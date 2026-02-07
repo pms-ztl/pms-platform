@@ -16,6 +16,7 @@ const createGoalSchema = z.object({
   type: z.nativeEnum(GoalType),
   priority: z.nativeEnum(GoalPriority).optional(),
   parentGoalId: z.string().uuid().optional(),
+  ownerId: z.string().uuid().optional(),
   startDate: z.string().optional().nullable().transform((val) => (val ? new Date(val) : undefined)),
   dueDate: z.string().optional().nullable().transform((val) => (val ? new Date(val) : undefined)),
   targetValue: z.number().optional(),
@@ -248,6 +249,19 @@ export class GoalsController {
       const rootGoalId = req.query.rootGoalId as string | undefined;
 
       const tree = await goalsService.getGoalTree(req.tenantId, rootGoalId);
+
+      res.status(200).json({
+        success: true,
+        data: tree,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getTeamGoalTree(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const tree = await goalsService.getTeamGoalTree(req.tenantId, req.user.id);
 
       res.status(200).json({
         success: true,

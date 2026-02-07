@@ -124,6 +124,7 @@ export interface CreateGoalInput {
   type: GoalType;
   priority?: GoalPriority;
   parentGoalId?: string;
+  ownerId?: string;
   startDate?: Date;
   dueDate?: Date;
   targetValue?: number;

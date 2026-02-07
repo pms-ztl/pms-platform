@@ -11,12 +11,14 @@ import {
   CalendarIcon,
   UserIcon,
   FlagIcon,
+  PlusIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 
-import { goalsApi, type Goal, type UpdateGoalInput } from '@/lib/api';
+import { goalsApi, usersApi, performanceMathApi, type Goal, type UpdateGoalInput, type CreateGoalInput, type User, type GoalMappingResult } from '@/lib/api';
+import { useAuthStore } from '@/store/auth';
 
 const statusColors: Record<string, string> = {
   DRAFT: 'bg-secondary-100 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-300',
@@ -33,15 +35,30 @@ const priorityColors: Record<string, string> = {
   CRITICAL: 'text-danger-700 dark:text-danger-400 font-bold',
 };
 
+const typeColors: Record<string, string> = {
+  COMPANY: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+  DEPARTMENT: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  TEAM: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
+  INDIVIDUAL: 'bg-secondary-100 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-300',
+  OKR_OBJECTIVE: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  OKR_KEY_RESULT: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+};
+
+const MANAGER_ROLES = ['Super Admin', 'SUPER_ADMIN', 'HR_ADMIN', 'HR Admin', 'MANAGER', 'Manager', 'ADMIN', 'Tenant Admin', 'TENANT_ADMIN'];
+
 export function GoalDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const user = useAuthStore((s) => s.user);
+  const userRoles = user?.roles ?? [];
+  const isManager = userRoles.some((r) => MANAGER_ROLES.includes(r));
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showProgressModal, setShowProgressModal] = useState(false);
   const [showCommentModal, setShowCommentModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSubGoalModal, setShowSubGoalModal] = useState(false);
 
   const { data: goal, isLoading, error } = useQuery({
     queryKey: ['goal', id],
@@ -59,6 +76,21 @@ export function GoalDetailPage() {
     queryKey: ['goal', id, 'comments'],
     queryFn: () => goalsApi.getComments(id!),
     enabled: !!id,
+  });
+
+  // Contribution mapping (only when goal has child goals)
+  const hasChildren = goal?.childGoals && goal.childGoals.length > 0;
+  const { data: contributionData } = useQuery({
+    queryKey: ['goal-mapping', id],
+    queryFn: () => performanceMathApi.getGoalMapping(id!),
+    enabled: !!id && !!hasChildren,
+  });
+
+  // Direct reports for sub-goal assignee selector
+  const { data: myReports } = useQuery({
+    queryKey: ['my-reports'],
+    queryFn: () => usersApi.getMyReports(),
+    enabled: showSubGoalModal && isManager,
   });
 
   const updateMutation = useMutation({
@@ -92,6 +124,7 @@ export function GoalDetailPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['goal', id] });
       queryClient.invalidateQueries({ queryKey: ['goal', id, 'progress'] });
+      queryClient.invalidateQueries({ queryKey: ['goal-mapping', id] });
       setShowProgressModal(false);
       toast.success('Progress updated');
     },
@@ -109,6 +142,20 @@ export function GoalDetailPage() {
     },
     onError: (error) => {
       toast.error(error instanceof Error ? error.message : 'Failed to add comment');
+    },
+  });
+
+  const createSubGoalMutation = useMutation({
+    mutationFn: (data: CreateGoalInput) => goalsApi.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['goal', id] });
+      queryClient.invalidateQueries({ queryKey: ['goals'] });
+      queryClient.invalidateQueries({ queryKey: ['goals-tree'] });
+      setShowSubGoalModal(false);
+      toast.success('Sub-goal assigned successfully');
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to create sub-goal');
     },
   });
 
@@ -145,6 +192,9 @@ export function GoalDetailPage() {
           </Link>
           <div>
             <div className="flex items-center gap-3">
+              <span className={clsx('text-[10px] font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
+                {goal.type?.replace('_', ' ')}
+              </span>
               <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">{goal.title}</h1>
               <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', statusColors[goal.status])}>
                 {goal.status}
@@ -153,9 +203,21 @@ export function GoalDetailPage() {
             {goal.description && (
               <p className="mt-2 text-secondary-600 dark:text-secondary-400 max-w-2xl">{goal.description}</p>
             )}
+            {/* Show who created the goal if different from owner */}
+            {goal.createdBy && goal.createdBy.id !== goal.owner?.id && (
+              <p className="mt-1 text-xs text-secondary-400 dark:text-secondary-500">
+                Assigned by {goal.createdBy.firstName} {goal.createdBy.lastName}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {isManager && (
+            <button onClick={() => setShowSubGoalModal(true)} className="btn-primary">
+              <PlusIcon className="h-5 w-5 mr-2" />
+              Assign Sub-Goal
+            </button>
+          )}
           <button onClick={() => setShowProgressModal(true)} className="btn-secondary">
             <ChartBarIcon className="h-5 w-5 mr-2" />
             Update Progress
@@ -198,6 +260,110 @@ export function GoalDetailPage() {
               </div>
             )}
           </div>
+
+          {/* ── Contribution Breakdown (when goal has children) ── */}
+          {hasChildren && (
+            <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+              <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Contribution Breakdown</h3>
+
+              {/* Summary scores from math engine */}
+              {contributionData && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+                  <div className="text-center p-3 rounded-lg bg-primary-50 dark:bg-primary-900/20">
+                    <p className="text-2xl font-bold text-primary-700 dark:text-primary-300">
+                      {(contributionData.compositeScore * 100).toFixed(0)}%
+                    </p>
+                    <p className="text-[10px] text-primary-600 dark:text-primary-400 font-medium mt-0.5">Composite Score</p>
+                  </div>
+                  <div className="text-center p-3 rounded-lg bg-success-50 dark:bg-success-900/20">
+                    <p className="text-2xl font-bold text-success-700 dark:text-success-300">
+                      {(contributionData.completionScore * 100).toFixed(0)}%
+                    </p>
+                    <p className="text-[10px] text-success-600 dark:text-success-400 font-medium mt-0.5">Completion</p>
+                  </div>
+                  <div className="text-center p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20">
+                    <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">
+                      {(contributionData.qualityAdjustedScore * 100).toFixed(0)}%
+                    </p>
+                    <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">Quality-Adj.</p>
+                  </div>
+                  <div className="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
+                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">
+                      {(contributionData.efficiency * 100).toFixed(0)}%
+                    </p>
+                    <p className="text-[10px] text-blue-600 dark:text-blue-400 font-medium mt-0.5">Efficiency</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Per-child contribution */}
+              <div className="space-y-3">
+                {contributionData?.childGoals && contributionData.childGoals.length > 0 ? (
+                  contributionData.childGoals.map((child) => (
+                    <div key={child.goalId} className="p-3 rounded-lg border border-secondary-200 dark:border-secondary-600">
+                      <div className="flex items-center justify-between mb-2">
+                        <Link
+                          to={`/goals/${child.goalId}`}
+                          className="text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400"
+                        >
+                          {child.title}
+                        </Link>
+                        <div className="flex items-center gap-3 text-xs">
+                          <span className="text-secondary-500 dark:text-secondary-400">
+                            Weight: {child.weight}
+                          </span>
+                          <span className={clsx(
+                            'font-semibold px-2 py-0.5 rounded-full',
+                            child.weightedContribution > 0.2
+                              ? 'bg-success-100 text-success-800 dark:bg-success-900/30 dark:text-success-300'
+                              : child.weightedContribution > 0.1
+                              ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+                              : 'bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400'
+                          )}>
+                            {(child.weightedContribution * 100).toFixed(1)}% contribution
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-secondary-200 dark:bg-secondary-700 rounded-full h-2">
+                          <div
+                            className={clsx('h-2 rounded-full', child.progress >= 100 ? 'bg-success-500' : 'bg-primary-600')}
+                            style={{ width: `${Math.min(child.progress, 100)}%` }}
+                          />
+                        </div>
+                        <span className="text-xs text-secondary-600 dark:text-secondary-400 w-10 text-right">{child.progress}%</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  // Fallback to simple child goals list if math data not available
+                  goal.childGoals?.map((child) => (
+                    <Link
+                      key={child.id}
+                      to={`/goals/${child.id}`}
+                      className="block p-3 rounded-lg border border-secondary-200 dark:border-secondary-600 hover:border-primary-300 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-secondary-900 dark:text-white">{child.title}</span>
+                          <span className="text-xs text-secondary-400">
+                            {child.owner?.firstName} {child.owner?.lastName}
+                          </span>
+                        </div>
+                        <span className="text-xs text-secondary-500 dark:text-secondary-400">{child.progress}%</span>
+                      </div>
+                      <div className="mt-2 w-full bg-secondary-200 dark:bg-secondary-700 rounded-full h-1.5">
+                        <div
+                          className="h-1.5 rounded-full bg-primary-500"
+                          style={{ width: `${Math.min(child.progress, 100)}%` }}
+                        />
+                      </div>
+                    </Link>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Progress history */}
           {progressHistory && progressHistory.length > 0 && (
@@ -285,11 +451,23 @@ export function GoalDetailPage() {
                 <UserIcon className="h-5 w-5 text-secondary-400 dark:text-secondary-500" />
                 <div>
                   <dt className="text-xs text-secondary-500 dark:text-secondary-400">Owner</dt>
-                  <dd className="text-sm text-secondary-900 dark:text-white">
+                  <dd className="text-sm text-secondary-900 dark:text-white flex items-center gap-2">
+                    <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[10px] font-bold text-primary-700 dark:text-primary-300">
+                      {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
+                    </div>
                     {goal.owner?.firstName} {goal.owner?.lastName}
                   </dd>
                 </div>
               </div>
+              {goal.weight !== undefined && goal.weight !== null && (
+                <div className="flex items-center gap-3">
+                  <ChartBarIcon className="h-5 w-5 text-secondary-400 dark:text-secondary-500" />
+                  <div>
+                    <dt className="text-xs text-secondary-500 dark:text-secondary-400">Weight</dt>
+                    <dd className="text-sm text-secondary-900 dark:text-white">{goal.weight} / 10</dd>
+                  </div>
+                </div>
+              )}
               {goal.parentGoal && (
                 <div className="flex items-center gap-3">
                   <LinkIcon className="h-5 w-5 text-secondary-400 dark:text-secondary-500" />
@@ -309,30 +487,18 @@ export function GoalDetailPage() {
             </dl>
           </div>
 
-          {/* Aligned goals */}
-          {goal.childGoals && goal.childGoals.length > 0 && (
+          {/* Child Goals (simple list for sidebar, detailed view in main area) */}
+          {!hasChildren && (
             <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-              <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Child Goals</h3>
-              <div className="space-y-3">
-                {goal.childGoals.map((child) => (
-                  <Link
-                    key={child.id}
-                    to={`/goals/${child.id}`}
-                    className="block p-3 rounded-lg border border-secondary-200 dark:border-secondary-600 hover:border-primary-300 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-secondary-900 dark:text-white">{child.title}</span>
-                      <span className="text-xs text-secondary-500 dark:text-secondary-400">{child.progress}%</span>
-                    </div>
-                    <div className="mt-2 w-full bg-secondary-200 dark:bg-secondary-700 rounded-full h-1.5">
-                      <div
-                        className="h-1.5 rounded-full bg-primary-500"
-                        style={{ width: `${Math.min(child.progress, 100)}%` }}
-                      />
-                    </div>
-                  </Link>
-                ))}
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-medium text-secondary-700 dark:text-secondary-300">Sub-Goals</h3>
+                {isManager && (
+                  <button onClick={() => setShowSubGoalModal(true)} className="text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400">
+                    + Assign
+                  </button>
+                )}
               </div>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">No sub-goals yet.</p>
             </div>
           )}
         </div>
@@ -526,6 +692,110 @@ export function GoalDetailPage() {
                   {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Assign Sub-Goal Modal ── */}
+      {showSubGoalModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div className="fixed inset-0 bg-black/30 dark:bg-black/50" onClick={() => setShowSubGoalModal(false)} />
+            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-lg w-full p-6 border border-transparent dark:border-secondary-700">
+              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-1">Assign Sub-Goal</h2>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
+                Create a cascading sub-goal under "{goal.title}"
+              </p>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.currentTarget);
+                  const input: CreateGoalInput = {
+                    title: formData.get('title') as string,
+                    description: (formData.get('description') as string) || undefined,
+                    type: formData.get('type') as string,
+                    priority: formData.get('priority') as string,
+                    dueDate: (formData.get('dueDate') as string) || undefined,
+                    weight: Number(formData.get('weight')) || undefined,
+                    parentGoalId: id,  // locked to current goal
+                  };
+                  const ownerId = formData.get('ownerId') as string;
+                  if (ownerId) input.ownerId = ownerId;
+                  createSubGoalMutation.mutate(input);
+                }}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="label dark:text-secondary-300">Sub-Goal Title</label>
+                  <input name="title" type="text" required className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white dark:placeholder-secondary-400" placeholder="e.g., Engineering Delivery Target" />
+                </div>
+                <div>
+                  <label className="label dark:text-secondary-300">Description</label>
+                  <textarea name="description" rows={2} className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white dark:placeholder-secondary-400" placeholder="Describe this sub-goal" />
+                </div>
+
+                {/* Assignee */}
+                <div>
+                  <label className="label dark:text-secondary-300">Assign To</label>
+                  <select name="ownerId" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                    <option value="">Myself</option>
+                    {myReports?.map((report: User) => (
+                      <option key={report.id} value={report.id}>
+                        {report.firstName} {report.lastName} {report.jobTitle ? `— ${report.jobTitle}` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="label dark:text-secondary-300">Type</label>
+                    <select name="type" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white text-sm">
+                      <option value="INDIVIDUAL">Individual</option>
+                      <option value="TEAM">Team</option>
+                      <option value="DEPARTMENT">Department</option>
+                      <option value="OKR_KEY_RESULT">Key Result</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="label dark:text-secondary-300">Priority</label>
+                    <select name="priority" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white text-sm">
+                      <option value="MEDIUM">Medium</option>
+                      <option value="LOW">Low</option>
+                      <option value="HIGH">High</option>
+                      <option value="CRITICAL">Critical</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="label dark:text-secondary-300">Weight</label>
+                    <input name="weight" type="number" min="0" max="10" step="0.5" defaultValue="5" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white text-sm" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="label dark:text-secondary-300">Due Date</label>
+                  <input
+                    name="dueDate"
+                    type="date"
+                    defaultValue={goal.dueDate ? goal.dueDate.substring(0, 10) : ''}
+                    className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                  />
+                </div>
+
+                <div className="bg-secondary-50 dark:bg-secondary-900/50 rounded-lg p-3 text-xs text-secondary-600 dark:text-secondary-400">
+                  <strong>Parent:</strong> {goal.title} &middot; <strong>Progress cascading:</strong> This sub-goal's progress will automatically roll up to the parent using weighted averages.
+                </div>
+
+                <div className="flex justify-end gap-3 mt-6">
+                  <button type="button" onClick={() => setShowSubGoalModal(false)} className="btn-secondary">
+                    Cancel
+                  </button>
+                  <button type="submit" disabled={createSubGoalMutation.isPending} className="btn-primary">
+                    {createSubGoalMutation.isPending ? 'Assigning...' : 'Assign Sub-Goal'}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

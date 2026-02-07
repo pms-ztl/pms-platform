@@ -38,10 +38,23 @@ export class GoalsService {
       }
     }
 
+    // Determine goal owner: use input.ownerId if provided (manager assigning to report), else self
+    const effectiveOwnerId = input.ownerId ?? userId;
+
+    // If assigning to another user, validate they exist in the same tenant
+    if (input.ownerId !== undefined && input.ownerId !== userId) {
+      const targetUser = await prisma.user.findFirst({
+        where: { id: input.ownerId, tenantId, isActive: true, deletedAt: null },
+      });
+      if (targetUser === null) {
+        throw new ValidationError('Target user not found or inactive');
+      }
+    }
+
     const goal = await prisma.goal.create({
       data: {
         tenantId,
-        ownerId: userId,
+        ownerId: effectiveOwnerId,
         createdById: userId,
         title: input.title,
         description: input.description,
@@ -591,6 +604,49 @@ export class GoalsService {
     });
 
     return comments as unknown as Array<{ id: string; content: string; createdAt: Date; author: { firstName: string; lastName: string } }>;
+  }
+
+  /**
+   * Get the goal hierarchy for a manager and their direct reports.
+   * Returns top-level goals with nested child goals, each with owner info.
+   */
+  async getTeamGoalTree(tenantId: string, managerId: string) {
+    // Get direct reports
+    const directReports = await prisma.user.findMany({
+      where: { tenantId, managerId, isActive: true, deletedAt: null },
+      select: { id: true },
+    });
+    const reportIds = directReports.map((r) => r.id);
+    const allUserIds = [managerId, ...reportIds];
+
+    // Get all goals owned by manager + reports
+    const goals = await prisma.goal.findMany({
+      where: {
+        tenantId,
+        ownerId: { in: allUserIds },
+        deletedAt: null,
+      },
+      include: {
+        owner: { select: { id: true, firstName: true, lastName: true } },
+        childGoals: {
+          where: { deletedAt: null },
+          include: {
+            owner: { select: { id: true, firstName: true, lastName: true } },
+            childGoals: {
+              where: { deletedAt: null },
+              include: {
+                owner: { select: { id: true, firstName: true, lastName: true } },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    // Filter to top-level goals (parentGoalId is null or parent is outside this set)
+    const goalIds = new Set(goals.map((g) => g.id));
+    return goals.filter((g) => !g.parentGoalId || !goalIds.has(g.parentGoalId));
   }
 }
 

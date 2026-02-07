@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { PlusIcon, FunnelIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, FunnelIcon, ListBulletIcon, ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
-import { goalsApi, type Goal, type CreateGoalInput } from '@/lib/api';
+import { goalsApi, usersApi, type Goal, type CreateGoalInput, type User } from '@/lib/api';
+import { useAuthStore } from '@/store/auth';
 
-const statusColors = {
+const statusColors: Record<string, string> = {
   DRAFT: 'badge-secondary',
   ACTIVE: 'badge-primary',
   COMPLETED: 'badge-success',
@@ -14,28 +15,159 @@ const statusColors = {
   ON_HOLD: 'badge-warning',
 };
 
-const priorityColors = {
+const priorityColors: Record<string, string> = {
   LOW: 'text-secondary-500',
   MEDIUM: 'text-warning-600',
   HIGH: 'text-danger-600',
   CRITICAL: 'text-danger-700 font-bold',
 };
 
+const typeColors: Record<string, string> = {
+  COMPANY: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+  DEPARTMENT: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  TEAM: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
+  INDIVIDUAL: 'bg-secondary-100 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-300',
+  OKR_OBJECTIVE: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  OKR_KEY_RESULT: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+};
+
+const MANAGER_ROLES = ['Super Admin', 'SUPER_ADMIN', 'HR_ADMIN', 'HR Admin', 'MANAGER', 'Manager', 'ADMIN', 'Tenant Admin', 'TENANT_ADMIN'];
+
+function isManagerRole(roles: string[]): boolean {
+  return roles.some((r) => MANAGER_ROLES.includes(r));
+}
+
+// ── Tree Node Component ─────────────────────────────────────────────────────
+function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
+  const [expanded, setExpanded] = useState(depth < 2);
+  const hasChildren = goal.childGoals && goal.childGoals.length > 0;
+
+  return (
+    <div>
+      <div
+        className={clsx(
+          'flex items-center gap-3 px-4 py-3 hover:bg-secondary-50 dark:hover:bg-secondary-700/50 border-b border-secondary-100 dark:border-secondary-700/50',
+          depth > 0 && 'border-l-2 border-l-primary-200 dark:border-l-primary-800'
+        )}
+        style={{ paddingLeft: `${depth * 24 + 16}px` }}
+      >
+        {/* Expand/collapse */}
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className={clsx('p-0.5 rounded', hasChildren ? 'hover:bg-secondary-200 dark:hover:bg-secondary-600' : 'invisible')}
+        >
+          {expanded ? (
+            <ChevronDownIcon className="h-4 w-4 text-secondary-400" />
+          ) : (
+            <ChevronRightIcon className="h-4 w-4 text-secondary-400" />
+          )}
+        </button>
+
+        {/* Type badge */}
+        <span className={clsx('text-[10px] font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
+          {goal.type?.replace('_', ' ')}
+        </span>
+
+        {/* Title */}
+        <a
+          href={`/goals/${goal.id}`}
+          className="flex-1 text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 truncate"
+        >
+          {goal.title}
+        </a>
+
+        {/* Owner */}
+        <div className="flex items-center gap-1.5 min-w-[120px]">
+          <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[10px] font-bold text-primary-700 dark:text-primary-300">
+            {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
+          </div>
+          <span className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
+            {goal.owner?.firstName} {goal.owner?.lastName}
+          </span>
+        </div>
+
+        {/* Progress */}
+        <div className="flex items-center gap-2 min-w-[120px]">
+          <div className="w-16 bg-secondary-200 dark:bg-secondary-700 rounded-full h-1.5">
+            <div
+              className={clsx('h-1.5 rounded-full', goal.progress >= 100 ? 'bg-success-500' : 'bg-primary-600')}
+              style={{ width: `${Math.min(goal.progress, 100)}%` }}
+            />
+          </div>
+          <span className="text-xs text-secondary-600 dark:text-secondary-400 w-8 text-right">{goal.progress}%</span>
+        </div>
+
+        {/* Weight */}
+        {goal.weight !== undefined && goal.weight !== null && (
+          <span className="text-[10px] text-secondary-400 dark:text-secondary-500 min-w-[40px] text-right">
+            w:{goal.weight}
+          </span>
+        )}
+
+        {/* Status */}
+        <span className={clsx('text-xs px-2 py-0.5 rounded-full', statusColors[goal.status] || 'badge-secondary')}>
+          {goal.status}
+        </span>
+      </div>
+
+      {/* Children */}
+      {expanded && hasChildren && (
+        <div>
+          {goal.childGoals!.map((child) => (
+            <GoalTreeNode key={child.id} goal={child} depth={depth + 1} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Main GoalsPage ──────────────────────────────────────────────────────────
 export function GoalsPage() {
   const queryClient = useQueryClient();
+  const user = useAuthStore((s) => s.user);
+  const userRoles = user?.roles ?? [];
+  const isManager = isManagerRole(userRoles);
+
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [page, setPage] = useState(1);
+  const [viewMode, setViewMode] = useState<'list' | 'tree'>('list');
 
+  // List view query
   const { data, isLoading } = useQuery({
     queryKey: ['goals', { page, status: statusFilter }],
     queryFn: () => goalsApi.list({ page, limit: 10, status: statusFilter || undefined }),
+    enabled: viewMode === 'list',
+  });
+
+  // Tree view query
+  const { data: treeData, isLoading: treeLoading } = useQuery({
+    queryKey: ['goals-tree', isManager ? 'team' : 'all'],
+    queryFn: () => (isManager ? goalsApi.getTeamTree() : goalsApi.getTree()),
+    enabled: viewMode === 'tree',
+  });
+
+  // Parent goals for selector (all goals user can see)
+  const { data: parentGoals } = useQuery({
+    queryKey: ['goals-for-parent-selector'],
+    queryFn: () => goalsApi.list({ limit: 100 }),
+    enabled: showCreateModal,
+    select: (d) => d.data,
+  });
+
+  // Direct reports for assignee selector
+  const { data: myReports } = useQuery({
+    queryKey: ['my-reports'],
+    queryFn: () => usersApi.getMyReports(),
+    enabled: showCreateModal && isManager,
   });
 
   const createMutation = useMutation({
     mutationFn: (data: CreateGoalInput) => goalsApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['goals'] });
+      queryClient.invalidateQueries({ queryKey: ['goals-tree'] });
       setShowCreateModal(false);
       toast.success('Goal created successfully');
     },
@@ -54,170 +186,240 @@ export function GoalsPage() {
             Track and manage your goals and OKRs
           </p>
         </div>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="btn-primary"
-        >
+        <button onClick={() => setShowCreateModal(true)} className="btn-primary">
           <PlusIcon className="h-5 w-5 mr-2" />
           Create Goal
         </button>
       </div>
 
-      {/* Filters */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <FunnelIcon className="h-5 w-5 text-secondary-400 dark:text-secondary-500" />
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="input py-1.5 w-40"
+      {/* Filters + View Toggle */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <FunnelIcon className="h-5 w-5 text-secondary-400 dark:text-secondary-500" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="input py-1.5 w-40"
+            >
+              <option value="">All Statuses</option>
+              <option value="DRAFT">Draft</option>
+              <option value="ACTIVE">Active</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="ON_HOLD">On Hold</option>
+              <option value="CANCELLED">Cancelled</option>
+            </select>
+          </div>
+        </div>
+
+        {/* View mode toggle */}
+        <div className="flex items-center gap-1 bg-secondary-100 dark:bg-secondary-800 rounded-lg p-1">
+          <button
+            onClick={() => setViewMode('list')}
+            className={clsx(
+              'px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
+              viewMode === 'list'
+                ? 'bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white shadow-sm'
+                : 'text-secondary-500 dark:text-secondary-400 hover:text-secondary-700 dark:hover:text-secondary-300'
+            )}
           >
-            <option value="">All Statuses</option>
-            <option value="DRAFT">Draft</option>
-            <option value="ACTIVE">Active</option>
-            <option value="COMPLETED">Completed</option>
-            <option value="ON_HOLD">On Hold</option>
-            <option value="CANCELLED">Cancelled</option>
-          </select>
+            <ListBulletIcon className="h-4 w-4 inline mr-1" />
+            List
+          </button>
+          <button
+            onClick={() => setViewMode('tree')}
+            className={clsx(
+              'px-3 py-1.5 text-xs font-medium rounded-md transition-colors',
+              viewMode === 'tree'
+                ? 'bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white shadow-sm'
+                : 'text-secondary-500 dark:text-secondary-400 hover:text-secondary-700 dark:hover:text-secondary-300'
+            )}
+          >
+            <svg className="h-4 w-4 inline mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M3 4h4v2H3V4zm6 0h8v2H9V4zM5 9h4v2H5V9zm6 0h6v2h-6V9zM7 14h4v2H7v-2zm6 0h4v2h-4v-2z" />
+            </svg>
+            Tree
+          </button>
         </div>
       </div>
 
-      {/* Goals list */}
-      {isLoading ? (
-        <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
-        </div>
-      ) : data?.data.length === 0 ? (
-        <div className="text-center py-12 card card-body dark:bg-secondary-800">
-          <FunnelIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-          <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No goals found</h3>
-          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-            Get started by creating a new goal.
-          </p>
-          <div className="mt-6">
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="btn-primary"
-            >
-              <PlusIcon className="h-5 w-5 mr-2" />
-              Create Goal
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
-          <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
-            <thead className="bg-secondary-50 dark:bg-secondary-900">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                  Goal
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                  Priority
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                  Progress
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                  Due Date
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
-              {data?.data.map((goal) => (
-                <tr key={goal.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
-                  <td className="px-6 py-4">
-                    <div>
-                      <a
-                        href={`/goals/${goal.id}`}
-                        className="text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400"
-                      >
-                        {goal.title}
-                      </a>
-                      {goal.description && (
-                        <p className="text-sm text-secondary-500 dark:text-secondary-400 truncate max-w-md">
-                          {goal.description}
-                        </p>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={statusColors[goal.status as keyof typeof statusColors] || 'badge-secondary'}>
-                      {goal.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={clsx('text-sm', priorityColors[goal.priority as keyof typeof priorityColors])}>
-                      {goal.priority}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="w-24 bg-secondary-200 dark:bg-secondary-700 rounded-full h-2">
-                        <div
-                          className={clsx(
-                            'h-2 rounded-full',
-                            goal.progress >= 100 ? 'bg-success-500' : 'bg-primary-600'
-                          )}
-                          style={{ width: `${Math.min(goal.progress, 100)}%` }}
-                        />
-                      </div>
-                      <span className="ml-2 text-sm text-secondary-600 dark:text-secondary-400">
-                        {goal.progress}%
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500 dark:text-secondary-400">
-                    {goal.dueDate ? new Date(goal.dueDate).toLocaleDateString() : '-'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <a
-                      href={`/goals/${goal.id}`}
-                      className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300"
-                    >
-                      View
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Pagination */}
-          {data && data.meta.totalPages > 1 && (
-            <div className="px-6 py-3 border-t border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
-              <div className="text-sm text-secondary-500 dark:text-secondary-400">
-                Showing {(page - 1) * data.meta.limit + 1} to{' '}
-                {Math.min(page * data.meta.limit, data.meta.total)} of {data.meta.total} results
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={!data.meta.hasPreviousPage}
-                  className="btn-secondary text-sm disabled:opacity-50"
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={() => setPage((p) => p + 1)}
-                  disabled={!data.meta.hasNextPage}
-                  className="btn-secondary text-sm disabled:opacity-50"
-                >
-                  Next
+      {/* ── List View ── */}
+      {viewMode === 'list' && (
+        <>
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            </div>
+          ) : data?.data.length === 0 ? (
+            <div className="text-center py-12 card card-body dark:bg-secondary-800">
+              <FunnelIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+              <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No goals found</h3>
+              <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
+                Get started by creating a new goal.
+              </p>
+              <div className="mt-6">
+                <button onClick={() => setShowCreateModal(true)} className="btn-primary">
+                  <PlusIcon className="h-5 w-5 mr-2" />
+                  Create Goal
                 </button>
               </div>
             </div>
+          ) : (
+            <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                <thead className="bg-secondary-50 dark:bg-secondary-900">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Goal</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Owner</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Priority</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Progress</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Due Date</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                  {data?.data.map((goal) => (
+                    <tr key={goal.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <span className={clsx('text-[10px] font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
+                            {goal.type?.replace('_', ' ')}
+                          </span>
+                          <div>
+                            <a
+                              href={`/goals/${goal.id}`}
+                              className="text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400"
+                            >
+                              {goal.title}
+                            </a>
+                            {goal.parentGoal && (
+                              <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">
+                                ↳ {goal.parentGoal.title}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[10px] font-bold text-primary-700 dark:text-primary-300">
+                            {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
+                          </div>
+                          <span className="text-xs text-secondary-600 dark:text-secondary-400">
+                            {goal.owner?.firstName} {goal.owner?.lastName}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={statusColors[goal.status] || 'badge-secondary'}>
+                          {goal.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={clsx('text-sm', priorityColors[goal.priority])}>
+                          {goal.priority}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="w-24 bg-secondary-200 dark:bg-secondary-700 rounded-full h-2">
+                            <div
+                              className={clsx('h-2 rounded-full', goal.progress >= 100 ? 'bg-success-500' : 'bg-primary-600')}
+                              style={{ width: `${Math.min(goal.progress, 100)}%` }}
+                            />
+                          </div>
+                          <span className="ml-2 text-sm text-secondary-600 dark:text-secondary-400">
+                            {goal.progress}%
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500 dark:text-secondary-400">
+                        {goal.dueDate ? new Date(goal.dueDate).toLocaleDateString() : '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <a
+                          href={`/goals/${goal.id}`}
+                          className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300"
+                        >
+                          View
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Pagination */}
+              {data && data.meta.totalPages > 1 && (
+                <div className="px-6 py-3 border-t border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
+                  <div className="text-sm text-secondary-500 dark:text-secondary-400">
+                    Showing {(page - 1) * data.meta.limit + 1} to{' '}
+                    {Math.min(page * data.meta.limit, data.meta.total)} of {data.meta.total} results
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      disabled={page <= 1}
+                      className="btn-secondary text-sm disabled:opacity-50"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() => setPage((p) => p + 1)}
+                      disabled={!data.meta.totalPages || page >= data.meta.totalPages}
+                      className="btn-secondary text-sm disabled:opacity-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
-        </div>
+        </>
       )}
 
-      {/* Create Modal (simplified) */}
+      {/* ── Tree View ── */}
+      {viewMode === 'tree' && (
+        <>
+          {treeLoading ? (
+            <div className="flex justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            </div>
+          ) : !treeData || treeData.length === 0 ? (
+            <div className="text-center py-12 card card-body dark:bg-secondary-800">
+              <svg className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM7 14h7v7H7v-7z" />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No goal hierarchy found</h3>
+              <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
+                Create goals with parent-child relationships to see the tree view.
+              </p>
+            </div>
+          ) : (
+            <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
+              <div className="px-4 py-3 bg-secondary-50 dark:bg-secondary-900 border-b border-secondary-200 dark:border-secondary-700">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-secondary-700 dark:text-secondary-300">
+                    {isManager ? 'Team Goal Hierarchy' : 'Goal Hierarchy'}
+                  </h3>
+                  <span className="text-xs text-secondary-400 dark:text-secondary-500">
+                    {treeData.length} top-level goal{treeData.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+              </div>
+              <div>
+                {treeData.map((goal) => (
+                  <GoalTreeNode key={goal.id} goal={goal} />
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ── Enhanced Create Modal ── */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
@@ -228,13 +430,22 @@ export function GoalsPage() {
                 onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.currentTarget);
-                  createMutation.mutate({
+                  const input: CreateGoalInput = {
                     title: formData.get('title') as string,
-                    description: formData.get('description') as string,
+                    description: (formData.get('description') as string) || undefined,
                     type: formData.get('type') as string,
                     priority: formData.get('priority') as string,
-                    dueDate: formData.get('dueDate') as string,
-                  });
+                    dueDate: (formData.get('dueDate') as string) || undefined,
+                    weight: Number(formData.get('weight')) || undefined,
+                  };
+                  // Parent goal
+                  const parentGoalId = formData.get('parentGoalId') as string;
+                  if (parentGoalId) input.parentGoalId = parentGoalId;
+                  // Assignee
+                  const ownerId = formData.get('ownerId') as string;
+                  if (ownerId) input.ownerId = ownerId;
+
+                  createMutation.mutate(input);
                 }}
                 className="space-y-4"
               >
@@ -246,6 +457,41 @@ export function GoalsPage() {
                   <label className="label dark:text-secondary-300">Description</label>
                   <textarea name="description" rows={3} className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white dark:placeholder-secondary-400" placeholder="Describe your goal" />
                 </div>
+
+                {/* Parent Goal Selector */}
+                <div>
+                  <label className="label dark:text-secondary-300">Parent Goal (optional)</label>
+                  <select name="parentGoalId" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                    <option value="">None (top-level goal)</option>
+                    {parentGoals?.map((g) => (
+                      <option key={g.id} value={g.id}>
+                        [{g.type?.replace('_', ' ')}] {g.title}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
+                    Link this goal as a child of an existing goal to create a cascade
+                  </p>
+                </div>
+
+                {/* Assign To (Manager/Admin only) */}
+                {isManager && (
+                  <div>
+                    <label className="label dark:text-secondary-300">Assign To</label>
+                    <select name="ownerId" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                      <option value="">Myself</option>
+                      {myReports?.map((report: User) => (
+                        <option key={report.id} value={report.id}>
+                          {report.firstName} {report.lastName} {report.jobTitle ? `— ${report.jobTitle}` : ''}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
+                      Assign this goal to a direct report (cascading)
+                    </p>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">Goal Type</label>
@@ -274,18 +520,19 @@ export function GoalsPage() {
                     <input name="dueDate" type="date" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white" />
                   </div>
                   <div>
-                    <label className="label dark:text-secondary-300">Weightage (%)</label>
+                    <label className="label dark:text-secondary-300">Weight (0-10)</label>
                     <input
-                      name="weightage"
+                      name="weight"
                       type="number"
                       min="0"
-                      max="100"
-                      defaultValue="20"
+                      max="10"
+                      step="0.5"
+                      defaultValue="5"
                       className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
-                      placeholder="e.g., 20"
+                      placeholder="e.g., 5"
                     />
                     <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
-                      Goal weightage for performance calculation
+                      Weight for contribution to parent goal (0-10)
                     </p>
                   </div>
                 </div>

@@ -9,10 +9,13 @@ const router = Router();
 // All routes require authentication
 router.use(authenticate);
 
-// Goal CRUD
+// Goal CRUD (own + team scope so managers can assign goals to reports)
 router.post(
   '/',
-  authorize({ resource: 'goals', action: 'create', scope: 'own' }),
+  authorize(
+    { resource: 'goals', action: 'create', scope: 'own' },
+    { resource: 'goals', action: 'create', scope: 'team' }
+  ),
   (req, res, next) => goalsController.create(req, res, next)
 );
 
@@ -31,6 +34,12 @@ router.get(
   '/tree',
   authorize({ resource: 'goals', action: 'read', scope: 'all' }),
   (req, res, next) => goalsController.getGoalTree(req, res, next)
+);
+
+router.get(
+  '/team-tree',
+  authorize({ resource: 'goals', action: 'read', scope: 'team' }),
+  (req, res, next) => goalsController.getTeamGoalTree(req, res, next)
 );
 
 router.get(

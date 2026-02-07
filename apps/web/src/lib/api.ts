@@ -193,6 +193,7 @@ export const goalsApi = {
     api.post<Goal>(`/goals/${id}/progress`, { progress, note }),
   getProgressHistory: (id: string) => api.get<any[]>(`/goals/${id}/progress/history`),
   getTree: (rootGoalId?: string) => api.get<Goal[]>('/goals/tree', { params: { rootGoalId } }),
+  getTeamTree: () => api.get<Goal[]>('/goals/team-tree'),
   addComment: (id: string, content: string) => api.post<any>(`/goals/${id}/comments`, { content }),
   getComments: (id: string) => api.get<any[]>(`/goals/${id}/comments`),
 };
@@ -334,9 +335,12 @@ export interface Goal {
   targetValue?: number;
   currentValue?: number;
   unit?: string;
+  weight?: number;
   startDate?: string;
   dueDate?: string;
-  owner: { id: string; firstName: string; lastName: string };
+  createdById?: string;
+  owner: { id: string; firstName: string; lastName: string; avatarUrl?: string };
+  createdBy?: { id: string; firstName: string; lastName: string };
   parentGoal?: { id: string; title: string };
   childGoals?: Goal[];
 }
@@ -347,11 +351,12 @@ export interface CreateGoalInput {
   type: string;
   priority?: string;
   parentGoalId?: string;
+  ownerId?: string;
   startDate?: string;
   dueDate?: string;
   targetValue?: number;
   unit?: string;
-  weightage?: number;
+  weight?: number;
 }
 
 export interface UpdateGoalInput {
