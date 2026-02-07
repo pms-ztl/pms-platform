@@ -71,6 +71,12 @@ export const CACHE_PREFIX = {
 export class RedisCacheService {
   private redis: Redis;
   private subscriber: Redis;
+  private _available = false;
+  private _errorLogged = false;
+
+  get available(): boolean {
+    return this._available;
+  }
 
   constructor() {
     const redisConfig = {
@@ -80,23 +86,36 @@ export class RedisCacheService {
       db: parseInt(process.env.REDIS_DB || '0'),
       keyPrefix: process.env.REDIS_KEY_PREFIX || 'pms:',
       retryStrategy: (times: number) => {
-        const delay = Math.min(times * 50, 2000);
-        return delay;
+        if (times > 3) {
+          // Stop retrying — Redis not available in this environment
+          return null;
+        }
+        return Math.min(times * 200, 2000);
       },
       maxRetriesPerRequest: 3,
       enableReadyCheck: true,
-      lazyConnect: false
+      lazyConnect: true, // Don't connect until first use
     };
 
     this.redis = new Redis(redisConfig);
     this.subscriber = new Redis(redisConfig);
 
     this.redis.on('error', (err) => {
-      console.error('Redis Client Error:', err);
+      this._available = false;
+      if (!this._errorLogged) {
+        console.warn('[RedisCacheService] Redis unavailable:', (err as Error).message);
+        this._errorLogged = true;
+      }
     });
 
     this.redis.on('connect', () => {
-      console.log('Redis Client Connected');
+      this._available = true;
+      this._errorLogged = false;
+      console.log('[RedisCacheService] Redis connected');
+    });
+
+    this.redis.on('end', () => {
+      this._available = false;
     });
   }
 
