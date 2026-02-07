@@ -1,0 +1,36 @@
+{
+  "name": "pms-platform",
+  "version": "1.0.0",
+  "description": "Enterprise Performance Management System",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "db:generate": "turbo run db:generate --filter=@pms/database",
+    "db:push": "turbo run db:push --filter=@pms/database",
+    "db:migrate": "turbo run db:migrate --filter=@pms/database",
+    "db:seed": "turbo run db:seed --filter=@pms/database",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "eslint": "^9.39.2",
+    "prettier": "^3.2.4",
+    "turbo": "^1.11.0",
+    "typescript": "^5.3.3",
+    "vite": "^7.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "packageManager": "npm@10.2.0"
+}

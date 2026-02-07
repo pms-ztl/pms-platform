@@ -1,0 +1,867 @@
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
+import { useAuthStore } from '@/store/auth';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+
+interface ApiError {
+  code: string;
+  message: string;
+  details?: Record<string, unknown>;
+}
+
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: ApiError;
+  meta?: {
+    total?: number;
+    page?: number;
+    limit?: number;
+    totalPages?: number;
+  };
+}
+
+class ApiClient {
+  private client: AxiosInstance;
+
+  constructor() {
+    this.client = axios.create({
+      baseURL: API_BASE_URL,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    // Request interceptor - add auth token
+    this.client.interceptors.request.use(
+      (config) => {
+        const token = useAuthStore.getState().accessToken;
+        console.log('[API Client] Request to:', config.url, 'Token exists:', !!token);
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+          console.log('[API Client] Added Authorization header');
+        } else {
+          console.warn('[API Client] No token available for request');
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    // Response interceptor - handle errors and token refresh
+    this.client.interceptors.response.use(
+      (response) => response,
+      async (error: AxiosError<ApiResponse<unknown>>) => {
+        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+
+        // Handle 401 - try to refresh token
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          try {
+            const refreshToken = useAuthStore.getState().refreshToken;
+            if (refreshToken) {
+              const response = await this.client.post<ApiResponse<{ accessToken: string; refreshToken: string }>>('/auth/refresh', {
+                refreshToken,
+              });
+
+              if (response.data.success && response.data.data) {
+                useAuthStore.getState().setTokens(
+                  response.data.data.accessToken,
+                  response.data.data.refreshToken
+                );
+
+                // Retry original request
+                return this.client(originalRequest);
+              }
+            }
+          } catch {
+            // Refresh failed - logout
+            useAuthStore.getState().logout();
+            window.location.href = '/login';
+          }
+        }
+
+        // Extract error message
+        const errorMessage = error.response?.data?.error?.message || error.message || 'An error occurred';
+
+        return Promise.reject(new Error(errorMessage));
+      }
+    );
+  }
+
+  async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.client.get<ApiResponse<T>>(url, config);
+    if (!response.data.success) {
+      throw new Error(response.data.error?.message || 'Request failed');
+    }
+    return response.data.data as T;
+  }
+
+  async getRaw(url: string, config?: AxiosRequestConfig): Promise<string> {
+    const response = await this.client.get(url, { ...config, responseType: 'text' });
+    return response.data;
+  }
+
+  async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.client.post<ApiResponse<T>>(url, data, config);
+    if (!response.data.success) {
+      throw new Error(response.data.error?.message || 'Request failed');
+    }
+    return response.data.data as T;
+  }
+
+  async postFormData<T>(url: string, formData: FormData, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.client.post<ApiResponse<T>>(url, formData, {
+      ...config,
+      headers: {
+        ...config?.headers,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    if (!response.data.success) {
+      throw new Error(response.data.error?.message || 'Request failed');
+    }
+    return response.data.data as T;
+  }
+
+  async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.client.put<ApiResponse<T>>(url, data, config);
+    if (!response.data.success) {
+      throw new Error(response.data.error?.message || 'Request failed');
+    }
+    return response.data.data as T;
+  }
+
+  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.client.delete<ApiResponse<T>>(url, config);
+    if (!response.data.success) {
+      throw new Error(response.data.error?.message || 'Request failed');
+    }
+    return response.data.data as T;
+  }
+
+  async getPaginated<T>(
+    url: string,
+    params?: Record<string, unknown>
+  ): Promise<{ data: T[]; meta: { total: number; page: number; limit: number; totalPages: number } }> {
+    const response = await this.client.get<ApiResponse<T[]>>(url, { params });
+    if (!response.data.success) {
+      throw new Error(response.data.error?.message || 'Request failed');
+    }
+    return {
+      data: response.data.data || [],
+      meta: response.data.meta as { total: number; page: number; limit: number; totalPages: number },
+    };
+  }
+}
+
+export const api = new ApiClient();
+
+// API endpoints
+export const authApi = {
+  login: (email: string, password: string, tenantSlug?: string) =>
+    api.post<{ accessToken: string; refreshToken: string; expiresIn: number }>('/auth/login', {
+      email,
+      password,
+      tenantSlug,
+    }),
+  verifyMfa: (tempToken: string, mfaCode: string) =>
+    api.post<{ accessToken: string; refreshToken: string }>('/auth/mfa/verify', {
+      tempToken,
+      mfaCode,
+    }),
+  logout: (refreshToken?: string) => api.post('/auth/logout', { refreshToken }),
+  me: () => api.get<User>('/auth/me'),
+  changePassword: (currentPassword: string, newPassword: string) =>
+    api.post('/auth/password/change', { currentPassword, newPassword }),
+  setupMfa: () => api.post<{ secret: string; otpauthUrl: string }>('/auth/mfa/setup'),
+  verifyMfaSetup: (code: string) => api.post('/auth/mfa/setup/verify', { code }),
+  forgotPassword: (email: string) => api.post('/auth/password/forgot', { email }),
+  resetPassword: (token: string, password: string) => api.post('/auth/password/reset', { token, password }),
+};
+
+export const goalsApi = {
+  list: (params?: { page?: number; limit?: number; status?: string; type?: string; ownerId?: string }) =>
+    api.getPaginated<Goal>('/goals', params),
+  getMyGoals: (params?: { status?: string }) => api.getPaginated<Goal>('/goals/my', params),
+  getById: (id: string) => api.get<Goal>(`/goals/${id}`),
+  create: (data: CreateGoalInput) => api.post<Goal>('/goals', data),
+  update: (id: string, data: UpdateGoalInput) => api.put<Goal>(`/goals/${id}`, data),
+  delete: (id: string) => api.delete(`/goals/${id}`),
+  updateProgress: (id: string, progress: number, note?: string) =>
+    api.post<Goal>(`/goals/${id}/progress`, { progress, note }),
+  getProgressHistory: (id: string) => api.get<any[]>(`/goals/${id}/progress/history`),
+  getTree: (rootGoalId?: string) => api.get<Goal[]>('/goals/tree', { params: { rootGoalId } }),
+  addComment: (id: string, content: string) => api.post<any>(`/goals/${id}/comments`, { content }),
+  getComments: (id: string) => api.get<any[]>(`/goals/${id}/comments`),
+};
+
+export const reviewsApi = {
+  listCycles: (params?: { status?: string }) => api.get<ReviewCycle[]>('/reviews/cycles', { params }),
+  getCycle: (id: string) => api.get<ReviewCycle>(`/reviews/cycles/${id}`),
+  getCycleStats: (id: string) => api.get<ReviewCycleStats>(`/reviews/cycles/${id}/stats`),
+  createCycle: (data: CreateReviewCycleInput) => api.post<ReviewCycle>('/reviews/cycles', data),
+  launchCycle: (id: string) => api.post<ReviewCycle>(`/reviews/cycles/${id}/launch`),
+  listMyReviews: (params?: { asReviewer?: boolean; asReviewee?: boolean; cycleId?: string }) =>
+    api.get<Review[]>('/reviews/my', { params }),
+  getReview: (id: string) => api.get<Review>(`/reviews/${id}`),
+  startReview: (id: string) => api.post<Review>(`/reviews/${id}/start`),
+  saveDraft: (id: string, data: Partial<SubmitReviewInput>) =>
+    api.put<Review>(`/reviews/${id}/draft`, data),
+  submitReview: (id: string, data: SubmitReviewInput) =>
+    api.post<Review>(`/reviews/${id}/submit`, data),
+  acknowledgeReview: (id: string) => api.post<Review>(`/reviews/${id}/acknowledge`),
+};
+
+export const feedbackApi = {
+  create: (data: CreateFeedbackInput) => api.post<Feedback>('/feedback', data),
+  listReceived: (params?: { type?: string; page?: number; limit?: number }) =>
+    api.getPaginated<Feedback>('/feedback/received', params),
+  listGiven: (params?: { page?: number; limit?: number }) => api.getPaginated<Feedback>('/feedback/given', params),
+  listTeam: (params?: { teamMemberId?: string; page?: number; limit?: number }) =>
+    api.getPaginated<Feedback>('/feedback/team', params),
+  getTimeline: (userId?: string) => api.get<TimelineEvent[]>(userId ? `/feedback/timeline/${userId}` : '/feedback/timeline'),
+  acknowledge: (id: string) => api.post<Feedback>(`/feedback/${id}/acknowledge`),
+  requestFeedback: (fromUserId: string, aboutUserId?: string, message?: string) =>
+    api.post('/feedback/request', { fromUserId, aboutUserId, message }),
+};
+
+export interface CreateUserInput {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password?: string;
+  jobTitle?: string;
+  employeeNumber?: string;
+  departmentId?: string;
+  managerId?: string;
+  level?: number;
+  hireDate?: string;
+  roleIds?: string[];
+}
+
+export interface UpdateUserInput {
+  firstName?: string;
+  lastName?: string;
+  displayName?: string;
+  avatarUrl?: string;
+  jobTitle?: string;
+  departmentId?: string | null;
+  managerId?: string | null;
+  level?: number;
+  timezone?: string;
+  locale?: string;
+}
+
+export interface Role {
+  id: string;
+  name: string;
+  description: string | null;
+}
+
+export interface Department {
+  id: string;
+  name: string;
+  code: string | null;
+}
+
+export const usersApi = {
+  list: (params?: { page?: number; limit?: number; search?: string; departmentId?: string; isActive?: boolean }) =>
+    api.getPaginated<User>('/users', params),
+  getById: (id: string) => api.get<User>(`/users/${id}`),
+  getMyReports: () => api.get<User[]>('/users/my-reports'),
+  getTeamMembers: () => api.getPaginated<User>('/users/team-members'),  // NEW: For feedback dropdowns
+  getOrgChart: (rootUserId?: string) =>
+    api.get<User[]>('/users/org-chart', { params: { rootUserId } }),
+  create: (data: CreateUserInput) => api.post<User>('/users', data),
+  update: (id: string, data: UpdateUserInput) => api.put<User>(`/users/${id}`, data),
+  deactivate: (id: string) => api.post(`/users/${id}/deactivate`),
+  reactivate: (id: string) => api.post(`/users/${id}/reactivate`),
+  deleteUser: (id: string) => api.delete(`/users/${id}`),
+  assignRole: (id: string, roleId: string) => api.post(`/users/${id}/roles`, { roleId }),
+  removeRole: (id: string, roleId: string) => api.delete(`/users/${id}/roles/${roleId}`),
+  listRoles: () => api.get<Role[]>('/users/roles'),
+  listDepartments: () => api.get<Department[]>('/users/departments'),
+  // Avatar management
+  uploadAvatar: (file: File) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+    return api.postFormData<{ avatarUrl: string }>('/users/me/avatar', formData);
+  },
+  setAiAvatar: (avatarUrl: string) => api.post<{ avatarUrl: string }>('/users/me/ai-avatar', { avatarUrl }),
+};
+
+export const calibrationApi = {
+  listSessions: (params?: { cycleId?: string; status?: string }) =>
+    api.get<CalibrationSession[]>('/calibration/sessions', { params }),
+  getSession: (id: string) => api.get<CalibrationSession>(`/calibration/sessions/${id}`),
+  createSession: (data: CreateCalibrationSessionInput) =>
+    api.post<CalibrationSession>('/calibration/sessions', data),
+  startSession: (id: string) => api.post<CalibrationSession>(`/calibration/sessions/${id}/start`),
+  getReviewsForCalibration: (sessionId: string) =>
+    api.get<CalibrationReview[]>(`/calibration/sessions/${sessionId}/reviews`),
+  adjustRating: (sessionId: string, data: AdjustRatingInput) =>
+    api.post<CalibrationRating>(`/calibration/sessions/${sessionId}/ratings`, data),
+};
+
+// Type definitions
+export interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  tenantId: string;
+  permissions: string[];
+  displayName?: string;
+  avatarUrl?: string;
+  jobTitle?: string;
+  department?: { id: string; name: string };
+  manager?: { id: string; firstName: string; lastName: string };
+  roles: string[];
+  isActive: boolean;
+  mfaEnabled?: boolean;
+}
+
+export interface Goal {
+  id: string;
+  title: string;
+  description?: string;
+  type: string;
+  status: string;
+  priority: string;
+  progress: number;
+  targetValue?: number;
+  currentValue?: number;
+  unit?: string;
+  startDate?: string;
+  dueDate?: string;
+  owner: { id: string; firstName: string; lastName: string };
+  parentGoal?: { id: string; title: string };
+  childGoals?: Goal[];
+}
+
+export interface CreateGoalInput {
+  title: string;
+  description?: string;
+  type: string;
+  priority?: string;
+  parentGoalId?: string;
+  startDate?: string;
+  dueDate?: string;
+  targetValue?: number;
+  unit?: string;
+  weightage?: number;
+}
+
+export interface UpdateGoalInput {
+  title?: string;
+  description?: string;
+  priority?: string;
+  status?: string;
+  progress?: number;
+}
+
+export interface ReviewCycle {
+  id: string;
+  name: string;
+  description?: string;
+  type: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  reviewCount?: number;
+}
+
+export interface ReviewCycleStats {
+  total: number;
+  notStarted: number;
+  inProgress: number;
+  submitted: number;
+  calibrated: number;
+  finalized: number;
+  acknowledged: number;
+  completionRate: number;
+}
+
+export interface CreateReviewCycleInput {
+  name: string;
+  description?: string;
+  type: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface Review {
+  id: string;
+  cycleId: string;
+  reviewee: { id: string; firstName: string; lastName: string; jobTitle?: string };
+  reviewer: { id: string; firstName: string; lastName: string };
+  type: string;
+  status: string;
+  overallRating?: number;
+  content?: Record<string, unknown>;
+  strengths?: string[];
+  areasForGrowth?: string[];
+  summary?: string;
+  submittedAt?: string;
+  acknowledgedAt?: string;
+  cycle?: { id: string; name: string; status: string };
+}
+
+export interface SubmitReviewInput {
+  overallRating: number;
+  content: Record<string, unknown>;
+  strengths?: string[];
+  areasForGrowth?: string[];
+  summary?: string;
+}
+
+export interface Feedback {
+  id: string;
+  fromUser?: { id: string; firstName: string; lastName: string };
+  toUser: { id: string; firstName: string; lastName: string };
+  type: string;
+  visibility: string;
+  content: string;
+  isAnonymous: boolean;
+  tags?: string[];
+  sentiment?: string;
+  createdAt: string;
+  isAcknowledged: boolean;
+}
+
+export interface CreateFeedbackInput {
+  toUserId: string;
+  type: string;
+  visibility: string;
+  content: string;
+  isAnonymous?: boolean;
+  tags?: string[];
+}
+
+export interface TimelineEvent {
+  type: 'feedback' | 'goal_update' | 'recognition';
+  date: string;
+  data: unknown;
+}
+
+export interface CalibrationSession {
+  id: string;
+  name: string;
+  description?: string;
+  status: string;
+  scheduledStart: string;
+  facilitator: { id: string; firstName: string; lastName: string };
+  preAnalysis?: {
+    totalReviews: number;
+    outliers: unknown[];
+    biasIndicators: unknown[];
+  };
+}
+
+export interface CreateCalibrationSessionInput {
+  cycleId: string;
+  name: string;
+  scheduledStart: string;
+}
+
+export interface CalibrationReview {
+  id: string;
+  reviewee: { id: string; firstName: string; lastName: string; jobTitle?: string; level: number };
+  reviewer: { id: string; firstName: string; lastName: string };
+  overallRating?: number;
+  calibratedRating?: number;
+  status: string;
+}
+
+export interface AdjustRatingInput {
+  reviewId: string;
+  adjustedRating: number;
+  rationale: string;
+}
+
+export interface CalibrationRating {
+  id: string;
+  originalRating: number;
+  adjustedRating: number;
+  rationale: string;
+}
+
+export interface DashboardMetrics {
+  goals: {
+    total: number;
+    completed: number;
+    inProgress: number;
+    avgProgress: number;
+    onTrack: number;
+    atRisk: number;
+    overdue: number;
+  };
+  reviews: {
+    activeCycles: number;
+    completionRate: number;
+    avgRating: number;
+    pendingReviews: number;
+    submittedReviews: number;
+  };
+  feedback: {
+    total: number;
+    praiseCount: number;
+    constructiveCount: number;
+    avgSentiment: number;
+  };
+  team: {
+    totalEmployees: number;
+    activeEmployees: number;
+    avgGoalsPerEmployee: number;
+  };
+}
+
+export interface PerformanceDistribution {
+  rating: number;
+  count: number;
+  percentage: number;
+}
+
+export interface GoalTrend {
+  month: string;
+  completed: number;
+  created: number;
+  completionRate: number;
+}
+
+export interface FeedbackTrend {
+  month: string;
+  praise: number;
+  constructive: number;
+  total: number;
+}
+
+export interface TeamPerformance {
+  departmentId: string;
+  departmentName: string;
+  employeeCount: number;
+  avgGoalProgress: number;
+  avgRating: number;
+  feedbackCount: number;
+}
+
+export interface BiasMetric {
+  dimension: string;
+  category: string;
+  avgRating: number;
+  count: number;
+  variance: number;
+}
+
+export const analyticsApi = {
+  getDashboard: () => api.get<DashboardMetrics>('/analytics/dashboard'),
+  getPerformanceDistribution: (cycleId?: string) =>
+    api.get<PerformanceDistribution[]>('/analytics/performance-distribution', {
+      params: cycleId ? { cycleId } : undefined,
+    }),
+  getGoalTrends: (months?: number) =>
+    api.get<GoalTrend[]>('/analytics/goal-trends', { params: { months } }),
+  getFeedbackTrends: (months?: number) =>
+    api.get<FeedbackTrend[]>('/analytics/feedback-trends', { params: { months } }),
+  getTeamPerformance: () => api.get<TeamPerformance[]>('/analytics/team-performance'),
+  getBiasMetrics: (cycleId?: string) =>
+    api.get<BiasMetric[]>('/analytics/bias-metrics', { params: cycleId ? { cycleId } : undefined }),
+  getCycleStats: (cycleId: string) => api.get<any>(`/analytics/cycle/${cycleId}/stats`),
+  exportData: (dataType: 'goals' | 'reviews' | 'feedback') =>
+    api.getRaw(`/analytics/export/${dataType}`),
+};
+
+// ============================================================================
+// Notifications API
+// ============================================================================
+
+export interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  status: string;
+  isRead: boolean;
+  data?: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface NotificationPreferences {
+  emailEnabled: boolean;
+  pushEnabled: boolean;
+  inAppEnabled: boolean;
+  feedbackNotifications: boolean;
+  reviewNotifications: boolean;
+  goalNotifications: boolean;
+  systemNotifications: boolean;
+}
+
+export const notificationsApi = {
+  list: (params?: { page?: number; limit?: number; status?: string }) =>
+    api.getPaginated<Notification>('/notifications', params),
+  getUnreadCount: () => api.get<{ count: number }>('/notifications/unread-count'),
+  markAsRead: (id: string) => api.post(`/notifications/${id}/read`),
+  markAllAsRead: () => api.post('/notifications/read-all'),
+  getPreferences: () => api.get<NotificationPreferences>('/notifications/preferences'),
+  updatePreferences: (prefs: Partial<NotificationPreferences>) =>
+    api.put<NotificationPreferences>('/notifications/preferences', prefs),
+};
+
+// ============================================================================
+// Evidence API
+// ============================================================================
+
+export interface Evidence {
+  id: string;
+  title: string;
+  description?: string;
+  type: string;
+  source: string;
+  status: string;
+  url?: string;
+  metadata?: Record<string, unknown>;
+  userId: string;
+  user?: { id: string; firstName: string; lastName: string };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateEvidenceInput {
+  title: string;
+  description?: string;
+  type: string;
+  source: string;
+  url?: string;
+  metadata?: Record<string, unknown>;
+  userId?: string;
+}
+
+export const evidenceApi = {
+  list: (params?: { page?: number; limit?: number; type?: string; status?: string }) =>
+    api.getPaginated<Evidence>('/evidence', params),
+  getById: (id: string) => api.get<Evidence>(`/evidence/${id}`),
+  create: (data: CreateEvidenceInput) => api.post<Evidence>('/evidence', data),
+  update: (id: string, data: Partial<CreateEvidenceInput>) => api.put<Evidence>(`/evidence/${id}`, data),
+  verify: (id: string) => api.post<Evidence>(`/evidence/${id}/verify`),
+  archive: (id: string) => api.post<Evidence>(`/evidence/${id}/archive`),
+  linkToReview: (evidenceId: string, reviewId: string) =>
+    api.post('/evidence/link-to-review', { evidenceId, reviewId }),
+  getEmployeeSummary: (employeeId: string) =>
+    api.get<{ total: number; byType: Record<string, number>; byStatus: Record<string, number> }>(`/evidence/employees/${employeeId}/summary`),
+};
+
+// ============================================================================
+// Promotions API
+// ============================================================================
+
+export interface PromotionDecision {
+  id: string;
+  employeeId: string;
+  employee?: { id: string; firstName: string; lastName: string; jobTitle?: string };
+  promotionType: string;
+  currentRole?: string;
+  proposedRole?: string;
+  currentLevel?: number;
+  proposedLevel?: number;
+  status: string;
+  justification?: string;
+  effectiveDate?: string;
+  nominatedBy?: { id: string; firstName: string; lastName: string };
+  createdAt: string;
+}
+
+export interface CreatePromotionInput {
+  employeeId: string;
+  promotionType: string;
+  proposedRole?: string;
+  proposedLevel?: number;
+  justification: string;
+  effectiveDate?: string;
+}
+
+export const promotionsApi = {
+  list: (params?: { page?: number; limit?: number; status?: string }) =>
+    api.getPaginated<PromotionDecision>('/promotions', params),
+  getById: (id: string) => api.get<PromotionDecision>(`/promotions/${id}`),
+  create: (data: CreatePromotionInput) => api.post<PromotionDecision>('/promotions', data),
+  update: (id: string, data: Partial<CreatePromotionInput>) =>
+    api.put<PromotionDecision>(`/promotions/${id}`, data),
+  startReview: (id: string) => api.post<PromotionDecision>(`/promotions/${id}/start-review`),
+  approve: (id: string, data?: { notes?: string }) =>
+    api.post<PromotionDecision>(`/promotions/${id}/approve`, data),
+  reject: (id: string, data?: { reason?: string }) =>
+    api.post<PromotionDecision>(`/promotions/${id}/reject`, data),
+  defer: (id: string, data?: { reason?: string; deferUntil?: string }) =>
+    api.post<PromotionDecision>(`/promotions/${id}/defer`, data),
+  implement: (id: string) => api.post<PromotionDecision>(`/promotions/${id}/implement`),
+  getSummary: () => api.get<any>('/promotions/summary'),
+  linkEvidence: (decisionId: string, evidenceId: string) =>
+    api.post('/promotions/link-evidence', { decisionId, evidenceId }),
+};
+
+// ============================================================================
+// Compensation API
+// ============================================================================
+
+export interface CompensationDecision {
+  id: string;
+  employeeId: string;
+  employee?: { id: string; firstName: string; lastName: string; jobTitle?: string };
+  compensationType: string;
+  currentAmount?: number;
+  proposedAmount?: number;
+  currency?: string;
+  status: string;
+  justification?: string;
+  effectiveDate?: string;
+  approvedBy?: { id: string; firstName: string; lastName: string };
+  createdAt: string;
+}
+
+export interface CreateCompensationInput {
+  employeeId: string;
+  compensationType: string;
+  proposedAmount: number;
+  currency?: string;
+  justification: string;
+  effectiveDate?: string;
+}
+
+export const compensationApi = {
+  list: (params?: { page?: number; limit?: number; status?: string }) =>
+    api.getPaginated<CompensationDecision>('/compensation', params),
+  getById: (id: string) => api.get<CompensationDecision>(`/compensation/${id}`),
+  create: (data: CreateCompensationInput) => api.post<CompensationDecision>('/compensation', data),
+  update: (id: string, data: Partial<CreateCompensationInput>) =>
+    api.put<CompensationDecision>(`/compensation/${id}`, data),
+  submit: (id: string) => api.post<CompensationDecision>(`/compensation/${id}/submit`),
+  approve: (id: string, data?: { notes?: string }) =>
+    api.post<CompensationDecision>(`/compensation/${id}/approve`, data),
+  reject: (id: string, data?: { reason?: string }) =>
+    api.post<CompensationDecision>(`/compensation/${id}/reject`, data),
+  implement: (id: string) => api.post<CompensationDecision>(`/compensation/${id}/implement`),
+  getBudgetSummary: () => api.get<any>('/compensation/budget-summary'),
+  linkEvidence: (decisionId: string, evidenceId: string) =>
+    api.post('/compensation/link-evidence', { decisionId, evidenceId }),
+};
+
+// ============================================================================
+// Reports API
+// ============================================================================
+
+export interface GeneratedReport {
+  id: string;
+  reportType: string;
+  periodType?: string;
+  periodLabel?: string;
+  title: string;
+  summary?: string;
+  generationStatus: string;
+  pdfUrl?: string;
+  excelUrl?: string;
+  csvUrl?: string;
+  createdAt: string;
+  accessCount: number;
+}
+
+export interface GenerateReportInput {
+  reportType: string;
+  aggregationType?: string;
+  entityId?: string;
+  periodStart?: string;
+  periodEnd?: string;
+  exportFormats?: string[];
+  async?: boolean;
+}
+
+export const reportsApi = {
+  list: (params?: { page?: number; limit?: number; reportType?: string }) =>
+    api.getPaginated<GeneratedReport>('/reports', params),
+  getById: (id: string) => api.get<GeneratedReport>(`/reports/${id}`),
+  generate: (data: GenerateReportInput) => api.post<any>('/reports/generate', data),
+  getJobStatus: (jobId: string) => api.get<any>(`/reports/jobs/${jobId}`),
+  listSchedules: () => api.get<any[]>('/reports/schedules'),
+  createSchedule: (data: { reportDefinitionId: string; cronExpression: string; startDate: string; endDate?: string }) =>
+    api.post<any>('/reports/schedules', data),
+  pauseSchedule: (id: string) => api.post(`/reports/schedules/${id}/pause`),
+  resumeSchedule: (id: string) => api.post(`/reports/schedules/${id}/resume`),
+  deleteSchedule: (id: string) => api.delete(`/reports/schedules/${id}`),
+};
+
+// ============================================================================
+// Calendar Events API
+// ============================================================================
+
+export interface CalendarEventData {
+  id: string;
+  title: string;
+  description?: string;
+  eventDate: string;
+  startTime?: string;
+  endTime?: string;
+  allDay: boolean;
+  type: 'MEETING' | 'DEADLINE' | 'REMINDER' | 'PERSONAL' | 'GOAL_RELATED' | 'REVIEW_RELATED';
+  color?: string;
+  recurrenceRule?: string;
+  recurrenceEndDate?: string;
+  parentEventId?: string;
+  reminderMinutes: number[];
+  goalId?: string;
+  reviewCycleId?: string;
+  goal?: { id: string; title: string };
+  reviewCycle?: { id: string; name: string };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateCalendarEventInput {
+  title: string;
+  description?: string;
+  eventDate: string;
+  startTime?: string;
+  endTime?: string;
+  allDay?: boolean;
+  type: string;
+  color?: string;
+  recurrenceRule?: string;
+  recurrenceEndDate?: string;
+  reminderMinutes?: number[];
+  goalId?: string;
+  reviewCycleId?: string;
+}
+
+export interface UpdateCalendarEventInput {
+  title?: string;
+  description?: string;
+  eventDate?: string;
+  startTime?: string;
+  endTime?: string;
+  allDay?: boolean;
+  type?: string;
+  color?: string;
+  recurrenceRule?: string;
+  recurrenceEndDate?: string;
+  reminderMinutes?: number[];
+  goalId?: string | null;
+  reviewCycleId?: string | null;
+}
+
+export const calendarEventsApi = {
+  list: (params?: {
+    startDate?: string;
+    endDate?: string;
+    type?: string;
+    goalId?: string;
+    reviewCycleId?: string;
+    page?: number;
+    limit?: number;
+  }) => api.getPaginated<CalendarEventData>('/calendar/events', params),
+  getById: (id: string) => api.get<CalendarEventData>(`/calendar/events/${id}`),
+  create: (data: CreateCalendarEventInput) =>
+    api.post<CalendarEventData>('/calendar/events', data),
+  update: (id: string, data: UpdateCalendarEventInput) =>
+    api.put<CalendarEventData>(`/calendar/events/${id}`, data),
+  delete: (id: string) => api.delete(`/calendar/events/${id}`),
+};

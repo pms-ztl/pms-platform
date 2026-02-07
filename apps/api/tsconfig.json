@@ -1,0 +1,43 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "types": ["node", "express", "jest"],
+    "strict": false,
+    "noImplicitAny": false
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "src/**/*.unused",
+    "src/common/filters/**",
+    "src/common/interceptors/**",
+    "src/integrations/**",
+    "src/modules/compensation/**",
+    "src/modules/evidence/**",
+    "src/modules/promotion/**",
+    "src/modules/webhooks/**",
+    "src/modules/reports/**",
+    "src/services/actionable-insights/**",
+    "src/services/ai-insights/**",
+    "src/services/reporting/**",
+    "src/services/visualization/**",
+    "src/controllers/actionable-insights.controller.ts",
+    "src/controllers/ai-insights.controller.ts",
+    "src/test/**"
+  ],
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/database" }
+  ]
+}

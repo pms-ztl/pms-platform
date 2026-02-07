@@ -1,0 +1,152 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
+import { BullModule } from '@nestjs/bull';
+
+// Core modules
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { GoalsModule } from './modules/goals/goals.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
+import { FeedbackModule } from './modules/feedback/feedback.module';
+import { OneOnOnesModule } from './modules/one-on-ones/one-on-ones.module';
+import { CompetenciesModule } from './modules/competencies/competencies.module';
+import { CalibrationModule } from './modules/calibration/calibration.module';
+import { TeamsModule } from './modules/teams/teams.module';
+import { DepartmentsModule } from './modules/departments/departments.module';
+
+// Feature modules (46-50)
+import { PromotionsModule } from './modules/promotions/promotions.module';
+import { SuccessionModule } from './modules/succession/succession.module';
+import { DevelopmentPlansModule } from './modules/development-plans/development-plans.module';
+import { TeamOptimizationModule } from './modules/team-optimization/team-optimization.module';
+import { PIPsModule } from './modules/pips/pips.module';
+import { OrgHealthModule } from './modules/org-health/org-health.module';
+
+// Infrastructure modules
+import { WebhooksModule } from './modules/webhooks/webhooks.module';
+import { IntegrationsModule } from './modules/integrations/integrations.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { ReportsModule } from './modules/reports/reports.module';
+
+// Common modules
+import { DatabaseModule } from './common/database/database.module';
+import { CacheModule } from './common/cache/cache.module';
+import { LoggerModule } from './common/logger/logger.module';
+
+// Guards and Interceptors
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
+import { TenantGuard } from './common/guards/tenant.guard';
+import { RateLimitGuard } from './common/guards/rate-limit.guard';
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+
+@Module({
+  imports: [
+    // Configuration
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.local', '.env'],
+      expandVariables: true,
+    }),
+
+    // Throttling/Rate Limiting
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        ttl: config.get('THROTTLE_TTL') || 60,
+        limit: config.get('THROTTLE_LIMIT') || 100,
+        ignoreUserAgents: [/health-check/],
+        skipIf: () => process.env.NODE_ENV === 'test',
+      }),
+    }),
+
+    // Task Scheduling
+    ScheduleModule.forRoot(),
+
+    // Queue Management
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        redis: {
+          host: config.get('REDIS_HOST') || 'localhost',
+          port: config.get('REDIS_PORT') || 6379,
+          password: config.get('REDIS_PASSWORD'),
+          db: config.get('REDIS_QUEUE_DB') || 1,
+        },
+        defaultJobOptions: {
+          removeOnComplete: true,
+          removeOnFail: false,
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 1000,
+          },
+        },
+      }),
+    }),
+
+    // Common modules
+    DatabaseModule,
+    CacheModule,
+    LoggerModule,
+
+    // Core modules
+    AuthModule,
+    UsersModule,
+    GoalsModule,
+    ReviewsModule,
+    FeedbackModule,
+    OneOnOnesModule,
+    CompetenciesModule,
+    CalibrationModule,
+    TeamsModule,
+    DepartmentsModule,
+
+    // Feature modules (46-50)
+    PromotionsModule,
+    SuccessionModule,
+    DevelopmentPlansModule,
+    TeamOptimizationModule,
+    PIPsModule,
+    OrgHealthModule,
+
+    // Infrastructure modules
+    WebhooksModule,
+    IntegrationsModule,
+    AnalyticsModule,
+    NotificationsModule,
+    ReportsModule,
+  ],
+  providers: [
+    // Global guards
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: TenantGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RateLimitGuard,
+    },
+
+    // Global interceptors
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TimeoutInterceptor,
+    },
+  ],
+})
+export class AppModule {}

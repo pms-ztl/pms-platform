@@ -1,0 +1,89 @@
+import { createApp } from './app';
+import { config } from './config';
+import { logger } from './utils/logger';
+import { connectRedis, disconnectRedis } from './utils/redis';
+import { emailService } from './services/email';
+import { initDeadlineReminderJob } from './jobs/deadline-reminder.job';
+
+async function bootstrap(): Promise<void> {
+  const app = createApp();
+
+  // Connect to Redis
+  try {
+    await connectRedis();
+    logger.info('Connected to Redis');
+  } catch (error) {
+    logger.warn('Redis connection failed, continuing without cache', { error });
+  }
+
+  // Initialize email service
+  try {
+    const emailReady = await emailService.verifyConnection();
+    if (emailReady) {
+      logger.info('SMTP email service initialized');
+    } else {
+      logger.warn('Email service not configured - email notifications disabled');
+    }
+  } catch (error) {
+    logger.warn('Email service initialization failed', { error });
+  }
+
+  // Initialize cron jobs
+  try {
+    initDeadlineReminderJob();
+    logger.info('Cron jobs initialized');
+  } catch (error) {
+    logger.warn('Cron job initialization failed', { error });
+  }
+
+  // Start server
+  const server = app.listen(config.PORT, config.HOST, () => {
+    logger.info(`Server started`, {
+      host: config.HOST,
+      port: config.PORT,
+      environment: config.NODE_ENV,
+    });
+  });
+
+  // Graceful shutdown
+  const shutdown = async (signal: string): Promise<void> => {
+    logger.info(`${signal} received, shutting down gracefully`);
+
+    server.close(async () => {
+      logger.info('HTTP server closed');
+
+      try {
+        await disconnectRedis();
+        logger.info('Redis connection closed');
+      } catch (error) {
+        logger.error('Error closing Redis connection', { error });
+      }
+
+      process.exit(0);
+    });
+
+    // Force shutdown after 30 seconds
+    setTimeout(() => {
+      logger.error('Forced shutdown after timeout');
+      process.exit(1);
+    }, 30000);
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+
+  // Handle uncaught exceptions
+  process.on('uncaughtException', (error) => {
+    logger.error('Uncaught exception', { error });
+    process.exit(1);
+  });
+
+  process.on('unhandledRejection', (reason) => {
+    logger.error('Unhandled rejection', { reason });
+  });
+}
+
+bootstrap().catch((error) => {
+  logger.error('Failed to start server', { error });
+  process.exit(1);
+});

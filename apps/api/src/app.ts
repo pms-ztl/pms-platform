@@ -1,0 +1,204 @@
+import compression from 'compression';
+import cors from 'cors';
+import express, { type Express } from 'express';
+import helmet from 'helmet';
+import path from 'path';
+
+import { config } from './config';
+import {
+  errorHandler,
+  notFoundHandler,
+  standardRateLimiter,
+  authRateLimiter,
+} from './middleware';
+import { authRoutes } from './modules/auth';
+import { goalsRoutes } from './modules/goals';
+import { reviewsRoutes } from './modules/reviews';
+import { feedbackRoutes } from './modules/feedback';
+import { calibrationRoutes } from './modules/calibration';
+import { usersRoutes } from './modules/users';
+import { analyticsRoutes } from './modules/analytics';
+import { notificationsRoutes } from './modules/notifications';
+import { integrationsRoutes } from './modules/integrations';
+import { evidenceRoutes } from './modules/evidence';
+import { compensationRoutes } from './modules/compensation';
+import { promotionRoutes } from './modules/promotion';
+import { reportsRoutes } from './modules/reports';
+import actionableInsightsRoutes from './routes/actionable-insights.routes';
+import aiInsightsRoutes from './routes/ai-insights.routes';
+import { realtimePerformanceRoutes } from './modules/realtime-performance';
+import { calendarRoutes } from './modules/calendar';
+import { prisma } from '@pms/database';
+import { getRedisClient } from './utils/redis';
+import { logger } from './utils/logger';
+
+export function createApp(): Express {
+  const app = express();
+
+  // Security middleware
+  app.use(
+    helmet({
+      contentSecurityPolicy: process.env.NODE_ENV === 'production'
+        ? {
+            directives: {
+              defaultSrc: ["'self'"],
+              styleSrc: ["'self'", "'unsafe-inline'"],
+              scriptSrc: ["'self'", "'unsafe-inline'"],
+              imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
+              connectSrc: ["'self'", 'https:'],
+              fontSrc: ["'self'", 'data:'],
+            },
+          }
+        : {
+            directives: {
+              defaultSrc: ["'self'"],
+              styleSrc: ["'self'", "'unsafe-inline'"],
+              scriptSrc: ["'self'"],
+              imgSrc: ["'self'", 'data:', 'https:'],
+            },
+          },
+      crossOriginEmbedderPolicy: false,
+    })
+  );
+
+  // CORS configuration
+  const corsOrigins = config.CORS_ORIGINS.split(',').map((origin) => origin.trim());
+  app.use(
+    cors({
+      origin: corsOrigins,
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-ID', 'X-Request-ID'],
+      exposedHeaders: ['X-Total-Count', 'X-Request-ID'],
+      maxAge: 86400, // 24 hours
+    })
+  );
+
+  // Compression
+  app.use(compression());
+
+  // Body parsing
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+  // Serve static files for uploads
+  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
+  // Request logging
+  app.use((req, res, next) => {
+    const startTime = Date.now();
+
+    res.on('finish', () => {
+      const duration = Date.now() - startTime;
+      logger.info('HTTP Request', {
+        method: req.method,
+        path: req.path,
+        statusCode: res.statusCode,
+        duration: `${duration}ms`,
+        ip: req.ip,
+        userAgent: req.get('User-Agent'),
+      });
+    });
+
+    next();
+  });
+
+  // Health check (no rate limiting)
+  app.get('/health', (_req, res) => {
+    res.status(200).json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      version: process.env.npm_package_version ?? '1.0.0',
+    });
+  });
+
+  // Ready check (for Kubernetes) - verifies DB + Redis connectivity
+  app.get('/ready', async (_req, res) => {
+    const checks: { db: boolean; redis: boolean } = { db: false, redis: false };
+
+    // Check database connectivity
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      checks.db = true;
+    } catch (error) {
+      logger.error('Ready check: database unreachable', { error });
+    }
+
+    // Check Redis connectivity
+    try {
+      const redis = getRedisClient();
+      await redis.ping();
+      checks.redis = true;
+    } catch (error) {
+      logger.error('Ready check: Redis unreachable', { error });
+    }
+
+    const allHealthy = checks.db && checks.redis;
+    res.status(allHealthy ? 200 : 503).json({
+      status: allHealthy ? 'ready' : 'not_ready',
+      checks,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
+  // API routes with rate limiting
+  const apiRouter = express.Router();
+
+  // Auth routes with stricter rate limiting
+  apiRouter.use('/auth', authRateLimiter, authRoutes);
+
+  // Other routes with standard rate limiting
+  apiRouter.use('/goals', standardRateLimiter, goalsRoutes);
+  apiRouter.use('/reviews', standardRateLimiter, reviewsRoutes);
+  apiRouter.use('/feedback', standardRateLimiter, feedbackRoutes);
+  apiRouter.use('/calibration', standardRateLimiter, calibrationRoutes);
+  apiRouter.use('/users', standardRateLimiter, usersRoutes);
+  apiRouter.use('/analytics', standardRateLimiter, analyticsRoutes);
+  apiRouter.use('/notifications', standardRateLimiter, notificationsRoutes);
+  apiRouter.use('/integrations', standardRateLimiter, integrationsRoutes);
+  apiRouter.use('/evidence', standardRateLimiter, evidenceRoutes);
+  apiRouter.use('/compensation', standardRateLimiter, compensationRoutes);
+  apiRouter.use('/promotions', standardRateLimiter, promotionRoutes);
+  apiRouter.use('/reports', standardRateLimiter, reportsRoutes);
+  apiRouter.use('/actionable-insights', standardRateLimiter, actionableInsightsRoutes);
+  apiRouter.use('/ai-insights', standardRateLimiter, aiInsightsRoutes);
+  apiRouter.use('/realtime-performance', standardRateLimiter, realtimePerformanceRoutes);
+  apiRouter.use('/calendar/events', standardRateLimiter, calendarRoutes);
+
+  // Mount API routes
+  app.use('/api/v1', apiRouter);
+
+  // API documentation redirect
+  app.get('/api', (_req, res) => {
+    res.redirect('/api/v1/docs');
+  });
+
+  // In production, serve the frontend static files from the API server
+  // This allows a single-service deployment (no separate nginx/static host needed)
+  if (process.env.NODE_ENV === 'production') {
+    const frontendPath = path.join(process.cwd(), '..', '..', 'frontend-dist');
+    const altFrontendPath = path.join(process.cwd(), 'frontend-dist');
+
+    const staticPath = require('fs').existsSync(frontendPath) ? frontendPath : altFrontendPath;
+
+    if (require('fs').existsSync(staticPath)) {
+      app.use(express.static(staticPath, { maxAge: '1y', immutable: true }));
+
+      // SPA fallback: serve index.html for non-API routes
+      app.get('*', (req, res, next) => {
+        if (req.path.startsWith('/api') || req.path === '/health' || req.path === '/ready') {
+          return next();
+        }
+        res.sendFile(path.join(staticPath, 'index.html'));
+      });
+    }
+  }
+
+  // 404 handler
+  app.use(notFoundHandler);
+
+  // Error handler (must be last)
+  app.use(errorHandler);
+
+  return app;
+}

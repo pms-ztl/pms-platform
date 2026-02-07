@@ -1,0 +1,57 @@
+version: '3.8'
+
+# ===========================================
+# PMS Platform - Local Development Setup
+# Run: docker compose -f docker-compose.dev.yml up
+# ===========================================
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: pms-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pms_dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - pms-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: pms-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - pms-network
+
+volumes:
+  postgres_data:
+    name: pms_postgres_data
+  redis_data:
+    name: pms_redis_data
+
+networks:
+  pms-network:
+    name: pms-network
+    driver: bridge

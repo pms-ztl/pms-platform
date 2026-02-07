@@ -1,0 +1,51 @@
+# Web Frontend Dockerfile
+FROM node:20-alpine AS base
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json turbo.json ./
+COPY apps/web/package.json ./apps/web/
+COPY packages/ui/package.json ./packages/ui/
+
+# Install dependencies
+RUN npm ci
+
+# Copy source files
+COPY apps/web ./apps/web
+COPY packages/ui ./packages/ui
+COPY tsconfig.json ./
+
+# Build the application
+FROM base AS builder
+
+ARG VITE_API_URL=/api/v1
+ENV VITE_API_URL=$VITE_API_URL
+
+RUN npm run build --workspace=@pms/web
+
+# Production image with nginx
+FROM nginx:alpine AS production
+
+# Copy nginx configuration
+COPY infrastructure/docker/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built files
+COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+
+# Add non-root user
+RUN chown -R nginx:nginx /usr/share/nginx/html && \
+    chown -R nginx:nginx /var/cache/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    touch /var/run/nginx.pid && \
+    chown -R nginx:nginx /var/run/nginx.pid
+
+USER nginx
+
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:80/health || exit 1
+
+CMD ["nginx", "-g", "daemon off;"]

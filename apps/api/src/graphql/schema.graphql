@@ -1,0 +1,746 @@
+# ============================================================================
+# PMS Platform GraphQL Schema
+# ============================================================================
+
+scalar DateTime
+scalar JSON
+scalar Upload
+
+# ============================================================================
+# DIRECTIVES
+# ============================================================================
+
+directive @auth(requires: [Role!]) on FIELD_DEFINITION | OBJECT
+directive @rateLimit(limit: Int!, duration: Int!) on FIELD_DEFINITION
+directive @deprecated(reason: String!) on FIELD_DEFINITION | ENUM_VALUE
+
+# ============================================================================
+# ENUMS
+# ============================================================================
+
+enum Role {
+  ADMIN
+  HR_ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+enum GoalStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  ON_HOLD
+}
+
+enum GoalType {
+  INDIVIDUAL
+  TEAM
+  DEPARTMENT
+  COMPANY
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ReviewStatus {
+  DRAFT
+  IN_PROGRESS
+  SUBMITTED
+  APPROVED
+  CALIBRATED
+}
+
+enum ReviewType {
+  ANNUAL
+  MID_YEAR
+  QUARTERLY
+  PROBATION
+  PROJECT_END
+}
+
+enum FeedbackType {
+  POSITIVE
+  CONSTRUCTIVE
+  PEER
+  UPWARD
+  DOWNWARD
+}
+
+enum Sentiment {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+  MIXED
+}
+
+enum PIPStatus {
+  ACTIVE
+  COMPLETED
+  EXTENDED
+  UNSUCCESSFUL
+}
+
+enum PIPSeverity {
+  LOW
+  MODERATE
+  SEVERE
+}
+
+# ============================================================================
+# INPUT TYPES
+# ============================================================================
+
+input PageInput {
+  page: Int = 1
+  limit: Int = 50
+  sort: String
+  order: String = "desc"
+}
+
+input UserFilter {
+  search: String
+  departmentId: String
+  managerId: String
+  isActive: Boolean
+  roles: [Role!]
+}
+
+input GoalFilter {
+  ownerId: String
+  teamId: String
+  status: [GoalStatus!]
+  type: [GoalType!]
+  priority: [Priority!]
+  startDate: DateTime
+  endDate: DateTime
+  search: String
+}
+
+input ReviewFilter {
+  revieweeId: String
+  reviewerId: String
+  cycleId: String
+  status: [ReviewStatus!]
+  type: [ReviewType!]
+}
+
+input FeedbackFilter {
+  receiverId: String
+  giverId: String
+  type: [FeedbackType!]
+  sentiment: [Sentiment!]
+  startDate: DateTime
+  endDate: DateTime
+}
+
+input PromotionFilter {
+  userId: String
+  status: String
+  readinessScoreMin: Float
+  targetLevel: Int
+}
+
+input DevelopmentFilter {
+  userId: String
+  status: String
+  planType: String
+}
+
+input PIPFilter {
+  userId: String
+  status: [PIPStatus!]
+  severity: [PIPSeverity!]
+}
+
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  departmentId: String
+  managerId: String
+  jobTitle: String
+  level: Int
+}
+
+input UpdateUserInput {
+  firstName: String
+  lastName: String
+  departmentId: String
+  managerId: String
+  jobTitle: String
+  level: Int
+  isActive: Boolean
+}
+
+input CreateGoalInput {
+  title: String!
+  description: String
+  ownerId: String!
+  teamId: String
+  type: GoalType!
+  priority: Priority!
+  startDate: DateTime!
+  dueDate: DateTime!
+  parentId: String
+  tags: [String!]
+}
+
+input UpdateGoalInput {
+  title: String
+  description: String
+  status: GoalStatus
+  priority: Priority
+  progress: Float
+  dueDate: DateTime
+  tags: [String!]
+}
+
+input CreateReviewInput {
+  revieweeId: String!
+  reviewerId: String!
+  cycleId: String!
+  type: ReviewType!
+}
+
+input CreateFeedbackInput {
+  receiverId: String!
+  type: FeedbackType!
+  content: String!
+  visibility: String!
+  tags: [String!]
+}
+
+input PromotionInput {
+  userId: String!
+  currentRole: String!
+  currentLevel: Int!
+  targetRole: String!
+  targetLevel: Int!
+  readinessScore: Float!
+  recommendationReason: String!
+  requiredActions: [String!]
+}
+
+input DevelopmentPlanInput {
+  userId: String!
+  planType: String!
+  careerGoal: String!
+  targetRole: String
+  targetLevel: Int
+  duration: Int!
+}
+
+input CreatePIPInput {
+  userId: String!
+  pipType: String!
+  severity: PIPSeverity!
+  performanceIssues: JSON!
+  improvementGoals: JSON!
+  duration: Int!
+}
+
+input CheckInInput {
+  notes: String!
+  progress: Float!
+  achievements: [String!]
+  challenges: [String!]
+}
+
+input CreateWebhookInput {
+  name: String!
+  url: String!
+  events: [String!]!
+  headers: JSON
+}
+
+# ============================================================================
+# TYPES
+# ============================================================================
+
+type User {
+  id: ID!
+  email: String!
+  firstName: String
+  lastName: String
+  displayName: String
+  avatarUrl: String
+  jobTitle: String
+  level: Int
+  department: Department
+  manager: User
+  directReports: [User!]
+  teams: [TeamMember!]
+  roles: [UserRole!]
+  isActive: Boolean!
+  hireDate: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type UserRole {
+  role: Role!
+  assignedAt: DateTime!
+}
+
+type Department {
+  id: ID!
+  name: String!
+  code: String!
+  parent: Department
+  head: User
+  members: [User!]
+  isActive: Boolean!
+  createdAt: DateTime!
+}
+
+type Team {
+  id: ID!
+  name: String!
+  code: String!
+  type: String!
+  lead: User
+  members: [TeamMember!]
+  department: Department
+  isActive: Boolean!
+  createdAt: DateTime!
+}
+
+type TeamMember {
+  team: Team!
+  user: User!
+  role: String!
+  allocation: Int!
+  isPrimary: Boolean!
+  joinedAt: DateTime!
+}
+
+type Goal {
+  id: ID!
+  title: String!
+  description: String
+  owner: User!
+  team: Team
+  type: GoalType!
+  status: GoalStatus!
+  priority: Priority!
+  progress: Float!
+  startDate: DateTime!
+  dueDate: DateTime!
+  parent: Goal
+  children: [Goal!]
+  keyResults: [KeyResult!]
+  tags: [String!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type KeyResult {
+  id: ID!
+  goal: Goal!
+  description: String!
+  targetValue: Float!
+  currentValue: Float!
+  unit: String
+  status: String!
+  owner: User
+  createdAt: DateTime!
+}
+
+type PerformanceReview {
+  id: ID!
+  reviewee: User!
+  reviewer: User!
+  cycle: ReviewCycle!
+  type: ReviewType!
+  status: ReviewStatus!
+  overallRating: Int
+  strengths: [String!]
+  areasForImprovement: [String!]
+  recommendations: String
+  feedback: [Feedback!]
+  submittedAt: DateTime
+  approvedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ReviewCycle {
+  id: ID!
+  name: String!
+  type: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  status: String!
+  reviews: [PerformanceReview!]
+}
+
+type Feedback {
+  id: ID!
+  giver: User!
+  receiver: User!
+  type: FeedbackType!
+  content: String!
+  sentiment: Sentiment
+  rating: Int
+  visibility: String!
+  tags: [String!]
+  acknowledgedAt: DateTime
+  createdAt: DateTime!
+}
+
+type PromotionRecommendation {
+  id: ID!
+  user: User!
+  recommendedBy: User!
+  currentRole: String!
+  currentLevel: Int!
+  targetRole: String!
+  targetLevel: Int!
+  readinessScore: Float!
+  status: String!
+  recommendationReason: String!
+  requiredActions: [String!]
+  estimatedTimeframe: String
+  approvedAt: DateTime
+  createdAt: DateTime!
+}
+
+type SuccessionPlan {
+  id: ID!
+  positionId: String!
+  positionTitle: String!
+  currentIncumbent: User
+  criticality: String!
+  successors: JSON!
+  status: String!
+  createdAt: DateTime!
+}
+
+type DevelopmentPlan {
+  id: ID!
+  user: User!
+  planType: String!
+  careerGoal: String!
+  targetRole: String
+  targetLevel: Int
+  duration: Int!
+  status: String!
+  activities: JSON!
+  progress: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type TeamOptimization {
+  id: ID!
+  team: Team!
+  optimizationType: String!
+  currentComposition: JSON!
+  recommendations: JSON!
+  status: String!
+  metrics: JSON
+  createdAt: DateTime!
+}
+
+type PerformanceImprovementPlan {
+  id: ID!
+  user: User!
+  createdBy: User!
+  pipType: String!
+  severity: PIPSeverity!
+  performanceIssues: JSON!
+  improvementGoals: JSON!
+  supportProvided: [String!]
+  duration: Int!
+  status: PIPStatus!
+  startDate: DateTime!
+  endDate: DateTime!
+  checkIns: [PIPCheckIn!]
+  outcome: String
+  createdAt: DateTime!
+}
+
+type PIPCheckIn {
+  id: ID!
+  pip: PerformanceImprovementPlan!
+  checkInDate: DateTime!
+  notes: String!
+  progress: Float!
+  achievements: [String!]
+  challenges: [String!]
+  nextSteps: [String!]
+}
+
+type OrganizationalHealthMetrics {
+  id: ID!
+  period: String!
+  calculatedAt: DateTime!
+  metrics: JSON!
+  insights: JSON!
+  cultureDimensions: JSON
+  riskAreas: JSON
+}
+
+type MLModelPrediction {
+  id: ID!
+  user: User!
+  modelType: String!
+  predictionType: String!
+  score: Float!
+  confidence: Float!
+  factors: JSON!
+  recommendation: String
+  validUntil: DateTime!
+  createdAt: DateTime!
+}
+
+type Notification {
+  id: ID!
+  user: User!
+  type: String!
+  title: String!
+  message: String!
+  priority: String!
+  isRead: Boolean!
+  actionUrl: String
+  createdAt: DateTime!
+}
+
+type Webhook {
+  id: ID!
+  name: String!
+  url: String!
+  secret: String!
+  events: [String!]!
+  isActive: Boolean!
+  headers: JSON
+  deliveries: [WebhookDelivery!]
+  createdAt: DateTime!
+}
+
+type WebhookDelivery {
+  id: ID!
+  webhook: Webhook!
+  eventId: String!
+  status: String!
+  attemptNumber: Int!
+  responseStatus: Int
+  deliveredAt: DateTime
+  createdAt: DateTime!
+}
+
+type Integration {
+  id: ID!
+  provider: String!
+  status: String!
+  config: JSON
+  lastSyncAt: DateTime
+  nextSyncAt: DateTime
+  createdAt: DateTime!
+}
+
+type SyncResult {
+  success: Boolean!
+  recordsProcessed: Int!
+  recordsCreated: Int!
+  recordsUpdated: Int!
+  recordsSkipped: Int!
+  errors: [String!]
+  duration: Int!
+}
+
+# ============================================================================
+# ANALYTICS TYPES
+# ============================================================================
+
+type PerformanceDistribution {
+  exceptional: Float!
+  exceeds: Float!
+  meets: Float!
+  below: Float!
+  totalReviews: Int!
+}
+
+type EngagementDataPoint {
+  date: DateTime!
+  score: Float!
+  trend: String!
+}
+
+type AttritionPrediction {
+  user: User!
+  riskScore: Float!
+  confidence: Float!
+  factors: [String!]
+  recommendation: String!
+}
+
+# ============================================================================
+# CONNECTION TYPES
+# ============================================================================
+
+type UserConnection {
+  edges: [UserEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+type GoalConnection {
+  edges: [GoalEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type GoalEdge {
+  node: Goal!
+  cursor: String!
+}
+
+type ReviewConnection {
+  edges: [ReviewEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type ReviewEdge {
+  node: PerformanceReview!
+  cursor: String!
+}
+
+type FeedbackConnection {
+  edges: [FeedbackEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type FeedbackEdge {
+  node: Feedback!
+  cursor: String!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+# ============================================================================
+# QUERIES
+# ============================================================================
+
+type Query {
+  # Users & Identity
+  user(id: ID!): User @auth(requires: [EMPLOYEE])
+  users(filter: UserFilter, page: PageInput): UserConnection! @auth(requires: [EMPLOYEE])
+  me: User! @auth(requires: [EMPLOYEE])
+
+  # Goals
+  goal(id: ID!): Goal @auth(requires: [EMPLOYEE])
+  goals(filter: GoalFilter, page: PageInput): GoalConnection! @auth(requires: [EMPLOYEE])
+  goalAlignment(goalId: ID!): [Goal!] @auth(requires: [EMPLOYEE])
+
+  # Reviews
+  review(id: ID!): PerformanceReview @auth(requires: [EMPLOYEE])
+  reviews(filter: ReviewFilter, page: PageInput): ReviewConnection! @auth(requires: [EMPLOYEE])
+
+  # Feedback
+  feedback(id: ID!): Feedback @auth(requires: [EMPLOYEE])
+  feedbackReceived(userId: ID, page: PageInput): FeedbackConnection! @auth(requires: [EMPLOYEE])
+  feedbackGiven(userId: ID, page: PageInput): FeedbackConnection! @auth(requires: [EMPLOYEE])
+
+  # Promotions & Succession
+  promotionRecommendations(filter: PromotionFilter): [PromotionRecommendation!] @auth(requires: [MANAGER, HR_ADMIN])
+  successionPlans(filter: JSON): [SuccessionPlan!] @auth(requires: [HR_ADMIN, ADMIN])
+
+  # Development Plans
+  developmentPlan(userId: ID!): DevelopmentPlan @auth(requires: [EMPLOYEE])
+  developmentPlans(filter: DevelopmentFilter): [DevelopmentPlan!] @auth(requires: [MANAGER])
+
+  # Team Optimization
+  teamOptimization(teamId: ID!): TeamOptimization @auth(requires: [MANAGER])
+
+  # PIPs
+  performanceImprovementPlans(filter: PIPFilter): [PerformanceImprovementPlan!] @auth(requires: [MANAGER])
+
+  # Organizational Health
+  organizationalHealth(period: String): OrganizationalHealthMetrics @auth(requires: [HR_ADMIN, ADMIN])
+
+  # Analytics
+  performanceDistribution(departmentId: ID, startDate: DateTime, endDate: DateTime): PerformanceDistribution! @auth(requires: [MANAGER])
+  engagementTrends(userId: ID, departmentId: ID, period: String): [EngagementDataPoint!] @auth(requires: [MANAGER])
+  attritionRisk(departmentId: ID): [AttritionPrediction!] @auth(requires: [HR_ADMIN])
+
+  # Integrations
+  integrations: [Integration!] @auth(requires: [ADMIN])
+  integration(provider: String!): Integration @auth(requires: [ADMIN])
+}
+
+# ============================================================================
+# MUTATIONS
+# ============================================================================
+
+type Mutation {
+  # Users
+  createUser(input: CreateUserInput!): User! @auth(requires: [HR_ADMIN, ADMIN])
+  updateUser(id: ID!, input: UpdateUserInput!): User! @auth(requires: [HR_ADMIN, ADMIN])
+  deleteUser(id: ID!): Boolean! @auth(requires: [ADMIN])
+
+  # Goals
+  createGoal(input: CreateGoalInput!): Goal! @auth(requires: [EMPLOYEE])
+  updateGoal(id: ID!, input: UpdateGoalInput!): Goal! @auth(requires: [EMPLOYEE])
+  updateGoalProgress(id: ID!, progress: Float!): Goal! @auth(requires: [EMPLOYEE])
+  deleteGoal(id: ID!): Boolean! @auth(requires: [EMPLOYEE])
+
+  # Reviews
+  createReview(input: CreateReviewInput!): PerformanceReview! @auth(requires: [MANAGER])
+  submitReview(id: ID!): PerformanceReview! @auth(requires: [MANAGER])
+  approveReview(id: ID!): PerformanceReview! @auth(requires: [HR_ADMIN])
+
+  # Feedback
+  createFeedback(input: CreateFeedbackInput!): Feedback! @auth(requires: [EMPLOYEE])
+  acknowledgeFeedback(id: ID!): Feedback! @auth(requires: [EMPLOYEE])
+
+  # Promotions
+  createPromotionRecommendation(input: PromotionInput!): PromotionRecommendation! @auth(requires: [MANAGER])
+  approvePromotion(id: ID!): PromotionRecommendation! @auth(requires: [HR_ADMIN])
+
+  # Development Plans
+  createDevelopmentPlan(input: DevelopmentPlanInput!): DevelopmentPlan! @auth(requires: [MANAGER])
+  updateDevelopmentPlanProgress(id: ID!, progress: Float!): DevelopmentPlan! @auth(requires: [EMPLOYEE])
+
+  # PIPs
+  createPIP(input: CreatePIPInput!): PerformanceImprovementPlan! @auth(requires: [MANAGER])
+  addPIPCheckIn(pipId: ID!, input: CheckInInput!): PIPCheckIn! @auth(requires: [MANAGER])
+
+  # Webhooks
+  createWebhook(input: CreateWebhookInput!): Webhook! @auth(requires: [ADMIN])
+  deleteWebhook(id: ID!): Boolean! @auth(requires: [ADMIN])
+
+  # Integrations
+  connectIntegration(provider: String!, config: JSON!): Integration! @auth(requires: [ADMIN])
+  syncIntegration(provider: String!): SyncResult! @auth(requires: [ADMIN])
+}
+
+# ============================================================================
+# SUBSCRIPTIONS
+# ============================================================================
+
+type Subscription {
+  # Real-time updates
+  goalUpdated(userId: ID!): Goal! @auth(requires: [EMPLOYEE])
+  reviewStatusChanged(userId: ID!): PerformanceReview! @auth(requires: [EMPLOYEE])
+  feedbackReceived(userId: ID!): Feedback! @auth(requires: [EMPLOYEE])
+  notificationReceived(userId: ID!): Notification! @auth(requires: [EMPLOYEE])
+  teamMemberAdded(teamId: ID!): TeamMember! @auth(requires: [EMPLOYEE])
+}

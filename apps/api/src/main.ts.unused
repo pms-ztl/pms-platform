@@ -1,0 +1,202 @@
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import * as compression from 'compression';
+import helmet from 'helmet';
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+    cors: true,
+  });
+
+  const configService = app.get(ConfigService);
+
+  // Global prefix
+  app.setGlobalPrefix('api');
+
+  // API Versioning
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
+
+  // Security middleware
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+      },
+    },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+  }));
+
+  // Compression
+  app.use(compression());
+
+  // CORS configuration
+  app.enableCors({
+    origin: configService.get('CORS_ORIGINS')?.split(',') || ['http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Tenant-ID',
+      'X-API-Version',
+      'X-Request-ID',
+    ],
+    exposedHeaders: [
+      'X-Total-Count',
+      'X-Page',
+      'X-Per-Page',
+      'X-RateLimit-Limit',
+      'X-RateLimit-Remaining',
+      'X-RateLimit-Reset',
+      'Link',
+    ],
+  });
+
+  // Global validation pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      validationError: {
+        target: false,
+        value: false,
+      },
+    }),
+  );
+
+  // Global filters
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Global interceptors
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
+    new TransformInterceptor(),
+  );
+
+  // Swagger/OpenAPI documentation
+  const config = new DocumentBuilder()
+    .setTitle('PMS Platform API')
+    .setDescription('Performance Management System API - Comprehensive REST API for all PMS features')
+    .setVersion('1.0')
+    .setContact(
+      'PMS Platform Support',
+      'https://pms-platform.com',
+      'api@pms-platform.com'
+    )
+    .setLicense('Proprietary', 'https://pms-platform.com/license')
+    .addServer('https://api.pms-platform.com', 'Production')
+    .addServer('https://api-staging.pms-platform.com', 'Staging')
+    .addServer('http://localhost:3001', 'Development')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Enter JWT token',
+      },
+      'access-token',
+    )
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'X-API-Key',
+        in: 'header',
+        description: 'API Key for service-to-service authentication',
+      },
+      'api-key',
+    )
+    .addTag('Authentication', 'Authentication and authorization endpoints')
+    .addTag('Users', 'User management endpoints')
+    .addTag('Goals', 'Goals and OKR management')
+    .addTag('Reviews', 'Performance review endpoints')
+    .addTag('Feedback', '360° feedback endpoints')
+    .addTag('One-on-Ones', '1-on-1 meeting management')
+    .addTag('Competencies', 'Skills and competency management')
+    .addTag('Calibration', 'Review calibration endpoints')
+    .addTag('Promotions', 'Promotion recommendations (Feature 46)')
+    .addTag('Succession', 'Succession planning (Feature 46)')
+    .addTag('Development', 'Development plans (Feature 47)')
+    .addTag('Team Optimization', 'Team optimization (Feature 48)')
+    .addTag('PIPs', 'Performance Improvement Plans (Feature 49)')
+    .addTag('Org Health', 'Organizational health (Feature 50)')
+    .addTag('Analytics', 'Analytics and reporting')
+    .addTag('Webhooks', 'Webhook management')
+    .addTag('Integrations', 'Third-party integrations')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config, {
+    operationIdFactory: (controllerKey: string, methodKey: string) =>
+      `${controllerKey}_${methodKey}`,
+  });
+
+  SwaggerModule.setup('api/docs', app, document, {
+    customSiteTitle: 'PMS Platform API Documentation',
+    customCss: '.swagger-ui .topbar { display: none }',
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      filter: true,
+      showExtensions: true,
+      showCommonExtensions: true,
+      docExpansion: 'none',
+      defaultModelsExpandDepth: 3,
+      defaultModelExpandDepth: 3,
+    },
+  });
+
+  // Health check endpoint
+  app.getHttpAdapter().get('/health', (req, res) => {
+    res.status(200).json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: configService.get('NODE_ENV'),
+      version: configService.get('APP_VERSION') || '1.0.0',
+    });
+  });
+
+  // Graceful shutdown
+  app.enableShutdownHooks();
+
+  const port = configService.get('PORT') || 3001;
+  await app.listen(port);
+
+  console.log(`
+    ╔═══════════════════════════════════════════════════════════════╗
+    ║                                                               ║
+    ║   🚀 PMS Platform API Server                                 ║
+    ║                                                               ║
+    ║   🌐 Server: http://localhost:${port}                          ║
+    ║   📚 API Docs: http://localhost:${port}/api/docs              ║
+    ║   ❤️  Health: http://localhost:${port}/health                 ║
+    ║   🔧 Environment: ${configService.get('NODE_ENV') || 'development'}                                ║
+    ║                                                               ║
+    ╚═══════════════════════════════════════════════════════════════╝
+  `);
+}
+
+bootstrap().catch((error) => {
+  console.error('Failed to start application:', error);
+  process.exit(1);
+});

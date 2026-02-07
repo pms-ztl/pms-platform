@@ -1,0 +1,83 @@
+# Render Blueprint - PMS Platform
+# Single service serves both API + Frontend at pms.xzashr.com
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  # ---- PMS Platform (API + Frontend) ----
+  - type: web
+    name: pms-platform
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: |
+      npm ci &&
+      cd packages/database && npx prisma generate && npm run build && cd ../.. &&
+      cd packages/core && npm run build || true && cd ../.. &&
+      cd apps/web && npm run build && cd ../.. &&
+      mkdir -p apps/api/frontend-dist &&
+      cp -r apps/web/dist/* apps/api/frontend-dist/ &&
+      cd apps/api && npm run build
+    startCommand: cd packages/database && npx prisma migrate deploy && cd ../../apps/api && node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pms-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: pms-redis
+          type: redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: MFA_ISSUER
+        value: PMS Platform
+      - key: CORS_ORIGINS
+        value: https://pms.xzashr.com
+      - key: LOG_LEVEL
+        value: info
+      - key: VITE_API_URL
+        value: /api/v1
+      # SMTP - set these manually in Render dashboard
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_SECURE
+        value: "false"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        value: "PMS Platform <aerofyta@gmail.com>"
+
+  # ---- Redis ----
+  - type: redis
+    name: pms-redis
+    region: oregon
+    plan: free
+    maxmemoryPolicy: allkeys-lru
+
+# ---- PostgreSQL Database ----
+databases:
+  - name: pms-db
+    region: oregon
+    plan: free
+    databaseName: pms_production
+    user: pms_user

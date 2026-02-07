@@ -1,0 +1,2257 @@
+openapi: 3.1.0
+info:
+  title: PMS Enterprise API
+  description: |
+    Enterprise Performance Management System API
+
+    ## Authentication
+    All endpoints require authentication via Bearer token unless otherwise noted.
+    Obtain tokens via the `/auth/login` endpoint.
+
+    ## Multi-tenancy
+    Include `X-Tenant-ID` header for all requests (optional if token includes tenant context).
+
+    ## Rate Limiting
+    - Standard endpoints: 1000 requests/minute
+    - Auth endpoints: 10 requests/minute
+
+    ## Error Handling
+    All errors follow RFC 7807 Problem Details format.
+  version: 1.0.0
+  contact:
+    name: PMS API Support
+    email: api-support@pms.local
+  license:
+    name: Proprietary
+    url: https://pms.local/license
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development server
+  - url: https://api.pms.local/v1
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: Authentication and session management
+  - name: Users
+    description: User management
+  - name: Goals
+    description: Goals and OKRs management
+  - name: Reviews
+    description: Performance review cycles and reviews
+  - name: Feedback
+    description: Continuous feedback
+  - name: Calibration
+    description: Calibration sessions and ratings
+  - name: Analytics
+    description: Analytics and reporting
+  - name: Notifications
+    description: Notification management
+  - name: Integrations
+    description: Third-party integrations
+
+security:
+  - bearerAuth: []
+
+paths:
+  # ==================== AUTHENTICATION ====================
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /auth/mfa/verify:
+    post:
+      tags: [Authentication]
+      summary: Verify MFA code
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaVerifyRequest'
+      responses:
+        '200':
+          description: MFA verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Refresh access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/logout:
+    post:
+      tags: [Authentication]
+      summary: Logout and invalidate tokens
+      responses:
+        '204':
+          description: Logged out successfully
+
+  /auth/me:
+    get:
+      tags: [Authentication]
+      summary: Get current user profile
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  # ==================== USERS ====================
+  /users:
+    get:
+      tags: [Users]
+      summary: List users
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: departmentId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: User list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUsers'
+    post:
+      tags: [Users]
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{userId}:
+    parameters:
+      - $ref: '#/components/parameters/UserIdParam'
+    get:
+      tags: [Users]
+      summary: Get user by ID
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Users]
+      summary: Update user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{userId}/direct-reports:
+    parameters:
+      - $ref: '#/components/parameters/UserIdParam'
+    get:
+      tags: [Users]
+      summary: Get user's direct reports
+      responses:
+        '200':
+          description: Direct reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  # ==================== GOALS ====================
+  /goals:
+    get:
+      tags: [Goals]
+      summary: List goals
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: ownerId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/GoalStatus'
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/GoalType'
+        - name: parentGoalId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Goal list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedGoals'
+    post:
+      tags: [Goals]
+      summary: Create goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGoalRequest'
+      responses:
+        '201':
+          description: Goal created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goal'
+
+  /goals/{goalId}:
+    parameters:
+      - $ref: '#/components/parameters/GoalIdParam'
+    get:
+      tags: [Goals]
+      summary: Get goal by ID
+      responses:
+        '200':
+          description: Goal details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalWithRelations'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Goals]
+      summary: Update goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGoalRequest'
+      responses:
+        '200':
+          description: Goal updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goal'
+    delete:
+      tags: [Goals]
+      summary: Delete goal (soft delete)
+      responses:
+        '204':
+          description: Goal deleted
+
+  /goals/{goalId}/progress:
+    parameters:
+      - $ref: '#/components/parameters/GoalIdParam'
+    put:
+      tags: [Goals]
+      summary: Update goal progress
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [progress]
+              properties:
+                progress:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                currentValue:
+                  type: number
+                note:
+                  type: string
+      responses:
+        '200':
+          description: Progress updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goal'
+
+  /goals/{goalId}/align:
+    parameters:
+      - $ref: '#/components/parameters/GoalIdParam'
+    post:
+      tags: [Goals]
+      summary: Align goal to another goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [toGoalId]
+              properties:
+                toGoalId:
+                  type: string
+                  format: uuid
+                contributionWeight:
+                  type: number
+                  default: 1
+      responses:
+        '201':
+          description: Alignment created
+
+  /goals/tree:
+    get:
+      tags: [Goals]
+      summary: Get goal hierarchy tree
+      parameters:
+        - name: rootGoalId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Goal tree
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GoalTreeNode'
+
+  # ==================== REVIEWS ====================
+  /reviews/cycles:
+    get:
+      tags: [Reviews]
+      summary: List review cycles
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ReviewCycleStatus'
+      responses:
+        '200':
+          description: Review cycles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReviewCycles'
+    post:
+      tags: [Reviews]
+      summary: Create review cycle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewCycleRequest'
+      responses:
+        '201':
+          description: Cycle created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewCycle'
+
+  /reviews/cycles/{cycleId}:
+    parameters:
+      - $ref: '#/components/parameters/CycleIdParam'
+    get:
+      tags: [Reviews]
+      summary: Get review cycle by ID
+      responses:
+        '200':
+          description: Review cycle details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewCycleWithStats'
+    patch:
+      tags: [Reviews]
+      summary: Update review cycle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewCycleRequest'
+      responses:
+        '200':
+          description: Cycle updated
+
+  /reviews/cycles/{cycleId}/launch:
+    parameters:
+      - $ref: '#/components/parameters/CycleIdParam'
+    post:
+      tags: [Reviews]
+      summary: Launch review cycle
+      responses:
+        '200':
+          description: Cycle launched
+
+  /reviews:
+    get:
+      tags: [Reviews]
+      summary: List reviews
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: cycleId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: revieweeId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ReviewStatus'
+      responses:
+        '200':
+          description: Reviews
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReviews'
+
+  /reviews/{reviewId}:
+    parameters:
+      - $ref: '#/components/parameters/ReviewIdParam'
+    get:
+      tags: [Reviews]
+      summary: Get review by ID
+      responses:
+        '200':
+          description: Review details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewWithDetails'
+    patch:
+      tags: [Reviews]
+      summary: Update review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewRequest'
+      responses:
+        '200':
+          description: Review updated
+
+  /reviews/{reviewId}/submit:
+    parameters:
+      - $ref: '#/components/parameters/ReviewIdParam'
+    post:
+      tags: [Reviews]
+      summary: Submit review
+      responses:
+        '200':
+          description: Review submitted
+
+  /reviews/{reviewId}/bias-analysis:
+    parameters:
+      - $ref: '#/components/parameters/ReviewIdParam'
+    get:
+      tags: [Reviews]
+      summary: Get bias analysis for review
+      responses:
+        '200':
+          description: Bias analysis result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BiasAnalysisResult'
+
+  # ==================== FEEDBACK ====================
+  /feedback:
+    get:
+      tags: [Feedback]
+      summary: List feedback
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: toUserId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: fromUserId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/FeedbackType'
+      responses:
+        '200':
+          description: Feedback list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFeedback'
+    post:
+      tags: [Feedback]
+      summary: Give feedback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFeedbackRequest'
+      responses:
+        '201':
+          description: Feedback created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feedback'
+
+  /feedback/{feedbackId}:
+    parameters:
+      - $ref: '#/components/parameters/FeedbackIdParam'
+    get:
+      tags: [Feedback]
+      summary: Get feedback by ID
+      responses:
+        '200':
+          description: Feedback details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feedback'
+
+  /feedback/timeline/{userId}:
+    parameters:
+      - $ref: '#/components/parameters/UserIdParam'
+    get:
+      tags: [Feedback]
+      summary: Get unified feedback timeline for user
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Unified timeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackTimeline'
+
+  # ==================== CALIBRATION ====================
+  /calibration/sessions:
+    get:
+      tags: [Calibration]
+      summary: List calibration sessions
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: cycleId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/CalibrationStatus'
+      responses:
+        '200':
+          description: Calibration sessions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCalibrationSessions'
+    post:
+      tags: [Calibration]
+      summary: Create calibration session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCalibrationSessionRequest'
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalibrationSession'
+
+  /calibration/sessions/{sessionId}:
+    parameters:
+      - $ref: '#/components/parameters/SessionIdParam'
+    get:
+      tags: [Calibration]
+      summary: Get calibration session by ID
+      responses:
+        '200':
+          description: Session details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalibrationSessionWithDetails'
+
+  /calibration/sessions/{sessionId}/start:
+    parameters:
+      - $ref: '#/components/parameters/SessionIdParam'
+    post:
+      tags: [Calibration]
+      summary: Start calibration session
+      responses:
+        '200':
+          description: Session started
+
+  /calibration/sessions/{sessionId}/complete:
+    parameters:
+      - $ref: '#/components/parameters/SessionIdParam'
+    post:
+      tags: [Calibration]
+      summary: Complete calibration session
+      responses:
+        '200':
+          description: Session completed
+
+  /calibration/sessions/{sessionId}/ratings:
+    parameters:
+      - $ref: '#/components/parameters/SessionIdParam'
+    post:
+      tags: [Calibration]
+      summary: Adjust rating in calibration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustRatingRequest'
+      responses:
+        '201':
+          description: Rating adjusted
+
+  /calibration/sessions/{sessionId}/pre-analysis:
+    parameters:
+      - $ref: '#/components/parameters/SessionIdParam'
+    get:
+      tags: [Calibration]
+      summary: Get AI pre-analysis for calibration session
+      responses:
+        '200':
+          description: Pre-analysis result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalibrationPreAnalysis'
+
+  # ==================== ANALYTICS ====================
+  /analytics/overview:
+    get:
+      tags: [Analytics]
+      summary: Get analytics overview
+      responses:
+        '200':
+          description: Analytics overview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsOverview'
+
+  /analytics/goals:
+    get:
+      tags: [Analytics]
+      summary: Get goal analytics
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: departmentId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Goal analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalAnalytics'
+
+  /analytics/reviews:
+    get:
+      tags: [Analytics]
+      summary: Get review analytics
+      parameters:
+        - name: cycleId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Review analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewAnalytics'
+
+  /analytics/fairness:
+    get:
+      tags: [Analytics]
+      summary: Get fairness analytics (bias detection aggregate)
+      parameters:
+        - name: cycleId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Fairness analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FairnessAnalytics'
+
+  # ==================== NOTIFICATIONS ====================
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: List notifications
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: unreadOnly
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNotifications'
+
+  /notifications/{notificationId}/read:
+    parameters:
+      - name: notificationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Notifications]
+      summary: Mark notification as read
+      responses:
+        '200':
+          description: Marked as read
+
+  /notifications/read-all:
+    post:
+      tags: [Notifications]
+      summary: Mark all notifications as read
+      responses:
+        '200':
+          description: All marked as read
+
+  # ==================== INTEGRATIONS ====================
+  /integrations:
+    get:
+      tags: [Integrations]
+      summary: List integrations
+      responses:
+        '200':
+          description: Integrations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Integration'
+    post:
+      tags: [Integrations]
+      summary: Create integration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIntegrationRequest'
+      responses:
+        '201':
+          description: Integration created
+
+  /integrations/{integrationId}:
+    parameters:
+      - name: integrationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Integrations]
+      summary: Get integration by ID
+      responses:
+        '200':
+          description: Integration details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationWithStatus'
+    delete:
+      tags: [Integrations]
+      summary: Disconnect integration
+      responses:
+        '204':
+          description: Integration disconnected
+
+  /integrations/{integrationId}/sync:
+    parameters:
+      - name: integrationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Integrations]
+      summary: Trigger manual sync
+      responses:
+        '202':
+          description: Sync started
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    UserIdParam:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    GoalIdParam:
+      name: goalId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    CycleIdParam:
+      name: cycleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ReviewIdParam:
+      name: reviewId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    FeedbackIdParam:
+      name: feedbackId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    SessionIdParam:
+      name: sessionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    Forbidden:
+      description: Access denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationProblemDetails'
+    TooManyRequests:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+  schemas:
+    # Common
+    ProblemDetails:
+      type: object
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+
+    ValidationProblemDetails:
+      allOf:
+        - $ref: '#/components/schemas/ProblemDetails'
+        - type: object
+          properties:
+            errors:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: string
+
+    PaginationMeta:
+      type: object
+      required: [total, page, limit, totalPages, hasNextPage, hasPreviousPage]
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+        hasNextPage:
+          type: boolean
+        hasPreviousPage:
+          type: boolean
+
+    # Auth
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        tenantSlug:
+          type: string
+        mfaCode:
+          type: string
+          pattern: '^\d{6}$'
+
+    MfaVerifyRequest:
+      type: object
+      required: [tempToken, mfaCode]
+      properties:
+        tempToken:
+          type: string
+        mfaCode:
+          type: string
+          pattern: '^\d{6}$'
+
+    TokenResponse:
+      type: object
+      required: [accessToken, refreshToken, expiresIn]
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: integer
+        mfaRequired:
+          type: boolean
+        tempToken:
+          type: string
+
+    # User
+    User:
+      type: object
+      required: [id, email, firstName, lastName, tenantId]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        displayName:
+          type: string
+        avatarUrl:
+          type: string
+          format: uri
+        jobTitle:
+          type: string
+        departmentId:
+          type: string
+          format: uuid
+        managerId:
+          type: string
+          format: uuid
+        level:
+          type: integer
+        isActive:
+          type: boolean
+        mfaEnabled:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateUserRequest:
+      type: object
+      required: [email, firstName, lastName]
+      properties:
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
+          minLength: 8
+        jobTitle:
+          type: string
+        departmentId:
+          type: string
+          format: uuid
+        managerId:
+          type: string
+          format: uuid
+        roleIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        jobTitle:
+          type: string
+        departmentId:
+          type: string
+          format: uuid
+        managerId:
+          type: string
+          format: uuid
+        isActive:
+          type: boolean
+
+    PaginatedUsers:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    # Goals
+    GoalType:
+      type: string
+      enum: [INDIVIDUAL, TEAM, DEPARTMENT, COMPANY, OKR_OBJECTIVE, OKR_KEY_RESULT]
+
+    GoalStatus:
+      type: string
+      enum: [DRAFT, ACTIVE, COMPLETED, CANCELLED, ON_HOLD]
+
+    GoalPriority:
+      type: string
+      enum: [LOW, MEDIUM, HIGH, CRITICAL]
+
+    Goal:
+      type: object
+      required: [id, tenantId, ownerId, title, type, status, progress]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        ownerId:
+          type: string
+          format: uuid
+        parentGoalId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/GoalType'
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/GoalStatus'
+        priority:
+          $ref: '#/components/schemas/GoalPriority'
+        progress:
+          type: number
+          minimum: 0
+          maximum: 100
+        targetValue:
+          type: number
+        currentValue:
+          type: number
+        unit:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+        weight:
+          type: number
+        tags:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    GoalWithRelations:
+      allOf:
+        - $ref: '#/components/schemas/Goal'
+        - type: object
+          properties:
+            owner:
+              $ref: '#/components/schemas/User'
+            parentGoal:
+              $ref: '#/components/schemas/Goal'
+            childGoals:
+              type: array
+              items:
+                $ref: '#/components/schemas/Goal'
+            alignments:
+              type: array
+              items:
+                type: object
+                properties:
+                  toGoalId:
+                    type: string
+                    format: uuid
+                  toGoalTitle:
+                    type: string
+                  contributionWeight:
+                    type: number
+
+    GoalTreeNode:
+      allOf:
+        - $ref: '#/components/schemas/Goal'
+        - type: object
+          properties:
+            children:
+              type: array
+              items:
+                $ref: '#/components/schemas/GoalTreeNode'
+
+    CreateGoalRequest:
+      type: object
+      required: [title, type]
+      properties:
+        title:
+          type: string
+          maxLength: 500
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/GoalType'
+        priority:
+          $ref: '#/components/schemas/GoalPriority'
+        parentGoalId:
+          type: string
+          format: uuid
+        startDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+        targetValue:
+          type: number
+        unit:
+          type: string
+        weight:
+          type: number
+        tags:
+          type: array
+          items:
+            type: string
+
+    UpdateGoalRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/GoalStatus'
+        priority:
+          $ref: '#/components/schemas/GoalPriority'
+        progress:
+          type: number
+          minimum: 0
+          maximum: 100
+        currentValue:
+          type: number
+        dueDate:
+          type: string
+          format: date-time
+        weight:
+          type: number
+        tags:
+          type: array
+          items:
+            type: string
+
+    PaginatedGoals:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Goal'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    # Reviews
+    ReviewCycleStatus:
+      type: string
+      enum: [DRAFT, SCHEDULED, SELF_ASSESSMENT, MANAGER_REVIEW, CALIBRATION, FINALIZATION, SHARING, COMPLETED, CANCELLED]
+
+    ReviewCycleType:
+      type: string
+      enum: [ANNUAL, SEMI_ANNUAL, QUARTERLY, PROBATION, PROJECT, AD_HOC]
+
+    ReviewStatus:
+      type: string
+      enum: [NOT_STARTED, IN_PROGRESS, SUBMITTED, CALIBRATED, FINALIZED, ACKNOWLEDGED]
+
+    ReviewType:
+      type: string
+      enum: [SELF, MANAGER, PEER, UPWARD, EXTERNAL, THREE_SIXTY]
+
+    ReviewCycle:
+      type: object
+      required: [id, tenantId, name, type, status, startDate, endDate]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/ReviewCycleType'
+        status:
+          $ref: '#/components/schemas/ReviewCycleStatus'
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        selfAssessmentStart:
+          type: string
+          format: date-time
+        selfAssessmentEnd:
+          type: string
+          format: date-time
+        managerReviewStart:
+          type: string
+          format: date-time
+        managerReviewEnd:
+          type: string
+          format: date-time
+        calibrationStart:
+          type: string
+          format: date-time
+        calibrationEnd:
+          type: string
+          format: date-time
+        includeGoals:
+          type: boolean
+        includeFeedback:
+          type: boolean
+        include360:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    ReviewCycleWithStats:
+      allOf:
+        - $ref: '#/components/schemas/ReviewCycle'
+        - type: object
+          properties:
+            stats:
+              type: object
+              properties:
+                totalParticipants:
+                  type: integer
+                selfAssessmentCompleted:
+                  type: integer
+                managerReviewCompleted:
+                  type: integer
+                calibrationCompleted:
+                  type: integer
+                overallCompletionRate:
+                  type: number
+
+    CreateReviewCycleRequest:
+      type: object
+      required: [name, type, startDate, endDate]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/ReviewCycleType'
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        selfAssessmentStart:
+          type: string
+          format: date-time
+        selfAssessmentEnd:
+          type: string
+          format: date-time
+        managerReviewStart:
+          type: string
+          format: date-time
+        managerReviewEnd:
+          type: string
+          format: date-time
+        includeGoals:
+          type: boolean
+        includeFeedback:
+          type: boolean
+        include360:
+          type: boolean
+        templateId:
+          type: string
+          format: uuid
+
+    UpdateReviewCycleRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        endDate:
+          type: string
+          format: date-time
+
+    PaginatedReviewCycles:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewCycle'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    Review:
+      type: object
+      required: [id, tenantId, cycleId, revieweeId, reviewerId, type, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        cycleId:
+          type: string
+          format: uuid
+        revieweeId:
+          type: string
+          format: uuid
+        reviewerId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/ReviewType'
+        status:
+          $ref: '#/components/schemas/ReviewStatus'
+        overallRating:
+          type: number
+        calibratedRating:
+          type: number
+        content:
+          type: object
+        strengths:
+          type: array
+          items:
+            type: string
+        areasForGrowth:
+          type: array
+          items:
+            type: string
+        summary:
+          type: string
+        submittedAt:
+          type: string
+          format: date-time
+        biasScore:
+          type: number
+
+    ReviewWithDetails:
+      allOf:
+        - $ref: '#/components/schemas/Review'
+        - type: object
+          properties:
+            reviewee:
+              $ref: '#/components/schemas/User'
+            reviewer:
+              $ref: '#/components/schemas/User'
+            cycle:
+              $ref: '#/components/schemas/ReviewCycle'
+            goals:
+              type: array
+              items:
+                type: object
+                properties:
+                  goalId:
+                    type: string
+                    format: uuid
+                  goalTitle:
+                    type: string
+                  rating:
+                    type: number
+                  comment:
+                    type: string
+
+    UpdateReviewRequest:
+      type: object
+      properties:
+        content:
+          type: object
+        overallRating:
+          type: number
+          minimum: 1
+          maximum: 5
+        strengths:
+          type: array
+          items:
+            type: string
+        areasForGrowth:
+          type: array
+          items:
+            type: string
+        summary:
+          type: string
+
+    PaginatedReviews:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    BiasAnalysisResult:
+      type: object
+      required: [overallScore, indicators]
+      properties:
+        overallScore:
+          type: number
+          minimum: 0
+          maximum: 100
+        indicators:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              phrase:
+                type: string
+              severity:
+                type: string
+                enum: [low, medium, high]
+              suggestion:
+                type: string
+              explanation:
+                type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    # Feedback
+    FeedbackType:
+      type: string
+      enum: [PRAISE, CONSTRUCTIVE, SUGGESTION, REQUEST, RECOGNITION]
+
+    FeedbackVisibility:
+      type: string
+      enum: [PRIVATE, MANAGER_VISIBLE, PUBLIC]
+
+    Feedback:
+      type: object
+      required: [id, tenantId, fromUserId, toUserId, type, content]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        fromUserId:
+          type: string
+          format: uuid
+        toUserId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/FeedbackType'
+        visibility:
+          $ref: '#/components/schemas/FeedbackVisibility'
+        content:
+          type: string
+        isAnonymous:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+        sentiment:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateFeedbackRequest:
+      type: object
+      required: [toUserId, type, content]
+      properties:
+        toUserId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/FeedbackType'
+        visibility:
+          $ref: '#/components/schemas/FeedbackVisibility'
+        content:
+          type: string
+          minLength: 10
+          maxLength: 5000
+        isAnonymous:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+        valueTags:
+          type: array
+          items:
+            type: string
+        skillTags:
+          type: array
+          items:
+            type: string
+
+    PaginatedFeedback:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Feedback'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    FeedbackTimeline:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              type:
+                type: string
+                enum: [feedback, recognition, goal_update, review]
+              date:
+                type: string
+                format: date-time
+              content:
+                type: object
+              aiCategory:
+                type: string
+              sentiment:
+                type: string
+        summary:
+          type: object
+          properties:
+            totalItems:
+              type: integer
+            byType:
+              type: object
+              additionalProperties:
+                type: integer
+            themes:
+              type: array
+              items:
+                type: string
+
+    # Calibration
+    CalibrationStatus:
+      type: string
+      enum: [SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED]
+
+    CalibrationSession:
+      type: object
+      required: [id, tenantId, cycleId, name, facilitatorId, status, scheduledStart]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        cycleId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        facilitatorId:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/CalibrationStatus'
+        scheduledStart:
+          type: string
+          format: date-time
+        scheduledEnd:
+          type: string
+          format: date-time
+        actualStart:
+          type: string
+          format: date-time
+        actualEnd:
+          type: string
+          format: date-time
+        departmentScope:
+          type: array
+          items:
+            type: string
+        levelScope:
+          type: array
+          items:
+            type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    CalibrationSessionWithDetails:
+      allOf:
+        - $ref: '#/components/schemas/CalibrationSession'
+        - type: object
+          properties:
+            facilitator:
+              $ref: '#/components/schemas/User'
+            participants:
+              type: array
+              items:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  role:
+                    type: string
+            reviews:
+              type: array
+              items:
+                $ref: '#/components/schemas/Review'
+            ratings:
+              type: array
+              items:
+                type: object
+                properties:
+                  reviewId:
+                    type: string
+                    format: uuid
+                  originalRating:
+                    type: number
+                  adjustedRating:
+                    type: number
+                  rationale:
+                    type: string
+
+    CreateCalibrationSessionRequest:
+      type: object
+      required: [cycleId, name, scheduledStart]
+      properties:
+        cycleId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        scheduledStart:
+          type: string
+          format: date-time
+        scheduledEnd:
+          type: string
+          format: date-time
+        departmentScope:
+          type: array
+          items:
+            type: string
+        levelScope:
+          type: array
+          items:
+            type: integer
+        participantIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    AdjustRatingRequest:
+      type: object
+      required: [reviewId, adjustedRating, rationale]
+      properties:
+        reviewId:
+          type: string
+          format: uuid
+        adjustedRating:
+          type: number
+          minimum: 1
+          maximum: 5
+        rationale:
+          type: string
+          minLength: 10
+        discussionNotes:
+          type: string
+
+    PaginatedCalibrationSessions:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalibrationSession'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    CalibrationPreAnalysis:
+      type: object
+      properties:
+        outliers:
+          type: array
+          items:
+            type: object
+            properties:
+              reviewId:
+                type: string
+                format: uuid
+              revieweeName:
+                type: string
+              rating:
+                type: number
+              outlierType:
+                type: string
+                enum: [high, low]
+              deviation:
+                type: number
+              suggestedDiscussion:
+                type: string
+        biasAlerts:
+          type: array
+          items:
+            type: object
+            properties:
+              alertType:
+                type: string
+              severity:
+                type: string
+              description:
+                type: string
+              affectedReviewIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+        distributionAnalysis:
+          type: object
+          properties:
+            mean:
+              type: number
+            median:
+              type: number
+            standardDeviation:
+              type: number
+            distribution:
+              type: object
+              additionalProperties:
+                type: integer
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    # Analytics
+    AnalyticsOverview:
+      type: object
+      properties:
+        goals:
+          type: object
+          properties:
+            total:
+              type: integer
+            active:
+              type: integer
+            completed:
+              type: integer
+            averageProgress:
+              type: number
+        reviews:
+          type: object
+          properties:
+            activeCycles:
+              type: integer
+            pendingReviews:
+              type: integer
+            completedReviews:
+              type: integer
+            overallCompletionRate:
+              type: number
+        feedback:
+          type: object
+          properties:
+            totalThisMonth:
+              type: integer
+            praiseCount:
+              type: integer
+            constructiveCount:
+              type: integer
+        engagement:
+          type: object
+          properties:
+            activeUsers:
+              type: integer
+            weeklyActivityRate:
+              type: number
+
+    GoalAnalytics:
+      type: object
+      properties:
+        summary:
+          type: object
+          properties:
+            total:
+              type: integer
+            byStatus:
+              type: object
+              additionalProperties:
+                type: integer
+            byType:
+              type: object
+              additionalProperties:
+                type: integer
+            averageProgress:
+              type: number
+        trends:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+              created:
+                type: integer
+              completed:
+                type: integer
+              averageProgress:
+                type: number
+        alignment:
+          type: object
+          properties:
+            alignedGoals:
+              type: integer
+            unalignedGoals:
+              type: integer
+            alignmentRate:
+              type: number
+
+    ReviewAnalytics:
+      type: object
+      properties:
+        completion:
+          type: object
+          properties:
+            selfAssessment:
+              type: number
+            managerReview:
+              type: number
+            overall:
+              type: number
+        ratings:
+          type: object
+          properties:
+            distribution:
+              type: object
+              additionalProperties:
+                type: integer
+            average:
+              type: number
+            median:
+              type: number
+        timeliness:
+          type: object
+          properties:
+            onTime:
+              type: integer
+            late:
+              type: integer
+            averageDaysToComplete:
+              type: number
+
+    FairnessAnalytics:
+      type: object
+      properties:
+        overallScore:
+          type: number
+        biasIndicators:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              count:
+                type: integer
+              percentage:
+                type: number
+        reviewerAnalysis:
+          type: array
+          items:
+            type: object
+            properties:
+              reviewerId:
+                type: string
+                format: uuid
+              averageScore:
+                type: number
+              commonBiases:
+                type: array
+                items:
+                  type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    # Notifications
+    Notification:
+      type: object
+      required: [id, userId, type, title, body]
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        data:
+          type: object
+        channel:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, SENT, FAILED, READ]
+        sentAt:
+          type: string
+          format: date-time
+        readAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    PaginatedNotifications:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+
+    # Integrations
+    IntegrationStatus:
+      type: string
+      enum: [ACTIVE, INACTIVE, ERROR, PENDING_AUTH]
+
+    Integration:
+      type: object
+      required: [id, tenantId, type, name, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        tenantId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [workday, sap, bamboohr, adp, slack, teams, jira, okta, azure_ad]
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/IntegrationStatus'
+        lastSyncAt:
+          type: string
+          format: date-time
+        lastError:
+          type: string
+        syncFrequency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    IntegrationWithStatus:
+      allOf:
+        - $ref: '#/components/schemas/Integration'
+        - type: object
+          properties:
+            syncStats:
+              type: object
+              properties:
+                lastSyncRecordsProcessed:
+                  type: integer
+                lastSyncRecordsFailed:
+                  type: integer
+                totalSyncs:
+                  type: integer
+                successRate:
+                  type: number
+
+    CreateIntegrationRequest:
+      type: object
+      required: [type, name]
+      properties:
+        type:
+          type: string
+        name:
+          type: string
+        config:
+          type: object
+        syncFrequency:
+          type: string
+          enum: [realtime, hourly, daily, weekly]
