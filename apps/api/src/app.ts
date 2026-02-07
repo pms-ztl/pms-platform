@@ -40,19 +40,23 @@ export function createApp(): Express {
         ? {
             directives: {
               defaultSrc: ["'self'"],
-              styleSrc: ["'self'", "'unsafe-inline'"],
+              styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+              styleSrcElem: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
               scriptSrc: ["'self'", "'unsafe-inline'"],
               imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
-              connectSrc: ["'self'", 'https:'],
-              fontSrc: ["'self'", 'data:'],
+              connectSrc: ["'self'", 'https:', 'wss:'],
+              fontSrc: ["'self'", 'data:', 'https://fonts.gstatic.com'],
             },
           }
         : {
             directives: {
               defaultSrc: ["'self'"],
-              styleSrc: ["'self'", "'unsafe-inline'"],
+              styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+              styleSrcElem: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
               scriptSrc: ["'self'"],
               imgSrc: ["'self'", 'data:', 'https:'],
+              fontSrc: ["'self'", 'data:', 'https://fonts.gstatic.com'],
+              connectSrc: ["'self'", 'ws:', 'wss:'],
             },
           },
       crossOriginEmbedderPolicy: false,
@@ -177,11 +181,29 @@ export function createApp(): Express {
     const staticPath = fs.existsSync(frontendPath) ? frontendPath : altFrontendPath;
 
     if (fs.existsSync(staticPath)) {
-      app.use(express.static(staticPath, { maxAge: '1y', immutable: true }));
+      // Serve static assets with correct MIME types
+      app.use(express.static(staticPath, {
+        maxAge: '1y',
+        immutable: true,
+        setHeaders: (res, filePath) => {
+          // Ensure correct Content-Type for common assets
+          if (filePath.endsWith('.css')) res.setHeader('Content-Type', 'text/css');
+          else if (filePath.endsWith('.js')) res.setHeader('Content-Type', 'application/javascript');
+          else if (filePath.endsWith('.svg')) res.setHeader('Content-Type', 'image/svg+xml');
+          else if (filePath.endsWith('.json')) res.setHeader('Content-Type', 'application/json');
+          else if (filePath.endsWith('.woff2')) res.setHeader('Content-Type', 'font/woff2');
+          else if (filePath.endsWith('.woff')) res.setHeader('Content-Type', 'font/woff');
+        },
+      }));
 
-      // SPA fallback: serve index.html for non-API routes
+      // SPA fallback: serve index.html for non-API, non-asset routes
       app.get('*', (req, res, next) => {
+        // Skip API routes
         if (req.path.startsWith('/api') || req.path === '/health' || req.path === '/ready') {
+          return next();
+        }
+        // Don't serve index.html for missing static assets — return 404 instead
+        if (/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff2?|ttf|eot|map|json)$/i.test(req.path)) {
           return next();
         }
         res.sendFile(path.join(staticPath, 'index.html'));
