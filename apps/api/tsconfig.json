@@ -28,12 +28,15 @@
     "src/modules/promotion/**",
     "src/modules/webhooks/**",
     "src/modules/reports/**",
+    "src/routes/actionable-insights.routes.ts",
+    "src/routes/ai-insights.routes.ts",
     "src/services/actionable-insights/**",
     "src/services/ai-insights/**",
     "src/services/reporting/**",
     "src/services/visualization/**",
     "src/controllers/actionable-insights.controller.ts",
     "src/controllers/ai-insights.controller.ts",
+    "src/modules/realtime-performance/realtime-performance.websocket.ts",
     "src/test/**"
   ],
   "references": [

@@ -4,7 +4,9 @@
   "description": "Enterprise Performance Management System",
   "private": true,
   "workspaces": [
-    "apps/*",
+    "apps/api",
+    "apps/web",
+    "apps/admin",
     "packages/*"
   ],
   "scripts": {
@@ -22,11 +24,9 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
-    "eslint": "^9.39.2",
     "prettier": "^3.2.4",
     "turbo": "^1.11.0",
-    "typescript": "^5.3.3",
-    "vite": "^7.3.1"
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0",

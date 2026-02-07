@@ -22,8 +22,6 @@
     "clsx": "^2.1.0",
     "d3": "^7.9.0",
     "date-fns": "^3.2.0",
-    "eslint": "9.39.2",
-    "expo-notifications": "0.32.16",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.1.0",
     "qrcode.react": "^4.2.0",

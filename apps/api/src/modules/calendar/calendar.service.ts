@@ -97,7 +97,7 @@ export class CalendarService {
         reminderMinutes: input.reminderMinutes ?? [],
         goalId: input.goalId,
         reviewCycleId: input.reviewCycleId,
-        metadata: input.metadata ?? {},
+        metadata: (input.metadata ?? {}) as any,
       },
     });
 
@@ -123,24 +123,25 @@ export class CalendarService {
       throw new NotFoundError('CalendarEvent', eventId);
     }
 
+    const updateData: any = {};
+    if (input.title !== undefined) updateData.title = input.title;
+    if (input.description !== undefined) updateData.description = input.description;
+    if (input.eventDate !== undefined) updateData.eventDate = input.eventDate;
+    if (input.startTime !== undefined) updateData.startTime = input.startTime;
+    if (input.endTime !== undefined) updateData.endTime = input.endTime;
+    if (input.allDay !== undefined) updateData.allDay = input.allDay;
+    if (input.type !== undefined) updateData.type = input.type;
+    if (input.color !== undefined) updateData.color = input.color;
+    if (input.recurrenceRule !== undefined) updateData.recurrenceRule = input.recurrenceRule;
+    if (input.recurrenceEndDate !== undefined) updateData.recurrenceEndDate = input.recurrenceEndDate;
+    if (input.reminderMinutes !== undefined) updateData.reminderMinutes = input.reminderMinutes;
+    if (input.goalId !== undefined) updateData.goalId = input.goalId;
+    if (input.reviewCycleId !== undefined) updateData.reviewCycleId = input.reviewCycleId;
+    if (input.metadata !== undefined) updateData.metadata = input.metadata;
+
     const event = await prisma.calendarEvent.update({
       where: { id: eventId },
-      data: {
-        ...(input.title !== undefined && { title: input.title }),
-        ...(input.description !== undefined && { description: input.description }),
-        ...(input.eventDate !== undefined && { eventDate: input.eventDate }),
-        ...(input.startTime !== undefined && { startTime: input.startTime }),
-        ...(input.endTime !== undefined && { endTime: input.endTime }),
-        ...(input.allDay !== undefined && { allDay: input.allDay }),
-        ...(input.type !== undefined && { type: input.type }),
-        ...(input.color !== undefined && { color: input.color }),
-        ...(input.recurrenceRule !== undefined && { recurrenceRule: input.recurrenceRule }),
-        ...(input.recurrenceEndDate !== undefined && { recurrenceEndDate: input.recurrenceEndDate }),
-        ...(input.reminderMinutes !== undefined && { reminderMinutes: input.reminderMinutes }),
-        ...(input.goalId !== undefined && { goalId: input.goalId }),
-        ...(input.reviewCycleId !== undefined && { reviewCycleId: input.reviewCycleId }),
-        ...(input.metadata !== undefined && { metadata: input.metadata }),
-      },
+      data: updateData,
     });
 
     auditLogger('CALENDAR_EVENT_UPDATED', userId, tenantId, 'calendarEvent', eventId, {

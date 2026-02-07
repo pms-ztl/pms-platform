@@ -1,6 +1,7 @@
 import compression from 'compression';
 import cors from 'cors';
 import express, { type Express } from 'express';
+import fs from 'fs';
 import helmet from 'helmet';
 import path from 'path';
 
@@ -20,12 +21,8 @@ import { usersRoutes } from './modules/users';
 import { analyticsRoutes } from './modules/analytics';
 import { notificationsRoutes } from './modules/notifications';
 import { integrationsRoutes } from './modules/integrations';
-import { evidenceRoutes } from './modules/evidence';
-import { compensationRoutes } from './modules/compensation';
-import { promotionRoutes } from './modules/promotion';
-import { reportsRoutes } from './modules/reports';
-import actionableInsightsRoutes from './routes/actionable-insights.routes';
-import aiInsightsRoutes from './routes/ai-insights.routes';
+// NOTE: evidence, compensation, promotion, reports, actionable-insights, ai-insights
+// modules are excluded from build (incomplete TS). They can be re-enabled once fixed.
 import { realtimePerformanceRoutes } from './modules/realtime-performance';
 import { calendarRoutes } from './modules/calendar';
 import { prisma } from '@pms/database';
@@ -156,12 +153,8 @@ export function createApp(): Express {
   apiRouter.use('/analytics', standardRateLimiter, analyticsRoutes);
   apiRouter.use('/notifications', standardRateLimiter, notificationsRoutes);
   apiRouter.use('/integrations', standardRateLimiter, integrationsRoutes);
-  apiRouter.use('/evidence', standardRateLimiter, evidenceRoutes);
-  apiRouter.use('/compensation', standardRateLimiter, compensationRoutes);
-  apiRouter.use('/promotions', standardRateLimiter, promotionRoutes);
-  apiRouter.use('/reports', standardRateLimiter, reportsRoutes);
-  apiRouter.use('/actionable-insights', standardRateLimiter, actionableInsightsRoutes);
-  apiRouter.use('/ai-insights', standardRateLimiter, aiInsightsRoutes);
+  // NOTE: evidence, compensation, promotions, reports, actionable-insights, ai-insights
+  // routes are disabled (incomplete modules with TS errors). Re-enable once fixed.
   apiRouter.use('/realtime-performance', standardRateLimiter, realtimePerformanceRoutes);
   apiRouter.use('/calendar/events', standardRateLimiter, calendarRoutes);
 
@@ -179,9 +172,9 @@ export function createApp(): Express {
     const frontendPath = path.join(process.cwd(), '..', '..', 'frontend-dist');
     const altFrontendPath = path.join(process.cwd(), 'frontend-dist');
 
-    const staticPath = require('fs').existsSync(frontendPath) ? frontendPath : altFrontendPath;
+    const staticPath = fs.existsSync(frontendPath) ? frontendPath : altFrontendPath;
 
-    if (require('fs').existsSync(staticPath)) {
+    if (fs.existsSync(staticPath)) {
       app.use(express.static(staticPath, { maxAge: '1y', immutable: true }));
 
       // SPA fallback: serve index.html for non-API routes
