@@ -274,6 +274,7 @@ export class PerformanceMathController {
         },
         select: {
           id: true,
+          title: true,
           progress: true,
           startDate: true,
           dueDate: true,
@@ -383,6 +384,7 @@ export class PerformanceMathController {
         success: true,
         data: {
           goalId,
+          goalTitle: goal.title,
           ...result,
           metadata: {
             totalProgressUpdates: goal.progressUpdates.length,

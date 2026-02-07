@@ -646,24 +646,31 @@ export function DashboardPage() {
             ))}
 
             {/* At-risk goals as action items */}
-            {atRiskGoals.slice(0, 2).map((risk: any) => (
-              <div
-                key={risk.goalId}
-                className="p-4 rounded-xl bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200/50 dark:border-red-800/50"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg shadow">
-                    <ExclamationTriangleIcon className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{risk.goalTitle}</p>
-                    <p className="text-xs text-red-600 dark:text-red-400 mt-0.5">
-                      Risk: {risk.riskScore}% &bull; Needs {risk.requiredVelocity}%/day to finish on time
-                    </p>
+            {atRiskGoals.slice(0, 2).map((risk: any) => {
+              const goalTitle = goalsData?.data?.find((g: any) => g.id === risk.goalId)?.title || 'Goal needs attention';
+              const velocity = risk.requiredVelocity;
+              const velocityText = !velocity || !isFinite(velocity) || velocity >= 999
+                ? 'Past due — immediate action needed'
+                : `Needs ${velocity.toFixed(1)}%/day to finish on time`;
+              return (
+                <div
+                  key={risk.goalId}
+                  className="p-4 rounded-xl bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200/50 dark:border-red-800/50"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg shadow">
+                      <ExclamationTriangleIcon className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{goalTitle}</p>
+                      <p className="text-xs text-red-600 dark:text-red-400 mt-0.5">
+                        Risk: {risk.riskScore}% &bull; {velocityText}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {pendingReviews.length === 0 && atRiskGoals.length === 0 && (
               <div className="text-center py-8">

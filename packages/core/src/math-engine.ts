@@ -749,12 +749,16 @@ export function assessGoalRisk(input: GoalRiskInput): GoalRiskResult {
   // Current velocity using EWMA
   const currentVelocity = velocityHistory.length > 0 ? ewma(velocityHistory, 0.4) : 0;
 
-  // Required velocity
+  // Required velocity (cap to finite value for display safety)
   const remainingProgress = 100 - progress;
-  const requiredVelocity = daysRemaining > 0 ? remainingProgress / daysRemaining : Infinity;
+  const requiredVelocity = daysRemaining > 0
+    ? remainingProgress / daysRemaining
+    : (remainingProgress > 0 ? 999 : 0); // 999 = past due, 0 = already complete
 
   // Days needed at current pace
-  const daysNeededAtCurrentPace = currentVelocity > 0 ? remainingProgress / currentVelocity : Infinity;
+  const daysNeededAtCurrentPace = currentVelocity > 0
+    ? remainingProgress / currentVelocity
+    : (remainingProgress > 0 ? 9999 : 0);
 
   // Projected completion at deadline
   const projectedCompletion = Math.min(100, progress + currentVelocity * daysRemaining);
