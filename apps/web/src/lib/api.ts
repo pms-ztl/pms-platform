@@ -865,3 +865,108 @@ export const calendarEventsApi = {
     api.put<CalendarEventData>(`/calendar/events/${id}`, data),
   delete: (id: string) => api.delete(`/calendar/events/${id}`),
 };
+
+// ============================================================================
+// Performance Math API (Mathematical Engine)
+// ============================================================================
+
+export interface PerformanceScoreResult {
+  overallScore: number;
+  goalAttainment: number;
+  reviewScore: number;
+  feedbackScore: number;
+  percentile: number | null;
+  trajectory: number;
+  confidence: number;
+  weights: { goals: number; reviews: number; feedback: number; attendance: number; collaboration: number };
+  derivedRating: number;
+  dataPoints: { goals: number; reviews: number; feedbacks: number };
+}
+
+export interface GoalRiskResult {
+  goalId: string;
+  goalTitle: string;
+  riskScore: number;
+  riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  components: {
+    scheduleRisk: number;
+    velocityRisk: number;
+    dependencyRisk: number;
+    complexityRisk: number;
+  };
+  projectedCompletion: number;
+  requiredVelocity: number;
+  currentVelocity: number;
+  daysNeededAtCurrentPace: number;
+  daysRemaining: number;
+}
+
+export interface TeamAnalyticsResult {
+  managerId: string;
+  teamSize: number;
+  avgScore: number;
+  scoreSpread: number;
+  ratingEntropy: number;
+  giniCoefficient: number;
+  velocityTrend: number;
+  predictedNextAvg: number;
+  memberZScores: Array<{
+    userId: string;
+    name: string;
+    score: number;
+    zScore: number;
+    category: 'high' | 'average' | 'low';
+  }>;
+}
+
+export interface GoalMappingResult {
+  goalId: string;
+  goalTitle: string;
+  completionScore: number;
+  qualityAdjustedScore: number;
+  timelinessFactor: number;
+  compositeScore: number;
+  velocity: number;
+  predictedCompletionDate: string | null;
+  riskScore: number;
+  efficiency: number;
+  childGoals: Array<{
+    goalId: string;
+    title: string;
+    progress: number;
+    weight: number;
+    weightedContribution: number;
+  }>;
+}
+
+export interface CalibrationResult {
+  cycleId: string;
+  totalRatings: number;
+  calibrations: Array<{
+    reviewId: string;
+    revieweeName: string;
+    reviewerName: string;
+    originalRating: number;
+    calibratedRating: number;
+    adjustment: number;
+  }>;
+  statistics: {
+    avgOriginal: number;
+    avgCalibrated: number;
+    stdDevOriginal: number;
+    stdDevCalibrated: number;
+  };
+}
+
+export const performanceMathApi = {
+  getScore: (userId: string) =>
+    api.get<PerformanceScoreResult>(`/performance-math/score/${userId}`),
+  getGoalRisk: (goalId: string) =>
+    api.get<GoalRiskResult>(`/performance-math/goal-risk/${goalId}`),
+  getTeamAnalytics: (managerId: string) =>
+    api.get<TeamAnalyticsResult>(`/performance-math/team/${managerId}`),
+  calibrateRatings: (cycleId: string) =>
+    api.post<CalibrationResult>('/performance-math/calibrate', { cycleId }),
+  getGoalMapping: (goalId: string) =>
+    api.get<GoalMappingResult>(`/performance-math/goal-mapping/${goalId}`),
+};
