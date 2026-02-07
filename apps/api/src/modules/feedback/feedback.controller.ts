@@ -14,7 +14,7 @@ const createFeedbackSchema = z.object({
   toUserId: z.string().uuid(),
   type: z.nativeEnum(FeedbackType),
   visibility: z.nativeEnum(FeedbackVisibility),
-  content: z.string().min(10, 'Feedback must be at least 10 characters').max(5000),
+  content: z.string().min(3, 'Feedback must be at least 3 characters').max(5000),
   isAnonymous: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
   valueTags: z.array(z.string()).optional(),

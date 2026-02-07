@@ -30,12 +30,18 @@ export function errorHandler(
 
   // Determine response
   if (isAppError(err)) {
+    // Always send validation details (user needs them to fix input).
+    // For other errors, only send details in development.
+    const includeDetails =
+      err.details !== undefined &&
+      (err.code === 'VALIDATION_ERROR' || !isProduction);
+
     res.status(err.statusCode).json({
       success: false,
       error: {
         code: err.code,
         message: err.message,
-        ...(err.details !== undefined && !isProduction ? { details: err.details } : {}),
+        ...(includeDetails ? { details: err.details } : {}),
       },
     });
     return;
