@@ -24,6 +24,7 @@ import { integrationsRoutes } from './modules/integrations';
 // NOTE: evidence, compensation, promotion, reports, actionable-insights, ai-insights
 // modules are excluded from build (incomplete TS). They can be re-enabled once fixed.
 import { realtimePerformanceRoutes } from './modules/realtime-performance';
+import { performanceMathRoutes } from './modules/performance-math';
 import { calendarRoutes } from './modules/calendar';
 import { prisma } from '@pms/database';
 import { getRedisClient } from './utils/redis';
@@ -156,6 +157,7 @@ export function createApp(): Express {
   // NOTE: evidence, compensation, promotions, reports, actionable-insights, ai-insights
   // routes are disabled (incomplete modules with TS errors). Re-enable once fixed.
   apiRouter.use('/realtime-performance', standardRateLimiter, realtimePerformanceRoutes);
+  apiRouter.use('/performance-math', standardRateLimiter, performanceMathRoutes);
   apiRouter.use('/calendar/events', standardRateLimiter, calendarRoutes);
 
   // Mount API routes

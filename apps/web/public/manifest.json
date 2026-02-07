@@ -1,0 +1,21 @@
+{
+  "name": "PMS Platform - Performance Management System",
+  "short_name": "PMS",
+  "description": "Enterprise Performance Management System",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e293b",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "en",
+  "scope": "/"
+}

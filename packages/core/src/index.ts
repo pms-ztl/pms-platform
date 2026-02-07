@@ -301,6 +301,39 @@ export {
   type GeneratedReport,
 } from './advanced-analytics';
 
+// Mathematical Performance Engine
+export {
+  mathEngine,
+  mean,
+  weightedMean,
+  weightedHarmonicMean,
+  variance,
+  standardDeviation,
+  sampleStdDev,
+  zScore,
+  sigmoid,
+  boundedSigmoid,
+  pearsonCorrelation,
+  linearRegression,
+  ewma,
+  shannonEntropy,
+  percentileRank,
+  bayesianEstimate,
+  giniCoefficient,
+  calculateGoalFromTasks,
+  calculatePerformanceScore,
+  calculateTeamAnalytics,
+  assessGoalRisk,
+  calibrateRatings,
+  type TaskCompletion,
+  type GoalMathResult,
+  type PerformanceInputs,
+  type PerformanceResult,
+  type TeamMathResult,
+  type GoalRiskInput,
+  type GoalRiskResult,
+} from './math-engine';
+
 // Validation schemas
 export * from './validation';
 
