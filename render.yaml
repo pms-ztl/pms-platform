@@ -22,7 +22,10 @@ services:
       mkdir -p apps/api/frontend-dist &&
       cp -r apps/web/dist/* apps/api/frontend-dist/ &&
       echo "=== Building API ===" &&
-      cd apps/api && npm run build &&
+      cd apps/api && npm run build && cd ../.. &&
+      echo "=== Compiling seed for production ===" &&
+      mkdir -p packages/database/prisma/dist &&
+      npx esbuild packages/database/prisma/seed.ts --bundle --platform=node --outfile=packages/database/prisma/dist/seed.js --external:@prisma/client --external:bcryptjs --format=cjs &&
       echo "=== Build complete ==="
     startCommand: cd packages/database && npx prisma migrate deploy && cd ../.. && node scripts/seed-if-empty.js && cd apps/api && node dist/index.js
     healthCheckPath: /health

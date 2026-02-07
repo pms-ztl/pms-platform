@@ -13,12 +13,27 @@ async function main() {
       return;
     }
     console.log('[seed-if-empty] Empty database detected. Running seed...');
-    // Dynamic import to run the seed
     const { execSync } = require('child_process');
-    execSync('cd packages/database && npx ts-node prisma/seed.ts', {
-      stdio: 'inherit',
-      env: { ...process.env },
-    });
+    const path = require('path');
+    const fs = require('fs');
+
+    // Try compiled JS first (production/Render), fall back to ts-node (local dev)
+    const compiledSeed = path.resolve(__dirname, '../packages/database/prisma/dist/seed.js');
+    if (fs.existsSync(compiledSeed)) {
+      console.log('[seed-if-empty] Using compiled seed (prisma/dist/seed.js)');
+      execSync(`node ${compiledSeed}`, {
+        stdio: 'inherit',
+        env: { ...process.env },
+        cwd: path.resolve(__dirname, '../packages/database'),
+      });
+    } else {
+      console.log('[seed-if-empty] Using ts-node (local dev)');
+      execSync('npx ts-node prisma/seed.ts', {
+        stdio: 'inherit',
+        env: { ...process.env },
+        cwd: path.resolve(__dirname, '../packages/database'),
+      });
+    }
     console.log('[seed-if-empty] Seed completed successfully.');
   } catch (err) {
     // If tenant table doesn't exist yet, migration hasn't run — skip seeding
