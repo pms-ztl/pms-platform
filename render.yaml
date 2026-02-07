@@ -9,16 +9,15 @@ services:
     runtime: node
     region: oregon
     plan: free
-    nodeVersion: "20.11.0"
     buildCommand: |
-      echo "=== Installing dependencies ===" &&
-      npm ci --include=dev &&
+      echo "=== Installing dependencies (with devDeps) ===" &&
+      NODE_ENV=development npm ci &&
       echo "=== Generating Prisma client ===" &&
       cd packages/database && npx prisma generate && echo "=== Building database package ===" && npm run build && cd ../.. &&
       echo "=== Building core package ===" &&
       cd packages/core && npm run build || true && cd ../.. &&
       echo "=== Building web frontend ===" &&
-      cd apps/web && VITE_API_URL=/api/v1 npm run build && cd ../.. &&
+      cd apps/web && VITE_API_URL=/api/v1 npx vite build && cd ../.. &&
       echo "=== Copying frontend to API ===" &&
       mkdir -p apps/api/frontend-dist &&
       cp -r apps/web/dist/* apps/api/frontend-dist/ &&
