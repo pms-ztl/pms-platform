@@ -24,7 +24,7 @@ services:
       echo "=== Building API ===" &&
       cd apps/api && npm run build &&
       echo "=== Build complete ==="
-    startCommand: cd packages/database && npx prisma migrate deploy && cd ../../apps/api && node dist/index.js
+    startCommand: cd packages/database && npx prisma migrate deploy && cd ../.. && node scripts/seed-if-empty.js && cd apps/api && node dist/index.js
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
@@ -55,7 +55,7 @@ services:
       - key: MFA_ISSUER
         value: PMS Platform
       - key: CORS_ORIGINS
-        value: https://pms.xzashr.com
+        value: https://pms.xzashr.com,https://pms-platform.onrender.com
       - key: LOG_LEVEL
         value: info
       - key: VITE_API_URL
