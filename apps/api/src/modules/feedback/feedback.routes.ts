@@ -47,6 +47,18 @@ router.get(
   (req, res, next) => feedbackController.getTimeline(req, res, next)
 );
 
+// Recognition wall (public feed of recognitions)
+router.get(
+  '/recognition-wall',
+  (req, res, next) => feedbackController.getRecognitionWall(req, res, next)
+);
+
+// Top recognized employees leaderboard
+router.get(
+  '/top-recognized',
+  (req, res, next) => feedbackController.getTopRecognized(req, res, next)
+);
+
 // Request feedback
 router.post(
   '/request',

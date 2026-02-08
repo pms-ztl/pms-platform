@@ -528,6 +528,96 @@ export class FeedbackService {
     });
   }
 
+  async getRecognitionWall(
+    tenantId: string,
+    page: number = 1,
+    limit: number = 20
+  ) {
+    const skip = (page - 1) * limit;
+    const where = {
+      tenantId,
+      type: { in: [FeedbackType.RECOGNITION, FeedbackType.PRAISE] },
+      visibility: FeedbackVisibility.PUBLIC,
+      deletedAt: null,
+    };
+
+    const [data, total] = await Promise.all([
+      prisma.feedback.findMany({
+        where,
+        include: {
+          fromUser: {
+            select: { id: true, firstName: true, lastName: true, avatarUrl: true, jobTitle: true },
+          },
+          toUser: {
+            select: { id: true, firstName: true, lastName: true, avatarUrl: true, jobTitle: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.feedback.count({ where }),
+    ]);
+
+    // Handle anonymous
+    const processed = data.map((f) => {
+      if (f.isAnonymous) {
+        return { ...f, fromUser: null, fromUserId: 'anonymous' };
+      }
+      return f;
+    });
+
+    return {
+      data: processed,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  async getTopRecognized(tenantId: string, period: 'month' | 'quarter' | 'year' = 'month') {
+    const now = new Date();
+    let since: Date;
+
+    if (period === 'month') {
+      since = new Date(now.getFullYear(), now.getMonth(), 1);
+    } else if (period === 'quarter') {
+      const quarterStart = Math.floor(now.getMonth() / 3) * 3;
+      since = new Date(now.getFullYear(), quarterStart, 1);
+    } else {
+      since = new Date(now.getFullYear(), 0, 1);
+    }
+
+    const recognitions = await prisma.feedback.groupBy({
+      by: ['toUserId'],
+      where: {
+        tenantId,
+        type: { in: [FeedbackType.RECOGNITION, FeedbackType.PRAISE] },
+        visibility: FeedbackVisibility.PUBLIC,
+        deletedAt: null,
+        createdAt: { gte: since },
+      },
+      _count: { id: true },
+      orderBy: { _count: { id: 'desc' } },
+      take: 10,
+    });
+
+    // Fetch user details for the top recognized
+    const userIds = recognitions.map(r => r.toUserId);
+    const users = await prisma.user.findMany({
+      where: { id: { in: userIds } },
+      select: { id: true, firstName: true, lastName: true, avatarUrl: true, jobTitle: true },
+    });
+
+    const userMap = new Map(users.map(u => [u.id, u]));
+
+    return recognitions.map(r => ({
+      user: userMap.get(r.toUserId) ?? { id: r.toUserId, firstName: 'Unknown', lastName: '', avatarUrl: null, jobTitle: null },
+      count: r._count.id,
+    }));
+  }
+
   async delete(tenantId: string, userId: string, feedbackId: string): Promise<void> {
     const feedback = await prisma.feedback.findFirst({
       where: {

@@ -18,6 +18,10 @@ import {
   ScaleIcon,
   BoltIcon,
   DocumentTextIcon,
+  CalendarDaysIcon,
+  AcademicCapIcon,
+  ExclamationTriangleIcon,
+  StarIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
@@ -27,9 +31,13 @@ import { authApi } from '@/lib/api';
 const navigation: Array<{ name: string; href: string; icon: React.ForwardRefExoticComponent<any>; roles?: string[] }> = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
   { name: 'Goals', href: '/goals', icon: FlagIcon },
+  { name: '1-on-1s', href: '/one-on-ones', icon: CalendarDaysIcon },
   { name: 'Reviews', href: '/reviews', icon: ClipboardDocumentCheckIcon },
   { name: 'Self-Appraisal', href: '/self-appraisal', icon: DocumentTextIcon },
   { name: 'Feedback', href: '/feedback', icon: ChatBubbleLeftRightIcon },
+  { name: 'Recognition', href: '/recognition', icon: StarIcon },
+  { name: 'Development', href: '/development', icon: AcademicCapIcon },
+  { name: 'PIP', href: '/pip', icon: ExclamationTriangleIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Calibration', href: '/calibration', icon: ScaleIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Analytics', href: '/analytics', icon: ChartBarIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Real-time', href: '/realtime', icon: BoltIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },

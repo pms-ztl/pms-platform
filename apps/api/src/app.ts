@@ -26,6 +26,9 @@ import { integrationsRoutes } from './modules/integrations';
 import { realtimePerformanceRoutes } from './modules/realtime-performance';
 import { performanceMathRoutes } from './modules/performance-math';
 import { calendarRoutes } from './modules/calendar';
+import { oneOnOneRoutes } from './modules/one-on-ones';
+import { developmentRoutes } from './modules/development';
+import { pipRoutes } from './modules/pip';
 import { prisma } from '@pms/database';
 import { getRedisClient } from './utils/redis';
 import { logger } from './utils/logger';
@@ -163,6 +166,9 @@ export function createApp(): Express {
   apiRouter.use('/realtime-performance', standardRateLimiter, realtimePerformanceRoutes);
   apiRouter.use('/performance-math', standardRateLimiter, performanceMathRoutes);
   apiRouter.use('/calendar/events', standardRateLimiter, calendarRoutes);
+  apiRouter.use('/one-on-ones', standardRateLimiter, oneOnOneRoutes);
+  apiRouter.use('/development', standardRateLimiter, developmentRoutes);
+  apiRouter.use('/pip', standardRateLimiter, pipRoutes);
 
   // Mount API routes
   app.use('/api/v1', apiRouter);

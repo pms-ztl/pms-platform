@@ -278,6 +278,27 @@ export class FeedbackController {
     }
   }
 
+  async getRecognitionWall(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = Math.min(parseInt(req.query.limit as string) || 20, 50);
+      const result = await feedbackService.getRecognitionWall(req.tenantId, page, limit);
+      res.json({
+        success: true,
+        data: result.data,
+        meta: { total: result.total, page: result.page, limit: result.limit, totalPages: result.totalPages },
+      });
+    } catch (error) { next(error); }
+  }
+
+  async getTopRecognized(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const period = (req.query.period as string) || 'month';
+      const data = await feedbackService.getTopRecognized(req.tenantId, period as any);
+      res.json({ success: true, data });
+    } catch (error) { next(error); }
+  }
+
   async delete(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const feedbackId = req.params.id;

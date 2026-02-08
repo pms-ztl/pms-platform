@@ -27,6 +27,13 @@ import { ProfilePage } from '@/pages/profile/ProfilePage';
 import { SettingsPage } from '@/pages/settings/SettingsPage';
 import { UserManagementPage } from '@/pages/admin/UserManagementPage';
 import { SelfAppraisalPage } from '@/pages/self-appraisal/SelfAppraisalPage';
+import { OneOnOnesPage } from '@/pages/one-on-ones/OneOnOnesPage';
+import { OneOnOneDetailPage } from '@/pages/one-on-ones/OneOnOneDetailPage';
+import { DevelopmentPage } from '@/pages/development/DevelopmentPage';
+import { DevelopmentPlanDetailPage } from '@/pages/development/DevelopmentPlanDetailPage';
+import { PIPPage } from '@/pages/pip/PIPPage';
+import { PIPDetailPage } from '@/pages/pip/PIPDetailPage';
+import { RecognitionPage } from '@/pages/recognition/RecognitionPage';
 
 // Protected route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -170,6 +177,13 @@ function App() {
           <Route path="reviews" element={<ReviewsPage />} />
           <Route path="reviews/:id" element={<ReviewDetailPage />} />
           <Route path="feedback" element={<FeedbackPage />} />
+          <Route path="one-on-ones" element={<OneOnOnesPage />} />
+          <Route path="one-on-ones/:id" element={<OneOnOneDetailPage />} />
+          <Route path="development" element={<DevelopmentPage />} />
+          <Route path="development/:id" element={<DevelopmentPlanDetailPage />} />
+          <Route path="pip" element={<RoleGuard path="/pip"><PIPPage /></RoleGuard>} />
+          <Route path="pip/:id" element={<RoleGuard path="/pip"><PIPDetailPage /></RoleGuard>} />
+          <Route path="recognition" element={<RecognitionPage />} />
           <Route path="calibration" element={<RoleGuard path="/calibration"><CalibrationPage /></RoleGuard>} />
           <Route path="analytics" element={<RoleGuard path="/analytics"><AnalyticsPage /></RoleGuard>} />
           <Route path="realtime" element={<RoleGuard path="/realtime"><RealtimePerformancePage /></RoleGuard>} />

@@ -487,6 +487,66 @@ export function GoalDetailPage() {
             </dl>
           </div>
 
+          {/* SMART Goal Indicator */}
+          <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+            <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-3">SMART Score</h3>
+            <div className="space-y-2">
+              {(() => {
+                const criteria = [
+                  { letter: 'S', label: 'Specific', met: !!(goal.description && goal.description.length > 20) },
+                  { letter: 'M', label: 'Measurable', met: !!(goal.targetValue && goal.unit) },
+                  { letter: 'A', label: 'Achievable', met: !!(goal.weight && goal.weight > 0) },
+                  { letter: 'R', label: 'Relevant', met: !!(goal.parentGoal) },
+                  { letter: 'T', label: 'Time-bound', met: !!(goal.startDate && goal.dueDate) },
+                ];
+                const metCount = criteria.filter(c => c.met).length;
+                return (
+                  <>
+                    <div className="flex items-center justify-center gap-1.5 mb-3">
+                      {criteria.map(c => (
+                        <div
+                          key={c.letter}
+                          className={clsx(
+                            'w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all',
+                            c.met
+                              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 ring-2 ring-emerald-500/30'
+                              : 'bg-secondary-100 text-secondary-400 dark:bg-secondary-700 dark:text-secondary-500'
+                          )}
+                          title={`${c.label}: ${c.met ? 'Met' : 'Not met'}`}
+                        >
+                          {c.letter}
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-center text-sm font-medium text-secondary-700 dark:text-secondary-300">
+                      {metCount}/5 criteria met
+                    </p>
+                    <div className="space-y-1.5 mt-3">
+                      {criteria.map(c => (
+                        <div key={c.letter} className="flex items-center gap-2 text-xs">
+                          {c.met ? (
+                            <svg className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                          ) : (
+                            <svg className="h-3.5 w-3.5 text-secondary-300 dark:text-secondary-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                          <span className={clsx(
+                            c.met ? 'text-secondary-700 dark:text-secondary-300' : 'text-secondary-400 dark:text-secondary-500'
+                          )}>
+                            <strong>{c.letter}</strong> — {c.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+
           {/* Child Goals (simple list for sidebar, detailed view in main area) */}
           {!hasChildren && (
             <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
