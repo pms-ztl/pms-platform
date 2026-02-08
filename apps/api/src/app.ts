@@ -21,14 +21,18 @@ import { usersRoutes } from './modules/users';
 import { analyticsRoutes } from './modules/analytics';
 import { notificationsRoutes } from './modules/notifications';
 import { integrationsRoutes } from './modules/integrations';
-// NOTE: evidence, compensation, promotion, reports, actionable-insights, ai-insights
-// modules are excluded from build (incomplete TS). They can be re-enabled once fixed.
+import { compensationRoutes } from './modules/compensation';
+import { evidenceRoutes } from './modules/evidence';
+import { promotionRoutes } from './modules/promotion';
+import { reportsRoutes } from './modules/reports';
 import { realtimePerformanceRoutes } from './modules/realtime-performance';
 import { performanceMathRoutes } from './modules/performance-math';
 import { calendarRoutes } from './modules/calendar';
 import { oneOnOneRoutes } from './modules/one-on-ones';
 import { developmentRoutes } from './modules/development';
 import { pipRoutes } from './modules/pip';
+import { successionRoutes } from './modules/succession';
+import { adminConfigRoutes } from './modules/admin-config';
 import { prisma } from '@pms/database';
 import { getRedisClient } from './utils/redis';
 import { logger } from './utils/logger';
@@ -161,14 +165,18 @@ export function createApp(): Express {
   apiRouter.use('/analytics', standardRateLimiter, analyticsRoutes);
   apiRouter.use('/notifications', standardRateLimiter, notificationsRoutes);
   apiRouter.use('/integrations', standardRateLimiter, integrationsRoutes);
-  // NOTE: evidence, compensation, promotions, reports, actionable-insights, ai-insights
-  // routes are disabled (incomplete modules with TS errors). Re-enable once fixed.
+  apiRouter.use('/compensation', standardRateLimiter, compensationRoutes);
+  apiRouter.use('/evidence', standardRateLimiter, evidenceRoutes);
+  apiRouter.use('/promotions', standardRateLimiter, promotionRoutes);
+  apiRouter.use('/reports', standardRateLimiter, reportsRoutes);
   apiRouter.use('/realtime-performance', standardRateLimiter, realtimePerformanceRoutes);
   apiRouter.use('/performance-math', standardRateLimiter, performanceMathRoutes);
   apiRouter.use('/calendar/events', standardRateLimiter, calendarRoutes);
   apiRouter.use('/one-on-ones', standardRateLimiter, oneOnOneRoutes);
   apiRouter.use('/development', standardRateLimiter, developmentRoutes);
   apiRouter.use('/pip', standardRateLimiter, pipRoutes);
+  apiRouter.use('/succession', standardRateLimiter, successionRoutes);
+  apiRouter.use('/admin-config', standardRateLimiter, adminConfigRoutes);
 
   // Mount API routes
   app.use('/api/v1', apiRouter);

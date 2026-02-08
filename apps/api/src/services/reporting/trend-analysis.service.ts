@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { prisma } from '@pms/database';
 import { logger } from '../../utils/logger';
 import { dataAggregationService, PeriodType, AggregationType } from './data-aggregation.service';

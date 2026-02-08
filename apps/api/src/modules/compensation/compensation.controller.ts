@@ -4,14 +4,15 @@
  * HTTP handlers for compensation decision endpoints.
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { compensationService } from './compensation.service';
 import { CompensationType, CompensationDecisionStatus } from '@pms/database';
+import type { AuthenticatedRequest } from '../../types';
 
 export class CompensationController {
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const decision = await compensationService.createDecision(tenantId, userId, {
         employeeId: req.body.employeeId,
         cycleId: req.body.cycleId,
@@ -32,9 +33,9 @@ export class CompensationController {
     }
   }
 
-  async get(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async get(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await compensationService.getDecision(tenantId, userId, decisionId);
@@ -44,9 +45,9 @@ export class CompensationController {
     }
   }
 
-  async list(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async list(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const filters = {
         employeeId: req.query.employeeId as string | undefined,
         cycleId: req.query.cycleId as string | undefined,
@@ -65,9 +66,9 @@ export class CompensationController {
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async update(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await compensationService.updateDecision(tenantId, userId, decisionId, {
@@ -83,9 +84,9 @@ export class CompensationController {
     }
   }
 
-  async submit(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async submit(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await compensationService.submitForApproval(tenantId, userId, decisionId);
@@ -95,9 +96,9 @@ export class CompensationController {
     }
   }
 
-  async approve(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async approve(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await compensationService.approve(tenantId, userId, decisionId, {
@@ -111,9 +112,9 @@ export class CompensationController {
     }
   }
 
-  async reject(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async reject(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await compensationService.reject(tenantId, userId, decisionId, req.body.reason);
@@ -123,9 +124,9 @@ export class CompensationController {
     }
   }
 
-  async implement(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async implement(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await compensationService.implement(tenantId, userId, decisionId);
@@ -135,9 +136,9 @@ export class CompensationController {
     }
   }
 
-  async linkEvidence(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async linkEvidence(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
 
       const link = await compensationService.linkEvidence(tenantId, userId, {
         decisionId: req.body.decisionId,
@@ -153,9 +154,9 @@ export class CompensationController {
     }
   }
 
-  async unlinkEvidence(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async unlinkEvidence(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId, evidenceId } = req.params;
 
       await compensationService.unlinkEvidence(tenantId, userId, decisionId, evidenceId);
@@ -165,9 +166,9 @@ export class CompensationController {
     }
   }
 
-  async getBudgetSummary(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getBudgetSummary(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId } = req.context;
+      const tenantId = req.tenantId!;
       const cycleId = req.query.cycleId as string | undefined;
 
       const summary = await compensationService.getBudgetSummary(tenantId, cycleId);

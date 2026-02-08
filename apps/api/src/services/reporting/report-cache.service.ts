@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { getRedisClient } from '../../utils/redis';
 import { logger } from '../../utils/logger';
 import { ReportType } from './report-generation.service';

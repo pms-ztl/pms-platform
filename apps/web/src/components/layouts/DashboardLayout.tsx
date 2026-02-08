@@ -22,11 +22,17 @@ import {
   AcademicCapIcon,
   ExclamationTriangleIcon,
   StarIcon,
+  DocumentChartBarIcon,
+  UserPlusIcon,
+  QuestionMarkCircleIcon,
+  AdjustmentsHorizontalIcon,
+  ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
 import { useAuthStore } from '@/store/auth';
 import { authApi } from '@/lib/api';
+import { NotificationBell } from '@/components/NotificationBell';
 
 const navigation: Array<{ name: string; href: string; icon: React.ForwardRefExoticComponent<any>; roles?: string[] }> = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
@@ -40,12 +46,18 @@ const navigation: Array<{ name: string; href: string; icon: React.ForwardRefExot
   { name: 'PIP', href: '/pip', icon: ExclamationTriangleIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Calibration', href: '/calibration', icon: ScaleIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Analytics', href: '/analytics', icon: ChartBarIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  { name: 'Reports', href: '/reports', icon: DocumentChartBarIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Real-time', href: '/realtime', icon: BoltIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  { name: 'HR Analytics', href: '/hr-analytics', icon: AdjustmentsHorizontalIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  { name: 'Succession', href: '/succession', icon: UserPlusIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
   { name: 'Team', href: '/team', icon: UsersIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  { name: 'Help', href: '/help', icon: QuestionMarkCircleIcon },
 ];
 
 const adminNavigation = [
   { name: 'User Management', href: '/admin/users', icon: UserGroupIcon },
+  { name: 'Configuration', href: '/admin/config', icon: Cog6ToothIcon },
+  { name: 'Moderator', href: '/reviews/moderate', icon: ShieldCheckIcon },
 ];
 
 export function DashboardLayout() {
@@ -275,6 +287,8 @@ export function DashboardLayout() {
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1" />
             <div className="flex items-center gap-x-4 lg:gap-x-6">
+              {/* Notifications */}
+              <NotificationBell />
               {/* Profile dropdown */}
               <Menu as="div" className="relative">
                 <Menu.Button className="-m-1.5 flex items-center p-1.5">

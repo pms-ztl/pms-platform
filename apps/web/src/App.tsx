@@ -34,6 +34,12 @@ import { DevelopmentPlanDetailPage } from '@/pages/development/DevelopmentPlanDe
 import { PIPPage } from '@/pages/pip/PIPPage';
 import { PIPDetailPage } from '@/pages/pip/PIPDetailPage';
 import { RecognitionPage } from '@/pages/recognition/RecognitionPage';
+import { ConfigurationPage } from '@/pages/admin/ConfigurationPage';
+import { ReportsPage } from '@/pages/reports/ReportsPage';
+import { SuccessionPage } from '@/pages/succession/SuccessionPage';
+import { HelpPage } from '@/pages/help/HelpPage';
+import { ModeratorDashboardPage } from '@/pages/reviews/ModeratorDashboardPage';
+import { HRAnalyticsPage } from '@/pages/analytics/HRAnalyticsPage';
 
 // Protected route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -191,7 +197,13 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="self-appraisal" element={<SelfAppraisalPage />} />
+          <Route path="reports" element={<RoleGuard path="/reports"><ReportsPage /></RoleGuard>} />
+          <Route path="hr-analytics" element={<RoleGuard path="/hr-analytics"><HRAnalyticsPage /></RoleGuard>} />
+          <Route path="succession" element={<RoleGuard path="/succession"><SuccessionPage /></RoleGuard>} />
+          <Route path="help" element={<HelpPage />} />
+          <Route path="reviews/moderate" element={<RoleGuard path="/reviews/moderate"><ModeratorDashboardPage /></RoleGuard>} />
           <Route path="admin/users" element={<RoleGuard path="/admin/users"><UserManagementPage /></RoleGuard>} />
+          <Route path="admin/config" element={<RoleGuard path="/admin/config"><ConfigurationPage /></RoleGuard>} />
         </Route>
 
         {/* Catch all */}

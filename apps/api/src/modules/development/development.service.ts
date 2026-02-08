@@ -283,6 +283,82 @@ export class DevelopmentService {
     return updated;
   }
 
+  // ── Development Recommendations ──────────────────────────────────────
+
+  async getRecommendations(tenantId: string, userId: string) {
+    // Get behavioral competency scores for the user
+    const scores = await prisma.behavioralCompetencyScore.findMany({
+      where: { tenantId, userId },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+
+    // Get competency frameworks to provide context
+    const frameworks = await prisma.competencyFramework.findMany({
+      where: { tenantId },
+      include: { competencies: true },
+    });
+
+    // Identify low-scoring competencies (below 3.0 on 5-point scale)
+    const lowScores: any[] = [];
+    const scoreFields = [
+      { field: 'communicationScore', name: 'Communication' },
+      { field: 'collaborationScore', name: 'Collaboration' },
+      { field: 'problemSolvingScore', name: 'Problem Solving' },
+      { field: 'emotionalIntelligenceScore', name: 'Emotional Intelligence' },
+      { field: 'timeManagementScore', name: 'Time Management' },
+      { field: 'initiativeScore', name: 'Initiative' },
+    ];
+
+    for (const score of scores) {
+      for (const { field, name } of scoreFields) {
+        const value = Number((score as any)[field]) || 0;
+        if (value > 0 && value < 3.0) {
+          lowScores.push({ competency: name, score: value, assessmentDate: score.createdAt });
+        }
+      }
+    }
+
+    // Generate recommendations based on low scores
+    const activityTypeMap: Record<string, string[]> = {
+      'Communication': ['TRAINING', 'WORKSHOP', 'COACHING', 'READING'],
+      'Collaboration': ['PROJECT', 'MENTORING', 'WORKSHOP', 'STRETCH_ASSIGNMENT'],
+      'Problem Solving': ['TRAINING', 'CERTIFICATION', 'PROJECT', 'STRETCH_ASSIGNMENT'],
+      'Emotional Intelligence': ['COACHING', 'WORKSHOP', 'READING', 'SELF_STUDY'],
+      'Time Management': ['TRAINING', 'COACHING', 'SELF_STUDY', 'READING'],
+      'Initiative': ['STRETCH_ASSIGNMENT', 'PROJECT', 'MENTORING', 'JOB_ROTATION'],
+    };
+
+    const recommendations = lowScores.map(ls => ({
+      competency: ls.competency,
+      currentScore: ls.score,
+      targetScore: 3.5,
+      gap: Number((3.5 - ls.score).toFixed(2)),
+      priority: ls.score < 2.0 ? 'HIGH' : ls.score < 2.5 ? 'MEDIUM' : 'LOW',
+      suggestedActivities: (activityTypeMap[ls.competency] || ['TRAINING']).map(type => ({
+        activityType: type,
+        description: `Improve ${ls.competency.toLowerCase()} through ${type.toLowerCase().replace('_', ' ')}`,
+        estimatedHours: type === 'CERTIFICATION' ? 40 : type === 'PROJECT' ? 80 : 20,
+      })),
+      relatedCompetencies: frameworks.flatMap(f =>
+        f.competencies.filter(c =>
+          c.name.toLowerCase().includes(ls.competency.toLowerCase().split(' ')[0])
+        ).map(c => ({ id: c.id, name: c.name, levelDescriptions: c.levelDescriptions }))
+      ),
+    }));
+
+    // Sort by priority
+    const priorityOrder: Record<string, number> = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+    recommendations.sort((a, b) => (priorityOrder[a.priority] ?? 3) - (priorityOrder[b.priority] ?? 3));
+
+    return {
+      userId,
+      totalGaps: recommendations.length,
+      overallReadiness: scores.length > 0 ? Number((scores[0] as any).overallScore || 0) : 0,
+      recommendations,
+    };
+  }
+
   // ── Helpers ────────────────────────────────────────────────────────────
 
   private async recalculatePlanProgress(planId: string) {

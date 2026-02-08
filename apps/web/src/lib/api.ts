@@ -1145,6 +1145,8 @@ export const developmentApi = {
     progressReview?: string; skillsAcquired?: string[];
     managerFeedback?: string; selfAssessment?: string; nextSteps?: string[];
   }) => api.put<DevelopmentCheckpoint>(`/development/checkpoints/${checkpointId}/complete`, data),
+  getRecommendations: (userId?: string) =>
+    api.get<any>(userId ? `/development/recommendations/${userId}` : '/development/recommendations'),
 };
 
 // ============================================================================
@@ -1268,4 +1270,46 @@ export const performanceMathApi = {
     api.post<CalibrationResult>('/performance-math/calibrate', { cycleId }),
   getGoalMapping: (goalId: string) =>
     api.get<GoalMappingResult>(`/performance-math/goal-mapping/${goalId}`),
+};
+
+// ============================================================================
+// Admin Configuration API
+// ============================================================================
+
+export const adminConfigApi = {
+  listTemplates: () => api.get<any[]>('/admin-config/templates'),
+  getTemplate: (id: string) => api.get<any>(`/admin-config/templates/${id}`),
+  createTemplate: (data: any) => api.post<any>('/admin-config/templates', data),
+  updateTemplate: (id: string, data: any) => api.put<any>(`/admin-config/templates/${id}`, data),
+  deleteTemplate: (id: string) => api.delete(`/admin-config/templates/${id}`),
+  listFrameworks: () => api.get<any[]>('/admin-config/frameworks'),
+  getFramework: (id: string) => api.get<any>(`/admin-config/frameworks/${id}`),
+  createFramework: (data: any) => api.post<any>('/admin-config/frameworks', data),
+  updateFramework: (id: string, data: any) => api.put<any>(`/admin-config/frameworks/${id}`, data),
+  deleteFramework: (id: string) => api.delete(`/admin-config/frameworks/${id}`),
+  listCompetencies: (frameworkId: string) => api.get<any[]>(`/admin-config/frameworks/${frameworkId}/competencies`),
+  createCompetency: (frameworkId: string, data: any) => api.post<any>(`/admin-config/frameworks/${frameworkId}/competencies`, data),
+  updateCompetency: (id: string, data: any) => api.put<any>(`/admin-config/competencies/${id}`, data),
+  deleteCompetency: (id: string) => api.delete(`/admin-config/competencies/${id}`),
+  listQuestionnaires: () => api.get<any[]>('/admin-config/questionnaires'),
+  createQuestionnaire: (data: any) => api.post<any>('/admin-config/questionnaires', data),
+  getRatingScales: () => api.get<any[]>('/admin-config/rating-scales'),
+};
+
+export const successionApi = {
+  list: (params?: any) => api.get<any[]>('/succession', params),
+  getById: (id: string) => api.get<any>(`/succession/${id}`),
+  create: (data: any) => api.post<any>('/succession', data),
+  update: (id: string, data: any) => api.put<any>(`/succession/${id}`, data),
+  delete: (id: string) => api.delete(`/succession/${id}`),
+  getNineBoxGrid: () => api.get<any>('/succession/nine-box'),
+  getReadiness: (id: string) => api.get<any[]>(`/succession/${id}/readiness`),
+};
+
+export const hrAnalyticsApi = {
+  getCompensationAnalysis: () => api.get<any>('/analytics/compensation'),
+  getBiasAnalysis: () => api.get<any>('/analytics/bias'),
+  getNormalization: () => api.get<any>('/analytics/normalization'),
+  getRatingDistribution: () => api.get<any>('/analytics/ratings'),
+  getDepartmentMetrics: () => api.get<any[]>('/analytics/departments'),
 };

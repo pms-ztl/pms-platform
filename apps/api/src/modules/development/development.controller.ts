@@ -144,6 +144,14 @@ class DevelopmentController {
       res.json({ success: true, data: checkpoint });
     } catch (error) { next(error); }
   }
+
+  async getRecommendations(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const targetUserId = req.params.userId ?? req.user.id;
+      const data = await developmentService.getRecommendations(req.tenantId, targetUserId);
+      res.json({ success: true, data });
+    } catch (error) { next(error); }
+  }
 }
 
 export const developmentController = new DevelopmentController();

@@ -21,6 +21,13 @@ router.post('/plans/:id/approve',
   (req, res, next) => developmentController.approvePlan(req, res, next)
 );
 
+// Recommendations
+router.get('/recommendations', (req, res, next) => developmentController.getRecommendations(req, res, next));
+router.get('/recommendations/:userId',
+  authorize({ resource: 'development', action: 'read', scope: 'team' }),
+  (req, res, next) => developmentController.getRecommendations(req, res, next)
+);
+
 // Activities
 router.post('/plans/:id/activities', (req, res, next) => developmentController.addActivity(req, res, next));
 router.put('/activities/:id', (req, res, next) => developmentController.updateActivity(req, res, next));

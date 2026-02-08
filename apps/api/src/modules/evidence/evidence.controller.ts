@@ -4,14 +4,15 @@
  * HTTP handlers for evidence management endpoints.
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { evidenceService } from './evidence.service';
 import { EvidenceType, EvidenceSource, EvidenceStatus } from '@pms/database';
+import type { AuthenticatedRequest } from '../../types';
 
 export class EvidenceController {
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const evidence = await evidenceService.createEvidence(tenantId, userId, {
         employeeId: req.body.employeeId,
         type: req.body.type as EvidenceType,
@@ -36,9 +37,9 @@ export class EvidenceController {
     }
   }
 
-  async get(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async get(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { evidenceId } = req.params;
 
       const evidence = await evidenceService.getEvidence(tenantId, userId, evidenceId);
@@ -48,9 +49,9 @@ export class EvidenceController {
     }
   }
 
-  async list(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async list(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const filters = {
         employeeId: req.query.employeeId as string | undefined,
         type: req.query.type as EvidenceType | undefined,
@@ -69,9 +70,9 @@ export class EvidenceController {
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async update(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { evidenceId } = req.params;
 
       const evidence = await evidenceService.updateEvidence(tenantId, userId, evidenceId, {
@@ -92,9 +93,9 @@ export class EvidenceController {
     }
   }
 
-  async verify(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async verify(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { evidenceId } = req.params;
 
       const evidence = await evidenceService.verifyEvidence(tenantId, userId, evidenceId, {
@@ -111,9 +112,9 @@ export class EvidenceController {
     }
   }
 
-  async linkToReview(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async linkToReview(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
 
       const link = await evidenceService.linkToReview(tenantId, userId, {
         evidenceId: req.body.evidenceId,
@@ -130,9 +131,9 @@ export class EvidenceController {
     }
   }
 
-  async unlinkFromReview(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async unlinkFromReview(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { evidenceId, reviewId } = req.params;
 
       await evidenceService.unlinkFromReview(tenantId, userId, evidenceId, reviewId, req.body.reason);
@@ -142,9 +143,9 @@ export class EvidenceController {
     }
   }
 
-  async archive(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async archive(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { evidenceId } = req.params;
 
       const evidence = await evidenceService.archiveEvidence(tenantId, userId, evidenceId, req.body.reason);
@@ -154,9 +155,9 @@ export class EvidenceController {
     }
   }
 
-  async bulkImport(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async bulkImport(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
 
       const result = await evidenceService.importEvidence(
         tenantId,
@@ -172,9 +173,9 @@ export class EvidenceController {
     }
   }
 
-  async getSummary(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getSummary(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId } = req.context;
+      const tenantId = req.tenantId!;
       const { employeeId } = req.params;
       const fromDate = req.query.fromDate ? new Date(req.query.fromDate as string) : undefined;
       const toDate = req.query.toDate ? new Date(req.query.toDate as string) : undefined;

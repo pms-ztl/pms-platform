@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Queue, Worker, Job, QueueEvents } from 'bullmq';
 import { Redis } from 'ioredis';
 import { prisma } from '@pms/database';

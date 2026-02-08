@@ -4,14 +4,15 @@
  * HTTP handlers for promotion decision endpoints.
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { promotionService } from './promotion.service';
 import { PromotionType, PromotionDecisionStatus } from '@pms/database';
+import type { AuthenticatedRequest } from '../../types';
 
 export class PromotionController {
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const decision = await promotionService.createDecision(tenantId, userId, {
         employeeId: req.body.employeeId,
         cycleId: req.body.cycleId,
@@ -32,9 +33,9 @@ export class PromotionController {
     }
   }
 
-  async get(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async get(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await promotionService.getDecision(tenantId, userId, decisionId);
@@ -44,9 +45,9 @@ export class PromotionController {
     }
   }
 
-  async list(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async list(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const filters = {
         employeeId: req.query.employeeId as string | undefined,
         cycleId: req.query.cycleId as string | undefined,
@@ -66,9 +67,9 @@ export class PromotionController {
     }
   }
 
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async update(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await promotionService.updateDecision(tenantId, userId, decisionId, {
@@ -85,9 +86,9 @@ export class PromotionController {
     }
   }
 
-  async startReview(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async startReview(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await promotionService.startReview(tenantId, userId, decisionId);
@@ -97,9 +98,9 @@ export class PromotionController {
     }
   }
 
-  async approve(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async approve(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await promotionService.approve(tenantId, userId, decisionId, {
@@ -113,9 +114,9 @@ export class PromotionController {
     }
   }
 
-  async reject(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async reject(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await promotionService.reject(tenantId, userId, decisionId, req.body.reason);
@@ -125,9 +126,9 @@ export class PromotionController {
     }
   }
 
-  async defer(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async defer(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await promotionService.defer(
@@ -144,9 +145,9 @@ export class PromotionController {
     }
   }
 
-  async implement(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async implement(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId } = req.params;
 
       const decision = await promotionService.implement(tenantId, userId, decisionId);
@@ -156,9 +157,9 @@ export class PromotionController {
     }
   }
 
-  async linkEvidence(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async linkEvidence(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
 
       const link = await promotionService.linkEvidence(tenantId, userId, {
         decisionId: req.body.decisionId,
@@ -175,9 +176,9 @@ export class PromotionController {
     }
   }
 
-  async unlinkEvidence(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async unlinkEvidence(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId, userId } = req.context;
+      const tenantId = req.tenantId!; const userId = req.user!.id;
       const { decisionId, evidenceId } = req.params;
 
       await promotionService.unlinkEvidence(tenantId, userId, decisionId, evidenceId);
@@ -187,9 +188,9 @@ export class PromotionController {
     }
   }
 
-  async getSummary(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getSummary(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tenantId } = req.context;
+      const tenantId = req.tenantId!;
       const cycleId = req.query.cycleId as string | undefined;
 
       const summary = await promotionService.getPromotionSummary(tenantId, cycleId);
