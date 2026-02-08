@@ -105,17 +105,23 @@ export function hasRole(roles: string[], requiredRoles: string[]): boolean {
 // Route-level access control configuration
 // Maps restricted paths to the roles that can access them
 const ROUTE_ACCESS: Record<string, { roles?: string[] }> = {
-  '/calibration':  { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-  '/analytics':    { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-  '/realtime':     { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-  '/team':         { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-  '/pip':          { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-  '/reports':      { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-  '/hr-analytics': { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
-  '/succession':   { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
-  '/reviews/moderate': { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-  '/admin/users':  { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
-  '/admin/config': { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  '/calibration':        { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/analytics':          { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/realtime':           { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/team':               { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/pip':                { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/reports':            { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/compensation':       { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/promotions':         { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/review-cycles':      { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/manager-dashboard':  { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/hr-analytics':       { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  '/succession':         { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  '/compliance':         { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  '/reviews/moderate':   { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/admin/users':        { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  '/admin/config':       { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  '/admin/audit':        { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
 };
 
 /**

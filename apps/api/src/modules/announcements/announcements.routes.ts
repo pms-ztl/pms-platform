@@ -1,0 +1,22 @@
+import { Router } from 'express';
+import { authenticate } from '../../middleware/authenticate';
+import { authorize } from '../../middleware/authorize';
+import { announcementsController } from './announcements.controller';
+
+const router = Router();
+
+router.use(authenticate);
+
+// All users can view active announcements
+router.get('/active', (req, res, next) => announcementsController.getActive(req as any, res, next));
+
+// Admin management
+router.get('/', authorize({ resource: 'announcements', action: 'read', scope: 'all' }), (req, res, next) => announcementsController.list(req as any, res, next));
+router.get('/stats', authorize({ resource: 'announcements', action: 'read', scope: 'all' }), (req, res, next) => announcementsController.getStats(req as any, res, next));
+router.post('/', authorize({ resource: 'announcements', action: 'create', scope: 'all' }), (req, res, next) => announcementsController.create(req as any, res, next));
+router.get('/:id', (req, res, next) => announcementsController.getById(req as any, res, next));
+router.put('/:id', authorize({ resource: 'announcements', action: 'update', scope: 'all' }), (req, res, next) => announcementsController.update(req as any, res, next));
+router.delete('/:id', authorize({ resource: 'announcements', action: 'delete', scope: 'all' }), (req, res, next) => announcementsController.delete(req as any, res, next));
+router.post('/:id/pin', authorize({ resource: 'announcements', action: 'update', scope: 'all' }), (req, res, next) => announcementsController.pin(req as any, res, next));
+
+export { router as announcementRoutes };

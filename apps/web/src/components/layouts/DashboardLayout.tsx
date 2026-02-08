@@ -27,6 +27,16 @@ import {
   QuestionMarkCircleIcon,
   AdjustmentsHorizontalIcon,
   ShieldCheckIcon,
+  CurrencyDollarIcon,
+  ArrowTrendingUpIcon,
+  DocumentMagnifyingGlassIcon,
+  MegaphoneIcon,
+  PuzzlePieceIcon,
+  CheckBadgeIcon,
+  TrophyIcon,
+  RectangleGroupIcon,
+  MapIcon,
+  ClipboardDocumentListIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
@@ -37,26 +47,38 @@ import { NotificationBell } from '@/components/NotificationBell';
 const navigation: Array<{ name: string; href: string; icon: React.ForwardRefExoticComponent<any>; roles?: string[] }> = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
   { name: 'Goals', href: '/goals', icon: FlagIcon },
+  { name: 'Goal Alignment', href: '/goal-alignment', icon: MapIcon },
   { name: '1-on-1s', href: '/one-on-ones', icon: CalendarDaysIcon },
   { name: 'Reviews', href: '/reviews', icon: ClipboardDocumentCheckIcon },
+  { name: 'Review Cycles', href: '/review-cycles', icon: ClipboardDocumentListIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Self-Appraisal', href: '/self-appraisal', icon: DocumentTextIcon },
   { name: 'Feedback', href: '/feedback', icon: ChatBubbleLeftRightIcon },
   { name: 'Recognition', href: '/recognition', icon: StarIcon },
+  { name: 'Skills', href: '/skills', icon: PuzzlePieceIcon },
   { name: 'Development', href: '/development', icon: AcademicCapIcon },
+  { name: 'Career Path', href: '/career', icon: ArrowTrendingUpIcon },
+  { name: 'Evidence', href: '/evidence', icon: DocumentMagnifyingGlassIcon },
   { name: 'PIP', href: '/pip', icon: ExclamationTriangleIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  { name: 'Compensation', href: '/compensation', icon: CurrencyDollarIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  { name: 'Promotions', href: '/promotions', icon: ArrowTrendingUpIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Calibration', href: '/calibration', icon: ScaleIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  { name: 'Leaderboard', href: '/leaderboard', icon: TrophyIcon },
+  { name: 'Manager Hub', href: '/manager-dashboard', icon: RectangleGroupIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Analytics', href: '/analytics', icon: ChartBarIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Reports', href: '/reports', icon: DocumentChartBarIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'Real-time', href: '/realtime', icon: BoltIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   { name: 'HR Analytics', href: '/hr-analytics', icon: AdjustmentsHorizontalIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  { name: 'Compliance', href: '/compliance', icon: CheckBadgeIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
   { name: 'Succession', href: '/succession', icon: UserPlusIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
   { name: 'Team', href: '/team', icon: UsersIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  { name: 'Announcements', href: '/announcements', icon: MegaphoneIcon },
   { name: 'Help', href: '/help', icon: QuestionMarkCircleIcon },
 ];
 
 const adminNavigation = [
   { name: 'User Management', href: '/admin/users', icon: UserGroupIcon },
   { name: 'Configuration', href: '/admin/config', icon: Cog6ToothIcon },
+  { name: 'Audit Log', href: '/admin/audit', icon: DocumentMagnifyingGlassIcon },
   { name: 'Moderator', href: '/reviews/moderate', icon: ShieldCheckIcon },
 ];
 

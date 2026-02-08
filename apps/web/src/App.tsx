@@ -40,6 +40,19 @@ import { SuccessionPage } from '@/pages/succession/SuccessionPage';
 import { HelpPage } from '@/pages/help/HelpPage';
 import { ModeratorDashboardPage } from '@/pages/reviews/ModeratorDashboardPage';
 import { HRAnalyticsPage } from '@/pages/analytics/HRAnalyticsPage';
+import { AuditLogPage } from '@/pages/admin/AuditLogPage';
+import { SkillsMatrixPage } from '@/pages/skills/SkillsMatrixPage';
+import { CompensationPage } from '@/pages/compensation/CompensationPage';
+import { PromotionsPage } from '@/pages/promotions/PromotionsPage';
+import { EvidencePage } from '@/pages/evidence/EvidencePage';
+import { EmployeeProfilePage } from '@/pages/employees/EmployeeProfilePage';
+import { CompliancePage } from '@/pages/compliance/CompliancePage';
+import { AnnouncementsPage } from '@/pages/announcements/AnnouncementsPage';
+import { ReviewCyclesPage } from '@/pages/reviews/ReviewCyclesPage';
+import { GoalAlignmentPage } from '@/pages/goals/GoalAlignmentPage';
+import { CareerPathPage } from '@/pages/career/CareerPathPage';
+import { ManagerDashboardPage } from '@/pages/manager/ManagerDashboardPage';
+import { LeaderboardPage } from '@/pages/leaderboard/LeaderboardPage';
 
 // Protected route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -204,6 +217,19 @@ function App() {
           <Route path="reviews/moderate" element={<RoleGuard path="/reviews/moderate"><ModeratorDashboardPage /></RoleGuard>} />
           <Route path="admin/users" element={<RoleGuard path="/admin/users"><UserManagementPage /></RoleGuard>} />
           <Route path="admin/config" element={<RoleGuard path="/admin/config"><ConfigurationPage /></RoleGuard>} />
+          <Route path="admin/audit" element={<RoleGuard path="/admin/audit"><AuditLogPage /></RoleGuard>} />
+          <Route path="skills" element={<SkillsMatrixPage />} />
+          <Route path="compensation" element={<RoleGuard path="/compensation"><CompensationPage /></RoleGuard>} />
+          <Route path="promotions" element={<RoleGuard path="/promotions"><PromotionsPage /></RoleGuard>} />
+          <Route path="evidence" element={<EvidencePage />} />
+          <Route path="employees/:id" element={<EmployeeProfilePage />} />
+          <Route path="compliance" element={<RoleGuard path="/compliance"><CompliancePage /></RoleGuard>} />
+          <Route path="announcements" element={<AnnouncementsPage />} />
+          <Route path="review-cycles" element={<RoleGuard path="/review-cycles"><ReviewCyclesPage /></RoleGuard>} />
+          <Route path="goal-alignment" element={<GoalAlignmentPage />} />
+          <Route path="career" element={<CareerPathPage />} />
+          <Route path="manager-dashboard" element={<RoleGuard path="/manager-dashboard"><ManagerDashboardPage /></RoleGuard>} />
+          <Route path="leaderboard" element={<LeaderboardPage />} />
         </Route>
 
         {/* Catch all */}

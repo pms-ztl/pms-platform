@@ -33,6 +33,10 @@ import { developmentRoutes } from './modules/development';
 import { pipRoutes } from './modules/pip';
 import { successionRoutes } from './modules/succession';
 import { adminConfigRoutes } from './modules/admin-config';
+import { auditRoutes } from './modules/audit';
+import { skillsRoutes } from './modules/skills';
+import { complianceRoutes } from './modules/compliance';
+import { announcementRoutes } from './modules/announcements';
 import { prisma } from '@pms/database';
 import { getRedisClient } from './utils/redis';
 import { logger } from './utils/logger';
@@ -177,6 +181,10 @@ export function createApp(): Express {
   apiRouter.use('/pip', standardRateLimiter, pipRoutes);
   apiRouter.use('/succession', standardRateLimiter, successionRoutes);
   apiRouter.use('/admin-config', standardRateLimiter, adminConfigRoutes);
+  apiRouter.use('/audit', standardRateLimiter, auditRoutes);
+  apiRouter.use('/skills', standardRateLimiter, skillsRoutes);
+  apiRouter.use('/compliance', standardRateLimiter, complianceRoutes);
+  apiRouter.use('/announcements', standardRateLimiter, announcementRoutes);
 
   // Mount API routes
   app.use('/api/v1', apiRouter);
