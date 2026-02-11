@@ -49,23 +49,18 @@ Then open **http://localhost:3002** in your browser.
 ### Setup
 
 ```bash
-# 1. Clone and install
+# 1. Clone and install (auto-creates .env from .env.example)
 git clone https://github.com/agdanish/pms-platform.git
 cd pms-platform
 npm install
 
-# 2. Start PostgreSQL + Redis via Docker (easiest)
+# 2. Start PostgreSQL + Redis via Docker
 docker compose -f docker-compose.dev.yml up -d
 
-# 3. Set up environment
-cp .env.example .env
+# 3. Set up database (generate + migrate + seed — one command)
+npm run setup
 
-# 4. Set up the database
-npm run db:generate
-npm run db:migrate
-npm run db:seed
-
-# 5. Start dev servers (API on :3001, Web on :3002)
+# 4. Start dev servers (API on :3001, Web on :3002)
 npm run dev
 ```
 
