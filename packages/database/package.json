@@ -13,6 +13,7 @@
     "clean": "rm -rf dist",
     "db:generate": "prisma generate",
     "db:push": "prisma db push --accept-data-loss",
+    "db:reset": "prisma migrate reset --force --skip-seed",
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
