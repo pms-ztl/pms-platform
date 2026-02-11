@@ -944,16 +944,34 @@ export class ReportGenerationService {
       params.periodStart || new Date()
     );
 
-    // Save generated report to database
-    const savedReport = await prisma.generatedReport.create({
-      data: {
-        tenantId,
-        reportDefinitionId: params.customConfig?.reportDefinitionId || 'ad-hoc-' + Date.now(),
-        reportType,
-        periodType,
-        periodStart: start,
-        periodEnd: end,
-        periodLabel: label,
+    // Save generated report to database (upsert to handle duplicate cache keys)
+    const cacheKey = `report:${tenantId}:${reportType}:${label}`;
+    const reportPayload = {
+      tenantId,
+      reportDefinitionId: params.customConfig?.reportDefinitionId || undefined,
+      reportType,
+      periodType,
+      periodStart: start,
+      periodEnd: end,
+      periodLabel: label,
+      title: reportData.title,
+      summary: reportData.summary,
+      data: reportData.data,
+      trends: reportData.trends,
+      comparisons: reportData.comparisons,
+      insights: reportData.insights,
+      recommendations: reportData.recommendations,
+      generationType: generatedById ? 'on_demand' : 'scheduled',
+      generatedById,
+      generationStatus: 'completed',
+      generationStartedAt: new Date(),
+      generationCompletedAt: new Date(),
+      cacheKey,
+    };
+    const savedReport = await prisma.generatedReport.upsert({
+      where: { cacheKey },
+      create: reportPayload,
+      update: {
         title: reportData.title,
         summary: reportData.summary,
         data: reportData.data,
@@ -966,7 +984,7 @@ export class ReportGenerationService {
         generationStatus: 'completed',
         generationStartedAt: new Date(),
         generationCompletedAt: new Date(),
-        cacheKey: `report:${tenantId}:${reportType}:${label}`,
+        accessCount: { increment: 1 },
       },
     });
 

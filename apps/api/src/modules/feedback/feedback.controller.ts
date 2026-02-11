@@ -8,6 +8,8 @@ import { FeedbackType, FeedbackVisibility } from '@pms/database';
 import type { AuthenticatedRequest, PaginationQuery } from '../../types';
 import { ValidationError } from '../../utils/errors';
 import { feedbackService } from './feedback.service';
+import { notificationsService } from '../notifications';
+import { logger } from '../../utils/logger';
 
 // Validation schemas
 const createFeedbackSchema = z.object({
@@ -43,6 +45,20 @@ export class FeedbackController {
         req.user.id,
         parseResult.data
       );
+
+      // Notify the recipient asynchronously
+      try {
+        const senderName = `${req.user.firstName} ${req.user.lastName}`;
+        await notificationsService.notifyFeedbackReceived(
+          parseResult.data.toUserId,
+          req.tenantId,
+          parseResult.data.type,
+          parseResult.data.isAnonymous || false,
+          senderName
+        );
+      } catch (notifErr) {
+        logger.warn('Failed to send feedback notification', { error: notifErr });
+      }
 
       res.status(201).json({
         success: true,
@@ -268,6 +284,22 @@ export class FeedbackController {
       }
 
       await feedbackService.requestFeedback(req.tenantId, req.user.id, parseResult.data);
+
+      // Also send email notification via proper notification service
+      try {
+        const senderName = `${req.user.firstName} ${req.user.lastName}`;
+        await notificationsService.send({
+          userId: parseResult.data.fromUserId,
+          tenantId: req.tenantId,
+          type: 'FEEDBACK_RECEIVED',
+          channel: 'EMAIL',
+          title: 'Feedback Requested',
+          body: parseResult.data.message || `${senderName} has requested your feedback.`,
+          data: { requestedBy: req.user.id },
+        });
+      } catch (notifErr) {
+        logger.warn('Failed to send feedback request email notification', { error: notifErr });
+      }
 
       res.status(200).json({
         success: true,

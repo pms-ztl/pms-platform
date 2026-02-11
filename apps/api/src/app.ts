@@ -11,6 +11,7 @@ import {
   notFoundHandler,
   standardRateLimiter,
   authRateLimiter,
+  socketEmitMiddleware,
 } from './middleware';
 import { authRoutes } from './modules/auth';
 import { goalsRoutes } from './modules/goals';
@@ -37,6 +38,8 @@ import { auditRoutes } from './modules/audit';
 import { skillsRoutes } from './modules/skills';
 import { complianceRoutes } from './modules/compliance';
 import { announcementRoutes } from './modules/announcements';
+import { leaderboardRoutes } from './modules/leaderboard';
+import { careerRoutes } from './modules/career';
 import { prisma } from '@pms/database';
 import { getRedisClient } from './utils/redis';
 import { logger } from './utils/logger';
@@ -157,6 +160,9 @@ export function createApp(): Express {
   // API routes with rate limiting
   const apiRouter = express.Router();
 
+  // Real-time socket emit on mutations
+  apiRouter.use(socketEmitMiddleware);
+
   // Auth routes with stricter rate limiting
   apiRouter.use('/auth', authRateLimiter, authRoutes);
 
@@ -185,6 +191,8 @@ export function createApp(): Express {
   apiRouter.use('/skills', standardRateLimiter, skillsRoutes);
   apiRouter.use('/compliance', standardRateLimiter, complianceRoutes);
   apiRouter.use('/announcements', standardRateLimiter, announcementRoutes);
+  apiRouter.use('/leaderboard', standardRateLimiter, leaderboardRoutes);
+  apiRouter.use('/career', standardRateLimiter, careerRoutes);
 
   // Mount API routes
   app.use('/api/v1', apiRouter);

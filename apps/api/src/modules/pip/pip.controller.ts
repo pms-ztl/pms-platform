@@ -6,21 +6,21 @@ import { pipService } from './pip.service';
 
 const createPIPSchema = z.object({
   userId: z.string().uuid(),
-  pipTitle: z.string().min(5).max(300),
+  pipTitle: z.string().min(1).max(300),
   pipType: z.enum(['PERFORMANCE', 'BEHAVIOR', 'ATTENDANCE', 'SKILLS']),
   severity: z.enum(['STANDARD', 'SERIOUS', 'FINAL_WARNING']),
   startDate: z.string().min(1),
   endDate: z.string().min(1),
   reviewFrequency: z.enum(['WEEKLY', 'BI_WEEKLY', 'MONTHLY']),
   performanceIssues: z.array(z.object({ issue: z.string(), details: z.string().optional() })).min(1),
-  impactStatement: z.string().min(10).max(5000),
-  performanceExpectations: z.string().min(10).max(5000),
+  impactStatement: z.string().max(5000).optional().default(''),
+  performanceExpectations: z.string().max(5000).optional().default(''),
   specificGoals: z.array(z.object({ goal: z.string(), metric: z.string().optional() })).min(1),
-  measurableObjectives: z.array(z.object({ objective: z.string(), target: z.string().optional() })),
+  measurableObjectives: z.array(z.object({ objective: z.string(), target: z.string().optional() })).optional().default([]),
   successCriteria: z.array(z.object({ criterion: z.string() })).min(1),
-  supportProvided: z.array(z.object({ support: z.string() })),
+  supportProvided: z.array(z.object({ support: z.string() })).optional().default([]),
   trainingRequired: z.array(z.string()).optional(),
-  consequencesOfNonCompliance: z.string().min(10).max(5000),
+  consequencesOfNonCompliance: z.string().max(5000).optional().default(''),
 });
 
 const addCheckInSchema = z.object({

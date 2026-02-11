@@ -178,13 +178,13 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             <p className="text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">Demo Credentials</p>
             <div className="space-y-1 text-xs text-secondary-500 dark:text-secondary-400">
               <p>
-                <span className="font-medium">Super Admin:</span> prssanjana@gmail.com / demo@pms
+                <span className="font-medium">Super Admin:</span> danish@xzashr.com / demo@pms
               </p>
               <p>
                 <span className="font-medium">HR Manager:</span> agdanishr@gmail.com / demo@123
               </p>
               <p>
-                <span className="font-medium">Team Lead:</span> preethisivachandran0@gmail.com / demo@789
+                <span className="font-medium">Manager:</span> preethisivachandran0@gmail.com / demo@789
               </p>
               <p>
                 <span className="font-medium">Employee:</span> sanjayn0369@gmail.com / demo@456

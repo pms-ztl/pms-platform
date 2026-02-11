@@ -191,18 +191,31 @@ export function ReportsPage() {
 
   const handleDownload = async (report: GeneratedReport, fmt: string) => {
     try {
+      const fmtLower = fmt.toLowerCase();
       const urlMap: Record<string, string | undefined> = {
         pdf: report.pdfUrl,
         excel: report.excelUrl,
         csv: report.csvUrl,
       };
-      const url = urlMap[fmt.toLowerCase()];
-      if (url) {
-        window.open(url, '_blank');
-      } else {
+      if (!urlMap[fmtLower]) {
         toast.error(`No ${fmt} file available for this report`);
+        return;
       }
-    } catch {
+
+      // Use the axios-based API client which has auth headers + correct base URL
+      const blob = await reportsApi.download(report.id, fmtLower);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const ext = fmtLower === 'excel' ? 'xlsx' : fmtLower;
+      a.download = `${report.title}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast.success('Download started');
+    } catch (err) {
+      console.error('[Download] Error:', err);
       toast.error('Download failed');
     }
   };

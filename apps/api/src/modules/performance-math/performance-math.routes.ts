@@ -22,4 +22,7 @@ router.post('/calibrate', controller.calibrateReviewRatings.bind(controller));
 // GET /api/v1/performance-math/goal-mapping/:goalId - Get mathematical task-to-goal mapping
 router.get('/goal-mapping/:goalId', controller.getGoalTaskMapping.bind(controller));
 
+// GET /api/v1/performance-math/cpis/:userId - Comprehensive Performance Intelligence Score
+router.get('/cpis/:userId', controller.getCPIS.bind(controller));
+
 export { router as performanceMathRoutes };

@@ -77,12 +77,12 @@ class AuditService {
       ];
     }
 
-    const [data, total] = await Promise.all([
+    const [rawData, total] = await Promise.all([
       prisma.auditEvent.findMany({
         where,
         include: {
           user: {
-            select: { firstName: true, lastName: true, email: true },
+            select: { id: true, firstName: true, lastName: true, email: true },
           },
         },
         orderBy: { createdAt: 'desc' },
@@ -93,6 +93,12 @@ class AuditService {
     ]);
 
     const totalPages = Math.ceil(total / limit);
+
+    // Map createdAt -> timestamp for frontend compatibility
+    const data = rawData.map((event) => ({
+      ...event,
+      timestamp: event.createdAt,
+    }));
 
     return {
       data,
@@ -256,8 +262,26 @@ class AuditService {
       count,
     }));
 
+    // Compute frontend-expected stats
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const eventsToday = await prisma.auditEvent.count({
+      where: { tenantId, createdAt: { gte: todayStart } },
+    });
+
+    const activeUsersTodayResult = await prisma.auditEvent.groupBy({
+      by: ['userId'],
+      where: { tenantId, createdAt: { gte: todayStart }, userId: { not: null } },
+    });
+
+    const topAction = byAction.length > 0 ? byAction[0].action : 'N/A';
+
     return {
-      total,
+      totalEvents: total,
+      totalEventsTrend: 0,
+      eventsToday,
+      activeUsersToday: activeUsersTodayResult.length,
+      mostCommonAction: topAction,
       byAction: byAction.map((a) => ({ action: a.action, count: a._count.id })),
       byEntityType: byEntityType.map((e) => ({ entityType: e.entityType, count: e._count.id })),
       mostActiveUsers,

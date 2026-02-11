@@ -25,6 +25,7 @@ import {
   type Department,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { DataTable, type Column } from '@/components/ui';
 
 export function UserManagementPage() {
   const queryClient = useQueryClient();
@@ -141,6 +142,97 @@ export function UserManagementPage() {
     },
   });
 
+  const userColumns: Column<User>[] = [
+    {
+      key: 'user',
+      header: 'User',
+      render: (member) => (
+        <div className="flex items-center gap-3">
+          {member.avatarUrl ? (
+            <img src={member.avatarUrl} alt={`${member.firstName} ${member.lastName}`} className="w-10 h-10 rounded-full" />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
+              <span className="text-sm font-medium text-primary-700 dark:text-primary-300">{member.firstName?.[0]}{member.lastName?.[0]}</span>
+            </div>
+          )}
+          <div>
+            <p className="text-sm font-medium text-secondary-900 dark:text-white">{member.firstName} {member.lastName}</p>
+            <p className="text-xs text-secondary-500 dark:text-secondary-400 flex items-center gap-1">
+              <EnvelopeIcon className="h-3 w-3" />{member.email}
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'role',
+      header: 'Role',
+      render: (member) => (
+        <div className="flex flex-wrap gap-1 items-center">
+          {member.roles?.slice(0, 2).map((role, i) => (
+            <span key={i} className={clsx('px-2 py-0.5 rounded-full text-xs font-medium',
+              role === 'ADMIN' || role === 'HR_ADMIN' || role === 'HR Admin' || role === 'Tenant Admin'
+                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300'
+                : role === 'MANAGER' || role === 'Manager'
+                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
+                : 'bg-secondary-100 text-secondary-700 dark:bg-secondary-700 dark:text-secondary-300'
+            )}>{role.replace('_', ' ')}</span>
+          ))}
+          {member.roles && member.roles.length > 2 && (
+            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400">+{member.roles.length - 2}</span>
+          )}
+          <button onClick={() => setShowRoleModal(member)} className="ml-1 p-1 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-xs underline">Manage</button>
+        </div>
+      ),
+    },
+    {
+      key: 'department',
+      header: 'Department',
+      render: (member) => member.department ? (
+        <span className="text-sm text-secondary-700 dark:text-secondary-300 flex items-center gap-1">
+          <BuildingOfficeIcon className="h-4 w-4 text-secondary-400" />{member.department.name}
+        </span>
+      ) : (
+        <span className="text-sm text-secondary-400 dark:text-secondary-500">—</span>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (member) => (
+        <span className={clsx('px-2.5 py-1 rounded-full text-xs font-medium',
+          member.isActive ? 'bg-success-100 text-success-700 dark:bg-success-900/50 dark:text-success-300' : 'bg-danger-100 text-danger-700 dark:bg-danger-900/50 dark:text-danger-300'
+        )}>{member.isActive ? 'Active' : 'Inactive'}</span>
+      ),
+    },
+    {
+      key: 'actions',
+      header: '',
+      className: 'text-right',
+      render: (member) => (
+        <div className="flex items-center justify-end gap-2">
+          <button onClick={() => setEditingUser(member)} className="p-2 text-secondary-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 dark:hover:text-primary-400 rounded-lg transition-colors" title="Edit user">
+            <PencilSquareIcon className="h-5 w-5" />
+          </button>
+          {member.isActive ? (
+            <button onClick={() => { if (confirm('Are you sure you want to deactivate this user?')) deactivateMutation.mutate(member.id); }} className="p-2 text-secondary-400 hover:text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-900/30 dark:hover:text-danger-400 rounded-lg transition-colors" title="Deactivate user">
+              <XCircleIcon className="h-5 w-5" />
+            </button>
+          ) : (
+            <>
+              <button onClick={() => reactivateMutation.mutate(member.id)} className="p-2 text-secondary-400 hover:text-success-600 hover:bg-success-50 dark:hover:bg-success-900/30 dark:hover:text-success-400 rounded-lg transition-colors" title="Reactivate user">
+                <CheckCircleIcon className="h-5 w-5" />
+              </button>
+              <button onClick={() => { if (confirm('Are you sure you want to PERMANENTLY DELETE this user? This action cannot be undone.')) deleteUserMutation.mutate(member.id); }} className="p-2 text-secondary-400 hover:text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-900/30 dark:hover:text-danger-400 rounded-lg transition-colors" title="Delete user permanently">
+                <TrashIcon className="h-5 w-5" />
+              </button>
+            </>
+          )}
+        </div>
+      ),
+    },
+  ];
+
   if (!isHRAdmin) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -253,174 +345,16 @@ export function UserManagementPage() {
       </div>
 
       {/* Users List */}
-      {isLoading ? (
-        <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
-        </div>
-      ) : !usersData?.data?.length ? (
-        <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700 text-center py-12">
-          <UserGroupIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-          <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No users found</h3>
-          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-            {searchQuery ? 'Try adjusting your search query.' : 'Add your first user to get started.'}
-          </p>
-        </div>
-      ) : (
-        <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
-              <thead className="bg-secondary-50 dark:bg-secondary-900/50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                    User
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                    Role
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                    Department
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-secondary-200 dark:divide-secondary-700 bg-white dark:bg-secondary-800">
-                {usersData.data.map((member: User) => (
-                  <tr key={member.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        {member.avatarUrl ? (
-                          <img
-                            src={member.avatarUrl}
-                            alt={`${member.firstName} ${member.lastName}`}
-                            className="w-10 h-10 rounded-full"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
-                            <span className="text-sm font-medium text-primary-700 dark:text-primary-300">
-                              {member.firstName?.[0]}{member.lastName?.[0]}
-                            </span>
-                          </div>
-                        )}
-                        <div>
-                          <p className="text-sm font-medium text-secondary-900 dark:text-white">
-                            {member.firstName} {member.lastName}
-                          </p>
-                          <p className="text-xs text-secondary-500 dark:text-secondary-400 flex items-center gap-1">
-                            <EnvelopeIcon className="h-3 w-3" />
-                            {member.email}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-wrap gap-1 items-center">
-                        {member.roles?.slice(0, 2).map((role, i) => (
-                          <span
-                            key={i}
-                            className={clsx(
-                              'px-2 py-0.5 rounded-full text-xs font-medium',
-                              role === 'ADMIN' || role === 'HR_ADMIN' || role === 'HR Admin' || role === 'Tenant Admin'
-                                ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300'
-                                : role === 'MANAGER' || role === 'Manager'
-                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300'
-                                : 'bg-secondary-100 text-secondary-700 dark:bg-secondary-700 dark:text-secondary-300'
-                            )}
-                          >
-                            {role.replace('_', ' ')}
-                          </span>
-                        ))}
-                        {member.roles && member.roles.length > 2 && (
-                          <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400">
-                            +{member.roles.length - 2}
-                          </span>
-                        )}
-                        <button
-                          onClick={() => setShowRoleModal(member)}
-                          className="ml-1 p-1 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-xs underline"
-                        >
-                          Manage
-                        </button>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {member.department ? (
-                        <span className="text-sm text-secondary-700 dark:text-secondary-300 flex items-center gap-1">
-                          <BuildingOfficeIcon className="h-4 w-4 text-secondary-400" />
-                          {member.department.name}
-                        </span>
-                      ) : (
-                        <span className="text-sm text-secondary-400 dark:text-secondary-500">—</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={clsx(
-                          'px-2.5 py-1 rounded-full text-xs font-medium',
-                          member.isActive
-                            ? 'bg-success-100 text-success-700 dark:bg-success-900/50 dark:text-success-300'
-                            : 'bg-danger-100 text-danger-700 dark:bg-danger-900/50 dark:text-danger-300'
-                        )}
-                      >
-                        {member.isActive ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => setEditingUser(member)}
-                          className="p-2 text-secondary-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 dark:hover:text-primary-400 rounded-lg transition-colors"
-                          title="Edit user"
-                        >
-                          <PencilSquareIcon className="h-5 w-5" />
-                        </button>
-                        {member.isActive ? (
-                          <button
-                            onClick={() => {
-                              if (confirm('Are you sure you want to deactivate this user?')) {
-                                deactivateMutation.mutate(member.id);
-                              }
-                            }}
-                            className="p-2 text-secondary-400 hover:text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-900/30 dark:hover:text-danger-400 rounded-lg transition-colors"
-                            title="Deactivate user"
-                          >
-                            <XCircleIcon className="h-5 w-5" />
-                          </button>
-                        ) : (
-                          <>
-                            <button
-                              onClick={() => reactivateMutation.mutate(member.id)}
-                              className="p-2 text-secondary-400 hover:text-success-600 hover:bg-success-50 dark:hover:bg-success-900/30 dark:hover:text-success-400 rounded-lg transition-colors"
-                              title="Reactivate user"
-                            >
-                              <CheckCircleIcon className="h-5 w-5" />
-                            </button>
-                            <button
-                              onClick={() => {
-                                if (confirm('Are you sure you want to PERMANENTLY DELETE this user? This action cannot be undone.')) {
-                                  deleteUserMutation.mutate(member.id);
-                                }
-                              }}
-                              className="p-2 text-secondary-400 hover:text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-900/30 dark:hover:text-danger-400 rounded-lg transition-colors"
-                              title="Delete user permanently"
-                            >
-                              <TrashIcon className="h-5 w-5" />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+      <DataTable<User>
+        columns={userColumns}
+        data={usersData?.data ?? []}
+        isLoading={isLoading}
+        keyExtractor={(member) => member.id}
+        emptyTitle="No users found"
+        emptyDescription={searchQuery ? 'Try adjusting your search query.' : 'Add your first user to get started.'}
+        emptyIcon={<UserGroupIcon className="h-12 w-12" />}
+        emptyAction={{ label: 'Add User', onClick: () => setShowCreateModal(true) }}
+      />
 
       {/* Create User Modal */}
       {showCreateModal && (

@@ -168,6 +168,9 @@ export class FeedbackService {
           fromUser: {
             select: { id: true, firstName: true, lastName: true, avatarUrl: true },
           },
+          toUser: {
+            select: { id: true, firstName: true, lastName: true },
+          },
         },
         skip,
         take: limit,
@@ -229,6 +232,9 @@ export class FeedbackService {
       prisma.feedback.findMany({
         where,
         include: {
+          fromUser: {
+            select: { id: true, firstName: true, lastName: true, avatarUrl: true },
+          },
           toUser: {
             select: { id: true, firstName: true, lastName: true },
           },

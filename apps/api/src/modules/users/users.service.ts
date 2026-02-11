@@ -4,6 +4,7 @@ import type { PaginatedResult, PaginationParams } from '@pms/database';
 
 import { auditLogger } from '../../utils/logger';
 import { NotFoundError, ValidationError, ConflictError } from '../../utils/errors';
+import { deleteSession } from '../../utils/redis';
 
 interface CreateUserInput {
   email: string;
@@ -352,6 +353,9 @@ export class UsersService {
       where: { id: userId },
       data: { avatarUrl },
     });
+
+    // Invalidate session cache so next /auth/me returns updated avatarUrl
+    await deleteSession(userId);
 
     auditLogger('USER_AVATAR_UPDATED', userId, tenantId, 'user', userId, {
       avatarUrl,

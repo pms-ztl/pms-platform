@@ -31,34 +31,53 @@ import { useAuthStore } from '@/store/auth';
 type Period = 'week' | 'month' | 'quarter' | 'year';
 type LeaderboardTab = 'performance' | 'goals' | 'recognition' | 'learning';
 
-interface LeaderboardEntry {
+interface LeaderboardUser {
   id: string;
+  firstName: string;
+  lastName: string;
+  jobTitle: string | null;
+  department: string | null;
+}
+
+interface PerformanceEntry {
   rank: number;
-  rankChange: number | null;
-  user: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    avatarUrl?: string;
-    jobTitle?: string;
-    department?: string;
-  };
+  user: LeaderboardUser;
   score: number;
-  goalsCompleted?: number;
-  goalsTotal?: number;
-  reviewRating?: number;
-  trendUp?: boolean;
-  completionRate?: number;
-  onTimeRate?: number;
-  streak?: number;
-  kudosReceived?: number;
-  badges?: string[];
-  pointsTotal?: number;
-  topCategory?: string;
-  coursesCompleted?: number;
-  hoursInvested?: number;
-  skillsAcquired?: number;
-  certifications?: number;
+  goalsCompleted: number;
+  goalsTotal: number;
+  reviewRating: number | null;
+  trendUp: boolean | null;
+}
+
+interface GoalsEntry {
+  rank: number;
+  user: LeaderboardUser;
+  score: number;
+  goalsCompleted: number;
+  goalsTotal: number;
+  completionRate: number;
+  avgProgress: number;
+  onTimeRate: number;
+}
+
+interface RecognitionEntry {
+  rank: number;
+  user: LeaderboardUser;
+  score: number;
+  totalReceived: number;
+  avgSentiment: number | null;
+  praiseCount: number;
+}
+
+interface LearningEntry {
+  rank: number;
+  user: LeaderboardUser;
+  score: number;
+  plansTotal: number;
+  plansCompleted: number;
+  avgProgress: number;
+  activitiesCompleted: number;
+  activitiesTotal: number;
 }
 
 interface DepartmentScore {
@@ -68,104 +87,16 @@ interface DepartmentScore {
   avgScore: number;
 }
 
-interface Achievement {
-  id: string;
-  title: string;
-  icon: string;
-  unlockedAt: string;
-}
-
 interface MyStats {
-  performanceRank: number;
-  goalsRank: number;
-  recognitionRank: number;
-  learningRank: number;
-  totalPoints: number;
-  badges: string[];
-  currentStreak: number;
-  progressHistory: number[];
-  achievements: Achievement[];
+  totalUsers: number;
+  performance: { rank: number; score: number; percentile: number };
+  goals: { rank: number; score: number; percentile: number };
+  recognition: { rank: number; score: number; percentile: number };
+  learning: { rank: number; score: number; percentile: number };
 }
 
-// ─── Mock Data Generators ───────────────────────────────────────────────────
-
-const DEPARTMENTS = ['Engineering', 'Product', 'Design', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations'];
-const TITLES = ['Software Engineer', 'Product Manager', 'Designer', 'Data Analyst', 'Team Lead', 'Director', 'Specialist', 'Coordinator'];
-const BADGE_TYPES = ['Leadership', 'Teamwork', 'Innovation', 'Performance', 'Collaboration'];
-
-function generateMockEntries(tab: LeaderboardTab, count = 25): LeaderboardEntry[] {
-  const names = [
-    ['Sarah', 'Chen'], ['James', 'Wilson'], ['Maria', 'Garcia'], ['David', 'Kim'],
-    ['Emma', 'Patel'], ['Michael', 'Brown'], ['Aisha', 'Rahman'], ['Lucas', 'Martinez'],
-    ['Priya', 'Sharma'], ['Oliver', 'Taylor'], ['Sofia', 'Andersen'], ['Noah', 'Williams'],
-    ['Isabella', 'Lee'], ['Ethan', 'Johnson'], ['Ava', 'Thompson'], ['Liam', 'Davis'],
-    ['Mia', 'Clark'], ['Benjamin', 'Rodriguez'], ['Charlotte', 'Lopez'], ['William', 'Hall'],
-    ['Amelia', 'Young'], ['Mason', 'Allen'], ['Harper', 'King'], ['Elijah', 'Wright'],
-    ['Evelyn', 'Scott'],
-  ];
-
-  return names.slice(0, count).map((name, i) => {
-    const baseScore = Math.max(1.5, 5.0 - i * 0.12 + (Math.random() * 0.3 - 0.15));
-    const changes = [3, -1, 2, null, -2, 1, 0, -3, 5, 0, 1, -1, 2, null, 0, -2, 3, 1, -1, 0, 2, -1, 0, 1, -2];
-    return {
-      id: `user-${i + 1}`,
-      rank: i + 1,
-      rankChange: changes[i] ?? null,
-      user: {
-        id: `user-${i + 1}`,
-        firstName: name[0],
-        lastName: name[1],
-        jobTitle: TITLES[i % TITLES.length],
-        department: DEPARTMENTS[i % DEPARTMENTS.length],
-      },
-      score: Math.round(baseScore * 100) / 100,
-      goalsCompleted: Math.floor(Math.random() * 12) + 3,
-      goalsTotal: Math.floor(Math.random() * 5) + 12,
-      reviewRating: Math.round((3.5 + Math.random() * 1.5) * 10) / 10,
-      trendUp: Math.random() > 0.35,
-      completionRate: Math.round(65 + Math.random() * 35),
-      onTimeRate: Math.round(70 + Math.random() * 30),
-      streak: Math.floor(Math.random() * 8) + 1,
-      kudosReceived: Math.floor(Math.random() * 50) + 5,
-      badges: BADGE_TYPES.slice(0, Math.floor(Math.random() * 4) + 1),
-      pointsTotal: Math.floor(Math.random() * 2000) + 500,
-      topCategory: BADGE_TYPES[Math.floor(Math.random() * BADGE_TYPES.length)],
-      coursesCompleted: Math.floor(Math.random() * 15) + 1,
-      hoursInvested: Math.floor(Math.random() * 120) + 10,
-      skillsAcquired: Math.floor(Math.random() * 8) + 1,
-      certifications: Math.floor(Math.random() * 5),
-    };
-  });
-}
-
-function generateDepartmentScores(): DepartmentScore[] {
-  return DEPARTMENTS.map((name, i) => ({
-    id: `dept-${i}`,
-    name,
-    memberCount: Math.floor(Math.random() * 30) + 10,
-    avgScore: Math.round((3.2 + Math.random() * 1.6) * 100) / 100,
-  })).sort((a, b) => b.avgScore - a.avgScore);
-}
-
-function generateMyStats(): MyStats {
-  return {
-    performanceRank: 7,
-    goalsRank: 4,
-    recognitionRank: 12,
-    learningRank: 3,
-    totalPoints: 1850,
-    badges: ['Leadership', 'Innovation', 'Collaboration'],
-    currentStreak: 5,
-    progressHistory: [3.2, 3.5, 3.8, 4.0, 4.1, 4.3],
-    achievements: [
-      { id: '1', title: 'First Review Completed', icon: 'star', unlockedAt: '2025-01-15' },
-      { id: '2', title: '10 Goals Crushed', icon: 'flag', unlockedAt: '2025-03-22' },
-      { id: '3', title: 'Team Player Award', icon: 'heart', unlockedAt: '2025-06-10' },
-      { id: '4', title: '5-Week Streak', icon: 'fire', unlockedAt: '2025-09-05' },
-      { id: '5', title: 'Certified Expert', icon: 'academic', unlockedAt: '2025-11-18' },
-    ],
-  };
-}
+// Union type for any leaderboard entry (used in shared rendering logic)
+type AnyEntry = PerformanceEntry | GoalsEntry | RecognitionEntry | LearningEntry;
 
 // ─── Sub-Components ─────────────────────────────────────────────────────────
 
@@ -257,53 +188,6 @@ function AchievementIcon({ icon, className = 'h-5 w-5' }: { icon: string; classN
   return <Icon className={className} />;
 }
 
-// ─── Podium ─────────────────────────────────────────────────────────────────
-
-function Podium({ entries }: { entries: LeaderboardEntry[] }) {
-  const top3 = entries.slice(0, 3);
-  if (top3.length < 3) return null;
-
-  const podiumOrder = [top3[1], top3[0], top3[2]];
-  const heights = ['h-28', 'h-36', 'h-24'];
-  const gradients = [
-    'from-slate-200 via-slate-100 to-white dark:from-slate-600 dark:via-slate-700 dark:to-slate-800',
-    'from-amber-200 via-amber-100 to-yellow-50 dark:from-amber-700 dark:via-amber-800 dark:to-amber-900',
-    'from-orange-200 via-orange-100 to-orange-50 dark:from-orange-700 dark:via-orange-800 dark:to-orange-900',
-  ];
-  const ringColors = ['ring-slate-300 dark:ring-slate-500', 'ring-amber-400 dark:ring-amber-500', 'ring-orange-400 dark:ring-orange-500'];
-  const labels = ['Silver', 'Gold', 'Bronze'];
-
-  return (
-    <div className="flex items-end justify-center gap-4 sm:gap-6 py-6">
-      {podiumOrder.map((entry, idx) => (
-        <div key={entry.id} className={clsx('flex flex-col items-center transition-all duration-500 animate-slide-up', idx === 1 && 'order-2', idx === 0 && 'order-1', idx === 2 && 'order-3')} style={{ animationDelay: `${idx * 150}ms` }}>
-          <div className="relative mb-3">
-            {idx === 1 && (
-              <TrophyIcon className="absolute -top-5 left-1/2 -translate-x-1/2 h-8 w-8 text-amber-400 drop-shadow-lg animate-bounce-soft" />
-            )}
-            <div className={clsx('rounded-full p-1 ring-4', ringColors[idx])}>
-              <Avatar user={entry.user} size={idx === 1 ? 'xl' : 'lg'} />
-            </div>
-            <span className={clsx(
-              'absolute -bottom-1 -right-1 inline-flex items-center justify-center h-6 w-6 rounded-full text-xs font-bold text-white shadow-lg',
-              idx === 0 && 'bg-gradient-to-br from-slate-400 to-slate-500',
-              idx === 1 && 'bg-gradient-to-br from-amber-400 to-amber-600',
-              idx === 2 && 'bg-gradient-to-br from-orange-400 to-orange-600',
-            )}>{entry.rank}</span>
-          </div>
-          <p className="text-sm font-semibold text-secondary-900 dark:text-white text-center">{entry.user.firstName} {entry.user.lastName}</p>
-          <p className="text-xs text-secondary-500 dark:text-secondary-400 text-center">{entry.user.jobTitle}</p>
-          <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">{entry.score.toFixed(2)}</p>
-          <p className="text-[10px] text-secondary-400 dark:text-secondary-500 uppercase tracking-wider">{entry.user.department}</p>
-          <div className={clsx('mt-2 w-24 sm:w-28 rounded-t-xl bg-gradient-to-b flex items-end justify-center', heights[idx], gradients[idx])}>
-            <span className="text-xs font-bold text-secondary-500 dark:text-secondary-300 pb-2 uppercase tracking-wider">{labels[idx]}</span>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 // ─── Sparkline ──────────────────────────────────────────────────────────────
 
 function Sparkline({ data, className }: { data: number[]; className?: string }) {
@@ -326,9 +210,75 @@ function Sparkline({ data, className }: { data: number[]; className?: string }) 
   );
 }
 
+// ─── Podium ─────────────────────────────────────────────────────────────────
+
+function Podium({ entries }: { entries: AnyEntry[] }) {
+  const top3 = entries.slice(0, 3);
+  if (top3.length < 3) {
+    if (top3.length === 0) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12 text-secondary-400 dark:text-secondary-500">
+          <TrophyIcon className="h-12 w-12 mb-3 opacity-40" />
+          <p className="text-sm font-medium">No data available for this period</p>
+          <p className="text-xs mt-1">Check back later or select a different time range</p>
+        </div>
+      );
+    }
+    return null;
+  }
+
+  const podiumOrder = [top3[1], top3[0], top3[2]];
+  const heights = ['h-28', 'h-36', 'h-24'];
+  const gradients = [
+    'from-slate-200 via-slate-100 to-white dark:from-slate-600 dark:via-slate-700 dark:to-slate-800',
+    'from-amber-200 via-amber-100 to-yellow-50 dark:from-amber-700 dark:via-amber-800 dark:to-amber-900',
+    'from-orange-200 via-orange-100 to-orange-50 dark:from-orange-700 dark:via-orange-800 dark:to-orange-900',
+  ];
+  const ringColors = ['ring-slate-300 dark:ring-slate-500', 'ring-amber-400 dark:ring-amber-500', 'ring-orange-400 dark:ring-orange-500'];
+  const labels = ['Silver', 'Gold', 'Bronze'];
+
+  return (
+    <div className="flex items-end justify-center gap-4 sm:gap-6 py-6">
+      {podiumOrder.map((entry, idx) => (
+        <div key={entry.user.id} className={clsx('flex flex-col items-center transition-all duration-500 animate-slide-up', idx === 1 && 'order-2', idx === 0 && 'order-1', idx === 2 && 'order-3')} style={{ animationDelay: `${idx * 150}ms` }}>
+          <div className="relative mb-3">
+            {idx === 1 && (
+              <TrophyIcon className="absolute -top-5 left-1/2 -translate-x-1/2 h-8 w-8 text-amber-400 drop-shadow-lg animate-bounce-soft" />
+            )}
+            <div className={clsx('rounded-full p-1 ring-4', ringColors[idx])}>
+              <Avatar user={entry.user} size={idx === 1 ? 'xl' : 'lg'} />
+            </div>
+            <span className={clsx(
+              'absolute -bottom-1 -right-1 inline-flex items-center justify-center h-6 w-6 rounded-full text-xs font-bold text-white shadow-lg',
+              idx === 0 && 'bg-gradient-to-br from-slate-400 to-slate-500',
+              idx === 1 && 'bg-gradient-to-br from-amber-400 to-amber-600',
+              idx === 2 && 'bg-gradient-to-br from-orange-400 to-orange-600',
+            )}>{entry.rank}</span>
+          </div>
+          <p className="text-sm font-semibold text-secondary-900 dark:text-white text-center">{entry.user.firstName} {entry.user.lastName}</p>
+          <p className="text-xs text-secondary-500 dark:text-secondary-400 text-center">{entry.user.jobTitle}</p>
+          <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">{entry.score.toFixed(1)}</p>
+          <p className="text-[10px] text-secondary-400 dark:text-secondary-500 uppercase tracking-wider">{entry.user.department}</p>
+          <div className={clsx('mt-2 w-24 sm:w-28 rounded-t-xl bg-gradient-to-b flex items-end justify-center', heights[idx], gradients[idx])}>
+            <span className="text-xs font-bold text-secondary-500 dark:text-secondary-300 pb-2 uppercase tracking-wider">{labels[idx]}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── Department Bar Chart ───────────────────────────────────────────────────
 
 function DepartmentChart({ departments }: { departments: DepartmentScore[] }) {
+  if (departments.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-8 text-secondary-400 dark:text-secondary-500">
+        <p className="text-sm">No department data available</p>
+      </div>
+    );
+  }
+
   const maxScore = Math.max(...departments.map(d => d.avgScore));
 
   return (
@@ -339,15 +289,55 @@ function DepartmentChart({ departments }: { departments: DepartmentScore[] }) {
           <div className="flex-1 h-7 bg-secondary-100 dark:bg-secondary-800 rounded-full overflow-hidden relative">
             <div
               className="h-full bg-gradient-to-r from-primary-500 to-primary-400 dark:from-primary-600 dark:to-primary-400 rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-2"
-              style={{ width: `${(dept.avgScore / maxScore) * 100}%` }}
+              style={{ width: `${maxScore > 0 ? (dept.avgScore / maxScore) * 100 : 0}%` }}
             >
-              <span className="text-[10px] font-bold text-white">{dept.avgScore.toFixed(2)}</span>
+              <span className="text-[10px] font-bold text-white">{dept.avgScore.toFixed(1)}</span>
             </div>
           </div>
           <span className="w-14 text-xs text-secondary-500 dark:text-secondary-400 text-right">{dept.memberCount} ppl</span>
         </div>
       ))}
     </div>
+  );
+}
+
+// ─── Empty State ────────────────────────────────────────────────────────────
+
+function EmptyState({ message = 'No data available' }: { message?: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center h-64 text-secondary-400 dark:text-secondary-500">
+      <ChartBarIcon className="h-10 w-10 mb-3 opacity-40" />
+      <p className="text-sm font-medium">{message}</p>
+      <p className="text-xs mt-1">Try selecting a different time period</p>
+    </div>
+  );
+}
+
+// ─── Error State ────────────────────────────────────────────────────────────
+
+function ErrorState({ message = 'Failed to load data' }: { message?: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center h-64 text-danger-400 dark:text-danger-500">
+      <ChartBarIcon className="h-10 w-10 mb-3 opacity-40" />
+      <p className="text-sm font-medium">{message}</p>
+      <p className="text-xs mt-1 text-secondary-400">Please try again later</p>
+    </div>
+  );
+}
+
+// ─── Score Display Helper ───────────────────────────────────────────────────
+
+function ScoreDisplay({ score }: { score: number }) {
+  return (
+    <>
+      <span className={clsx(
+        'text-sm font-bold',
+        score >= 75 ? 'text-success-600 dark:text-success-400' : score >= 50 ? 'text-primary-600 dark:text-primary-400' : 'text-warning-600 dark:text-warning-400',
+      )}>
+        {score.toFixed(1)}
+      </span>
+      <span className="text-xs text-secondary-400"> / 100</span>
+    </>
   );
 }
 
@@ -359,62 +349,47 @@ export function LeaderboardPage() {
   const [activeTab, setActiveTab] = useState<LeaderboardTab>('performance');
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Data queries -- using mock data wrapped in useQuery for future replacement
-  const { data: performanceEntries, isLoading: loadingPerformance } = useQuery({
+  // ─── Data Queries ───────────────────────────────────────────────────────
+
+  const { data: performanceEntries, isLoading: loadingPerformance, isError: errorPerformance } = useQuery({
     queryKey: ['leaderboard', 'performance', period],
-    queryFn: async () => {
-      try { return await api.get<LeaderboardEntry[]>(`/leaderboard/performance?period=${period}`); }
-      catch { return generateMockEntries('performance'); }
-    },
+    queryFn: () => api.get<PerformanceEntry[]>(`/leaderboard/performance?period=${period}`),
     staleTime: 60_000,
   });
 
-  const { data: goalsEntries, isLoading: loadingGoals } = useQuery({
+  const { data: goalsEntries, isLoading: loadingGoals, isError: errorGoals } = useQuery({
     queryKey: ['leaderboard', 'goals', period],
-    queryFn: async () => {
-      try { return await api.get<LeaderboardEntry[]>(`/leaderboard/goals?period=${period}`); }
-      catch { return generateMockEntries('goals'); }
-    },
+    queryFn: () => api.get<GoalsEntry[]>(`/leaderboard/goals?period=${period}`),
     staleTime: 60_000,
   });
 
-  const { data: recognitionEntries, isLoading: loadingRecognition } = useQuery({
+  const { data: recognitionEntries, isLoading: loadingRecognition, isError: errorRecognition } = useQuery({
     queryKey: ['leaderboard', 'recognition', period],
-    queryFn: async () => {
-      try { return await api.get<LeaderboardEntry[]>(`/leaderboard/recognition?period=${period}`); }
-      catch { return generateMockEntries('recognition'); }
-    },
+    queryFn: () => api.get<RecognitionEntry[]>(`/leaderboard/recognition?period=${period}`),
     staleTime: 60_000,
   });
 
-  const { data: learningEntries, isLoading: loadingLearning } = useQuery({
+  const { data: learningEntries, isLoading: loadingLearning, isError: errorLearning } = useQuery({
     queryKey: ['leaderboard', 'learning', period],
-    queryFn: async () => {
-      try { return await api.get<LeaderboardEntry[]>(`/leaderboard/learning?period=${period}`); }
-      catch { return generateMockEntries('learning'); }
-    },
+    queryFn: () => api.get<LearningEntry[]>(`/leaderboard/learning?period=${period}`),
     staleTime: 60_000,
   });
 
   const { data: departmentScores } = useQuery({
     queryKey: ['leaderboard', 'departments', period],
-    queryFn: async () => {
-      try { return await api.get<DepartmentScore[]>(`/leaderboard/departments?period=${period}`); }
-      catch { return generateDepartmentScores(); }
-    },
+    queryFn: () => api.get<DepartmentScore[]>(`/leaderboard/departments?period=${period}`),
     staleTime: 60_000,
   });
 
   const { data: myStats } = useQuery({
     queryKey: ['leaderboard', 'my-stats', period],
-    queryFn: async () => {
-      try { return await api.get<MyStats>(`/leaderboard/my-stats?period=${period}`); }
-      catch { return generateMyStats(); }
-    },
+    queryFn: () => api.get<MyStats>(`/leaderboard/my-stats?period=${period}`),
     staleTime: 60_000,
   });
 
-  const entriesMap: Record<LeaderboardTab, LeaderboardEntry[] | undefined> = {
+  // ─── Active Tab Data ──────────────────────────────────────────────────
+
+  const entriesMap: Record<LeaderboardTab, AnyEntry[] | undefined> = {
     performance: performanceEntries,
     goals: goalsEntries,
     recognition: recognitionEntries,
@@ -428,8 +403,16 @@ export function LeaderboardPage() {
     learning: loadingLearning,
   };
 
+  const errorMap: Record<LeaderboardTab, boolean> = {
+    performance: errorPerformance,
+    goals: errorGoals,
+    recognition: errorRecognition,
+    learning: errorLearning,
+  };
+
   const entries = entriesMap[activeTab] || [];
   const isLoading = loadingMap[activeTab];
+  const isError = errorMap[activeTab];
 
   const currentUserEntry = useMemo(
     () => entries.find(e => e.user.id === user?.id),
@@ -450,130 +433,140 @@ export function LeaderboardPage() {
     { key: 'learning', label: 'Learning', icon: AcademicCapIcon },
   ];
 
-  // ─── Renderers per Tab ──────────────────────────────────────────────────
+  // ─── Row Renderers per Tab ────────────────────────────────────────────
 
-  function renderPerformanceRow(entry: LeaderboardEntry) {
+  function renderPerformanceRow(entry: AnyEntry) {
+    const e = entry as PerformanceEntry;
     return (
       <>
         <td className="px-4 py-3 whitespace-nowrap">
           <div className="flex items-center gap-2">
-            <RankBadge rank={entry.rank} />
-            <RankChange change={entry.rankChange} />
+            <RankBadge rank={e.rank} />
+            <RankChange change={null} />
           </div>
         </td>
         <td className="px-4 py-3 whitespace-nowrap">
           <div className="flex items-center gap-3">
-            <Avatar user={entry.user} size="sm" />
+            <Avatar user={e.user} size="sm" />
             <div>
-              <p className="text-sm font-medium text-secondary-900 dark:text-white">{entry.user.firstName} {entry.user.lastName}</p>
-              <p className="text-xs text-secondary-500 dark:text-secondary-400">{entry.user.jobTitle}</p>
+              <p className="text-sm font-medium text-secondary-900 dark:text-white">{e.user.firstName} {e.user.lastName}</p>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400">{e.user.jobTitle}</p>
             </div>
           </div>
         </td>
-        <td className="px-4 py-3 text-sm text-secondary-600 dark:text-secondary-400">{entry.user.department}</td>
+        <td className="px-4 py-3 text-sm text-secondary-600 dark:text-secondary-400">{e.user.department}</td>
         <td className="px-4 py-3">
-          <span className={clsx('text-sm font-bold', entry.score >= 4.0 ? 'text-success-600 dark:text-success-400' : entry.score >= 3.0 ? 'text-primary-600 dark:text-primary-400' : 'text-warning-600 dark:text-warning-400')}>
-            {entry.score.toFixed(2)}
-          </span>
-          <span className="text-xs text-secondary-400"> / 5.0</span>
+          <ScoreDisplay score={e.score} />
         </td>
-        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{entry.goalsCompleted}</td>
-        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{entry.reviewRating?.toFixed(1)}</td>
+        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.goalsCompleted} / {e.goalsTotal}</td>
+        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.reviewRating != null ? e.reviewRating.toFixed(1) : '--'}</td>
         <td className="px-4 py-3">
-          {entry.trendUp
-            ? <ArrowTrendingUpIcon className="h-5 w-5 text-success-500" />
-            : <ArrowTrendingDownIcon className="h-5 w-5 text-danger-500" />}
+          {e.trendUp === true && <ArrowTrendingUpIcon className="h-5 w-5 text-success-500" />}
+          {e.trendUp === false && <ArrowTrendingDownIcon className="h-5 w-5 text-danger-500" />}
+          {e.trendUp === null && <span className="text-xs text-secondary-400">--</span>}
         </td>
       </>
     );
   }
 
-  function renderGoalsRow(entry: LeaderboardEntry) {
+  function renderGoalsRow(entry: AnyEntry) {
+    const e = entry as GoalsEntry;
     return (
       <>
         <td className="px-4 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-2"><RankBadge rank={entry.rank} /><RankChange change={entry.rankChange} /></div>
+          <div className="flex items-center gap-2"><RankBadge rank={e.rank} /><RankChange change={null} /></div>
         </td>
         <td className="px-4 py-3 whitespace-nowrap">
           <div className="flex items-center gap-3">
-            <Avatar user={entry.user} size="sm" />
-            <p className="text-sm font-medium text-secondary-900 dark:text-white">{entry.user.firstName} {entry.user.lastName}</p>
+            <Avatar user={e.user} size="sm" />
+            <p className="text-sm font-medium text-secondary-900 dark:text-white">{e.user.firstName} {e.user.lastName}</p>
           </div>
         </td>
-        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{entry.goalsCompleted} / {entry.goalsTotal}</td>
+        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.goalsCompleted} / {e.goalsTotal}</td>
         <td className="px-4 py-3">
           <div className="flex items-center gap-2">
             <div className="flex-1 max-w-[80px] h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
-              <div className="h-full bg-primary-500 rounded-full transition-all duration-500" style={{ width: `${entry.completionRate}%` }} />
+              <div className="h-full bg-primary-500 rounded-full transition-all duration-500" style={{ width: `${e.completionRate}%` }} />
             </div>
-            <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">{entry.completionRate}%</span>
+            <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">{e.completionRate.toFixed(0)}%</span>
           </div>
         </td>
-        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{entry.onTimeRate}%</td>
         <td className="px-4 py-3">
-          <div className="flex items-center gap-1">
-            <FireIcon className="h-4 w-4 text-orange-500" />
-            <span className="text-sm font-semibold text-orange-600 dark:text-orange-400">{entry.streak}</span>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 max-w-[60px] h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
+              <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${e.avgProgress}%` }} />
+            </div>
+            <span className="text-sm text-secondary-700 dark:text-secondary-300">{e.avgProgress.toFixed(0)}%</span>
           </div>
+        </td>
+        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.onTimeRate.toFixed(0)}%</td>
+      </>
+    );
+  }
+
+  function renderRecognitionRow(entry: AnyEntry) {
+    const e = entry as RecognitionEntry;
+    return (
+      <>
+        <td className="px-4 py-3 whitespace-nowrap">
+          <div className="flex items-center gap-2"><RankBadge rank={e.rank} /><RankChange change={null} /></div>
+        </td>
+        <td className="px-4 py-3 whitespace-nowrap">
+          <div className="flex items-center gap-3">
+            <Avatar user={e.user} size="sm" />
+            <p className="text-sm font-medium text-secondary-900 dark:text-white">{e.user.firstName} {e.user.lastName}</p>
+          </div>
+        </td>
+        <td className="px-4 py-3">
+          <span className="text-sm font-bold text-primary-600 dark:text-primary-400">{e.score.toFixed(1)}</span>
+        </td>
+        <td className="px-4 py-3 text-sm font-semibold text-secondary-700 dark:text-secondary-300">{e.totalReceived}</td>
+        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.praiseCount}</td>
+        <td className="px-4 py-3 text-sm text-secondary-600 dark:text-secondary-400">
+          {e.avgSentiment != null ? e.avgSentiment.toFixed(2) : '--'}
         </td>
       </>
     );
   }
 
-  function renderRecognitionRow(entry: LeaderboardEntry) {
+  function renderLearningRow(entry: AnyEntry) {
+    const e = entry as LearningEntry;
     return (
       <>
         <td className="px-4 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-2"><RankBadge rank={entry.rank} /><RankChange change={entry.rankChange} /></div>
+          <div className="flex items-center gap-2"><RankBadge rank={e.rank} /><RankChange change={null} /></div>
         </td>
         <td className="px-4 py-3 whitespace-nowrap">
           <div className="flex items-center gap-3">
-            <Avatar user={entry.user} size="sm" />
-            <p className="text-sm font-medium text-secondary-900 dark:text-white">{entry.user.firstName} {entry.user.lastName}</p>
+            <Avatar user={e.user} size="sm" />
+            <p className="text-sm font-medium text-secondary-900 dark:text-white">{e.user.firstName} {e.user.lastName}</p>
           </div>
         </td>
-        <td className="px-4 py-3 text-sm font-semibold text-secondary-700 dark:text-secondary-300">{entry.kudosReceived}</td>
+        <td className="px-4 py-3 text-sm font-semibold text-secondary-700 dark:text-secondary-300">{e.plansCompleted} / {e.plansTotal}</td>
         <td className="px-4 py-3">
-          <div className="flex items-center gap-1">
-            {entry.badges?.map(b => <BadgeIcon key={b} badge={b} className="h-5 w-5" />)}
+          <div className="flex items-center gap-2">
+            <div className="flex-1 max-w-[60px] h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
+              <div className="h-full bg-violet-500 rounded-full transition-all duration-500" style={{ width: `${e.avgProgress}%` }} />
+            </div>
+            <span className="text-sm text-secondary-700 dark:text-secondary-300">{e.avgProgress.toFixed(0)}%</span>
           </div>
         </td>
+        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.activitiesCompleted} / {e.activitiesTotal}</td>
         <td className="px-4 py-3">
-          <span className="text-sm font-bold text-primary-600 dark:text-primary-400">{entry.pointsTotal?.toLocaleString()}</span>
+          <span className="text-sm font-bold text-primary-600 dark:text-primary-400">{e.score.toFixed(1)}</span>
         </td>
-        <td className="px-4 py-3 text-sm text-secondary-600 dark:text-secondary-400">{entry.topCategory}</td>
-      </>
-    );
-  }
-
-  function renderLearningRow(entry: LeaderboardEntry) {
-    return (
-      <>
-        <td className="px-4 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-2"><RankBadge rank={entry.rank} /><RankChange change={entry.rankChange} /></div>
-        </td>
-        <td className="px-4 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-3">
-            <Avatar user={entry.user} size="sm" />
-            <p className="text-sm font-medium text-secondary-900 dark:text-white">{entry.user.firstName} {entry.user.lastName}</p>
-          </div>
-        </td>
-        <td className="px-4 py-3 text-sm font-semibold text-secondary-700 dark:text-secondary-300">{entry.coursesCompleted}</td>
-        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{entry.hoursInvested}h</td>
-        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{entry.skillsAcquired}</td>
-        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{entry.certifications}</td>
       </>
     );
   }
 
   const columnHeaders: Record<LeaderboardTab, string[]> = {
-    performance: ['Rank', 'Employee', 'Department', 'Score', 'Goals Done', 'Review', 'Trend'],
-    goals: ['Rank', 'Employee', 'Completed / Total', 'Completion Rate', 'On-Time', 'Streak'],
-    recognition: ['Rank', 'Employee', 'Kudos', 'Badges', 'Points', 'Top Category'],
-    learning: ['Rank', 'Employee', 'Courses', 'Hours', 'Skills', 'Certs'],
+    performance: ['Rank', 'Employee', 'Department', 'Score', 'Goals', 'Review', 'Trend'],
+    goals: ['Rank', 'Employee', 'Completed / Total', 'Completion Rate', 'Avg Progress', 'On-Time'],
+    recognition: ['Rank', 'Employee', 'Score', 'Received', 'Praise', 'Avg Sentiment'],
+    learning: ['Rank', 'Employee', 'Plans', 'Avg Progress', 'Activities', 'Score'],
   };
 
-  const rowRenderers: Record<LeaderboardTab, (e: LeaderboardEntry) => JSX.Element> = {
+  const rowRenderers: Record<LeaderboardTab, (e: AnyEntry) => JSX.Element> = {
     performance: renderPerformanceRow,
     goals: renderGoalsRow,
     recognition: renderRecognitionRow,
@@ -651,6 +644,10 @@ export function LeaderboardPage() {
                 <div className="flex items-center justify-center h-64">
                   <div className="animate-spin rounded-full h-10 w-10 border-2 border-primary-500 border-t-transparent" />
                 </div>
+              ) : isError ? (
+                <ErrorState />
+              ) : entries.length === 0 ? (
+                <EmptyState />
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
@@ -664,7 +661,7 @@ export function LeaderboardPage() {
                     <tbody className="divide-y divide-secondary-100 dark:divide-secondary-800">
                       {entries.map((entry, idx) => (
                         <tr
-                          key={entry.id}
+                          key={entry.user.id}
                           className={clsx(
                             'transition-all duration-300 hover:bg-secondary-50 dark:hover:bg-secondary-800/50',
                             entry.user.id === user?.id && 'bg-primary-50/60 dark:bg-primary-900/20 ring-1 ring-inset ring-primary-200 dark:ring-primary-800',
@@ -686,7 +683,11 @@ export function LeaderboardPage() {
                 <UserGroupIcon className="h-5 w-5 text-primary-500" />
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Department Comparison</h2>
               </div>
-              {departmentScores && <DepartmentChart departments={departmentScores} />}
+              {departmentScores ? <DepartmentChart departments={departmentScores} /> : (
+                <div className="flex items-center justify-center py-8 text-secondary-400">
+                  <p className="text-sm">Loading department data...</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -708,81 +709,88 @@ export function LeaderboardPage() {
                 <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
                   <BoltIcon className="h-4 w-4 text-primary-500" /> My Rankings
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {([
-                    { label: 'Performance', rank: myStats?.performanceRank, color: 'text-primary-500' },
-                    { label: 'Goals', rank: myStats?.goalsRank, color: 'text-success-500' },
-                    { label: 'Recognition', rank: myStats?.recognitionRank, color: 'text-amber-500' },
-                    { label: 'Learning', rank: myStats?.learningRank, color: 'text-violet-500' },
-                  ]).map(item => (
-                    <div key={item.label} className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-3 text-center">
-                      <p className={clsx('text-2xl font-bold', item.color)}>#{item.rank}</p>
-                      <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{item.label}</p>
-                    </div>
-                  ))}
-                </div>
+                {myStats ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    {([
+                      { label: 'Performance', rank: myStats.performance.rank, color: 'text-primary-500' },
+                      { label: 'Goals', rank: myStats.goals.rank, color: 'text-success-500' },
+                      { label: 'Recognition', rank: myStats.recognition.rank, color: 'text-amber-500' },
+                      { label: 'Learning', rank: myStats.learning.rank, color: 'text-violet-500' },
+                    ]).map(item => (
+                      <div key={item.label} className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-3 text-center">
+                        <p className={clsx('text-2xl font-bold', item.color)}>#{item.rank}</p>
+                        <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{item.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center py-4 text-secondary-400">
+                    <p className="text-sm">Loading...</p>
+                  </div>
+                )}
               </div>
 
-              {/* Personal Stats */}
+              {/* Scores & Percentiles */}
               <div className="bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
-                <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Personal Stats</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-secondary-600 dark:text-secondary-400">Total Points</span>
-                    <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{myStats?.totalPoints?.toLocaleString()}</span>
-                  </div>
-                  <div>
-                    <span className="text-sm text-secondary-600 dark:text-secondary-400">Badges</span>
-                    <div className="flex items-center gap-2 mt-1.5">
-                      {myStats?.badges?.map(b => (
-                        <div key={b} className="flex items-center gap-1 bg-secondary-100 dark:bg-secondary-800 rounded-full px-2.5 py-1">
-                          <BadgeIcon badge={b} className="h-4 w-4" />
-                          <span className="text-xs font-medium text-secondary-700 dark:text-secondary-300">{b}</span>
+                <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Scores & Percentiles</h3>
+                {myStats ? (
+                  <div className="space-y-4">
+                    {([
+                      { label: 'Performance', score: myStats.performance.score, percentile: myStats.performance.percentile, color: 'bg-primary-500' },
+                      { label: 'Goals', score: myStats.goals.score, percentile: myStats.goals.percentile, color: 'bg-success-500' },
+                      { label: 'Recognition', score: myStats.recognition.score, percentile: myStats.recognition.percentile, color: 'bg-amber-500' },
+                      { label: 'Learning', score: myStats.learning.score, percentile: myStats.learning.percentile, color: 'bg-violet-500' },
+                    ]).map(item => (
+                      <div key={item.label}>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm text-secondary-600 dark:text-secondary-400">{item.label}</span>
+                          <span className="text-sm font-bold text-secondary-900 dark:text-white">{item.score.toFixed(1)}</span>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-secondary-600 dark:text-secondary-400">Current Streak</span>
-                    <div className="flex items-center gap-1">
-                      <FireIcon className="h-5 w-5 text-orange-500" />
-                      <span className="text-lg font-bold text-orange-600 dark:text-orange-400">{myStats?.currentStreak} weeks</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Progress Sparkline */}
-              <div className="bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
-                <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-3">Your Progress</h3>
-                <div className="h-12">
-                  {myStats?.progressHistory && <Sparkline data={myStats.progressHistory} className="w-full h-full" />}
-                </div>
-                <div className="flex justify-between mt-1">
-                  <span className="text-[10px] text-secondary-400">6 periods ago</span>
-                  <span className="text-[10px] text-secondary-400">Current</span>
-                </div>
-              </div>
-
-              {/* Achievements */}
-              <div className="bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
-                <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
-                  <TrophyIcon className="h-4 w-4 text-amber-500" /> Achievements
-                </h3>
-                <div className="space-y-3">
-                  {myStats?.achievements?.map((ach, i) => (
-                    <div key={ach.id} className="flex items-center gap-3 animate-slide-up" style={{ animationDelay: `${i * 80}ms` }}>
-                      <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-800/40 dark:to-amber-700/40 flex items-center justify-center">
-                        <AchievementIcon icon={ach.icon} className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
+                            <div className={clsx('h-full rounded-full transition-all duration-500', item.color)} style={{ width: `${item.percentile}%` }} />
+                          </div>
+                          <span className="text-xs font-medium text-secondary-500 dark:text-secondary-400 w-14 text-right">Top {(100 - item.percentile).toFixed(0)}%</span>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{ach.title}</p>
-                        <p className="text-xs text-secondary-400 dark:text-secondary-500">{new Date(ach.unlockedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                    ))}
+                    <div className="pt-3 border-t border-secondary-200 dark:border-secondary-700">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-secondary-600 dark:text-secondary-400">Total Users</span>
+                        <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{myStats.totalUsers}</span>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center py-4 text-secondary-400">
+                    <p className="text-sm">Loading...</p>
+                  </div>
+                )}
               </div>
+
+              {/* Current User Highlight */}
+              {currentUserEntry && (
+                <div className="bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+                  <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
+                    <TrophyIcon className="h-4 w-4 text-amber-500" /> Your Position
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <Avatar user={currentUserEntry.user} size="lg" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-secondary-900 dark:text-white">{currentUserEntry.user.firstName} {currentUserEntry.user.lastName}</p>
+                      <p className="text-xs text-secondary-500 dark:text-secondary-400">{currentUserEntry.user.jobTitle}</p>
+                      <div className="flex items-center gap-3 mt-2">
+                        <span className="text-xs font-medium text-secondary-600 dark:text-secondary-400">
+                          Rank <span className="text-lg font-bold text-primary-600 dark:text-primary-400">#{currentUserEntry.rank}</span>
+                        </span>
+                        <span className="text-xs font-medium text-secondary-600 dark:text-secondary-400">
+                          Score <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{currentUserEntry.score.toFixed(1)}</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </aside>
           )}
         </div>

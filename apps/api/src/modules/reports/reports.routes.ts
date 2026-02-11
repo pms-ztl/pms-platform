@@ -19,18 +19,39 @@ router.post(
   reportsController.generateReport.bind(reportsController)
 );
 
-// Get report by ID
-router.get(
-  '/:reportId',
-  authorize({ resource: 'reports', action: 'read', scope: 'own' }),
-  reportsController.getReport.bind(reportsController)
-);
-
-// List generated reports
+// List generated reports (must be before /:reportId)
 router.get(
   '/',
   authorize({ resource: 'reports', action: 'read', scope: 'own' }),
   reportsController.listReports.bind(reportsController)
+);
+
+// List schedules (must be before /:reportId)
+router.get(
+  '/schedules',
+  authorize({ resource: 'reports', action: 'read', scope: 'department' }),
+  reportsController.listSchedules.bind(reportsController)
+);
+
+// Get schedule statistics (must be before /:reportId)
+router.get(
+  '/schedules/:scheduleId/stats',
+  authorize({ resource: 'reports', action: 'read', scope: 'department' }),
+  reportsController.getScheduleStats.bind(reportsController)
+);
+
+// Download report export file (must be before /:reportId)
+router.get(
+  '/:reportId/download',
+  authorize({ resource: 'reports', action: 'read', scope: 'own' }),
+  reportsController.downloadReport.bind(reportsController)
+);
+
+// Get report by ID (must be AFTER specific path routes)
+router.get(
+  '/:reportId',
+  authorize({ resource: 'reports', action: 'read', scope: 'own' }),
+  reportsController.getReport.bind(reportsController)
 );
 
 /**
@@ -72,19 +93,7 @@ router.post(
   reportsController.resumeSchedule.bind(reportsController)
 );
 
-// List schedules
-router.get(
-  '/schedules',
-  authorize({ resource: 'reports', action: 'read', scope: 'department' }),
-  reportsController.listSchedules.bind(reportsController)
-);
-
-// Get schedule statistics
-router.get(
-  '/schedules/:scheduleId/stats',
-  authorize({ resource: 'reports', action: 'read', scope: 'department' }),
-  reportsController.getScheduleStats.bind(reportsController)
-);
+// (schedules GET and schedule stats routes moved above /:reportId)
 
 /**
  * Job Status Routes

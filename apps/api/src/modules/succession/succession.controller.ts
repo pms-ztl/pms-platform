@@ -37,12 +37,17 @@ class SuccessionController {
 
   async list(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
+      const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+      const limit = req.query.limit ? Math.min(parseInt(req.query.limit as string, 10), 100) : 20;
       const filters = {
         criticality: req.query.criticality as string | undefined,
         status: req.query.status as string | undefined,
       };
-      const plans = await successionService.list(req.tenantId!, filters);
-      res.json({ success: true, data: plans });
+      const allPlans = await successionService.list(req.tenantId!, filters);
+      const total = allPlans.length;
+      const totalPages = Math.ceil(total / limit);
+      const paged = allPlans.slice((page - 1) * limit, page * limit);
+      res.json({ success: true, data: paged, meta: { total, page, limit, totalPages } });
     } catch (error) { next(error); }
   }
 

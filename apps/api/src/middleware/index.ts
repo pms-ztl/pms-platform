@@ -8,3 +8,4 @@ export {
   mfaRateLimiter,
   integrationRateLimiter,
 } from './rateLimiter';
+export { socketEmitMiddleware } from './socketEmit';

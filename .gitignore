@@ -106,6 +106,18 @@ TROUBLESHOOTING.md
 UI_*.md
 VISUAL_*.md
 
+# Uploaded files (user content, not source code)
+apps/api/uploads/
+
+# Generated exports (reports, PDFs)
+apps/api/exports/
+
+# Backup zips from cleanup
+pms-unused-backup-*.zip
+
+# Stray Windows null device file
+nul
+
 # Misc
 .cache/
 *.tsbuildinfo

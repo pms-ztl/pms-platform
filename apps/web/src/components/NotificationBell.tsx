@@ -25,7 +25,7 @@ export function NotificationBell() {
   const { data: notifications = [], isLoading } = useQuery({
     queryKey: ['notifications'],
     queryFn: () => notificationsApi.list({ limit: 20 }),
-    refetchInterval: 30000, // Poll every 30s
+    // Real-time updates via Socket.io invalidate this query automatically
   });
 
   const markReadMutation = useMutation({

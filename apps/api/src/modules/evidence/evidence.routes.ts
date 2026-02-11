@@ -5,9 +5,12 @@
  */
 
 import { Router } from 'express';
+import { authenticate } from '../../middleware/authenticate';
 import { evidenceController } from './evidence.controller';
 
 const router = Router();
+
+router.use(authenticate);
 
 // Core CRUD
 router.post('/', evidenceController.create.bind(evidenceController));

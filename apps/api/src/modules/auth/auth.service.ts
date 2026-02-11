@@ -446,13 +446,17 @@ export class AuthService {
       return cachedUser;
     }
 
-    // Fetch user from database
+    // Fetch user from database with relations needed for frontend
     const user = await prisma.user.findFirst({
       where: {
         id: payload.sub,
         tenantId: payload.tid,
         isActive: true,
         deletedAt: null,
+      },
+      include: {
+        department: { select: { id: true, name: true } },
+        manager: { select: { id: true, firstName: true, lastName: true } },
       },
     });
 
@@ -468,6 +472,11 @@ export class AuthService {
       lastName: user.lastName,
       roles: payload.roles,
       permissions: payload.permissions,
+      // Profile fields
+      displayName: user.displayName ?? undefined,
+      avatarUrl: user.avatarUrl ?? undefined,
+      jobTitle: user.jobTitle ?? undefined,
+      isActive: user.isActive,
       // Organizational structure fields for ABAC
       departmentId: user.departmentId ?? undefined,
       businessUnitId: user.businessUnitId ?? undefined,
@@ -477,6 +486,9 @@ export class AuthService {
       contractType: user.contractType ?? undefined,
       // Security fields
       mfaEnabled: user.mfaEnabled,
+      // Relations
+      department: user.department ?? undefined,
+      manager: user.manager ?? undefined,
     };
 
     // Cache for subsequent requests
@@ -514,8 +526,8 @@ export class AuthService {
       expiresIn: config.JWT_REFRESH_EXPIRES_IN as string,
     } as jwt.SignOptions);
 
-    // Store session
-    await setSession(user.id, { id: user.id, tenantId: user.tenantId, roles, permissions });
+    // Session will be lazily cached by validateToken() on first authenticated request
+    // with the full AuthenticatedUser object (including avatarUrl, department, etc.)
 
     // Calculate expiration time
     const decoded = jwt.decode(accessToken) as JWTPayload;

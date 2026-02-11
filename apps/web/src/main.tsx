@@ -5,12 +5,15 @@ import { Toaster } from 'react-hot-toast';
 
 import App from './App';
 import { queryClient } from './lib/query-client';
+import { SocketProvider } from './providers/SocketProvider';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <SocketProvider>
+          <App />
+      </SocketProvider>
       <Toaster
         position="top-right"
         toastOptions={{

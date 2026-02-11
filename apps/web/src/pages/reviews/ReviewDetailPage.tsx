@@ -19,7 +19,7 @@ import { reviewsApi, goalsApi, type Review, type SubmitReviewInput, type Goal } 
 import { useAuthStore } from '@/store/auth';
 
 const reviewStatusColors: Record<string, string> = {
-  NOT_STARTED: 'bg-secondary-100 text-secondary-800',
+  NOT_STARTED: 'bg-secondary-100 dark:bg-secondary-800 text-secondary-800 dark:text-secondary-200',
   IN_PROGRESS: 'bg-primary-100 text-primary-800',
   SUBMITTED: 'bg-warning-100 text-warning-800',
   CALIBRATED: 'bg-info-100 text-info-800',
@@ -221,7 +221,7 @@ export function ReviewDetailPage() {
   if (error || !review) {
     return (
       <div className="text-center py-12">
-        <h3 className="text-lg font-medium text-secondary-900">Review not found</h3>
+        <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Review not found</h3>
         <Link to="/reviews" className="btn-primary mt-4 inline-block">
           Back to Reviews
         </Link>
@@ -234,19 +234,19 @@ export function ReviewDetailPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-4">
-          <Link to="/reviews" className="p-2 rounded-lg hover:bg-secondary-100 text-secondary-500">
+          <Link to="/reviews" className="p-2 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-800 text-secondary-500">
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-secondary-900">
+              <h1 className="text-2xl font-bold text-secondary-900 dark:text-white dark:text-white">
                 {review.type} Review
               </h1>
               <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', reviewStatusColors[review.status])}>
                 {review.status.replace('_', ' ')}
               </span>
             </div>
-            <p className="text-secondary-600 mt-1">{review.cycle?.name}</p>
+            <p className="text-secondary-600 dark:text-secondary-400 mt-1">{review.cycle?.name}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -299,12 +299,12 @@ export function ReviewDetailPage() {
           <div className="card card-body">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center">
-                <span className="text-xl font-medium text-primary-700">
+                <span className="text-xl font-medium text-primary-700 dark:text-primary-300 dark:text-primary-300">
                   {review.reviewee.firstName[0]}{review.reviewee.lastName[0]}
                 </span>
               </div>
               <div>
-                <h3 className="text-lg font-medium text-secondary-900">
+                <h3 className="text-lg font-medium text-secondary-900 dark:text-white dark:text-white">
                   {review.reviewee.firstName} {review.reviewee.lastName}
                 </h3>
                 <p className="text-secondary-500">{review.reviewee.jobTitle || 'Employee'}</p>
@@ -317,14 +317,14 @@ export function ReviewDetailPage() {
 
           {/* Review questions */}
           <div className="card card-body space-y-6">
-            <h3 className="text-lg font-medium text-secondary-900">Performance Assessment</h3>
+            <h3 className="text-lg font-medium text-secondary-900 dark:text-white dark:text-white">Performance Assessment</h3>
 
             {reviewQuestions.map((question) => (
               <div key={question.id} className="space-y-2">
-                <label className="block text-sm font-medium text-secondary-900">
+                <label className="block text-sm font-medium text-secondary-900 dark:text-white dark:text-secondary-100">
                   {question.label}
                 </label>
-                <p className="text-xs text-secondary-500">{question.description}</p>
+                <p className="text-xs text-secondary-500 dark:text-secondary-400">{question.description}</p>
                 {question.type === 'textarea' ? (
                   <textarea
                     value={formData[question.id] || ''}
@@ -347,21 +347,21 @@ export function ReviewDetailPage() {
 
           {/* Overall rating */}
           <div className="card card-body">
-            <h3 className="text-lg font-medium text-secondary-900 mb-4">Overall Performance Rating</h3>
+            <h3 className="text-lg font-medium text-secondary-900 dark:text-white dark:text-white mb-4">Overall Performance Rating</h3>
             <div className="flex items-center gap-4">
               <RatingInput value={overallRating} onChange={setOverallRating} disabled={!canEdit} />
-              <span className="text-2xl font-bold text-secondary-900">{overallRating}/5</span>
+              <span className="text-2xl font-bold text-secondary-900 dark:text-white dark:text-white">{overallRating}/5</span>
             </div>
-            <div className="mt-4 flex gap-2 text-xs text-secondary-500">
-              <span className="px-2 py-1 bg-secondary-100 rounded">1 = Needs Improvement</span>
-              <span className="px-2 py-1 bg-secondary-100 rounded">3 = Meets Expectations</span>
-              <span className="px-2 py-1 bg-secondary-100 rounded">5 = Exceptional</span>
+            <div className="mt-4 flex gap-2 text-xs text-secondary-500 dark:text-secondary-400">
+              <span className="px-2 py-1 bg-secondary-100 dark:bg-secondary-800 rounded">1 = Needs Improvement</span>
+              <span className="px-2 py-1 bg-secondary-100 dark:bg-secondary-800 rounded">3 = Meets Expectations</span>
+              <span className="px-2 py-1 bg-secondary-100 dark:bg-secondary-800 rounded">5 = Exceptional</span>
             </div>
           </div>
 
           {/* Summary */}
           <div className="card card-body">
-            <h3 className="text-lg font-medium text-secondary-900 mb-4">Review Summary</h3>
+            <h3 className="text-lg font-medium text-secondary-900 dark:text-white dark:text-white mb-4">Review Summary</h3>
             <textarea
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
@@ -377,12 +377,12 @@ export function ReviewDetailPage() {
         <div className="space-y-6">
           {/* Strengths */}
           <div className="card card-body">
-            <h3 className="text-lg font-medium text-secondary-900 mb-4">Key Strengths</h3>
+            <h3 className="text-lg font-medium text-secondary-900 dark:text-white dark:text-white mb-4">Key Strengths</h3>
             <div className="space-y-2">
               {strengths.map((strength, i) => (
                 <div key={i} className="flex items-center gap-2 text-sm">
                   <CheckIcon className="h-4 w-4 text-success-500 flex-shrink-0" />
-                  <span className="text-secondary-700">{strength}</span>
+                  <span className="text-secondary-700 dark:text-secondary-300 dark:text-secondary-300">{strength}</span>
                   {canEdit && (
                     <button
                       onClick={() => setStrengths(strengths.filter((_, idx) => idx !== i))}
@@ -413,12 +413,12 @@ export function ReviewDetailPage() {
 
           {/* Areas for growth */}
           <div className="card card-body">
-            <h3 className="text-lg font-medium text-secondary-900 mb-4">Areas for Growth</h3>
+            <h3 className="text-lg font-medium text-secondary-900 dark:text-white dark:text-white mb-4">Areas for Growth</h3>
             <div className="space-y-2">
               {areasForGrowth.map((area, i) => (
                 <div key={i} className="flex items-center gap-2 text-sm">
                   <div className="w-4 h-4 rounded-full border-2 border-warning-400 flex-shrink-0" />
-                  <span className="text-secondary-700">{area}</span>
+                  <span className="text-secondary-700 dark:text-secondary-300 dark:text-secondary-300">{area}</span>
                   {canEdit && (
                     <button
                       onClick={() => setAreasForGrowth(areasForGrowth.filter((_, idx) => idx !== i))}
@@ -450,12 +450,12 @@ export function ReviewDetailPage() {
           {/* Goals */}
           {revieweeGoals?.data && revieweeGoals.data.length > 0 && (
             <div className="card card-body">
-              <h3 className="text-lg font-medium text-secondary-900 mb-4">Goals</h3>
+              <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Goals</h3>
               <div className="space-y-3">
                 {revieweeGoals.data.slice(0, 5).map((goal: Goal) => (
                   <div key={goal.id} className="text-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-secondary-900 font-medium truncate">{goal.title}</span>
+                      <span className="text-secondary-900 dark:text-white font-medium truncate">{goal.title}</span>
                       <span className="text-secondary-500">{goal.progress}%</span>
                     </div>
                     <div className="mt-1 w-full bg-secondary-200 rounded-full h-1.5">

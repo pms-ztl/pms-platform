@@ -13,15 +13,47 @@ import { prisma } from '@pms/database';
 
 // Validation schemas
 const generateReportSchema = z.object({
-  reportType: z.enum(['WEEKLY_SUMMARY', 'MONTHLY_CARD', 'QUARTERLY_REVIEW', 'YEARLY_INDEX', 'COMPARATIVE_ANALYSIS']),
-  aggregationType: z.enum(['user', 'team', 'department', 'business_unit', 'tenant']).optional(),
+  reportType: z.string().min(1),
+  aggregationType: z.string().optional(),
   entityId: z.string().uuid().optional(),
-  periodStart: z.string().datetime().optional(),
-  periodEnd: z.string().datetime().optional(),
+  periodStart: z.string().optional(),
+  periodEnd: z.string().optional(),
   exportFormats: z.array(z.enum(['pdf', 'excel', 'csv'])).optional(),
   recipients: z.array(z.string().email()).optional(),
   async: z.boolean().optional(),
 });
+
+// Map frontend report type labels to backend ReportType enum
+const REPORT_TYPE_MAP: Record<string, ReportType> = {
+  PERFORMANCE_SUMMARY: 'WEEKLY_SUMMARY',
+  '360_DEGREE_FEEDBACK': 'QUARTERLY_REVIEW',
+  TEAM_ANALYTICS: 'COMPARATIVE_ANALYSIS',
+  COMPENSATION_ANALYSIS: 'QUARTERLY_REVIEW',
+  DEVELOPMENT_PROGRESS: 'MONTHLY_CARD',
+  GOAL_ACHIEVEMENT: 'MONTHLY_CARD',
+  PIP_STATUS: 'MONTHLY_CARD',
+  COMPLIANCE_STATUS: 'QUARTERLY_REVIEW',
+  // Direct matches (backward compatibility)
+  WEEKLY_SUMMARY: 'WEEKLY_SUMMARY',
+  MONTHLY_CARD: 'MONTHLY_CARD',
+  QUARTERLY_REVIEW: 'QUARTERLY_REVIEW',
+  YEARLY_INDEX: 'YEARLY_INDEX',
+  COMPARATIVE_ANALYSIS: 'COMPARATIVE_ANALYSIS',
+};
+
+// Map frontend scope labels to backend AggregationType
+const AGGREGATION_TYPE_MAP: Record<string, string> = {
+  INDIVIDUAL: 'user',
+  TEAM: 'team',
+  DEPARTMENT: 'department',
+  ORGANIZATION: 'tenant',
+  // Direct matches (backward compatibility)
+  user: 'user',
+  team: 'team',
+  department: 'department',
+  business_unit: 'business_unit',
+  tenant: 'tenant',
+};
 
 const scheduleReportSchema = z.object({
   reportDefinitionId: z.string().uuid(),
@@ -72,8 +104,8 @@ export class ReportsController {
       }
 
       const {
-        reportType,
-        aggregationType = 'tenant',
+        reportType: rawReportType,
+        aggregationType: rawAggregationType = 'tenant',
         entityId = tenantId,
         periodStart,
         periodEnd,
@@ -82,10 +114,15 @@ export class ReportsController {
         async = false,
       } = validation.data;
 
+      // Map frontend values to backend enums
+      const reportType = REPORT_TYPE_MAP[rawReportType] || 'QUARTERLY_REVIEW';
+      const aggregationType = AGGREGATION_TYPE_MAP[rawAggregationType] || 'tenant';
+
       logger.info('Generating report', {
         tenantId,
         userId,
         reportType,
+        rawReportType,
         aggregationType,
         async,
       });
@@ -145,13 +182,14 @@ export class ReportsController {
             },
           });
 
-          exportUrls[format] = await reportExportService.getReportUrl(filepath);
-
-          // Update report with export URL
+          // Store filepath in DB (for download handler to find the file)
           await prisma.generatedReport.update({
             where: { id: report.id },
-            data: { [`${format}Url`]: exportUrls[format] },
+            data: { [`${format}Url`]: filepath },
           });
+
+          // Return API download URL to the frontend
+          exportUrls[format] = await reportExportService.getReportUrl(filepath, report.id, format);
         }
 
         res.status(200).json({
@@ -208,9 +246,102 @@ export class ReportsController {
         },
       });
 
+      // Transform raw filesystem paths into API download URLs
+      const reportData = {
+        ...report,
+        pdfUrl: report.pdfUrl ? `/api/v1/reports/${report.id}/download?format=pdf` : null,
+        excelUrl: report.excelUrl ? `/api/v1/reports/${report.id}/download?format=excel` : null,
+        csvUrl: report.csvUrl ? `/api/v1/reports/${report.id}/download?format=csv` : null,
+      };
+
       res.status(200).json({
         success: true,
-        data: report,
+        data: reportData,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Download report export file
+   * GET /api/v1/reports/:reportId/download?format=pdf|excel|csv
+   */
+  async downloadReport(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const tenantId = req.tenantId!;
+      const { reportId } = req.params;
+      const format = (req.query.format as string || 'pdf').toLowerCase();
+
+      const report = await prisma.generatedReport.findFirst({
+        where: {
+          id: reportId,
+          tenantId,
+          deletedAt: null,
+        },
+      });
+
+      if (!report) {
+        res.status(404).json({
+          success: false,
+          error: { code: 'NOT_FOUND', message: 'Report not found' },
+        });
+        return;
+      }
+
+      // Get the stored filepath
+      const urlMap: Record<string, string | null> = {
+        pdf: report.pdfUrl,
+        excel: report.excelUrl,
+        csv: report.csvUrl,
+      };
+
+      const filepath = urlMap[format];
+      if (!filepath) {
+        res.status(404).json({
+          success: false,
+          error: { code: 'NOT_FOUND', message: `No ${format} export available for this report` },
+        });
+        return;
+      }
+
+      // Check if file exists
+      const { existsSync } = await import('fs');
+      if (!existsSync(filepath)) {
+        res.status(404).json({
+          success: false,
+          error: { code: 'NOT_FOUND', message: 'Export file not found on disk' },
+        });
+        return;
+      }
+
+      // Set content type and disposition
+      const contentTypes: Record<string, string> = {
+        pdf: 'application/pdf',
+        excel: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        csv: 'text/csv',
+      };
+      const extensions: Record<string, string> = {
+        pdf: 'pdf',
+        excel: 'xlsx',
+        csv: 'csv',
+      };
+
+      const filename = `${report.title.replace(/[^a-zA-Z0-9-_ ]/g, '')}.${extensions[format] || format}`;
+      res.setHeader('Content-Type', contentTypes[format] || 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+      const { createReadStream } = await import('fs');
+      const stream = createReadStream(filepath);
+      stream.pipe(res);
+
+      // Update access count
+      await prisma.generatedReport.update({
+        where: { id: reportId },
+        data: {
+          accessCount: { increment: 1 },
+          lastAccessedAt: new Date(),
+        },
       });
     } catch (error) {
       next(error);
@@ -269,9 +400,17 @@ export class ReportsController {
 
       const totalPages = Math.ceil(total / take);
 
+      // Transform raw filesystem paths into API download URLs
+      const reportsWithUrls = reports.map((r) => ({
+        ...r,
+        pdfUrl: r.pdfUrl ? `/api/v1/reports/${r.id}/download?format=pdf` : null,
+        excelUrl: r.excelUrl ? `/api/v1/reports/${r.id}/download?format=excel` : null,
+        csvUrl: r.csvUrl ? `/api/v1/reports/${r.id}/download?format=csv` : null,
+      }));
+
       res.status(200).json({
         success: true,
-        data: reports,
+        data: reportsWithUrls,
         meta: {
           total,
           page: parseInt(page as string),

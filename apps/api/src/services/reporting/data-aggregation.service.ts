@@ -141,7 +141,9 @@ export class DataAggregationService {
   }
 
   /**
-   * Build where clause based on aggregation type and entity
+   * Build where clause based on aggregation type and entity.
+   * For goals, we look for goals that are active/relevant during the period,
+   * not just goals created during the period.
    */
   private buildWhereClause(
     tenantId: string,
@@ -153,30 +155,40 @@ export class DataAggregationService {
     const baseWhere: any = {
       tenantId,
       deletedAt: null,
-      createdAt: {
-        gte: periodStart,
-        lte: periodEnd,
-      },
+      // Include goals that overlap with the period:
+      // - created before period end AND (no due date OR due date after period start)
+      // - OR completed during the period
+      OR: [
+        {
+          createdAt: { lte: periodEnd },
+          OR: [
+            { dueDate: null },
+            { dueDate: { gte: periodStart } },
+          ],
+        },
+        {
+          completedAt: {
+            gte: periodStart,
+            lte: periodEnd,
+          },
+        },
+      ],
     };
 
     switch (aggregationType) {
       case 'user':
-        return { ...baseWhere, userId: entityId };
+        return { ...baseWhere, ownerId: entityId };
 
       case 'team':
-        // Goals and reviews linked to team members
         return {
           ...baseWhere,
-          OR: [
-            { userId: { in: [] } }, // Will be populated with team member IDs
-            { teamId: entityId },
-          ],
+          teamId: entityId,
         };
 
       case 'department':
         return {
           ...baseWhere,
-          user: {
+          owner: {
             departmentId: entityId,
           },
         };
@@ -184,7 +196,7 @@ export class DataAggregationService {
       case 'business_unit':
         return {
           ...baseWhere,
-          user: {
+          owner: {
             businessUnitId: entityId,
           },
         };
@@ -217,23 +229,27 @@ export class DataAggregationService {
   ): Promise<Partial<PerformanceMetrics>> {
     // Update where clause for team aggregation
     if (teamMemberIds && teamMemberIds.length > 0) {
-      whereClause.userId = { in: teamMemberIds };
+      whereClause.ownerId = { in: teamMemberIds };
     }
 
     const goals = await prisma.goal.findMany({
-      where: whereClause,
+      where: {
+        ...whereClause,
+        status: { not: 'DRAFT' }, // Exclude draft goals from reports
+      },
       select: {
         status: true,
         progress: true,
-        targetDate: true,
+        dueDate: true,
       },
     });
 
     const now = new Date();
     const totalGoals = goals.length;
     const completedGoals = goals.filter(g => g.status === 'COMPLETED').length;
-    const inProgressGoals = goals.filter(g => g.status === 'IN_PROGRESS').length;
-    const notStartedGoals = goals.filter(g => g.status === 'NOT_STARTED').length;
+    // GoalStatus enum: DRAFT, ACTIVE, COMPLETED, CANCELLED, ON_HOLD
+    const inProgressGoals = goals.filter(g => g.status === 'ACTIVE').length;
+    const notStartedGoals = goals.filter(g => g.status === 'ON_HOLD' || g.status === 'CANCELLED').length;
 
     // Determine on-track, at-risk, overdue goals
     let onTrackGoals = 0;
@@ -246,7 +262,7 @@ export class DataAggregationService {
 
       if (goal.status === 'COMPLETED') {
         onTrackGoals++;
-      } else if (goal.targetDate && new Date(goal.targetDate) < now) {
+      } else if (goal.dueDate && new Date(goal.dueDate) < now) {
         overdueGoals++;
       } else if (Number(goal.progress || 0) < 50) {
         atRiskGoals++;
@@ -280,10 +296,8 @@ export class DataAggregationService {
     const whereClause: any = {
       tenantId,
       deletedAt: null,
-      createdAt: {
-        gte: periodStart,
-        lte: periodEnd,
-      },
+      // Include reviews created before period end that are still active
+      createdAt: { lte: periodEnd },
     };
 
     if (teamMemberIds && teamMemberIds.length > 0) {
@@ -329,10 +343,7 @@ export class DataAggregationService {
     const whereClause: any = {
       tenantId,
       deletedAt: null,
-      createdAt: {
-        gte: periodStart,
-        lte: periodEnd,
-      },
+      createdAt: { lte: periodEnd },
     };
 
     if (teamMemberIds && teamMemberIds.length > 0) {
@@ -343,7 +354,7 @@ export class DataAggregationService {
       where: whereClause,
       select: {
         type: true,
-        sentiment: true,
+        sentimentScore: true,
       },
     });
 
@@ -351,12 +362,12 @@ export class DataAggregationService {
     const positiveFeedback = feedback.filter(f => f.type === 'PRAISE').length;
     const constructiveFeedback = feedback.filter(f => f.type === 'CONSTRUCTIVE').length;
 
-    // Calculate average sentiment (assuming sentiment is a number 0-1)
+    // Use sentimentScore (Float) instead of sentiment (String)
     const sentimentSum = feedback
-      .filter(f => f.sentiment !== null)
-      .reduce((sum, f) => sum + Number(f.sentiment), 0);
+      .filter(f => f.sentimentScore !== null)
+      .reduce((sum, f) => sum + Number(f.sentimentScore), 0);
 
-    const feedbackWithSentiment = feedback.filter(f => f.sentiment !== null).length;
+    const feedbackWithSentiment = feedback.filter(f => f.sentimentScore !== null).length;
 
     return {
       totalFeedback,
@@ -377,7 +388,7 @@ export class DataAggregationService {
   ): Promise<Partial<PerformanceMetrics>> {
     const whereClause: any = {
       tenantId,
-      recordedAt: {
+      metricDate: {
         gte: periodStart,
         lte: periodEnd,
       },
@@ -387,17 +398,18 @@ export class DataAggregationService {
       whereClause.userId = { in: teamMemberIds };
     }
 
-    // Get daily metrics for better aggregation
+    // Get daily metrics using CORRECT Prisma field names from DailyPerformanceMetric model
     const dailyMetrics = await prisma.dailyPerformanceMetric.findMany({
       where: whereClause,
       select: {
-        productivity: true,
-        quality: true,
-        collaboration: true,
-        performanceScore: true,
-        workloadHours: true,
-        stressLevel: true,
-        wellbeingScore: true,
+        avgProductivityScore: true,
+        avgTaskCompletionRate: true,
+        avgCollaborationScore: true,
+        overallPerformanceScore: true,
+        totalActiveMinutes: true,
+        avgEngagementScore: true,
+        totalFocusMinutes: true,
+        totalMeetingMinutes: true,
       },
     });
 
@@ -415,32 +427,36 @@ export class DataAggregationService {
       };
     }
 
+    // Map ACTUAL Prisma field names to our aggregation fields
     const sums = dailyMetrics.reduce((acc, metric: any) => ({
-      productivity: acc.productivity + Number(metric.productivity || 0),
-      quality: acc.quality + Number(metric.quality || 0),
-      collaboration: acc.collaboration + Number(metric.collaboration || 0),
-      performanceScore: acc.performanceScore + Number(metric.performanceScore || 0),
-      workloadHours: acc.workloadHours + Number(metric.workloadHours || 0),
-      stressLevel: acc.stressLevel + Number(metric.stressLevel || 0),
-      wellbeingScore: acc.wellbeingScore + Number(metric.wellbeingScore || 0),
+      productivity: acc.productivity + Number(metric.avgProductivityScore || 0),
+      quality: acc.quality + Number(metric.avgTaskCompletionRate || 0),
+      collaboration: acc.collaboration + Number(metric.avgCollaborationScore || 0),
+      performanceScore: acc.performanceScore + Number(metric.overallPerformanceScore || 0),
+      activeMinutes: acc.activeMinutes + Number(metric.totalActiveMinutes || 0),
+      engagement: acc.engagement + Number(metric.avgEngagementScore || 0),
+      focusMinutes: acc.focusMinutes + Number(metric.totalFocusMinutes || 0),
     }), {
       productivity: 0,
       quality: 0,
       collaboration: 0,
       performanceScore: 0,
-      workloadHours: 0,
-      stressLevel: 0,
-      wellbeingScore: 0,
+      activeMinutes: 0,
+      engagement: 0,
+      focusMinutes: 0,
     });
+
+    // Convert totalActiveMinutes to hours for workload
+    const avgActiveHoursPerDay = (sums.activeMinutes / count) / 60;
 
     return {
       avgProductivity: sums.productivity / count,
       avgQuality: sums.quality / count,
       avgCollaboration: sums.collaboration / count,
       performanceScore: sums.performanceScore / count,
-      avgWorkloadHours: sums.workloadHours / count,
-      avgStressLevel: sums.stressLevel / count,
-      avgWellbeingScore: sums.wellbeingScore / count,
+      avgWorkloadHours: avgActiveHoursPerDay,
+      avgStressLevel: 0, // No direct stress field in schema - derive from workload
+      avgWellbeingScore: sums.engagement / count, // Use engagement as wellbeing proxy
     };
   }
 
@@ -455,10 +471,7 @@ export class DataAggregationService {
   ): Promise<Partial<PerformanceMetrics>> {
     const whereClause: any = {
       tenantId,
-      timestamp: {
-        gte: periodStart,
-        lte: periodEnd,
-      },
+      createdAt: { lte: periodEnd },
     };
 
     if (teamMemberIds && teamMemberIds.length > 0) {
@@ -543,6 +556,41 @@ export class DataAggregationService {
   ): Promise<void> {
     const { tenantId, aggregationType, entityId, periodType, periodStart, periodEnd } = params;
 
+    // Clamp decimal values to fit their DB column constraints
+    // Decimal(5,2) max = 999.99, Decimal(3,2) max = 9.99
+    const clamp5 = (v: number) => Math.min(Math.max(v || 0, -999.99), 999.99);
+    const clamp3 = (v: number) => Math.min(Math.max(v || 0, -9.99), 9.99);
+
+    const safeMetrics = {
+      totalGoals: metrics.totalGoals || 0,
+      completedGoals: metrics.completedGoals || 0,
+      inProgressGoals: metrics.inProgressGoals || 0,
+      notStartedGoals: metrics.notStartedGoals || 0,
+      onTrackGoals: metrics.onTrackGoals || 0,
+      atRiskGoals: metrics.atRiskGoals || 0,
+      overdueGoals: metrics.overdueGoals || 0,
+      avgGoalProgress: clamp5(metrics.avgGoalProgress),
+      goalCompletionRate: clamp5(metrics.goalCompletionRate),
+      totalReviews: metrics.totalReviews || 0,
+      completedReviews: metrics.completedReviews || 0,
+      pendingReviews: metrics.pendingReviews || 0,
+      avgReviewRating: clamp3(metrics.avgReviewRating),
+      reviewCompletionRate: clamp5(metrics.reviewCompletionRate),
+      totalFeedback: metrics.totalFeedback || 0,
+      positiveFeedback: metrics.positiveFeedback || 0,
+      constructiveFeedback: metrics.constructiveFeedback || 0,
+      avgSentimentScore: clamp3(metrics.avgSentimentScore),
+      avgProductivity: clamp5(metrics.avgProductivity),
+      avgQuality: clamp5(metrics.avgQuality),
+      avgCollaboration: clamp5(metrics.avgCollaboration),
+      performanceScore: clamp5(metrics.performanceScore),
+      avgWorkloadHours: clamp5(metrics.avgWorkloadHours),
+      avgStressLevel: clamp3(metrics.avgStressLevel),
+      avgWellbeingScore: clamp3(metrics.avgWellbeingScore),
+      totalActivities: metrics.totalActivities || 0,
+      activeUsers: metrics.activeUsers || 0,
+    };
+
     await prisma.performanceAggregation.upsert({
       where: {
         tenantId_aggregationType_entityId_periodType_periodStart: {
@@ -562,10 +610,10 @@ export class DataAggregationService {
         periodStart,
         periodEnd,
         periodLabel: label,
-        ...metrics,
+        ...safeMetrics,
       },
       update: {
-        ...metrics,
+        ...safeMetrics,
         updatedAt: new Date(),
       },
     });

@@ -1,12 +1,18 @@
+import { createServer } from 'http';
+
 import { createApp } from './app';
 import { config } from './config';
 import { logger } from './utils/logger';
 import { connectRedis, disconnectRedis } from './utils/redis';
+import { initSocketIO, closeSocketIO } from './utils/socket';
 import { emailService } from './services/email';
 import { initDeadlineReminderJob } from './jobs/deadline-reminder.job';
 
 async function bootstrap(): Promise<void> {
   const app = createApp();
+
+  // Create HTTP server (required for Socket.io)
+  const httpServer = createServer(app);
 
   // Connect to Redis
   try {
@@ -15,6 +21,9 @@ async function bootstrap(): Promise<void> {
   } catch (error) {
     logger.warn('Redis connection failed, continuing without cache', { error });
   }
+
+  // Initialize Socket.io
+  initSocketIO(httpServer);
 
   // Initialize email service
   try {
@@ -37,7 +46,7 @@ async function bootstrap(): Promise<void> {
   }
 
   // Start server
-  const server = app.listen(config.PORT, config.HOST, () => {
+  httpServer.listen(config.PORT, config.HOST, () => {
     logger.info(`Server started`, {
       host: config.HOST,
       port: config.PORT,
@@ -49,8 +58,14 @@ async function bootstrap(): Promise<void> {
   const shutdown = async (signal: string): Promise<void> => {
     logger.info(`${signal} received, shutting down gracefully`);
 
-    server.close(async () => {
+    httpServer.close(async () => {
       logger.info('HTTP server closed');
+
+      try {
+        await closeSocketIO();
+      } catch (error) {
+        logger.error('Error closing Socket.io', { error });
+      }
 
       try {
         await disconnectRedis();

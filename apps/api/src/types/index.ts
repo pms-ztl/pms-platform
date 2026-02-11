@@ -26,6 +26,11 @@ export interface AuthenticatedUser {
   lastName: string;
   roles: string[];
   permissions: string[];
+  // Profile fields
+  displayName?: string;
+  avatarUrl?: string;
+  jobTitle?: string;
+  isActive: boolean;
   // Organizational structure fields
   departmentId?: string;
   businessUnitId?: string;
@@ -35,6 +40,9 @@ export interface AuthenticatedUser {
   contractType?: string;
   // Security fields
   mfaEnabled?: boolean;
+  // Populated relations (for /auth/me response)
+  department?: { id: string; name: string };
+  manager?: { id: string; firstName: string; lastName: string };
 }
 
 // AuthenticatedRequest - use Request directly since we augment Express.Request

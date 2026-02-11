@@ -26,21 +26,24 @@ interface CreatePromotionDecisionInput {
   cycleId?: string;
   calibrationSessionId?: string;
   type: PromotionType;
-  currentRoleId: string;
-  proposedRoleId: string;
-  effectiveDate: Date;
-  rationale: string;
-  performanceRating?: number;
+  currentRoleId?: string;
+  proposedRoleId?: string;
+  previousTitle?: string;
+  newTitle?: string;
+  previousLevel?: number;
+  newLevel?: number;
+  effectiveDate?: Date;
+  justification: string;
   readinessScore?: number;
-  criteria?: Record<string, unknown>;
+  criteriaScores?: Record<string, unknown>;
 }
 
 interface UpdatePromotionDecisionInput {
   proposedRoleId?: string;
-  rationale?: string;
+  justification?: string;
   effectiveDate?: Date;
   readinessScore?: number;
-  criteria?: Record<string, unknown>;
+  criteriaScores?: Record<string, unknown>;
 }
 
 interface ApprovalInput {
@@ -51,7 +54,6 @@ interface ApprovalInput {
 interface LinkEvidenceInput {
   decisionId: string;
   evidenceId: string;
-  criterionId?: string;
   weight?: number;
   relevanceScore?: number;
   notes?: string;
@@ -85,8 +87,6 @@ export class PromotionService {
     const employee = await prisma.user.findFirst({
       where: {
         id: input.employeeId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -94,28 +94,33 @@ export class PromotionService {
       throw new NotFoundError('Employee', input.employeeId);
     }
 
-    // Validate roles exist
-    const [currentRole, proposedRole] = await Promise.all([
-      prisma.role.findFirst({
-        where: { id: input.currentRoleId, tenantId, deletedAt: null },
-      }),
-      prisma.role.findFirst({
-        where: { id: input.proposedRoleId, tenantId, deletedAt: null },
-      }),
-    ]);
+    // Resolve role info - support both role IDs and direct title/level input
+    let previousRoleId = input.currentRoleId || undefined;
+    let newRoleId = input.proposedRoleId || undefined;
+    let previousTitle = input.previousTitle || employee.jobTitle || undefined;
+    let newTitle = input.newTitle || undefined;
+    let previousLevel = input.previousLevel ?? employee.level ?? undefined;
+    let newLevel = input.newLevel ?? undefined;
 
-    if (!currentRole) {
-      throw new NotFoundError('Current role', input.currentRoleId);
+    if (input.currentRoleId) {
+      const currentRole = await prisma.role.findFirst({ where: { id: input.currentRoleId } });
+      if (currentRole) {
+        previousTitle = previousTitle || currentRole.name;
+        previousLevel = previousLevel ?? currentRole.level ?? undefined;
+      }
     }
-    if (!proposedRole) {
-      throw new NotFoundError('Proposed role', input.proposedRoleId);
+
+    if (input.proposedRoleId) {
+      const proposedRole = await prisma.role.findFirst({ where: { id: input.proposedRoleId } });
+      if (proposedRole) {
+        newTitle = newTitle || proposedRole.name;
+        newLevel = newLevel ?? proposedRole.level ?? undefined;
+      }
     }
 
     // Validate cycle if provided
     if (input.cycleId) {
-      const cycle = await prisma.reviewCycle.findFirst({
-        where: { id: input.cycleId, tenantId, deletedAt: null },
-      });
+      const cycle = await prisma.reviewCycle.findFirst({ where: { id: input.cycleId } });
       if (!cycle) {
         throw new NotFoundError('Review cycle', input.cycleId);
       }
@@ -123,32 +128,29 @@ export class PromotionService {
 
     // Validate calibration session if provided
     if (input.calibrationSessionId) {
-      const session = await prisma.calibrationSession.findFirst({
-        where: { id: input.calibrationSessionId, tenantId, deletedAt: null },
-      });
+      const session = await prisma.calibrationSession.findFirst({ where: { id: input.calibrationSessionId } });
       if (!session) {
         throw new NotFoundError('Calibration session', input.calibrationSessionId);
       }
     }
 
-    // Calculate level change
-    const levelChange = (proposedRole.level || 0) - (currentRole.level || 0);
-
     const decision = await prisma.promotionDecision.create({
       data: {
         tenantId,
         employeeId: input.employeeId,
-        cycleId: input.cycleId,
+        reviewCycleId: input.cycleId,
         calibrationSessionId: input.calibrationSessionId,
         type: input.type,
-        currentRoleId: input.currentRoleId,
-        proposedRoleId: input.proposedRoleId,
-        levelChange,
+        previousRoleId,
+        newRoleId,
+        previousLevel,
+        newLevel,
+        previousTitle,
+        newTitle,
         effectiveDate: input.effectiveDate,
-        rationale: input.rationale,
-        performanceRating: input.performanceRating,
+        justification: input.justification,
         readinessScore: input.readinessScore,
-        criteria: input.criteria ?? {},
+        criteriaScores: input.criteriaScores ?? {},
         status: PromotionDecisionStatus.NOMINATED,
         nominatedById: userId,
         nominatedAt: new Date(),
@@ -158,9 +160,8 @@ export class PromotionService {
     auditLogger('PROMOTION_DECISION_CREATED', userId, tenantId, 'promotion_decision', decision.id, {
       employeeId: input.employeeId,
       type: input.type,
-      currentRole: currentRole.name,
-      proposedRole: proposedRole.name,
-      levelChange,
+      previousTitle,
+      newTitle,
     });
 
     return decision;
@@ -175,11 +176,9 @@ export class PromotionService {
     const existing = await prisma.promotionDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
       include: {
-        currentRole: true,
+        previousRole: true,
       },
     });
 
@@ -195,31 +194,33 @@ export class PromotionService {
 
     // Capture previous state
     const previousState = {
-      proposedRoleId: existing.proposedRoleId,
-      rationale: existing.rationale,
+      newRoleId: existing.newRoleId,
+      justification: existing.justification,
       effectiveDate: existing.effectiveDate,
     };
 
-    // Calculate new level change if role changed
-    let levelChange = existing.levelChange;
-    if (input.proposedRoleId && input.proposedRoleId !== existing.proposedRoleId) {
+    // Calculate new level if role changed
+    let newLevel = existing.newLevel;
+    let newTitle = existing.newTitle;
+    if (input.proposedRoleId && input.proposedRoleId !== existing.newRoleId) {
       const newRole = await prisma.role.findFirst({
-        where: { id: input.proposedRoleId, tenantId, deletedAt: null },
+        where: { id: input.proposedRoleId },
       });
       if (!newRole) {
         throw new NotFoundError('Proposed role', input.proposedRoleId);
       }
-      levelChange = (newRole.level || 0) - (existing.currentRole?.level || 0);
+      newLevel = newRole.level;
+      newTitle = newRole.name;
     }
 
     const decision = await prisma.promotionDecision.update({
       where: { id: decisionId },
       data: {
-        ...(input.proposedRoleId !== undefined && { proposedRoleId: input.proposedRoleId, levelChange }),
-        ...(input.rationale !== undefined && { rationale: input.rationale }),
+        ...(input.proposedRoleId !== undefined && { newRoleId: input.proposedRoleId, newLevel, newTitle }),
+        ...(input.justification !== undefined && { justification: input.justification }),
         ...(input.effectiveDate !== undefined && { effectiveDate: input.effectiveDate }),
         ...(input.readinessScore !== undefined && { readinessScore: input.readinessScore }),
-        ...(input.criteria !== undefined && { criteria: input.criteria }),
+        ...(input.criteriaScores !== undefined && { criteriaScores: input.criteriaScores }),
       },
     });
 
@@ -239,20 +240,18 @@ export class PromotionService {
     const decision = await prisma.promotionDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
       include: {
         employee: {
           select: { id: true, firstName: true, lastName: true, email: true, jobTitle: true },
         },
-        currentRole: {
-          select: { id: true, name: true, level: true },
+        previousRole: {
+          select: { id: true, name: true, description: true },
         },
-        proposedRole: {
-          select: { id: true, name: true, level: true },
+        newRole: {
+          select: { id: true, name: true, description: true },
         },
-        cycle: {
+        reviewCycle: {
           select: { id: true, name: true },
         },
         calibrationSession: {
@@ -286,18 +285,15 @@ export class PromotionService {
     userId: string,
     filters: PromotionFilters
   ): Promise<PromotionDecision[]> {
-    const where: Record<string, unknown> = {
-      tenantId,
-      deletedAt: null,
-    };
+    const where: Record<string, unknown> = { tenantId };
 
     if (filters.employeeId) where.employeeId = filters.employeeId;
-    if (filters.cycleId) where.cycleId = filters.cycleId;
+    if (filters.cycleId) where.reviewCycleId = filters.cycleId;
     if (filters.calibrationSessionId) where.calibrationSessionId = filters.calibrationSessionId;
     if (filters.type) where.type = filters.type;
     if (filters.status) where.status = filters.status;
-    if (filters.currentRoleId) where.currentRoleId = filters.currentRoleId;
-    if (filters.proposedRoleId) where.proposedRoleId = filters.proposedRoleId;
+    if (filters.currentRoleId) where.previousRoleId = filters.currentRoleId;
+    if (filters.proposedRoleId) where.newRoleId = filters.proposedRoleId;
     if (filters.effectiveDateFrom || filters.effectiveDateTo) {
       where.effectiveDate = {
         ...(filters.effectiveDateFrom && { gte: filters.effectiveDateFrom }),
@@ -309,13 +305,16 @@ export class PromotionService {
       where,
       include: {
         employee: {
-          select: { id: true, firstName: true, lastName: true, jobTitle: true },
+          select: { id: true, firstName: true, lastName: true, jobTitle: true, level: true },
         },
-        currentRole: {
-          select: { id: true, name: true, level: true },
+        previousRole: {
+          select: { id: true, name: true },
         },
-        proposedRole: {
-          select: { id: true, name: true, level: true },
+        newRole: {
+          select: { id: true, name: true },
+        },
+        nominatedBy: {
+          select: { id: true, firstName: true, lastName: true },
         },
       },
       orderBy: { createdAt: 'desc' },
@@ -334,8 +333,6 @@ export class PromotionService {
     const existing = await prisma.promotionDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
       include: {
         _count: {
@@ -361,8 +358,8 @@ export class PromotionService {
       where: { id: decisionId },
       data: {
         status: PromotionDecisionStatus.UNDER_REVIEW,
-        reviewStartedAt: new Date(),
-        reviewStartedById: userId,
+        reviewedAt: new Date(),
+        reviewedById: userId,
       },
     });
 
@@ -382,8 +379,6 @@ export class PromotionService {
     const existing = await prisma.promotionDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -401,10 +396,10 @@ export class PromotionService {
     }
 
     // Validate adjusted role if provided
-    let finalRoleId = existing.proposedRoleId;
+    let finalRoleId = existing.newRoleId;
     if (input.adjustedRoleId) {
       const adjustedRole = await prisma.role.findFirst({
-        where: { id: input.adjustedRoleId, tenantId, deletedAt: null },
+        where: { id: input.adjustedRoleId },
       });
       if (!adjustedRole) {
         throw new NotFoundError('Adjusted role', input.adjustedRoleId);
@@ -418,14 +413,14 @@ export class PromotionService {
         status: PromotionDecisionStatus.APPROVED,
         approvedAt: new Date(),
         approvedById: userId,
-        approvalNotes: input.notes,
-        finalRoleId,
+        metadata: { approvalNotes: input.notes },
+        newRoleId: finalRoleId,
       },
     });
 
     auditLogger('PROMOTION_DECISION_APPROVED', userId, tenantId, 'promotion_decision', decisionId, {
       employeeId: existing.employeeId,
-      proposedRoleId: existing.proposedRoleId,
+      newRoleId: existing.newRoleId,
       finalRoleId,
     });
 
@@ -441,8 +436,6 @@ export class PromotionService {
     const existing = await prisma.promotionDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -482,8 +475,6 @@ export class PromotionService {
     const existing = await prisma.promotionDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -499,8 +490,6 @@ export class PromotionService {
       where: { id: decisionId },
       data: {
         status: PromotionDecisionStatus.DEFERRED,
-        deferredAt: new Date(),
-        deferredById: userId,
         deferralReason: reason,
         deferredUntil: deferUntil,
       },
@@ -523,8 +512,6 @@ export class PromotionService {
     const existing = await prisma.promotionDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -556,7 +543,7 @@ export class PromotionService {
 
     auditLogger('PROMOTION_DECISION_IMPLEMENTED', userId, tenantId, 'promotion_decision', decisionId, {
       employeeId: existing.employeeId,
-      finalRoleId: existing.finalRoleId || existing.proposedRoleId,
+      newRoleId: existing.newRoleId,
       effectiveDate: existing.effectiveDate,
     });
 
@@ -574,8 +561,6 @@ export class PromotionService {
     const decision = await prisma.promotionDecision.findFirst({
       where: {
         id: input.decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -587,8 +572,6 @@ export class PromotionService {
     const evidence = await prisma.evidence.findFirst({
       where: {
         id: input.evidenceId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -617,7 +600,6 @@ export class PromotionService {
       data: {
         evidenceId: input.evidenceId,
         promotionDecisionId: input.decisionId,
-        criterionId: input.criterionId,
         weight: input.weight ?? 1.0,
         relevanceScore: input.relevanceScore,
         linkedById: userId,
@@ -628,7 +610,6 @@ export class PromotionService {
     auditLogger('PROMOTION_EVIDENCE_LINKED', userId, tenantId, 'decision_evidence', link.id, {
       decisionId: input.decisionId,
       evidenceId: input.evidenceId,
-      criterionId: input.criterionId,
     });
 
     return link;
@@ -674,13 +655,10 @@ export class PromotionService {
     averageReadinessScore: number | null;
     averageTimeToDecision: number | null;
   }> {
-    const where: Record<string, unknown> = {
-      tenantId,
-      deletedAt: null,
-    };
+    const where: Record<string, unknown> = { tenantId };
 
     if (cycleId) {
-      where.cycleId = cycleId;
+      where.reviewCycleId = cycleId;
     }
 
     const decisions = await prisma.promotionDecision.findMany({
@@ -697,8 +675,9 @@ export class PromotionService {
       byType[d.type] = (byType[d.type] || 0) + 1;
       byStatus[d.status] = (byStatus[d.status] || 0) + 1;
 
-      if (d.levelChange !== null) {
-        byLevel[d.levelChange] = (byLevel[d.levelChange] || 0) + 1;
+      const levelChange = (d.newLevel ?? 0) - (d.previousLevel ?? 0);
+      if (d.newLevel !== null && d.previousLevel !== null) {
+        byLevel[levelChange] = (byLevel[levelChange] || 0) + 1;
       }
 
       if (d.readinessScore !== null) {

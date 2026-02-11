@@ -6,6 +6,7 @@ import clsx from 'clsx';
 
 import { goalsApi, usersApi, type Goal, type CreateGoalInput, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { DataTable, type Column } from '@/components/ui';
 
 const statusColors: Record<string, string> = {
   DRAFT: 'badge-secondary',
@@ -121,6 +122,96 @@ function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
     </div>
   );
 }
+
+// ── Goal Table Columns ──────────────────────────────────────────────────────
+const goalColumns: Column<Goal>[] = [
+  {
+    key: 'title',
+    header: 'Goal',
+    sortable: true,
+    render: (goal) => (
+      <div className="flex items-center gap-2">
+        <span className={clsx('text-[10px] font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
+          {goal.type?.replace('_', ' ')}
+        </span>
+        <div>
+          <a href={`/goals/${goal.id}`} className="text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400">
+            {goal.title}
+          </a>
+          {goal.parentGoal && (
+            <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">↳ {goal.parentGoal.title}</p>
+          )}
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: 'owner',
+    header: 'Owner',
+    render: (goal) => (
+      <div className="flex items-center gap-1.5">
+        <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[10px] font-bold text-primary-700 dark:text-primary-300">
+          {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
+        </div>
+        <span className="text-xs text-secondary-600 dark:text-secondary-400">
+          {goal.owner?.firstName} {goal.owner?.lastName}
+        </span>
+      </div>
+    ),
+  },
+  {
+    key: 'status',
+    header: 'Status',
+    sortable: true,
+    render: (goal) => (
+      <span className={statusColors[goal.status] || 'badge-secondary'}>{goal.status}</span>
+    ),
+  },
+  {
+    key: 'priority',
+    header: 'Priority',
+    sortable: true,
+    render: (goal) => (
+      <span className={clsx('text-sm', priorityColors[goal.priority])}>{goal.priority}</span>
+    ),
+  },
+  {
+    key: 'progress',
+    header: 'Progress',
+    sortable: true,
+    render: (goal) => (
+      <div className="flex items-center">
+        <div className="w-24 bg-secondary-200 dark:bg-secondary-700 rounded-full h-2">
+          <div
+            className={clsx('h-2 rounded-full', goal.progress >= 100 ? 'bg-success-500' : 'bg-primary-600')}
+            style={{ width: `${Math.min(goal.progress, 100)}%` }}
+          />
+        </div>
+        <span className="ml-2 text-sm text-secondary-600 dark:text-secondary-400">{goal.progress}%</span>
+      </div>
+    ),
+  },
+  {
+    key: 'dueDate',
+    header: 'Due Date',
+    sortable: true,
+    render: (goal) => (
+      <span className="text-sm text-secondary-500 dark:text-secondary-400">
+        {goal.dueDate ? new Date(goal.dueDate).toLocaleDateString() : '-'}
+      </span>
+    ),
+  },
+  {
+    key: 'actions',
+    header: '',
+    className: 'text-right',
+    render: (goal) => (
+      <a href={`/goals/${goal.id}`} className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 text-sm font-medium">
+        View
+      </a>
+    ),
+  },
+];
 
 // ── Main GoalsPage ──────────────────────────────────────────────────────────
 export function GoalsPage() {
@@ -245,139 +336,22 @@ export function GoalsPage() {
 
       {/* ── List View ── */}
       {viewMode === 'list' && (
-        <>
-          {isLoading ? (
-            <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
-            </div>
-          ) : data?.data.length === 0 ? (
-            <div className="text-center py-12 card card-body dark:bg-secondary-800">
-              <FunnelIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-              <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No goals found</h3>
-              <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-                Get started by creating a new goal.
-              </p>
-              <div className="mt-6">
-                <button onClick={() => setShowCreateModal(true)} className="btn-primary">
-                  <PlusIcon className="h-5 w-5 mr-2" />
-                  Create Goal
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
-                <thead className="bg-secondary-50 dark:bg-secondary-900">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Goal</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Owner</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Priority</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Progress</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Due Date</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
-                  {data?.data.map((goal) => (
-                    <tr key={goal.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <span className={clsx('text-[10px] font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
-                            {goal.type?.replace('_', ' ')}
-                          </span>
-                          <div>
-                            <a
-                              href={`/goals/${goal.id}`}
-                              className="text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400"
-                            >
-                              {goal.title}
-                            </a>
-                            {goal.parentGoal && (
-                              <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">
-                                ↳ {goal.parentGoal.title}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-1.5">
-                          <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[10px] font-bold text-primary-700 dark:text-primary-300">
-                            {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
-                          </div>
-                          <span className="text-xs text-secondary-600 dark:text-secondary-400">
-                            {goal.owner?.firstName} {goal.owner?.lastName}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={statusColors[goal.status] || 'badge-secondary'}>
-                          {goal.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={clsx('text-sm', priorityColors[goal.priority])}>
-                          {goal.priority}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="w-24 bg-secondary-200 dark:bg-secondary-700 rounded-full h-2">
-                            <div
-                              className={clsx('h-2 rounded-full', goal.progress >= 100 ? 'bg-success-500' : 'bg-primary-600')}
-                              style={{ width: `${Math.min(goal.progress, 100)}%` }}
-                            />
-                          </div>
-                          <span className="ml-2 text-sm text-secondary-600 dark:text-secondary-400">
-                            {goal.progress}%
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500 dark:text-secondary-400">
-                        {goal.dueDate ? new Date(goal.dueDate).toLocaleDateString() : '-'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a
-                          href={`/goals/${goal.id}`}
-                          className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300"
-                        >
-                          View
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              {/* Pagination */}
-              {data && data.meta.totalPages > 1 && (
-                <div className="px-6 py-3 border-t border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
-                  <div className="text-sm text-secondary-500 dark:text-secondary-400">
-                    Showing {(page - 1) * data.meta.limit + 1} to{' '}
-                    {Math.min(page * data.meta.limit, data.meta.total)} of {data.meta.total} results
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
-                      disabled={page <= 1}
-                      className="btn-secondary text-sm disabled:opacity-50"
-                    >
-                      Previous
-                    </button>
-                    <button
-                      onClick={() => setPage((p) => p + 1)}
-                      disabled={!data.meta.totalPages || page >= data.meta.totalPages}
-                      className="btn-secondary text-sm disabled:opacity-50"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </>
+        <DataTable<Goal>
+          columns={goalColumns}
+          data={data?.data ?? []}
+          isLoading={isLoading}
+          keyExtractor={(goal) => goal.id}
+          emptyTitle="No goals found"
+          emptyDescription="Get started by creating a new goal."
+          emptyIcon={<FunnelIcon className="h-12 w-12" />}
+          emptyAction={{ label: 'Create Goal', onClick: () => setShowCreateModal(true) }}
+          pagination={data?.meta ? {
+            page,
+            pageSize: data.meta.limit,
+            total: data.meta.total,
+            onPageChange: setPage,
+          } : undefined}
+        />
       )}
 
       {/* ── Tree View ── */}

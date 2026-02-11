@@ -5,9 +5,12 @@
  */
 
 import { Router } from 'express';
+import { authenticate } from '../../middleware/authenticate';
 import { compensationController } from './compensation.controller';
 
 const router = Router();
+
+router.use(authenticate);
 
 // Core CRUD
 router.post('/', compensationController.create.bind(compensationController));

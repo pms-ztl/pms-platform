@@ -270,13 +270,8 @@ export class RealtimePerformanceService extends EventEmitter {
         : 0;
     }
 
-    // Get current hour metrics
-    const currentHour = new Date(now);
-    currentHour.setMinutes(0, 0, 0);
-
-    const currentHourMetric = hourlyMetrics.find(
-      m => m.metricHour.getTime() === currentHour.getTime()
-    );
+    // Get the most recent hour's metrics (first item since ordered desc)
+    const currentHourMetric = hourlyMetrics.length > 0 ? hourlyMetrics[0] : null;
 
     return {
       timestamp: now,

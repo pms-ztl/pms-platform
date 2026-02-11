@@ -486,11 +486,16 @@ export function PromotionsPage() {
                   e.preventDefault();
                   if (!formEmployeeId) { toast.error('Please select an employee'); return; }
                   if (formJustification.trim().length < 50) { toast.error('Justification must be at least 50 characters'); return; }
+                  // Validate required fields per type
+                  const needsRole = formType === 'TITLE_CHANGE' || formType === 'ROLE_CHANGE' || formType === 'LATERAL_MOVE';
+                  const needsLevel = formType === 'LEVEL_PROMOTION' || formType === 'ROLE_CHANGE';
+                  if (needsRole && !formProposedRole.trim()) { toast.error('Please enter a proposed role'); return; }
+                  if (needsLevel && !formProposedLevel) { toast.error('Please enter a proposed level'); return; }
                   createMutation.mutate({
                     employeeId: formEmployeeId,
                     promotionType: formType,
-                    proposedRole: formProposedRole || undefined,
-                    proposedLevel: formProposedLevel ? parseInt(formProposedLevel, 10) : undefined,
+                    proposedRole: needsRole ? formProposedRole.trim() : (selectedEmployee?.jobTitle || undefined),
+                    proposedLevel: needsLevel ? parseInt(formProposedLevel, 10) : undefined,
                     justification: formJustification.trim(),
                     effectiveDate: formEffectiveDate ? new Date(formEffectiveDate).toISOString() : undefined,
                   });
@@ -524,65 +529,85 @@ export function PromotionsPage() {
                   </label>
                   <select
                     value={formType}
-                    onChange={(e) => setFormType(e.target.value)}
+                    onChange={(e) => {
+                      const newType = e.target.value;
+                      setFormType(newType);
+                      // Clear irrelevant fields when switching type
+                      if (newType === 'LEVEL_PROMOTION') { setFormProposedRole(''); }
+                      if (newType === 'TITLE_CHANGE' || newType === 'LATERAL_MOVE') { setFormProposedLevel(''); }
+                    }}
                     className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
                   >
                     {PROMOTION_TYPES.filter((t) => t !== 'ALL').map((t) => (
                       <option key={t} value={t}>{typeLabels[t]}</option>
                     ))}
                   </select>
+                  <p className="text-xs text-secondary-400 mt-1">
+                    {formType === 'LEVEL_PROMOTION' && 'Same role, higher level (e.g., Engineer L3 → L4)'}
+                    {formType === 'TITLE_CHANGE' && 'New title/role, same level (e.g., Engineer → Senior Engineer)'}
+                    {formType === 'ROLE_CHANGE' && 'Different role and level (e.g., Engineer → Tech Lead)'}
+                    {formType === 'LATERAL_MOVE' && 'Same level, different role (e.g., Frontend → Backend Engineer)'}
+                  </p>
                 </div>
 
-                {/* Current Role (read-only) + Proposed Role */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">Current Role</label>
-                    <input
-                      type="text"
-                      readOnly
-                      value={selectedEmployee?.jobTitle || ''}
-                      placeholder="Select employee first"
-                      className="w-full rounded-lg border border-secondary-200 dark:border-secondary-600 bg-secondary-50 dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-500 dark:text-secondary-400 cursor-not-allowed"
-                    />
+                {/* Role fields — show for TITLE_CHANGE, ROLE_CHANGE, LATERAL_MOVE */}
+                {(formType === 'TITLE_CHANGE' || formType === 'ROLE_CHANGE' || formType === 'LATERAL_MOVE') && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">Current Role</label>
+                      <input
+                        type="text"
+                        readOnly
+                        value={selectedEmployee?.jobTitle || ''}
+                        placeholder="Select employee first"
+                        className="w-full rounded-lg border border-secondary-200 dark:border-secondary-600 bg-secondary-50 dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-500 dark:text-secondary-400 cursor-not-allowed"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
+                        Proposed Role <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formProposedRole}
+                        onChange={(e) => setFormProposedRole(e.target.value)}
+                        placeholder="e.g., Senior Engineer"
+                        required
+                        className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
-                      Proposed Role <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={formProposedRole}
-                      onChange={(e) => setFormProposedRole(e.target.value)}
-                      placeholder="e.g., Senior Engineer"
-                      className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
-                    />
-                  </div>
-                </div>
+                )}
 
-                {/* Current Level (read-only) + Proposed Level */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">Current Level</label>
-                    <input
-                      type="text"
-                      readOnly
-                      value={selectedEmployee?.level ?? ''}
-                      placeholder="Auto-filled"
-                      className="w-full rounded-lg border border-secondary-200 dark:border-secondary-600 bg-secondary-50 dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-500 dark:text-secondary-400 cursor-not-allowed"
-                    />
+                {/* Level fields — show for LEVEL_PROMOTION, ROLE_CHANGE */}
+                {(formType === 'LEVEL_PROMOTION' || formType === 'ROLE_CHANGE') && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">Current Level</label>
+                      <input
+                        type="text"
+                        readOnly
+                        value={selectedEmployee?.level ?? ''}
+                        placeholder="Auto-filled"
+                        className="w-full rounded-lg border border-secondary-200 dark:border-secondary-600 bg-secondary-50 dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-500 dark:text-secondary-400 cursor-not-allowed"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
+                        Proposed Level <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={formProposedLevel}
+                        onChange={(e) => setFormProposedLevel(e.target.value)}
+                        placeholder="e.g., 5"
+                        required
+                        className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">Proposed Level</label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={formProposedLevel}
-                      onChange={(e) => setFormProposedLevel(e.target.value)}
-                      placeholder="e.g., 5"
-                      className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
-                    />
-                  </div>
-                </div>
+                )}
 
                 {/* Justification */}
                 <div>

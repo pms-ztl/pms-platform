@@ -23,21 +23,22 @@ import { NotFoundError, ValidationError, AuthorizationError } from '../../utils/
 
 interface CreateCompensationDecisionInput {
   employeeId: string;
-  cycleId?: string;
+  reviewCycleId?: string;
   type: CompensationType;
-  currentAmount: number;
-  proposedAmount: number;
+  previousAmount: number;
+  newAmount: number;
   currency: string;
   effectiveDate: Date;
-  rationale: string;
+  reason: string;
+  justification?: string;
   performanceRating?: number;
   marketData?: Record<string, unknown>;
-  budgetPoolId?: string;
+  equityAnalysis?: Record<string, unknown>;
 }
 
 interface UpdateCompensationDecisionInput {
-  proposedAmount?: number;
-  rationale?: string;
+  newAmount?: number;
+  reason?: string;
   effectiveDate?: Date;
   marketData?: Record<string, unknown>;
 }
@@ -57,7 +58,7 @@ interface LinkEvidenceInput {
 
 interface CompensationFilters {
   employeeId?: string;
-  cycleId?: string;
+  reviewCycleId?: string;
   type?: CompensationType;
   status?: CompensationDecisionStatus;
   minAmount?: number;
@@ -92,51 +93,54 @@ export class CompensationService {
     }
 
     // Validate cycle if provided
-    if (input.cycleId) {
+    if (input.reviewCycleId) {
       const cycle = await prisma.reviewCycle.findFirst({
         where: {
-          id: input.cycleId,
+          id: input.reviewCycleId,
           tenantId,
           deletedAt: null,
         },
       });
 
       if (!cycle) {
-        throw new NotFoundError('Review cycle', input.cycleId);
+        throw new NotFoundError('Review cycle', input.reviewCycleId);
       }
     }
 
-    // Calculate percentage change
-    const percentageChange = input.currentAmount > 0
-      ? ((input.proposedAmount - input.currentAmount) / input.currentAmount) * 100
+    // Calculate change amount and percentage
+    const changeAmount = input.newAmount - input.previousAmount;
+    const changePercent = input.previousAmount > 0
+      ? ((input.newAmount - input.previousAmount) / input.previousAmount) * 100
       : 0;
 
     const decision = await prisma.compensationDecision.create({
       data: {
         tenantId,
         employeeId: input.employeeId,
-        cycleId: input.cycleId,
+        reviewCycleId: input.reviewCycleId,
         type: input.type,
-        currentAmount: input.currentAmount,
-        proposedAmount: input.proposedAmount,
-        percentageChange,
+        previousAmount: input.previousAmount,
+        newAmount: input.newAmount,
+        changeAmount,
+        changePercent,
         currency: input.currency,
         effectiveDate: input.effectiveDate,
-        rationale: input.rationale,
+        reason: input.reason,
+        justification: input.justification,
         performanceRating: input.performanceRating,
         marketData: input.marketData ?? {},
-        budgetPoolId: input.budgetPoolId,
+        equityAnalysis: input.equityAnalysis,
         status: CompensationDecisionStatus.DRAFT,
-        createdById: userId,
+        proposedById: userId,
       },
     });
 
     auditLogger('COMPENSATION_DECISION_CREATED', userId, tenantId, 'compensation_decision', decision.id, {
       employeeId: input.employeeId,
       type: input.type,
-      currentAmount: input.currentAmount,
-      proposedAmount: input.proposedAmount,
-      percentageChange,
+      previousAmount: input.previousAmount,
+      newAmount: input.newAmount,
+      changePercent,
     });
 
     return decision;
@@ -151,8 +155,6 @@ export class CompensationService {
     const existing = await prisma.compensationDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -168,22 +170,24 @@ export class CompensationService {
 
     // Capture previous state
     const previousState = {
-      proposedAmount: existing.proposedAmount,
-      rationale: existing.rationale,
+      newAmount: existing.newAmount,
+      reason: existing.reason,
       effectiveDate: existing.effectiveDate,
     };
 
-    // Recalculate percentage if amount changed
-    let percentageChange = existing.percentageChange;
-    if (input.proposedAmount !== undefined && existing.currentAmount > 0) {
-      percentageChange = ((input.proposedAmount - existing.currentAmount) / existing.currentAmount) * 100;
+    // Recalculate change values if amount changed
+    let changeAmount = existing.changeAmount;
+    let changePercent = existing.changePercent;
+    if (input.newAmount !== undefined && existing.previousAmount > 0) {
+      changeAmount = input.newAmount - existing.previousAmount;
+      changePercent = ((input.newAmount - existing.previousAmount) / existing.previousAmount) * 100;
     }
 
     const decision = await prisma.compensationDecision.update({
       where: { id: decisionId },
       data: {
-        ...(input.proposedAmount !== undefined && { proposedAmount: input.proposedAmount, percentageChange }),
-        ...(input.rationale !== undefined && { rationale: input.rationale }),
+        ...(input.newAmount !== undefined && { newAmount: input.newAmount, changeAmount, changePercent }),
+        ...(input.reason !== undefined && { reason: input.reason }),
         ...(input.effectiveDate !== undefined && { effectiveDate: input.effectiveDate }),
         ...(input.marketData !== undefined && { marketData: input.marketData }),
       },
@@ -205,17 +209,15 @@ export class CompensationService {
     const decision = await prisma.compensationDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
       include: {
         employee: {
           select: { id: true, firstName: true, lastName: true, email: true, jobTitle: true },
         },
-        cycle: {
+        reviewCycle: {
           select: { id: true, name: true },
         },
-        createdBy: {
+        proposedBy: {
           select: { id: true, firstName: true, lastName: true },
         },
         approvedBy: {
@@ -243,17 +245,14 @@ export class CompensationService {
     userId: string,
     filters: CompensationFilters
   ): Promise<CompensationDecision[]> {
-    const where: Record<string, unknown> = {
-      tenantId,
-      deletedAt: null,
-    };
+    const where: Record<string, unknown> = { tenantId };
 
     if (filters.employeeId) where.employeeId = filters.employeeId;
-    if (filters.cycleId) where.cycleId = filters.cycleId;
+    if (filters.reviewCycleId) where.reviewCycleId = filters.reviewCycleId;
     if (filters.type) where.type = filters.type;
     if (filters.status) where.status = filters.status;
     if (filters.minAmount !== undefined || filters.maxAmount !== undefined) {
-      where.proposedAmount = {
+      where.newAmount = {
         ...(filters.minAmount !== undefined && { gte: filters.minAmount }),
         ...(filters.maxAmount !== undefined && { lte: filters.maxAmount }),
       };
@@ -288,8 +287,6 @@ export class CompensationService {
     const existing = await prisma.compensationDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
       include: {
         _count: {
@@ -315,14 +312,12 @@ export class CompensationService {
       where: { id: decisionId },
       data: {
         status: CompensationDecisionStatus.PENDING_APPROVAL,
-        submittedAt: new Date(),
-        submittedById: userId,
       },
     });
 
     auditLogger('COMPENSATION_DECISION_SUBMITTED', userId, tenantId, 'compensation_decision', decisionId, {
-      proposedAmount: decision.proposedAmount,
-      percentageChange: decision.percentageChange,
+      newAmount: decision.newAmount,
+      changePercent: decision.changePercent,
     });
 
     return decision;
@@ -337,8 +332,6 @@ export class CompensationService {
     const existing = await prisma.compensationDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -351,14 +344,15 @@ export class CompensationService {
     }
 
     // Cannot approve own decision
-    if (existing.createdById === userId) {
+    if (existing.proposedById === userId) {
       throw new ValidationError('Cannot approve your own compensation decision');
     }
 
-    // Calculate final values
-    const finalAmount = input.adjustedAmount ?? existing.proposedAmount;
-    const finalPercentageChange = existing.currentAmount > 0
-      ? ((finalAmount - existing.currentAmount) / existing.currentAmount) * 100
+    // If amount was adjusted, recalculate change values
+    const finalAmount = input.adjustedAmount ?? existing.newAmount;
+    const changeAmount = finalAmount - existing.previousAmount;
+    const changePercent = existing.previousAmount > 0
+      ? ((finalAmount - existing.previousAmount) / existing.previousAmount) * 100
       : 0;
 
     const decision = await prisma.compensationDecision.update({
@@ -367,16 +361,16 @@ export class CompensationService {
         status: CompensationDecisionStatus.APPROVED,
         approvedAt: new Date(),
         approvedById: userId,
-        approvalNotes: input.notes,
-        finalAmount,
-        finalPercentageChange,
+        newAmount: finalAmount,
+        changeAmount,
+        changePercent,
       },
     });
 
     auditLogger('COMPENSATION_DECISION_APPROVED', userId, tenantId, 'compensation_decision', decisionId, {
-      proposedAmount: existing.proposedAmount,
+      originalNewAmount: existing.newAmount,
       finalAmount,
-      adjustedBy: input.adjustedAmount ? finalAmount - existing.proposedAmount : 0,
+      adjustedBy: input.adjustedAmount ? finalAmount - existing.newAmount : 0,
     });
 
     return decision;
@@ -391,8 +385,6 @@ export class CompensationService {
     const existing = await prisma.compensationDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -429,8 +421,6 @@ export class CompensationService {
     const existing = await prisma.compensationDecision.findFirst({
       where: {
         id: decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -453,7 +443,7 @@ export class CompensationService {
 
     auditLogger('COMPENSATION_DECISION_IMPLEMENTED', userId, tenantId, 'compensation_decision', decisionId, {
       employeeId: existing.employeeId,
-      finalAmount: existing.finalAmount,
+      newAmount: existing.newAmount,
       effectiveDate: existing.effectiveDate,
     });
 
@@ -471,8 +461,6 @@ export class CompensationService {
     const decision = await prisma.compensationDecision.findFirst({
       where: {
         id: input.decisionId,
-        tenantId,
-        deletedAt: null,
       },
     });
 
@@ -560,57 +548,50 @@ export class CompensationService {
 
   async getBudgetSummary(
     tenantId: string,
-    cycleId?: string
+    reviewCycleId?: string
   ): Promise<{
-    totalCurrentCost: number;
-    totalProposedCost: number;
-    totalApprovedCost: number;
+    totalPreviousCost: number;
+    totalNewCost: number;
     averageIncrease: number;
     byType: Record<string, { count: number; totalAmount: number }>;
     byStatus: Record<string, number>;
   }> {
-    const where: Record<string, unknown> = {
-      tenantId,
-      deletedAt: null,
-    };
+    const where: Record<string, unknown> = { tenantId };
 
-    if (cycleId) {
-      where.cycleId = cycleId;
+    if (reviewCycleId) {
+      where.reviewCycleId = reviewCycleId;
     }
 
     const decisions = await prisma.compensationDecision.findMany({
       where,
     });
 
-    let totalCurrentCost = 0;
-    let totalProposedCost = 0;
-    let totalApprovedCost = 0;
+    let totalPreviousCost = 0;
+    let totalNewCost = 0;
     let increaseSum = 0;
     let increaseCount = 0;
     const byType: Record<string, { count: number; totalAmount: number }> = {};
     const byStatus: Record<string, number> = {};
 
     for (const d of decisions) {
-      totalCurrentCost += d.currentAmount;
-      totalProposedCost += d.proposedAmount;
-      if (d.finalAmount) totalApprovedCost += d.finalAmount;
+      totalPreviousCost += d.previousAmount;
+      totalNewCost += d.newAmount;
 
-      if (d.percentageChange) {
-        increaseSum += d.percentageChange;
+      if (d.changePercent) {
+        increaseSum += d.changePercent;
         increaseCount++;
       }
 
       byType[d.type] = byType[d.type] || { count: 0, totalAmount: 0 };
       byType[d.type].count++;
-      byType[d.type].totalAmount += d.finalAmount || d.proposedAmount;
+      byType[d.type].totalAmount += d.newAmount;
 
       byStatus[d.status] = (byStatus[d.status] || 0) + 1;
     }
 
     return {
-      totalCurrentCost,
-      totalProposedCost,
-      totalApprovedCost,
+      totalPreviousCost,
+      totalNewCost,
       averageIncrease: increaseCount > 0 ? increaseSum / increaseCount : 0,
       byType,
       byStatus,

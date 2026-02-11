@@ -8,7 +8,7 @@ import { reportExportService, ExportFormat } from './report-export.service';
 import { dataAggregationService, PeriodType, AggregationType } from './data-aggregation.service';
 
 const redisConnection = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
+  host: process.env.REDIS_HOST || '127.0.0.1',
   port: parseInt(process.env.REDIS_PORT || '6379'),
   maxRetriesPerRequest: null,
 });

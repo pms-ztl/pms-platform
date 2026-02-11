@@ -12,7 +12,7 @@ const getSystemTheme = () => {
   if (typeof window !== 'undefined') {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
-  return 'light';
+  return 'dark';
 };
 
 const applyTheme = (theme: Theme) => {
@@ -29,7 +29,7 @@ const applyTheme = (theme: Theme) => {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      theme: 'light',
+      theme: 'dark',
       setTheme: (theme) => {
         applyTheme(theme);
         set({ theme });

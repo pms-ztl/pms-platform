@@ -34,6 +34,27 @@ router.get(
   analyticsController.getBiasMetrics
 );
 
+// HR Analytics: Compensation vs Performance (HR admin only)
+router.get(
+  '/compensation',
+  authorize({ roles: ['HR_ADMIN', 'ADMIN'] }),
+  analyticsController.getCompensationAnalysis
+);
+
+// HR Analytics: Bias detection (HR admin only)
+router.get(
+  '/bias',
+  authorize({ roles: ['HR_ADMIN', 'ADMIN'] }),
+  analyticsController.getBiasAnalysis
+);
+
+// HR Analytics: Rating normalization (HR admin only)
+router.get(
+  '/normalization',
+  authorize({ roles: ['HR_ADMIN', 'ADMIN'] }),
+  analyticsController.getNormalizationAnalysis
+);
+
 // Review cycle stats
 router.get('/cycle/:cycleId/stats', analyticsController.getCycleStats);
 

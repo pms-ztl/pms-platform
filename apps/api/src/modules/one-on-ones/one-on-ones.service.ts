@@ -79,7 +79,8 @@ export class OneOnOnesService {
       OR: [{ managerId: userId }, { employeeId: userId }],
     };
     if (filters?.status) {
-      where.status = filters.status;
+      const statuses = filters.status.split(',').map((s: string) => s.trim());
+      where.status = statuses.length === 1 ? statuses[0] : { in: statuses };
     }
 
     const [data, total] = await Promise.all([

@@ -14,7 +14,11 @@ const listQuerySchema = z.object({
   dateFrom: z.string().datetime({ offset: true }).optional().or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()),
   dateTo: z.string().datetime({ offset: true }).optional().or(z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()),
   search: z.string().optional(),
-});
+  userSearch: z.string().optional(),
+}).transform((data) => ({
+  ...data,
+  search: data.search || data.userSearch,
+}));
 
 const paginationSchema = z.object({
   page: z.coerce.number().int().positive().optional().default(1),

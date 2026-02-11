@@ -6,6 +6,7 @@ import { z } from 'zod';
 import type { AuthenticatedRequest, PaginationQuery } from '../../types';
 import { ValidationError } from '../../utils/errors';
 import { usersService } from './users.service';
+import { processAvatarUpload } from '../../middleware/upload';
 
 // Validation schemas
 const createUserSchema = z.object({
@@ -351,25 +352,38 @@ export class UsersController {
 
   /**
    * Upload avatar for current user or specified user (admin)
+   * Generates optimized thumbnails (sm/md/lg/original) using sharp
    */
   async uploadAvatar(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const file = req.file;
       const userId = req.params.id || req.user.id;
 
-      if (!file) {
+      if (!file || !file.buffer) {
         throw new ValidationError('No file uploaded');
       }
 
-      // Construct the avatar URL (relative path served from /uploads)
-      const avatarUrl = `/uploads/avatars/${file.filename}`;
+      // Process the upload: generates sm (64px), md (160px), lg (320px), original (800px) webp variants
+      const { baseFilename, files } = await processAvatarUpload(file.buffer, file.originalname);
 
-      // Update user with new avatar URL
+      // Store the base path — frontend appends size suffix as needed
+      // Default URL points to the md (160px) variant for general use
+      const avatarUrl = `/uploads/avatars/${baseFilename}.webp`;
+
+      // Update user with new avatar URL (stores the original/base path)
       await usersService.updateAvatar(req.tenantId, userId, avatarUrl);
 
       res.status(200).json({
         success: true,
-        data: { avatarUrl },
+        data: {
+          avatarUrl,
+          variants: {
+            sm: `/uploads/avatars/${files.sm}`,
+            md: `/uploads/avatars/${files.md}`,
+            lg: `/uploads/avatars/${files.lg}`,
+            original: `/uploads/avatars/${files.original}`,
+          },
+        },
         message: 'Avatar uploaded successfully',
       });
     } catch (error) {

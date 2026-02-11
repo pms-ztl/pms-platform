@@ -211,6 +211,66 @@ export class AnalyticsController {
       next(error);
     }
   }
+  // ============================================================================
+  // HR Analytics Endpoints
+  // ============================================================================
+
+  /**
+   * GET /api/v1/analytics/compensation
+   * Compensation vs Performance analysis
+   */
+  async getCompensationAnalysis(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { tenantId } = req.user!;
+
+      const data = await analyticsService.getCompensationAnalysis(tenantId);
+
+      res.json({
+        success: true,
+        data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /api/v1/analytics/bias
+   * Bias detection analysis
+   */
+  async getBiasAnalysis(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { tenantId } = req.user!;
+
+      const data = await analyticsService.getBiasAnalysis(tenantId);
+
+      res.json({
+        success: true,
+        data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /api/v1/analytics/normalization
+   * Rating normalization analysis with z-scores
+   */
+  async getNormalizationAnalysis(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { tenantId } = req.user!;
+
+      const data = await analyticsService.getNormalizationAnalysis(tenantId);
+
+      res.json({
+        success: true,
+        data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const analyticsController = new AnalyticsController();

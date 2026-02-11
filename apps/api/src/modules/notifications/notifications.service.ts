@@ -173,7 +173,7 @@ export class NotificationsService {
   ) {
     const { unreadOnly = false, channel, limit = 50, offset = 0 } = options || {};
 
-    const where: any = { userId, tenantId };
+    const where: any = { userId };
 
     if (unreadOnly) {
       where.readAt = null;
@@ -197,7 +197,7 @@ export class NotificationsService {
       data: notifications,
       meta: {
         total,
-        unread: await prisma.notification.count({ where: { userId, tenantId, readAt: null } }),
+        unread: await prisma.notification.count({ where: { userId, readAt: null } }),
       },
     };
   }
@@ -217,7 +217,7 @@ export class NotificationsService {
    */
   async markAllAsRead(userId: string, tenantId: string): Promise<void> {
     await prisma.notification.updateMany({
-      where: { userId, tenantId, readAt: null },
+      where: { userId, readAt: null },
       data: { readAt: new Date() },
     });
   }

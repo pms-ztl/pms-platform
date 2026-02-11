@@ -1,7 +1,7 @@
 // PMS Platform Service Worker
 // Provides offline support with multiple caching strategies
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const STATIC_CACHE = `pms-static-${CACHE_VERSION}`;
 const API_CACHE = `pms-api-${CACHE_VERSION}`;
 const PAGES_CACHE = `pms-pages-${CACHE_VERSION}`;
@@ -177,6 +177,11 @@ self.addEventListener('fetch', (event) => {
 
   // Only handle same-origin requests (skip CDN fonts, analytics, etc.)
   if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  // Skip file download requests — let them go straight to the network
+  if (url.pathname.includes('/download')) {
     return;
   }
 

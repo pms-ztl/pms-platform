@@ -95,11 +95,18 @@ export class CalibrationController {
         facilitatorId: query.facilitatorId,
       };
 
-      const sessions = await calibrationService.listSessions(req.tenantId, filters);
+      const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+      const limit = req.query.limit ? Math.min(parseInt(req.query.limit as string, 10), 100) : 20;
+
+      const allSessions = await calibrationService.listSessions(req.tenantId, filters);
+      const total = allSessions.length;
+      const totalPages = Math.ceil(total / limit);
+      const paged = allSessions.slice((page - 1) * limit, page * limit);
 
       res.status(200).json({
         success: true,
-        data: sessions,
+        data: paged,
+        meta: { total, page, limit, totalPages },
       });
     } catch (error) {
       next(error);

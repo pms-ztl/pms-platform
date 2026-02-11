@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "types": ["node", "express", "jest"],
     "strict": false,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "noEmitOnError": false
   },
   "include": ["src/**/*"],
   "exclude": [

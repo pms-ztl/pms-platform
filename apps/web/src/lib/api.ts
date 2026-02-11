@@ -3,6 +3,33 @@ import { useAuthStore } from '@/store/auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
+/**
+ * Get the optimized avatar URL for a given size.
+ * For local uploads (/uploads/avatars/{uuid}.webp), appends size suffix.
+ * For external URLs (dicebear, etc.), returns as-is.
+ *
+ * @param avatarUrl - The base avatar URL from the user object
+ * @param size - 'sm' (64px), 'md' (160px), 'lg' (320px), or 'original' (800px)
+ */
+export function getAvatarUrl(avatarUrl: string | undefined | null, size: 'sm' | 'md' | 'lg' | 'original' = 'md'): string | null {
+  if (!avatarUrl) return null;
+
+  // External URLs (dicebear, robohash, etc.) — pass through
+  if (avatarUrl.startsWith('http://') || avatarUrl.startsWith('https://')) {
+    return avatarUrl;
+  }
+
+  // Local uploads: /uploads/avatars/{uuid}.webp → /uploads/avatars/{uuid}-{size}.webp
+  if (avatarUrl.startsWith('/uploads/avatars/') && size !== 'original') {
+    const ext = avatarUrl.lastIndexOf('.');
+    if (ext > 0) {
+      return `${avatarUrl.substring(0, ext)}-${size}${avatarUrl.substring(ext)}`;
+    }
+  }
+
+  return avatarUrl;
+}
+
 interface ApiError {
   code: string;
   message: string;
@@ -139,6 +166,11 @@ class ApiClient {
       throw new Error(response.data.error?.message || 'Request failed');
     }
     return response.data.data as T;
+  }
+
+  async getBlob(url: string, config?: AxiosRequestConfig): Promise<Blob> {
+    const response = await this.client.get(url, { ...config, responseType: 'blob' });
+    return response.data;
   }
 
   async getPaginated<T>(
@@ -790,6 +822,8 @@ export const reportsApi = {
     api.getPaginated<GeneratedReport>('/reports', params),
   getById: (id: string) => api.get<GeneratedReport>(`/reports/${id}`),
   generate: (data: GenerateReportInput) => api.post<any>('/reports/generate', data),
+  download: (reportId: string, format: string) =>
+    api.getBlob(`/reports/${reportId}/download?format=${format}`),
   getJobStatus: (jobId: string) => api.get<any>(`/reports/jobs/${jobId}`),
   listSchedules: () => api.get<any[]>('/reports/schedules'),
   createSchedule: (data: { reportDefinitionId: string; cronExpression: string; startDate: string; endDate?: string }) =>
@@ -1270,6 +1304,8 @@ export const performanceMathApi = {
     api.post<CalibrationResult>('/performance-math/calibrate', { cycleId }),
   getGoalMapping: (goalId: string) =>
     api.get<GoalMappingResult>(`/performance-math/goal-mapping/${goalId}`),
+  getCPIS: (userId: string) =>
+    api.get<any>(`/performance-math/cpis/${userId}`),
 };
 
 // ============================================================================

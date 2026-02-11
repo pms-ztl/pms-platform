@@ -2410,7 +2410,7 @@ model ReportDefinition {
 model GeneratedReport {
   id                  String   @id @default(uuid()) @db.Uuid
   tenantId            String   @map("tenant_id") @db.Uuid
-  reportDefinitionId  String   @map("report_definition_id") @db.Uuid
+  reportDefinitionId  String?  @map("report_definition_id") @db.Uuid
   reportType          String   @map("report_type")
 
   // Report Period
@@ -2457,7 +2457,7 @@ model GeneratedReport {
 
   // Relations
   tenant              Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  reportDefinition    ReportDefinition @relation(fields: [reportDefinitionId], references: [id], onDelete: Cascade)
+  reportDefinition    ReportDefinition? @relation(fields: [reportDefinitionId], references: [id], onDelete: Cascade)
   generatedBy         User?    @relation("ReportGenerator", fields: [generatedById], references: [id])
 
   @@index([tenantId])

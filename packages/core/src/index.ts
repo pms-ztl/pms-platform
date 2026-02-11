@@ -332,6 +332,11 @@ export {
   type TeamMathResult,
   type GoalRiskInput,
   type GoalRiskResult,
+  calculateCPIS,
+  type CPISInput,
+  type CPISDimension,
+  type CPISResult,
+  type FairnessAnalysis,
 } from './math-engine';
 
 // Validation schemas

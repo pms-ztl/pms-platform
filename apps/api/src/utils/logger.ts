@@ -45,14 +45,20 @@ export const requestLogger = (
   });
 };
 
+/**
+ * Audit logger — persists events to the audit_events table AND logs to Winston.
+ * Persistence is fire-and-forget so it never blocks the calling code.
+ */
 export const auditLogger = (
   action: string,
   userId: string | null,
   tenantId: string,
   entityType: string,
   entityId: string,
-  metadata?: Record<string, unknown>
+  metadata?: Record<string, unknown>,
+  extra?: { ipAddress?: string; userAgent?: string; previousState?: any; newState?: any }
 ): void => {
+  // Always log to Winston for immediate console/file visibility
   logger.info('Audit Event', {
     action,
     userId,
@@ -62,4 +68,33 @@ export const auditLogger = (
     metadata,
     timestamp: new Date().toISOString(),
   });
+
+  // Persist to database (fire-and-forget)
+  try {
+    // Lazy import to avoid circular dependency at module load time
+    const { prisma } = require('@pms/database');
+    prisma.auditEvent
+      .create({
+        data: {
+          tenantId,
+          userId: userId || undefined,
+          action,
+          entityType,
+          entityId,
+          previousState: extra?.previousState || undefined,
+          newState: extra?.newState || undefined,
+          ipAddress: extra?.ipAddress || undefined,
+          userAgent: extra?.userAgent || undefined,
+          metadata: metadata || {},
+        },
+      })
+      .catch((err: any) => {
+        logger.warn('Failed to persist audit event', {
+          action, entityType, entityId,
+          error: err?.message || String(err),
+        });
+      });
+  } catch (err: any) {
+    logger.warn('Audit persistence init error', { error: err?.message });
+  }
 };

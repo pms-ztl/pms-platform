@@ -33,6 +33,7 @@ import { api } from '@/lib/api';
 interface AuditEvent {
   id: string;
   timestamp: string;
+  createdAt?: string;
   userId: string;
   user: {
     id: string;
@@ -510,6 +511,11 @@ export function AuditLogPage() {
       api.get<AuditStats>('/audit/stats', { params: queryParams }),
   });
 
+  // ── Derived data ──────────────────────────────────────────────────────────
+
+  const events = eventsData?.data ?? [];
+  const meta = eventsData?.meta ?? { total: 0, page: 1, limit: 20, totalPages: 0 };
+
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   const handleApplyFilters = useCallback(() => {
@@ -529,24 +535,60 @@ export function AuditLogPage() {
     [],
   );
 
-  const handleExportCsv = useCallback(() => {
-    const params = new URLSearchParams();
-    const qp = buildQueryParams(appliedFilters);
-    Object.entries(qp).forEach(([k, v]) => {
-      if (v !== undefined && v !== null) params.set(k, String(v));
-    });
-    params.set('format', 'csv');
-    window.open(`/api/v1/audit/export?${params.toString()}`, '_blank');
-  }, [appliedFilters]);
+  const handleExportCsv = useCallback(async () => {
+    const headers = ['Timestamp', 'User', 'Email', 'Action', 'Entity Type', 'Entity ID', 'IP Address'];
+    const escCsv = (v: string) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+
+    // Fetch ALL events matching current filters (up to 10000) for full export
+    try {
+      const exportParams = { ...buildQueryParams(appliedFilters), page: '1', limit: '10000' };
+      const allData = await api.getPaginated<AuditEvent>('/audit', exportParams);
+      const allEvents = allData?.data ?? events;
+
+      if (allEvents.length === 0) return;
+
+      const rows = allEvents.map((e: AuditEvent) => [
+        escCsv(e.timestamp || e.createdAt || ''),
+        escCsv(`${e.user?.firstName ?? ''} ${e.user?.lastName ?? ''}`),
+        escCsv(e.user?.email ?? ''),
+        escCsv(e.action),
+        escCsv(e.entityType),
+        escCsv(e.entityId),
+        escCsv(e.ipAddress ?? ''),
+      ].join(','));
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `audit-log-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      // Fallback to current page data
+      const rows = events.map((e) => [
+        escCsv(e.timestamp || e.createdAt || ''),
+        escCsv(`${e.user?.firstName ?? ''} ${e.user?.lastName ?? ''}`),
+        escCsv(e.user?.email ?? ''),
+        escCsv(e.action),
+        escCsv(e.entityType),
+        escCsv(e.entityId),
+        escCsv(e.ipAddress ?? ''),
+      ].join(','));
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `audit-log-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  }, [events, appliedFilters]);
 
   const toggleRowExpand = useCallback((id: string) => {
     setExpandedRow((prev) => (prev === id ? null : id));
   }, []);
-
-  // ── Derived data ──────────────────────────────────────────────────────────
-
-  const events = eventsData?.data ?? [];
-  const meta = eventsData?.meta ?? { total: 0, page: 1, limit: 20, totalPages: 0 };
 
   const pageNumbers = useMemo(() => {
     const pages: number[] = [];

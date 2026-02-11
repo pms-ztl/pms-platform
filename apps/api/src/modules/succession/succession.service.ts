@@ -37,12 +37,12 @@ class SuccessionService {
   async getNineBoxGrid(tenantId: string) {
     // Get all users with their latest review ratings
     const users = await prisma.user.findMany({
-      where: { tenantId, status: 'ACTIVE' },
+      where: { tenantId, isActive: true },
       select: { id: true, firstName: true, lastName: true, email: true, jobTitle: true, department: true }
     });
 
-    // Get latest review submissions for each user (performance axis)
-    const reviewSubmissions = await prisma.reviewSubmission.findMany({
+    // Get latest reviews for each user (performance axis)
+    const reviewSubmissions = await prisma.review.findMany({
       where: { tenantId, status: 'SUBMITTED' },
       orderBy: { submittedAt: 'desc' },
       select: { revieweeId: true, overallRating: true }
@@ -51,7 +51,7 @@ class SuccessionService {
     // Get development plans progress (potential axis)
     const devPlans = await prisma.developmentPlan.findMany({
       where: { tenantId, status: 'ACTIVE' },
-      select: { userId: true, overallProgress: true }
+      select: { userId: true, progressPercentage: true }
     });
 
     // Build ratings map (latest rating per user)
@@ -66,8 +66,8 @@ class SuccessionService {
     const potentialMap = new Map<string, number>();
     for (const dp of devPlans) {
       const existing = potentialMap.get(dp.userId);
-      if (!existing || (dp.overallProgress && Number(dp.overallProgress) > existing)) {
-        potentialMap.set(dp.userId, Number(dp.overallProgress || 0));
+      if (!existing || (dp.progressPercentage && Number(dp.progressPercentage) > existing)) {
+        potentialMap.set(dp.userId, Number(dp.progressPercentage || 0));
       }
     }
 

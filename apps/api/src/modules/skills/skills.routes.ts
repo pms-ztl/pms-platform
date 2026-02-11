@@ -15,7 +15,8 @@ router.delete('/categories/:id', authorize({ resource: 'skills', action: 'delete
 
 // Skill Assessments
 router.get('/assessments', (req, res, next) => skillsController.listAssessments(req as any, res, next));
-router.post('/assessments', authorize({ resource: 'skills', action: 'create', scope: 'team' }), (req, res, next) => skillsController.createAssessment(req as any, res, next));
+router.post('/assessments', (req, res, next) => skillsController.createAssessment(req as any, res, next));
+router.post('/assessments/request', (req, res, next) => skillsController.requestAssessment(req as any, res, next));
 router.put('/assessments/:id', (req, res, next) => skillsController.updateAssessment(req as any, res, next));
 router.post('/assessments/:id/progress', (req, res, next) => skillsController.addProgressEntry(req as any, res, next));
 

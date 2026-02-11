@@ -19,7 +19,7 @@ import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 
-import { authApi, goalsApi, reviewsApi, feedbackApi, usersApi, type Goal } from '@/lib/api';
+import { authApi, goalsApi, reviewsApi, feedbackApi, usersApi, getAvatarUrl, type Goal } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { EmployeeCard } from '@/components/employee-card';
 
@@ -355,7 +355,7 @@ export function ProfilePage() {
         <div className="flex items-center gap-6">
           <div className="relative group">
             {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user.firstName} className="w-20 h-20 rounded-full object-cover" />
+              <img src={getAvatarUrl(user.avatarUrl, 'md') || user.avatarUrl} alt={user.firstName} className="w-20 h-20 rounded-full object-cover" />
             ) : (
               <div className="w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
                 <span className="text-2xl font-medium text-primary-700 dark:text-primary-300">

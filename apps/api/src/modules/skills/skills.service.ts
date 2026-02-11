@@ -53,6 +53,14 @@ class SkillsService {
     });
   }
 
+  async findCategoryIdByName(tenantId: string, name: string): Promise<string | undefined> {
+    const category = await prisma.skillCategory.findFirst({
+      where: { tenantId, name, deletedAt: null },
+      select: { id: true },
+    });
+    return category?.id;
+  }
+
   // ─── Skill Assessments ──────────────────────────────────────────────
 
   async listAssessments(tenantId: string, params: {
@@ -189,7 +197,9 @@ class SkillsService {
       where: { tenantId, userId, deletedAt: null },
       include: {
         skillCategory: true,
-        progressHistory: { orderBy: { createdAt: 'desc' } },
+        progressHistory: {
+          orderBy: { createdAt: 'asc' },
+        },
       },
       orderBy: { skillName: 'asc' },
     });
@@ -212,14 +222,8 @@ class SkillsService {
         managerAssessment: assessment.managerAssessment ? Number(assessment.managerAssessment) : null,
         finalScore: Number(assessment.finalScore),
         lastAssessedAt: assessment.lastAssessedAt,
-        progressHistory: assessment.progressHistory.map((h) => ({
-          id: h.id,
-          previousScore: Number(h.previousScore),
-          newScore: Number(h.newScore),
-          changeReason: h.changeReason,
-          notes: h.notes,
-          createdAt: h.createdAt,
-        })),
+        improvementPlan: assessment.improvementPlan,
+        progressHistory: assessment.progressHistory || [],
       });
     }
 
@@ -504,6 +508,47 @@ class SkillsService {
       categories: categories.map((c) => ({ id: c.id, name: c.name })),
       heatmap,
     };
+  }
+
+  // ─── Assessment Request ──────────────────────────────────────────────
+
+  async requestManagerAssessment(tenantId: string, userId: string, assessmentId: string) {
+    // Verify the assessment belongs to this user and tenant
+    const assessment = await prisma.technicalSkillAssessment.findFirst({
+      where: { id: assessmentId, tenantId, userId },
+      include: { skillCategory: true },
+    });
+    if (!assessment) throw new Error('Assessment not found');
+
+    // Find the user's manager
+    const user = await prisma.user.findFirst({
+      where: { id: userId, tenantId },
+      select: { id: true, firstName: true, lastName: true, managerId: true },
+    });
+    if (!user?.managerId) throw new Error('No manager assigned');
+
+    // Create a notification for the manager
+    try {
+      await prisma.notification.create({
+        data: {
+          userId: user.managerId,
+          type: 'SKILL_ASSESSMENT_REQUEST',
+          title: 'Skill Assessment Request',
+          body: `${user.firstName} ${user.lastName} has requested a manager assessment for "${assessment.skillName}"`,
+          data: {
+            assessmentId: assessment.id,
+            requestedBy: userId,
+            skillName: assessment.skillName,
+            category: assessment.skillCategory?.name,
+          },
+          channel: 'in_app',
+        },
+      });
+    } catch {
+      // Notification creation is best-effort; don't fail the request
+    }
+
+    return { success: true };
   }
 }
 
