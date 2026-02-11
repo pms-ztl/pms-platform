@@ -270,10 +270,10 @@ async function main() {
 
   // 1. System Owner / Super Admin — Dr. Prasina Sathish A.
   const prasinaUser = await prisma.user.upsert({
-    where: { tenantId_email: { tenantId: tenant.id, email: 'prssanjana@gmail.com' } },
+    where: { tenantId_email: { tenantId: tenant.id, email: 'danish@xzashr.com' } },
     update: {},
     create: {
-      email: 'prssanjana@gmail.com',
+      email: 'danish@xzashr.com',
       passwordHash: prasinaHash,
       firstName: 'Prasina',
       lastName: 'Sathish A',
@@ -2391,7 +2391,7 @@ async function main() {
   console.log('┌─────────────────────┬─────────────────────────────────────┬──────────┬──────────────────────────┐');
   console.log('│ Entity              │ Email                               │ Password │ Roles                    │');
   console.log('├─────────────────────┼─────────────────────────────────────┼──────────┼──────────────────────────┤');
-  console.log('│ System Owner        │ prssanjana@gmail.com                │ demo@pms │ SUPER_ADMIN + HR_ADMIN   │');
+  console.log('│ System Owner        │ danish@xzashr.com                │ demo@pms │ SUPER_ADMIN + HR_ADMIN   │');
   console.log('│ Process Lead        │ agdanishr@gmail.com                 │ demo@123 │ HR_ADMIN + EMPLOYEE      │');
   console.log('│ Evaluator           │ preethisivachandran0@gmail.com      │ demo@789 │ MANAGER + EMPLOYEE       │');
   console.log('│ Employee            │ sanjayn0369@gmail.com               │ demo@456 │ EMPLOYEE                 │');
