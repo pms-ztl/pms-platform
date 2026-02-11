@@ -1,7 +1,7 @@
 # Multi-stage build for PMS Frontend
 
 # Stage 1: Base with system deps
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 
 RUN apk add --no-cache libc6-compat wget
@@ -12,7 +12,10 @@ COPY turbo.json ./
 
 # Copy workspace package.json files
 COPY apps/web/package*.json ./apps/web/
+COPY apps/api/package*.json ./apps/api/ 2>/dev/null || true
+COPY apps/admin/package*.json ./apps/admin/ 2>/dev/null || true
 COPY packages/core/package*.json ./packages/core/ 2>/dev/null || true
+COPY packages/database/package*.json ./packages/database/ 2>/dev/null || true
 COPY packages/ui/package*.json ./packages/ui/ 2>/dev/null || true
 
 # Stage 2: Install dependencies
@@ -45,8 +48,8 @@ FROM nginx:alpine AS production
 # Copy built static assets
 COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
-# Copy nginx config
-COPY apps/web/nginx.conf /etc/nginx/conf.d/default.conf
+# Copy nginx config (from infrastructure)
+COPY infrastructure/docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 

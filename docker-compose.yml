@@ -1,5 +1,13 @@
 version: '3.8'
 
+# =============================================================
+# PMS Platform - Full Stack Docker Setup
+# =============================================================
+# Quick start:  docker compose up --build
+# Stop:         docker compose down
+# Reset DB:     docker compose down -v && docker compose up --build
+# =============================================================
+
 services:
   # PostgreSQL Database
   db:
@@ -55,23 +63,22 @@ services:
       HOST: 0.0.0.0
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-pms_dev}
       REDIS_URL: redis://redis:6379
-      JWT_SECRET: ${JWT_SECRET}
+      JWT_SECRET: ${JWT_SECRET:-pms-docker-jwt-secret-change-in-prod}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
       JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
-      SESSION_SECRET: ${SESSION_SECRET}
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      SESSION_SECRET: ${SESSION_SECRET:-pms-docker-session-secret-change-it}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-pms-docker-encryption-key-32ch!!}
       MFA_ISSUER: ${MFA_ISSUER:-PMS Platform}
-      CORS_ORIGINS: ${CORS_ORIGINS:-https://pms.xzashr.com}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3002,http://localhost}
       LOG_LEVEL: ${LOG_LEVEL:-info}
-      # SMTP Email
-      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_SECURE: ${SMTP_SECURE:-false}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
-      SMTP_FROM: ${SMTP_FROM:-PMS Platform <aerofyta@gmail.com>}
+      SMTP_FROM: ${SMTP_FROM:-PMS Platform <noreply@pms-platform.com>}
     ports:
-      - "127.0.0.1:3001:3001"
+      - "3001:3001"
     depends_on:
       db:
         condition: service_healthy
@@ -97,7 +104,7 @@ services:
     container_name: pms-frontend
     restart: unless-stopped
     ports:
-      - "127.0.0.1:3002:80"
+      - "3002:80"
     depends_on:
       backend:
         condition: service_healthy

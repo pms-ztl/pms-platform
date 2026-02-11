@@ -1,256 +1,175 @@
 # PMS Platform - Enterprise Performance Management System
 
-A modern, scalable performance management platform designed for enterprise organizations. Built with a modular monolith architecture using Node.js, TypeScript, React, and React Native.
+A modern, scalable performance management platform built with Node.js, TypeScript, React, and PostgreSQL.
 
-## Features
+## Quick Start (Docker - Recommended)
 
-### Core Modules
-- **Goals Management** - OKRs, SMART goals, cascading alignment, and progress tracking
-- **Performance Reviews** - Multi-rater reviews, customizable templates, and automated workflows
-- **Continuous Feedback** - Real-time feedback, peer recognition, and 360° surveys
-- **Calibration** - AI-assisted rating calibration with bias detection
-- **Analytics** - Real-time dashboards, predictive insights, and custom reporting
-- **Integrations** - HRIS, SSO, collaboration tools, and calendar sync
+**One command to run the full app:**
 
-### Key Differentiators
-1. **Multi-language NLP Bias Detection** - Detects 12+ bias patterns across 8 languages
-2. **AI Calibration Assistant** - Pre-session analysis with outlier detection
-3. **Offline-First Mobile Experience** - Background sync with delta updates
-4. **Real-Time Collaboration** - Live review editing with presence indicators
-5. **Sentiment Timeline Analysis** - Feedback trend visualization over time
-6. **Manager Effectiveness Dashboard** - Team health metrics and coaching insights
-7. **Customizable Competency Framework** - Industry-specific templates
-8. **Goal Alignment Visualization** - Interactive D3.js hierarchy graphs
-9. **Skills Gap Analysis** - ML-driven development recommendations
-10. **Anonymous Feedback Channels** - End-to-end encrypted with safety scoring
-11. **Review Cycle Automation** - ML-optimized reminder scheduling
-12. **Cross-Tenant Benchmarking** - Privacy-preserving industry comparisons
-13. **Smart Meeting Prep** - AI-generated 1:1 meeting agendas
-14. **Integration Hub** - 12+ enterprise connectors with unified sync
-15. **Predictive Flight Risk** - Employee retention modeling
-16. **Voice/Video Feedback** - Transcription and sentiment analysis
+```bash
+git clone https://github.com/agdanish/pms-platform.git
+cd pms-platform
+docker compose up --build
+```
 
-## Architecture
+Then open **http://localhost:3002** in your browser.
 
-### Project Structure
+> **Default login:** Check the seed output in the terminal for the admin credentials.
+
+### Docker Commands
+
+| Command | What it does |
+|---------|-------------|
+| `docker compose up --build` | Build and start everything |
+| `docker compose up -d` | Start in background |
+| `docker compose down` | Stop all services |
+| `docker compose down -v` | Stop and **wipe database** |
+| `docker compose logs -f backend` | Watch API logs |
+| `docker compose logs -f frontend` | Watch frontend logs |
+
+### What Docker starts
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Frontend** | http://localhost:3002 | React web app (nginx) |
+| **API** | http://localhost:3001 | Express REST API |
+| **PostgreSQL** | localhost:5432 | Database |
+| **Redis** | localhost:6379 | Cache & queues |
+
+---
+
+## Local Development (Without Docker)
+
+### Prerequisites
+
+- Node.js 20+ and npm 9+
+- PostgreSQL 16+
+- Redis 7+
+
+### Setup
+
+```bash
+# 1. Clone and install
+git clone https://github.com/agdanish/pms-platform.git
+cd pms-platform
+npm install
+
+# 2. Start PostgreSQL + Redis via Docker (easiest)
+docker compose -f docker-compose.dev.yml up -d
+
+# 3. Set up environment
+cp .env.example .env
+
+# 4. Set up the database
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+
+# 5. Start dev servers (API on :3001, Web on :3002)
+npm run dev
+```
+
+### Dev URLs
+
+- **Web App:** http://localhost:3002
+- **API:** http://localhost:3001
+- **API Health:** http://localhost:3001/health
+
+---
+
+## Project Structure
 
 ```
 pms-platform/
 ├── apps/
-│   ├── api/              # Express.js REST API
-│   ├── web/              # React web application
-│   ├── mobile/           # React Native mobile app
-│   └── admin/            # Admin dashboard
+│   ├── api/              # Express.js REST API (production)
+│   ├── web/              # React + Vite frontend (production)
+│   ├── admin/            # Admin dashboard (standalone)
+│   └── mobile/           # React Native mobile app (standalone)
 ├── packages/
-│   ├── core/             # Business logic & services
-│   ├── database/         # Prisma schema & migrations
-│   ├── ui/               # Shared React components
-│   └── events/           # Event definitions & bus
-├── docs/
-│   ├── api/              # OpenAPI specifications
-│   └── architecture/     # ADRs and design docs
+│   ├── core/             # Shared business logic & math engine
+│   ├── database/         # Prisma schema, migrations & seed
+│   └── ui/               # Shared React component library
 ├── infrastructure/
-│   ├── docker/           # Docker configurations
-│   └── kubernetes/       # K8s manifests
-└── scripts/              # Build & deployment scripts
+│   ├── docker/           # Dockerfiles & nginx config
+│   └── kubernetes/       # K8s deployment manifests
+├── scripts/              # Seed & release scripts
+├── docs/                 # Architecture & API documentation
+├── docker-compose.yml    # Full stack (production-like)
+└── docker-compose.dev.yml # DB + Redis only (for local dev)
 ```
 
-### Technology Stack
+## Features
+
+### Core Modules
+- **Goals Management** - OKRs, SMART goals, cascading alignment
+- **Performance Reviews** - Multi-rater reviews, automated workflows
+- **Continuous Feedback** - Real-time feedback, peer recognition, 360 surveys
+- **Calibration** - AI-assisted rating calibration with bias detection
+- **Analytics** - Real-time dashboards and custom reporting
+- **Succession Planning** - 9-Box grid, talent pools
+- **Compensation** - Modeling, budgets, equity analysis
+- **Skills Assessment** - Gap analysis, development plans
+- **1-on-1 Meetings** - Scheduling, agendas, action items
+- **Career Pathing** - Role progression, recommendations
+- **Leaderboard** - Team performance rankings
+
+### Tech Stack
 
 | Layer | Technology |
 |-------|------------|
-| API | Node.js, Express, TypeScript |
-| Web Frontend | React, Tailwind CSS, Redux Toolkit |
-| Mobile | React Native, Expo |
-| Database | PostgreSQL with Row-Level Security |
-| Cache | Redis |
-| Queue | Kafka (production), In-memory (dev) |
-| Authentication | Passport.js, SAML 2.0, OIDC |
-| Testing | Vitest, Jest, Supertest |
-| Documentation | OpenAPI 3.1 |
+| API | Node.js 20, Express, TypeScript |
+| Frontend | React 18, Vite, Tailwind CSS |
+| Database | PostgreSQL 16 with Prisma ORM |
+| Cache | Redis 7 |
+| Auth | JWT + bcrypt |
+| Testing | Vitest, Jest |
+| Build | Turborepo monorepo |
+| Deploy | Docker, Render, Kubernetes-ready |
 
-## Quick Start
+## API Endpoints
 
-### Prerequisites
+### Authentication
+- `POST /api/v1/auth/login` - Login
+- `POST /api/v1/auth/register` - Register
+- `POST /api/v1/auth/refresh` - Refresh token
 
-- Node.js 18+
-- npm 9+
-- PostgreSQL 14+
-- Redis 7+
-- Docker (optional)
+### Goals
+- `GET /api/v1/goals` - List goals
+- `POST /api/v1/goals` - Create goal
+- `PATCH /api/v1/goals/:id` - Update goal
 
-### Installation
+### Reviews
+- `GET /api/v1/reviews` - List reviews
+- `POST /api/v1/reviews/cycles` - Create review cycle
+- `POST /api/v1/reviews/:id/submit` - Submit review
 
-```bash
-# Clone the repository
-git clone https://github.com/your-org/pms-platform.git
-cd pms-platform
+### Feedback
+- `POST /api/v1/feedback` - Give feedback
+- `POST /api/v1/recognition` - Give recognition
 
-# Install dependencies
-npm install
-
-# Set up environment variables
-cp .env.example .env
-
-# Generate Prisma client
-npm run db:generate
-
-# Run database migrations
-npm run db:migrate
-
-# Seed initial data
-npm run db:seed
-
-# Start development servers
-npm run dev
-```
-
-### Development URLs
-
-- API: http://localhost:3001
-- Web: http://localhost:3000
-- Admin: http://localhost:3002
-- API Docs: http://localhost:3001/api-docs
-
-## Configuration
-
-### Environment Variables
-
-```env
-# Database
-DATABASE_URL=postgresql://user:pass@localhost:5432/pms
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# JWT
-JWT_SECRET=your-secure-secret
-JWT_EXPIRES_IN=15m
-REFRESH_TOKEN_EXPIRES_IN=7d
-
-# SSO (optional)
-SAML_ISSUER=https://your-idp.com
-SAML_CALLBACK_URL=https://api.yourapp.com/auth/saml/callback
-
-# Integrations (optional)
-WORKDAY_CLIENT_ID=...
-WORKDAY_CLIENT_SECRET=...
-SLACK_CLIENT_ID=...
-SLACK_CLIENT_SECRET=...
-```
+Full API available at `/health` when running.
 
 ## Testing
 
 ```bash
-# Run all tests
-npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run specific package tests
-npm run test --filter=@pms/core
+npm test                # Run all tests
+npm run test:unit       # Unit tests only
+npm run test:integration # Integration tests
 ```
 
 ## Deployment
 
-### Docker
-
-```bash
-# Build all images
-docker-compose build
-
-# Start services
-docker-compose up -d
-```
-
-### Kubernetes
-
-```bash
-# Apply configurations
-kubectl apply -f infrastructure/kubernetes/
-
-# Check deployment status
-kubectl get pods -n pms-platform
-```
-
-## API Documentation
-
-The API follows RESTful conventions and is documented using OpenAPI 3.1. Key endpoints:
-
-### Authentication
-- `POST /auth/login` - User login
-- `POST /auth/register` - User registration
-- `POST /auth/refresh` - Refresh access token
-- `POST /auth/logout` - User logout
-- `POST /auth/mfa/verify` - Verify MFA code
-
-### Goals
-- `GET /goals` - List goals
-- `POST /goals` - Create goal
-- `GET /goals/:id` - Get goal details
-- `PATCH /goals/:id` - Update goal
-- `POST /goals/:id/progress` - Update progress
-- `POST /goals/:id/align` - Align to parent goal
-
-### Reviews
-- `GET /reviews` - List reviews
-- `GET /reviews/cycles` - List review cycles
-- `POST /reviews/cycles` - Create review cycle
-- `POST /reviews/:id/submit` - Submit review
-- `GET /calibration/sessions` - List calibration sessions
-
-### Feedback
-- `GET /feedback` - List feedback
-- `POST /feedback` - Give feedback
-- `POST /feedback/:id/acknowledge` - Acknowledge feedback
-- `POST /recognition` - Give recognition
-
-Full API documentation available at `/api-docs` when running the API server.
-
-## Architecture Decisions
-
-Key architectural decisions are documented as ADRs:
-
-- [ADR-001: Modular Monolith Architecture](docs/architecture/ADR-001-modular-monolith.md)
-- [ADR-002: Multi-tenancy with Row-Level Security](docs/architecture/ADR-002-multi-tenancy.md)
-- [ADR-003: Authentication and Authorization](docs/architecture/ADR-003-authentication-authorization.md)
-- [ADR-004: Event Sourcing for Audit](docs/architecture/ADR-004-event-sourcing-audit.md)
-
-## Security
-
-- AES-256 encryption for data at rest
-- TLS 1.3 for data in transit
-- Row-Level Security for tenant isolation
-- RBAC + ABAC authorization model
-- MFA support (TOTP, SMS, Email)
-- SOC 2 Type II compliant
-- GDPR data handling
+The app is deployed on [Render](https://render.com) via `render.yaml`. Push to `main` triggers automatic deployment.
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Commit changes (`git commit -m 'Add my feature'`)
+4. Push to branch (`git push origin feature/my-feature`)
 5. Open a Pull Request
-
-### Code Style
-
-- ESLint + Prettier for formatting
-- Conventional commits
-- 80%+ test coverage required
-- All PRs require review
 
 ## License
 
 Proprietary - All rights reserved.
-
-## Support
-
-- Documentation: https://docs.pms-platform.com
-- Issues: https://github.com/your-org/pms-platform/issues
-- Email: support@pms-platform.com
