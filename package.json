@@ -10,7 +10,9 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev",
+    "postinstall": "node -e \"const fs=require('fs'); if(!fs.existsSync('.env')&&fs.existsSync('.env.example')){fs.copyFileSync('.env.example','.env');console.log('Created .env from .env.example')}\"",
+    "setup": "npm run db:generate && npm run db:migrate && npm run db:seed",
+    "dev": "turbo run dev --filter=@pms/api --filter=@pms/web --filter=@pms/core --filter=@pms/database",
     "build": "turbo run build",
     "test": "turbo run test",
     "test:unit": "turbo run test --filter=@pms/core --filter=@pms/api",
