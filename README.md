@@ -57,7 +57,7 @@ npm install
 # 2. Start PostgreSQL + Redis via Docker
 docker compose -f docker-compose.dev.yml up -d
 
-# 3. Set up database (generate + migrate + seed — one command)
+# 3. Set up database (creates tables + seeds demo data)
 npm run setup
 
 # 4. Start dev servers (API on :3001, Web on :3002)
@@ -69,6 +69,15 @@ npm run dev
 - **Web App:** http://localhost:3002
 - **API:** http://localhost:3001
 - **API Health:** http://localhost:3001/health
+
+### Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| `DATABASE_URL not found` | Run `npm install` again (it auto-creates `.env`), or manually copy: `cp .env.example .env` |
+| `Table does not exist` | Run `npm run setup` to create tables and seed data |
+| TypeScript errors in `@pms/core` | These are known and don't block the app — the API compiles separately |
+| Port 3002 already in use | Kill the process using port 3002, or check if another Vite instance is running |
 
 ---
 
