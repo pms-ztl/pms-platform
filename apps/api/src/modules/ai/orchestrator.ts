@@ -9,7 +9,7 @@ import { logger } from '../../utils/logger';
 import { llmClient } from './llm-client';
 import type { BaseAgent, AgentResponse } from './base-agent';
 
-// Import all specialized agents
+// Import original agents
 import { NLPQueryAgent } from './agents/nlp-query.agent';
 import { ExcelValidationAgent } from './agents/excel-validation.agent';
 import { LicenseAgent } from './agents/license.agent';
@@ -19,6 +19,14 @@ import { OnboardingAgent } from './agents/onboarding.agent';
 import { SecurityAgent } from './agents/security.agent';
 import { ReportAgent } from './agents/report.agent';
 import { NotificationAgent } from './agents/notification.agent';
+
+// Import new specialized agents (35-feature coverage)
+import { CoachingAgent } from './agents/coaching.agent';
+import { WorkforceIntelAgent } from './agents/workforce-intel.agent';
+import { GovernanceAgent } from './agents/governance.agent';
+import { ConflictResolutionAgent } from './agents/conflict-resolution.agent';
+import { TalentMarketplaceAgent } from './agents/talent-marketplace.agent';
+import { StrategicAlignmentAgent } from './agents/strategic-alignment.agent';
 
 // ── Agent Registry ─────────────────────────────────────────
 
@@ -32,6 +40,12 @@ const AGENT_TYPES = [
   'security',
   'report',
   'notification',
+  'coaching',
+  'workforce_intel',
+  'governance',
+  'conflict_resolution',
+  'talent_marketplace',
+  'strategic_alignment',
 ] as const;
 
 export type AgentType = (typeof AGENT_TYPES)[number];
@@ -45,14 +59,20 @@ Available agents:
 - nlp_query: General questions about employees, teams, data queries, "who", "how many", "show me", "list"
 - excel_validation: Anything about Excel uploads, CSV, employee data imports, bulk operations
 - license: Questions about licenses, seats, subscriptions, plans, usage limits, billing
-- performance: Goal setting, performance reviews, ratings, progress tracking, self-reviews, coaching
-- career: Career development, promotions, skill gaps, career paths, L-level progression
+- performance: Goal setting, performance reviews, ratings, progress tracking, self-reviews
+- career: Career development, promotions, career paths, L-level progression
 - onboarding: New employee setup, welcome emails, onboarding checklists, first-day tasks
-- security: Security threats, login attempts, suspicious activity, compliance, audit logs, IP blocking
-- report: Generate reports, analytics summaries, team health, monthly/quarterly reviews
+- security: Security threats, login attempts, suspicious activity, compliance, audit logs
+- report: Generate reports, analytics summaries, monthly/quarterly business reviews
 - notification: Notification preferences, alert settings, digest summaries
+- coaching: Personalized coaching, micro-learning, skill improvement, mentorship matching, "coach me", "help me improve"
+- workforce_intel: Burnout risk, attrition prediction, flight risk, retention strategies, team health, workforce planning, succession pipeline
+- governance: Bias detection, fairness audits, equity analysis, review language bias, calibration fairness, explainable scoring
+- conflict_resolution: Team conflicts, friction, toxic communication, morale issues, collaboration problems, team dynamics
+- talent_marketplace: Internal mobility, skill marketplace, project matching, role changes, goal redistribution, talent reallocation
+- strategic_alignment: OKR alignment, strategy shifts, milestone tracking, performance snapshots, 1:1 prep, company objectives
 
-Respond with ONLY the agent type (one word from the list above), nothing else.`;
+Respond with ONLY the agent type (one word/phrase from the list above), nothing else.`;
 
 // ── Orchestrator ───────────────────────────────────────────
 
@@ -62,7 +82,7 @@ class AgentOrchestrator {
   constructor() {
     this.agents = new Map();
 
-    // Register all agents
+    // Register original 9 agents
     this.agents.set('nlp_query', new NLPQueryAgent());
     this.agents.set('excel_validation', new ExcelValidationAgent());
     this.agents.set('license', new LicenseAgent());
@@ -72,6 +92,14 @@ class AgentOrchestrator {
     this.agents.set('security', new SecurityAgent());
     this.agents.set('report', new ReportAgent());
     this.agents.set('notification', new NotificationAgent());
+
+    // Register new 6 agents (35-feature coverage)
+    this.agents.set('coaching', new CoachingAgent());
+    this.agents.set('workforce_intel', new WorkforceIntelAgent());
+    this.agents.set('governance', new GovernanceAgent());
+    this.agents.set('conflict_resolution', new ConflictResolutionAgent());
+    this.agents.set('talent_marketplace', new TalentMarketplaceAgent());
+    this.agents.set('strategic_alignment', new StrategicAlignmentAgent());
   }
 
   /**

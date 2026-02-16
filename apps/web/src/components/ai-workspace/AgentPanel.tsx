@@ -13,14 +13,20 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 export type AgentType =
   | 'performance'
-  | 'analytics'
-  | 'feedback'
-  | 'hr'
+  | 'nlp_query'
+  | 'excel_validation'
+  | 'license'
+  | 'career'
   | 'report'
   | 'onboarding'
   | 'security'
   | 'notification'
-  | 'goals';
+  | 'coaching'
+  | 'workforce_intel'
+  | 'governance'
+  | 'conflict_resolution'
+  | 'talent_marketplace'
+  | 'strategic_alignment';
 
 interface AgentDef {
   type: AgentType;
@@ -33,38 +39,76 @@ interface AgentDef {
 }
 
 const AGENTS: AgentDef[] = [
+  // ── Core Agents ──
   {
     type: 'performance',
     icon: '\uD83C\uDFAF',
     name: 'Performance',
-    description: 'Review scores, ratings & trends',
+    description: 'Reviews, ratings & goal coaching',
     gradientFrom: 'from-rose-500/20',
     gradientTo: 'to-orange-500/20',
     glowColor: 'shadow-rose-500/30',
   },
   {
-    type: 'analytics',
-    icon: '\uD83D\uDCCA',
-    name: 'Analytics',
-    description: 'Data insights & visualizations',
-    gradientFrom: 'from-blue-500/20',
-    gradientTo: 'to-cyan-500/20',
-    glowColor: 'shadow-blue-500/30',
+    type: 'strategic_alignment',
+    icon: '\uD83C\uDFAF',
+    name: 'Strategy',
+    description: 'OKR alignment & 1:1 snapshots',
+    gradientFrom: 'from-indigo-500/20',
+    gradientTo: 'to-blue-500/20',
+    glowColor: 'shadow-indigo-500/30',
   },
   {
-    type: 'feedback',
-    icon: '\uD83D\uDCAC',
-    name: 'Feedback',
-    description: '360 feedback & sentiment',
+    type: 'coaching',
+    icon: '\uD83E\uDDD1\u200D\uD83C\uDFEB',
+    name: 'Coaching',
+    description: 'Personalized micro-coaching',
     gradientFrom: 'from-emerald-500/20',
     gradientTo: 'to-teal-500/20',
     glowColor: 'shadow-emerald-500/30',
   },
   {
-    type: 'hr',
-    icon: '\uD83D\uDC65',
-    name: 'HR',
-    description: 'Policies, leave & compliance',
+    type: 'workforce_intel',
+    icon: '\uD83E\uDDE0',
+    name: 'Workforce Intel',
+    description: 'Burnout, attrition & retention',
+    gradientFrom: 'from-purple-500/20',
+    gradientTo: 'to-fuchsia-500/20',
+    glowColor: 'shadow-purple-500/30',
+  },
+  {
+    type: 'governance',
+    icon: '\u2696\uFE0F',
+    name: 'Governance',
+    description: 'Bias audits & fairness checks',
+    gradientFrom: 'from-amber-500/20',
+    gradientTo: 'to-yellow-500/20',
+    glowColor: 'shadow-amber-500/30',
+  },
+  {
+    type: 'talent_marketplace',
+    icon: '\uD83C\uDFEA',
+    name: 'Talent Market',
+    description: 'Mobility, skill matching & goals',
+    gradientFrom: 'from-sky-500/20',
+    gradientTo: 'to-blue-500/20',
+    glowColor: 'shadow-sky-500/30',
+  },
+  {
+    type: 'conflict_resolution',
+    icon: '\uD83E\uDD1D',
+    name: 'Conflict',
+    description: 'Team dynamics & mediation',
+    gradientFrom: 'from-orange-500/20',
+    gradientTo: 'to-red-500/20',
+    glowColor: 'shadow-orange-500/30',
+  },
+  // ── Utility Agents ──
+  {
+    type: 'career',
+    icon: '\uD83D\uDE80',
+    name: 'Career',
+    description: 'Growth paths & skill gaps',
     gradientFrom: 'from-violet-500/20',
     gradientTo: 'to-purple-500/20',
     glowColor: 'shadow-violet-500/30',
@@ -74,33 +118,24 @@ const AGENTS: AgentDef[] = [
     icon: '\uD83D\uDCCB',
     name: 'Report',
     description: 'Generate & export reports',
-    gradientFrom: 'from-amber-500/20',
-    gradientTo: 'to-yellow-500/20',
-    glowColor: 'shadow-amber-500/30',
+    gradientFrom: 'from-blue-500/20',
+    gradientTo: 'to-cyan-500/20',
+    glowColor: 'shadow-blue-500/30',
   },
   {
-    type: 'goals',
-    icon: '\uD83C\uDFC6',
-    name: 'Goals',
-    description: 'OKRs, cascading & tracking',
-    gradientFrom: 'from-indigo-500/20',
-    gradientTo: 'to-blue-500/20',
-    glowColor: 'shadow-indigo-500/30',
-  },
-  {
-    type: 'onboarding',
-    icon: '\uD83C\uDF93',
-    name: 'Onboarding',
-    description: 'New hire setup & guidance',
-    gradientFrom: 'from-pink-500/20',
-    gradientTo: 'to-rose-500/20',
-    glowColor: 'shadow-pink-500/30',
+    type: 'nlp_query',
+    icon: '\uD83D\uDD0D',
+    name: 'Data Query',
+    description: 'Ask anything about your data',
+    gradientFrom: 'from-gray-500/20',
+    gradientTo: 'to-slate-500/20',
+    glowColor: 'shadow-gray-500/30',
   },
   {
     type: 'security',
     icon: '\uD83D\uDD12',
     name: 'Security',
-    description: 'Audit logs & threat alerts',
+    description: 'Threats, audits & compliance',
     gradientFrom: 'from-red-500/20',
     gradientTo: 'to-rose-500/20',
     glowColor: 'shadow-red-500/30',
@@ -109,10 +144,37 @@ const AGENTS: AgentDef[] = [
     type: 'notification',
     icon: '\uD83D\uDD14',
     name: 'Notification',
-    description: 'Alerts, reminders & digests',
+    description: 'Smart alerts & digests',
     gradientFrom: 'from-cyan-500/20',
     gradientTo: 'to-sky-500/20',
     glowColor: 'shadow-cyan-500/30',
+  },
+  {
+    type: 'onboarding',
+    icon: '\uD83C\uDF93',
+    name: 'Onboarding',
+    description: 'New hire setup & checklists',
+    gradientFrom: 'from-pink-500/20',
+    gradientTo: 'to-rose-500/20',
+    glowColor: 'shadow-pink-500/30',
+  },
+  {
+    type: 'license',
+    icon: '\uD83D\uDD11',
+    name: 'License',
+    description: 'Seats, plans & billing',
+    gradientFrom: 'from-lime-500/20',
+    gradientTo: 'to-green-500/20',
+    glowColor: 'shadow-lime-500/30',
+  },
+  {
+    type: 'excel_validation',
+    icon: '\uD83D\uDCC4',
+    name: 'Excel AI',
+    description: 'Smart data validation & import',
+    gradientFrom: 'from-teal-500/20',
+    gradientTo: 'to-emerald-500/20',
+    glowColor: 'shadow-teal-500/30',
   },
 ];
 
