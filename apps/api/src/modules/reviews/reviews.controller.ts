@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO: Fix validation schema types
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
@@ -86,9 +85,9 @@ export class ReviewsController {
       }
 
       const cycle = await reviewsService.createCycle(
-        req.tenantId,
-        req.user.id,
-        parseResult.data
+        req.tenantId!,
+        req.user!.id,
+        parseResult.data as { name: string; type: ReviewCycleType; startDate: Date; endDate: Date; description?: string; selfAssessmentStart?: Date; selfAssessmentEnd?: Date; managerReviewStart?: Date; managerReviewEnd?: Date; calibrationStart?: Date; calibrationEnd?: Date; includeGoals?: boolean; includeFeedback?: boolean; include360?: boolean; templateId?: string; settings?: Record<string, unknown> }
       );
 
       res.status(201).json({
@@ -117,8 +116,8 @@ export class ReviewsController {
       }
 
       const cycle = await reviewsService.updateCycle(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         cycleId,
         parseResult.data
       );
@@ -140,7 +139,7 @@ export class ReviewsController {
         throw new ValidationError('Cycle ID is required');
       }
 
-      const cycle = await reviewsService.launchCycle(req.tenantId, req.user.id, cycleId);
+      const cycle = await reviewsService.launchCycle(req.tenantId!, req.user!.id, cycleId);
 
       res.status(200).json({
         success: true,
@@ -169,8 +168,8 @@ export class ReviewsController {
       }
 
       const cycle = await reviewsService.advanceCycleStatus(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         cycleId,
         parseResult.data.status
       );
@@ -192,7 +191,7 @@ export class ReviewsController {
         throw new ValidationError('Cycle ID is required');
       }
 
-      const cycle = await reviewsService.getCycle(req.tenantId, cycleId);
+      const cycle = await reviewsService.getCycle(req.tenantId!, cycleId);
 
       res.status(200).json({
         success: true,
@@ -215,7 +214,7 @@ export class ReviewsController {
         type: query.type !== undefined ? (query.type as ReviewCycleType) : undefined,
       };
 
-      const cycles = await reviewsService.listCycles(req.tenantId, filters);
+      const cycles = await reviewsService.listCycles(req.tenantId!, filters);
 
       res.status(200).json({
         success: true,
@@ -234,7 +233,7 @@ export class ReviewsController {
         throw new ValidationError('Cycle ID is required');
       }
 
-      const stats = await reviewsService.getCycleStats(req.tenantId, cycleId);
+      const stats = await reviewsService.getCycleStats(req.tenantId!, cycleId);
 
       res.status(200).json({
         success: true,
@@ -255,7 +254,7 @@ export class ReviewsController {
         throw new ValidationError('Review ID is required');
       }
 
-      const review = await reviewsService.getReview(req.tenantId, req.user.id, reviewId);
+      const review = await reviewsService.getReview(req.tenantId!, req.user!.id, reviewId);
 
       res.status(200).json({
         success: true,
@@ -282,7 +281,7 @@ export class ReviewsController {
         status: query.status !== undefined ? (query.status as ReviewStatus) : undefined,
       };
 
-      const reviews = await reviewsService.listMyReviews(req.tenantId, req.user.id, filters);
+      const reviews = await reviewsService.listMyReviews(req.tenantId!, req.user!.id, filters);
 
       res.status(200).json({
         success: true,
@@ -301,7 +300,7 @@ export class ReviewsController {
         throw new ValidationError('Review ID is required');
       }
 
-      const review = await reviewsService.startReview(req.tenantId, req.user.id, reviewId);
+      const review = await reviewsService.startReview(req.tenantId!, req.user!.id, reviewId);
 
       res.status(200).json({
         success: true,
@@ -329,8 +328,8 @@ export class ReviewsController {
       }
 
       const review = await reviewsService.saveReviewDraft(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         reviewId,
         parseResult.data
       );
@@ -361,10 +360,10 @@ export class ReviewsController {
       }
 
       const review = await reviewsService.submitReview(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         reviewId,
-        parseResult.data
+        parseResult.data as { overallRating: number; content: Record<string, unknown>; strengths?: string[]; areasForGrowth?: string[]; summary?: string; privateNotes?: string }
       );
 
       res.status(200).json({
@@ -385,7 +384,7 @@ export class ReviewsController {
         throw new ValidationError('Review ID is required');
       }
 
-      const review = await reviewsService.acknowledgeReview(req.tenantId, req.user.id, reviewId);
+      const review = await reviewsService.acknowledgeReview(req.tenantId!, req.user!.id, reviewId);
 
       res.status(200).json({
         success: true,

@@ -1,10 +1,9 @@
-// @ts-nocheck
 import { getRedisClient } from '../../utils/redis';
 import { logger } from '../../utils/logger';
 import { ReportType } from './report-generation.service';
 import { PeriodType } from './data-aggregation.service';
 
-const redis = getRedisClient();
+const redis = getRedisClient() as any;
 
 /**
  * Report Cache Service

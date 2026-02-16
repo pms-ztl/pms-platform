@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
 import type { AuthenticatedRequest } from '../../types';
@@ -95,7 +94,12 @@ class SkillsController {
     try {
       const parsed = createCategorySchema.safeParse(req.body);
       if (!parsed.success) throw new ValidationError('Invalid data', { errors: parsed.error.format() });
-      const category = await skillsService.createCategory(req.tenantId!, parsed.data);
+      const category = await skillsService.createCategory(req.tenantId!, parsed.data as {
+        name: string;
+        description?: string;
+        parentCategoryId?: string;
+        categoryType?: string;
+      });
       res.status(201).json({ success: true, data: category });
     } catch (error) { next(error); }
   }
@@ -260,8 +264,14 @@ class SkillsController {
     try {
       const parsed = addProgressSchema.safeParse(req.body);
       if (!parsed.success) throw new ValidationError('Invalid data', { errors: parsed.error.format() });
+      const progressData = parsed.data as {
+        previousScore: number;
+        newScore: number;
+        changeReason?: string;
+        notes?: string;
+      };
       const entry = await skillsService.addProgressEntry(req.tenantId!, req.params.id, {
-        ...parsed.data,
+        ...progressData,
         assessedBy: req.user!.id,
       });
       res.status(201).json({ success: true, data: entry });

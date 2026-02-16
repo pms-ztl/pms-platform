@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO: Fix validation schema types
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
@@ -52,9 +51,9 @@ export class UsersController {
       }
 
       const user = await usersService.create(
-        req.tenantId,
-        req.user.id,
-        parseResult.data
+        req.tenantId!,
+        req.user!.id,
+        parseResult.data as { email: string; firstName: string; lastName: string; password?: string; jobTitle?: string; employeeNumber?: string; departmentId?: string; managerId?: string; level?: number; hireDate?: Date; roleIds?: string[] }
       );
 
       res.status(201).json({
@@ -83,8 +82,8 @@ export class UsersController {
       }
 
       const user = await usersService.update(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         userId,
         parseResult.data
       );
@@ -106,7 +105,7 @@ export class UsersController {
         throw new ValidationError('User ID is required');
       }
 
-      const user = await usersService.getById(req.tenantId, userId);
+      const user = await usersService.getById(req.tenantId!, userId);
 
       res.status(200).json({
         success: true,
@@ -142,7 +141,7 @@ export class UsersController {
         sortOrder: (query.sortOrder ?? 'asc') as 'asc' | 'desc',
       };
 
-      const result = await usersService.list(req.tenantId, filters, pagination);
+      const result = await usersService.list(req.tenantId!, filters, pagination);
 
       res.status(200).json({
         success: true,
@@ -169,7 +168,7 @@ export class UsersController {
         throw new ValidationError('User ID is required');
       }
 
-      await usersService.deactivate(req.tenantId, req.user.id, userId);
+      await usersService.deactivate(req.tenantId!, req.user!.id, userId);
 
       res.status(200).json({
         success: true,
@@ -188,7 +187,7 @@ export class UsersController {
         throw new ValidationError('User ID is required');
       }
 
-      await usersService.reactivate(req.tenantId, req.user.id, userId);
+      await usersService.reactivate(req.tenantId!, req.user!.id, userId);
 
       res.status(200).json({
         success: true,
@@ -205,7 +204,7 @@ export class UsersController {
       if (!userId) throw new ValidationError('User ID is required');
 
       const { reason } = req.body;
-      await usersService.archive(req.tenantId, req.user.id, userId, reason);
+      await usersService.archive(req.tenantId!, req.user!.id, userId, reason);
 
       res.status(200).json({
         success: true,
@@ -219,7 +218,7 @@ export class UsersController {
   async getLicenseUsage(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const { licenseService } = await import('../super-admin/license.service');
-      const usage = await licenseService.getLicenseUsage(req.tenantId);
+      const usage = await licenseService.getLicenseUsage(req.tenantId!);
       res.json({ success: true, data: usage });
     } catch (error) {
       next(error);
@@ -234,7 +233,7 @@ export class UsersController {
         throw new ValidationError('User ID is required');
       }
 
-      await usersService.deleteUser(req.tenantId, req.user.id, userId);
+      await usersService.deleteUser(req.tenantId!, req.user!.id, userId);
 
       res.status(200).json({
         success: true,
@@ -247,9 +246,9 @@ export class UsersController {
 
   async getDirectReports(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const managerId = req.params.id ?? req.user.id;
+      const managerId = req.params.id ?? req.user!.id;
 
-      const reports = await usersService.getDirectReports(req.tenantId, managerId);
+      const reports = await usersService.getDirectReports(req.tenantId!, managerId);
 
       res.status(200).json({
         success: true,
@@ -265,7 +264,7 @@ export class UsersController {
       const rootUserId = req.query.rootUserId as string | undefined;
       const depth = req.query.depth !== undefined ? parseInt(req.query.depth as string, 10) : 3;
 
-      const orgChart = await usersService.getOrgChart(req.tenantId, rootUserId, depth);
+      const orgChart = await usersService.getOrgChart(req.tenantId!, rootUserId, depth);
 
       res.status(200).json({
         success: true,
@@ -278,7 +277,7 @@ export class UsersController {
 
   async listRoles(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const roles = await usersService.listRoles(req.tenantId);
+      const roles = await usersService.listRoles(req.tenantId!);
 
       res.status(200).json({
         success: true,
@@ -291,7 +290,7 @@ export class UsersController {
 
   async listDepartments(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const departments = await usersService.listDepartments(req.tenantId);
+      const departments = await usersService.listDepartments(req.tenantId!);
 
       res.status(200).json({
         success: true,
@@ -319,8 +318,8 @@ export class UsersController {
       }
 
       await usersService.assignRole(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         userId,
         parseResult.data.roleId
       );
@@ -343,7 +342,7 @@ export class UsersController {
         throw new ValidationError('User ID and Role ID are required');
       }
 
-      await usersService.removeRole(req.tenantId, req.user.id, userId, roleId);
+      await usersService.removeRole(req.tenantId!, req.user!.id, userId, roleId);
 
       res.status(200).json({
         success: true,
@@ -360,7 +359,7 @@ export class UsersController {
    */
   async getTeamMembers(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const users = await usersService.getTeamMembers(req.tenantId, req.user.id);
+      const users = await usersService.getTeamMembers(req.tenantId!, req.user!.id);
 
       res.status(200).json({
         success: true,
@@ -384,7 +383,7 @@ export class UsersController {
   async uploadAvatar(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const file = req.file;
-      const userId = req.params.id || req.user.id;
+      const userId = req.params.id || req.user!.id;
 
       if (!file || !file.buffer) {
         throw new ValidationError('No file uploaded');
@@ -398,7 +397,7 @@ export class UsersController {
       const avatarUrl = `/uploads/avatars/${baseFilename}.webp`;
 
       // Update user with new avatar URL (stores the original/base path)
-      await usersService.updateAvatar(req.tenantId, userId, avatarUrl);
+      await usersService.updateAvatar(req.tenantId!, userId, avatarUrl);
 
       res.status(200).json({
         success: true,
@@ -423,7 +422,7 @@ export class UsersController {
    */
   async setAiAvatar(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const userId = req.params.id || req.user.id;
+      const userId = req.params.id || req.user!.id;
       const { avatarUrl } = req.body;
 
       if (!avatarUrl || typeof avatarUrl !== 'string') {
@@ -440,7 +439,7 @@ export class UsersController {
         throw new ValidationError('Invalid AI avatar URL');
       }
 
-      await usersService.updateAvatar(req.tenantId, userId, avatarUrl);
+      await usersService.updateAvatar(req.tenantId!, userId, avatarUrl);
 
       res.status(200).json({
         success: true,
@@ -453,7 +452,7 @@ export class UsersController {
   }
   async getSubscriptionInfo(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const info = await usersService.getSubscriptionInfo(req.tenantId);
+      const info = await usersService.getSubscriptionInfo(req.tenantId!);
       res.json({ success: true, data: info });
     } catch (error) {
       next(error);
@@ -468,8 +467,8 @@ export class UsersController {
       }
 
       const result = await usersService.assignDesignatedManager(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         managerUserId
       );
 
@@ -485,7 +484,7 @@ export class UsersController {
 
   async getEmployeeBreakdown(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const breakdown = await usersService.getEmployeeBreakdown(req.tenantId);
+      const breakdown = await usersService.getEmployeeBreakdown(req.tenantId!);
       res.json({ success: true, data: breakdown });
     } catch (error) {
       next(error);
@@ -499,7 +498,7 @@ export class UsersController {
         throw new ValidationError('canView must be a boolean');
       }
 
-      const result = await usersService.toggleSuperAdminAccess(req.tenantId, req.user.id, canView);
+      const result = await usersService.toggleSuperAdminAccess(req.tenantId!, req.user!.id, canView);
       res.json({
         success: true,
         data: result,
@@ -513,7 +512,7 @@ export class UsersController {
   }
   async resendCredentials(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const result = await usersService.resendCredentials(req.tenantId, req.user.id, req.params.id);
+      const result = await usersService.resendCredentials(req.tenantId!, req.user!.id, req.params.id);
       res.json({
         success: true,
         data: result,

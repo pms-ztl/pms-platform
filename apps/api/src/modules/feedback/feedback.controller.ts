@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO: Fix validation schema types
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
@@ -40,20 +39,31 @@ export class FeedbackController {
         });
       }
 
+      const validatedData = parseResult.data as {
+        toUserId: string;
+        type: FeedbackType;
+        visibility: FeedbackVisibility;
+        content: string;
+        isAnonymous?: boolean;
+        tags?: string[];
+        valueTags?: string[];
+        skillTags?: string[];
+      };
+
       const feedback = await feedbackService.create(
-        req.tenantId,
-        req.user.id,
-        parseResult.data
+        req.tenantId!,
+        req.user!.id,
+        validatedData
       );
 
       // Notify the recipient asynchronously
       try {
-        const senderName = `${req.user.firstName} ${req.user.lastName}`;
+        const senderName = `${req.user!.firstName} ${req.user!.lastName}`;
         await notificationsService.notifyFeedbackReceived(
-          parseResult.data.toUserId,
-          req.tenantId,
-          parseResult.data.type,
-          parseResult.data.isAnonymous || false,
+          validatedData.toUserId,
+          req.tenantId!,
+          validatedData.type,
+          validatedData.isAnonymous || false,
           senderName
         );
       } catch (notifErr) {
@@ -77,7 +87,7 @@ export class FeedbackController {
         throw new ValidationError('Feedback ID is required');
       }
 
-      const feedback = await feedbackService.getById(req.tenantId, req.user.id, feedbackId);
+      const feedback = await feedbackService.getById(req.tenantId!, req.user!.id, feedbackId);
 
       res.status(200).json({
         success: true,
@@ -110,8 +120,8 @@ export class FeedbackController {
       };
 
       const result = await feedbackService.listReceived(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         filters,
         pagination
       );
@@ -155,8 +165,8 @@ export class FeedbackController {
       };
 
       const result = await feedbackService.listGiven(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         filters,
         pagination
       );
@@ -202,8 +212,8 @@ export class FeedbackController {
       };
 
       const result = await feedbackService.listTeamFeedback(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         filters,
         pagination
       );
@@ -227,7 +237,7 @@ export class FeedbackController {
 
   async getTimeline(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const targetUserId = req.params.userId ?? req.user.id;
+      const targetUserId = req.params.userId ?? req.user!.id;
       const query = req.query as {
         fromDate?: string;
         toDate?: string;
@@ -239,8 +249,8 @@ export class FeedbackController {
       };
 
       const timeline = await feedbackService.getUnifiedTimeline(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         targetUserId,
         filters
       );
@@ -262,7 +272,7 @@ export class FeedbackController {
         throw new ValidationError('Feedback ID is required');
       }
 
-      const feedback = await feedbackService.acknowledge(req.tenantId, req.user.id, feedbackId);
+      const feedback = await feedbackService.acknowledge(req.tenantId!, req.user!.id, feedbackId);
 
       res.status(200).json({
         success: true,
@@ -283,19 +293,25 @@ export class FeedbackController {
         });
       }
 
-      await feedbackService.requestFeedback(req.tenantId, req.user.id, parseResult.data);
+      const requestData = parseResult.data as {
+        fromUserId: string;
+        aboutUserId?: string;
+        message?: string;
+      };
+
+      await feedbackService.requestFeedback(req.tenantId!, req.user!.id, requestData);
 
       // Also send email notification via proper notification service
       try {
-        const senderName = `${req.user.firstName} ${req.user.lastName}`;
+        const senderName = `${req.user!.firstName} ${req.user!.lastName}`;
         await notificationsService.send({
-          userId: parseResult.data.fromUserId,
-          tenantId: req.tenantId,
+          userId: requestData.fromUserId,
+          tenantId: req.tenantId!,
           type: 'FEEDBACK_RECEIVED',
-          channel: 'EMAIL',
+          channel: 'email',
           title: 'Feedback Requested',
-          body: parseResult.data.message || `${senderName} has requested your feedback.`,
-          data: { requestedBy: req.user.id },
+          body: requestData.message || `${senderName} has requested your feedback.`,
+          data: { requestedBy: req.user!.id },
         });
       } catch (notifErr) {
         logger.warn('Failed to send feedback request email notification', { error: notifErr });
@@ -314,7 +330,7 @@ export class FeedbackController {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = Math.min(parseInt(req.query.limit as string) || 20, 50);
-      const result = await feedbackService.getRecognitionWall(req.tenantId, page, limit);
+      const result = await feedbackService.getRecognitionWall(req.tenantId!, page, limit);
       res.json({
         success: true,
         data: result.data,
@@ -326,7 +342,7 @@ export class FeedbackController {
   async getTopRecognized(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const period = (req.query.period as string) || 'month';
-      const data = await feedbackService.getTopRecognized(req.tenantId, period as any);
+      const data = await feedbackService.getTopRecognized(req.tenantId!, period as any);
       res.json({ success: true, data });
     } catch (error) { next(error); }
   }
@@ -339,7 +355,7 @@ export class FeedbackController {
         throw new ValidationError('Feedback ID is required');
       }
 
-      await feedbackService.delete(req.tenantId, req.user.id, feedbackId);
+      await feedbackService.delete(req.tenantId!, req.user!.id, feedbackId);
 
       res.status(200).json({
         success: true,

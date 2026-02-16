@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Promotion Service
  *
@@ -9,6 +8,7 @@
 import { MS_PER_DAY } from '../../utils/constants';
 import {
   prisma,
+  Prisma,
   type PromotionDecision,
   type DecisionEvidence,
   PromotionType,
@@ -104,7 +104,7 @@ export class PromotionService {
     let newLevel = input.newLevel ?? undefined;
 
     if (input.currentRoleId) {
-      const currentRole = await prisma.role.findFirst({ where: { id: input.currentRoleId } });
+      const currentRole = await prisma.role.findFirst({ where: { id: input.currentRoleId } }) as any;
       if (currentRole) {
         previousTitle = previousTitle || currentRole.name;
         previousLevel = previousLevel ?? currentRole.level ?? undefined;
@@ -112,7 +112,7 @@ export class PromotionService {
     }
 
     if (input.proposedRoleId) {
-      const proposedRole = await prisma.role.findFirst({ where: { id: input.proposedRoleId } });
+      const proposedRole = await prisma.role.findFirst({ where: { id: input.proposedRoleId } }) as any;
       if (proposedRole) {
         newTitle = newTitle || proposedRole.name;
         newLevel = newLevel ?? proposedRole.level ?? undefined;
@@ -151,7 +151,7 @@ export class PromotionService {
         effectiveDate: input.effectiveDate,
         justification: input.justification,
         readinessScore: input.readinessScore,
-        criteriaScores: input.criteriaScores ?? {},
+        criteriaScores: (input.criteriaScores ?? {}) as Prisma.InputJsonValue,
         status: PromotionDecisionStatus.NOMINATED,
         nominatedById: userId,
         nominatedAt: new Date(),
@@ -206,7 +206,7 @@ export class PromotionService {
     if (input.proposedRoleId && input.proposedRoleId !== existing.newRoleId) {
       const newRole = await prisma.role.findFirst({
         where: { id: input.proposedRoleId },
-      });
+      }) as any;
       if (!newRole) {
         throw new NotFoundError('Proposed role', input.proposedRoleId);
       }
@@ -221,8 +221,8 @@ export class PromotionService {
         ...(input.justification !== undefined && { justification: input.justification }),
         ...(input.effectiveDate !== undefined && { effectiveDate: input.effectiveDate }),
         ...(input.readinessScore !== undefined && { readinessScore: input.readinessScore }),
-        ...(input.criteriaScores !== undefined && { criteriaScores: input.criteriaScores }),
-      },
+        ...(input.criteriaScores !== undefined && { criteriaScores: input.criteriaScores as Prisma.InputJsonValue }),
+      } as Prisma.PromotionDecisionUncheckedUpdateInput,
     });
 
     auditLogger('PROMOTION_DECISION_UPDATED', userId, tenantId, 'promotion_decision', decisionId, {

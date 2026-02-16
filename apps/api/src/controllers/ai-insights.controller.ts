@@ -3,7 +3,8 @@
  * REST API endpoints for AI/ML features
  */
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import type { AuthenticatedRequest } from '../types';
 import {
   SentimentAnalysisService,
   ProductivityPredictionService,
@@ -23,9 +24,9 @@ export class AIInsightsController {
   // SENTIMENT ANALYSIS
   // ============================================================================
 
-  async analyzeSentiment(req: Request, res: Response) {
+  async analyzeSentiment(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId, userId } = req.user as any; // From auth middleware
+      const { tenantId, id: userId } = req.user!; // From auth middleware
       const { text, sourceType, sourceId, sourceReference } = req.body;
 
       const result = await sentimentService.analyzeSentiment({
@@ -43,9 +44,9 @@ export class AIInsightsController {
     }
   }
 
-  async getSentimentTrend(req: Request, res: Response) {
+  async getSentimentTrend(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { userId, periodType, periodStart, periodEnd } = req.query;
 
       const result = await sentimentService.getSentimentTrend({
@@ -62,9 +63,9 @@ export class AIInsightsController {
     }
   }
 
-  async getSentimentHistory(req: Request, res: Response) {
+  async getSentimentHistory(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { userId, limit, sourceType } = req.query;
 
       const result = await sentimentService.getUserSentimentHistory({
@@ -84,9 +85,9 @@ export class AIInsightsController {
   // PRODUCTIVITY PREDICTION
   // ============================================================================
 
-  async predictProductivity(req: Request, res: Response) {
+  async predictProductivity(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { entityType, entityId, predictionType, predictionDate, features } = req.body;
 
       const result = await productivityService.predictProductivity({
@@ -104,9 +105,9 @@ export class AIInsightsController {
     }
   }
 
-  async extractProductivityFeatures(req: Request, res: Response) {
+  async extractProductivityFeatures(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { entityType, entityId, featureDate } = req.body;
 
       const features = await productivityService.extractFeatures({
@@ -122,9 +123,9 @@ export class AIInsightsController {
     }
   }
 
-  async getProductivityPredictions(req: Request, res: Response) {
+  async getProductivityPredictions(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { entityType, entityId, limit } = req.query;
 
       const result = await productivityService.getPredictions({
@@ -140,7 +141,7 @@ export class AIInsightsController {
     }
   }
 
-  async validateProductivityPrediction(req: Request, res: Response) {
+  async validateProductivityPrediction(req: AuthenticatedRequest, res: Response) {
     try {
       const { predictionId, actualScore } = req.body;
 
@@ -159,9 +160,9 @@ export class AIInsightsController {
   // ENGAGEMENT SCORING
   // ============================================================================
 
-  async calculateEngagement(req: Request, res: Response) {
+  async calculateEngagement(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { userId, scoreDate, calculationPeriod } = req.body;
 
       const result = await engagementService.calculateEngagementScore({
@@ -177,9 +178,9 @@ export class AIInsightsController {
     }
   }
 
-  async trackEngagementEvent(req: Request, res: Response) {
+  async trackEngagementEvent(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId, userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const { eventType, eventCategory, eventData, engagementImpact, positiveIndicator, sourceSystem } = req.body;
 
       const result = await engagementService.trackEngagementEvent({
@@ -199,9 +200,9 @@ export class AIInsightsController {
     }
   }
 
-  async getEngagementHistory(req: Request, res: Response) {
+  async getEngagementHistory(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { userId, days } = req.query;
 
       const result = await engagementService.getEngagementHistory({
@@ -216,9 +217,9 @@ export class AIInsightsController {
     }
   }
 
-  async getAtRiskUsers(req: Request, res: Response) {
+  async getAtRiskUsers(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { riskLevel } = req.query;
 
       const result = await engagementService.getAtRiskUsers({
@@ -236,9 +237,9 @@ export class AIInsightsController {
   // ANOMALY DETECTION
   // ============================================================================
 
-  async detectAnomalies(req: Request, res: Response) {
+  async detectAnomalies(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { entityType, entityId } = req.body;
 
       const result = await anomalyService.detectAnomalies({
@@ -253,9 +254,9 @@ export class AIInsightsController {
     }
   }
 
-  async acknowledgeAnomaly(req: Request, res: Response) {
+  async acknowledgeAnomaly(req: AuthenticatedRequest, res: Response) {
     try {
-      const { userId } = req.user as any;
+      const { id: userId } = req.user!;
       const { anomalyId } = req.params;
 
       const result = await anomalyService.acknowledgeAnomaly({
@@ -269,7 +270,7 @@ export class AIInsightsController {
     }
   }
 
-  async resolveAnomaly(req: Request, res: Response) {
+  async resolveAnomaly(req: AuthenticatedRequest, res: Response) {
     try {
       const { anomalyId } = req.params;
       const { resolution } = req.body;
@@ -285,9 +286,9 @@ export class AIInsightsController {
     }
   }
 
-  async getActiveAnomalies(req: Request, res: Response) {
+  async getActiveAnomalies(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { severity, entityType } = req.query;
 
       const result = await anomalyService.getActiveAnomalies({
@@ -302,9 +303,9 @@ export class AIInsightsController {
     }
   }
 
-  async getAnomalyStatistics(req: Request, res: Response) {
+  async getAnomalyStatistics(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { days } = req.query;
 
       const result = await anomalyService.getAnomalyStatistics({
@@ -322,9 +323,9 @@ export class AIInsightsController {
   // PERFORMANCE BENCHMARKING
   // ============================================================================
 
-  async createBenchmark(req: Request, res: Response) {
+  async createBenchmark(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const {
         benchmarkName,
         benchmarkType,
@@ -356,9 +357,9 @@ export class AIInsightsController {
     }
   }
 
-  async compareToBenchmark(req: Request, res: Response) {
+  async compareToBenchmark(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const {
         userId,
         metricName,
@@ -386,9 +387,9 @@ export class AIInsightsController {
     }
   }
 
-  async getUserComparisons(req: Request, res: Response) {
+  async getUserComparisons(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { userId, metricName } = req.query;
 
       const result = await benchmarkService.getUserComparisons({
@@ -403,9 +404,9 @@ export class AIInsightsController {
     }
   }
 
-  async getTeamBenchmarkSummary(req: Request, res: Response) {
+  async getTeamBenchmarkSummary(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { teamId, metricName } = req.query;
 
       const result = await benchmarkService.getTeamBenchmarkSummary({

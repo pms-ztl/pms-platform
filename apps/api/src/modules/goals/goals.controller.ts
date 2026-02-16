@@ -1,9 +1,9 @@
-// @ts-nocheck
 // TODO: Fix validation schema types
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
 
 import { GoalStatus, GoalType, GoalPriority } from '@pms/database';
+import type { CreateGoalInput, UpdateGoalInput } from '@pms/database';
 
 import type { AuthenticatedRequest, PaginationQuery } from '../../types';
 import { ValidationError } from '../../utils/errors';
@@ -67,9 +67,9 @@ export class GoalsController {
       }
 
       const goal = await goalsService.create(
-        req.tenantId,
-        req.user.id,
-        parseResult.data
+        req.tenantId!,
+        req.user!.id,
+        parseResult.data as CreateGoalInput
       );
 
       res.status(201).json({
@@ -98,10 +98,10 @@ export class GoalsController {
       }
 
       const goal = await goalsService.update(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         goalId,
-        parseResult.data
+        parseResult.data as UpdateGoalInput
       );
 
       res.status(200).json({
@@ -121,7 +121,7 @@ export class GoalsController {
         throw new ValidationError('Goal ID is required');
       }
 
-      await goalsService.delete(req.tenantId, req.user.id, goalId);
+      await goalsService.delete(req.tenantId!, req.user!.id, goalId);
 
       res.status(200).json({
         success: true,
@@ -140,7 +140,7 @@ export class GoalsController {
         throw new ValidationError('Goal ID is required');
       }
 
-      const goal = await goalsService.getById(req.tenantId, goalId, req.user.id);
+      const goal = await goalsService.getById(req.tenantId!, goalId, req.user!.id);
 
       res.status(200).json({
         success: true,
@@ -177,8 +177,8 @@ export class GoalsController {
       };
 
       const result = await goalsService.list(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         filters,
         pagination
       );
@@ -208,7 +208,7 @@ export class GoalsController {
       };
 
       const filters = {
-        ownerId: req.user.id,
+        ownerId: req.user!.id,
         status: query.status !== undefined ? (query.status as GoalStatus) : undefined,
         type: query.type !== undefined ? (query.type as GoalType) : undefined,
       };
@@ -221,8 +221,8 @@ export class GoalsController {
       };
 
       const result = await goalsService.list(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         filters,
         pagination
       );
@@ -248,7 +248,7 @@ export class GoalsController {
     try {
       const rootGoalId = req.query.rootGoalId as string | undefined;
 
-      const tree = await goalsService.getGoalTree(req.tenantId, rootGoalId);
+      const tree = await goalsService.getGoalTree(req.tenantId!, rootGoalId);
 
       res.status(200).json({
         success: true,
@@ -261,7 +261,7 @@ export class GoalsController {
 
   async getTeamGoalTree(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const tree = await goalsService.getTeamGoalTree(req.tenantId, req.user.id);
+      const tree = await goalsService.getTeamGoalTree(req.tenantId!, req.user!.id);
 
       res.status(200).json({
         success: true,
@@ -289,8 +289,8 @@ export class GoalsController {
       }
 
       const goal = await goalsService.updateProgress(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         goalId,
         parseResult.data.progress,
         parseResult.data.currentValue,
@@ -314,7 +314,7 @@ export class GoalsController {
         throw new ValidationError('Goal ID is required');
       }
 
-      const history = await goalsService.getProgressHistory(req.tenantId, goalId);
+      const history = await goalsService.getProgressHistory(req.tenantId!, goalId);
 
       res.status(200).json({
         success: true,
@@ -342,8 +342,8 @@ export class GoalsController {
       }
 
       await goalsService.alignGoals(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         goalId,
         parseResult.data.toGoalId,
         parseResult.data.contributionWeight
@@ -367,7 +367,7 @@ export class GoalsController {
         throw new ValidationError('Goal IDs are required');
       }
 
-      await goalsService.removeAlignment(req.tenantId, req.user.id, goalId, toGoalId);
+      await goalsService.removeAlignment(req.tenantId!, req.user!.id, goalId, toGoalId);
 
       res.status(200).json({
         success: true,
@@ -395,8 +395,8 @@ export class GoalsController {
       }
 
       await goalsService.addComment(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         goalId,
         parseResult.data.content
       );
@@ -418,7 +418,7 @@ export class GoalsController {
         throw new ValidationError('Goal ID is required');
       }
 
-      const comments = await goalsService.getComments(req.tenantId, goalId);
+      const comments = await goalsService.getComments(req.tenantId!, goalId);
 
       res.status(200).json({
         success: true,

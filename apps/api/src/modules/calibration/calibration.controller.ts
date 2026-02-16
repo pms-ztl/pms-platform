@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO: Fix validation schema types
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
@@ -47,10 +46,20 @@ export class CalibrationController {
         });
       }
 
+      const sessionData = parseResult.data as {
+        cycleId: string;
+        name: string;
+        description?: string;
+        scheduledStart: Date;
+        scheduledEnd?: Date;
+        departmentScope?: string[];
+        levelScope?: number[];
+      };
+
       const session = await calibrationService.createSession(
-        req.tenantId,
-        req.user.id,
-        parseResult.data
+        req.tenantId!,
+        req.user!.id,
+        sessionData
       );
 
       res.status(201).json({
@@ -70,7 +79,7 @@ export class CalibrationController {
         throw new ValidationError('Session ID is required');
       }
 
-      const session = await calibrationService.getSession(req.tenantId, sessionId);
+      const session = await calibrationService.getSession(req.tenantId!, sessionId);
 
       res.status(200).json({
         success: true,
@@ -98,7 +107,7 @@ export class CalibrationController {
       const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
       const limit = req.query.limit ? Math.min(parseInt(req.query.limit as string, 10), 100) : 20;
 
-      const allSessions = await calibrationService.listSessions(req.tenantId, filters);
+      const allSessions = await calibrationService.listSessions(req.tenantId!, filters);
       const total = allSessions.length;
       const totalPages = Math.ceil(total / limit);
       const paged = allSessions.slice((page - 1) * limit, page * limit);
@@ -122,8 +131,8 @@ export class CalibrationController {
       }
 
       const session = await calibrationService.startSession(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         sessionId
       );
 
@@ -154,8 +163,8 @@ export class CalibrationController {
       }
 
       const session = await calibrationService.completeSession(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         sessionId,
         parseResult.data.notes
       );
@@ -187,8 +196,8 @@ export class CalibrationController {
       }
 
       await calibrationService.addParticipant(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         sessionId,
         parseResult.data.userId,
         parseResult.data.role
@@ -212,7 +221,7 @@ export class CalibrationController {
       }
 
       const reviews = await calibrationService.getReviewsForCalibration(
-        req.tenantId,
+        req.tenantId!,
         sessionId
       );
 
@@ -241,11 +250,18 @@ export class CalibrationController {
         });
       }
 
+      const ratingData = parseResult.data as {
+        reviewId: string;
+        adjustedRating: number;
+        rationale: string;
+        discussionNotes?: string;
+      };
+
       const rating = await calibrationService.adjustRating(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         sessionId,
-        parseResult.data
+        ratingData
       );
 
       res.status(200).json({
@@ -265,7 +281,7 @@ export class CalibrationController {
         throw new ValidationError('Session ID is required');
       }
 
-      const ratings = await calibrationService.getSessionRatings(req.tenantId, sessionId);
+      const ratings = await calibrationService.getSessionRatings(req.tenantId!, sessionId);
 
       res.status(200).json({
         success: true,

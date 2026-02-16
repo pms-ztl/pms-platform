@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO: Fix type mismatches with Prisma schema
 import { prisma } from '@pms/database';
 import { IntegrationStatus, SyncJobStatus } from '@prisma/client';
@@ -16,12 +15,16 @@ const IntegrationType = {
   SLACK: 'SLACK',
   MS_TEAMS: 'MS_TEAMS',
   JIRA: 'JIRA',
+  ASANA: 'ASANA',
   GOOGLE_CALENDAR: 'GOOGLE_CALENDAR',
   OUTLOOK_CALENDAR: 'OUTLOOK_CALENDAR',
+  OKTA: 'OKTA',
+  AZURE_AD: 'AZURE_AD',
   CUSTOM: 'CUSTOM',
 } as const;
 type IntegrationType = (typeof IntegrationType)[keyof typeof IntegrationType];
 type SyncDirection = 'INBOUND' | 'OUTBOUND' | 'BIDIRECTIONAL';
+const SyncDirectionDefault: SyncDirection = 'INBOUND';
 
 // Encryption key for credentials (should be from env in production)
 const ENCRYPTION_KEY = process.env.INTEGRATION_ENCRYPTION_KEY || 'default-key-change-in-prod-32ch';
@@ -192,9 +195,7 @@ export class IntegrationsService {
         type: true,
         name: true,
         status: true,
-        isEnabled: true,
         lastSyncAt: true,
-        lastSyncStatus: true,
         createdAt: true,
       },
     });
@@ -248,18 +249,14 @@ export class IntegrationsService {
         tenantId,
         type,
         name,
-        credentials: encryptedCredentials,
+        credentials: encryptedCredentials as any,
         config: config.additionalConfig || {},
-        status: IntegrationStatus.PENDING,
-        isEnabled: false,
+        status: IntegrationStatus.PENDING_AUTH,
+        createdById: userId,
       },
     });
 
-    auditLogger.info('Integration created', {
-      action: 'INTEGRATION_CREATED',
-      tenantId,
-      userId,
-      integrationId: integration.id,
+    auditLogger('INTEGRATION_CREATED', userId, tenantId, 'integration', integration.id, {
       integrationType: type,
     });
 
@@ -293,10 +290,6 @@ export class IntegrationsService {
       data.name = updates.name;
     }
 
-    if (updates.isEnabled !== undefined) {
-      data.isEnabled = updates.isEnabled;
-    }
-
     if (updates.config) {
       data.credentials = this.encryptCredentials(updates.config);
       data.config = updates.config.additionalConfig || existing.config;
@@ -307,12 +300,7 @@ export class IntegrationsService {
       data,
     });
 
-    auditLogger.info('Integration updated', {
-      action: 'INTEGRATION_UPDATED',
-      tenantId,
-      userId,
-      integrationId,
-    });
+    auditLogger('INTEGRATION_UPDATED', userId, tenantId, 'integration', integrationId);
 
     return {
       ...integration,
@@ -326,15 +314,10 @@ export class IntegrationsService {
   async deleteIntegration(integrationId: string, tenantId: string, userId: string) {
     await prisma.integration.update({
       where: { id: integrationId },
-      data: { deletedAt: new Date(), isEnabled: false },
+      data: { deletedAt: new Date() },
     });
 
-    auditLogger.info('Integration deleted', {
-      action: 'INTEGRATION_DELETED',
-      tenantId,
-      userId,
-      integrationId,
-    });
+    auditLogger('INTEGRATION_DELETED', userId, tenantId, 'integration', integrationId);
   }
 
   /**
@@ -382,10 +365,10 @@ export class IntegrationsService {
     integrationId: string,
     tenantId: string,
     userId: string,
-    direction: SyncDirection = SyncDirection.INBOUND
+    direction: SyncDirection = 'INBOUND'
   ) {
     const integration = await prisma.integration.findFirst({
-      where: { id: integrationId, tenantId, deletedAt: null, isEnabled: true },
+      where: { id: integrationId, tenantId, deletedAt: null, status: IntegrationStatus.ACTIVE },
     });
 
     if (!integration) {
@@ -397,8 +380,7 @@ export class IntegrationsService {
       data: {
         integrationId,
         direction,
-        status: SyncStatus.PENDING,
-        triggeredBy: userId,
+        status: SyncJobStatus.PENDING,
       },
     });
 
@@ -438,7 +420,7 @@ export class IntegrationsService {
     // Update status to running
     await prisma.integrationSyncJob.update({
       where: { id: syncJobId },
-      data: { status: SyncStatus.RUNNING, startedAt: new Date() },
+      data: { status: SyncJobStatus.RUNNING, startedAt: new Date() },
     });
 
     const credentials = this.decryptCredentials(integration.credentials);
@@ -467,13 +449,11 @@ export class IntegrationsService {
       await prisma.integrationSyncJob.update({
         where: { id: syncJobId },
         data: {
-          status: result.errors.length === 0 ? SyncStatus.COMPLETED : SyncStatus.FAILED,
+          status: result.errors.length === 0 ? SyncJobStatus.COMPLETED : SyncJobStatus.FAILED,
           completedAt: new Date(),
           recordsProcessed: result.recordsProcessed,
-          recordsCreated: result.recordsCreated,
-          recordsUpdated: result.recordsUpdated,
           recordsFailed: result.recordsFailed,
-          errorLog: result.errors.length > 0 ? { errors: result.errors } : null,
+          errorLog: result.errors.length > 0 ? { errors: result.errors } as any : undefined,
         },
       });
 
@@ -482,7 +462,6 @@ export class IntegrationsService {
         where: { id: integration.id },
         data: {
           lastSyncAt: new Date(),
-          lastSyncStatus: result.errors.length === 0 ? 'SUCCESS' : 'FAILED',
           status: IntegrationStatus.ACTIVE,
         },
       });
@@ -492,9 +471,9 @@ export class IntegrationsService {
       await prisma.integrationSyncJob.update({
         where: { id: syncJobId },
         data: {
-          status: SyncStatus.FAILED,
+          status: SyncJobStatus.FAILED,
           completedAt: new Date(),
-          errorLog: { error: error instanceof Error ? error.message : 'Unknown error' },
+          errorLog: { error: error instanceof Error ? error.message : 'Unknown error' } as any,
         },
       });
     }

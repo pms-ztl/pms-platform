@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Evidence Service
  *
@@ -124,7 +123,7 @@ export class EvidenceService {
         source: input.source,
         title: input.title,
         description: input.description,
-        content: input.content ?? {},
+        metadata: (input.content ?? {}) as any,
         externalId: input.externalId,
         externalUrl: input.externalUrl,
         occurredAt: input.occurredAt,
@@ -134,8 +133,7 @@ export class EvidenceService {
         tags: input.tags ?? [],
         skillTags: input.skillTags ?? [],
         valueTags: input.valueTags ?? [],
-        status: EvidenceStatus.PENDING,
-        createdById: userId,
+        status: EvidenceStatus.PENDING_VERIFICATION,
       },
     });
 
@@ -181,19 +179,20 @@ export class EvidenceService {
       qualityScore: existing.qualityScore,
     };
 
+    const updateData: Record<string, unknown> = {};
+    if (input.title !== undefined) updateData.title = input.title;
+    if (input.description !== undefined) updateData.description = input.description;
+    if (input.content !== undefined) updateData.metadata = input.content;
+    if (input.impactScore !== undefined) updateData.impactScore = input.impactScore;
+    if (input.effortScore !== undefined) updateData.effortScore = input.effortScore;
+    if (input.qualityScore !== undefined) updateData.qualityScore = input.qualityScore;
+    if (input.tags !== undefined) updateData.tags = input.tags;
+    if (input.skillTags !== undefined) updateData.skillTags = input.skillTags;
+    if (input.valueTags !== undefined) updateData.valueTags = input.valueTags;
+
     const evidence = await prisma.evidence.update({
       where: { id: evidenceId },
-      data: {
-        ...(input.title !== undefined && { title: input.title }),
-        ...(input.description !== undefined && { description: input.description }),
-        ...(input.content !== undefined && { content: input.content }),
-        ...(input.impactScore !== undefined && { impactScore: input.impactScore }),
-        ...(input.effortScore !== undefined && { effortScore: input.effortScore }),
-        ...(input.qualityScore !== undefined && { qualityScore: input.qualityScore }),
-        ...(input.tags !== undefined && { tags: input.tags }),
-        ...(input.skillTags !== undefined && { skillTags: input.skillTags }),
-        ...(input.valueTags !== undefined && { valueTags: input.valueTags }),
-      },
+      data: updateData as any,
     });
 
     auditLogger('EVIDENCE_UPDATED', userId, tenantId, 'evidence', evidenceId, {
@@ -219,9 +218,6 @@ export class EvidenceService {
         employee: {
           select: { id: true, firstName: true, lastName: true, email: true },
         },
-        createdBy: {
-          select: { id: true, firstName: true, lastName: true },
-        },
         verifiedBy: {
           select: { id: true, firstName: true, lastName: true },
         },
@@ -243,8 +239,7 @@ export class EvidenceService {
     // Access control: user must be employee, their manager, or HR
     // TODO: Add proper permission check
     const canAccess =
-      evidence.employeeId === userId ||
-      evidence.createdById === userId;
+      evidence.employeeId === userId;
 
     if (!canAccess) {
       throw new AuthorizationError('You do not have access to this evidence');
@@ -518,9 +513,11 @@ export class EvidenceService {
       where: { id: evidenceId },
       data: {
         status: EvidenceStatus.ARCHIVED,
-        archivedAt: new Date(),
-        archivedById: userId,
-        archiveReason: reason,
+        metadata: {
+          archivedAt: new Date().toISOString(),
+          archivedById: userId,
+          archiveReason: reason,
+        },
       },
     });
 

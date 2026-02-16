@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { prisma } from '@pms/database';
 
 class SuccessionService {
@@ -112,17 +111,17 @@ class SuccessionService {
 
     const devPlans = await prisma.developmentPlan.findMany({
       where: { userId: { in: userIds }, tenantId },
-      select: { userId: true, overallProgress: true, status: true }
+      select: { userId: true, progressPercentage: true, status: true }
     });
 
     return successors.map((s: any) => {
       const user = users.find(u => u.id === s.userId);
-      const plan = devPlans.find(d => d.userId === s.userId);
+      const devPlan = devPlans.find(d => d.userId === s.userId);
       return {
         ...s,
         user,
-        developmentProgress: plan ? Number(plan.overallProgress || 0) : 0,
-        developmentStatus: plan?.status || 'NONE',
+        developmentProgress: devPlan ? Number(devPlan.progressPercentage || 0) : 0,
+        developmentStatus: devPlan?.status || 'NONE',
       };
     });
   }

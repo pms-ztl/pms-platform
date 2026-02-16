@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO: Fix validation schema types
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
@@ -55,9 +54,9 @@ export class CalendarController {
       }
 
       const event = await calendarService.create(
-        req.tenantId,
-        req.user.id,
-        parseResult.data
+        req.tenantId!,
+        req.user!.id,
+        parseResult.data as any
       );
 
       res.status(201).json({
@@ -82,10 +81,10 @@ export class CalendarController {
       }
 
       const event = await calendarService.update(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         eventId,
-        parseResult.data
+        parseResult.data as any
       );
 
       res.status(200).json({
@@ -101,7 +100,7 @@ export class CalendarController {
     try {
       const eventId = req.params.id;
 
-      await calendarService.delete(req.tenantId, req.user.id, eventId);
+      await calendarService.delete(req.tenantId!, req.user!.id, eventId);
 
       res.status(200).json({
         success: true,
@@ -116,7 +115,7 @@ export class CalendarController {
     try {
       const eventId = req.params.id;
 
-      const event = await calendarService.getById(req.tenantId, req.user.id, eventId);
+      const event = await calendarService.getById(req.tenantId!, req.user!.id, eventId);
 
       res.status(200).json({
         success: true,
@@ -153,8 +152,8 @@ export class CalendarController {
       };
 
       const result = await calendarService.list(
-        req.tenantId,
-        req.user.id,
+        req.tenantId!,
+        req.user!.id,
         filters,
         pagination
       );

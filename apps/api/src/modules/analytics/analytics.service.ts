@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO: Fix type mismatches with Prisma schema
 import { prisma } from '@pms/database';
 import { logger } from '../../utils/logger';

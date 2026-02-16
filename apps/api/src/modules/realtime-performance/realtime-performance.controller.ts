@@ -4,7 +4,8 @@
  * REST API endpoints for Features 1-8
  */
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import type { AuthenticatedRequest } from '../../types';
 import { MS_PER_DAY, DAYS } from '../../utils/constants';
 import { realtimePerformanceService } from './realtime-performance.service';
 
@@ -17,9 +18,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/hourly
    * Get hourly performance metrics
    */
-  async getHourlyMetrics(req: Request, res: Response): Promise<void> {
+  async getHourlyMetrics(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const { startTime, endTime, targetUserId } = req.query;
 
       const effectiveUserId = targetUserId as string || userId;
@@ -51,9 +52,9 @@ export class RealtimePerformanceController {
    * POST /api/v1/realtime-performance/hourly
    * Record hourly performance metrics
    */
-  async recordHourlyMetrics(req: Request, res: Response): Promise<void> {
+  async recordHourlyMetrics(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const metrics = req.body;
 
       await realtimePerformanceService.recordHourlyMetrics({
@@ -79,9 +80,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/snapshot
    * Get current performance snapshot
    */
-  async getCurrentSnapshot(req: Request, res: Response): Promise<void> {
+  async getCurrentSnapshot(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const { targetUserId } = req.query;
 
       const effectiveUserId = targetUserId as string || userId;
@@ -111,9 +112,9 @@ export class RealtimePerformanceController {
    * POST /api/v1/realtime-performance/activity
    * Record an activity event
    */
-  async recordActivity(req: Request, res: Response): Promise<void> {
+  async recordActivity(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const event = req.body;
 
       await realtimePerformanceService.recordActivityEvent({
@@ -144,9 +145,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/activity
    * Get activity stream
    */
-  async getActivityStream(req: Request, res: Response): Promise<void> {
+  async getActivityStream(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const { targetUserId, limit = '50', offset = '0' } = req.query;
 
       const effectiveUserId = targetUserId as string || userId;
@@ -174,9 +175,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/activity/summary
    * Get activity summary
    */
-  async getActivitySummary(req: Request, res: Response): Promise<void> {
+  async getActivitySummary(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const { targetUserId, startTime, endTime } = req.query;
 
       const effectiveUserId = targetUserId as string || userId;
@@ -210,9 +211,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/goals/dashboard
    * Get real-time goal progress dashboard
    */
-  async getGoalDashboard(req: Request, res: Response): Promise<void> {
+  async getGoalDashboard(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId, roles } = req.user as any;
+      const { tenantId, id: userId, roles } = req.user!;
       const { includeTeamGoals } = req.query;
 
       const isManager = roles?.includes('MANAGER') || roles?.includes('ADMIN');
@@ -243,10 +244,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/deadlines/check
    * Check and generate deadline alerts
    */
-  async checkDeadlines(req: Request, res: Response): Promise<void> {
+  async checkDeadlines(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;  // FIXED: req.user has 'id', not 'userId'
-
+      const { tenantId, id: userId } = req.user!;
       console.log('[DEADLINES] Checking deadlines for user:', userId);
       const alerts = await realtimePerformanceService.checkDeadlineAlerts(tenantId, userId);
       console.log('[DEADLINES] Check completed successfully, found:', alerts.length, 'alerts');
@@ -269,9 +269,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/deadlines/alerts
    * Get active deadline alerts
    */
-  async getDeadlineAlerts(req: Request, res: Response): Promise<void> {
+  async getDeadlineAlerts(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
 
       const alerts = await realtimePerformanceService.getActiveDeadlineAlerts(tenantId, userId);
 
@@ -291,10 +291,10 @@ export class RealtimePerformanceController {
    * POST /api/v1/realtime-performance/deadlines/alerts/:id/acknowledge
    * Acknowledge a deadline alert
    */
-  async acknowledgeAlert(req: Request, res: Response): Promise<void> {
+  async acknowledgeAlert(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
 
       await realtimePerformanceService.acknowledgeDeadlineAlert(tenantId, userId, id);
 
@@ -314,10 +314,10 @@ export class RealtimePerformanceController {
    * POST /api/v1/realtime-performance/deadlines/alerts/:id/snooze
    * Snooze a deadline alert
    */
-  async snoozeAlert(req: Request, res: Response): Promise<void> {
+  async snoozeAlert(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const { hours } = req.body;
 
       await realtimePerformanceService.snoozeDeadlineAlert(tenantId, userId, id, hours);
@@ -342,10 +342,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/workload
    * Analyze workload for current user
    */
-  async analyzeWorkload(req: Request, res: Response): Promise<void> {
+  async analyzeWorkload(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;  // FIXED: req.user has 'id', not 'userId'
-      const { targetUserId } = req.query;
+      const { tenantId, id: userId } = req.user!;      const { targetUserId } = req.query;
 
       const effectiveUserId = targetUserId as string || userId;
 
@@ -371,9 +370,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/workload/team
    * Get team workload distribution
    */
-  async getTeamWorkload(req: Request, res: Response): Promise<void> {
+  async getTeamWorkload(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
 
       const distribution = await realtimePerformanceService.getTeamWorkloadDistribution(
         tenantId,
@@ -400,9 +399,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/anomalies/detect
    * Detect anomalies for current user
    */
-  async detectAnomalies(req: Request, res: Response): Promise<void> {
+  async detectAnomalies(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const { targetUserId } = req.query;
 
       const effectiveUserId = targetUserId as string || userId;
@@ -432,10 +431,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/sentiment
    * Analyze sentiment for current user
    */
-  async analyzeSentiment(req: Request, res: Response): Promise<void> {
+  async analyzeSentiment(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;  // FIXED: req.user has 'id', not 'userId'
-      const { targetUserId, periodDays = '7' } = req.query;
+      const { tenantId, id: userId } = req.user!;      const { targetUserId, periodDays = '7' } = req.query;
 
       const effectiveUserId = targetUserId as string || userId;
 
@@ -465,9 +463,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/sentiment/team
    * Get team morale snapshot
    */
-  async getTeamMorale(req: Request, res: Response): Promise<void> {
+  async getTeamMorale(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
 
       const morale = await realtimePerformanceService.getTeamMorale(tenantId, userId);
 
@@ -491,9 +489,9 @@ export class RealtimePerformanceController {
    * POST /api/v1/realtime-performance/milestones
    * Create a milestone
    */
-  async createMilestone(req: Request, res: Response): Promise<void> {
+  async createMilestone(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const data = req.body;
 
       const milestone = await realtimePerformanceService.createMilestone(tenantId, {
@@ -523,9 +521,9 @@ export class RealtimePerformanceController {
    * PATCH /api/v1/realtime-performance/milestones/:id
    * Update milestone progress
    */
-  async updateMilestone(req: Request, res: Response): Promise<void> {
+  async updateMilestone(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { id: userId } = req.user as any;
+      const { id: userId } = req.user!;
       const { id } = req.params;
       const update = req.body;
 
@@ -556,9 +554,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/milestones
    * Get milestones
    */
-  async getMilestones(req: Request, res: Response): Promise<void> {
+  async getMilestones(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { goalId, teamId } = req.query;
 
       if (goalId) {
@@ -595,9 +593,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/milestones/timeline
    * Get milestone timeline
    */
-  async getMilestoneTimeline(req: Request, res: Response): Promise<void> {
+  async getMilestoneTimeline(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { goalId, teamId } = req.query;
 
       const timeline = await realtimePerformanceService.getMilestoneTimeline(
@@ -622,9 +620,9 @@ export class RealtimePerformanceController {
    * POST /api/v1/realtime-performance/milestones/detect
    * Auto-detect milestones for a goal
    */
-  async detectMilestones(req: Request, res: Response): Promise<void> {
+  async detectMilestones(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { goalId } = req.body;
 
       const detected = await realtimePerformanceService.detectMilestones(tenantId, goalId);
@@ -649,9 +647,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/heatmap/individual
    * Get individual activity heatmap
    */
-  async getActivityHeatmap(req: Request, res: Response): Promise<void> {
+  async getActivityHeatmap(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const { targetUserId, startDate, endDate } = req.query;
 
       const effectiveUserId = targetUserId as string || userId;
@@ -685,9 +683,9 @@ export class RealtimePerformanceController {
    * GET /api/v1/realtime-performance/heatmap/team
    * Get team activity heatmap (MANAGER+ roles only)
    */
-  async getTeamActivityHeatmap(req: Request, res: Response): Promise<void> {
+  async getTeamActivityHeatmap(req: AuthenticatedRequest, res: Response): Promise<void> {
     try {
-      const { tenantId, id: userId } = req.user as any;
+      const { tenantId, id: userId } = req.user!;
       const { startDate, endDate } = req.query;
 
       // Default: last 365 days

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Compensation Service
  *
@@ -8,6 +7,7 @@
 
 import {
   prisma,
+  Prisma,
   type CompensationDecision,
   type DecisionEvidence,
   CompensationType,
@@ -128,8 +128,8 @@ export class CompensationService {
         reason: input.reason,
         justification: input.justification,
         performanceRating: input.performanceRating,
-        marketData: input.marketData ?? {},
-        equityAnalysis: input.equityAnalysis,
+        marketData: (input.marketData ?? {}) as Prisma.InputJsonValue,
+        equityAnalysis: input.equityAnalysis as Prisma.InputJsonValue ?? undefined,
         status: CompensationDecisionStatus.DRAFT,
         proposedById: userId,
       },
@@ -189,8 +189,8 @@ export class CompensationService {
         ...(input.newAmount !== undefined && { newAmount: input.newAmount, changeAmount, changePercent }),
         ...(input.reason !== undefined && { reason: input.reason }),
         ...(input.effectiveDate !== undefined && { effectiveDate: input.effectiveDate }),
-        ...(input.marketData !== undefined && { marketData: input.marketData }),
-      },
+        ...(input.marketData !== undefined && { marketData: input.marketData as Prisma.InputJsonValue }),
+      } as Prisma.CompensationDecisionUncheckedUpdateInput,
     });
 
     auditLogger('COMPENSATION_DECISION_UPDATED', userId, tenantId, 'compensation_decision', decisionId, {

@@ -1,5 +1,3 @@
-// @ts-nocheck
-// TODO: Fix type mismatches with Prisma schema
 import {
   prisma,
   type CalibrationSession,
@@ -203,9 +201,9 @@ export class CalibrationService {
       data: {
         status: CalibrationStatus.IN_PROGRESS,
         actualStart: new Date(),
-        preAnalysis: preAnalysis as unknown as Record<string, unknown>,
-        outliers: preAnalysis.outliers as unknown as Array<Record<string, unknown>>,
-        biasAlerts: preAnalysis.biasIndicators as unknown as Array<Record<string, unknown>>,
+        preAnalysis: preAnalysis as any,
+        outliers: preAnalysis.outliers as any,
+        biasAlerts: preAnalysis.biasIndicators as any,
       },
     });
 

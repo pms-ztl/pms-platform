@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { prisma } from '@pms/database';
 import {
   startOfWeek,
@@ -214,7 +213,7 @@ export class DataAggregationService {
    */
   private async getTeamMemberIds(teamId: string): Promise<string[]> {
     const members = await prisma.teamMember.findMany({
-      where: { teamId, isActive: true },
+      where: { teamId } as any,
       select: { userId: true },
     });
     return members.map(m => m.userId);
@@ -313,7 +312,7 @@ export class DataAggregationService {
     });
 
     const totalReviews = reviews.length;
-    const completedReviews = reviews.filter(r => r.status === 'COMPLETED').length;
+    const completedReviews = reviews.filter(r => r.status === 'FINALIZED' || r.status === 'ACKNOWLEDGED').length;
     const pendingReviews = totalReviews - completedReviews;
 
     const ratingsSum = reviews

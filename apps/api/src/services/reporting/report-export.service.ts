@@ -1,4 +1,3 @@
-// @ts-nocheck
 import PDFDocument from 'pdfkit';
 import ExcelJS from 'exceljs';
 import { createWriteStream, promises as fs } from 'fs';

@@ -1,7 +1,7 @@
-// @ts-nocheck
 // TODO: Fix type mismatches with Prisma schema
 import {
   prisma,
+  Prisma,
   type ReviewCycle,
   type Review,
   ReviewCycleStatus,
@@ -72,7 +72,7 @@ export class ReviewsService {
         includeFeedback: input.includeFeedback ?? true,
         include360: input.include360 ?? false,
         templateId: input.templateId,
-        settings: input.settings ?? {},
+        settings: (input.settings ?? {}) as Prisma.InputJsonValue,
         createdById: userId,
         status: ReviewCycleStatus.DRAFT,
       },
@@ -138,8 +138,8 @@ export class ReviewsService {
         ...(input.includeFeedback !== undefined && { includeFeedback: input.includeFeedback }),
         ...(input.include360 !== undefined && { include360: input.include360 }),
         ...(input.templateId !== undefined && { templateId: input.templateId }),
-        ...(input.settings !== undefined && { settings: input.settings }),
-      },
+        ...(input.settings !== undefined && { settings: input.settings as Prisma.InputJsonValue }),
+      } as Prisma.ReviewCycleUncheckedUpdateInput,
     });
 
     auditLogger('REVIEW_CYCLE_UPDATED', userId, tenantId, 'review_cycle', cycleId, {
@@ -252,7 +252,7 @@ export class ReviewsService {
     }
 
     // Validate status progression
-    const statusOrder = [
+    const statusOrder: ReviewCycleStatus[] = [
       ReviewCycleStatus.DRAFT,
       ReviewCycleStatus.SCHEDULED,
       ReviewCycleStatus.SELF_ASSESSMENT,
@@ -530,7 +530,7 @@ export class ReviewsService {
       where: { id: reviewId },
       data: {
         ...(input.overallRating !== undefined && { overallRating: input.overallRating }),
-        ...(input.content !== undefined && { content: input.content }),
+        ...(input.content !== undefined && { content: input.content as Prisma.InputJsonValue }),
         ...(input.strengths !== undefined && { strengths: input.strengths }),
         ...(input.areasForGrowth !== undefined && { areasForGrowth: input.areasForGrowth }),
         ...(input.summary !== undefined && { summary: input.summary }),
@@ -539,7 +539,7 @@ export class ReviewsService {
           review.status === ReviewStatus.NOT_STARTED
             ? ReviewStatus.IN_PROGRESS
             : review.status,
-      },
+      } as Prisma.ReviewUncheckedUpdateInput,
     });
 
     return updatedReview;
@@ -580,7 +580,7 @@ export class ReviewsService {
       where: { id: reviewId },
       data: {
         overallRating: input.overallRating,
-        content: input.content,
+        content: input.content as Prisma.InputJsonValue,
         strengths: input.strengths ?? [],
         areasForGrowth: input.areasForGrowth ?? [],
         summary: input.summary,

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { prisma } from '@pms/database';
 
 class SkillsService {
@@ -531,6 +530,7 @@ class SkillsService {
     try {
       await prisma.notification.create({
         data: {
+          tenantId,
           userId: user.managerId,
           type: 'SKILL_ASSESSMENT_REQUEST',
           title: 'Skill Assessment Request',
@@ -540,7 +540,7 @@ class SkillsService {
             requestedBy: userId,
             skillName: assessment.skillName,
             category: assessment.skillCategory?.name,
-          },
+          } as any,
           channel: 'in_app',
         },
       });

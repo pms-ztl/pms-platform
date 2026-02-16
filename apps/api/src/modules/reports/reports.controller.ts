@@ -1,8 +1,7 @@
-// @ts-nocheck
-import { Request, Response, NextFunction } from 'express';
+import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { logger } from '../../utils/logger';
-import { AuthenticatedRequest } from '../../types';
+import type { AuthenticatedRequest } from '../../types';
 import { reportGenerationService, ReportType } from '../../services/reporting/report-generation.service';
 import { jobQueueService } from '../../services/reporting/job-queue.service';
 import { reportSchedulerService } from '../../services/reporting/report-scheduler.service';
@@ -446,11 +445,21 @@ export class ReportsController {
         return;
       }
 
+      const scheduleData = validation.data as {
+        reportDefinitionId: string;
+        cronExpression: string;
+        timezone?: string;
+        startDate: string;
+        endDate?: string;
+      };
+
       const schedule = await reportSchedulerService.addSchedule({
         tenantId,
-        ...validation.data,
-        startDate: new Date(validation.data.startDate),
-        endDate: validation.data.endDate ? new Date(validation.data.endDate) : undefined,
+        reportDefinitionId: scheduleData.reportDefinitionId,
+        cronExpression: scheduleData.cronExpression,
+        timezone: scheduleData.timezone,
+        startDate: new Date(scheduleData.startDate),
+        endDate: scheduleData.endDate ? new Date(scheduleData.endDate) : undefined,
       });
 
       res.status(201).json({

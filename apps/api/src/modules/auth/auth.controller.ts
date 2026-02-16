@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO: Fix validation schema types
 import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
@@ -70,7 +69,7 @@ export class AuthController {
         });
       }
 
-      const result = await authService.login(parseResult.data);
+      const result = await authService.login(parseResult.data as { email: string; password: string; tenantSlug?: string; mfaCode?: string });
 
       if ('mfaRequired' in result) {
         res.status(200).json({
@@ -148,7 +147,7 @@ export class AuthController {
         return;
       }
 
-      await authService.logout(req.user.id, accessToken, refreshToken);
+      await authService.logout(req.user!.id, accessToken, refreshToken);
 
       res.status(200).json({ success: true });
     } catch (error) {
@@ -236,7 +235,7 @@ export class AuthController {
       }
 
       await authService.changePassword(
-        req.user.id,
+        req.user!.id,
         parseResult.data.currentPassword,
         parseResult.data.newPassword
       );
@@ -252,7 +251,7 @@ export class AuthController {
 
   async setupMfa(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const result = await authService.setupMfa(req.user.id);
+      const result = await authService.setupMfa(req.user!.id);
 
       res.status(200).json({
         success: true,
@@ -273,7 +272,7 @@ export class AuthController {
         });
       }
 
-      await authService.verifyMfaSetup(req.user.id, parseResult.data.code);
+      await authService.verifyMfaSetup(req.user!.id, parseResult.data.code);
 
       res.status(200).json({
         success: true,
@@ -294,7 +293,7 @@ export class AuthController {
         });
       }
 
-      await authService.disableMfa(req.user.id, parseResult.data.password);
+      await authService.disableMfa(req.user!.id, parseResult.data.password);
 
       res.status(200).json({
         success: true,

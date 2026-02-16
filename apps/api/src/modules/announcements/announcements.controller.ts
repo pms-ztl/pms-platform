@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
 import type { AuthenticatedRequest } from '../../types';
@@ -40,7 +39,17 @@ class AnnouncementsController {
 
   async create(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
-      const validated = createAnnouncementSchema.parse(req.body);
+      const validated = createAnnouncementSchema.parse(req.body) as {
+        title: string;
+        content: string;
+        category: string;
+        priority?: string;
+        targetAudience?: any;
+        isPinned?: boolean;
+        publishedAt?: string;
+        expiresAt?: string;
+        attachmentUrls?: string[];
+      };
       const data = await announcementsService.create(req.tenantId!, req.user!.id, validated);
       res.status(201).json({ success: true, data });
     } catch (error) { next(error); }

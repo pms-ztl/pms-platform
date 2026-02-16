@@ -3,7 +3,8 @@
  * REST API endpoints for Features 46-50
  */
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import type { AuthenticatedRequest } from '../types';
 import {
   PromotionSuccessionService,
   DevelopmentPlanService,
@@ -23,9 +24,9 @@ export class ActionableInsightsController {
   // PROMOTION & SUCCESSION RECOMMENDATIONS (Feature 46)
   // ============================================================================
 
-  async generatePromotionRecommendation(req: Request, res: Response) {
+  async generatePromotionRecommendation(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { userId, targetRole, targetLevel, targetDepartment } = req.body;
 
       const recommendation = await promotionService.generatePromotionRecommendation({
@@ -42,9 +43,9 @@ export class ActionableInsightsController {
     }
   }
 
-  async createSuccessionPlan(req: Request, res: Response) {
+  async createSuccessionPlan(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { positionId, positionTitle, currentIncumbent, criticality } = req.body;
 
       const plan = await promotionService.createSuccessionPlan({
@@ -61,9 +62,9 @@ export class ActionableInsightsController {
     }
   }
 
-  async getUserPromotionRecommendations(req: Request, res: Response) {
+  async getUserPromotionRecommendations(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { userId } = req.params;
 
       const recommendations = await promotionService.getUserPromotionRecommendations(tenantId, userId);
@@ -74,9 +75,9 @@ export class ActionableInsightsController {
     }
   }
 
-  async getSuccessionPlans(req: Request, res: Response) {
+  async getSuccessionPlans(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { criticality } = req.query;
 
       const plans = await promotionService.getSuccessionPlans(tenantId, {
@@ -89,9 +90,9 @@ export class ActionableInsightsController {
     }
   }
 
-  async approvePromotionRecommendation(req: Request, res: Response) {
+  async approvePromotionRecommendation(req: AuthenticatedRequest, res: Response) {
     try {
-      const { userId } = req.user as any;
+      const { id: userId } = req.user!;
       const { recommendationId } = req.params;
 
       const result = await promotionService.approveRecommendation(recommendationId, userId);
@@ -102,9 +103,9 @@ export class ActionableInsightsController {
     }
   }
 
-  async rejectPromotionRecommendation(req: Request, res: Response) {
+  async rejectPromotionRecommendation(req: AuthenticatedRequest, res: Response) {
     try {
-      const { userId } = req.user as any;
+      const { id: userId } = req.user!;
       const { recommendationId } = req.params;
       const { rejectionReason } = req.body;
 
@@ -124,9 +125,9 @@ export class ActionableInsightsController {
   // DEVELOPMENT PLAN GENERATOR (Feature 47)
   // ============================================================================
 
-  async generateDevelopmentPlan(req: Request, res: Response) {
+  async generateDevelopmentPlan(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const {
         userId,
         planType,
@@ -152,9 +153,9 @@ export class ActionableInsightsController {
     }
   }
 
-  async getUserDevelopmentPlans(req: Request, res: Response) {
+  async getUserDevelopmentPlans(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { userId } = req.params;
 
       const plans = await developmentService.getUserDevelopmentPlans(tenantId, userId);
@@ -165,7 +166,7 @@ export class ActionableInsightsController {
     }
   }
 
-  async updateDevelopmentPlanProgress(req: Request, res: Response) {
+  async updateDevelopmentPlanProgress(req: AuthenticatedRequest, res: Response) {
     try {
       const { planId } = req.params;
 
@@ -177,7 +178,7 @@ export class ActionableInsightsController {
     }
   }
 
-  async completeDevelopmentPlan(req: Request, res: Response) {
+  async completeDevelopmentPlan(req: AuthenticatedRequest, res: Response) {
     try {
       const { planId } = req.params;
 
@@ -193,9 +194,9 @@ export class ActionableInsightsController {
   // TEAM OPTIMIZATION (Feature 48)
   // ============================================================================
 
-  async optimizeTeamComposition(req: Request, res: Response) {
+  async optimizeTeamComposition(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const {
         optimizationType,
         teamName,
@@ -227,7 +228,7 @@ export class ActionableInsightsController {
     }
   }
 
-  async analyzeTeamComposition(req: Request, res: Response) {
+  async analyzeTeamComposition(req: AuthenticatedRequest, res: Response) {
     try {
       const { teamId } = req.params;
 
@@ -243,9 +244,9 @@ export class ActionableInsightsController {
   // PIP AUTOMATION (Feature 49)
   // ============================================================================
 
-  async generatePIP(req: Request, res: Response) {
+  async generatePIP(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId, userId: createdBy } = req.user as any;
+      const { tenantId, id: createdBy } = req.user!;
       const {
         userId,
         pipType,
@@ -270,9 +271,9 @@ export class ActionableInsightsController {
     }
   }
 
-  async conductPIPCheckIn(req: Request, res: Response) {
+  async conductPIPCheckIn(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId, userId: conductedBy } = req.user as any;
+      const { tenantId, id: conductedBy } = req.user!;
       const { pipId } = req.params;
       const {
         userId,
@@ -297,7 +298,7 @@ export class ActionableInsightsController {
     }
   }
 
-  async completePIP(req: Request, res: Response) {
+  async completePIP(req: AuthenticatedRequest, res: Response) {
     try {
       const { pipId } = req.params;
       const { outcome, outcomeNotes } = req.body;
@@ -314,9 +315,9 @@ export class ActionableInsightsController {
   // ORGANIZATIONAL HEALTH (Feature 50)
   // ============================================================================
 
-  async calculateOrganizationalHealth(req: Request, res: Response) {
+  async calculateOrganizationalHealth(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
       const { period } = req.query;
 
       const metrics = await orgHealthService.calculateOrganizationalHealth(
@@ -330,9 +331,9 @@ export class ActionableInsightsController {
     }
   }
 
-  async conductCultureDiagnostic(req: Request, res: Response) {
+  async conductCultureDiagnostic(req: AuthenticatedRequest, res: Response) {
     try {
-      const { tenantId } = req.user as any;
+      const { tenantId } = req.user!;
 
       const diagnostic = await orgHealthService.conductCultureDiagnostic(tenantId);
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { prisma } from '@pms/database';
 import { MS_PER_DAY } from '../../utils/constants';
 

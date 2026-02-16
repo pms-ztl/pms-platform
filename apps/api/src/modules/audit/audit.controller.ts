@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Response, NextFunction } from 'express';
 import { z } from 'zod';
 import type { AuthenticatedRequest } from '../../types';
