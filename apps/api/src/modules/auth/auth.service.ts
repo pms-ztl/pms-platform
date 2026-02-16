@@ -530,6 +530,8 @@ export class AuthService {
       contractType: user.contractType ?? undefined,
       // Security fields
       mfaEnabled: user.mfaEnabled,
+      // AI access
+      aiAccessEnabled: user.aiAccessEnabled,
       // Relations
       department: user.department ?? undefined,
       manager: user.manager ?? undefined,

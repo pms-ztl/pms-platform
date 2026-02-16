@@ -113,6 +113,7 @@ export class LicenseService {
         subscriptionPlan: true,
         subscriptionStatus: true,
         subscriptionExpiresAt: true,
+        settings: true,
       },
     });
 
@@ -120,13 +121,19 @@ export class LicenseService {
       throw new ValidationError('Tenant not found');
     }
 
-    const [activeCount, archivedCount, totalCount] = await Promise.all([
+    const [activeCount, archivedCount, totalCount, aiAccessCount] = await Promise.all([
       prisma.user.count({ where: { tenantId, isActive: true, deletedAt: null, archivedAt: null } }),
       prisma.user.count({ where: { tenantId, archivedAt: { not: null }, deletedAt: null } }),
       prisma.user.count({ where: { tenantId, deletedAt: null } }),
+      prisma.user.count({ where: { tenantId, isActive: true, deletedAt: null, aiAccessEnabled: true } }),
     ]);
 
     const effectiveLimit = Math.max(tenant.licenseCount, tenant.maxUsers);
+
+    // Extract AI feature status from tenant settings
+    const settings = (tenant.settings as Record<string, unknown>) ?? {};
+    const features = (settings.features as Record<string, unknown>) ?? {};
+    const aiEnabled = !!features.agenticAI;
 
     return {
       activeUsers: activeCount,
@@ -139,6 +146,8 @@ export class LicenseService {
       plan: tenant.subscriptionPlan,
       status: tenant.subscriptionStatus,
       expiresAt: tenant.subscriptionExpiresAt?.toISOString() ?? null,
+      aiEnabled,
+      aiAccessCount,
     };
   }
 }

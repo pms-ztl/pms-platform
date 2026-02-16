@@ -35,6 +35,7 @@ export interface User {
   roles: string[];
   isActive: boolean;
   mfaEnabled?: boolean;
+  aiAccessEnabled?: boolean;
 }
 
 export interface DashboardMetrics {

@@ -550,8 +550,9 @@ model User {
   mfaEnabled     Boolean   @default(false) @map("mfa_enabled")
   mfaSecret      String?   @map("mfa_secret")
   emailVerified  Boolean   @default(false) @map("email_verified")
-  contractType   String?   @map("contract_type") // For union/contract rules
-  archivedAt     DateTime? @map("archived_at") // When employee left org (data preserved)
+  contractType     String?   @map("contract_type") // For union/contract rules
+  aiAccessEnabled  Boolean   @default(false) @map("ai_access_enabled")
+  archivedAt       DateTime? @map("archived_at") // When employee left org (data preserved)
   archivedReason String?   @map("archived_reason")
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")

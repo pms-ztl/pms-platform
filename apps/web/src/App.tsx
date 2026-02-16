@@ -58,6 +58,7 @@ import { SetPasswordPage } from '@/pages/auth/SetPasswordPage';
 import { ExcelUploadPage } from '@/pages/ExcelUploadPage';
 import { LicenseDashboardPage } from '@/pages/admin/LicenseDashboardPage';
 import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
+import { AIAccessManagementPage } from '@/pages/admin/AIAccessManagementPage';
 
 // Super Admin Pages (lazy loaded for code splitting)
 const SADashboardPage = lazy(() => import('@/pages/super-admin/SADashboardPage').then(m => ({ default: m.SADashboardPage })));
@@ -315,6 +316,7 @@ function App() {
           <Route path="notifications" element={<NotificationsPage />} />
           <Route path="admin/licenses" element={<RoleGuard path="/admin/licenses"><LicenseDashboardPage /></RoleGuard>} />
           <Route path="admin/excel-upload" element={<RoleGuard path="/admin/excel-upload"><ExcelUploadPage /></RoleGuard>} />
+          <Route path="admin/ai-access" element={<RoleGuard path="/admin/ai-access"><AIAccessManagementPage /></RoleGuard>} />
         </Route>
 
         {/* Super Admin routes - completely separate layout */}

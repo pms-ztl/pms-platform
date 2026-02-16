@@ -17,6 +17,7 @@ interface User {
   manager?: { id: string; firstName: string; lastName: string };
   isActive: boolean;
   mfaEnabled?: boolean;
+  aiAccessEnabled?: boolean;
 }
 
 interface AuthState {
@@ -124,6 +125,7 @@ const ROUTE_ACCESS: Record<string, { roles?: string[] }> = {
   '/admin/audit':        { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
   '/admin/excel-upload': { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
   '/admin/licenses':     { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  '/admin/ai-access':    { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
 };
 
 /**

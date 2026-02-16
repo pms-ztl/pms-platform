@@ -1031,6 +1031,177 @@ export class UsersService {
 
     return { email: user.email, expiresAt: expiresAt.toISOString() };
   }
+
+  // ============================================================================
+  // AI ACCESS MANAGEMENT
+  // ============================================================================
+
+  /**
+   * Toggle AI access for a single user.
+   * Requires tenant to have agenticAI feature enabled.
+   */
+  async toggleAiAccess(
+    tenantId: string,
+    adminId: string,
+    userId: string,
+    enabled: boolean,
+  ): Promise<{ userId: string; aiAccessEnabled: boolean }> {
+    // Verify tenant has AI feature
+    await this.verifyTenantAiFeature(tenantId);
+
+    const user = await prisma.user.findFirst({
+      where: { id: userId, tenantId, deletedAt: null },
+      select: { id: true, email: true, firstName: true, lastName: true, aiAccessEnabled: true },
+    });
+
+    if (!user) throw new NotFoundError('User', userId);
+
+    if (user.aiAccessEnabled === enabled) {
+      return { userId: user.id, aiAccessEnabled: enabled };
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { aiAccessEnabled: enabled },
+    });
+
+    auditLogger('AI_ACCESS_TOGGLED', adminId, tenantId, 'user', userId, {
+      enabled,
+      userEmail: user.email,
+    });
+
+    // Invalidate session cache so the change takes effect immediately
+    await deleteSession(userId);
+
+    return { userId: user.id, aiAccessEnabled: enabled };
+  }
+
+  /**
+   * Bulk toggle AI access for multiple users.
+   */
+  async bulkToggleAiAccess(
+    tenantId: string,
+    adminId: string,
+    userIds: string[],
+    enabled: boolean,
+  ): Promise<{ updated: number }> {
+    await this.verifyTenantAiFeature(tenantId);
+
+    const result = await prisma.user.updateMany({
+      where: {
+        id: { in: userIds },
+        tenantId,
+        deletedAt: null,
+      },
+      data: { aiAccessEnabled: enabled },
+    });
+
+    // Invalidate session cache for all affected users
+    await Promise.all(userIds.map((id) => deleteSession(id)));
+
+    auditLogger('AI_ACCESS_BULK_TOGGLED', adminId, tenantId, 'user', adminId, {
+      enabled,
+      userCount: result.count,
+      userIds,
+    });
+
+    return { updated: result.count };
+  }
+
+  /**
+   * Get AI access statistics for the tenant.
+   */
+  async getAiAccessStats(tenantId: string) {
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: { settings: true, subscriptionPlan: true },
+    });
+
+    if (!tenant) throw new NotFoundError('Tenant not found');
+
+    const settings = (tenant.settings as Record<string, unknown>) ?? {};
+    const features = (settings.features as Record<string, unknown>) ?? {};
+    const aiSettings = (settings.ai as Record<string, unknown>) ?? {};
+
+    const [totalUsers, aiEnabledCount, aiEnabledUsers] = await Promise.all([
+      prisma.user.count({ where: { tenantId, isActive: true, deletedAt: null } }),
+      prisma.user.count({ where: { tenantId, isActive: true, deletedAt: null, aiAccessEnabled: true } }),
+      prisma.user.findMany({
+        where: { tenantId, isActive: true, deletedAt: null, aiAccessEnabled: true },
+        select: { id: true, firstName: true, lastName: true, email: true, jobTitle: true },
+        orderBy: { firstName: 'asc' },
+      }),
+    ]);
+
+    return {
+      plan: tenant.subscriptionPlan,
+      aiFeatureEnabled: !!features.agenticAI,
+      delegateToManagers: !!aiSettings.delegateToManagers,
+      totalUsers,
+      aiEnabledCount,
+      aiEnabledUsers,
+    };
+  }
+
+  /**
+   * Update tenant-level AI delegation setting.
+   * Controls whether managers can grant AI access to their reports.
+   */
+  async updateAiDelegation(
+    tenantId: string,
+    adminId: string,
+    delegateToManagers: boolean,
+  ): Promise<{ delegateToManagers: boolean }> {
+    await this.verifyTenantAiFeature(tenantId);
+
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: { settings: true },
+    });
+    if (!tenant) throw new NotFoundError('Tenant not found');
+
+    const currentSettings = (tenant.settings as Record<string, unknown>) ?? {};
+    const updatedSettings = {
+      ...currentSettings,
+      ai: {
+        ...((currentSettings.ai as Record<string, unknown>) ?? {}),
+        enabled: true,
+        delegateToManagers,
+      },
+    };
+
+    await prisma.tenant.update({
+      where: { id: tenantId },
+      data: { settings: updatedSettings as any },
+    });
+
+    auditLogger('AI_DELEGATION_UPDATED', adminId, tenantId, 'tenant', tenantId, {
+      delegateToManagers,
+    });
+
+    return { delegateToManagers };
+  }
+
+  /**
+   * Verify that the tenant has the agenticAI feature enabled.
+   */
+  private async verifyTenantAiFeature(tenantId: string): Promise<void> {
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: { settings: true },
+    });
+
+    if (!tenant) throw new NotFoundError('Tenant not found');
+
+    const settings = (tenant.settings as Record<string, unknown>) ?? {};
+    const features = (settings.features as Record<string, unknown>) ?? {};
+
+    if (!features.agenticAI) {
+      throw new ValidationError(
+        'Agentic AI feature is not enabled for this organization. Upgrade to Professional or Enterprise plan.',
+      );
+    }
+  }
 }
 
 export const usersService = new UsersService();

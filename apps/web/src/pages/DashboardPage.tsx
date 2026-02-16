@@ -16,7 +16,9 @@ import { StarIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
 
 import { goalsApi, reviewsApi, feedbackApi, performanceMathApi, type Goal } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import { CalendarPlanner } from '@/components/calendar';
+import { AIWorkspacePage } from '@/pages/AIWorkspacePage';
 
 import {
   AnimatedWaves,
@@ -37,6 +39,14 @@ import type { StatItem, ActivityItem } from '@/components/dashboard';
 // ─── Main Dashboard ─────────────────────────────────────────────────────────
 export function DashboardPage() {
   const { user } = useAuthStore();
+  const { isAiMode } = useAIWorkspaceStore();
+  const hasAiAccess = user?.aiAccessEnabled === true;
+
+  // If AI workspace mode is active and user has access, render the immersive AI workspace
+  if (isAiMode && hasAiAccess) {
+    return <AIWorkspacePage />;
+  }
+
   const isManager = (user?.roles ?? []).some((r) => MANAGER_ROLES.includes(r));
 
   // ── Real data queries ──────────────────────────────────────────────────

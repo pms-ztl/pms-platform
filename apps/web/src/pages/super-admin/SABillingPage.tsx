@@ -9,6 +9,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   PencilSquareIcon,
+  CheckCircleIcon,
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -40,6 +42,22 @@ const STATUS_BADGE: Record<string, { variant: 'success' | 'warning' | 'danger' |
   TRIAL: { variant: 'info' as 'default', label: 'Trial' },
   EXPIRED: { variant: 'danger', label: 'Expired' },
 };
+
+type PlanKey = 'FREE' | 'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE';
+
+const PLAN_FEATURES: { feature: string; plans: Record<PlanKey, boolean> }[] = [
+  { feature: 'Performance Reviews', plans: { FREE: true, STARTER: true, PROFESSIONAL: true, ENTERPRISE: true } },
+  { feature: 'Goal Management', plans: { FREE: true, STARTER: true, PROFESSIONAL: true, ENTERPRISE: true } },
+  { feature: '360 Feedback', plans: { FREE: false, STARTER: true, PROFESSIONAL: true, ENTERPRISE: true } },
+  { feature: 'Analytics & Reports', plans: { FREE: false, STARTER: true, PROFESSIONAL: true, ENTERPRISE: true } },
+  { feature: 'Calibration', plans: { FREE: false, STARTER: false, PROFESSIONAL: true, ENTERPRISE: true } },
+  { feature: 'Succession Planning', plans: { FREE: false, STARTER: false, PROFESSIONAL: true, ENTERPRISE: true } },
+  { feature: 'Agentic AI', plans: { FREE: false, STARTER: false, PROFESSIONAL: true, ENTERPRISE: true } },
+  { feature: 'Custom Integrations', plans: { FREE: false, STARTER: false, PROFESSIONAL: false, ENTERPRISE: true } },
+  { feature: 'Dedicated Support', plans: { FREE: false, STARTER: false, PROFESSIONAL: false, ENTERPRISE: true } },
+];
+
+const PLAN_ORDER: PlanKey[] = ['FREE', 'STARTER', 'PROFESSIONAL', 'ENTERPRISE'];
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -230,6 +248,50 @@ export function SABillingPage() {
           value={subsLoading ? '--' : `${churnRate}%`}
           icon={<ArrowTrendingDownIcon className="h-6 w-6" />}
         />
+      </div>
+
+      {/* Plan Feature Comparison */}
+      <div className="rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 overflow-hidden">
+        <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Plan Comparison</h2>
+          <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-0.5">Features included in each subscription tier</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/50">
+                <th className="text-left px-6 py-3 font-medium text-secondary-600 dark:text-secondary-400">Feature</th>
+                {PLAN_ORDER.map((plan) => (
+                  <th key={plan} className="px-4 py-3 text-center font-medium text-secondary-600 dark:text-secondary-400">
+                    <Badge variant={PLAN_BADGE[plan].variant}>{PLAN_BADGE[plan].label}</Badge>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {PLAN_FEATURES.map((row, idx) => (
+                <tr
+                  key={row.feature}
+                  className={clsx(
+                    'border-b border-secondary-100 dark:border-secondary-700/50',
+                    idx % 2 === 0 ? 'bg-white dark:bg-secondary-800' : 'bg-secondary-50/50 dark:bg-secondary-800/30',
+                  )}
+                >
+                  <td className="px-6 py-3 font-medium text-secondary-900 dark:text-white whitespace-nowrap">{row.feature}</td>
+                  {PLAN_ORDER.map((plan) => (
+                    <td key={plan} className="px-4 py-3 text-center">
+                      {row.plans[plan] ? (
+                        <CheckCircleIcon className="h-5 w-5 text-green-500 mx-auto" />
+                      ) : (
+                        <XCircleIcon className="h-5 w-5 text-secondary-300 dark:text-secondary-600 mx-auto" />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Filter */}

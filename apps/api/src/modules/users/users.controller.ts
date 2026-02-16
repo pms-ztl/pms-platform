@@ -522,6 +522,93 @@ export class UsersController {
       next(error);
     }
   }
+
+  // ── AI Access Management ──
+
+  async toggleAiAccess(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { enabled } = req.body;
+      if (typeof enabled !== 'boolean') {
+        throw new ValidationError('enabled must be a boolean');
+      }
+
+      const result = await usersService.toggleAiAccess(
+        req.tenantId!,
+        req.user!.id,
+        req.params.id,
+        enabled,
+      );
+
+      res.json({
+        success: true,
+        data: result,
+        message: enabled ? 'AI access enabled for user' : 'AI access disabled for user',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async bulkToggleAiAccess(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userIds, enabled } = req.body;
+      if (!Array.isArray(userIds) || userIds.length === 0) {
+        throw new ValidationError('userIds must be a non-empty array');
+      }
+      if (typeof enabled !== 'boolean') {
+        throw new ValidationError('enabled must be a boolean');
+      }
+
+      const result = await usersService.bulkToggleAiAccess(
+        req.tenantId!,
+        req.user!.id,
+        userIds,
+        enabled,
+      );
+
+      res.json({
+        success: true,
+        data: result,
+        message: `AI access ${enabled ? 'enabled' : 'disabled'} for ${result.updated} users`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAiAccessStats(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const stats = await usersService.getAiAccessStats(req.tenantId!);
+      res.json({ success: true, data: stats });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateAiDelegation(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { delegateToManagers } = req.body;
+      if (typeof delegateToManagers !== 'boolean') {
+        throw new ValidationError('delegateToManagers must be a boolean');
+      }
+
+      const result = await usersService.updateAiDelegation(
+        req.tenantId!,
+        req.user!.id,
+        delegateToManagers,
+      );
+
+      res.json({
+        success: true,
+        data: result,
+        message: delegateToManagers
+          ? 'Managers can now grant AI access to their reports'
+          : 'Only admins can grant AI access',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const usersController = new UsersController();

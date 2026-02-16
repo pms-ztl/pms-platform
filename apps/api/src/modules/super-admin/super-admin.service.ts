@@ -177,6 +177,7 @@ export class SuperAdminService {
               calibration: plan === 'PROFESSIONAL' || plan === 'ENTERPRISE',
               analytics: plan !== 'FREE',
               integrations: plan === 'ENTERPRISE',
+              agenticAI: plan === 'PROFESSIONAL' || plan === 'ENTERPRISE',
             },
             limits: {
               maxUsers: licenseCount,
@@ -189,6 +190,10 @@ export class SuperAdminService {
               ssoEnabled: plan === 'ENTERPRISE',
               passwordPolicy: 'STANDARD',
               sessionTimeout: 480,
+            },
+            ai: {
+              enabled: plan === 'PROFESSIONAL' || plan === 'ENTERPRISE',
+              delegateToManagers: false,
             },
           },
         },
@@ -798,18 +803,54 @@ export class SuperAdminService {
     const tenant = await prisma.tenant.findFirst({ where: { id: tenantId, deletedAt: null } });
     if (!tenant) throw new NotFoundError('Tenant', tenantId);
 
-    await prisma.$transaction([
+    const aiEnabled = plan === 'PROFESSIONAL' || plan === 'ENTERPRISE';
+
+    // Update tenant settings features to match new plan
+    const currentSettings = (tenant.settings as Record<string, unknown>) ?? {};
+    const currentFeatures = (currentSettings.features as Record<string, unknown>) ?? {};
+    const updatedSettings = {
+      ...currentSettings,
+      features: {
+        ...currentFeatures,
+        calibration: plan === 'PROFESSIONAL' || plan === 'ENTERPRISE',
+        analytics: plan !== 'FREE',
+        integrations: plan === 'ENTERPRISE',
+        agenticAI: aiEnabled,
+      },
+    };
+
+    const operations = [
       prisma.tenant.update({
         where: { id: tenantId },
-        data: { subscriptionPlan: plan, subscriptionTier: plan.toLowerCase() },
+        data: {
+          subscriptionPlan: plan,
+          subscriptionTier: plan.toLowerCase(),
+          settings: updatedSettings as any,
+        },
       }),
       prisma.subscription.updateMany({
         where: { tenantId, status: 'ACTIVE' },
         data: { plan },
       }),
-    ]);
+    ];
 
-    auditLogger('TENANT_PLAN_UPDATED', updatedBy, tenantId, 'tenant', tenantId, { plan });
+    // On downgrade: bulk-disable AI access for all tenant users
+    if (!aiEnabled) {
+      operations.push(
+        prisma.user.updateMany({
+          where: { tenantId, aiAccessEnabled: true },
+          data: { aiAccessEnabled: false },
+        }) as any,
+      );
+    }
+
+    await prisma.$transaction(operations);
+
+    auditLogger('TENANT_PLAN_UPDATED', updatedBy, tenantId, 'tenant', tenantId, {
+      plan,
+      aiEnabled,
+      ...(aiEnabled ? {} : { aiAccessBulkDisabled: true }),
+    });
   }
 
   async createInvoice(tenantId: string, data: {

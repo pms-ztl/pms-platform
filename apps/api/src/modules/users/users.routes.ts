@@ -62,6 +62,25 @@ router.get(
   (req, res, next) => usersController.getEmployeeBreakdown(req, res, next)
 );
 
+// AI Access Management (Admin only, or Manager if delegated)
+router.get(
+  '/ai-access/stats',
+  requireRoles('HR Admin', 'Tenant Admin'),
+  (req, res, next) => usersController.getAiAccessStats(req, res, next)
+);
+
+router.put(
+  '/ai-access/bulk',
+  requireRoles('HR Admin', 'Tenant Admin'),
+  (req, res, next) => usersController.bulkToggleAiAccess(req, res, next)
+);
+
+router.put(
+  '/ai-access/delegation',
+  requireRoles('HR Admin', 'Tenant Admin'),
+  (req, res, next) => usersController.updateAiDelegation(req, res, next)
+);
+
 // Avatar upload for current user
 router.post(
   '/me/avatar',
@@ -189,6 +208,13 @@ router.post(
   '/:id/ai-avatar',
   requireRoles('HR Admin', 'Tenant Admin'),
   (req, res, next) => usersController.setAiAvatar(req, res, next)
+);
+
+// Toggle AI access for a specific user (Admin or Manager if delegated)
+router.put(
+  '/:id/ai-access',
+  requireRoles('HR Admin', 'Tenant Admin', 'Manager'),
+  (req, res, next) => usersController.toggleAiAccess(req, res, next)
 );
 
 export { router as usersRoutes };

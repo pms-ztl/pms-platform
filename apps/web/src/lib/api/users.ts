@@ -91,4 +91,20 @@ export const usersApi = {
     return api.postFormData<{ avatarUrl: string }>('/users/me/avatar', formData);
   },
   setAiAvatar: (avatarUrl: string) => api.post<{ avatarUrl: string }>('/users/me/ai-avatar', { avatarUrl }),
+  // AI Access Management
+  toggleAiAccess: (userId: string, enabled: boolean) =>
+    api.put<{ userId: string; aiAccessEnabled: boolean }>(`/users/${userId}/ai-access`, { enabled }),
+  bulkToggleAiAccess: (userIds: string[], enabled: boolean) =>
+    api.put<{ updated: number }>('/users/ai-access/bulk', { userIds, enabled }),
+  getAiAccessStats: () =>
+    api.get<{
+      plan: string;
+      aiFeatureEnabled: boolean;
+      delegateToManagers: boolean;
+      totalUsers: number;
+      aiEnabledCount: number;
+      aiEnabledUsers: Array<{ id: string; firstName: string; lastName: string; email: string; jobTitle: string | null }>;
+    }>('/users/ai-access/stats'),
+  updateAiDelegation: (delegateToManagers: boolean) =>
+    api.put<{ delegateToManagers: boolean }>('/users/ai-access/delegation', { delegateToManagers }),
 };

@@ -40,6 +40,8 @@ export interface AuthenticatedUser {
   contractType?: string;
   // Security fields
   mfaEnabled?: boolean;
+  // AI access
+  aiAccessEnabled?: boolean;
   // Populated relations (for /auth/me response)
   department?: { id: string; name: string };
   manager?: { id: string; firstName: string; lastName: string };

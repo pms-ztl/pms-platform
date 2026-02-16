@@ -160,6 +160,11 @@ export interface SATenantSettings {
     calibration: boolean;
     analytics: boolean;
     integrations: boolean;
+    agenticAI: boolean;
+  };
+  ai?: {
+    enabled: boolean;
+    delegateToManagers: boolean;
   };
   limits: {
     maxUsers: number;

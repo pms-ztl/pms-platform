@@ -5,14 +5,16 @@
 import { Router } from 'express';
 
 import { authenticate } from '../../middleware/authenticate';
+import { aiAccessGuard } from '../../middleware/ai-access-guard';
 import { asyncHandler } from '../../utils/async-handler';
 import { aiController } from './ai.controller';
 import type { AuthenticatedRequest } from '../../types';
 
 const router = Router();
 
-// All AI routes require authentication
+// All AI routes require authentication + AI access
 router.use(authenticate);
+router.use(aiAccessGuard);
 
 // Chat
 router.post('/chat', asyncHandler((req, res, next) => aiController.chat(req as AuthenticatedRequest, res, next)));

@@ -40,10 +40,12 @@ import {
   ClipboardDocumentListIcon,
   ArrowUpTrayIcon,
   KeyIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
 import { useAuthStore } from '@/store/auth';
+import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import { authApi, getAvatarUrl } from '@/lib/api';
 import { NotificationBell } from '@/components/NotificationBell';
 import { AIChatWidget } from '@/components/ai/AIChatWidget';
@@ -135,6 +137,7 @@ const adminSection: NavSection = {
     { name: 'Configuration', href: '/admin/config', icon: Cog6ToothIcon },
     { name: 'Audit Log', href: '/admin/audit', icon: DocumentMagnifyingGlassIcon },
     { name: 'Moderator', href: '/reviews/moderate', icon: ShieldCheckIcon },
+    { name: 'AI Access', href: '/admin/ai-access', icon: SparklesIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
   ],
 };
 
@@ -344,6 +347,34 @@ function SidebarContent({
   );
 }
 
+// ── AI Workspace Toggle ──────────────────────────────────────────────────
+
+function AIWorkspaceToggle() {
+  const { isAiMode, toggleAiMode } = useAIWorkspaceStore();
+
+  return (
+    <button
+      onClick={toggleAiMode}
+      className={clsx(
+        'relative flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-300',
+        isAiMode
+          ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30 ring-2 ring-purple-400/50'
+          : 'bg-secondary-100 dark:bg-white/[0.06] text-secondary-600 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-white/[0.1]',
+      )}
+      title={isAiMode ? 'Switch to PMS Workspace' : 'Switch to AI Workspace'}
+    >
+      <SparklesIcon className={clsx('h-4 w-4 transition-transform duration-300', isAiMode && 'animate-pulse')} />
+      <span className="hidden sm:inline">{isAiMode ? 'AI Mode' : 'AI'}</span>
+      {isAiMode && (
+        <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-300" />
+        </span>
+      )}
+    </button>
+  );
+}
+
 // ── Main Layout ──────────────────────────────────────────────────────────
 
 export function DashboardLayout() {
@@ -351,6 +382,7 @@ export function DashboardLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
   const { user, logout, refreshToken } = useAuthStore();
+  const { isAiMode } = useAIWorkspaceStore();
 
   const userRoles = user?.roles ?? [];
   const isAdmin = userRoles.some((r: string) => ['SUPER_ADMIN', 'HR_ADMIN', 'ADMIN'].includes(r));
@@ -465,6 +497,10 @@ export function DashboardLayout() {
             <div className="flex flex-1" />
             <div className="flex items-center gap-x-4 lg:gap-x-5">
               <NotificationBell />
+
+              {/* AI Workspace Toggle — visible only when user has AI access */}
+              {user?.aiAccessEnabled && <AIWorkspaceToggle />}
+
               <Menu as="div" className="relative">
                 <Menu.Button className="-m-1.5 flex items-center p-1.5 rounded-lg hover:bg-white/[0.04] transition-colors">
                   <span className="sr-only">Open user menu</span>
@@ -531,8 +567,8 @@ export function DashboardLayout() {
         </main>
       </div>
 
-      {/* AI Chat Widget — available on all pages */}
-      <AIChatWidget />
+      {/* AI Chat Widget — hidden when in AI workspace mode (workspace has integrated chat) */}
+      {!isAiMode && <AIChatWidget />}
     </div>
   );
 }

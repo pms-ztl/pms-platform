@@ -225,6 +225,7 @@ function FeaturesTab({
     calibration: 'Rating Calibration',
     analytics: 'Advanced Analytics',
     integrations: 'Third-party Integrations',
+    agenticAI: 'Agentic AI',
   };
 
   return (
