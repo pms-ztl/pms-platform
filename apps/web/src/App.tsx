@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 
 import { useAuthStore } from '@/store/auth';
 import { canAccess } from '@/store/auth';
@@ -8,6 +8,7 @@ import { authApi } from '@/lib/api';
 
 // Layouts
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
+import { SuperAdminLayout } from '@/components/layouts/SuperAdminLayout';
 import { AuthLayout } from '@/components/layouts/AuthLayout';
 
 // Pages
@@ -53,6 +54,29 @@ import { GoalAlignmentPage } from '@/pages/goals/GoalAlignmentPage';
 import { CareerPathPage } from '@/pages/career/CareerPathPage';
 import { ManagerDashboardPage } from '@/pages/manager/ManagerDashboardPage';
 import { LeaderboardPage } from '@/pages/leaderboard/LeaderboardPage';
+import { SetPasswordPage } from '@/pages/auth/SetPasswordPage';
+import { ExcelUploadPage } from '@/pages/ExcelUploadPage';
+import { LicenseDashboardPage } from '@/pages/admin/LicenseDashboardPage';
+import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
+
+// Super Admin Pages (lazy loaded for code splitting)
+const SADashboardPage = lazy(() => import('@/pages/super-admin/SADashboardPage').then(m => ({ default: m.SADashboardPage })));
+const SATenantsPage = lazy(() => import('@/pages/super-admin/SATenantsPage').then(m => ({ default: m.SATenantsPage })));
+const SATenantDetailPage = lazy(() => import('@/pages/super-admin/SATenantDetailPage').then(m => ({ default: m.SATenantDetailPage })));
+const SAUsersPage = lazy(() => import('@/pages/super-admin/SAUsersPage').then(m => ({ default: m.SAUsersPage })));
+const SABillingPage = lazy(() => import('@/pages/super-admin/SABillingPage').then(m => ({ default: m.SABillingPage })));
+const SAAuditPage = lazy(() => import('@/pages/super-admin/SAAuditPage').then(m => ({ default: m.SAAuditPage })));
+const SASecurityPage = lazy(() => import('@/pages/super-admin/SASecurityPage').then(m => ({ default: m.SASecurityPage })));
+const SASystemPage = lazy(() => import('@/pages/super-admin/SASystemPage').then(m => ({ default: m.SASystemPage })));
+
+// Suspense fallback for lazy-loaded pages
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-600"></div>
+    </div>
+  );
+}
 
 // Protected route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -101,7 +125,7 @@ function RoleGuard({ children, path }: { children: React.ReactNode; path: string
 
 // Public route wrapper (redirects if already authenticated)
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const { isAuthenticated, isLoading, user } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -112,10 +136,60 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (isAuthenticated) {
+    // Route Super Admin to their dedicated dashboard
+    if (user?.roles.includes('SUPER_ADMIN')) {
+      return <Navigate to="/sa/dashboard" replace />;
+    }
     return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
+}
+
+// Super Admin route guard - only allows SUPER_ADMIN role
+function SuperAdminGuard({ children }: { children: React.ReactNode }) {
+  const { user, isAuthenticated, isLoading } = useAuthStore();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!user?.roles.includes('SUPER_ADMIN')) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-center bg-gray-50 dark:bg-gray-900">
+        <div className="rounded-full bg-red-100 dark:bg-red-900/30 p-4 mb-4">
+          <svg className="h-12 w-12 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+          </svg>
+        </div>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Access Denied</h2>
+        <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-md">
+          Super Admin access is required to view this page.
+        </p>
+        <Link to="/dashboard" className="mt-6 inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium hover:underline">
+          &larr; Back to Dashboard
+        </Link>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
+
+// Smart redirect: routes users to the correct dashboard based on role
+function SmartRedirect() {
+  const { user, isAuthenticated } = useAuthStore();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (user?.roles.includes('SUPER_ADMIN')) return <Navigate to="/sa/dashboard" replace />;
+  return <Navigate to="/dashboard" replace />;
 }
 
 function App() {
@@ -179,6 +253,14 @@ function App() {
             </PublicRoute>
           }
         />
+        <Route
+          path="/set-password"
+          element={
+            <AuthLayout>
+              <SetPasswordPage />
+            </AuthLayout>
+          }
+        />
 
         {/* Protected routes */}
         <Route
@@ -230,10 +312,34 @@ function App() {
           <Route path="career" element={<CareerPathPage />} />
           <Route path="manager-dashboard" element={<RoleGuard path="/manager-dashboard"><ManagerDashboardPage /></RoleGuard>} />
           <Route path="leaderboard" element={<LeaderboardPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+          <Route path="admin/licenses" element={<RoleGuard path="/admin/licenses"><LicenseDashboardPage /></RoleGuard>} />
+          <Route path="admin/excel-upload" element={<RoleGuard path="/admin/excel-upload"><ExcelUploadPage /></RoleGuard>} />
         </Route>
 
-        {/* Catch all */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        {/* Super Admin routes - completely separate layout */}
+        <Route
+          path="/sa"
+          element={
+            <SuperAdminGuard>
+              <SuperAdminLayout />
+            </SuperAdminGuard>
+          }
+        >
+          <Route index element={<Navigate to="/sa/dashboard" replace />} />
+          <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><SADashboardPage /></Suspense>} />
+          <Route path="tenants" element={<Suspense fallback={<PageLoader />}><SATenantsPage /></Suspense>} />
+          <Route path="tenants/:id" element={<Suspense fallback={<PageLoader />}><SATenantDetailPage /></Suspense>} />
+          <Route path="users" element={<Suspense fallback={<PageLoader />}><SAUsersPage /></Suspense>} />
+          <Route path="billing" element={<Suspense fallback={<PageLoader />}><SABillingPage /></Suspense>} />
+          <Route path="audit" element={<Suspense fallback={<PageLoader />}><SAAuditPage /></Suspense>} />
+          <Route path="security" element={<Suspense fallback={<PageLoader />}><SASecurityPage /></Suspense>} />
+          <Route path="system" element={<Suspense fallback={<PageLoader />}><SASystemPage /></Suspense>} />
+          <Route path="settings" element={<Suspense fallback={<PageLoader />}><SASystemPage /></Suspense>} />
+        </Route>
+
+        {/* Catch all - route based on role */}
+        <Route path="*" element={<SmartRedirect />} />
       </Routes>
     </BrowserRouter>
   );

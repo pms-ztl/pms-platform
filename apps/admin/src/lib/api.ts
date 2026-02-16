@@ -33,7 +33,7 @@ export interface Tenant {
   name: string;
   slug: string;
   domain?: string;
-  status: 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
+  status: 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED' | 'EXPIRED';
   plan: 'FREE' | 'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE';
   settings: TenantSettings;
   createdAt: string;
@@ -41,6 +41,19 @@ export interface Tenant {
   userCount: number;
   storageUsed: number;
   monthlyActiveUsers: number;
+  maxLevel: number;
+  licenseCount: number;
+  maxUsers: number;
+  isActive: boolean;
+  subscriptionExpiresAt?: string;
+  ceoEmail?: string;
+  superAdminCanView: boolean;
+  designatedManager?: {
+    id: string;
+    email: string;
+    name: string;
+    isActive: boolean;
+  };
 }
 
 export interface TenantSettings {
@@ -109,6 +122,12 @@ export interface SystemMetrics {
   errorRate: number;
   avgResponseTime: number;
   uptime: number;
+}
+
+export interface DashboardStats extends SystemMetrics {
+  planDistribution: Array<{ name: string; value: number }>;
+  health: Record<string, string>;
+  healthStatus: string;
 }
 
 export interface BillingInfo {
@@ -202,6 +221,10 @@ export const tenantsApi = {
   updateSettings: (id: string, settings: Partial<TenantSettings>) =>
     api.put<Tenant>(`/tenants/${id}/settings`, settings),
   exportData: (id: string) => api.post<{ downloadUrl: string }>(`/tenants/${id}/export`),
+  getDesignatedManager: (id: string) =>
+    api.get<{ id: string; email: string; firstName: string; lastName: string; isActive: boolean } | null>(`/tenants/${id}/designated-manager`),
+  assignDesignatedManager: (id: string, managerUserId: string) =>
+    api.post(`/tenants/${id}/designated-manager`, { managerUserId }),
 };
 
 // Users API
@@ -221,6 +244,7 @@ export const usersApi = {
 
 // System API
 export const systemApi = {
+  getDashboardStats: () => api.get<DashboardStats>('/system/dashboard'),
   getMetrics: () => api.get<SystemMetrics>('/system/metrics'),
   getConfig: () => api.get<SystemConfig>('/system/config'),
   updateConfig: (config: Partial<SystemConfig>) => api.put<SystemConfig>('/system/config', config),

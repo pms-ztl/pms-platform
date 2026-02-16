@@ -87,7 +87,8 @@ export class EmailService {
     to: string,
     subject: string,
     html: string,
-    text?: string
+    text?: string,
+    options?: { replyTo?: string }
   ): Promise<boolean> {
     if (!this.transporter) {
       // Try to create transporter if not yet initialized
@@ -108,6 +109,7 @@ export class EmailService {
           subject: `[PMS] ${subject}`,
           html,
           text: text || subject,
+          ...(options?.replyTo && { replyTo: options.replyTo }),
         });
 
         logger.info('Email sent successfully', {

@@ -30,7 +30,7 @@ export interface DisclosureLevel {
   isDefault?: boolean;
 }
 
-export interface TooltipConfig {
+export interface DisclosureTooltipConfig {
   content: React.ReactNode;
   placement?: 'top' | 'bottom' | 'left' | 'right';
   delay?: number;

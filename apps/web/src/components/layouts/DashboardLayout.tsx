@@ -38,12 +38,15 @@ import {
   RectangleGroupIcon,
   MapIcon,
   ClipboardDocumentListIcon,
+  ArrowUpTrayIcon,
+  KeyIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
 import { useAuthStore } from '@/store/auth';
 import { authApi, getAvatarUrl } from '@/lib/api';
 import { NotificationBell } from '@/components/NotificationBell';
+import { AIChatWidget } from '@/components/ai/AIChatWidget';
 import { LiveIndicator } from '@/components/ui/ConnectionStatus';
 import { ConnectionStatus } from '@/components/ui/ConnectionStatus';
 
@@ -127,6 +130,8 @@ const adminSection: NavSection = {
   collapsible: true,
   items: [
     { name: 'User Management', href: '/admin/users', icon: UserGroupIcon },
+    { name: 'License & Seats', href: '/admin/licenses', icon: KeyIcon },
+    { name: 'Excel Upload', href: '/admin/excel-upload', icon: ArrowUpTrayIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
     { name: 'Configuration', href: '/admin/config', icon: Cog6ToothIcon },
     { name: 'Audit Log', href: '/admin/audit', icon: DocumentMagnifyingGlassIcon },
     { name: 'Moderator', href: '/reviews/moderate', icon: ShieldCheckIcon },
@@ -525,6 +530,9 @@ export function DashboardLayout() {
           </div>
         </main>
       </div>
+
+      {/* AI Chat Widget — available on all pages */}
+      <AIChatWidget />
     </div>
   );
 }

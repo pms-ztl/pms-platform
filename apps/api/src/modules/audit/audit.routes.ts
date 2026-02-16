@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/authenticate';
 import { authorize } from '../../middleware/authorize';
+import { SUPER_ADMIN_ROLES } from '../../utils/roles';
 import { auditController } from './audit.controller';
 
 const router = Router();
@@ -48,7 +49,7 @@ router.get(
 // DELETE /purge - Purge old audit events (SUPER_ADMIN only)
 router.delete(
   '/purge',
-  authorize({ roles: ['SUPER_ADMIN', 'Super Admin'] }),
+  authorize({ roles: [...SUPER_ADMIN_ROLES] }),
   (req, res, next) => auditController.purge(req as any, res, next)
 );
 

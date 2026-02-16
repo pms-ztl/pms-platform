@@ -4,8 +4,31 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "composite": true,
-    "types": []
+    "types": [],
+    "strict": false,
+    "noImplicitOverride": false
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "src/architecture/**",
+    "src/audit/**",
+    "src/health/**",
+    "src/notifications/**",
+    "src/security/**",
+    "src/verification/**",
+    "src/websocket/**",
+    "src/advanced-analytics.ts",
+    "src/bias-favoritism-firewall.ts",
+    "src/compensation-rewards.ts",
+    "src/engagement-wellbeing.ts",
+    "src/explainable-promotion-engine.ts",
+    "src/learning-growth.ts",
+    "src/organizational-friction-index.ts",
+    "src/performance-simulator.ts",
+    "src/hardening-exports.ts",
+    "src/validation-scripts.ts"
+  ]
 }

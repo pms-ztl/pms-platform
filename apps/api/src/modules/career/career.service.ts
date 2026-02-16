@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { prisma } from '@pms/database';
+import { MS_PER_DAY } from '../../utils/constants';
 
 class CareerService {
   /**
@@ -43,7 +44,7 @@ class CareerService {
     const LEVEL_MAP: Record<string, number> = { BEGINNER: 1, INTERMEDIATE: 2, ADVANCED: 3, EXPERT: 4 };
 
     const tenure = user.hireDate
-      ? `${Math.floor((Date.now() - new Date(user.hireDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000))}y ${Math.floor(((Date.now() - new Date(user.hireDate).getTime()) / (30.44 * 24 * 60 * 60 * 1000)) % 12)}m`
+      ? `${Math.floor((Date.now() - new Date(user.hireDate).getTime()) / (365.25 * MS_PER_DAY))}y ${Math.floor(((Date.now() - new Date(user.hireDate).getTime()) / (30.44 * MS_PER_DAY)) % 12)}m`
       : 'N/A';
 
     // Get career paths for the tenant

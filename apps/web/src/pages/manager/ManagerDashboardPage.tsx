@@ -33,6 +33,7 @@ import {
   oneOnOnesApi,
   pipApi,
   performanceMathApi,
+  licenseApi,
   type User,
   type Goal,
   type Review,
@@ -194,6 +195,26 @@ export function ManagerDashboardPage() {
     enabled: !!user?.id,
     staleTime: 120_000,
     retry: 1,
+  });
+
+  const { data: licenseInfo } = useQuery({
+    queryKey: ['manager-license-info'],
+    queryFn: () => licenseApi.getUsage(),
+    staleTime: 120_000,
+  });
+
+  const { data: recentUploads } = useQuery({
+    queryKey: ['manager-upload-history'],
+    queryFn: async () => {
+      const token = useAuthStore.getState().accessToken;
+      const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+      const res = await fetch(`${API_BASE_URL}/excel-upload/history?limit=3`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      return data.data?.uploads ?? data.data ?? [];
+    },
+    staleTime: 60_000,
   });
 
   // ── Derived values ──────────────────────────────────────────────────────
@@ -570,6 +591,91 @@ export function ManagerDashboardPage() {
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
               Performance plans
             </p>
+          </div>
+        </SectionCard>
+      </div>
+
+      {/* ══════════════════════════ License & Uploads Row ══════════════════════════ */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* License Monitor Widget */}
+        {licenseInfo && (
+          <SectionCard>
+            <div className="p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 shadow">
+                  <ChartBarIcon className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">
+                  License Usage
+                </span>
+                {(licenseInfo.usagePercent ?? 0) >= 90 && (
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                    (licenseInfo.usagePercent ?? 0) >= 100
+                      ? 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400'
+                      : 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400'
+                  }`}>
+                    {(licenseInfo.usagePercent ?? 0) >= 100 ? 'Full' : 'Near Limit'}
+                  </span>
+                )}
+              </div>
+              <p className="text-2xl font-bold text-secondary-900 dark:text-white">
+                {licenseInfo.activeUsers}/{licenseInfo.licenseCount}
+              </p>
+              <div className="mt-2 h-2 bg-secondary-100 dark:bg-secondary-700 rounded-full overflow-hidden">
+                <div
+                  className={clsx(
+                    'h-full rounded-full transition-all duration-500',
+                    (licenseInfo.usagePercent ?? 0) >= 100 ? 'bg-red-500' :
+                    (licenseInfo.usagePercent ?? 0) >= 90 ? 'bg-yellow-500' : 'bg-emerald-500'
+                  )}
+                  style={{ width: `${Math.min(licenseInfo.usagePercent ?? 0, 100)}%` }}
+                />
+              </div>
+              <p className="text-xs text-secondary-400 mt-1">{licenseInfo.remaining} seats available</p>
+            </div>
+          </SectionCard>
+        )}
+
+        {/* Recent Uploads Widget */}
+        <SectionCard>
+          <div className="p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 shadow">
+                  <DocumentTextIcon className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">
+                  Recent Uploads
+                </span>
+              </div>
+              <Link
+                to="/excel-upload"
+                className="text-xs text-primary-600 dark:text-primary-400 hover:underline"
+              >
+                Upload New
+              </Link>
+            </div>
+            {Array.isArray(recentUploads) && recentUploads.length > 0 ? (
+              <div className="space-y-2">
+                {recentUploads.map((upload: any) => (
+                  <div key={upload.id} className="flex items-center justify-between py-1.5 border-b border-secondary-100 dark:border-secondary-800 last:border-0">
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{upload.fileName}</p>
+                      <p className="text-xs text-secondary-400">{new Date(upload.createdAt).toLocaleDateString()}</p>
+                    </div>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ml-2 ${
+                      upload.status === 'COMPLETED' ? 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400' :
+                      upload.status === 'FAILED' ? 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400' :
+                      'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400'
+                    }`}>
+                      {upload.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-secondary-400 dark:text-secondary-500">No recent uploads</p>
+            )}
           </div>
         </SectionCard>
       </div>

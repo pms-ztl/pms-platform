@@ -1,6 +1,7 @@
 // @ts-nocheck
 // TODO: Fix type mismatches with Prisma schema
-import { PrismaClient, IntegrationStatus, SyncJobStatus } from '@prisma/client';
+import { prisma } from '@pms/database';
+import { IntegrationStatus, SyncJobStatus } from '@prisma/client';
 import { logger, auditLogger } from '../../utils/logger';
 import { cacheGet, cacheSet, cacheDelete } from '../../utils/redis';
 import crypto from 'crypto';
@@ -21,8 +22,6 @@ const IntegrationType = {
 } as const;
 type IntegrationType = (typeof IntegrationType)[keyof typeof IntegrationType];
 type SyncDirection = 'INBOUND' | 'OUTBOUND' | 'BIDIRECTIONAL';
-
-const prisma = new PrismaClient();
 
 // Encryption key for credentials (should be from env in production)
 const ENCRYPTION_KEY = process.env.INTEGRATION_ENCRYPTION_KEY || 'default-key-change-in-prod-32ch';

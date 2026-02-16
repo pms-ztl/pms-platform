@@ -6,9 +6,8 @@
  * for identifying high-potential employees for promotions and succession planning.
  */
 
-import { PrismaClient, Prisma } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma, Prisma } from '@pms/database';
+import { MS_PER_DAY, DAYS, INACTIVE_USER_THRESHOLD_DAYS } from '../../utils/constants';
 
 export interface PromotionRecommendationInput {
   tenantId: string;
@@ -133,7 +132,7 @@ export class PromotionSuccessionService {
         successProbability,
         recommendationType: 'PROMOTION',
         modelVersion: 'v1.0',
-        expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90 days
+        expiresAt: new Date(Date.now() + DAYS(90)) // 90 days
       }
     });
 
@@ -254,7 +253,7 @@ export class PromotionSuccessionService {
   private calculateTenureScore(hireDate: Date | null): number {
     if (!hireDate) return 50;
 
-    const monthsOfTenure = Math.floor((Date.now() - hireDate.getTime()) / (1000 * 60 * 60 * 24 * 30));
+    const monthsOfTenure = Math.floor((Date.now() - hireDate.getTime()) / DAYS(30));
 
     // Scoring curve: optimal at 24-60 months, lower for too short or too long
     if (monthsOfTenure < 12) return 30; // Too new
@@ -584,7 +583,7 @@ export class PromotionSuccessionService {
         successors,
         emergencyBackup,
         benchStrength: readyNowCount,
-        nextReviewDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90 days
+        nextReviewDate: new Date(Date.now() + DAYS(90)) // 90 days
       }
     });
 

@@ -102,7 +102,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (context.onChange && value) {
-        context.onChange(value);
+        context.onChange(String(value));
       }
       if (onChange) {
         onChange(e);

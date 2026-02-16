@@ -3,6 +3,7 @@ import { Queue, Worker, Job, QueueEvents } from 'bullmq';
 import { Redis } from 'ioredis';
 import { prisma } from '@pms/database';
 import { logger } from '../../utils/logger';
+import { DAYS } from '../../utils/constants';
 import { reportGenerationService, ReportType } from './report-generation.service';
 import { reportExportService, ExportFormat } from './report-export.service';
 import { dataAggregationService, PeriodType, AggregationType } from './data-aggregation.service';
@@ -552,7 +553,7 @@ export class JobQueueService {
   /**
    * Cleanup old completed jobs
    */
-  async cleanupCompletedJobs(olderThan: number = 7 * 24 * 60 * 60 * 1000): Promise<void> {
+  async cleanupCompletedJobs(olderThan: number = DAYS(7)): Promise<void> {
     logger.info('Cleaning up completed jobs', { olderThan });
 
     const queues = [this.reportQueue, this.aggregationQueue, this.exportQueue, this.notificationQueue];

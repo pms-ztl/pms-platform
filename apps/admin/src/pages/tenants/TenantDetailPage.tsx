@@ -118,8 +118,31 @@ export default function TenantDetailPage() {
             <div>
               <p className="text-2xl font-semibold text-gray-900">
                 {m?.users || t.userCount}
+                <span className="text-sm font-normal text-gray-400"> / {t.licenseCount || '~'}</span>
               </p>
-              <p className="text-sm text-gray-500">Users</p>
+              <p className="text-sm text-gray-500">Active Users / Licenses</p>
+              {t.licenseCount > 0 && (
+                <div className="w-full h-1.5 bg-gray-100 rounded-full mt-1">
+                  <div
+                    className={clsx('h-1.5 rounded-full',
+                      (t.userCount / t.licenseCount) * 100 >= 90 ? 'bg-red-500' :
+                      (t.userCount / t.licenseCount) * 100 >= 70 ? 'bg-amber-500' : 'bg-emerald-500'
+                    )}
+                    style={{ width: `${Math.min(Math.round((t.userCount / t.licenseCount) * 100), 100)}%` }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="card p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-indigo-100 rounded-lg">
+              <ChartBarIcon className="h-5 w-5 text-indigo-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-semibold text-gray-900">L1-L{t.maxLevel || 16}</p>
+              <p className="text-sm text-gray-500">Org Levels</p>
             </div>
           </div>
         </div>
@@ -145,18 +168,59 @@ export default function TenantDetailPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Subscription & Manager Info */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card p-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-orange-100 rounded-lg">
-              <CircleStackIcon className="h-5 w-5 text-orange-600" />
+          <h3 className="text-sm font-medium text-gray-500 mb-3">Subscription Details</h3>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Plan</span>
+              <span className="text-sm font-medium text-gray-900">{t.plan}</span>
             </div>
-            <div>
-              <p className="text-2xl font-semibold text-gray-900">
-                {((m?.storage || t.storageUsed) / 1024 / 1024 / 1024).toFixed(1)} GB
-              </p>
-              <p className="text-sm text-gray-500">Storage</p>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Expires</span>
+              <span className="text-sm font-medium text-gray-900">
+                {t.subscriptionExpiresAt ? format(new Date(t.subscriptionExpiresAt), 'MMM d, yyyy') : 'No expiry set'}
+              </span>
             </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-gray-600">Super Admin Visibility</span>
+              <span className={clsx('text-sm font-medium', t.superAdminCanView ? 'text-emerald-600' : 'text-gray-400')}>
+                {t.superAdminCanView ? 'Allowed' : 'Denied'}
+              </span>
+            </div>
+            {t.ceoEmail && (
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">CEO Email</span>
+                <span className="text-sm font-medium text-gray-900">{t.ceoEmail}</span>
+              </div>
+            )}
           </div>
+        </div>
+        <div className="card p-4">
+          <h3 className="text-sm font-medium text-gray-500 mb-3">Designated Manager</h3>
+          {t.designatedManager ? (
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Name</span>
+                <span className="text-sm font-medium text-gray-900">{t.designatedManager.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Email</span>
+                <span className="text-sm font-medium text-gray-900">{t.designatedManager.email}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Status</span>
+                <span className={clsx('text-sm font-medium', t.designatedManager.isActive ? 'text-emerald-600' : 'text-red-600')}>
+                  {t.designatedManager.isActive ? 'Active' : 'Inactive'}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-400">No designated manager assigned yet</p>
+          )}
         </div>
       </div>
 
@@ -209,28 +273,22 @@ export default function TenantDetailPage() {
             </div>
 
             <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Plan Limits</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">License & Plan Limits</h3>
               <div className="grid grid-cols-3 gap-6">
                 <div>
-                  <p className="text-sm text-gray-500">Max Users</p>
-                  <p className="text-lg font-semibold text-gray-900">
-                    {t.settings.limits.maxUsers === -1
-                      ? 'Unlimited'
-                      : t.settings.limits.maxUsers}
-                  </p>
+                  <p className="text-sm text-gray-500">Licensed Seats</p>
+                  <p className="text-lg font-semibold text-gray-900">{t.licenseCount || 0}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Max Storage</p>
-                  <p className="text-lg font-semibold text-gray-900">
-                    {t.settings.limits.maxStorageGb} GB
-                  </p>
+                  <p className="text-sm text-gray-500">Max Org Levels</p>
+                  <p className="text-lg font-semibold text-gray-900">L1-L{t.maxLevel || 16}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Max Integrations</p>
+                  <p className="text-sm text-gray-500">Max Users (Legacy)</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {t.settings.limits.maxIntegrations === -1
+                    {t.settings?.limits?.maxUsers === -1
                       ? 'Unlimited'
-                      : t.settings.limits.maxIntegrations}
+                      : t.settings?.limits?.maxUsers ?? t.maxUsers}
                   </p>
                 </div>
               </div>

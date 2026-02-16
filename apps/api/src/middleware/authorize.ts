@@ -3,6 +3,8 @@ import type { Response, NextFunction, RequestHandler } from 'express';
 import type { AuthenticatedRequest } from '../types';
 import { AuthorizationError } from '../utils/errors';
 import { prisma } from '../lib/prisma';
+import { auditLogger } from '../utils/logger';
+import { ADMIN_ROLES, ALL_ROLE_ALIASES } from '../utils/roles';
 
 type PermissionCheck = {
   resource?: string;
@@ -84,9 +86,8 @@ export function requireRoles(...roles: string[]): RequestHandler {
         throw new AuthorizationError('User not authenticated');
       }
 
-      // Super admin bypass - check all possible super admin role names
-      const superAdminAliases = ['Super Admin', 'SUPER_ADMIN', 'ADMIN', 'Tenant Admin', 'TENANT_ADMIN'];
-      if (superAdminAliases.some(alias => user.roles.includes(alias))) {
+      // Super admin bypass - check all possible admin role names
+      if ((ADMIN_ROLES as readonly string[]).some(alias => user.roles.includes(alias))) {
         next();
         return;
       }
@@ -373,12 +374,16 @@ export async function checkResourceAccessAsync(
 ): Promise<boolean> {
   // Tenant isolation
   if (resource.tenantId !== user.tenantId) {
+    auditLogger('CROSS_TENANT_ACCESS_BLOCKED', user.id, user.tenantId, 'security', resource.tenantId ?? 'unknown', {
+      attemptedTenantId: resource.tenantId,
+      userTenantId: user.tenantId,
+      requiredScope,
+    });
     return false;
   }
 
   // Super admin bypass - check all possible admin role names
-  const adminAliases = ['Super Admin', 'SUPER_ADMIN', 'Tenant Admin', 'TENANT_ADMIN', 'ADMIN'];
-  if (adminAliases.some(alias => user.roles.includes(alias))) {
+  if ((ADMIN_ROLES as readonly string[]).some(alias => user.roles.includes(alias))) {
     return true;
   }
 
@@ -506,12 +511,16 @@ export function checkResourceAccess(
 ): boolean {
   // Tenant isolation
   if (resource.tenantId !== user.tenantId) {
+    auditLogger('CROSS_TENANT_ACCESS_BLOCKED', user.id, user.tenantId, 'security', resource.tenantId ?? 'unknown', {
+      attemptedTenantId: resource.tenantId,
+      userTenantId: user.tenantId,
+      requiredScope,
+    });
     return false;
   }
 
   // Super admin bypass - check all possible admin role names
-  const adminAliases = ['Super Admin', 'SUPER_ADMIN', 'Tenant Admin', 'TENANT_ADMIN', 'ADMIN'];
-  if (adminAliases.some(alias => user.roles.includes(alias))) {
+  if ((ADMIN_ROLES as readonly string[]).some(alias => user.roles.includes(alias))) {
     return true;
   }
 

@@ -12,6 +12,7 @@ import {
   standardRateLimiter,
   authRateLimiter,
   socketEmitMiddleware,
+  subscriptionGuard,
 } from './middleware';
 import { authRoutes } from './modules/auth';
 import { goalsRoutes } from './modules/goals';
@@ -40,6 +41,9 @@ import { complianceRoutes } from './modules/compliance';
 import { announcementRoutes } from './modules/announcements';
 import { leaderboardRoutes } from './modules/leaderboard';
 import { careerRoutes } from './modules/career';
+import { superAdminRoutes } from './modules/super-admin';
+import { excelUploadRoutes } from './modules/excel-upload';
+import { aiRoutes } from './modules/ai';
 import { prisma } from '@pms/database';
 import { getRedisClient } from './utils/redis';
 import { logger } from './utils/logger';
@@ -163,6 +167,9 @@ export function createApp(): Express {
   // Real-time socket emit on mutations
   apiRouter.use(socketEmitMiddleware);
 
+  // Subscription enforcement - blocks write operations for expired/suspended tenants
+  apiRouter.use(subscriptionGuard());
+
   // Auth routes with stricter rate limiting
   apiRouter.use('/auth', authRateLimiter, authRoutes);
 
@@ -193,9 +200,14 @@ export function createApp(): Express {
   apiRouter.use('/announcements', standardRateLimiter, announcementRoutes);
   apiRouter.use('/leaderboard', standardRateLimiter, leaderboardRoutes);
   apiRouter.use('/career', standardRateLimiter, careerRoutes);
+  apiRouter.use('/excel-upload', standardRateLimiter, excelUploadRoutes);
+  apiRouter.use('/ai', standardRateLimiter, aiRoutes);
 
   // Mount API routes
   app.use('/api/v1', apiRouter);
+
+  // Super Admin routes (separate from tenant API)
+  app.use('/api/admin', standardRateLimiter, superAdminRoutes);
 
   // API documentation redirect
   app.get('/api', (_req, res) => {

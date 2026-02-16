@@ -1262,7 +1262,7 @@ export class SilentContributionDetectionService {
       }
     });
 
-    const avgGapScore = gapScores.reduce((a, b) => a + b, 0) / gapScores.length;
+    const avgGapScore = gapScores.reduce((a: number, b: number) => a + b, 0) / gapScores.length;
 
     // Calculate enabling ratio
     const enablingContributions = profiles.reduce((sum, p) =>

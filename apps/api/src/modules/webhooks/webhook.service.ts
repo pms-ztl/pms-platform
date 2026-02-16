@@ -152,7 +152,9 @@ class WebhookService {
           `Webhook delivery to ${url} failed (attempt ${attempt}/${maxAttempts}), retrying in ${delay}ms`,
         );
         setTimeout(() => {
-          this.deliver(integration, event, attempt + 1, maxAttempts).catch(() => {});
+          this.deliver(integration, event, attempt + 1, maxAttempts).catch((retryErr) => {
+            logger.error(`Webhook retry delivery failed`, { url, attempt: attempt + 1, error: (retryErr as Error).message });
+          });
         }, delay);
       } else {
         logger.error(

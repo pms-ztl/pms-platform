@@ -6,6 +6,111 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Starting database seed...');
 
+  // ========================================================================
+  // PLATFORM TENANT + SUPER ADMIN (Multi-tenant SaaS foundation)
+  // ========================================================================
+
+  const platformTenant = await prisma.tenant.upsert({
+    where: { slug: 'platform' },
+    update: {},
+    create: {
+      name: 'PMS Platform',
+      slug: 'platform',
+      domain: null,
+      subscriptionTier: 'enterprise',
+      subscriptionPlan: 'ENTERPRISE',
+      subscriptionStatus: 'ACTIVE',
+      maxUsers: 999999,
+      licenseCount: 999999,
+      maxLevel: 16,
+      isActive: true,
+      settings: {
+        features: {
+          goals: true,
+          reviews: true,
+          feedback: true,
+          calibration: true,
+          analytics: true,
+          integrations: true,
+        },
+        limits: { maxUsers: -1, maxStorageGb: -1, maxIntegrations: -1 },
+        branding: {},
+        security: {
+          mfaRequired: false,
+          ssoEnabled: true,
+          passwordPolicy: 'STRONG',
+          sessionTimeout: 480,
+        },
+      },
+    },
+  });
+  console.log('✅ Platform tenant created:', platformTenant.id);
+
+  // Create Super Admin role
+  const superAdminRolePlatform = await prisma.role.upsert({
+    where: { tenantId_name: { tenantId: platformTenant.id, name: 'Super Admin' } },
+    update: {},
+    create: {
+      tenantId: platformTenant.id,
+      name: 'Super Admin',
+      description: 'Platform owner with full system access',
+      permissions: ['*:manage:all'],
+      isSystem: true,
+    },
+  });
+
+  // Create System Admin role
+  await prisma.role.upsert({
+    where: { tenantId_name: { tenantId: platformTenant.id, name: 'System Admin' } },
+    update: {},
+    create: {
+      tenantId: platformTenant.id,
+      name: 'System Admin',
+      description: 'System administrator with platform management access',
+      permissions: ['*:manage:all'],
+      isSystem: true,
+    },
+  });
+
+  // Create Super Admin user
+  const superAdminEmail = process.env.SUPER_ADMIN_EMAIL || 'admin@pms-platform.com';
+  const superAdminPassword = process.env.SUPER_ADMIN_PASSWORD || 'SuperAdmin@123';
+  const saPasswordHash = await bcrypt.hash(superAdminPassword, 12);
+
+  const existingSuperAdmin = await prisma.user.findFirst({
+    where: { email: superAdminEmail, tenantId: platformTenant.id },
+  });
+
+  if (!existingSuperAdmin) {
+    const superAdminUser = await prisma.user.create({
+      data: {
+        tenantId: platformTenant.id,
+        email: superAdminEmail,
+        firstName: 'Platform',
+        lastName: 'Admin',
+        passwordHash: saPasswordHash,
+        isActive: true,
+        emailVerified: true,
+        level: 16,
+      },
+    });
+
+    await prisma.userRole.create({
+      data: {
+        userId: superAdminUser.id,
+        roleId: superAdminRolePlatform.id,
+      },
+    });
+
+    console.log(`✅ Super Admin created: ${superAdminEmail} / ${superAdminPassword}`);
+  } else {
+    console.log(`ℹ️ Super Admin already exists: ${superAdminEmail}`);
+  }
+
+  // ========================================================================
+  // DEMO COMPANY TENANT (existing seed)
+  // ========================================================================
+
   // Create a demo tenant
   const tenant = await prisma.tenant.upsert({
     where: { slug: 'demo-company' },
@@ -27,7 +132,12 @@ async function main() {
         },
       },
       subscriptionTier: 'enterprise',
+      subscriptionPlan: 'ENTERPRISE',
+      subscriptionStatus: 'ACTIVE',
+      subscriptionExpiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
       maxUsers: 1000,
+      licenseCount: 100,
+      maxLevel: 16,
     },
   });
 
@@ -726,6 +836,7 @@ async function main() {
 
   await prisma.notification.create({
     data: {
+      tenantId: tenant.id,
       userId: sanjayUser.id,
       type: 'REVIEW_ASSIGNED',
       title: 'Performance Review Assigned',
@@ -741,6 +852,7 @@ async function main() {
 
   await prisma.notification.create({
     data: {
+      tenantId: tenant.id,
       userId: sanjayUser.id,
       type: 'FEEDBACK_RECEIVED',
       title: 'New Feedback Received',
@@ -1580,8 +1692,12 @@ async function main() {
 
   // Clean up existing data for idempotent re-seeding (cascading FKs)
   await prisma.technicalSkillAssessment.deleteMany({ where: { tenantId: tenant.id } });
-  await prisma.$executeRawUnsafe(`DELETE FROM leadership_competency_scores WHERE tenant_id = '${tenant.id}'`).catch(() => {});
-  await prisma.$executeRawUnsafe(`DELETE FROM behavioral_competency_scores WHERE tenant_id = '${tenant.id}'`).catch(() => {});
+  await prisma.$executeRawUnsafe(`DELETE FROM leadership_competency_scores WHERE tenant_id = '${tenant.id}'`).catch((err: unknown) => {
+    console.warn('leadership_competency_scores cleanup skipped (table may not exist)', (err as Error).message);
+  });
+  await prisma.$executeRawUnsafe(`DELETE FROM behavioral_competency_scores WHERE tenant_id = '${tenant.id}'`).catch((err: unknown) => {
+    console.warn('behavioral_competency_scores cleanup skipped (table may not exist)', (err as Error).message);
+  });
   await prisma.skillCategory.deleteMany({ where: { tenantId: tenant.id } });
 
   const technicalSkillCat = await prisma.skillCategory.create({

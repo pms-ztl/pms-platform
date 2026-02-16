@@ -518,6 +518,7 @@ export class FeedbackService {
     await prisma.notification.create({
       data: {
         userId: input.fromUserId,
+        tenantId,
         type: 'FEEDBACK_REQUEST',
         title: 'Feedback Requested',
         body: input.message ?? 'Someone has requested your feedback',

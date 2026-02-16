@@ -11,6 +11,7 @@ router.post('/mfa/verify', (req, res, next) => authController.verifyMfa(req, res
 router.post('/refresh', (req, res, next) => authController.refreshToken(req, res, next));
 router.post('/password/forgot', (req, res, next) => authController.initiatePasswordReset(req, res, next));
 router.post('/password/reset', (req, res, next) => authController.resetPassword(req, res, next));
+router.post('/password/set', (req, res, next) => authController.setInitialPassword(req, res, next));
 
 // Protected routes
 router.post('/logout', authenticate, (req, res, next) => authController.logout(req, res, next));

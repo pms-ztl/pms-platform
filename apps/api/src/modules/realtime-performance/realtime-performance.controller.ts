@@ -5,6 +5,7 @@
  */
 
 import { Request, Response } from 'express';
+import { MS_PER_DAY, DAYS } from '../../utils/constants';
 import { realtimePerformanceService } from './realtime-performance.service';
 
 export class RealtimePerformanceController {
@@ -24,7 +25,7 @@ export class RealtimePerformanceController {
       const effectiveUserId = targetUserId as string || userId;
 
       // Parse dates
-      const start = startTime ? new Date(startTime as string) : new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const start = startTime ? new Date(startTime as string) : new Date(Date.now() - MS_PER_DAY);
       const end = endTime ? new Date(endTime as string) : new Date();
 
       const metrics = await realtimePerformanceService.getHourlyMetrics(
@@ -179,7 +180,7 @@ export class RealtimePerformanceController {
       const { targetUserId, startTime, endTime } = req.query;
 
       const effectiveUserId = targetUserId as string || userId;
-      const start = startTime ? new Date(startTime as string) : new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const start = startTime ? new Date(startTime as string) : new Date(Date.now() - MS_PER_DAY);
       const end = endTime ? new Date(endTime as string) : new Date();
 
       const summary = await realtimePerformanceService.getActivitySummary(
@@ -659,7 +660,7 @@ export class RealtimePerformanceController {
       const end = endDate ? new Date(endDate as string) : new Date();
       const start = startDate
         ? new Date(startDate as string)
-        : new Date(end.getTime() - 365 * 24 * 60 * 60 * 1000);
+        : new Date(end.getTime() - DAYS(365));
 
       const heatmap = await realtimePerformanceService.getActivityHeatmap(
         tenantId,
@@ -693,7 +694,7 @@ export class RealtimePerformanceController {
       const end = endDate ? new Date(endDate as string) : new Date();
       const start = startDate
         ? new Date(startDate as string)
-        : new Date(end.getTime() - 365 * 24 * 60 * 60 * 1000);
+        : new Date(end.getTime() - DAYS(365));
 
       const heatmap = await realtimePerformanceService.getTeamActivityHeatmap(
         tenantId,

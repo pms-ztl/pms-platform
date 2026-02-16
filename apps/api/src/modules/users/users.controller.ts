@@ -199,6 +199,33 @@ export class UsersController {
     }
   }
 
+  async archive(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.params.id;
+      if (!userId) throw new ValidationError('User ID is required');
+
+      const { reason } = req.body;
+      await usersService.archive(req.tenantId, req.user.id, userId, reason);
+
+      res.status(200).json({
+        success: true,
+        message: 'User archived. License seat freed.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getLicenseUsage(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { licenseService } = await import('../super-admin/license.service');
+      const usage = await licenseService.getLicenseUsage(req.tenantId);
+      res.json({ success: true, data: usage });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async deleteUser(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.params.id;
@@ -419,6 +446,78 @@ export class UsersController {
         success: true,
         data: { avatarUrl },
         message: 'AI avatar set successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getSubscriptionInfo(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const info = await usersService.getSubscriptionInfo(req.tenantId);
+      res.json({ success: true, data: info });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async assignDesignatedManager(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { managerUserId } = req.body;
+      if (!managerUserId) {
+        throw new ValidationError('managerUserId is required');
+      }
+
+      const result = await usersService.assignDesignatedManager(
+        req.tenantId,
+        req.user.id,
+        managerUserId
+      );
+
+      res.json({
+        success: true,
+        data: result,
+        message: `${result.managerName} has been assigned as the designated manager for Excel uploads`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getEmployeeBreakdown(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const breakdown = await usersService.getEmployeeBreakdown(req.tenantId);
+      res.json({ success: true, data: breakdown });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async toggleSuperAdminAccess(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { canView } = req.body;
+      if (typeof canView !== 'boolean') {
+        throw new ValidationError('canView must be a boolean');
+      }
+
+      const result = await usersService.toggleSuperAdminAccess(req.tenantId, req.user.id, canView);
+      res.json({
+        success: true,
+        data: result,
+        message: canView
+          ? 'Platform admin access to employee details has been enabled'
+          : 'Platform admin access to employee details has been disabled',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async resendCredentials(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await usersService.resendCredentials(req.tenantId, req.user.id, req.params.id);
+      res.json({
+        success: true,
+        data: result,
+        message: `Password setup email sent to ${result.email}`,
       });
     } catch (error) {
       next(error);

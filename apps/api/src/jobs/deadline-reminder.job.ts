@@ -4,11 +4,10 @@
  */
 
 import cron from 'node-cron';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@pms/database';
 import { emailService } from '../services/email';
 import { logger } from '../utils/logger';
-
-const prisma = new PrismaClient();
+import { MS_PER_DAY } from '../utils/constants';
 
 /**
  * Check for goals with approaching deadlines and send reminder emails
@@ -50,7 +49,7 @@ async function checkDeadlineReminders(): Promise<void> {
       if (!goal.owner?.email || !goal.dueDate) continue;
 
       const daysRemaining = Math.ceil(
-        (goal.dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+        (goal.dueDate.getTime() - now.getTime()) / MS_PER_DAY
       );
 
       try {
@@ -93,7 +92,7 @@ async function checkDeadlineReminders(): Promise<void> {
       if (!goal.owner?.email || !goal.dueDate) continue;
 
       const daysOverdue = Math.ceil(
-        (now.getTime() - goal.dueDate.getTime()) / (1000 * 60 * 60 * 24)
+        (now.getTime() - goal.dueDate.getTime()) / MS_PER_DAY
       );
 
       try {

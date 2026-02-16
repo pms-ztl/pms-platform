@@ -1,9 +1,8 @@
 // @ts-nocheck
 // TODO: Fix type mismatches with Prisma schema
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@pms/database';
 import { logger } from '../../utils/logger';
-
-const prisma = new PrismaClient();
+import { MS_PER_DAY } from '../../utils/constants';
 
 export interface DashboardMetrics {
   goals: {
@@ -854,7 +853,7 @@ export class AnalyticsService {
     };
     for (const r of reviews) {
       if (r.reviewee.hireDate) {
-        const yearsOfService = (now.getTime() - new Date(r.reviewee.hireDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000);
+        const yearsOfService = (now.getTime() - new Date(r.reviewee.hireDate).getTime()) / (365.25 * MS_PER_DAY);
         let bucket: string;
         if (yearsOfService < 1) bucket = '< 1 year';
         else if (yearsOfService < 3) bucket = '1-2 years';

@@ -6,9 +6,8 @@
  * career goals, and skill gap analysis.
  */
 
-import { PrismaClient, Prisma } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma, Prisma } from '@pms/database';
+import { MS_PER_DAY, DAYS } from '../../utils/constants';
 
 export interface DevelopmentPlanGenerationInput {
   tenantId: string;
@@ -114,7 +113,7 @@ export class DevelopmentPlanService {
         planType,
         duration,
         startDate: new Date(),
-        targetCompletionDate: new Date(Date.now() + duration * 30 * 24 * 60 * 60 * 1000),
+        targetCompletionDate: new Date(Date.now() + DAYS(duration * 30)),
         careerGoal,
         targetRole,
         targetLevel,
@@ -467,7 +466,7 @@ export class DevelopmentPlanService {
         description: `Complete advanced training in ${skill} to reach proficiency level ${gap.required}`,
         targetSkills: [skill],
         estimatedHours: gap.gap * 20,
-        dueDate: new Date(Date.now() + (duration / 2) * 30 * 24 * 60 * 60 * 1000),
+        dueDate: new Date(Date.now() + DAYS((duration / 2) * 30)),
         priority: 'HIGH',
         learningObjectives: [
           `Understand advanced concepts in ${skill}`,
@@ -482,7 +481,7 @@ export class DevelopmentPlanService {
         description: `Lead a project that requires application of ${skill}`,
         targetSkills: [skill],
         estimatedHours: 40,
-        dueDate: new Date(Date.now() + duration * 30 * 24 * 60 * 60 * 1000),
+        dueDate: new Date(Date.now() + DAYS(duration * 30)),
         priority: 'HIGH',
         learningObjectives: [
           `Demonstrate ${skill} in production environment`,
@@ -503,7 +502,7 @@ export class DevelopmentPlanService {
         description: `Work with senior leader to develop ${competency} skills`,
         targetCompetencies: [competency],
         estimatedHours: 20,
-        dueDate: new Date(Date.now() + (duration * 0.75) * 30 * 24 * 60 * 60 * 1000),
+        dueDate: new Date(Date.now() + DAYS(duration * 0.75 * 30)),
         priority: 'MEDIUM',
         learningObjectives: [
           `Learn best practices for ${competency}`,
@@ -520,7 +519,7 @@ export class DevelopmentPlanService {
         description: 'Complete comprehensive leadership training program',
         targetCompetencies: ['Leadership', 'People Management', 'Strategic Thinking'],
         estimatedHours: 60,
-        dueDate: new Date(Date.now() + (duration * 0.6) * 30 * 24 * 60 * 60 * 1000),
+        dueDate: new Date(Date.now() + DAYS(duration * 0.6 * 30)),
         priority: 'HIGH',
         provider: 'Internal Learning Platform',
         learningObjectives: [
@@ -646,8 +645,8 @@ export class DevelopmentPlanService {
     const scoredMentors = potentialMentors
       .filter(m => m.performanceComparisons[0]?.performanceLevel === 'ABOVE' || m.performanceComparisons[0]?.performanceLevel === 'EXCEPTIONAL')
       .sort((a, b) => {
-        const aMonths = a.hireDate ? Math.floor((Date.now() - a.hireDate.getTime()) / (1000 * 60 * 60 * 24 * 30)) : 0;
-        const bMonths = b.hireDate ? Math.floor((Date.now() - b.hireDate.getTime()) / (1000 * 60 * 60 * 24 * 30)) : 0;
+        const aMonths = a.hireDate ? Math.floor((Date.now() - a.hireDate.getTime()) / DAYS(30)) : 0;
+        const bMonths = b.hireDate ? Math.floor((Date.now() - b.hireDate.getTime()) / DAYS(30)) : 0;
         return bMonths - aMonths;
       });
 
@@ -720,7 +719,7 @@ export class DevelopmentPlanService {
 
     for (let i = 1; i <= 4; i++) {
       const months = checkpointInterval * i;
-      const checkpointDate = new Date(startDate.getTime() + months * 30 * 24 * 60 * 60 * 1000);
+      const checkpointDate = new Date(startDate.getTime() + DAYS(months * 30));
       dates.push(checkpointDate);
     }
 

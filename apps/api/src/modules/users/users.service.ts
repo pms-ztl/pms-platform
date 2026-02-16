@@ -2,9 +2,13 @@ import { prisma, type User } from '@pms/database';
 import bcrypt from 'bcryptjs';
 import type { PaginatedResult, PaginationParams } from '@pms/database';
 
-import { auditLogger } from '../../utils/logger';
+import { auditLogger, logger } from '../../utils/logger';
+import { MS_PER_HOUR } from '../../utils/constants';
 import { NotFoundError, ValidationError, ConflictError } from '../../utils/errors';
 import { deleteSession } from '../../utils/redis';
+import { licenseService } from '../super-admin/license.service';
+import { emailService } from '../../services/email';
+import { managerAssignmentTemplate } from '../../services/email/email-templates';
 
 interface CreateUserInput {
   email: string;
@@ -48,6 +52,14 @@ export class UsersService {
     creatorId: string,
     input: CreateUserInput
   ): Promise<User> {
+    // License enforcement - check seat availability
+    await licenseService.enforceSeatLimit(tenantId);
+
+    // Level enforcement - validate against tenant max level
+    if (input.level !== undefined) {
+      await licenseService.validateLevelForTenant(tenantId, input.level);
+    }
+
     // Check for duplicate email
     const existingUser = await prisma.user.findFirst({
       where: {
@@ -210,6 +222,11 @@ export class UsersService {
       }
     }
 
+    // Validate level if changing
+    if (input.level !== undefined && input.level !== existingUser.level) {
+      await licenseService.validateLevelForTenant(tenantId, input.level);
+    }
+
     // Validate department if changing
     if (input.departmentId !== undefined && input.departmentId !== existingUser.departmentId) {
       const department = await prisma.department.findFirst({
@@ -282,12 +299,55 @@ export class UsersService {
       throw new NotFoundError('User', userId);
     }
 
+    // License enforcement - check seat availability before reactivating
+    await licenseService.enforceSeatLimit(tenantId);
+
     await prisma.user.update({
       where: { id: userId },
-      data: { isActive: true },
+      data: { isActive: true, archivedAt: null, archivedReason: null },
     });
 
     auditLogger('USER_REACTIVATED', adminId, tenantId, 'user', userId);
+  }
+
+  /**
+   * Archive a user - preserves all performance data but frees up a license seat.
+   * Different from delete: data stays intact, user just becomes inactive.
+   */
+  async archive(tenantId: string, adminId: string, userId: string, reason?: string): Promise<void> {
+    if (userId === adminId) {
+      throw new ValidationError('You cannot archive your own account');
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+        tenantId,
+        deletedAt: null,
+      },
+    });
+
+    if (user === null) {
+      throw new NotFoundError('User', userId);
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        isActive: false,
+        archivedAt: new Date(),
+        archivedReason: reason ?? 'Employee left organization',
+      },
+    });
+
+    // Clear sessions
+    try {
+      await deleteSession(userId);
+    } catch { /* ignore */ }
+
+    auditLogger('USER_ARCHIVED', adminId, tenantId, 'user', userId, {
+      reason: reason ?? 'Employee left organization',
+    });
   }
 
   /**
@@ -732,6 +792,244 @@ export class UsersService {
     });
 
     return users;
+  }
+
+  /**
+   * Assign a designated manager for the tenant (who can upload Excel sheets).
+   * Only callable by Tenant Admin / HR Admin.
+   */
+  async assignDesignatedManager(
+    tenantId: string,
+    adminUserId: string,
+    managerUserId: string
+  ): Promise<{ managerId: string; managerName: string; managerEmail: string }> {
+    // Verify the manager exists in this tenant and is active
+    const manager = await prisma.user.findFirst({
+      where: {
+        id: managerUserId,
+        tenantId,
+        isActive: true,
+        deletedAt: null,
+        archivedAt: null,
+      },
+      select: { id: true, firstName: true, lastName: true, email: true },
+    });
+
+    if (!manager) {
+      throw new NotFoundError('User not found or not active in this organization');
+    }
+
+    // Update the tenant's designated manager
+    await prisma.tenant.update({
+      where: { id: tenantId },
+      data: { designatedManagerId: managerUserId },
+    });
+
+    auditLogger('DESIGNATED_MANAGER_ASSIGNED', adminUserId, tenantId, 'tenant', tenantId, {
+      designatedManagerId: managerUserId,
+      managerEmail: manager.email,
+    });
+
+    // Send manager assignment email (non-blocking)
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: { name: true },
+    });
+    const admin = await prisma.user.findUnique({
+      where: { id: adminUserId },
+      select: { firstName: true, lastName: true },
+    });
+    const adminName = admin ? `${admin.firstName} ${admin.lastName}` : 'your admin';
+    const companyName = tenant?.name ?? 'your organization';
+
+    emailService.sendMail(
+      manager.email,
+      `You have been assigned as Designated Manager - ${companyName}`,
+      managerAssignmentTemplate(`${manager.firstName} ${manager.lastName}`, companyName, adminName)
+    ).catch((err: Error) => {
+      logger.warn('Failed to send manager assignment email', { error: err.message });
+    });
+
+    return {
+      managerId: manager.id,
+      managerName: `${manager.firstName} ${manager.lastName}`,
+      managerEmail: manager.email,
+    };
+  }
+
+  /**
+   * Get subscription info for the current tenant.
+   */
+  async getSubscriptionInfo(tenantId: string) {
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: {
+        id: true,
+        name: true,
+        subscriptionPlan: true,
+        subscriptionStatus: true,
+        subscriptionTier: true,
+        subscriptionExpiresAt: true,
+        licenseCount: true,
+        maxUsers: true,
+        maxLevel: true,
+        designatedManagerId: true,
+        superAdminCanView: true,
+        createdAt: true,
+      },
+    });
+
+    if (!tenant) {
+      throw new NotFoundError('Tenant not found');
+    }
+
+    const [activeCount, archivedCount] = await Promise.all([
+      prisma.user.count({ where: { tenantId, isActive: true, deletedAt: null, archivedAt: null } }),
+      prisma.user.count({ where: { tenantId, archivedAt: { not: null }, deletedAt: null } }),
+    ]);
+
+    const effectiveLimit = Math.max(tenant.licenseCount, tenant.maxUsers);
+
+    // Get designated manager info if assigned
+    let designatedManager = null;
+    if (tenant.designatedManagerId) {
+      const mgr = await prisma.user.findUnique({
+        where: { id: tenant.designatedManagerId },
+        select: { id: true, firstName: true, lastName: true, email: true },
+      });
+      if (mgr) {
+        designatedManager = {
+          id: mgr.id,
+          name: `${mgr.firstName} ${mgr.lastName}`,
+          email: mgr.email,
+        };
+      }
+    }
+
+    return {
+      tenantId: tenant.id,
+      companyName: tenant.name,
+      plan: tenant.subscriptionPlan,
+      status: tenant.subscriptionStatus,
+      tier: tenant.subscriptionTier,
+      expiresAt: tenant.subscriptionExpiresAt?.toISOString() ?? null,
+      license: {
+        total: effectiveLimit,
+        active: activeCount,
+        archived: archivedCount,
+        remaining: effectiveLimit - activeCount,
+        usagePercent: effectiveLimit > 0 ? Math.round((activeCount / effectiveLimit) * 100) : 0,
+      },
+      maxLevel: tenant.maxLevel,
+      superAdminCanView: tenant.superAdminCanView,
+      designatedManager,
+      memberSince: tenant.createdAt.toISOString(),
+    };
+  }
+
+  /**
+   * Toggle whether Super Admin (platform owner) can view this tenant's employee details.
+   */
+  async toggleSuperAdminAccess(tenantId: string, adminUserId: string, canView: boolean): Promise<{ superAdminCanView: boolean }> {
+    await prisma.tenant.update({
+      where: { id: tenantId },
+      data: { superAdminCanView: canView },
+    });
+
+    auditLogger('SUPER_ADMIN_ACCESS_TOGGLED', adminUserId, tenantId, 'tenant', tenantId, {
+      superAdminCanView: canView,
+    });
+
+    return { superAdminCanView: canView };
+  }
+
+  /**
+   * Get employee breakdown by level and department for the license dashboard.
+   */
+  async getEmployeeBreakdown(tenantId: string) {
+    const users = await prisma.user.findMany({
+      where: { tenantId, isActive: true, deletedAt: null, archivedAt: null },
+      select: { level: true, department: { select: { name: true } } },
+    });
+
+    // Group by level
+    const levelMap: Record<number, number> = {};
+    for (const u of users) {
+      levelMap[u.level] = (levelMap[u.level] || 0) + 1;
+    }
+
+    // Group by department
+    const deptMap: Record<string, number> = {};
+    for (const u of users) {
+      const deptName = u.department?.name || 'Unassigned';
+      deptMap[deptName] = (deptMap[deptName] || 0) + 1;
+    }
+
+    return {
+      byLevel: Object.entries(levelMap)
+        .map(([level, count]) => ({ level: Number(level), count }))
+        .sort((a, b) => a.level - b.level),
+      byDepartment: Object.entries(deptMap)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count),
+    };
+  }
+  /**
+   * Resend set-password credentials to an employee.
+   * Creates a new PasswordSetToken and sends the email.
+   */
+  async resendCredentials(tenantId: string, adminId: string, userId: string) {
+    const user = await prisma.user.findFirst({
+      where: { id: userId, tenantId, deletedAt: null },
+      select: { id: true, email: true, firstName: true, lastName: true, isActive: true },
+    });
+
+    if (!user) throw new NotFoundError('User', userId);
+    if (!user.isActive) throw new ValidationError('Cannot resend credentials to an inactive user');
+
+    // Invalidate any existing tokens
+    await prisma.passwordSetToken.updateMany({
+      where: { userId, usedAt: null },
+      data: { usedAt: new Date() },
+    });
+
+    // Create a new set-password token
+    const crypto = await import('crypto');
+    const token = crypto.randomUUID();
+    const expiresAt = new Date(Date.now() + 48 * MS_PER_HOUR); // 48 hours
+
+    await prisma.passwordSetToken.create({
+      data: { userId, token, expiresAt },
+    });
+
+    // Send the email
+    const appUrl = process.env.APP_URL || process.env.CORS_ORIGINS?.split(',')[0] || 'http://localhost:5173';
+    const setPasswordUrl = `${appUrl}/set-password?token=${token}`;
+
+    emailService.sendMail(
+      user.email,
+      'PMS Platform - Set Your Password',
+      `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #3B82F6;">Set Your Password</h2>
+          <p>Hello ${user.firstName},</p>
+          <p>Your login credentials have been resent. Please set your password using the link below.</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${setPasswordUrl}" style="background: #3B82F6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+              Set Your Password
+            </a>
+          </div>
+          <p style="color: #6B7280; font-size: 14px;">This link expires in 48 hours.</p>
+          <p style="color: #6B7280; font-size: 14px;">If the button doesn't work, copy this URL: ${setPasswordUrl}</p>
+        </div>
+      `,
+    ).catch((err: Error) => {
+      logger.warn('Failed to send credential resend email', { email: user.email, error: err.message });
+    });
+
+    auditLogger('CREDENTIALS_RESENT', adminId, tenantId, 'user', userId, { email: user.email });
+
+    return { email: user.email, expiresAt: expiresAt.toISOString() };
   }
 }
 

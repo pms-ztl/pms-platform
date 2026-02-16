@@ -4,9 +4,8 @@
  */
 
 import axios from 'axios';
-import { PrismaClient } from '@pms/database';
-
-const prisma = new PrismaClient();
+import { prisma } from '@pms/database';
+import { DAYS } from '../../utils/constants';
 
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8001';
 
@@ -75,7 +74,7 @@ export class EngagementScoringService {
           tenantId: params.tenantId,
           userId: params.userId,
           scoreDate: {
-            lte: new Date(scoreDate.getTime() - 7 * 24 * 60 * 60 * 1000)
+            lte: new Date(scoreDate.getTime() - DAYS(7))
           }
         },
         orderBy: { scoreDate: 'desc' }

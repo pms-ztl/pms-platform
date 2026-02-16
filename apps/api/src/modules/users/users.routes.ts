@@ -10,6 +10,8 @@ const router = Router();
 // All routes require authentication
 router.use(authenticate);
 
+// ── Static/named routes MUST be defined BEFORE /:id ──
+
 // List all available roles (for dropdowns)
 router.get(
   '/roles',
@@ -20,20 +22,6 @@ router.get(
 router.get(
   '/departments',
   (req, res, next) => usersController.listDepartments(req, res, next)
-);
-
-// User management (Admin only)
-router.post(
-  '/',
-  requireRoles('HR Admin', 'Tenant Admin'),
-  (req, res, next) => usersController.create(req, res, next)
-);
-
-// List users
-router.get(
-  '/',
-  authorize({ resource: 'users', action: 'read', scope: 'all' }),
-  (req, res, next) => usersController.list(req, res, next)
 );
 
 // Org chart
@@ -54,6 +42,70 @@ router.get(
   '/team-members',
   (req, res, next) => usersController.getTeamMembers(req, res, next)
 );
+
+// License usage info
+router.get(
+  '/license/usage',
+  (req, res, next) => usersController.getLicenseUsage(req, res, next)
+);
+
+// Subscription info for current tenant
+router.get(
+  '/subscription',
+  (req, res, next) => usersController.getSubscriptionInfo(req, res, next)
+);
+
+// Employee breakdown by level and department (Admin only)
+router.get(
+  '/breakdown',
+  requireRoles('HR Admin', 'Tenant Admin'),
+  (req, res, next) => usersController.getEmployeeBreakdown(req, res, next)
+);
+
+// Avatar upload for current user
+router.post(
+  '/me/avatar',
+  avatarUpload,
+  (req, res, next) => usersController.uploadAvatar(req, res, next)
+);
+
+// Set AI avatar for current user
+router.post(
+  '/me/ai-avatar',
+  (req, res, next) => usersController.setAiAvatar(req, res, next)
+);
+
+// Designated manager assignment (Tenant Admin / HR Admin only)
+router.put(
+  '/designated-manager',
+  requireRoles('HR Admin', 'Tenant Admin'),
+  (req, res, next) => usersController.assignDesignatedManager(req, res, next)
+);
+
+// Toggle Super Admin access to employee details (Tenant Admin only)
+router.put(
+  '/super-admin-access',
+  requireRoles('Tenant Admin'),
+  (req, res, next) => usersController.toggleSuperAdminAccess(req, res, next)
+);
+
+// ── Collection routes ──
+
+// User management (Admin + Manager)
+router.post(
+  '/',
+  requireRoles('HR Admin', 'Tenant Admin', 'Manager'),
+  (req, res, next) => usersController.create(req, res, next)
+);
+
+// List users
+router.get(
+  '/',
+  authorize({ resource: 'users', action: 'read', scope: 'all' }),
+  (req, res, next) => usersController.list(req, res, next)
+);
+
+// ── Parameterized routes (/:id) ──
 
 // Get specific user
 router.get(
@@ -79,8 +131,22 @@ router.post(
 // Reactivate user
 router.post(
   '/:id/reactivate',
-  requireRoles('HR Admin', 'Tenant Admin'),
+  requireRoles('HR Admin', 'Tenant Admin', 'Manager'),
   (req, res, next) => usersController.reactivate(req, res, next)
+);
+
+// Archive user (preserves data, frees license seat)
+router.post(
+  '/:id/archive',
+  requireRoles('HR Admin', 'Tenant Admin', 'Manager'),
+  (req, res, next) => usersController.archive(req, res, next)
+);
+
+// Resend set-password credentials to an employee
+router.post(
+  '/:id/resend-credentials',
+  requireRoles('HR Admin', 'Tenant Admin', 'Manager'),
+  (req, res, next) => usersController.resendCredentials(req, res, next)
 );
 
 // Delete user (permanent soft delete)
@@ -110,25 +176,12 @@ router.delete(
   (req, res, next) => usersController.removeRole(req, res, next)
 );
 
-// Avatar upload for current user
-router.post(
-  '/me/avatar',
-  avatarUpload,
-  (req, res, next) => usersController.uploadAvatar(req, res, next)
-);
-
 // Avatar upload for specific user (admin only)
 router.post(
   '/:id/avatar',
   requireRoles('HR Admin', 'Tenant Admin'),
   avatarUpload,
   (req, res, next) => usersController.uploadAvatar(req, res, next)
-);
-
-// Set AI avatar for current user
-router.post(
-  '/me/ai-avatar',
-  (req, res, next) => usersController.setAiAvatar(req, res, next)
 );
 
 // Set AI avatar for specific user (admin only)

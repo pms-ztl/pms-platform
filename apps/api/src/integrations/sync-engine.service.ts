@@ -3,6 +3,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { ConfigService } from '@nestjs/config';
+import { MS_PER_DAY } from '../utils/constants';
 
 interface SyncConfig {
   provider: string;
@@ -213,7 +214,7 @@ export class SyncEngineService {
   private async executeIncrementalSync(job: SyncJob, config: SyncConfig): Promise<void> {
     this.logger.log('Starting incremental sync...');
 
-    const lastSyncAt = config.lastSyncAt || new Date(Date.now() - 24 * 60 * 60 * 1000); // Default: 24h ago
+    const lastSyncAt = config.lastSyncAt || new Date(Date.now() - MS_PER_DAY); // Default: 24h ago
 
     // Fetch only changed records since last sync
     const sourceRecords = await this.fetchSourceRecords(config, {

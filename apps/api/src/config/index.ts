@@ -58,6 +58,13 @@ const envSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   SMTP_FROM: z.string().optional().default('PMS Platform <aerofyta@gmail.com>'),
+
+  // AI / LLM
+  ANTHROPIC_API_KEY: z.string().optional(),
+  OPENAI_API_KEY: z.string().optional(),
+  AI_PRIMARY_PROVIDER: z.enum(['anthropic', 'openai']).default('anthropic'),
+  AI_MAX_TOKENS: z.string().default('4096').transform(Number),
+  AI_MONTHLY_BUDGET_CENTS: z.string().default('10000').transform(Number),
 });
 
 const parseResult = envSchema.safeParse(process.env);

@@ -2,6 +2,7 @@
 import * as cron from 'node-cron';
 import { prisma } from '@pms/database';
 import { logger } from '../../utils/logger';
+import { MS_PER_HOUR } from '../../utils/constants';
 import { jobQueueService, ReportJobData } from './job-queue.service';
 import { ReportType } from './report-generation.service';
 import { AggregationType } from './data-aggregation.service';
@@ -246,7 +247,7 @@ export class ReportSchedulerService {
       // Parse cron expression to get next run time
       // This is a simplified version - in production, use a library like 'cron-parser'
       const now = new Date();
-      const nextRun = new Date(now.getTime() + 60 * 60 * 1000); // Placeholder: 1 hour from now
+      const nextRun = new Date(now.getTime() + MS_PER_HOUR); // Placeholder: 1 hour from now
 
       await prisma.reportSchedule.update({
         where: { id: scheduleId },

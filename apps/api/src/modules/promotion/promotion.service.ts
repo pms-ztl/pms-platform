@@ -6,6 +6,7 @@
  * All decisions must be linked to evidence for defensibility.
  */
 
+import { MS_PER_DAY } from '../../utils/constants';
 import {
   prisma,
   type PromotionDecision,
@@ -687,7 +688,7 @@ export class PromotionService {
 
       if (d.approvedAt && d.nominatedAt) {
         const timeDiff = d.approvedAt.getTime() - d.nominatedAt.getTime();
-        timeSum += timeDiff / (1000 * 60 * 60 * 24); // Convert to days
+        timeSum += timeDiff / MS_PER_DAY; // Convert to days
         timeCount++;
       }
     }

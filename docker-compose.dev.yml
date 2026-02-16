@@ -1,5 +1,3 @@
-version: '3.8'
-
 # ===========================================
 # PMS Platform - Local Development Setup
 # Run: docker compose -f docker-compose.dev.yml up

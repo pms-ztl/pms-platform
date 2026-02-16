@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 
 import { config } from '../config';
 import { RateLimitError } from '../utils/errors';
+import { MS_PER_HOUR } from '../utils/constants';
 
 // Standard rate limiter for authenticated endpoints
 export const standardRateLimiter = rateLimit({
@@ -41,7 +42,7 @@ export const authRateLimiter = rateLimit({
 
 // Rate limiter for password reset to prevent abuse
 export const passwordResetRateLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
+  windowMs: MS_PER_HOUR, // 1 hour
   max: 3, // 3 attempts per hour
   message: { success: false, error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many password reset requests' } },
   standardHeaders: true,
@@ -68,6 +69,22 @@ export const mfaRateLimiter = rateLimit({
   },
   handler: (_req: Request, _res: Response): void => {
     throw new RateLimitError('Too many MFA attempts, please try again later');
+  },
+});
+
+// Strict rate limiter for Excel upload to prevent abuse
+export const uploadRateLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 3, // 3 uploads per 5 minutes per user
+  message: { success: false, error: { code: 'RATE_LIMIT_EXCEEDED', message: 'Too many upload attempts' } },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req: Request): string => {
+    const userId = (req as { user?: { id: string } }).user?.id;
+    return `upload:${userId ?? req.ip ?? 'unknown'}`;
+  },
+  handler: (_req: Request, _res: Response): void => {
+    throw new RateLimitError('Too many upload attempts, please wait a few minutes before trying again');
   },
 });
 

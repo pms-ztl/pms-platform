@@ -31,9 +31,9 @@ import { LiveIndicator } from '../../components/ui/ConnectionStatus';
 const COLORS = ['#d946ef', '#22c55e', '#f59e0b', '#3b82f6', '#ef4444'];
 
 export default function DashboardPage() {
-  const { data: metrics, isLoading: metricsLoading } = useQuery({
-    queryKey: ['system-metrics'],
-    queryFn: () => systemApi.getMetrics(),
+  const { data: dashboardData, isLoading: metricsLoading } = useQuery({
+    queryKey: ['dashboard-stats'],
+    queryFn: () => systemApi.getDashboardStats(),
   });
 
   const { data: tenants, isLoading: tenantsLoading } = useQuery({
@@ -46,40 +46,18 @@ export default function DashboardPage() {
     queryFn: () => auditApi.list({ limit: 10 }),
   });
 
-  const systemMetrics = metrics?.data;
+  const systemMetrics = dashboardData?.data;
 
-  const userGrowthData = [
-    { month: 'Jan', users: 1200 },
-    { month: 'Feb', users: 1450 },
-    { month: 'Mar', users: 1680 },
-    { month: 'Apr', users: 1890 },
-    { month: 'May', users: 2100 },
-    { month: 'Jun', users: 2450 },
-  ];
+  // Use real plan distribution from backend (falls back to empty)
+  const planDistribution = systemMetrics?.planDistribution || [];
 
-  const apiRequestsData = [
-    { hour: '00:00', requests: 1200 },
-    { hour: '04:00', requests: 800 },
-    { hour: '08:00', requests: 2400 },
-    { hour: '12:00', requests: 3200 },
-    { hour: '16:00', requests: 2800 },
-    { hour: '20:00', requests: 1600 },
-  ];
-
-  const planDistribution = [
-    { name: 'Enterprise', value: 45 },
-    { name: 'Professional', value: 120 },
-    { name: 'Starter', value: 85 },
-    { name: 'Free', value: 150 },
-  ];
-
-  const healthServices = [
-    { name: 'API Server', status: 'healthy' },
-    { name: 'Database', status: 'healthy' },
-    { name: 'Redis Cache', status: 'healthy' },
-    { name: 'Email Service', status: 'healthy' },
-    { name: 'Socket.io', status: 'healthy' },
-  ];
+  // Use real health data from backend
+  const healthServices = systemMetrics?.health
+    ? Object.entries(systemMetrics.health).map(([name, status]) => ({
+        name: name.charAt(0).toUpperCase() + name.slice(1),
+        status: status as string,
+      }))
+    : [];
 
   return (
     <div className="space-y-8">
@@ -134,73 +112,80 @@ export default function DashboardPage() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="rounded-xl border border-gray-200 bg-white p-6">
-          <h3 className="text-base font-semibold text-gray-900 mb-4">User Growth</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={userGrowthData}>
-                <defs>
-                  <linearGradient id="userGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#d946ef" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="#d946ef" stopOpacity={0.05} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                <XAxis dataKey="month" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip
-                  contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
-                />
-                <Area type="monotone" dataKey="users" stroke="#d946ef" strokeWidth={2} fill="url(#userGradient)" />
-              </AreaChart>
-            </ResponsiveContainer>
+          <h3 className="text-base font-semibold text-gray-900 mb-4">Platform Summary</h3>
+          <div className="h-64 flex flex-col justify-center space-y-5">
+            <div className="flex items-center justify-between px-4 py-3 rounded-lg bg-purple-50">
+              <div>
+                <p className="text-sm text-gray-500">Total Tenants</p>
+                <p className="text-2xl font-bold text-purple-700">{systemMetrics?.totalTenants ?? 0}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-500">Active</p>
+                <p className="text-lg font-semibold text-green-600">{systemMetrics?.activeTenants ?? 0}</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between px-4 py-3 rounded-lg bg-blue-50">
+              <div>
+                <p className="text-sm text-gray-500">Total Users</p>
+                <p className="text-2xl font-bold text-blue-700">{systemMetrics?.totalUsers?.toLocaleString() ?? 0}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-500">Active</p>
+                <p className="text-lg font-semibold text-green-600">{systemMetrics?.activeUsers?.toLocaleString() ?? 0}</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between px-4 py-3 rounded-lg bg-gray-50">
+              <div>
+                <p className="text-sm text-gray-500">System Uptime</p>
+                <p className="text-2xl font-bold text-gray-700">
+                  {systemMetrics?.uptime ? `${Math.floor(systemMetrics.uptime / 3600)}h ${Math.floor((systemMetrics.uptime % 3600) / 60)}m` : 'N/A'}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-500">Status</p>
+                <Badge variant={systemMetrics?.healthStatus === 'healthy' ? 'success' : 'warning'}>
+                  {systemMetrics?.healthStatus || 'Unknown'}
+                </Badge>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="rounded-xl border border-gray-200 bg-white p-6">
-          <h3 className="text-base font-semibold text-gray-900 mb-4">API Requests (Today)</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={apiRequestsData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-                <XAxis dataKey="hour" stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="#9ca3af" fontSize={12} tickLine={false} axisLine={false} />
-                <Tooltip
-                  contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}
-                />
-                <Line type="monotone" dataKey="requests" stroke="#3b82f6" strokeWidth={2.5} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <h3 className="text-base font-semibold text-gray-900 mb-4">Tenant Plans (Live)</h3>
+          {planDistribution.length > 0 ? (
+            <>
+              <div className="h-56">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={planDistribution} cx="50%" cy="50%" innerRadius={55} outerRadius={75} paddingAngle={4} dataKey="value" strokeWidth={0}>
+                      {planDistribution.map((_, index) => (
+                        <Cell key={`cell-chart-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="mt-2 flex flex-wrap justify-center gap-3">
+                {planDistribution.map((item, index) => (
+                  <div key={item.name} className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                    <span className="text-xs text-gray-600">{item.name} ({item.value})</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="h-56 flex items-center justify-center text-gray-400 text-sm">
+              No tenant data available
+            </div>
+          )}
         </div>
       </div>
 
       {/* Bottom Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Plan Distribution */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6">
-          <h3 className="text-base font-semibold text-gray-900 mb-4">Tenant Plans</h3>
-          <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={planDistribution} cx="50%" cy="50%" innerRadius={55} outerRadius={75} paddingAngle={4} dataKey="value" strokeWidth={0}>
-                  {planDistribution.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb' }} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-2 flex flex-wrap justify-center gap-3">
-            {planDistribution.map((item, index) => (
-              <div key={item.name} className="flex items-center gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                <span className="text-xs text-gray-600">{item.name} ({item.value})</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Tenants */}
         <div className="rounded-xl border border-gray-200 bg-white p-6">
           <h3 className="text-base font-semibold text-gray-900 mb-4">Recent Tenants</h3>
@@ -245,28 +230,40 @@ export default function DashboardPage() {
         <div className="rounded-xl border border-gray-200 bg-white p-6">
           <h3 className="text-base font-semibold text-gray-900 mb-4">System Health</h3>
           <div className="space-y-2.5">
-            {healthServices.map((service) => (
-              <div key={service.name} className="flex items-center justify-between p-2.5 rounded-lg bg-green-50/50">
+            {healthServices.length > 0 ? healthServices.map((service) => (
+              <div key={service.name} className={`flex items-center justify-between p-2.5 rounded-lg ${
+                service.status === 'healthy' ? 'bg-green-50/50' : 'bg-red-50/50'
+              }`}>
                 <div className="flex items-center gap-2.5">
-                  <CheckCircleIcon className="h-4.5 w-4.5 text-green-500" />
+                  {service.status === 'healthy' ? (
+                    <CheckCircleIcon className="h-4.5 w-4.5 text-green-500" />
+                  ) : (
+                    <ExclamationTriangleIcon className="h-4.5 w-4.5 text-red-500" />
+                  )}
                   <span className="text-sm font-medium text-gray-900">{service.name}</span>
                 </div>
-                <Badge variant="success" size="sm">Healthy</Badge>
+                <Badge variant={service.status === 'healthy' ? 'success' : 'danger'} size="sm">
+                  {service.status === 'healthy' ? 'Healthy' : 'Unhealthy'}
+                </Badge>
               </div>
-            ))}
+            )) : (
+              <p className="text-sm text-gray-400">Loading health data...</p>
+            )}
           </div>
           <div className="mt-4 pt-4 border-t border-gray-100 space-y-2.5">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-500">Uptime</span>
               <span className="text-sm font-semibold text-gray-900">
-                {systemMetrics?.uptime?.toFixed(2) || '99.99'}%
+                {systemMetrics?.uptime
+                  ? `${Math.floor(systemMetrics.uptime / 3600)}h ${Math.floor((systemMetrics.uptime % 3600) / 60)}m`
+                  : 'N/A'}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Avg Response</span>
-              <span className="text-sm font-semibold text-gray-900">
-                {systemMetrics?.avgResponseTime || 45}ms
-              </span>
+              <span className="text-sm text-gray-500">Overall Status</span>
+              <Badge variant={systemMetrics?.healthStatus === 'healthy' ? 'success' : 'warning'} size="sm">
+                {systemMetrics?.healthStatus || 'Unknown'}
+              </Badge>
             </div>
           </div>
         </div>

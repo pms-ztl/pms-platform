@@ -35,10 +35,10 @@ export class NotificationsController {
    */
   async markAsRead(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id: userId } = req.user!;
+      const { tenantId, id: userId } = req.user!;
       const { id } = req.params;
 
-      await notificationsService.markAsRead(id, userId);
+      await notificationsService.markAsRead(id, userId, tenantId);
 
       res.json({
         success: true,

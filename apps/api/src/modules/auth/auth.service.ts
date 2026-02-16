@@ -112,7 +112,9 @@ export class AuthService {
     // Send login alert email (non-blocking)
     emailService.sendLoginAlert(
       { firstName: user.firstName, lastName: user.lastName, email: user.email },
-    ).catch(() => {}); // Silently ignore email errors
+    ).catch((err) => {
+      logger.warn('Login alert email failed', { email: user.email, error: (err as Error).message });
+    });
 
     return tokens;
   }
@@ -415,6 +417,48 @@ export class AuthService {
     });
 
     auditLogger('PASSWORD_CHANGED', userId, user.tenantId, 'user', userId);
+  }
+
+  /**
+   * Set initial password using a password-set token (from Excel onboarding).
+   * This activates the account and marks email as verified.
+   */
+  async setInitialPassword(token: string, newPassword: string): Promise<void> {
+    const passwordSetToken = await prisma.passwordSetToken.findUnique({
+      where: { token },
+      include: { user: true },
+    });
+
+    if (!passwordSetToken) {
+      throw new ValidationError('Invalid or expired password set token');
+    }
+
+    if (passwordSetToken.usedAt) {
+      throw new ValidationError('This password set link has already been used');
+    }
+
+    if (passwordSetToken.expiresAt < new Date()) {
+      throw new ValidationError('This password set link has expired. Contact your manager.');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: passwordSetToken.userId },
+        data: {
+          passwordHash: hashedPassword,
+          emailVerified: true,
+          isActive: true,
+        },
+      }),
+      prisma.passwordSetToken.update({
+        where: { id: passwordSetToken.id },
+        data: { usedAt: new Date() },
+      }),
+    ]);
+
+    auditLogger('PASSWORD_SET_INITIAL', passwordSetToken.userId, passwordSetToken.user.tenantId, 'user', passwordSetToken.userId);
   }
 
   async validateToken(token: string): Promise<AuthenticatedUser> {

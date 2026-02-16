@@ -1,20 +1,16 @@
-// @ts-nocheck
-// TODO: Fix type mismatches with Prisma schema
-import { PrismaClient, NotificationStatus } from '@prisma/client';
-import { logger, auditLogger } from '../../utils/logger';
-import { cacheGet, cacheSet, cacheDelete } from '../../utils/redis';
+import { prisma } from '@pms/database';
+import { NotificationStatus } from '@prisma/client';
+import { logger } from '../../utils/logger';
+import { cacheGet, cacheSet, getRedisClient, isRedisAvailable } from '../../utils/redis';
 import { emailService } from '../../services/email';
 
-const prisma = new PrismaClient();
-
-// Define local types since they're not in Prisma schema
 type NotificationType = 'GOAL_CREATED' | 'GOAL_UPDATED' | 'GOAL_COMPLETED' | 'REVIEW_ASSIGNED' | 'REVIEW_COMPLETED' | 'FEEDBACK_RECEIVED' | 'CALIBRATION_INVITE' | 'ONE_ON_ONE_REMINDER' | 'SYSTEM';
-type NotificationChannel = 'IN_APP' | 'EMAIL' | 'PUSH' | 'SMS';
+type NotificationChannel = 'in_app' | 'email' | 'push' | 'sms' | 'slack' | 'teams';
 
 export interface SendNotificationInput {
   userId: string;
   tenantId: string;
-  type: NotificationType;
+  type: NotificationType | string;
   channel: NotificationChannel;
   title: string;
   body: string;
@@ -52,7 +48,6 @@ export class NotificationsService {
       title,
       body,
       data,
-      templateId,
       priority = 'NORMAL',
       scheduledFor,
     } = input;
@@ -68,10 +63,7 @@ export class NotificationsService {
           title,
           body,
           data: data || {},
-          templateId,
-          priority,
-          status: scheduledFor ? NotificationStatus.SCHEDULED : NotificationStatus.PENDING,
-          scheduledFor,
+          status: NotificationStatus.PENDING,
         },
       });
 
@@ -86,28 +78,24 @@ export class NotificationsService {
 
       // Check if user wants this notification
       if (!this.shouldSend(type, channel, preferences)) {
-        await prisma.notification.update({
-          where: { id: notification.id },
-          data: { status: NotificationStatus.SKIPPED },
-        });
         return;
       }
 
       // Send based on channel
       switch (channel) {
-        case NotificationChannel.EMAIL:
+        case 'email':
           await this.sendEmail(notification.id, userId, title, body, data);
           break;
-        case NotificationChannel.PUSH:
+        case 'push':
           await this.sendPush(notification.id, userId, title, body, data);
           break;
-        case NotificationChannel.IN_APP:
+        case 'in_app':
           await this.sendInApp(notification.id, userId, title, body, data);
           break;
-        case NotificationChannel.SLACK:
+        case 'slack':
           await this.sendSlack(notification.id, userId, title, body, data);
           break;
-        case NotificationChannel.TEAMS:
+        case 'teams':
           await this.sendTeams(notification.id, userId, title, body, data);
           break;
       }
@@ -139,7 +127,7 @@ export class NotificationsService {
   async sendToUsers(
     userIds: string[],
     tenantId: string,
-    type: NotificationType,
+    type: NotificationType | string,
     channel: NotificationChannel,
     title: string,
     body: string,
@@ -173,7 +161,7 @@ export class NotificationsService {
   ) {
     const { unreadOnly = false, channel, limit = 50, offset = 0 } = options || {};
 
-    const where: any = { userId };
+    const where: any = { userId, tenantId };
 
     if (unreadOnly) {
       where.readAt = null;
@@ -197,7 +185,7 @@ export class NotificationsService {
       data: notifications,
       meta: {
         total,
-        unread: await prisma.notification.count({ where: { userId, readAt: null } }),
+        unread: await prisma.notification.count({ where: { userId, tenantId, readAt: null } }),
       },
     };
   }
@@ -205,9 +193,9 @@ export class NotificationsService {
   /**
    * Mark notification as read
    */
-  async markAsRead(notificationId: string, userId: string): Promise<void> {
+  async markAsRead(notificationId: string, userId: string, tenantId: string): Promise<void> {
     await prisma.notification.updateMany({
-      where: { id: notificationId, userId },
+      where: { id: notificationId, userId, tenantId },
       data: { readAt: new Date() },
     });
   }
@@ -217,7 +205,7 @@ export class NotificationsService {
    */
   async markAllAsRead(userId: string, tenantId: string): Promise<void> {
     await prisma.notification.updateMany({
-      where: { userId, readAt: null },
+      where: { userId, tenantId, readAt: null },
       data: { readAt: new Date() },
     });
   }
@@ -225,17 +213,16 @@ export class NotificationsService {
   /**
    * Get user notification preferences
    */
-  async getUserPreferences(userId: string, tenantId: string): Promise<NotificationPreferences> {
+  async getUserPreferences(userId: string, _tenantId: string): Promise<NotificationPreferences> {
     // Check cache first
     const cacheKey = `notification:preferences:${userId}`;
-    const cached = await redis.get(cacheKey);
+    const cached = await cacheGet<NotificationPreferences>(cacheKey);
 
     if (cached) {
-      return JSON.parse(cached);
+      return cached;
     }
 
-    // Get from database (would be stored in a user_settings table)
-    // For now, return defaults
+    // Return defaults (would be stored in a user_settings table)
     const defaults: NotificationPreferences = {
       emailEnabled: true,
       pushEnabled: true,
@@ -252,7 +239,7 @@ export class NotificationsService {
     };
 
     // Cache for 5 minutes
-    await redis.set(cacheKey, JSON.stringify(defaults), 'EX', 300);
+    await cacheSet(cacheKey, defaults, 300);
 
     return defaults;
   }
@@ -268,10 +255,8 @@ export class NotificationsService {
     const current = await this.getUserPreferences(userId, tenantId);
     const updated = { ...current, ...preferences };
 
-    // Save to database (would update user_settings table)
-    // For now, just cache it
     const cacheKey = `notification:preferences:${userId}`;
-    await redis.set(cacheKey, JSON.stringify(updated), 'EX', 300);
+    await cacheSet(cacheKey, updated, 300);
 
     return updated;
   }
@@ -280,42 +265,41 @@ export class NotificationsService {
    * Check if notification should be sent based on preferences
    */
   private shouldSend(
-    type: NotificationType,
+    type: NotificationType | string,
     channel: NotificationChannel,
     preferences: NotificationPreferences
   ): boolean {
     // Check channel is enabled
     switch (channel) {
-      case NotificationChannel.EMAIL:
+      case 'email':
         if (!preferences.emailEnabled) return false;
         break;
-      case NotificationChannel.PUSH:
+      case 'push':
         if (!preferences.pushEnabled) return false;
         break;
-      case NotificationChannel.IN_APP:
+      case 'in_app':
         if (!preferences.inAppEnabled) return false;
         break;
-      case NotificationChannel.SLACK:
+      case 'slack':
         if (!preferences.slackEnabled) return false;
         break;
-      case NotificationChannel.TEAMS:
+      case 'teams':
         if (!preferences.teamsEnabled) return false;
         break;
     }
 
     // Check type-specific preferences
     switch (type) {
-      case NotificationType.REVIEW_REMINDER:
-        return channel === NotificationChannel.EMAIL
+      case 'REVIEW_ASSIGNED':
+        return channel === 'email'
           ? preferences.emailReviewReminders
           : preferences.pushReviewReminders;
-      case NotificationType.FEEDBACK_RECEIVED:
-        return channel === NotificationChannel.EMAIL
+      case 'FEEDBACK_RECEIVED':
+        return channel === 'email'
           ? preferences.emailFeedbackReceived
           : preferences.pushFeedbackReceived;
-      case NotificationType.GOAL_UPDATE:
+      case 'GOAL_UPDATED':
         return preferences.emailGoalUpdates;
-      // Add more type checks as needed
     }
 
     return true;
@@ -329,9 +313,8 @@ export class NotificationsService {
     userId: string,
     title: string,
     body: string,
-    data?: Record<string, any>
+    _data?: Record<string, any>
   ): Promise<void> {
-    // Get user email
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { email: true, firstName: true },
@@ -342,7 +325,6 @@ export class NotificationsService {
       return;
     }
 
-    // Send email via SMTP (nodemailer)
     try {
       const htmlBody = `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
@@ -366,32 +348,16 @@ export class NotificationsService {
   }
 
   /**
-   * Send push notification
+   * Send push notification (placeholder)
    */
   private async sendPush(
     notificationId: string,
     userId: string,
     title: string,
     body: string,
-    data?: Record<string, any>
+    _data?: Record<string, any>
   ): Promise<void> {
-    // TODO: Get user's push tokens from device registration
-    // TODO: Integrate with FCM or APNS
-
-    logger.info('Push notification', {
-      notificationId,
-      userId,
-      title,
-      body,
-    });
-
-    // Example FCM integration:
-    // const tokens = await this.getUserPushTokens(userId);
-    // await firebase.messaging().sendMulticast({
-    //   tokens,
-    //   notification: { title, body },
-    //   data,
-    // });
+    logger.info('Push notification (not implemented)', { notificationId, userId, title, body });
   }
 
   /**
@@ -404,78 +370,52 @@ export class NotificationsService {
     body: string,
     data?: Record<string, any>
   ): Promise<void> {
-    // Publish to Redis for WebSocket servers to pick up
-    await redis.publish(`notifications:${userId}`, JSON.stringify({
-      id: notificationId,
-      title,
-      body,
-      data,
-      timestamp: new Date().toISOString(),
-    }));
+    if (isRedisAvailable()) {
+      try {
+        const redis = getRedisClient();
+        await redis.publish(`notifications:${userId}`, JSON.stringify({
+          id: notificationId,
+          title,
+          body,
+          data,
+          timestamp: new Date().toISOString(),
+        }));
+      } catch (err) {
+        logger.warn('Failed to publish in-app notification to Redis', { notificationId, error: err });
+      }
+    }
 
     logger.info('In-app notification published', { notificationId, userId });
   }
 
   /**
-   * Send Slack notification
+   * Send Slack notification (placeholder)
    */
   private async sendSlack(
     notificationId: string,
     userId: string,
     title: string,
     body: string,
-    data?: Record<string, any>
+    _data?: Record<string, any>
   ): Promise<void> {
-    // TODO: Get user's Slack user ID from integration settings
-    // TODO: Send via Slack Web API
-
-    logger.info('Slack notification', {
-      notificationId,
-      userId,
-      title,
-      body,
-    });
-
-    // Example Slack integration:
-    // const slackUserId = await this.getUserSlackId(userId);
-    // await slack.chat.postMessage({
-    //   channel: slackUserId,
-    //   text: title,
-    //   blocks: [{ type: 'section', text: { type: 'mrkdwn', text: body } }],
-    // });
+    logger.info('Slack notification (not implemented)', { notificationId, userId, title, body });
   }
 
   /**
-   * Send Microsoft Teams notification
+   * Send Microsoft Teams notification (placeholder)
    */
   private async sendTeams(
     notificationId: string,
     userId: string,
     title: string,
     body: string,
-    data?: Record<string, any>
+    _data?: Record<string, any>
   ): Promise<void> {
-    // TODO: Get user's Teams user ID from integration settings
-    // TODO: Send via MS Graph API
-
-    logger.info('Teams notification', {
-      notificationId,
-      userId,
-      title,
-      body,
-    });
-
-    // Example Teams integration:
-    // const teamsUserId = await this.getUserTeamsId(userId);
-    // await graphClient.api(`/users/${teamsUserId}/chats`)
-    //   .post({ message: { body: { content: body } } });
+    logger.info('Teams notification (not implemented)', { notificationId, userId, title, body });
   }
 
   // ============== Notification Event Helpers ==============
 
-  /**
-   * Notify user about new feedback
-   */
   async notifyFeedbackReceived(
     recipientId: string,
     tenantId: string,
@@ -488,31 +428,10 @@ export class NotificationsService {
       ? `You received anonymous ${feedbackType.toLowerCase()} feedback.`
       : `${senderName} sent you ${feedbackType.toLowerCase()} feedback.`;
 
-    await this.send({
-      userId: recipientId,
-      tenantId,
-      type: NotificationType.FEEDBACK_RECEIVED,
-      channel: NotificationChannel.IN_APP,
-      title,
-      body,
-      data: { feedbackType, isAnonymous },
-    });
-
-    // Also send email
-    await this.send({
-      userId: recipientId,
-      tenantId,
-      type: NotificationType.FEEDBACK_RECEIVED,
-      channel: NotificationChannel.EMAIL,
-      title,
-      body,
-      data: { feedbackType, isAnonymous },
-    });
+    await this.send({ userId: recipientId, tenantId, type: 'FEEDBACK_RECEIVED', channel: 'in_app', title, body, data: { feedbackType, isAnonymous } });
+    await this.send({ userId: recipientId, tenantId, type: 'FEEDBACK_RECEIVED', channel: 'email', title, body, data: { feedbackType, isAnonymous } });
   }
 
-  /**
-   * Notify user about review assignment
-   */
   async notifyReviewAssigned(
     reviewerId: string,
     tenantId: string,
@@ -523,30 +442,10 @@ export class NotificationsService {
     const title = 'Review Assigned';
     const body = `You have been assigned to review ${revieweeName} for ${cycleName}. Due: ${dueDate.toLocaleDateString()}`;
 
-    await this.send({
-      userId: reviewerId,
-      tenantId,
-      type: NotificationType.REVIEW_ASSIGNED,
-      channel: NotificationChannel.IN_APP,
-      title,
-      body,
-      data: { revieweeName, cycleName, dueDate: dueDate.toISOString() },
-    });
-
-    await this.send({
-      userId: reviewerId,
-      tenantId,
-      type: NotificationType.REVIEW_ASSIGNED,
-      channel: NotificationChannel.EMAIL,
-      title,
-      body,
-      data: { revieweeName, cycleName, dueDate: dueDate.toISOString() },
-    });
+    await this.send({ userId: reviewerId, tenantId, type: 'REVIEW_ASSIGNED', channel: 'in_app', title, body, data: { revieweeName, cycleName, dueDate: dueDate.toISOString() } });
+    await this.send({ userId: reviewerId, tenantId, type: 'REVIEW_ASSIGNED', channel: 'email', title, body, data: { revieweeName, cycleName, dueDate: dueDate.toISOString() } });
   }
 
-  /**
-   * Notify user about review completion
-   */
   async notifyReviewCompleted(
     revieweeId: string,
     tenantId: string,
@@ -555,30 +454,10 @@ export class NotificationsService {
     const title = 'Review Completed';
     const body = `Your performance review for ${cycleName} has been completed and is ready for acknowledgment.`;
 
-    await this.send({
-      userId: revieweeId,
-      tenantId,
-      type: NotificationType.REVIEW_COMPLETED,
-      channel: NotificationChannel.IN_APP,
-      title,
-      body,
-      data: { cycleName },
-    });
-
-    await this.send({
-      userId: revieweeId,
-      tenantId,
-      type: NotificationType.REVIEW_COMPLETED,
-      channel: NotificationChannel.EMAIL,
-      title,
-      body,
-      data: { cycleName },
-    });
+    await this.send({ userId: revieweeId, tenantId, type: 'REVIEW_COMPLETED', channel: 'in_app', title, body, data: { cycleName } });
+    await this.send({ userId: revieweeId, tenantId, type: 'REVIEW_COMPLETED', channel: 'email', title, body, data: { cycleName } });
   }
 
-  /**
-   * Send review reminder
-   */
   async notifyReviewReminder(
     reviewerId: string,
     tenantId: string,
@@ -588,34 +467,13 @@ export class NotificationsService {
     const title = 'Review Reminder';
     const body = `Reminder: Your review of ${revieweeName} is due in ${daysRemaining} day${daysRemaining === 1 ? '' : 's'}.`;
 
-    await this.send({
-      userId: reviewerId,
-      tenantId,
-      type: NotificationType.REVIEW_REMINDER,
-      channel: NotificationChannel.IN_APP,
-      title,
-      body,
-      data: { revieweeName, daysRemaining },
-    });
+    await this.send({ userId: reviewerId, tenantId, type: 'REVIEW_ASSIGNED', channel: 'in_app', title, body, data: { revieweeName, daysRemaining } });
 
     if (daysRemaining <= 3) {
-      // Send email for urgent reminders
-      await this.send({
-        userId: reviewerId,
-        tenantId,
-        type: NotificationType.REVIEW_REMINDER,
-        channel: NotificationChannel.EMAIL,
-        title,
-        body,
-        priority: daysRemaining === 1 ? 'URGENT' : 'HIGH',
-        data: { revieweeName, daysRemaining },
-      });
+      await this.send({ userId: reviewerId, tenantId, type: 'REVIEW_ASSIGNED', channel: 'email', title, body, priority: daysRemaining === 1 ? 'URGENT' : 'HIGH', data: { revieweeName, daysRemaining } });
     }
   }
 
-  /**
-   * Notify about goal progress update
-   */
   async notifyGoalProgress(
     userId: string,
     tenantId: string,
@@ -626,20 +484,9 @@ export class NotificationsService {
     const title = 'Goal Progress Updated';
     const body = `Goal "${goalTitle}" progress updated to ${progress}% by ${updatedBy}.`;
 
-    await this.send({
-      userId,
-      tenantId,
-      type: NotificationType.GOAL_UPDATE,
-      channel: NotificationChannel.IN_APP,
-      title,
-      body,
-      data: { goalTitle, progress, updatedBy },
-    });
+    await this.send({ userId, tenantId, type: 'GOAL_UPDATED', channel: 'in_app', title, body, data: { goalTitle, progress, updatedBy } });
   }
 
-  /**
-   * Notify about calibration session
-   */
   async notifyCalibrationScheduled(
     participantIds: string[],
     tenantId: string,
@@ -649,15 +496,7 @@ export class NotificationsService {
     const title = 'Calibration Session Scheduled';
     const body = `You have been invited to the calibration session "${sessionName}" on ${scheduledDate.toLocaleDateString()}.`;
 
-    await this.sendToUsers(
-      participantIds,
-      tenantId,
-      NotificationType.CALIBRATION_SCHEDULED,
-      NotificationChannel.EMAIL,
-      title,
-      body,
-      { sessionName, scheduledDate: scheduledDate.toISOString() }
-    );
+    await this.sendToUsers(participantIds, tenantId, 'CALIBRATION_INVITE', 'email', title, body, { sessionName, scheduledDate: scheduledDate.toISOString() });
   }
 }
 

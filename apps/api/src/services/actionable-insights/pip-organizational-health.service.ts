@@ -5,9 +5,8 @@
  * Implements automated PIP generation with dynamic content and organizational health analytics.
  */
 
-import { PrismaClient, Prisma } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma, Prisma } from '@pms/database';
+import { MS_PER_DAY, DAYS } from '../../utils/constants';
 
 // ============================================================================
 // FEATURE 49: PIP AUTOMATION
@@ -108,7 +107,7 @@ export class PIPAutomationService {
 
     // Start and end dates
     const startDate = new Date();
-    const endDate = new Date(Date.now() + duration * 24 * 60 * 60 * 1000);
+    const endDate = new Date(Date.now() + DAYS(duration));
 
     // Determine review frequency
     const reviewFrequency = duration <= 30 ? 'WEEKLY' : duration <= 60 ? 'BI_WEEKLY' : 'MONTHLY';
@@ -400,7 +399,7 @@ export class PIPAutomationService {
     for (let week = weeklyFreq; week <= duration / 7; week += weeklyFreq) {
       schedule.push({
         week,
-        date: new Date(Date.now() + week * 7 * 24 * 60 * 60 * 1000),
+        date: new Date(Date.now() + DAYS(week * 7)),
         topic: `Week ${week} Coaching Session`,
         focus: week <= duration / 14 ? 'Goal setting and initial progress' :
                week <= duration / 7 * 0.7 ? 'Mid-point review and adjustments' :
@@ -416,7 +415,7 @@ export class PIPAutomationService {
     const milestoneCount = duration <= 30 ? 2 : duration <= 60 ? 3 : 4;
 
     for (let i = 1; i <= milestoneCount; i++) {
-      const dueDate = new Date(Date.now() + (duration / milestoneCount * i) * 24 * 60 * 60 * 1000);
+      const dueDate = new Date(Date.now() + DAYS(duration / milestoneCount * i));
       milestones.push({
         name: `Milestone ${i} - ${Math.floor(100 / milestoneCount * i)}% Progress`,
         description: `Demonstrate ${Math.floor(100 / milestoneCount * i)}% progress toward all PIP goals`,
@@ -439,7 +438,7 @@ export class PIPAutomationService {
     const frequency = duration <= 30 ? 7 : duration <= 60 ? 14 : 30;
 
     for (let day = frequency; day <= duration; day += frequency) {
-      dates.push(new Date(startDate.getTime() + day * 24 * 60 * 60 * 1000));
+      dates.push(new Date(startDate.getTime() + DAYS(day)));
     }
 
     return dates;
@@ -664,15 +663,15 @@ export class OrganizationalHealthService {
     const now = new Date();
     switch (period) {
       case 'WEEKLY':
-        return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        return new Date(now.getTime() - DAYS(7));
       case 'MONTHLY':
-        return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        return new Date(now.getTime() - DAYS(30));
       case 'QUARTERLY':
-        return new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+        return new Date(now.getTime() - DAYS(90));
       case 'ANNUAL':
-        return new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+        return new Date(now.getTime() - DAYS(365));
       default:
-        return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        return new Date(now.getTime() - DAYS(30));
     }
   }
 

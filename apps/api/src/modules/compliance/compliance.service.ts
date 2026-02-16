@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { prisma } from '@pms/database';
+import { DAYS } from '../../utils/constants';
 
 class ComplianceService {
   // ─── Policies ────────────────────────────────────────────────
@@ -399,7 +400,7 @@ class ComplianceService {
           deletedAt: null,
           remediationDeadline: {
             gte: now,
-            lte: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000), // next 30 days
+            lte: new Date(now.getTime() + DAYS(30)), // next 30 days
           },
           complianceStatus: { in: ['PENDING', 'NON_COMPLIANT', 'PARTIAL'] },
         },

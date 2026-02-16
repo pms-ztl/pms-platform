@@ -4,9 +4,8 @@
  */
 
 import axios from 'axios';
-import { PrismaClient } from '@pms/database';
-
-const prisma = new PrismaClient();
+import { prisma } from '@pms/database';
+import { MS_PER_HOUR } from '../../utils/constants';
 
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8001';
 
@@ -340,7 +339,7 @@ export class AnomalyDetectionService {
     }, 0);
 
     const avgMs = totalMs / resolved.length;
-    return Math.round(avgMs / (1000 * 60 * 60)); // Convert to hours
+    return Math.round(avgMs / MS_PER_HOUR); // Convert to hours
   }
 
   /**

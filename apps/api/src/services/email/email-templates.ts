@@ -197,6 +197,337 @@ export function taskCompletionTemplate(
   `);
 }
 
+export function licenseCapacityWarningTemplate(
+  companyName: string,
+  activeCount: number,
+  licenseLimit: number,
+  percentUsed: number
+): string {
+  const urgencyColor = percentUsed >= 95 ? '#ef4444' : '#f59e0b';
+  const urgencyLabel = percentUsed >= 95 ? 'CRITICAL' : 'WARNING';
+
+  return baseLayout('License Capacity Alert', `
+    <h2 style="color: #1e293b; margin-top: 0;">License Capacity ${urgencyLabel}</h2>
+    <p>Hello,</p>
+    <p>Your organization <strong>${companyName}</strong> is approaching its employee license limit.</p>
+
+    <div class="alert-box">
+      <p style="margin: 0; font-weight: 600; color: #92400e;">
+        ${percentUsed}% of your licensed seats are in use
+      </p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Active Employees</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${activeCount}</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">License Limit</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${licenseLimit}</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Remaining Seats</td>
+        <td style="padding: 10px 0; color: ${urgencyColor}; font-weight: 700; font-size: 15px; text-align: right;">${licenseLimit - activeCount}</td>
+      </tr>
+    </table>
+
+    <div style="background-color: #e2e8f0; border-radius: 999px; height: 10px; margin: 16px 0;">
+      <div style="background: linear-gradient(90deg, ${urgencyColor}, ${urgencyColor}); height: 10px; border-radius: 999px; width: ${Math.min(percentUsed, 100)}%;"></div>
+    </div>
+
+    <p style="color: #64748b; font-size: 13px;">To add more employees, consider purchasing additional licenses or archiving inactive employees.</p>
+  `);
+}
+
+export function licenseLimitReachedTemplate(
+  companyName: string,
+  activeCount: number,
+  licenseLimit: number
+): string {
+  return baseLayout('License Limit Reached', `
+    <h2 style="color: #ef4444; margin-top: 0;">License Limit Reached</h2>
+    <p>Hello,</p>
+    <p>Your organization <strong>${companyName}</strong> has reached its employee license limit.</p>
+
+    <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 16px; border-radius: 0 8px 8px 0; margin: 16px 0;">
+      <p style="margin: 0; font-weight: 600; color: #991b1b;">
+        ${activeCount}/${licenseLimit} seats are in use. No more employees can be added.
+      </p>
+    </div>
+
+    <p><strong>To add new employees, you must either:</strong></p>
+    <ol style="color: #334155; line-height: 2;">
+      <li>Archive departing or inactive employees to free up seats</li>
+      <li>Purchase additional licenses from the platform administrator</li>
+    </ol>
+
+    <p style="color: #64748b; font-size: 13px;">Contact your platform administrator for assistance with upgrading your license plan.</p>
+  `);
+}
+
+export function subscriptionExpiryWarningTemplate(
+  companyName: string,
+  daysRemaining: number,
+  expiryDate: string
+): string {
+  const urgencyColor = daysRemaining <= 3 ? '#ef4444' : daysRemaining <= 7 ? '#f59e0b' : '#3b82f6';
+
+  return baseLayout('Subscription Expiry Warning', `
+    <h2 style="color: #1e293b; margin-top: 0;">Subscription Expiring Soon</h2>
+    <p>Hello,</p>
+    <p>The PMS subscription for <strong>${companyName}</strong> is expiring soon.</p>
+
+    <div class="alert-box">
+      <p style="margin: 0; font-weight: 600; color: #92400e;">
+        Your subscription expires in ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''}
+      </p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Organization</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${companyName}</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Expiry Date</td>
+        <td style="padding: 10px 0; color: ${urgencyColor}; font-weight: 600; font-size: 13px; text-align: right;">${expiryDate}</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Days Remaining</td>
+        <td style="padding: 10px 0; color: ${urgencyColor}; font-weight: 700; font-size: 15px; text-align: right;">${daysRemaining}</td>
+      </tr>
+    </table>
+
+    <p>After expiry, existing employees can continue using the platform, but new employee creation will be disabled.</p>
+    <p style="color: #64748b; font-size: 13px;">Please renew your subscription to maintain uninterrupted service.</p>
+  `);
+}
+
+export function subscriptionExpiredTemplate(
+  companyName: string,
+  expiredDate: string
+): string {
+  return baseLayout('Subscription Expired', `
+    <h2 style="color: #ef4444; margin-top: 0;">Subscription Expired</h2>
+    <p>Hello,</p>
+    <p>The PMS subscription for <strong>${companyName}</strong> has expired.</p>
+
+    <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 16px; border-radius: 0 8px 8px 0; margin: 16px 0;">
+      <p style="margin: 0; font-weight: 600; color: #991b1b;">
+        Your subscription expired on ${expiredDate}
+      </p>
+    </div>
+
+    <p><strong>What this means:</strong></p>
+    <ul style="color: #334155; line-height: 2;">
+      <li>Existing employees can still access the platform and their data</li>
+      <li>No new employees can be added</li>
+      <li>Some admin features may be restricted</li>
+    </ul>
+
+    <p>Please contact the platform administrator to renew your subscription and restore full functionality.</p>
+  `);
+}
+
+export function employeeCredentialsTemplate(
+  employeeName: string,
+  companyName: string,
+  email: string,
+  tempPassword: string,
+  loginUrl: string
+): string {
+  return baseLayout('Your PMS Account Credentials', `
+    <h2 style="color: #1e293b; margin-top: 0;">Welcome to PMS Platform!</h2>
+    <p>Hello ${employeeName},</p>
+    <p>Your account has been created for <strong>${companyName}</strong> on the PMS Platform. Use the credentials below to sign in.</p>
+
+    <div class="info-box">
+      <p style="margin: 0; font-weight: 600; color: #1e40af;">Your Login Details</p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Email</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${email}</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Temporary Password</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${tempPassword}</td>
+      </tr>
+    </table>
+
+    <div class="alert-box">
+      <p style="margin: 0; font-size: 13px; color: #92400e;">
+        <strong>Important:</strong> Please change your password immediately after your first login.
+      </p>
+    </div>
+
+    <p style="text-align: center; margin-top: 24px;">
+      <a href="${loginUrl}" class="btn">Sign In Now</a>
+    </p>
+  `);
+}
+
+export function welcomeAdminTemplate(
+  adminName: string,
+  companyName: string,
+  loginUrl: string,
+  licenseCount: number,
+  maxLevel: number
+): string {
+  return baseLayout('Welcome to PMS Platform', `
+    <h2 style="color: #1e293b; margin-top: 0;">Welcome, ${adminName}!</h2>
+    <p>Your organization <strong>${companyName}</strong> has been registered on the PMS Platform.</p>
+
+    <div class="success-box">
+      <p style="margin: 0; font-weight: 600; color: #166534;">Your account is ready!</p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Organization</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${companyName}</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Licensed Seats</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${licenseCount}</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Max Org Level</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">L${maxLevel}</td>
+      </tr>
+    </table>
+
+    <p><strong>Next steps:</strong></p>
+    <ol style="color: #334155; line-height: 2;">
+      <li>Assign a designated manager to upload employee data</li>
+      <li>Configure your departments and organizational structure</li>
+      <li>Have your manager upload the employee Excel sheet</li>
+    </ol>
+
+    <p style="text-align: center; margin-top: 24px;">
+      <a href="${loginUrl}" class="btn">Get Started</a>
+    </p>
+  `);
+}
+
+export function managerAssignmentTemplate(
+  managerName: string,
+  companyName: string,
+  adminName: string
+): string {
+  return baseLayout('Manager Assignment', `
+    <h2 style="color: #1e293b; margin-top: 0;">You have been assigned as Designated Manager</h2>
+    <p>Hello ${managerName},</p>
+    <p>You have been designated by <strong>${adminName}</strong> as the authorized person to manage employee data for <strong>${companyName}</strong>.</p>
+
+    <div class="info-box">
+      <p style="margin: 0; font-weight: 600; color: #1e40af;">Your Responsibilities</p>
+    </div>
+
+    <ul style="color: #334155; line-height: 2;">
+      <li>Upload employee data via Excel sheet</li>
+      <li>Create, update, and archive employee accounts</li>
+      <li>Monitor license usage and capacity</li>
+      <li>Ensure employee information is accurate and up to date</li>
+    </ul>
+
+    <p style="color: #64748b; font-size: 13px;">If you believe this assignment was made in error, please contact your organization admin.</p>
+  `);
+}
+
+export function uploadSuccessTemplate(
+  managerName: string,
+  companyName: string,
+  totalRows: number,
+  successCount: number,
+  fileName: string
+): string {
+  return baseLayout('Excel Upload Successful', `
+    <h2 style="color: #1e293b; margin-top: 0;">Upload Completed Successfully</h2>
+    <p>Hello ${managerName},</p>
+
+    <div class="success-box">
+      <p style="margin: 0; font-weight: 600; color: #166534;">
+        ${successCount} employee accounts have been created!
+      </p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">File</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${fileName}</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Total Rows</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${totalRows}</td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Accounts Created</td>
+        <td style="padding: 10px 0; color: #22c55e; font-weight: 600; font-size: 13px; text-align: right;">${successCount}</td>
+      </tr>
+    </table>
+
+    <p style="color: #64748b; font-size: 13px;">Login credentials have been sent to each employee via email. You can view the upload history in your dashboard.</p>
+  `);
+}
+
+export function uploadFailureTemplate(
+  managerName: string,
+  fileName: string,
+  errorCount: number,
+  errorSummary: string
+): string {
+  return baseLayout('Excel Upload Failed', `
+    <h2 style="color: #ef4444; margin-top: 0;">Upload Validation Failed</h2>
+    <p>Hello ${managerName},</p>
+    <p>The uploaded file <strong>${fileName}</strong> failed validation. No accounts were created.</p>
+
+    <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 16px; border-radius: 0 8px 8px 0; margin: 16px 0;">
+      <p style="margin: 0; font-weight: 600; color: #991b1b;">
+        ${errorCount} validation error${errorCount !== 1 ? 's' : ''} found
+      </p>
+    </div>
+
+    <div style="background-color: #f8fafc; border-radius: 8px; padding: 16px; margin: 16px 0; border: 1px solid #e2e8f0; font-family: monospace; font-size: 12px; white-space: pre-line; color: #334155;">
+${errorSummary}
+    </div>
+
+    <p>Please fix the errors listed above and re-upload the corrected file.</p>
+  `);
+}
+
+export function securityAlertTemplate(
+  recipientName: string,
+  alertType: string,
+  description: string,
+  details: string,
+  timestamp: string
+): string {
+  return baseLayout('Security Alert', `
+    <h2 style="color: #ef4444; margin-top: 0;">Security Alert</h2>
+    <p>Hello ${recipientName},</p>
+
+    <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 16px; border-radius: 0 8px 8px 0; margin: 16px 0;">
+      <p style="margin: 0; font-weight: 600; color: #991b1b;">${alertType}</p>
+      <p style="margin: 4px 0 0 0; color: #991b1b; font-size: 14px;">${description}</p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 10px 0; color: #64748b; font-size: 13px;">Time</td>
+        <td style="padding: 10px 0; color: #1e293b; font-weight: 600; font-size: 13px; text-align: right;">${timestamp}</td>
+      </tr>
+      <tr>
+        <td colspan="2" style="padding: 10px 0; color: #334155; font-size: 13px;">${details}</td>
+      </tr>
+    </table>
+
+    <p style="color: #64748b; font-size: 13px;">If this activity was authorized, you can safely ignore this alert. Otherwise, please take immediate action to secure your account.</p>
+  `);
+}
+
 export function reviewAssignmentTemplate(
   userName: string,
   revieweeName: string,

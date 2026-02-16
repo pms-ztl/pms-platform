@@ -170,12 +170,19 @@ export function NotificationBell() {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 border-t border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/50">
+          <div className="px-4 py-2 border-t border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/50 flex items-center justify-between">
+            <a
+              href="/notifications"
+              className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 font-medium"
+              onClick={() => setIsOpen(false)}
+            >
+              View all notifications →
+            </a>
             <a
               href="/settings"
-              className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 font-medium"
+              className="text-xs text-secondary-500 hover:text-secondary-700 dark:text-secondary-400 dark:hover:text-secondary-300"
             >
-              Notification Settings →
+              Settings
             </a>
           </div>
         </div>

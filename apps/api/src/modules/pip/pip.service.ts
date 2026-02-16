@@ -1,6 +1,7 @@
 import { prisma } from '@pms/database';
 import { auditLogger } from '../../utils/logger';
 import { NotFoundError, ValidationError } from '../../utils/errors';
+import { MS_PER_DAY } from '../../utils/constants';
 
 const userSelect = { id: true, firstName: true, lastName: true, email: true, avatarUrl: true, jobTitle: true };
 
@@ -53,7 +54,7 @@ export class PIPService {
 
     const startDate = new Date(input.startDate);
     const endDate = new Date(input.endDate);
-    const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / MS_PER_DAY);
 
     const pip = await prisma.performanceImprovementPlan.create({
       data: {

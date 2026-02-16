@@ -122,6 +122,8 @@ const ROUTE_ACCESS: Record<string, { roles?: string[] }> = {
   '/admin/users':        { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
   '/admin/config':       { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
   '/admin/audit':        { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
+  '/admin/excel-upload': { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/admin/licenses':     { roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
 };
 
 /**

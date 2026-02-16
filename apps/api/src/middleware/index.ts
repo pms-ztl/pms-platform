@@ -7,5 +7,7 @@ export {
   passwordResetRateLimiter,
   mfaRateLimiter,
   integrationRateLimiter,
+  uploadRateLimiter,
 } from './rateLimiter';
 export { socketEmitMiddleware } from './socketEmit';
+export { subscriptionGuard } from './subscriptionGuard';

@@ -202,6 +202,29 @@ export class AuthController {
     }
   }
 
+  async setInitialPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { token, password } = req.body;
+
+      if (!token || !password) {
+        throw new ValidationError('Token and password are required');
+      }
+
+      if (password.length < 8) {
+        throw new ValidationError('Password must be at least 8 characters');
+      }
+
+      await authService.setInitialPassword(token, password);
+
+      res.status(200).json({
+        success: true,
+        message: 'Password set successfully. You can now log in.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async changePassword(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const parseResult = changePasswordSchema.safeParse(req.body);

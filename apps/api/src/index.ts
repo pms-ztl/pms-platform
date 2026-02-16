@@ -7,6 +7,8 @@ import { connectRedis, disconnectRedis } from './utils/redis';
 import { initSocketIO, closeSocketIO } from './utils/socket';
 import { emailService } from './services/email';
 import { initDeadlineReminderJob } from './jobs/deadline-reminder.job';
+import { startMonitoringJob, stopMonitoringJob } from './jobs/license-expiry.job';
+import { initAIInsightsJob } from './jobs/ai-insights.job';
 
 async function bootstrap(): Promise<void> {
   const app = createApp();
@@ -45,6 +47,22 @@ async function bootstrap(): Promise<void> {
     logger.warn('Cron job initialization failed', { error });
   }
 
+  // Start license & subscription monitoring job (runs every 6 hours)
+  try {
+    startMonitoringJob();
+    logger.info('License monitoring job started');
+  } catch (error) {
+    logger.warn('License monitoring job failed to start', { error });
+  }
+
+  // Initialize AI insights cron jobs
+  try {
+    initAIInsightsJob();
+    logger.info('AI insights job initialized');
+  } catch (error) {
+    logger.warn('AI insights job failed to start', { error });
+  }
+
   // Start server
   httpServer.listen(config.PORT, config.HOST, () => {
     logger.info(`Server started`, {
@@ -60,6 +78,8 @@ async function bootstrap(): Promise<void> {
 
     httpServer.close(async () => {
       logger.info('HTTP server closed');
+
+      stopMonitoringJob();
 
       try {
         await closeSocketIO();

@@ -6,9 +6,8 @@
  * skill matching algorithms, diversity optimization, and collaboration scoring.
  */
 
-import { PrismaClient, Prisma } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma, Prisma } from '@pms/database';
+import { MS_PER_DAY, DAYS, INACTIVE_USER_THRESHOLD_DAYS } from '../../utils/constants';
 
 export interface TeamOptimizationInput {
   tenantId: string;
@@ -898,7 +897,7 @@ export class TeamOptimizationService {
   private calculateAverageTenure(members: any[]): number {
     const tenures = members
       .filter(m => m.hireDate)
-      .map(m => Math.floor((Date.now() - m.hireDate.getTime()) / (1000 * 60 * 60 * 24 * 30)));
+      .map(m => Math.floor((Date.now() - m.hireDate.getTime()) / DAYS(30)));
 
     return tenures.length > 0 ? tenures.reduce((a, b) => a + b, 0) / tenures.length : 0;
   }
@@ -995,7 +994,7 @@ export class TeamOptimizationService {
     const vulnerabilities: string[] = [];
 
     const newMembers = members.filter(m =>
-      m.hireDate && (Date.now() - m.hireDate.getTime()) < 90 * 24 * 60 * 60 * 1000
+      m.hireDate && (Date.now() - m.hireDate.getTime()) < DAYS(INACTIVE_USER_THRESHOLD_DAYS)
     ).length;
 
     if (newMembers > members.length * 0.4) {

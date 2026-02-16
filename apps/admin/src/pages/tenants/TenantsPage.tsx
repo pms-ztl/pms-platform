@@ -100,21 +100,33 @@ export default function TenantsPage() {
     },
     {
       key: 'userCount',
-      header: 'Users',
+      header: 'Users / Licenses',
       sortable: true,
-      render: (tenant) => (
-        <div className="flex items-center text-gray-700">
-          <UsersIcon className="h-4 w-4 mr-1 text-gray-400" />{tenant.userCount}
-        </div>
-      ),
+      render: (tenant) => {
+        const usage = tenant.licenseCount ? Math.round((tenant.userCount / tenant.licenseCount) * 100) : 0;
+        return (
+          <div>
+            <div className="flex items-center text-gray-700">
+              <UsersIcon className="h-4 w-4 mr-1 text-gray-400" />
+              {tenant.userCount} / {tenant.licenseCount || '~'}
+            </div>
+            {tenant.licenseCount > 0 && (
+              <div className="w-20 h-1.5 bg-gray-100 rounded-full mt-1">
+                <div
+                  className={clsx('h-1.5 rounded-full', usage >= 90 ? 'bg-red-500' : usage >= 70 ? 'bg-amber-500' : 'bg-emerald-500')}
+                  style={{ width: `${Math.min(usage, 100)}%` }}
+                />
+              </div>
+            )}
+          </div>
+        );
+      },
     },
     {
-      key: 'storage',
-      header: 'Storage',
+      key: 'maxLevel',
+      header: 'Levels',
       render: (tenant) => (
-        <div className="flex items-center text-gray-700">
-          <CircleStackIcon className="h-4 w-4 mr-1 text-gray-400" />{(tenant.storageUsed / 1024 / 1024 / 1024).toFixed(1)} GB
-        </div>
+        <span className="text-gray-600 text-sm">L1-L{tenant.maxLevel || 16}</span>
       ),
     },
     {
@@ -214,6 +226,10 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
     adminEmail: '',
     adminFirstName: '',
     adminLastName: '',
+    licenseCount: 50,
+    maxLevel: 9,
+    ceoEmail: '',
+    superAdminCanView: true,
   });
   const queryClient = useQueryClient();
 
@@ -224,8 +240,8 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
       toast.success('Tenant created successfully');
       onClose();
     },
-    onError: () => {
-      toast.error('Failed to create tenant');
+    onError: (err: Error) => {
+      toast.error(err.message || 'Failed to create tenant');
     },
   });
 
@@ -237,9 +253,10 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 p-6">
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4 p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">Create New Tenant</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Organization Info */}
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -263,11 +280,12 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    slug: e.target.value.toLowerCase().replace(/\s+/g, '-'),
+                    slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
                   })
                 }
                 className="input"
                 required
+                placeholder="company-name"
               />
             </div>
             <div>
@@ -287,9 +305,51 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
             </div>
           </div>
 
+          {/* License Configuration */}
           <div className="border-t border-gray-200 pt-4 mt-4">
             <h3 className="text-sm font-medium text-gray-900 mb-3">
-              Admin Account
+              License Configuration
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Number of Employee Licenses
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  max={100000}
+                  value={formData.licenseCount}
+                  onChange={(e) => setFormData({ ...formData, licenseCount: parseInt(e.target.value) || 0 })}
+                  className="input"
+                  required
+                />
+                <p className="text-xs text-gray-400 mt-1">Max active employees allowed</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Organizational Levels (1-16)
+                </label>
+                <select
+                  value={formData.maxLevel}
+                  onChange={(e) => setFormData({ ...formData, maxLevel: parseInt(e.target.value) })}
+                  className="input"
+                >
+                  {Array.from({ length: 16 }, (_, i) => i + 1).map((level) => (
+                    <option key={level} value={level}>
+                      L1 - L{level} ({level} level{level > 1 ? 's' : ''})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-400 mt-1">Max hierarchy levels for this org</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Admin Account */}
+          <div className="border-t border-gray-200 pt-4 mt-4">
+            <h3 className="text-sm font-medium text-gray-900 mb-3">
+              Company Admin Account
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -322,7 +382,7 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
               </div>
               <div className="col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
+                  Admin Email
                 </label>
                 <input
                   type="email"
@@ -334,7 +394,41 @@ function CreateTenantModal({ onClose }: { onClose: () => void }) {
                   required
                 />
               </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  CEO Email (optional)
+                </label>
+                <input
+                  type="email"
+                  value={formData.ceoEmail}
+                  onChange={(e) =>
+                    setFormData({ ...formData, ceoEmail: e.target.value })
+                  }
+                  className="input"
+                  placeholder="ceo@company.com"
+                />
+                <p className="text-xs text-gray-400 mt-1">For critical security and compliance alerts</p>
+              </div>
             </div>
+          </div>
+
+          {/* Permissions */}
+          <div className="border-t border-gray-200 pt-4 mt-4">
+            <h3 className="text-sm font-medium text-gray-900 mb-3">
+              Permissions &amp; Consent
+            </h3>
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.superAdminCanView}
+                onChange={(e) => setFormData({ ...formData, superAdminCanView: e.target.checked })}
+                className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+              />
+              <div>
+                <span className="text-sm text-gray-700 font-medium">Allow Super Admin to view employee data</span>
+                <p className="text-xs text-gray-400">Super Admin can see enrollment data and employee details for license monitoring</p>
+              </div>
+            </label>
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
