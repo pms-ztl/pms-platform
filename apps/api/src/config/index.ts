@@ -62,7 +62,8 @@ const envSchema = z.object({
   // AI / LLM
   ANTHROPIC_API_KEY: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
-  AI_PRIMARY_PROVIDER: z.enum(['anthropic', 'openai']).default('anthropic'),
+  GEMINI_API_KEY: z.string().optional(),
+  AI_PRIMARY_PROVIDER: z.enum(['anthropic', 'openai', 'gemini']).default('anthropic'),
   AI_MAX_TOKENS: z.string().default('4096').transform(Number),
   AI_MONTHLY_BUDGET_CENTS: z.string().default('10000').transform(Number),
 });

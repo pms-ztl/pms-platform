@@ -1,15 +1,21 @@
 /**
- * LLM Client - Dual-provider abstraction for Claude (Anthropic) + OpenAI
+ * LLM Client - Triple-provider abstraction for Claude + GPT + Gemini
  *
  * Features:
- * - Automatic fallback: if primary fails, retries with secondary
+ * - Automatic fallback chain: primary → secondary → tertiary
  * - Token counting and cost tracking per request
  * - Response caching via Redis (1hr TTL)
  * - Tenant-level rate limiting
+ *
+ * Supported providers:
+ * - Anthropic (Claude): claude-sonnet-4, claude-3.5-sonnet, claude-3-haiku
+ * - OpenAI (GPT): gpt-4o, gpt-4o-mini
+ * - Google (Gemini): gemini-2.0-flash, gemini-1.5-pro, gemini-1.5-flash
  */
 
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import crypto from 'crypto';
 
 import { config } from '../../config';
@@ -17,6 +23,8 @@ import { logger } from '../../utils/logger';
 import { cacheGet, cacheSet } from '../../utils/redis';
 
 // ── Types ──────────────────────────────────────────────────
+
+export type LLMProvider = 'anthropic' | 'openai' | 'gemini';
 
 export interface LLMMessage {
   role: 'user' | 'assistant' | 'system';
@@ -27,7 +35,7 @@ export interface LLMOptions {
   maxTokens?: number;
   temperature?: number;
   model?: string;
-  provider?: 'anthropic' | 'openai';
+  provider?: LLMProvider;
   /** Skip cache lookup/store for this call */
   noCache?: boolean;
   /** Tenant ID for rate-limit tracking */
@@ -36,7 +44,7 @@ export interface LLMOptions {
 
 export interface LLMResponse {
   content: string;
-  provider: 'anthropic' | 'openai';
+  provider: LLMProvider;
   model: string;
   inputTokens: number;
   outputTokens: number;
@@ -48,15 +56,22 @@ export interface LLMResponse {
 // ── Cost constants (approx cents per 1K tokens) ─────────
 
 const COST_PER_1K: Record<string, { input: number; output: number }> = {
+  // Anthropic
   'claude-sonnet-4-20250514': { input: 0.3, output: 1.5 },
   'claude-3-5-sonnet-20241022': { input: 0.3, output: 1.5 },
   'claude-3-haiku-20240307': { input: 0.025, output: 0.125 },
+  // OpenAI
   'gpt-4o': { input: 0.25, output: 1.0 },
   'gpt-4o-mini': { input: 0.015, output: 0.06 },
+  // Google Gemini
+  'gemini-2.0-flash': { input: 0.01, output: 0.04 },
+  'gemini-1.5-pro': { input: 0.125, output: 0.5 },
+  'gemini-1.5-flash': { input: 0.0075, output: 0.03 },
 };
 
 const DEFAULT_ANTHROPIC_MODEL = 'claude-sonnet-4-20250514';
 const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini';
+const DEFAULT_GEMINI_MODEL = 'gemini-2.0-flash';
 const CACHE_PREFIX = 'llm:cache:';
 const CACHE_TTL = 3600; // 1 hour
 const RATE_LIMIT_PREFIX = 'llm:rate:';
@@ -68,39 +83,74 @@ const RATE_LIMIT_MAX = 30; // 30 requests per minute per tenant
 class LLMClient {
   private anthropic: Anthropic | null = null;
   private openai: OpenAI | null = null;
-  private primaryProvider: 'anthropic' | 'openai';
+  private gemini: GoogleGenerativeAI | null = null;
+  private primaryProvider: LLMProvider;
+  private availableProviders: LLMProvider[] = [];
 
   constructor() {
     this.primaryProvider = config.AI_PRIMARY_PROVIDER ?? 'anthropic';
 
     if (config.ANTHROPIC_API_KEY) {
       this.anthropic = new Anthropic({ apiKey: config.ANTHROPIC_API_KEY });
+      this.availableProviders.push('anthropic');
     }
 
     if (config.OPENAI_API_KEY) {
       this.openai = new OpenAI({ apiKey: config.OPENAI_API_KEY });
+      this.availableProviders.push('openai');
     }
 
-    if (!this.anthropic && !this.openai) {
+    if (config.GEMINI_API_KEY) {
+      this.gemini = new GoogleGenerativeAI(config.GEMINI_API_KEY);
+      this.availableProviders.push('gemini');
+    }
+
+    if (this.availableProviders.length === 0) {
       logger.warn('No LLM API keys configured — AI features will be unavailable');
+    } else {
+      logger.info(`LLM providers initialized: ${this.availableProviders.join(', ')} (primary: ${this.primaryProvider})`);
     }
   }
 
   /** Check whether at least one provider is available */
   get isAvailable(): boolean {
-    return this.anthropic !== null || this.openai !== null;
+    return this.availableProviders.length > 0;
+  }
+
+  /**
+   * Build the fallback chain: primary first, then remaining configured providers.
+   */
+  private getFallbackChain(preferred?: LLMProvider): LLMProvider[] {
+    const primary = preferred ?? this.primaryProvider;
+    const chain: LLMProvider[] = [];
+
+    // Primary first (if available)
+    if (this.availableProviders.includes(primary)) {
+      chain.push(primary);
+    }
+
+    // Then all other available providers in their registration order
+    for (const p of this.availableProviders) {
+      if (!chain.includes(p)) {
+        chain.push(p);
+      }
+    }
+
+    return chain;
   }
 
   /**
    * Send a chat completion request.
-   * Automatically tries fallback provider on failure.
+   * Automatically cascades through fallback providers on failure.
    */
   async chat(
     messages: LLMMessage[],
     options: LLMOptions = {},
   ): Promise<LLMResponse> {
     if (!this.isAvailable) {
-      throw new Error('No LLM provider configured. Set ANTHROPIC_API_KEY or OPENAI_API_KEY.');
+      throw new Error(
+        'No LLM provider configured. Set ANTHROPIC_API_KEY, OPENAI_API_KEY, or GEMINI_API_KEY.',
+      );
     }
 
     // Rate-limit check
@@ -114,34 +164,26 @@ class LLMClient {
       if (cached) return cached;
     }
 
-    const provider = options.provider ?? this.primaryProvider;
-    const fallback = provider === 'anthropic' ? 'openai' : 'anthropic';
+    const chain = this.getFallbackChain(options.provider);
+    const errors: Array<{ provider: string; error: string }> = [];
 
-    try {
-      const response = await this.callProvider(provider, messages, options);
-      if (!options.noCache) {
-        await this.setCached(messages, options, response);
-      }
-      return response;
-    } catch (primaryErr) {
-      logger.warn(`LLM primary provider (${provider}) failed, trying fallback`, {
-        error: (primaryErr as Error).message,
-      });
-
+    for (const provider of chain) {
       try {
-        const response = await this.callProvider(fallback, messages, options);
+        const response = await this.callProvider(provider, messages, options);
         if (!options.noCache) {
           await this.setCached(messages, options, response);
         }
         return response;
-      } catch (fallbackErr) {
-        logger.error('Both LLM providers failed', {
-          primary: (primaryErr as Error).message,
-          fallback: (fallbackErr as Error).message,
-        });
-        throw new Error(`LLM call failed: ${(primaryErr as Error).message}`);
+      } catch (err) {
+        const msg = (err as Error).message;
+        errors.push({ provider, error: msg });
+        logger.warn(`LLM provider (${provider}) failed`, { error: msg });
       }
     }
+
+    // All providers failed
+    logger.error('All LLM providers failed', { errors });
+    throw new Error(`LLM call failed — all providers exhausted: ${errors[0]?.error}`);
   }
 
   /**
@@ -157,12 +199,13 @@ class LLMClient {
   // ── Private helpers ───────────────────────────────────
 
   private async callProvider(
-    provider: 'anthropic' | 'openai',
+    provider: LLMProvider,
     messages: LLMMessage[],
     options: LLMOptions,
   ): Promise<LLMResponse> {
     if (provider === 'anthropic') return this.callAnthropic(messages, options);
-    return this.callOpenAI(messages, options);
+    if (provider === 'openai') return this.callOpenAI(messages, options);
+    return this.callGemini(messages, options);
   }
 
   private async callAnthropic(
@@ -233,6 +276,68 @@ class LLMClient {
     return {
       content,
       provider: 'openai',
+      model,
+      inputTokens,
+      outputTokens,
+      costCents: this.calculateCost(model, inputTokens, outputTokens),
+      latencyMs,
+      cached: false,
+    };
+  }
+
+  private async callGemini(
+    messages: LLMMessage[],
+    options: LLMOptions,
+  ): Promise<LLMResponse> {
+    if (!this.gemini) throw new Error('Gemini client not configured');
+
+    const model = options.model ?? DEFAULT_GEMINI_MODEL;
+    const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
+
+    const genModel = this.gemini.getGenerativeModel({
+      model,
+      generationConfig: {
+        maxOutputTokens: maxTokens,
+        temperature: options.temperature ?? 0.3,
+      },
+    });
+
+    // Convert messages to Gemini format
+    // Gemini uses 'user' and 'model' roles with a separate systemInstruction
+    const systemMsg = messages.find((m) => m.role === 'system');
+    const chatMessages = messages.filter((m) => m.role !== 'system');
+
+    // Build the Gemini history (all messages except the last user message)
+    const geminiHistory = chatMessages.slice(0, -1).map((m) => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }],
+    }));
+
+    // Last message is the one we send
+    const lastMessage = chatMessages[chatMessages.length - 1];
+    if (!lastMessage) throw new Error('No messages to send to Gemini');
+
+    const start = Date.now();
+
+    const chat = genModel.startChat({
+      history: geminiHistory as any,
+      ...(systemMsg ? { systemInstruction: systemMsg.content } : {}),
+    });
+
+    const result = await chat.sendMessage(lastMessage.content);
+    const latencyMs = Date.now() - start;
+
+    const response = result.response;
+    const content = response.text();
+
+    // Extract token usage from response metadata
+    const usageMetadata = response.usageMetadata;
+    const inputTokens = usageMetadata?.promptTokenCount ?? 0;
+    const outputTokens = usageMetadata?.candidatesTokenCount ?? 0;
+
+    return {
+      content,
+      provider: 'gemini',
       model,
       inputTokens,
       outputTokens,
