@@ -303,7 +303,7 @@ export function CalendarPlanner() {
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
           <div
             key={day}
-            className="text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 py-2"
+            className="text-center text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400 py-2.5 bg-secondary-50 dark:bg-secondary-800/50 rounded-lg"
           >
             {day}
           </div>
@@ -340,7 +340,7 @@ export function CalendarPlanner() {
                     isToday(day) && 'text-primary-600 dark:text-primary-400 font-bold'
                   )}
                 >
-                  {format(day, 'd')}
+                  {day.getDate()}
                 </span>
                 {dayEvents.length > 0 && (
                   <span className="text-xs text-secondary-500 dark:text-secondary-400">
@@ -403,7 +403,7 @@ export function CalendarPlanner() {
                 isToday(day) ? 'text-primary-600 dark:text-primary-400' : 'text-secondary-900 dark:text-white'
               )}
             >
-              {format(day, 'd')}
+              {day.getDate()}
             </div>
           </div>
         ))}

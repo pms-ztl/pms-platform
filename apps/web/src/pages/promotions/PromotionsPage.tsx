@@ -27,6 +27,7 @@ import {
   type Evidence,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -91,6 +92,7 @@ function getInitials(firstName?: string, lastName?: string): string {
 // ---------------------------------------------------------------------------
 
 export function PromotionsPage() {
+  usePageTitle('Promotions');
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
 

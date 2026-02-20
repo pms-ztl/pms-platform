@@ -15,7 +15,7 @@ export type { CreateUserInput, UpdateUserInput, Role, Department } from './users
 
 // ── Goals ──
 export { goalsApi } from './goals';
-export type { Goal, CreateGoalInput, UpdateGoalInput } from './goals';
+export type { Goal, CreateGoalInput, UpdateGoalInput, ActivityItem } from './goals';
 
 // ── Reviews ──
 export { reviewsApi } from './reviews';
@@ -117,6 +117,19 @@ export type {
 export { aiApi } from './ai';
 export type { AIConversation, AIMessage, AIInsightCard, AIChatResponse } from './ai';
 
+// ── Health Metrics ──
+export { healthApi } from './health';
+export type { OrganizationalHealth, DepartmentHealth, HealthComponentScores, PeopleMetrics } from './health';
+
+// ── Engagement ──
+export { engagementApi } from './engagement';
+export type { EngagementOverview, EngagementTrendPoint, DepartmentEngagement, AtRiskEmployee } from './engagement';
+export type { EngagementEvent as EngagementEventData } from './engagement';
+
+// ── Pulse Survey ──
+export { pulseApi } from './pulse';
+export type { PulseSubmission, PulseResponse, PulseCanSubmit, PulseAnalyticsOverview, PulseTrendPoint, PulseDepartmentData } from './pulse';
+
 // ── Super Admin ──
 export {
   superAdminAuthApi,
@@ -138,3 +151,52 @@ export type {
   SASystemConfig,
   SAPaginatedResponse,
 } from './super-admin';
+
+// ── Delegations ──
+export { delegationsApi } from './delegations';
+export type { Delegation, DelegationType, DelegationStatus, CreateDelegationInput, DelegationAuditEvent } from './delegations';
+
+// ── Access Policies ──
+export { policiesApi } from './policies';
+export type { AccessPolicy, PolicyType, PolicyStatus, PolicyEffect, CreatePolicyInput, UpdatePolicyInput, SimulatePolicyInput, SimulatePolicyResult } from './policies';
+
+// ── RBAC Dashboard ──
+export { rbacApi } from './rbac';
+export type { RBACStats, RoleDistribution, RecentRoleChange } from './rbac';
+
+// ── Integrations ──
+export { integrationsApi } from './integrations';
+export type { IntegrationConnector, Integration, SyncHistoryEntry } from './integrations';
+
+// ── AI Insights ──
+export { aiInsightsApi } from './ai-insights';
+export type {
+  SentimentResult,
+  SentimentTrendPoint,
+  AnomalyItem,
+  AnomalyStats,
+  BenchmarkComparison,
+  TeamBenchmarkSummary,
+  ProductivityPrediction,
+  AtRiskUser,
+} from './ai-insights';
+
+// ── Actionable Insights ──
+export { actionableInsightsApi } from './actionable-insights';
+export type {
+  PromotionRecommendation,
+  SuccessionPlan,
+  TeamOptimizationResult,
+  TeamCompositionAnalysis,
+  OrgHealthMetrics,
+  CultureDiagnostic,
+  GeneratedDevPlan,
+} from './actionable-insights';
+
+// ── Performance Simulator ──
+export { simulatorApi } from './simulator';
+export type { SimulationInput, SimulationImpact, SimulationResult } from './simulator';
+
+// ── Mentoring Hub ──
+export { mentoringApi } from './mentoring';
+export type { MentorMatch, Mentorship, LearningPathItem } from './mentoring';

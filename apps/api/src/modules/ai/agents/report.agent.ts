@@ -11,6 +11,7 @@
 
 import { BaseAgent, type AgentContext } from '../base-agent';
 import * as tools from '../agent-tools';
+import { isAdmin, isManager, isEmployeeOnly } from '../../../utils/roles';
 import { DAYS } from '../../../utils/constants';
 
 const SYSTEM_PROMPT = `You are a business intelligence report generator for a Performance Management System.
@@ -30,9 +31,9 @@ Report formatting rules:
 - Use tables for comparisons
 - End with Recommendations (actionable items)
 
-Report types by role:
-- Employee: Personal performance summary
-- Manager: Team health and individual reviews
+IMPORTANT: Scope reports strictly by the user's role:
+- Employee: Only their own personal performance summary — no team or company data
+- Manager: Team health and their direct reports — no license/billing data
 - Admin: Company-wide performance and license usage
 - Super Admin: Platform-wide metrics and revenue`;
 
@@ -46,33 +47,53 @@ export class ReportAgent extends BaseAgent {
     userMessage: string,
   ): Promise<Record<string, unknown> | null> {
     const data: Record<string, unknown> = {};
+    const employeeOnly = isEmployeeOnly(context.userRoles);
+    const adminAccess = isAdmin(context.userRoles);
+    const managerAccess = isManager(context.userRoles);
 
-    // Always get license/company data
-    const license = await tools.queryLicenseUsage(context.tenantId);
-    data.companyOverview = license.data;
-
-    // Get users
-    const users = await tools.queryUsers(context.tenantId, { limit: 100 });
-    data.employees = users.data;
-
-    // Goals overview
-    const goals = await tools.queryGoals(context.tenantId, { limit: 100 });
-    data.goals = goals.data;
-
-    // Reviews
-    const reviews = await tools.queryReviews(context.tenantId, { limit: 50 });
-    data.reviews = reviews.data;
-
-    // Performance metrics
-    const analytics = await tools.queryAnalytics(context.tenantId, {
-      since: new Date(Date.now() - DAYS(30)),
-      limit: 100,
-    });
-    data.performanceMetrics = analytics.data;
-
-    // Feedback
-    const feedback = await tools.queryFeedback(context.tenantId, { limit: 30 });
-    data.feedback = feedback.data;
+    // ── Admin: full company overview including license ──
+    if (adminAccess) {
+      const [license, users, goals, reviews, analytics, feedback] = await Promise.all([
+        tools.queryLicenseUsage(context.tenantId),
+        tools.queryUsers(context.tenantId, { limit: 100 }),
+        tools.queryGoals(context.tenantId, { limit: 100 }),
+        tools.queryReviews(context.tenantId, { limit: 50 }),
+        tools.queryAnalytics(context.tenantId, { since: new Date(Date.now() - DAYS(30)), limit: 100 }),
+        tools.queryFeedback(context.tenantId, { limit: 30 }),
+      ]);
+      data.companyOverview = license.data;
+      data.employees = users.data;
+      data.goals = goals.data;
+      data.reviews = reviews.data;
+      data.performanceMetrics = analytics.data;
+      data.feedback = feedback.data;
+    }
+    // ── Manager: team-level data, no license ──
+    else if (managerAccess) {
+      const [users, goals, reviews, analytics, feedback] = await Promise.all([
+        tools.queryUsers(context.tenantId, { limit: 100 }),
+        tools.queryGoals(context.tenantId, { limit: 100 }),
+        tools.queryReviews(context.tenantId, { limit: 50 }),
+        tools.queryAnalytics(context.tenantId, { since: new Date(Date.now() - DAYS(30)), limit: 100 }),
+        tools.queryFeedback(context.tenantId, { limit: 30 }),
+      ]);
+      data.employees = users.data;
+      data.goals = goals.data;
+      data.reviews = reviews.data;
+      data.performanceMetrics = analytics.data;
+      data.feedback = feedback.data;
+    }
+    // ── Employee: own data only ──
+    else {
+      const [goals, reviews, feedback] = await Promise.all([
+        tools.queryGoals(context.tenantId, { userId: context.userId, limit: 20 }),
+        tools.queryReviews(context.tenantId, { userId: context.userId, limit: 10 }),
+        tools.queryFeedback(context.tenantId, { userId: context.userId, limit: 10 }),
+      ]);
+      data.myGoals = goals.data;
+      data.myReviews = reviews.data;
+      data.myFeedback = feedback.data;
+    }
 
     return data;
   }

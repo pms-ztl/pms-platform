@@ -22,6 +22,8 @@ export default function TenantDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [showLicenseModal, setShowLicenseModal] = useState(false);
+  const [licenseForm, setLicenseForm] = useState({ licenseCount: 0, maxLevel: 16, subscriptionPlan: 'PROFESSIONAL' });
   const queryClient = useQueryClient();
 
   const { data: tenant, isLoading } = useQuery({
@@ -42,6 +44,20 @@ export default function TenantDetailPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tenant', id] });
       toast.success('Settings updated');
+    },
+  });
+
+  const licenseMutation = useMutation({
+    mutationFn: (data: { licenseCount?: number; maxLevel?: number; subscriptionPlan?: string }) =>
+      tenantsApi.updateLicenses(id!, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tenant', id] });
+      queryClient.invalidateQueries({ queryKey: ['tenant-metrics', id] });
+      setShowLicenseModal(false);
+      toast.success('License configuration updated');
+    },
+    onError: () => {
+      toast.error('Failed to update license configuration');
     },
   });
 
@@ -273,7 +289,22 @@ export default function TenantDetailPage() {
             </div>
 
             <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">License & Plan Limits</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">License & Plan Limits</h3>
+                <button
+                  onClick={() => {
+                    setLicenseForm({
+                      licenseCount: t.licenseCount || 0,
+                      maxLevel: t.maxLevel || 16,
+                      subscriptionPlan: t.plan || 'PROFESSIONAL',
+                    });
+                    setShowLicenseModal(true);
+                  }}
+                  className="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+                >
+                  Modify Licenses
+                </button>
+              </div>
               <div className="grid grid-cols-3 gap-6">
                 <div>
                   <p className="text-sm text-gray-500">Licensed Seats</p>
@@ -502,6 +533,86 @@ export default function TenantDetailPage() {
           </div>
         )}
       </div>
+
+      {/* License Management Modal */}
+      {showLicenseModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Modify License Configuration</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Update the license allocation for <strong>{t.name}</strong>.
+            </p>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Subscription Plan
+                </label>
+                <select
+                  value={licenseForm.subscriptionPlan}
+                  onChange={(e) => setLicenseForm({ ...licenseForm, subscriptionPlan: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                >
+                  <option value="FREE">Free (up to L4)</option>
+                  <option value="STARTER">Starter (up to L8)</option>
+                  <option value="PROFESSIONAL">Professional (up to L12)</option>
+                  <option value="ENTERPRISE">Enterprise (up to L16)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Number of Licensed Seats
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  max={100000}
+                  value={licenseForm.licenseCount}
+                  onChange={(e) => setLicenseForm({ ...licenseForm, licenseCount: parseInt(e.target.value) || 0 })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Currently using {m?.users || t.userCount} of {t.licenseCount} seats
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Maximum Organizational Level (1-16)
+                </label>
+                <select
+                  value={licenseForm.maxLevel}
+                  onChange={(e) => setLicenseForm({ ...licenseForm, maxLevel: parseInt(e.target.value) })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                >
+                  {Array.from({ length: 16 }, (_, i) => i + 1).map((level) => (
+                    <option key={level} value={level}>
+                      L1 - L{level}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setShowLicenseModal(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => licenseMutation.mutate(licenseForm)}
+                disabled={licenseMutation.isPending}
+                className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+              >
+                {licenseMutation.isPending ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

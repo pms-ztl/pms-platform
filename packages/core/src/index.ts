@@ -205,6 +205,20 @@ export {
   type FairnessAnalysis,
 } from './math-engine';
 
+// Performance Simulator (USP Feature 8)
+export {
+  PerformanceSimulator,
+  performanceSimulator,
+  type SimulationScenario,
+  type SimulationResult,
+} from './performance-simulator';
+
+// Learning & Growth / Mentoring
+export {
+  LearningGrowthService,
+  learningGrowthService,
+} from './learning-growth';
+
 // Validation schemas
 export * from './validation';
 

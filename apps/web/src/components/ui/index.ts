@@ -6,3 +6,6 @@ export { Modal } from './Modal';
 export { DataTable } from './DataTable';
 export type { Column } from './DataTable';
 export { ConnectionStatus, LiveIndicator } from './ConnectionStatus';
+export { ScrollToTop } from './ScrollToTop';
+export { Breadcrumbs } from './Breadcrumbs';
+export { TopLoadingBar } from './TopLoadingBar';

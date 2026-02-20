@@ -54,7 +54,7 @@ function QuickActions({ pendingReviews, atRiskGoals, goalsData }: QuickActionsPr
           const velocity = risk.requiredVelocity;
           const velocityText = !velocity || !isFinite(velocity) || velocity >= 999
             ? 'Past due \u2014 immediate action needed'
-            : `Needs ${velocity.toFixed(1)}%/day to finish on time`;
+            : `Needs ${(velocity ?? 0).toFixed(1)}%/day to finish on time`;
           return (
             <div
               key={risk.goalId}

@@ -49,17 +49,17 @@ export function DataTable<T>({
   const totalPages = pagination ? Math.ceil(pagination.total / pagination.pageSize) : 0;
 
   return (
-    <div className={clsx('rounded-xl border border-gray-200 bg-white overflow-hidden', className)}>
+    <div className={clsx('glass-card !p-0 overflow-hidden', className)}>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200 bg-gray-50">
+            <tr className="border-b border-white/[0.06] bg-white/[0.03]">
               {columns.map((col) => (
                 <th
                   key={col.key}
                   className={clsx(
-                    'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500',
-                    col.sortable && 'cursor-pointer select-none hover:text-gray-700 transition-colors',
+                    'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-white/40',
+                    col.sortable && 'cursor-pointer select-none hover:text-white/70 transition-colors',
                     col.className
                   )}
                   onClick={col.sortable ? () => handleSort(col.key) : undefined}
@@ -74,7 +74,7 @@ export function DataTable<T>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-white/[0.04]">
             {isLoading ? (
               <SkeletonTableRows rows={5} cols={columns.length} />
             ) : data.length === 0 ? (
@@ -85,9 +85,9 @@ export function DataTable<T>({
               </tr>
             ) : (
               data.map((item, index) => (
-                <tr key={keyExtractor(item)} className="hover:bg-gray-50 transition-colors duration-150">
+                <tr key={keyExtractor(item)} className="hover:bg-white/[0.03] transition-colors duration-150">
                   {columns.map((col) => (
-                    <td key={col.key} className={clsx('px-4 py-3 text-sm text-gray-700', col.className)}>
+                    <td key={col.key} className={clsx('px-4 py-3 text-sm text-white/80', col.className)}>
                       {col.render(item, index)}
                     </td>
                   ))}
@@ -99,8 +99,8 @@ export function DataTable<T>({
       </div>
 
       {pagination && totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3">
-          <p className="text-sm text-gray-500">
+        <div className="flex items-center justify-between border-t border-white/[0.06] px-4 py-3">
+          <p className="text-sm text-white/40">
             Showing {(pagination.page - 1) * pagination.pageSize + 1}–
             {Math.min(pagination.page * pagination.pageSize, pagination.total)} of {pagination.total}
           </p>
@@ -108,7 +108,7 @@ export function DataTable<T>({
             <button
               onClick={() => pagination.onPageChange(pagination.page - 1)}
               disabled={pagination.page <= 1}
-              className="rounded-lg p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="rounded-lg p-1.5 text-white/30 hover:text-white/60 hover:bg-white/[0.06] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeftIcon className="h-4 w-4" />
             </button>
@@ -124,7 +124,7 @@ export function DataTable<T>({
                   onClick={() => pagination.onPageChange(pageNum)}
                   className={clsx(
                     'h-8 w-8 rounded-lg text-sm font-medium transition-colors',
-                    pageNum === pagination.page ? 'bg-primary-600 text-white' : 'text-gray-500 hover:bg-gray-100'
+                    pageNum === pagination.page ? 'bg-white/[0.15] text-white border border-white/[0.1]' : 'text-white/40 hover:bg-white/[0.06]'
                   )}
                 >
                   {pageNum}
@@ -134,7 +134,7 @@ export function DataTable<T>({
             <button
               onClick={() => pagination.onPageChange(pagination.page + 1)}
               disabled={pagination.page >= totalPages}
-              className="rounded-lg p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="rounded-lg p-1.5 text-white/30 hover:text-white/60 hover:bg-white/[0.06] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronRightIcon className="h-4 w-4" />
             </button>

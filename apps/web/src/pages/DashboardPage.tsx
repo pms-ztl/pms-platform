@@ -14,15 +14,17 @@ import {
 } from '@heroicons/react/24/outline';
 import { StarIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
 
+import { useState, useEffect } from 'react';
 import { goalsApi, reviewsApi, feedbackApi, performanceMathApi, type Goal } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import { CalendarPlanner } from '@/components/calendar';
 import { AIWorkspacePage } from '@/pages/AIWorkspacePage';
+import { OnboardingWizard } from '@/components/onboarding';
+import { QuickCheckinWidget } from '@/components/checkins/QuickCheckinWidget';
 
 import {
   AnimatedWaves,
-  FloatingOrbs,
   CPISScoreDisplay,
   UpcomingOneOnOnes,
   StatsGrid,
@@ -32,15 +34,36 @@ import {
   QuickActions,
   ManagerGoalCascade,
   RecentActivity,
+  PerformanceTrendChart,
+  SkillGapRadar,
+  PeerComparison,
+  LearningProgress,
+  RecognitionFeed,
+  GoalVelocity,
   MANAGER_ROLES,
 } from '@/components/dashboard';
 import type { StatItem, ActivityItem } from '@/components/dashboard';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────────
 export function DashboardPage() {
+  usePageTitle('Dashboard');
   const { user } = useAuthStore();
   const { isAiMode } = useAIWorkspaceStore();
   const hasAiAccess = user?.aiAccessEnabled === true;
+
+  // ── Onboarding Wizard ──────────────────────────────────────────────────
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    try {
+      const done = localStorage.getItem(`pms-onboarding-done-${user.id}`);
+      if (!done && (!user.jobTitle || !user.displayName)) {
+        setShowOnboarding(true);
+      }
+    } catch { /* localStorage unavailable */ }
+  }, [user]);
 
   // If AI workspace mode is active and user has access, render the immersive AI workspace
   if (isAiMode && hasAiAccess) {
@@ -284,9 +307,17 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-8 pb-8">
+      {/* Onboarding Wizard */}
+      {showOnboarding && user && (
+        <OnboardingWizard
+          user={{ id: user.id, firstName: user.firstName }}
+          onComplete={() => setShowOnboarding(false)}
+          onSkip={() => setShowOnboarding(false)}
+        />
+      )}
+
       {/* ═══════════════════ Hero Section ═══════════════════ */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-700 via-primary-600 to-accent-600 p-8 text-white shadow-2xl shine-sweep">
-        <FloatingOrbs />
         <AnimatedWaves />
 
         {/* Glassmorphism overlay layer */}
@@ -307,7 +338,7 @@ export function DashboardPage() {
               <CalendarDaysIcon className="w-4 h-4" />
               {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
-            <h1 className="text-4xl lg:text-5xl font-bold mb-3 text-shimmer">
+            <h1 className="text-5xl lg:text-7xl font-black mb-4 text-shimmer tracking-tight">
               {getGreeting()}, {user?.firstName}!
               <span className="inline-block ml-3 animate-bounce" style={{ animationDuration: '2s' }}>
                 {overallScore >= 80 ? '\uD83D\uDE80' : overallScore >= 50 ? '\uD83D\uDC4B' : '\uD83D\uDCAA'}
@@ -315,14 +346,22 @@ export function DashboardPage() {
             </h1>
             <p className="text-white/90 text-lg max-w-xl leading-relaxed">
               {cpisData
-                ? overallScore >= 80
-                  ? `Outstanding! You're ranked as "${cpisRankLabel}" with a ${cpisGrade} grade across 8 performance dimensions.`
+                ? overallScore >= 90
+                  ? `Exceptional performance! You're ranked as "${cpisRankLabel}" with a ${cpisGrade} grade. Top-tier across all 8 dimensions.`
+                  : overallScore >= 80
+                  ? `Outstanding work! "${cpisRankLabel}" with a ${cpisGrade} grade across 8 performance dimensions.`
+                  : overallScore >= 70
+                  ? `Strong performance! You're on a great trajectory. ${atRiskGoals.length > 0 ? `${atRiskGoals.length} goal(s) need attention.` : 'Keep building momentum!'}`
                   : overallScore >= 60
-                  ? `${cpisRankLabel} — CPIS ${Math.round(overallScore)}/100. ${atRiskGoals.length > 0 ? `${atRiskGoals.length} goal(s) need attention.` : 'Keep building momentum!'}`
-                  : `CPIS ${Math.round(overallScore)}/100 — ${cpisRankLabel}. Focus on your growth areas to improve your score.`
+                  ? `Good progress across your performance dimensions. ${atRiskGoals.length > 0 ? `${atRiskGoals.length} goal(s) need a closer look.` : 'Stay consistent and keep pushing!'}`
+                  : overallScore >= 50
+                  ? `You're building a solid foundation. ${atRiskGoals.length > 0 ? `Focus on your ${atRiskGoals.length} active goal(s) to accelerate growth.` : 'Explore your growth areas below.'}`
+                  : overallScore >= 35
+                  ? `Room to grow! Check your performance dimensions below for targeted improvements. ${atRiskGoals.length > 0 ? `${atRiskGoals.length} goal(s) need attention.` : ''}`
+                  : `Every journey starts somewhere. Focus on quick wins in your strongest dimensions to build momentum.`
                 : perfScore
-                ? `Performance Score: ${Math.round(perfScore.overallScore)}/100. ${atRiskGoals.length > 0 ? `${atRiskGoals.length} goal(s) need attention.` : 'Keep it up!'}`
-                : 'Computing your Comprehensive Performance Intelligence Score...'}
+                ? `Your performance is being tracked across multiple dimensions. ${atRiskGoals.length > 0 ? `${atRiskGoals.length} goal(s) need attention.` : 'Keep it up!'}`
+                : 'Your Comprehensive Performance Intelligence Score is being computed...'}
             </p>
 
             {/* Real Achievement Badges (earned from math engine) */}
@@ -438,8 +477,20 @@ export function DashboardPage() {
         />
       )}
 
+      {/* ═══════════════════ Performance Trend & Skill Gap ═══════════════════ */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <PerformanceTrendChart currentScore={overallScore} />
+        <SkillGapRadar userId={user?.id ?? ''} />
+      </div>
+
       {/* ═══════════════════ Stats Grid ═══════════════════ */}
       <StatsGrid stats={stats} />
+
+      {/* ═══════════════════ Quick Check-in ═══════════════════ */}
+      <QuickCheckinWidget />
+
+      {/* ═══════════════════ Peer Comparison ═══════════════════ */}
+      <PeerComparison percentile={percentile} score={overallScore} />
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* ═══════════════════ Goals with Risk Indicators ═══════════════════ */}
@@ -447,6 +498,15 @@ export function DashboardPage() {
 
         {/* ═══════════════════ Quick Actions ═══════════════════ */}
         <QuickActions pendingReviews={pendingReviews} atRiskGoals={atRiskGoals} goalsData={goalsData} />
+      </div>
+
+      {/* ═══════════════════ Goal Velocity ═══════════════════ */}
+      <GoalVelocity goals={goalsData?.data} goalRisks={goalRisks} />
+
+      {/* ═══════════════════ Learning & Recognition ═══════════════════ */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <LearningProgress />
+        <RecognitionFeed />
       </div>
 
       {/* ═══════════════════ Upcoming 1-on-1 Meetings ═══════════════════ */}

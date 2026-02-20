@@ -118,6 +118,7 @@ export class GoalsService {
         ...(input.weight !== undefined && { weight: input.weight }),
         ...(input.isPrivate !== undefined && { isPrivate: input.isPrivate }),
         ...(input.tags !== undefined && { tags: input.tags }),
+        ...((input as any).metadata !== undefined && { metadata: (input as any).metadata }),
         ...(input.status === GoalStatus.COMPLETED && { completedAt: new Date() }),
       },
     });
@@ -604,6 +605,248 @@ export class GoalsService {
     });
 
     return comments as unknown as Array<{ id: string; content: string; createdAt: Date; author: { firstName: string; lastName: string } }>;
+  }
+
+  // =========================================================================
+  // Bulk Update
+  // =========================================================================
+
+  async bulkUpdate(
+    tenantId: string,
+    userId: string,
+    goalIds: string[],
+    updates: {
+      status?: GoalStatus;
+      priority?: GoalPriority;
+      dueDate?: Date;
+    }
+  ): Promise<{ count: number }> {
+    // Verify all goals belong to this tenant
+    const goals = await prisma.goal.findMany({
+      where: { id: { in: goalIds }, tenantId, deletedAt: null },
+      select: { id: true },
+    });
+    const validIds = goals.map((g) => g.id);
+
+    if (validIds.length === 0) {
+      throw new ValidationError('No valid goals found for bulk update');
+    }
+
+    const data: Record<string, unknown> = {};
+    if (updates.status !== undefined) data.status = updates.status;
+    if (updates.priority !== undefined) data.priority = updates.priority;
+    if (updates.dueDate !== undefined) data.dueDate = updates.dueDate;
+    if (updates.status === GoalStatus.COMPLETED) data.completedAt = new Date();
+
+    const result = await prisma.goal.updateMany({
+      where: { id: { in: validIds } },
+      data,
+    });
+
+    auditLogger('GOALS_BULK_UPDATED', userId, tenantId, 'goal', validIds.join(','), {
+      count: result.count,
+      updates: Object.keys(updates),
+    });
+
+    return { count: result.count };
+  }
+
+  // =========================================================================
+  // Activity Feed (merged progress updates + comments)
+  // =========================================================================
+
+  async getActivity(
+    tenantId: string,
+    goalId: string
+  ): Promise<Array<{
+    type: 'progress' | 'comment' | 'status_change';
+    id: string;
+    content: string;
+    createdAt: Date;
+    user: { firstName: string; lastName: string } | null;
+    meta?: Record<string, unknown>;
+  }>> {
+    const goal = await prisma.goal.findFirst({
+      where: { id: goalId, tenantId, deletedAt: null },
+    });
+    if (goal === null) throw new NotFoundError('Goal', goalId);
+
+    const [progressUpdates, comments] = await Promise.all([
+      prisma.goalProgressUpdate.findMany({
+        where: { goalId },
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+      }),
+      prisma.goalComment.findMany({
+        where: { goalId, deletedAt: null },
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+      }),
+    ]);
+
+    // Collect unique user IDs to batch-fetch names
+    const userIds = new Set<string>();
+    progressUpdates.forEach((pu) => userIds.add(pu.updatedById));
+    comments.forEach((c) => userIds.add(c.authorId));
+
+    const users = userIds.size > 0
+      ? await prisma.user.findMany({
+          where: { id: { in: Array.from(userIds) } },
+          select: { id: true, firstName: true, lastName: true },
+        })
+      : [];
+    const userMap = new Map(users.map((u) => [u.id, { firstName: u.firstName, lastName: u.lastName }]));
+
+    const items: Array<{
+      type: 'progress' | 'comment' | 'status_change';
+      id: string;
+      content: string;
+      createdAt: Date;
+      user: { firstName: string; lastName: string } | null;
+      meta?: Record<string, unknown>;
+    }> = [];
+
+    progressUpdates.forEach((pu) => {
+      items.push({
+        type: 'progress',
+        id: pu.id,
+        content: pu.note || `Progress updated from ${pu.previousProgress}% to ${pu.newProgress}%`,
+        createdAt: pu.createdAt,
+        user: userMap.get(pu.updatedById) || null,
+        meta: {
+          previousProgress: pu.previousProgress,
+          newProgress: pu.newProgress,
+          previousValue: pu.previousValue,
+          newValue: pu.newValue,
+        },
+      });
+    });
+
+    comments.forEach((c) => {
+      items.push({
+        type: 'comment',
+        id: c.id,
+        content: c.content,
+        createdAt: c.createdAt,
+        user: userMap.get(c.authorId) || null,
+        meta: {},
+      });
+    });
+
+    // Sort merged list by createdAt desc
+    items.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+    return items;
+  }
+
+  // =========================================================================
+  // Export Goals as CSV
+  // =========================================================================
+
+  async exportGoals(
+    tenantId: string,
+    params: { type?: GoalType; status?: GoalStatus }
+  ): Promise<string> {
+    const where: Record<string, unknown> = { tenantId, deletedAt: null };
+    if (params.type) where.type = params.type;
+    if (params.status) where.status = params.status;
+
+    const goals = await prisma.goal.findMany({
+      where,
+      include: {
+        owner: { select: { firstName: true, lastName: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const header = 'Title,Type,Status,Priority,Progress,Owner,Start Date,Due Date,Tags';
+    const rows = goals.map((g) => {
+      const owner = g.owner ? `${g.owner.firstName} ${g.owner.lastName}` : '';
+      const tags = Array.isArray(g.tags) ? (g.tags as string[]).join('; ') : '';
+      const startDate = g.startDate ? new Date(g.startDate).toISOString().split('T')[0] : '';
+      const dueDate = g.dueDate ? new Date(g.dueDate).toISOString().split('T')[0] : '';
+      return [
+        `"${(g.title || '').replace(/"/g, '""')}"`,
+        g.type,
+        g.status,
+        g.priority,
+        g.progress,
+        `"${owner}"`,
+        startDate,
+        dueDate,
+        `"${tags}"`,
+      ].join(',');
+    });
+
+    return [header, ...rows].join('\n');
+  }
+
+  // =========================================================================
+  // Deadline Reminders Check
+  // =========================================================================
+
+  async checkDeadlineReminders(tenantId: string): Promise<{ reminded: number; overdue: number }> {
+    const now = new Date();
+    const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
+
+    // Goals due within 3 days that are still active
+    const soonGoals = await prisma.goal.findMany({
+      where: {
+        tenantId,
+        status: GoalStatus.ACTIVE,
+        progress: { lt: 100 },
+        dueDate: { lte: threeDaysFromNow, gte: now },
+        deletedAt: null,
+      },
+      include: { owner: { select: { id: true, firstName: true, email: true } } },
+    });
+
+    // Overdue goals
+    const overdueGoals = await prisma.goal.findMany({
+      where: {
+        tenantId,
+        status: GoalStatus.ACTIVE,
+        progress: { lt: 100 },
+        dueDate: { lt: now },
+        deletedAt: null,
+      },
+      include: { owner: { select: { id: true, firstName: true, email: true } } },
+    });
+
+    // Send email reminders for upcoming deadlines
+    for (const goal of soonGoals) {
+      if (goal.owner?.email && goal.dueDate) {
+        const daysLeft = Math.ceil((goal.dueDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000));
+        emailService.sendGoalDeadlineReminder(
+          { firstName: goal.owner.firstName, email: goal.owner.email },
+          { title: goal.title, progress: goal.progress, dueDate: goal.dueDate },
+          daysLeft
+        ).catch((err) => {
+          logger.error('Failed to send deadline reminder', { goalId: goal.id, error: err });
+        });
+      }
+    }
+
+    // Send email for overdue goals
+    for (const goal of overdueGoals) {
+      if (goal.owner?.email && goal.dueDate) {
+        emailService.sendGoalDeadlineReminder(
+          { firstName: goal.owner.firstName, email: goal.owner.email },
+          { title: goal.title, progress: goal.progress, dueDate: goal.dueDate },
+          -Math.ceil((now.getTime() - goal.dueDate.getTime()) / (24 * 60 * 60 * 1000))
+        ).catch((err) => {
+          logger.error('Failed to send overdue notification', { goalId: goal.id, error: err });
+        });
+      }
+    }
+
+    logger.info('Deadline reminders processed', {
+      tenantId,
+      reminded: soonGoals.length,
+      overdue: overdueGoals.length,
+    });
+
+    return { reminded: soonGoals.length, overdue: overdueGoals.length };
   }
 
   /**

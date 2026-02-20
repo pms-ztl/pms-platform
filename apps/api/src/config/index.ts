@@ -63,7 +63,9 @@ const envSchema = z.object({
   ANTHROPIC_API_KEY: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
   GEMINI_API_KEY: z.string().optional(),
-  AI_PRIMARY_PROVIDER: z.enum(['anthropic', 'openai', 'gemini']).default('anthropic'),
+  DEEPSEEK_API_KEY: z.string().optional(),
+  GROQ_API_KEY: z.string().optional(),
+  AI_PRIMARY_PROVIDER: z.enum(['anthropic', 'openai', 'gemini', 'deepseek', 'groq']).default('anthropic'),
   AI_MAX_TOKENS: z.string().default('4096').transform(Number),
   AI_MONTHLY_BUDGET_CENTS: z.string().default('10000').transform(Number),
 });

@@ -46,12 +46,18 @@ import {
   type DevelopmentPlan,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import {
+  PerformanceTimeline,
+  ProfileSkillsRadar,
+  ActivityStream,
+  QuickStatsBanner,
+} from '@/components/employee';
 
 // ============================================================================
 // Constants
 // ============================================================================
 
-type TabKey = 'overview' | 'goals' | 'reviews' | 'feedback' | 'development' | 'evidence';
+type TabKey = 'overview' | 'goals' | 'reviews' | 'feedback' | 'development' | 'evidence' | 'activity';
 
 const TABS: { key: TabKey; label: string; icon: React.ElementType }[] = [
   { key: 'overview', label: 'Overview', icon: ChartBarIcon },
@@ -60,6 +66,7 @@ const TABS: { key: TabKey; label: string; icon: React.ElementType }[] = [
   { key: 'feedback', label: 'Feedback', icon: ChatBubbleLeftRightIcon },
   { key: 'development', label: 'Development', icon: AcademicCapIcon },
   { key: 'evidence', label: 'Evidence', icon: DocumentTextIcon },
+  { key: 'activity', label: 'Activity', icon: ClockIcon },
 ];
 
 const goalStatusColors: Record<string, string> = {
@@ -499,7 +506,7 @@ export function EmployeeProfilePage() {
                 Overall
               </p>
               <p className={clsx('text-3xl font-bold mt-1', ratingColor(performanceScore.overallScore))}>
-                {performanceScore.overallScore.toFixed(1)}
+                {(performanceScore.overallScore ?? 0).toFixed(1)}
               </p>
               <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">
                 {ratingLabel(performanceScore.derivedRating)}
@@ -549,7 +556,7 @@ export function EmployeeProfilePage() {
                   'text-lg font-semibold',
                   performanceScore.trajectory > 0 ? 'text-green-600 dark:text-green-400' : performanceScore.trajectory < 0 ? 'text-red-600 dark:text-red-400' : 'text-secondary-500'
                 )}>
-                  {performanceScore.trajectory > 0 ? '+' : ''}{performanceScore.trajectory.toFixed(2)}
+                  {(performanceScore.trajectory ?? 0) > 0 ? '+' : ''}{(performanceScore.trajectory ?? 0).toFixed(2)}
                 </span>
               </div>
               <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">
@@ -603,21 +610,21 @@ export function EmployeeProfilePage() {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-medium text-secondary-600 dark:text-secondary-400">Goal Attainment</span>
-                <span className="text-xs font-bold text-secondary-900 dark:text-white">{performanceScore.goalAttainment.toFixed(1)}</span>
+                <span className="text-xs font-bold text-secondary-900 dark:text-white">{(performanceScore.goalAttainment ?? 0).toFixed(1)}</span>
               </div>
               <ProgressBar value={performanceScore.goalAttainment} max={5} color="primary" />
             </div>
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-medium text-secondary-600 dark:text-secondary-400">Review Score</span>
-                <span className="text-xs font-bold text-secondary-900 dark:text-white">{performanceScore.reviewScore.toFixed(1)}</span>
+                <span className="text-xs font-bold text-secondary-900 dark:text-white">{(performanceScore.reviewScore ?? 0).toFixed(1)}</span>
               </div>
               <ProgressBar value={performanceScore.reviewScore} max={5} color="success" />
             </div>
             <div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-medium text-secondary-600 dark:text-secondary-400">Feedback Score</span>
-                <span className="text-xs font-bold text-secondary-900 dark:text-white">{performanceScore.feedbackScore.toFixed(1)}</span>
+                <span className="text-xs font-bold text-secondary-900 dark:text-white">{(performanceScore.feedbackScore ?? 0).toFixed(1)}</span>
               </div>
               <ProgressBar value={performanceScore.feedbackScore} max={5} color="warning" />
             </div>
@@ -658,6 +665,17 @@ export function EmployeeProfilePage() {
           subtitle={latestReview ? latestReview.status.replace(/_/g, ' ') : 'No reviews yet'}
         />
       </div>
+
+      {/* ================================================================ */}
+      {/* Quick Stats Banner                                               */}
+      {/* ================================================================ */}
+      <QuickStatsBanner
+        employee={employee}
+        goalStats={{ total: goalStats.total, completed: goalStats.completed }}
+        feedbackCount={feedbackStats.total}
+        avgRating={latestReview?.overallRating ?? null}
+        activePlans={devPlans.filter((p: any) => p.status === 'ACTIVE').length}
+      />
 
       {/* ================================================================ */}
       {/* Quick Links                                                      */}
@@ -864,6 +882,12 @@ export function EmployeeProfilePage() {
               </div>
             )}
           </div>
+
+          {/* Performance Timeline */}
+          <PerformanceTimeline userId={id!} />
+
+          {/* Skills Radar */}
+          <ProfileSkillsRadar userId={id!} />
         </div>
       )}
 
@@ -1250,6 +1274,20 @@ export function EmployeeProfilePage() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* ─── Activity Tab ─── */}
+      {activeTab === 'activity' && (
+        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-6">Activity Stream</h3>
+          <ActivityStream
+            userId={id!}
+            goals={goals}
+            feedbackItems={feedbackItems}
+            reviews={Array.isArray(reviews) ? reviews : []}
+            devPlans={devPlans}
+          />
         </div>
       )}
     </div>

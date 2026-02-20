@@ -11,9 +11,13 @@
 
 import { BaseAgent, type AgentContext } from '../base-agent';
 import * as tools from '../agent-tools';
+import { isAdmin } from '../../../utils/roles';
 import { MS_PER_HOUR, MS_PER_DAY } from '../../../utils/constants';
 
 const SYSTEM_PROMPT = `You are a security analyst for a multi-tenant SaaS platform.
+
+IMPORTANT: Security data is restricted to Admin and Super Admin roles only.
+If the user does not have admin access, politely decline and explain that security information requires admin privileges.
 
 Your capabilities:
 1. **Threat Detection**: Analyze login failures, brute force attempts, unusual patterns
@@ -44,8 +48,15 @@ export class SecurityAgent extends BaseAgent {
     context: AgentContext,
     userMessage: string,
   ): Promise<Record<string, unknown> | null> {
+    // RBAC: Security data is admin-only
+    if (!isAdmin(context.userRoles)) {
+      return {
+        accessDenied: true,
+        message: 'Security and audit data is restricted to administrators. Please contact your admin for security reports.',
+      };
+    }
+
     const lower = userMessage.toLowerCase();
-    const oneHourAgo = new Date(Date.now() - MS_PER_HOUR);
     const oneDayAgo = new Date(Date.now() - MS_PER_DAY);
 
     const data: Record<string, unknown> = {};

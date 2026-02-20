@@ -11,12 +11,14 @@ import clsx from 'clsx';
 
 import { useAuthStore } from '@/store/auth';
 import { useThemeStore } from '@/store/theme';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 type SettingsTab = 'notifications' | 'appearance' | 'integrations' | 'privacy' | 'organization';
 
 export function SettingsPage() {
+  usePageTitle('Settings');
   const { user } = useAuthStore();
-  const { theme, setTheme } = useThemeStore();
+  const { theme, setTheme, compactMode, setCompactMode, animationsEnabled, setAnimationsEnabled } = useThemeStore();
   const [activeTab, setActiveTab] = useState<SettingsTab>('notifications');
 
   // Notification settings state
@@ -29,12 +31,6 @@ export function SettingsPage() {
     pushFeedbackReceived: true,
     pushMentions: true,
     inAppAll: true,
-  });
-
-  // Appearance settings state (compact and animations only - theme is managed by theme store)
-  const [appearanceSettings, setAppearanceSettings] = useState({
-    compactMode: false,
-    animationsEnabled: true,
   });
 
   // Privacy settings state
@@ -123,34 +119,33 @@ export function SettingsPage() {
     </div>
   );
 
+  const themeOptions: { key: typeof theme; label: string; description: string; previewStyle: React.CSSProperties }[] = [
+    { key: 'light',     label: 'Light',      description: 'Clean white backgrounds',   previewStyle: { backgroundColor: '#ffffff', border: '1px solid #d1d5db' } },
+    { key: 'dark',      label: 'Dark',        description: 'Easy on the eyes',          previewStyle: { backgroundColor: '#1e293b' } },
+    { key: 'deep-dark', label: 'Deep Dark',   description: 'Pure black, high contrast', previewStyle: { backgroundColor: '#000000', border: '1px solid #22d3ee', boxShadow: '0 0 8px rgba(6,182,212,0.3)' } },
+    { key: 'system',    label: 'System',      description: 'Follows OS preference',     previewStyle: { background: 'linear-gradient(to right, #ffffff, #1e293b)' } },
+  ];
+
   const renderAppearance = () => (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Theme</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Choose how the application looks.</p>
-        <div className="grid grid-cols-3 gap-4">
-          {(['light', 'dark', 'system'] as const).map((themeOption) => (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {themeOptions.map((opt) => (
             <button
-              key={themeOption}
-              onClick={() => setTheme(themeOption)}
+              key={opt.key}
+              onClick={() => setTheme(opt.key)}
               className={clsx(
-                'p-4 border rounded-lg text-center transition-all duration-200',
-                theme === themeOption
-                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 ring-2 ring-primary-500'
+                'p-4 border rounded-xl text-center transition-all duration-200',
+                theme === opt.key
+                  ? 'border-primary-500 ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/30'
                   : 'border-secondary-200 dark:border-secondary-700 hover:border-primary-300 dark:hover:border-primary-600'
               )}
             >
-              <div
-                className={clsx(
-                  'w-12 h-8 mx-auto rounded mb-2',
-                  themeOption === 'light'
-                    ? 'bg-white border border-secondary-200'
-                    : themeOption === 'dark'
-                    ? 'bg-secondary-800'
-                    : 'bg-gradient-to-r from-white to-secondary-800'
-                )}
-              />
-              <p className="text-sm font-medium text-secondary-900 dark:text-white capitalize">{themeOption}</p>
+              <div className="w-12 h-8 mx-auto rounded mb-2" style={opt.previewStyle} />
+              <p className="text-sm font-medium text-secondary-900 dark:text-white">{opt.label}</p>
+              <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-0.5">{opt.description}</p>
             </button>
           ))}
         </div>
@@ -168,10 +163,8 @@ export function SettingsPage() {
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                checked={appearanceSettings.compactMode}
-                onChange={(e) =>
-                  setAppearanceSettings({ ...appearanceSettings, compactMode: e.target.checked })
-                }
+                checked={compactMode}
+                onChange={(e) => setCompactMode(e.target.checked)}
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-secondary-200 dark:bg-secondary-700 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-secondary-300 dark:after:border-secondary-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
@@ -185,10 +178,8 @@ export function SettingsPage() {
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                checked={appearanceSettings.animationsEnabled}
-                onChange={(e) =>
-                  setAppearanceSettings({ ...appearanceSettings, animationsEnabled: e.target.checked })
-                }
+                checked={animationsEnabled}
+                onChange={(e) => setAnimationsEnabled(e.target.checked)}
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-secondary-200 dark:bg-secondary-700 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-secondary-300 dark:after:border-secondary-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>

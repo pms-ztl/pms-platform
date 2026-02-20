@@ -12,6 +12,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { prisma } from '@pms/database';
 import type { AuthenticatedRequest } from '../types';
 import { SUPER_ADMIN_ROLES } from '../utils/roles';
+import { isDevelopment } from '../config';
 
 export async function aiAccessGuard(
   req: Request,
@@ -26,6 +27,12 @@ export async function aiAccessGuard(
       success: false,
       error: { code: 'UNAUTHORIZED', message: 'Authentication required' },
     });
+    return;
+  }
+
+  // Development mode: bypass subscription & feature checks for all users
+  if (isDevelopment) {
+    next();
     return;
   }
 

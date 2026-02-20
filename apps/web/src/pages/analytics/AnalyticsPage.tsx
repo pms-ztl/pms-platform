@@ -42,22 +42,35 @@ import {
   type ReviewCycle,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import {
+  AnalyticsFilters,
+  ExportToolbar,
+  TeamPerformanceChart,
+  GoalCompletionTrends,
+  FeedbackAnalysisChart,
+  PerformanceDistributionChart,
+  type FilterState,
+} from '@/components/analytics';
 
 const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'];
 
 export function AnalyticsPage() {
+  usePageTitle('Analytics');
   const { user } = useAuthStore();
   const [selectedCycleId, setSelectedCycleId] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'overview' | 'performance' | 'goals' | 'feedback' | 'fairness'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'performance' | 'goals' | 'feedback' | 'fairness' | 'team'>('overview');
+  const [filters, setFilters] = useState<FilterState>({ months: 6, cycleId: '' });
 
   const isHRAdmin = user?.roles?.includes('HR_ADMIN') || user?.roles?.includes('ADMIN');
   const isManager = user?.roles?.includes('MANAGER') || isHRAdmin;
 
-  const { data: dashboard, isLoading: loadingDashboard } = useQuery({
+  const { data: dashboard, isLoading: loadingDashboard, isError: dashboardError } = useQuery({
     queryKey: ['analytics', 'dashboard'],
     queryFn: () => analyticsApi.getDashboard(),
     staleTime: 30_000,
     refetchOnWindowFocus: true,
+    retry: 1,
   });
 
   const { data: distribution } = useQuery({
@@ -65,20 +78,23 @@ export function AnalyticsPage() {
     queryFn: () => analyticsApi.getPerformanceDistribution(selectedCycleId || undefined),
     staleTime: 30_000,
     refetchOnWindowFocus: true,
+    retry: 1,
   });
 
   const { data: goalTrends } = useQuery({
-    queryKey: ['analytics', 'goal-trends'],
-    queryFn: () => analyticsApi.getGoalTrends(6),
+    queryKey: ['analytics', 'goal-trends', filters.months],
+    queryFn: () => analyticsApi.getGoalTrends(filters.months),
     staleTime: 30_000,
     refetchOnWindowFocus: true,
+    retry: 1,
   });
 
   const { data: feedbackTrends } = useQuery({
-    queryKey: ['analytics', 'feedback-trends'],
-    queryFn: () => analyticsApi.getFeedbackTrends(6),
+    queryKey: ['analytics', 'feedback-trends', filters.months],
+    queryFn: () => analyticsApi.getFeedbackTrends(filters.months),
     staleTime: 30_000,
     refetchOnWindowFocus: true,
+    retry: 1,
   });
 
   const { data: teamPerformance } = useQuery({
@@ -87,6 +103,7 @@ export function AnalyticsPage() {
     enabled: isHRAdmin,
     staleTime: 30_000,
     refetchOnWindowFocus: true,
+    retry: 1,
   });
 
   const { data: biasMetrics } = useQuery({
@@ -152,10 +169,22 @@ export function AnalyticsPage() {
   );
 
   const renderOverview = () => {
-    if (loadingDashboard || !dashboard) {
+    if (loadingDashboard) {
       return (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+        </div>
+      );
+    }
+
+    if (dashboardError || !dashboard) {
+      return (
+        <div className="text-center py-12">
+          <ChartBarIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+          <h3 className="mt-2 text-lg font-medium text-secondary-900 dark:text-white">No Analytics Data Yet</h3>
+          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
+            Analytics will populate as employees create goals, complete reviews, and provide feedback.
+          </p>
         </div>
       );
     }
@@ -564,39 +593,32 @@ export function AnalyticsPage() {
           <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Analytics</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Insights into performance, goals, and feedback</p>
         </div>
-        {isHRAdmin && (
-          <div className="flex gap-2">
-            <button onClick={() => handleExport('goals')} className="btn-secondary text-sm">
-              <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
-              Export Goals
-            </button>
-            <button onClick={() => handleExport('reviews')} className="btn-secondary text-sm">
-              <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
-              Export Reviews
-            </button>
-            <button onClick={() => handleExport('feedback')} className="btn-secondary text-sm">
-              <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
-              Export Feedback
-            </button>
-          </div>
-        )}
+        {isHRAdmin && <ExportToolbar />}
       </div>
+
+      {/* Filters */}
+      <AnalyticsFilters
+        filters={filters}
+        onChange={setFilters}
+        cycles={cycles}
+      />
 
       {/* Tabs */}
       <div className="border-b border-secondary-200 dark:border-secondary-700">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex space-x-8 overflow-x-auto">
           {[
             { key: 'overview', label: 'Overview' },
             { key: 'performance', label: 'Performance' },
             { key: 'goals', label: 'Goals' },
             { key: 'feedback', label: 'Feedback' },
+            ...(isManager ? [{ key: 'team', label: 'Team' }] : []),
             ...(isHRAdmin ? [{ key: 'fairness', label: 'Fairness' }] : []),
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key as typeof activeTab)}
               className={clsx(
-                'py-4 px-1 border-b-2 font-medium text-sm',
+                'py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap',
                 activeTab === tab.key
                   ? 'border-primary-500 text-primary-600 dark:text-primary-400'
                   : 'border-transparent text-secondary-500 hover:text-secondary-700 dark:text-secondary-400 dark:hover:text-secondary-300'
@@ -613,6 +635,15 @@ export function AnalyticsPage() {
       {activeTab === 'performance' && renderPerformance()}
       {activeTab === 'goals' && renderGoalsTrends()}
       {activeTab === 'feedback' && renderFeedbackTrends()}
+      {activeTab === 'team' && isManager && (
+        <div className="space-y-6">
+          <TeamPerformanceChart managerId={user?.id} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <GoalCompletionTrends months={filters.months} />
+            <PerformanceDistributionChart cycleId={filters.cycleId || undefined} />
+          </div>
+        </div>
+      )}
       {activeTab === 'fairness' && renderFairness()}
     </div>
   );

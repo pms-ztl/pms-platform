@@ -126,6 +126,9 @@ model Tenant {
   notifications               Notification[]   @relation("TenantNotifications")
   agentConversations          AgentConversation[]
   aiInsightCards              AIInsightCard[]
+  upgradeRequests             UpgradeRequest[]
+  conversations               Conversation[]
+  pulseSurveyResponses        PulseSurveyResponse[]
 
   @@index([slug])
   @@index([domain])
@@ -274,6 +277,9 @@ model Team {
 
   // Actionable Insights & Planning Relations
   compositionAnalyses TeamCompositionAnalysis[]
+
+  // Inner Chat
+  chatChannel Conversation[]
 
   @@unique([tenantId, code])
   @@index([tenantId])
@@ -707,6 +713,7 @@ model User {
   sentimentTrends        SentimentTrend[]        @relation("UserSentimentTrends")
   engagementScores       EngagementScore[]       @relation("UserEngagementScores")
   engagementEvents       EngagementEvent[]       @relation("UserEngagementEvents")
+  pulseSurveyResponses   PulseSurveyResponse[]   @relation("UserPulseSurveyResponses")
   performanceComparisons PerformanceComparison[] @relation("UserPerformanceComparisons")
   anomaliesAcknowledged2 AnomalyDetection[]      @relation("AnomalyAcknowledger2")
   mlModelsCreated        MLModel[]               @relation("MLModelCreator")
@@ -724,6 +731,16 @@ model User {
   calendarEvents     CalendarEvent[] @relation("UserCalendarEvents")
   agentConversations AgentConversation[]
   aiInsightCards     AIInsightCard[]
+
+  // Upgrade Requests
+  upgradeRequestsSubmitted UpgradeRequest[] @relation("UpgradeRequester")
+  upgradeRequestsReviewed  UpgradeRequest[] @relation("UpgradeReviewer")
+
+  // Inner Chat
+  conversationsCreated Conversation[]              @relation("ConversationCreator")
+  chatParticipations   ConversationParticipant[]
+  chatMessagesSent     ChatMessage[]               @relation("ChatMessageSender")
+  chatMessagesPinned   ChatMessage[]               @relation("MessagePinner")
 
   @@unique([tenantId, email])
   @@unique([tenantId, employeeNumber])
@@ -766,6 +783,7 @@ model Role {
   name        String
   description String?
   isSystem    Boolean   @default(false) @map("is_system")
+  category    String?   // ADMIN, HR, MANAGER, EMPLOYEE — used for authorization category fallback
   permissions Json      @default("[]")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
@@ -5573,6 +5591,43 @@ model ScenarioAnalysis {
 }
 
 // ============================================================================
+// PULSE SURVEY & MOOD TRACKING
+// ============================================================================
+
+model PulseSurveyResponse {
+  id       String @id @default(uuid()) @db.Uuid
+  tenantId String @map("tenant_id") @db.Uuid
+  userId   String @map("user_id") @db.Uuid
+
+  // Scores (1-5 scale)
+  moodScore   Int @map("mood_score") // 1=Very Low, 2=Low, 3=Neutral, 4=Good, 5=Great
+  energyScore Int? @map("energy_score") // Optional 1-5
+  stressScore Int? @map("stress_score") // Optional 1-5 (1=No stress, 5=Very stressed)
+
+  // Feedback
+  comment     String?  @map("comment") @db.Text
+  isAnonymous Boolean  @default(false) @map("is_anonymous")
+
+  // Survey Period
+  surveyDate DateTime @map("survey_date") @db.Date
+  surveyType String   @default("DAILY") @map("survey_type") // DAILY, WEEKLY
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation("UserPulseSurveyResponses", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, userId, surveyDate, surveyType])
+  @@index([tenantId])
+  @@index([userId])
+  @@index([surveyDate])
+  @@index([moodScore])
+  @@map("pulse_survey_responses")
+}
+
+// ============================================================================
 // MULTI-TENANT SAAS: SUBSCRIPTIONS, LICENSES & ONBOARDING
 // ============================================================================
 
@@ -5620,6 +5675,33 @@ model TenantInvoice {
   @@map("tenant_invoices")
 }
 
+model UpgradeRequest {
+  id                    String    @id @default(uuid()) @db.Uuid
+  tenantId              String    @map("tenant_id") @db.Uuid
+  requestedBy           String    @map("requested_by") @db.Uuid
+  currentPlan           String    @map("current_plan") // Plan at time of request
+  requestedPlan         String    @map("requested_plan") // Desired plan
+  requestedLicenseCount Int?      @map("requested_license_count")
+  requestedMaxLevel     Int?      @map("requested_max_level")
+  reason                String?
+  status                String    @default("PENDING") // PENDING, APPROVED, REJECTED, CANCELLED
+  reviewedBy            String?   @map("reviewed_by") @db.Uuid
+  reviewedAt            DateTime? @map("reviewed_at")
+  reviewNotes           String?   @map("review_notes")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  requester User   @relation("UpgradeRequester", fields: [requestedBy], references: [id])
+  reviewer  User?  @relation("UpgradeReviewer", fields: [reviewedBy], references: [id])
+
+  @@index([tenantId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("upgrade_requests")
+}
+
 model ExcelUpload {
   id           String   @id @default(uuid()) @db.Uuid
   tenantId     String   @map("tenant_id") @db.Uuid
@@ -5628,9 +5710,12 @@ model ExcelUpload {
   totalRows    Int      @default(0) @map("total_rows")
   successCount Int      @default(0) @map("success_count")
   errorCount   Int      @default(0) @map("error_count")
-  status       String   @default("PROCESSING") // PROCESSING, COMPLETED, FAILED, PARTIAL
-  errors       Json     @default("[]") // Row-wise validation errors
-  createdAt    DateTime @default(now()) @map("created_at")
+  status        String   @default("PROCESSING") // PROCESSING, COMPLETED, FAILED, PARTIAL, PREVIEW
+  errors        Json     @default("[]") // Row-wise validation errors
+  previewData   Json?    @map("preview_data") // Parsed rows stored for two-phase confirm
+  aiAnalysis    Json?    @map("ai_analysis") // AI validation agent analysis results
+  acceptedFixes Json?    @map("accepted_fixes") // User-accepted AI fix IDs
+  createdAt     DateTime @default(now()) @map("created_at")
 
   tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   uploadedBy User   @relation("ExcelUploader", fields: [uploadedById], references: [id])
@@ -5720,4 +5805,92 @@ model AIInsightCard {
   @@index([agentType])
   @@index([isRead, isDismissed])
   @@map("ai_insight_cards")
+}
+
+// ============================================================================
+// INNER CHAT SYSTEM (DMs, Groups, Team Channels)
+// ============================================================================
+
+enum ConversationType {
+  DIRECT       // 1-on-1 DM
+  GROUP        // Ad-hoc group chat
+  TEAM_CHANNEL // Auto-linked to a Team
+}
+
+enum MessageType {
+  TEXT
+  SYSTEM // "User joined", "User left", etc.
+}
+
+model Conversation {
+  id            String           @id @default(uuid()) @db.Uuid
+  tenantId      String           @map("tenant_id") @db.Uuid
+  type          ConversationType
+  name          String?          // null for DIRECT, required for GROUP/TEAM_CHANNEL
+  avatarUrl     String?          @map("avatar_url")
+  teamId        String?          @map("team_id") @db.Uuid
+  createdById   String           @map("created_by_id") @db.Uuid
+  lastMessageAt DateTime?        @map("last_message_at")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+
+  tenant       Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  team         Team?                     @relation(fields: [teamId], references: [id])
+  createdBy    User                      @relation("ConversationCreator", fields: [createdById], references: [id])
+  participants ConversationParticipant[]
+  messages     ChatMessage[]
+
+  @@index([tenantId])
+  @@index([teamId])
+  @@index([lastMessageAt])
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String    @id @default(uuid()) @db.Uuid
+  conversationId String    @map("conversation_id") @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  role           String    @default("MEMBER") // ADMIN, MEMBER
+  lastReadAt     DateTime? @map("last_read_at")
+  mutedAt        DateTime? @map("muted_at")
+  joinedAt       DateTime  @default(now()) @map("joined_at")
+  leftAt         DateTime? @map("left_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id])
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@map("conversation_participants")
+}
+
+model ChatMessage {
+  id             String      @id @default(uuid()) @db.Uuid
+  conversationId String      @map("conversation_id") @db.Uuid
+  senderId       String      @map("sender_id") @db.Uuid
+  content        String
+  type           MessageType @default(TEXT)
+  reactions      Json?       @default("[]")
+  replyToId      String?     @map("reply_to_id") @db.Uuid
+  isPinned       Boolean     @default(false) @map("is_pinned")
+  pinnedById     String?     @map("pinned_by_id") @db.Uuid
+  pinnedAt       DateTime?   @map("pinned_at")
+  forwardedFromId String?    @map("forwarded_from_id") @db.Uuid
+  editedAt       DateTime?   @map("edited_at")
+  deletedAt      DateTime?   @map("deleted_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+
+  conversation    Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender          User          @relation("ChatMessageSender", fields: [senderId], references: [id])
+  replyTo         ChatMessage?  @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies         ChatMessage[] @relation("MessageReplies")
+  forwardedFrom   ChatMessage?  @relation("MessageForwards", fields: [forwardedFromId], references: [id], onDelete: SetNull)
+  forwards        ChatMessage[] @relation("MessageForwards")
+  pinnedBy        User?         @relation("MessagePinner", fields: [pinnedById], references: [id])
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+  @@index([replyToId])
+  @@index([conversationId, isPinned])
+  @@map("chat_messages")
 }

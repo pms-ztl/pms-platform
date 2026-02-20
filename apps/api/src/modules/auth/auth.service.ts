@@ -98,8 +98,11 @@ export class AuthService {
     // Generate tokens
     const roles = user.userRoles.map((ur) => ur.role.name);
     const permissions = this.extractPermissions(user.userRoles);
+    const roleCategories = [...new Set(
+      user.userRoles.map((ur) => (ur.role as any).category).filter(Boolean) as string[]
+    )];
 
-    const tokens = await this.generateTokens(user, roles, permissions);
+    const tokens = await this.generateTokens(user, roles, permissions, roleCategories);
 
     // Update last login
     await prisma.user.update({
@@ -155,8 +158,11 @@ export class AuthService {
 
     const roles = user.userRoles.map((ur) => ur.role.name);
     const permissions = this.extractPermissions(user.userRoles);
+    const roleCategories = [...new Set(
+      user.userRoles.map((ur) => (ur.role as any).category).filter(Boolean) as string[]
+    )];
 
-    const tokens = await this.generateTokens(user, roles, permissions);
+    const tokens = await this.generateTokens(user, roles, permissions, roleCategories);
 
     await prisma.user.update({
       where: { id: user.id },
@@ -218,8 +224,11 @@ export class AuthService {
 
     const roles = user.userRoles.map((ur) => ur.role.name);
     const permissions = this.extractPermissions(user.userRoles);
+    const roleCategories = [...new Set(
+      user.userRoles.map((ur) => (ur.role as any).category).filter(Boolean) as string[]
+    )];
 
-    return this.generateTokens(user, roles, permissions);
+    return this.generateTokens(user, roles, permissions, roleCategories);
   }
 
   async logout(userId: string, accessToken: string, refreshToken?: string): Promise<void> {
@@ -516,6 +525,7 @@ export class AuthService {
       lastName: user.lastName,
       roles: payload.roles,
       permissions: payload.permissions,
+      roleCategories: payload.roleCategories,
       // Profile fields
       displayName: user.displayName ?? undefined,
       avatarUrl: user.avatarUrl ?? undefined,
@@ -546,7 +556,8 @@ export class AuthService {
   private async generateTokens(
     user: { id: string; tenantId: string; email: string },
     roles: string[],
-    permissions: string[]
+    permissions: string[],
+    roleCategories?: string[]
   ): Promise<TokenPair> {
     const now = Math.floor(Date.now() / 1000);
 
@@ -556,6 +567,7 @@ export class AuthService {
       email: user.email,
       roles,
       permissions,
+      ...(roleCategories && roleCategories.length > 0 ? { roleCategories } : {}),
     };
 
     const accessToken = jwt.sign(accessPayload, config.JWT_SECRET, {

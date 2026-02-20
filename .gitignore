@@ -132,3 +132,10 @@ WHAT_TO_DO_NOW.md
 WORKFLOW_DIAGRAM.txt
 Dockerfile.api
 docs/audit/*.txt
+_create_modules.py
+_role_b64.txt
+_write_role_page.js
+
+# Large media / images (not source code)
+img/
+apps/web/public/bg-vid.mp4

@@ -2,11 +2,6 @@ import { Fragment, useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Dialog, Transition, Menu } from '@headlessui/react';
 import {
-  HomeIcon,
-  FlagIcon,
-  ClipboardDocumentCheckIcon,
-  ChatBubbleLeftRightIcon,
-  UsersIcon,
   Cog6ToothIcon,
   Bars3Icon,
   XMarkIcon,
@@ -14,33 +9,6 @@ import {
   ArrowRightOnRectangleIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  UserGroupIcon,
-  ChartBarIcon,
-  ScaleIcon,
-  BoltIcon,
-  DocumentTextIcon,
-  CalendarDaysIcon,
-  AcademicCapIcon,
-  ExclamationTriangleIcon,
-  StarIcon,
-  DocumentChartBarIcon,
-  UserPlusIcon,
-  QuestionMarkCircleIcon,
-  AdjustmentsHorizontalIcon,
-  ShieldCheckIcon,
-  CurrencyDollarIcon,
-  ArrowTrendingUpIcon,
-  DocumentMagnifyingGlassIcon,
-  MegaphoneIcon,
-  PuzzlePieceIcon,
-  CheckBadgeIcon,
-  TrophyIcon,
-  RectangleGroupIcon,
-  MapIcon,
-  ClipboardDocumentListIcon,
-  ArrowUpTrayIcon,
-  KeyIcon,
-  SparklesIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
@@ -51,95 +19,16 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { AIChatWidget } from '@/components/ai/AIChatWidget';
 import { LiveIndicator } from '@/components/ui/ConnectionStatus';
 import { ConnectionStatus } from '@/components/ui/ConnectionStatus';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { CommandPalette } from '@/components/CommandPalette';
+import { KeyboardShortcuts } from '@/components/KeyboardShortcuts';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { ScrollToTop } from '@/components/ui/ScrollToTop';
+import { TopLoadingBar } from '@/components/ui/TopLoadingBar';
+import { useRouteChangeLoader } from '@/hooks/useRouteChangeLoader';
+import { navigationSections, adminSection, type NavItem, type NavSection } from '@/config/navigation';
 
-// ── Navigation Config ─────────────────────────────────────────────────────
-
-type NavItem = {
-  name: string;
-  href: string;
-  icon: React.ForwardRefExoticComponent<any>;
-  roles?: string[];
-};
-
-type NavSection = {
-  label: string;
-  items: NavItem[];
-  collapsible?: boolean;
-};
-
-const navigationSections: NavSection[] = [
-  {
-    label: 'Core',
-    items: [
-      { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-      { name: 'Goals', href: '/goals', icon: FlagIcon },
-      { name: 'Goal Alignment', href: '/goal-alignment', icon: MapIcon },
-      { name: '1-on-1s', href: '/one-on-ones', icon: CalendarDaysIcon },
-      { name: 'Reviews', href: '/reviews', icon: ClipboardDocumentCheckIcon },
-      { name: 'Self-Appraisal', href: '/self-appraisal', icon: DocumentTextIcon },
-      { name: 'Feedback', href: '/feedback', icon: ChatBubbleLeftRightIcon },
-      { name: 'Recognition', href: '/recognition', icon: StarIcon },
-    ],
-  },
-  {
-    label: 'Growth',
-    collapsible: true,
-    items: [
-      { name: 'Skills', href: '/skills', icon: PuzzlePieceIcon },
-      { name: 'Development', href: '/development', icon: AcademicCapIcon },
-      { name: 'Career Path', href: '/career', icon: ArrowTrendingUpIcon },
-      { name: 'Evidence', href: '/evidence', icon: DocumentMagnifyingGlassIcon },
-      { name: 'Leaderboard', href: '/leaderboard', icon: TrophyIcon },
-    ],
-  },
-  {
-    label: 'Management',
-    collapsible: true,
-    items: [
-      { name: 'Review Cycles', href: '/review-cycles', icon: ClipboardDocumentListIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-      { name: 'PIP', href: '/pip', icon: ExclamationTriangleIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-      { name: 'Compensation', href: '/compensation', icon: CurrencyDollarIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-      { name: 'Promotions', href: '/promotions', icon: ArrowTrendingUpIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-      { name: 'Calibration', href: '/calibration', icon: ScaleIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-      { name: 'Succession', href: '/succession', icon: UserPlusIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
-      { name: 'Manager Hub', href: '/manager-dashboard', icon: RectangleGroupIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-      { name: 'Team', href: '/team', icon: UsersIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-    ],
-  },
-  {
-    label: 'Insights',
-    collapsible: true,
-    items: [
-      { name: 'Analytics', href: '/analytics', icon: ChartBarIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-      { name: 'Reports', href: '/reports', icon: DocumentChartBarIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-      { name: 'Real-time', href: '/realtime', icon: BoltIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-      { name: 'HR Analytics', href: '/hr-analytics', icon: AdjustmentsHorizontalIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
-      { name: 'Compliance', href: '/compliance', icon: CheckBadgeIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
-    ],
-  },
-  {
-    label: 'More',
-    collapsible: true,
-    items: [
-      { name: 'Announcements', href: '/announcements', icon: MegaphoneIcon },
-      { name: 'Help', href: '/help', icon: QuestionMarkCircleIcon },
-    ],
-  },
-];
-
-const adminSection: NavSection = {
-  label: 'Administration',
-  collapsible: true,
-  items: [
-    { name: 'User Management', href: '/admin/users', icon: UserGroupIcon },
-    { name: 'License & Seats', href: '/admin/licenses', icon: KeyIcon },
-    { name: 'Excel Upload', href: '/admin/excel-upload', icon: ArrowUpTrayIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
-    { name: 'Configuration', href: '/admin/config', icon: Cog6ToothIcon },
-    { name: 'Audit Log', href: '/admin/audit', icon: DocumentMagnifyingGlassIcon },
-    { name: 'Moderator', href: '/reviews/moderate', icon: ShieldCheckIcon },
-    { name: 'AI Access', href: '/admin/ai-access', icon: SparklesIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN'] },
-  ],
-};
+// Navigation config imported from @/config/navigation
 
 // ── NavLink ───────────────────────────────────────────────────────────────
 
@@ -347,34 +236,6 @@ function SidebarContent({
   );
 }
 
-// ── AI Workspace Toggle ──────────────────────────────────────────────────
-
-function AIWorkspaceToggle() {
-  const { isAiMode, toggleAiMode } = useAIWorkspaceStore();
-
-  return (
-    <button
-      onClick={toggleAiMode}
-      className={clsx(
-        'relative flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-300',
-        isAiMode
-          ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30 ring-2 ring-purple-400/50'
-          : 'bg-secondary-100 dark:bg-white/[0.06] text-secondary-600 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-white/[0.1]',
-      )}
-      title={isAiMode ? 'Switch to PMS Workspace' : 'Switch to AI Workspace'}
-    >
-      <SparklesIcon className={clsx('h-4 w-4 transition-transform duration-300', isAiMode && 'animate-pulse')} />
-      <span className="hidden sm:inline">{isAiMode ? 'AI Mode' : 'AI'}</span>
-      {isAiMode && (
-        <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-300" />
-        </span>
-      )}
-    </button>
-  );
-}
-
 // ── Main Layout ──────────────────────────────────────────────────────────
 
 export function DashboardLayout() {
@@ -383,6 +244,9 @@ export function DashboardLayout() {
   const location = useLocation();
   const { user, logout, refreshToken } = useAuthStore();
   const { isAiMode } = useAIWorkspaceStore();
+
+  // Route change loading bar
+  useRouteChangeLoader();
 
   const userRoles = user?.roles ?? [];
   const isAdmin = userRoles.some((r: string) => ['SUPER_ADMIN', 'HR_ADMIN', 'ADMIN'].includes(r));
@@ -399,7 +263,10 @@ export function DashboardLayout() {
   };
 
   return (
-    <div className="min-h-screen transition-colors duration-300">
+    <div className="min-h-screen transition-colors duration-300 dashboard-scaled">
+      {/* Top loading bar */}
+      <TopLoadingBar />
+
       {/* Connection status toast */}
       <ConnectionStatus />
 
@@ -446,7 +313,7 @@ export function DashboardLayout() {
                   </div>
                 </Transition.Child>
 
-                <div className="flex grow flex-col bg-white dark:bg-[#0a0d1a]">
+                <div className="flex grow flex-col bg-white dark:bg-surface-dark">
                   <SidebarContent
                     userRoles={userRoles}
                     isAdmin={isAdmin}
@@ -467,7 +334,7 @@ export function DashboardLayout() {
           sidebarWidth
         )}
       >
-        <div className="flex grow flex-col overflow-hidden bg-white dark:bg-[#0a0d1a] border-r border-secondary-200/60 dark:border-white/[0.06] frosted-noise">
+        <div className="flex grow flex-col overflow-hidden bg-white dark:bg-surface-dark border-r border-secondary-200/60 dark:border-white/[0.06] frosted-noise">
           <SidebarContent
             userRoles={userRoles}
             isAdmin={isAdmin}
@@ -496,10 +363,8 @@ export function DashboardLayout() {
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1" />
             <div className="flex items-center gap-x-4 lg:gap-x-5">
+              <ThemeToggle />
               <NotificationBell />
-
-              {/* AI Workspace Toggle — visible only when user has AI access */}
-              {user?.aiAccessEnabled && <AIWorkspaceToggle />}
 
               <Menu as="div" className="relative">
                 <Menu.Button className="-m-1.5 flex items-center p-1.5 rounded-lg hover:bg-white/[0.04] transition-colors">
@@ -529,7 +394,7 @@ export function DashboardLayout() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 z-10 mt-2.5 w-48 origin-top-right rounded-xl bg-white/90 dark:bg-[#111430]/90 backdrop-blur-2xl py-2 shadow-xl ring-1 ring-secondary-900/5 dark:ring-white/[0.08] focus:outline-none">
+                  <Menu.Items className="absolute right-0 z-10 mt-2.5 w-48 origin-top-right rounded-xl bg-white/90 dark:bg-surface-card/90 backdrop-blur-2xl py-2 shadow-xl ring-1 ring-secondary-900/5 dark:ring-white/[0.08] focus:outline-none">
                     <Menu.Item>
                       {({ active }) => (
                         <Link
@@ -562,13 +427,19 @@ export function DashboardLayout() {
         {/* Main content area */}
         <main className="py-8">
           <div className="px-4 sm:px-6 lg:px-8 page-content">
+            <Breadcrumbs />
             <Outlet />
           </div>
         </main>
       </div>
 
-      {/* AI Chat Widget — hidden when in AI workspace mode (workspace has integrated chat) */}
-      {!isAiMode && <AIChatWidget />}
+      {/* Floating UI elements */}
+      <ScrollToTop />
+      {!(isAiMode && location.pathname === '/dashboard') && <AIChatWidget />}
+
+      {/* Global overlays */}
+      <CommandPalette />
+      <KeyboardShortcuts />
     </div>
   );
 }

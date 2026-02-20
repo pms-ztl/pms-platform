@@ -45,6 +45,10 @@ export class OnboardingAgent extends BaseAgent {
     context: AgentContext,
     _userMessage: string,
   ): Promise<Record<string, unknown> | null> {
+    // RBAC: Manager+ only — exposes license info and new hire audit events
+    const denied = this.requireManager(context, 'Employee onboarding management');
+    if (denied) return denied;
+
     const license = await tools.queryLicenseUsage(context.tenantId);
 
     // Get recently created users for onboarding tracking

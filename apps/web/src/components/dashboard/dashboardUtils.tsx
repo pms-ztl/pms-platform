@@ -26,7 +26,7 @@ export function ratingStars(rating: number) {
           className={clsx('w-4 h-4', i <= Math.round(rating) ? 'text-amber-400' : 'text-secondary-300 dark:text-secondary-600')}
         />
       ))}
-      <span className="ml-1 text-sm font-medium text-secondary-700 dark:text-secondary-300">{rating.toFixed(1)}</span>
+      <span className="ml-1 text-sm font-medium text-secondary-700 dark:text-secondary-300">{(rating ?? 0).toFixed(1)}</span>
     </div>
   );
 }

@@ -9,6 +9,12 @@ export { default as GoalsWithRisk } from './GoalsWithRisk';
 export { default as QuickActions } from './QuickActions';
 export { default as ManagerGoalCascade } from './ManagerGoalCascade';
 export { default as RecentActivity } from './RecentActivity';
+export { default as PerformanceTrendChart } from './PerformanceTrendChart';
+export { default as SkillGapRadar } from './SkillGapRadar';
+export { default as PeerComparison } from './PeerComparison';
+export { default as LearningProgress } from './LearningProgress';
+export { default as RecognitionFeed } from './RecognitionFeed';
+export { default as GoalVelocity } from './GoalVelocity';
 export { riskBadge, ratingStars, MANAGER_ROLES } from './dashboardUtils';
 
 export type { CPISScoreDisplayProps } from './CPISScoreDisplay';

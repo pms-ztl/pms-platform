@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { feedbackApi, usersApi, type Feedback, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const AVATAR_COLORS = [
   'bg-primary-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500',
@@ -44,6 +45,7 @@ function timeAgo(dateStr: string) {
 }
 
 export function RecognitionPage() {
+  usePageTitle('Recognition');
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const [showGiveModal, setShowGiveModal] = useState(false);

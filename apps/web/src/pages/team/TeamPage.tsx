@@ -15,8 +15,10 @@ import clsx from 'clsx';
 import { usersApi, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { ActivityHeatmap } from '@/components/realtime-performance/ActivityHeatmap';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export function TeamPage() {
+  usePageTitle('Team');
   const { user } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'list' | 'org-chart'>('list');

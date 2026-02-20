@@ -1,6 +1,14 @@
 import { prisma } from '@pms/database';
 import { ValidationError } from '../../utils/errors';
 
+/** Maximum org levels allowed per subscription plan */
+export const PLAN_MAX_LEVELS: Record<string, number> = {
+  FREE: 4,
+  STARTER: 8,
+  PROFESSIONAL: 12,
+  ENTERPRISE: 16,
+};
+
 export class LicenseService {
   /**
    * Get the number of active (non-archived, non-deleted) users for a tenant.
@@ -80,7 +88,7 @@ export class LicenseService {
   async validateLevelForTenant(tenantId: string, level: number): Promise<void> {
     const tenant = await prisma.tenant.findUnique({
       where: { id: tenantId },
-      select: { maxLevel: true },
+      select: { maxLevel: true, subscriptionPlan: true },
     });
 
     if (!tenant) {
@@ -91,12 +99,15 @@ export class LicenseService {
       throw new ValidationError(`Level must be between 1 and 16. Got: ${level}`);
     }
 
-    if (level > tenant.maxLevel) {
-      throw new ValidationError(
-        `Level ${level} exceeds this organization's maximum level of ${tenant.maxLevel}. ` +
-        `Contact your admin to increase the max level configuration.`,
-        { level, maxLevel: tenant.maxLevel }
-      );
+    // Apply both the tenant's configured maxLevel AND the plan-based cap
+    const planCap = PLAN_MAX_LEVELS[tenant.subscriptionPlan] ?? 16;
+    const effectiveMax = Math.min(tenant.maxLevel, planCap);
+
+    if (level > effectiveMax) {
+      const msg = level > planCap
+        ? `Level ${level} exceeds the ${tenant.subscriptionPlan} plan limit of ${planCap} levels. Upgrade your plan to unlock more levels.`
+        : `Level ${level} exceeds this organization's maximum level of ${effectiveMax}. Contact your admin to increase the max level configuration.`;
+      throw new ValidationError(msg, { level, maxLevel: effectiveMax, planCap });
     }
   }
 

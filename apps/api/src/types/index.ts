@@ -6,6 +6,7 @@ export interface JWTPayload {
   email: string;
   roles: string[];
   permissions: string[];
+  roleCategories?: string[]; // ADMIN, HR, MANAGER, EMPLOYEE — for authorization category fallback
   iat: number;
   exp: number;
 }
@@ -26,6 +27,7 @@ export interface AuthenticatedUser {
   lastName: string;
   roles: string[];
   permissions: string[];
+  roleCategories?: string[]; // ADMIN, HR, MANAGER, EMPLOYEE — for authorization category fallback
   // Profile fields
   displayName?: string;
   avatarUrl?: string;

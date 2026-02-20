@@ -8,6 +8,8 @@
 
 import { prisma, Prisma } from '@pms/database';
 import { MS_PER_DAY, DAYS } from '../../utils/constants';
+import { llmClient } from '../../modules/ai/llm-client';
+import { logger } from '../../utils/logger';
 
 export interface DevelopmentPlanGenerationInput {
   tenantId: string;
@@ -99,10 +101,45 @@ export class DevelopmentPlanService {
     const budget = this.calculateBudget(activities);
 
     // Define success metrics
-    const successMetrics = this.defineSuccessMetrics(planType, careerGoal);
+    let successMetrics = this.defineSuccessMetrics(planType, careerGoal);
 
     // Generate checkpoint dates
     const checkpointDates = this.generateCheckpointDates(new Date(), duration);
+
+    // ── LLM enrichment: generate AI-powered personalized content ──
+    try {
+      if (llmClient.isAvailable) {
+        const aiContent = await this.enrichPlanWithLLM({
+          userName: `${user.firstName} ${user.lastName}`,
+          currentRole: user.jobTitle || 'Current Role',
+          targetRole,
+          planType,
+          careerGoal,
+          duration,
+          strengthsAssessed,
+          developmentAreas,
+          skillGapAnalysis,
+        });
+        if (aiContent) {
+          // Merge AI-generated activities with algorithmic ones
+          if (aiContent.additionalActivities?.length) {
+            activities.push(...aiContent.additionalActivities);
+          }
+          // Enrich milestones with AI descriptions
+          if (aiContent.milestoneDescriptions?.length) {
+            for (let i = 0; i < milestones.length && i < aiContent.milestoneDescriptions.length; i++) {
+              milestones[i].description = aiContent.milestoneDescriptions[i];
+            }
+          }
+          // Replace generic success metrics with AI-tailored ones
+          if (aiContent.successMetrics?.length) {
+            successMetrics = [...successMetrics, ...aiContent.successMetrics];
+          }
+        }
+      }
+    } catch (err) {
+      logger.warn('LLM enrichment for development plan failed, using algorithmic results', { error: (err as Error).message });
+    }
 
     // Create development plan
     const plan = await prisma.developmentPlan.create({
@@ -776,6 +813,70 @@ export class DevelopmentPlanService {
         progressPercentage: 100
       }
     });
+  }
+
+  /**
+   * LLM-powered enrichment for development plans.
+   * Generates personalized activities, milestone narratives, and success metrics.
+   */
+  private async enrichPlanWithLLM(ctx: {
+    userName: string; currentRole: string; targetRole?: string; planType: string;
+    careerGoal: string; duration: number; strengthsAssessed: string[];
+    developmentAreas: string[]; skillGapAnalysis: Record<string, any>;
+  }) {
+    const gapSummary = Object.entries(ctx.skillGapAnalysis)
+      .map(([skill, gap]: [string, any]) => `${skill}: level ${gap.current} → ${gap.required}`)
+      .join(', ') || 'None identified';
+
+    const prompt = `You are a career development expert. Create personalized development plan content.
+
+Employee: ${ctx.userName}
+Current Role: ${ctx.currentRole}
+Target Role: ${ctx.targetRole || 'Next level'}
+Plan Type: ${ctx.planType}
+Career Goal: ${ctx.careerGoal}
+Duration: ${ctx.duration} months
+Strengths: ${ctx.strengthsAssessed.join(', ') || 'Not assessed'}
+Development Areas: ${ctx.developmentAreas.join(', ') || 'Not assessed'}
+Skill Gaps: ${gapSummary}
+
+Respond in strict JSON (no markdown):
+{
+  "additionalActivities": [
+    {
+      "activityType": "STRETCH_ASSIGNMENT",
+      "title": "specific title",
+      "description": "specific description",
+      "estimatedHours": 40,
+      "priority": "HIGH",
+      "learningObjectives": ["objective 1", "objective 2"]
+    }
+  ],
+  "milestoneDescriptions": [
+    "Q1: specific milestone description tailored to this person",
+    "Q2: specific milestone description",
+    "Q3: specific milestone description",
+    "Q4: specific milestone description"
+  ],
+  "successMetrics": [
+    { "metric": "specific metric name", "target": 85, "unit": "percentage", "measurement": "how to measure" }
+  ]
+}
+
+Generate 2-3 additional activities (STRETCH_ASSIGNMENT, SHADOWING, NETWORKING types), 4 milestone descriptions, and 1-2 custom success metrics. Be specific to this person's goals.`;
+
+    const response = await llmClient.generateText(prompt, {
+      maxTokens: 1000,
+      temperature: 0.5,
+    });
+
+    try {
+      const cleaned = response.content.replace(/```json?\s*/g, '').replace(/```/g, '').trim();
+      return JSON.parse(cleaned);
+    } catch {
+      logger.warn('Failed to parse LLM development plan enrichment response');
+      return null;
+    }
   }
 
   /**

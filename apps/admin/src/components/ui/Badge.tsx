@@ -11,21 +11,21 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: 'bg-gray-100 text-gray-700',
-  success: 'bg-green-100 text-green-700',
-  warning: 'bg-amber-100 text-amber-700',
-  danger: 'bg-red-100 text-red-700',
-  info: 'bg-blue-100 text-blue-700',
-  primary: 'bg-primary-100 text-primary-700',
+  default: 'bg-white/[0.08] text-white/60 border border-white/[0.06]',
+  success: 'bg-emerald-400/[0.12] text-emerald-400 border border-emerald-400/[0.15]',
+  warning: 'bg-amber-400/[0.12] text-amber-400 border border-amber-400/[0.15]',
+  danger: 'bg-red-400/[0.12] text-red-400 border border-red-400/[0.15]',
+  info: 'bg-sky-400/[0.12] text-sky-400 border border-sky-400/[0.15]',
+  primary: 'bg-violet-400/[0.12] text-violet-400 border border-violet-400/[0.15]',
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  default: 'bg-gray-500',
-  success: 'bg-green-500',
-  warning: 'bg-amber-500',
-  danger: 'bg-red-500',
-  info: 'bg-blue-500',
-  primary: 'bg-primary-500',
+  default: 'bg-white/50',
+  success: 'bg-emerald-400',
+  warning: 'bg-amber-400',
+  danger: 'bg-red-400',
+  info: 'bg-sky-400',
+  primary: 'bg-violet-400',
 };
 
 export function Badge({ children, variant = 'default', size = 'sm', dot, className }: BadgeProps) {

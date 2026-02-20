@@ -53,7 +53,7 @@ export async function requireSuperAdmin(
     // Check cache first — cacheGet already JSON-parses the stored value
     const cachedUser = await cacheGet<Record<string, unknown>>(`${SESSION_CACHE_PREFIX}${payload.sub}`);
     if (cachedUser) {
-      (req as AuthenticatedRequest).user = cachedUser as AuthenticatedRequest['user'];
+      (req as AuthenticatedRequest).user = cachedUser as unknown as AuthenticatedRequest['user'];
       (req as AuthenticatedRequest).tenantId = cachedUser.tenantId as string;
       next();
       return;

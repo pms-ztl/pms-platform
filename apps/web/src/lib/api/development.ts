@@ -20,6 +20,7 @@ export interface DevelopmentPlan {
   startDate: string;
   targetCompletionDate: string;
   overallProgress: number;
+  progressPercentage?: number;
   strengthsAssessed: string[];
   developmentAreas: string[];
   notes?: string;

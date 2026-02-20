@@ -50,6 +50,10 @@ export class TalentMarketplaceAgent extends BaseAgent {
     context: AgentContext,
     userMessage: string,
   ): Promise<Record<string, unknown> | null> {
+    // RBAC: Manager+ only — accesses org-wide talent data, user lists, goal redistribution
+    const denied = this.requireManager(context, 'Talent marketplace and internal mobility data');
+    if (denied) return denied;
+
     const lower = userMessage.toLowerCase();
     const data: Record<string, unknown> = {};
 

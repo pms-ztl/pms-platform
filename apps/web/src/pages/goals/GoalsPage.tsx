@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { goalsApi, usersApi, type Goal, type CreateGoalInput, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { DataTable, type Column } from '@/components/ui';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const statusColors: Record<string, string> = {
   DRAFT: 'badge-secondary',
@@ -215,6 +216,7 @@ const goalColumns: Column<Goal>[] = [
 
 // ── Main GoalsPage ──────────────────────────────────────────────────────────
 export function GoalsPage() {
+  usePageTitle('Goals');
   const queryClient = useQueryClient();
   const user = useAuthStore((s) => s.user);
   const userRoles = user?.roles ?? [];

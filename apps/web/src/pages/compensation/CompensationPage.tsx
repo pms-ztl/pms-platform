@@ -32,6 +32,7 @@ import {
   type CreateCompensationInput,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -90,6 +91,7 @@ function changePct(current?: number, proposed?: number) {
 // ---------------------------------------------------------------------------
 
 export function CompensationPage() {
+  usePageTitle('Compensation');
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
 
@@ -358,7 +360,7 @@ export function CompensationPage() {
               />
             </div>
             <span className="text-xs font-semibold text-secondary-700 dark:text-secondary-200">
-              {budgetUtilized.toFixed(0)}%
+              {(budgetUtilized ?? 0).toFixed(0)}%
             </span>
           </div>
           <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
@@ -402,12 +404,12 @@ export function CompensationPage() {
                 strokeLinecap="round" />
             </svg>
             <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-secondary-900 dark:text-white">
-              {budgetUtilized.toFixed(0)}%
+              {(budgetUtilized ?? 0).toFixed(0)}%
             </span>
           </div>
           <div>
             <p className="text-sm font-medium text-secondary-500 dark:text-secondary-400">Budget Utilized</p>
-            <p className="text-xl font-bold text-secondary-900 dark:text-white">{budgetUtilized.toFixed(1)}%</p>
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">{(budgetUtilized ?? 0).toFixed(1)}%</p>
           </div>
         </div>
       </div>
@@ -514,7 +516,7 @@ export function CompensationPage() {
                           <td className="px-4 py-3 text-sm font-medium">
                             {pct != null ? (
                               <span className={pct >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
-                                {pct >= 0 ? '+' : ''}{pct.toFixed(1)}%
+                                {(pct ?? 0) >= 0 ? '+' : ''}{(pct ?? 0).toFixed(1)}%
                               </span>
                             ) : '--'}
                           </td>
@@ -636,7 +638,7 @@ export function CompensationPage() {
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">{dept.department}</span>
                           <span className="text-xs text-secondary-500 dark:text-secondary-400">
-                            {fmtAmount(dept.used)} / {fmtAmount(dept.allocated)} ({pct.toFixed(0)}%)
+                            {fmtAmount(dept.used)} / {fmtAmount(dept.allocated)} ({(pct ?? 0).toFixed(0)}%)
                           </span>
                         </div>
                         <div className="h-3 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
@@ -685,7 +687,7 @@ export function CompensationPage() {
                                   : pct > 70 ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300'
                                   : 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
                               )}>
-                                {pct.toFixed(1)}%
+                                {(pct ?? 0).toFixed(1)}%
                               </span>
                             </td>
                           </tr>

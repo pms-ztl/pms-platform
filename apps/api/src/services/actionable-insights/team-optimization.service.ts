@@ -8,6 +8,8 @@
 
 import { prisma, Prisma } from '@pms/database';
 import { MS_PER_DAY, DAYS, INACTIVE_USER_THRESHOLD_DAYS } from '../../utils/constants';
+import { llmClient } from '../../modules/ai/llm-client';
+import { logger } from '../../utils/logger';
 
 export interface TeamOptimizationInput {
   tenantId: string;
@@ -101,10 +103,37 @@ export class TeamOptimizationService {
     );
 
     // Create implementation steps
-    const implementationSteps = this.createImplementationSteps(
+    let implementationSteps = this.createImplementationSteps(
       optimizationType,
       bestTeam.members
     );
+
+    // ── LLM enrichment: generate AI-powered team optimization narratives ──
+    try {
+      if (llmClient.isAvailable) {
+        const aiInsights = await this.enrichTeamOptimizationWithLLM({
+          teamName,
+          optimizationType,
+          teamSize,
+          overallScore: bestTeam.overallScore,
+          skillCoverageScore: bestTeam.skillCoverageScore,
+          diversityScore: bestTeam.diversityScore,
+          collaborationScore: bestTeam.collaborationScore,
+          strengthsAnalysis,
+          risks,
+          skillGaps,
+          redundancies,
+        });
+        if (aiInsights) {
+          if (aiInsights.strengthsAnalysis?.length) strengthsAnalysis.push(...aiInsights.strengthsAnalysis);
+          if (aiInsights.risks?.length) risks.push(...aiInsights.risks);
+          if (aiInsights.recommendations?.length) recommendations.push(...aiInsights.recommendations);
+          if (aiInsights.implementationSteps?.length) implementationSteps = [...implementationSteps, ...aiInsights.implementationSteps];
+        }
+      }
+    } catch (err) {
+      logger.warn('LLM enrichment for team optimization failed, using algorithmic results', { error: (err as Error).message });
+    }
 
     // Save optimization result
     const optimization = await prisma.teamOptimization.create({
@@ -1016,5 +1045,47 @@ export class TeamOptimizationService {
     }
 
     return recommendations;
+  }
+
+  /**
+   * LLM-powered enrichment for team optimization results.
+   * Generates contextual explanations and strategic recommendations.
+   */
+  private async enrichTeamOptimizationWithLLM(ctx: {
+    teamName: string; optimizationType: string; teamSize: number;
+    overallScore: number; skillCoverageScore: number; diversityScore: number;
+    collaborationScore: number; strengthsAnalysis: string[]; risks: string[];
+    skillGaps: Record<string, any>; redundancies: string[];
+  }) {
+    const prompt = `You are an organizational design expert. Analyze this team optimization result and provide strategic insights.
+
+Team: ${ctx.teamName} (${ctx.optimizationType})
+Size: ${ctx.teamSize} members
+Scores: Overall ${ctx.overallScore.toFixed(1)}, Skills ${ctx.skillCoverageScore.toFixed(1)}, Diversity ${ctx.diversityScore.toFixed(1)}, Collaboration ${ctx.collaborationScore.toFixed(1)}
+Strengths: ${ctx.strengthsAnalysis.join('; ') || 'None'}
+Risks: ${ctx.risks.join('; ') || 'None'}
+Skill Gaps: ${JSON.stringify(ctx.skillGaps)}
+Redundancies: ${ctx.redundancies.join(', ') || 'None'}
+
+Respond in strict JSON (no markdown):
+{
+  "strengthsAnalysis": ["1-2 AI-identified team strengths"],
+  "risks": ["1-2 risks to monitor"],
+  "recommendations": [{"priority": "HIGH", "category": "TEAM_DYNAMICS", "action": "specific recommendation"}],
+  "implementationSteps": [{"step": 1, "title": "step title", "description": "detailed description", "duration": "2 weeks"}]
+}`;
+
+    const response = await llmClient.generateText(prompt, {
+      maxTokens: 800,
+      temperature: 0.4,
+    });
+
+    try {
+      const cleaned = response.content.replace(/```json?\s*/g, '').replace(/```/g, '').trim();
+      return JSON.parse(cleaned);
+    } catch {
+      logger.warn('Failed to parse LLM team optimization enrichment response');
+      return null;
+    }
   }
 }

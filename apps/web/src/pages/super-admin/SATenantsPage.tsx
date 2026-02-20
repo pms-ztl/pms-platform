@@ -379,6 +379,14 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
   const [adminEmail, setAdminEmail] = useState('');
   const [ceoEmail, setCeoEmail] = useState('');
   const [superAdminCanView, setSuperAdminCanView] = useState(true);
+  const [useDefaultRoles, setUseDefaultRoles] = useState(true);
+  const [customRoles, setCustomRoles] = useState<Array<{ name: string; category: string }>>([
+    { name: 'Tenant Admin', category: 'ADMIN' },
+    { name: 'HR Admin', category: 'HR' },
+    { name: 'HR Business Partner', category: 'HR' },
+    { name: 'Manager', category: 'MANAGER' },
+    { name: 'Employee', category: 'EMPLOYEE' },
+  ]);
 
   // Auto-generate slug from org name
   useEffect(() => {
@@ -400,6 +408,13 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
       adminEmail: adminEmail.trim(),
       ceoEmail: ceoEmail.trim() || undefined,
       superAdminCanView,
+      ...(useDefaultRoles ? {} : {
+        roles: customRoles.filter((r) => r.name.trim()).map((r) => ({
+          name: r.name.trim(),
+          category: r.category,
+          permissions: [],
+        })),
+      }),
     });
   };
 
@@ -615,6 +630,93 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
                   />
                 </button>
               </div>
+            </fieldset>
+
+            {/* Roles Configuration */}
+            <fieldset className="space-y-4">
+              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                Roles Configuration
+              </legend>
+
+              <div className="flex items-center justify-between py-2">
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Use Default System Roles
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Tenant Admin, HR Admin, HR BP, Manager, Employee
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={useDefaultRoles}
+                  onClick={() => setUseDefaultRoles(!useDefaultRoles)}
+                  className={clsx(
+                    'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
+                    useDefaultRoles ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-gray-600'
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                      useDefaultRoles ? 'translate-x-5' : 'translate-x-0'
+                    )}
+                  />
+                </button>
+              </div>
+
+              {!useDefaultRoles && (
+                <div className="space-y-2">
+                  {customRoles.map((role, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={role.name}
+                        onChange={(e) => {
+                          const updated = [...customRoles];
+                          updated[idx] = { ...updated[idx], name: e.target.value };
+                          setCustomRoles(updated);
+                        }}
+                        placeholder="Role name"
+                        className="flex-1 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                      <select
+                        value={role.category}
+                        onChange={(e) => {
+                          const updated = [...customRoles];
+                          updated[idx] = { ...updated[idx], category: e.target.value };
+                          setCustomRoles(updated);
+                        }}
+                        className="w-28 px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        <option value="ADMIN">Admin</option>
+                        <option value="HR">HR</option>
+                        <option value="MANAGER">Manager</option>
+                        <option value="EMPLOYEE">Employee</option>
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => setCustomRoles(customRoles.filter((_, i) => i !== idx))}
+                        className="p-1 text-red-400 hover:text-red-500 transition-colors"
+                        title="Remove role"
+                      >
+                        <XMarkIcon className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => setCustomRoles([...customRoles, { name: '', category: 'EMPLOYEE' }])}
+                    className="text-sm text-indigo-500 hover:text-indigo-400 font-medium"
+                  >
+                    + Add Role
+                  </button>
+                  <p className="text-xs text-amber-400 mt-1">
+                    At least one role with ADMIN category is required.
+                  </p>
+                </div>
+              )}
             </fieldset>
 
             {/* Actions */}

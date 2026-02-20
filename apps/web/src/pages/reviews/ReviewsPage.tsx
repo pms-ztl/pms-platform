@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 
 import { reviewsApi, type ReviewCycle, type Review, type CreateReviewCycleInput } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const cycleStatusColors: Record<string, string> = {
   DRAFT: 'bg-secondary-100 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-200',
@@ -34,6 +35,7 @@ const reviewStatusColors: Record<string, string> = {
 };
 
 export function ReviewsPage() {
+  usePageTitle('Reviews');
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
   const [activeTab, setActiveTab] = useState<'my-reviews' | 'cycles'>('my-reviews');

@@ -18,10 +18,12 @@ import toast from 'react-hot-toast';
 
 import { licenseApi, type LicenseUsageData, type SubscriptionInfo } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export function LicenseDashboardPage() {
+  usePageTitle('License & Seats');
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const [showAssignModal, setShowAssignModal] = useState(false);

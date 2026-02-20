@@ -1,5 +1,5 @@
 /**
- * LLM Client - Triple-provider abstraction for Claude + GPT + Gemini
+ * LLM Client - Multi-provider abstraction for Claude + GPT + Gemini + DeepSeek + Groq
  *
  * Features:
  * - Automatic fallback chain: primary → secondary → tertiary
@@ -11,11 +11,14 @@
  * - Anthropic (Claude): claude-sonnet-4, claude-3.5-sonnet, claude-3-haiku
  * - OpenAI (GPT): gpt-4o, gpt-4o-mini
  * - Google (Gemini): gemini-2.0-flash, gemini-1.5-pro, gemini-1.5-flash
+ * - DeepSeek: deepseek-chat, deepseek-reasoner
+ * - Groq: llama-3.3-70b-versatile, llama-3.1-8b-instant, mixtral-8x7b-32768
  */
 
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import Groq from 'groq-sdk';
 import crypto from 'crypto';
 
 import { config } from '../../config';
@@ -24,7 +27,7 @@ import { cacheGet, cacheSet } from '../../utils/redis';
 
 // ── Types ──────────────────────────────────────────────────
 
-export type LLMProvider = 'anthropic' | 'openai' | 'gemini';
+export type LLMProvider = 'anthropic' | 'openai' | 'gemini' | 'deepseek' | 'groq';
 
 export interface LLMMessage {
   role: 'user' | 'assistant' | 'system';
@@ -67,11 +70,21 @@ const COST_PER_1K: Record<string, { input: number; output: number }> = {
   'gemini-2.0-flash': { input: 0.01, output: 0.04 },
   'gemini-1.5-pro': { input: 0.125, output: 0.5 },
   'gemini-1.5-flash': { input: 0.0075, output: 0.03 },
+  // DeepSeek
+  'deepseek-chat': { input: 0.014, output: 0.028 },
+  'deepseek-reasoner': { input: 0.055, output: 0.219 },
+  // Groq (fast inference)
+  'llama-3.3-70b-versatile': { input: 0.059, output: 0.079 },
+  'llama-3.1-8b-instant': { input: 0.005, output: 0.008 },
+  'mixtral-8x7b-32768': { input: 0.024, output: 0.024 },
+  'llama-3.1-70b-versatile': { input: 0.059, output: 0.079 },
 };
 
 const DEFAULT_ANTHROPIC_MODEL = 'claude-sonnet-4-20250514';
 const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini';
 const DEFAULT_GEMINI_MODEL = 'gemini-2.0-flash';
+const DEFAULT_DEEPSEEK_MODEL = 'deepseek-chat';
+const DEFAULT_GROQ_MODEL = 'llama-3.3-70b-versatile';
 const CACHE_PREFIX = 'llm:cache:';
 const CACHE_TTL = 3600; // 1 hour
 const RATE_LIMIT_PREFIX = 'llm:rate:';
@@ -84,6 +97,8 @@ class LLMClient {
   private anthropic: Anthropic | null = null;
   private openai: OpenAI | null = null;
   private gemini: GoogleGenerativeAI | null = null;
+  private deepseek: OpenAI | null = null;
+  private groq: Groq | null = null;
   private primaryProvider: LLMProvider;
   private availableProviders: LLMProvider[] = [];
 
@@ -103,6 +118,19 @@ class LLMClient {
     if (config.GEMINI_API_KEY) {
       this.gemini = new GoogleGenerativeAI(config.GEMINI_API_KEY);
       this.availableProviders.push('gemini');
+    }
+
+    if (config.DEEPSEEK_API_KEY) {
+      this.deepseek = new OpenAI({
+        apiKey: config.DEEPSEEK_API_KEY,
+        baseURL: 'https://api.deepseek.com',
+      });
+      this.availableProviders.push('deepseek');
+    }
+
+    if (config.GROQ_API_KEY) {
+      this.groq = new Groq({ apiKey: config.GROQ_API_KEY });
+      this.availableProviders.push('groq');
     }
 
     if (this.availableProviders.length === 0) {
@@ -149,7 +177,7 @@ class LLMClient {
   ): Promise<LLMResponse> {
     if (!this.isAvailable) {
       throw new Error(
-        'No LLM provider configured. Set ANTHROPIC_API_KEY, OPENAI_API_KEY, or GEMINI_API_KEY.',
+        'No LLM provider configured. Set ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY, or GROQ_API_KEY.',
       );
     }
 
@@ -205,6 +233,8 @@ class LLMClient {
   ): Promise<LLMResponse> {
     if (provider === 'anthropic') return this.callAnthropic(messages, options);
     if (provider === 'openai') return this.callOpenAI(messages, options);
+    if (provider === 'deepseek') return this.callDeepSeek(messages, options);
+    if (provider === 'groq') return this.callGroq(messages, options);
     return this.callGemini(messages, options);
   }
 
@@ -285,6 +315,74 @@ class LLMClient {
     };
   }
 
+  private async callDeepSeek(
+    messages: LLMMessage[],
+    options: LLMOptions,
+  ): Promise<LLMResponse> {
+    if (!this.deepseek) throw new Error('DeepSeek client not configured');
+
+    const model = options.model ?? DEFAULT_DEEPSEEK_MODEL;
+    const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
+
+    const start = Date.now();
+    const response = await this.deepseek.chat.completions.create({
+      model,
+      max_tokens: maxTokens,
+      temperature: options.temperature ?? 0.3,
+      messages: messages.map((m) => ({ role: m.role, content: m.content })),
+    });
+    const latencyMs = Date.now() - start;
+
+    const content = response.choices[0]?.message?.content ?? '';
+    const inputTokens = response.usage?.prompt_tokens ?? 0;
+    const outputTokens = response.usage?.completion_tokens ?? 0;
+
+    return {
+      content,
+      provider: 'deepseek',
+      model,
+      inputTokens,
+      outputTokens,
+      costCents: this.calculateCost(model, inputTokens, outputTokens),
+      latencyMs,
+      cached: false,
+    };
+  }
+
+  private async callGroq(
+    messages: LLMMessage[],
+    options: LLMOptions,
+  ): Promise<LLMResponse> {
+    if (!this.groq) throw new Error('Groq client not configured');
+
+    const model = options.model ?? DEFAULT_GROQ_MODEL;
+    const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
+
+    const start = Date.now();
+    const response = await this.groq.chat.completions.create({
+      model,
+      max_tokens: maxTokens,
+      temperature: options.temperature ?? 0.3,
+      messages: messages.map((m) => ({ role: m.role, content: m.content })),
+    });
+    const latencyMs = Date.now() - start;
+
+    const content = response.choices[0]?.message?.content ?? '';
+    const inputTokens = response.usage?.prompt_tokens ?? 0;
+    const outputTokens = response.usage?.completion_tokens ?? 0;
+
+    return {
+      content,
+      provider: 'groq',
+      model,
+      inputTokens,
+      outputTokens,
+      costCents: this.calculateCost(model, inputTokens, outputTokens),
+      latencyMs,
+      cached: false,
+    };
+  }
+
   private async callGemini(
     messages: LLMMessage[],
     options: LLMOptions,
@@ -294,18 +392,20 @@ class LLMClient {
     const model = options.model ?? DEFAULT_GEMINI_MODEL;
     const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
 
+    // Convert messages to Gemini format
+    // Gemini uses 'user' and 'model' roles with a separate systemInstruction
+    const systemMsg = messages.find((m) => m.role === 'system');
+    const chatMessages = messages.filter((m) => m.role !== 'system');
+
+    // Pass systemInstruction at the model level where formatSystemInstruction handles it
     const genModel = this.gemini.getGenerativeModel({
       model,
       generationConfig: {
         maxOutputTokens: maxTokens,
         temperature: options.temperature ?? 0.3,
       },
+      ...(systemMsg ? { systemInstruction: systemMsg.content } : {}),
     });
-
-    // Convert messages to Gemini format
-    // Gemini uses 'user' and 'model' roles with a separate systemInstruction
-    const systemMsg = messages.find((m) => m.role === 'system');
-    const chatMessages = messages.filter((m) => m.role !== 'system');
 
     // Build the Gemini history (all messages except the last user message)
     const geminiHistory = chatMessages.slice(0, -1).map((m) => ({
@@ -321,7 +421,6 @@ class LLMClient {
 
     const chat = genModel.startChat({
       history: geminiHistory as any,
-      ...(systemMsg ? { systemInstruction: systemMsg.content } : {}),
     });
 
     const result = await chat.sendMessage(lastMessage.content);

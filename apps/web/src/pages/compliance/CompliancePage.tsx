@@ -354,7 +354,7 @@ export function CompliancePage() {
               />
             </div>
             <span className="text-xs font-semibold text-secondary-700 dark:text-secondary-200">
-              {dashboard.complianceRate.toFixed(0)}%
+              {(dashboard.complianceRate ?? 0).toFixed(0)}%
             </span>
           </div>
           {isManager && (
@@ -411,12 +411,12 @@ export function CompliancePage() {
                 strokeLinecap="round" />
             </svg>
             <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-secondary-900 dark:text-white">
-              {dashboard.complianceRate.toFixed(0)}%
+              {(dashboard.complianceRate ?? 0).toFixed(0)}%
             </span>
           </div>
           <div>
             <p className="text-sm font-medium text-secondary-500 dark:text-secondary-400">Compliance Rate</p>
-            <p className="text-xl font-bold text-secondary-900 dark:text-white">{dashboard.complianceRate.toFixed(1)}%</p>
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">{(dashboard.complianceRate ?? 0).toFixed(1)}%</p>
           </div>
         </div>
       </div>

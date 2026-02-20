@@ -18,6 +18,8 @@ export interface Goal {
   weight?: number;
   startDate?: string;
   dueDate?: string;
+  tags?: string[];
+  metadata?: any;
   createdById?: string;
   owner: { id: string; firstName: string; lastName: string; avatarUrl?: string };
   createdBy?: { id: string; firstName: string; lastName: string };
@@ -45,6 +47,16 @@ export interface UpdateGoalInput {
   priority?: string;
   status?: string;
   progress?: number;
+  metadata?: any;
+}
+
+export interface ActivityItem {
+  type: 'progress' | 'comment' | 'status_change';
+  id: string;
+  content: string;
+  createdAt: string;
+  user: { firstName: string; lastName: string } | null;
+  meta?: Record<string, unknown>;
 }
 
 export const goalsApi = {
@@ -62,4 +74,23 @@ export const goalsApi = {
   getTeamTree: () => api.get<Goal[]>('/goals/team-tree'),
   addComment: (id: string, content: string) => api.post<any>(`/goals/${id}/comments`, { content }),
   getComments: (id: string) => api.get<any[]>(`/goals/${id}/comments`),
+
+  // Bulk operations
+  bulkUpdate: (goalIds: string[], updates: { status?: string; priority?: string; dueDate?: string }) =>
+    api.put<{ count: number }>('/goals/bulk-update', { goalIds, updates }),
+
+  // Activity feed
+  getActivity: (id: string) => api.get<ActivityItem[]>(`/goals/${id}/activity`),
+
+  // Export CSV (returns blob URL for download)
+  exportGoals: async (params?: { type?: string; status?: string }) => {
+    const query = new URLSearchParams();
+    if (params?.type) query.set('type', params.type);
+    if (params?.status) query.set('status', params.status);
+    const qs = query.toString();
+    return api.get<string>(`/goals/export${qs ? `?${qs}` : ''}`);
+  },
+
+  // Deadline reminders
+  checkReminders: () => api.post<{ reminded: number; overdue: number }>('/goals/check-reminders', {}),
 };

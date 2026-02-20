@@ -13,6 +13,7 @@ import {
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -232,7 +233,7 @@ function PlanCard({ plan, showEmployee }: { plan: DevelopmentPlan; showEmployee?
               )}
             </div>
           </div>
-          <ProgressRing progress={plan.overallProgress} />
+          <ProgressRing progress={plan.overallProgress ?? plan.progressPercentage ?? 0} />
         </div>
 
         {/* Badges */}
@@ -275,12 +276,12 @@ function PlanCard({ plan, showEmployee }: { plan: DevelopmentPlan; showEmployee?
         <div className="mb-3">
           <div className="flex items-center justify-between text-xs text-secondary-500 dark:text-secondary-400 mb-1">
             <span>Progress</span>
-            <span>{plan.overallProgress}%</span>
+            <span>{plan.overallProgress ?? plan.progressPercentage ?? 0}%</span>
           </div>
           <div className="h-2 rounded-full bg-secondary-200 dark:bg-secondary-700">
             <div
               className="h-2 rounded-full bg-primary-600 transition-all duration-500"
-              style={{ width: `${Math.min(plan.overallProgress, 100)}%` }}
+              style={{ width: `${Math.min(plan.overallProgress ?? plan.progressPercentage ?? 0, 100)}%` }}
             />
           </div>
         </div>
@@ -545,6 +546,7 @@ function CreatePlanModal({ onClose }: { onClose: () => void }) {
 // ── Main Page ────────────────────────────────────────────────────────────────
 
 export function DevelopmentPage() {
+  usePageTitle('Development Plans');
   const queryClient = useQueryClient();
   const user = useAuthStore((s) => s.user);
   const hasManagerAccess = user?.roles?.some((r) =>

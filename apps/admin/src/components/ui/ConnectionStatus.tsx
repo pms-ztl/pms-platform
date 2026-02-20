@@ -25,7 +25,7 @@ export function LiveIndicator() {
     <span
       className={clsx(
         'inline-block h-2 w-2 rounded-full',
-        status === 'connected' ? 'bg-green-500 animate-pulse' : status === 'connecting' ? 'bg-amber-500 animate-pulse' : 'bg-red-500'
+        status === 'connected' ? 'bg-emerald-400 animate-pulse' : status === 'connecting' ? 'bg-amber-400 animate-pulse' : 'bg-red-400'
       )}
       title={status === 'connected' ? 'Live' : status === 'connecting' ? 'Reconnecting' : 'Offline'}
     />

@@ -8,6 +8,8 @@
 
 import { prisma, Prisma } from '@pms/database';
 import { MS_PER_DAY, DAYS, INACTIVE_USER_THRESHOLD_DAYS } from '../../utils/constants';
+import { llmClient } from '../../modules/ai/llm-client';
+import { logger } from '../../utils/logger';
 
 export interface PromotionRecommendationInput {
   tenantId: string;
@@ -105,6 +107,36 @@ export class PromotionSuccessionService {
     // Calculate confidence and success probability
     const confidenceScore = this.calculateConfidence(performanceScore, potentialScore);
     const successProbability = this.calculateSuccessProbability(overallScore, skillsMatchScore);
+
+    // ── LLM enrichment: generate AI-powered narrative insights ──
+    try {
+      if (llmClient.isAvailable) {
+        const aiEnrichment = await this.enrichWithLLM({
+          userName: `${user.firstName} ${user.lastName}`,
+          targetRole,
+          readinessLevel,
+          overallScore,
+          performanceScore,
+          potentialScore,
+          skillsMatchScore,
+          leadershipScore,
+          tenureScore,
+          engagementScore,
+          skillGaps,
+          strengths,
+          developmentNeeds,
+          riskFactors,
+        });
+        if (aiEnrichment) {
+          if (aiEnrichment.strengths?.length) strengths.push(...aiEnrichment.strengths);
+          if (aiEnrichment.developmentNeeds?.length) developmentNeeds.push(...aiEnrichment.developmentNeeds);
+          if (aiEnrichment.riskFactors?.length) riskFactors.push(...aiEnrichment.riskFactors);
+          if (aiEnrichment.developmentActions?.length) developmentActions.push(...aiEnrichment.developmentActions);
+        }
+      }
+    } catch (err) {
+      logger.warn('LLM enrichment for promotion recommendation failed, using algorithmic results', { error: (err as Error).message });
+    }
 
     // Create recommendation record
     const recommendation = await prisma.promotionRecommendation.create({
@@ -664,6 +696,60 @@ export class PromotionSuccessionService {
         approvedAt: new Date()
       }
     });
+  }
+
+  /**
+   * LLM-powered enrichment for promotion recommendations.
+   * Generates personalized narrative insights using AI.
+   */
+  private async enrichWithLLM(ctx: {
+    userName: string; targetRole: string; readinessLevel: string; overallScore: number;
+    performanceScore: number; potentialScore: number; skillsMatchScore: number;
+    leadershipScore: number; tenureScore: number; engagementScore: number;
+    skillGaps: Record<string, any>; strengths: string[]; developmentNeeds: string[]; riskFactors: string[];
+  }) {
+    const gapSummary = Object.entries(ctx.skillGaps)
+      .map(([skill, gap]: [string, any]) => `${skill}: current ${gap.current}/${gap.required} (gap: ${gap.gap})`)
+      .join(', ') || 'No significant gaps';
+
+    const prompt = `You are an expert HR talent advisor. Analyze this employee's promotion readiness and provide specific, actionable insights.
+
+Employee: ${ctx.userName}
+Target Role: ${ctx.targetRole}
+Readiness Level: ${ctx.readinessLevel} (Overall Score: ${ctx.overallScore.toFixed(1)}/100)
+
+Score Breakdown:
+- Performance: ${ctx.performanceScore.toFixed(1)}/100
+- Potential: ${ctx.potentialScore.toFixed(1)}/100
+- Skills Match: ${ctx.skillsMatchScore.toFixed(1)}/100
+- Leadership: ${ctx.leadershipScore.toFixed(1)}/100
+- Tenure: ${ctx.tenureScore.toFixed(1)}/100
+- Engagement: ${ctx.engagementScore.toFixed(1)}/100
+
+Skill Gaps: ${gapSummary}
+Current Strengths: ${ctx.strengths.join('; ') || 'None identified'}
+Known Risks: ${ctx.riskFactors.join('; ') || 'None'}
+
+Respond in strict JSON (no markdown):
+{
+  "strengths": ["2-3 specific AI-identified strengths based on the score profile"],
+  "developmentNeeds": ["2-3 targeted development areas with specific recommendations"],
+  "riskFactors": ["1-2 risks to monitor if any, or empty array"],
+  "developmentActions": [{"skillName": "...", "actions": ["specific action 1", "specific action 2"], "estimatedDuration": 3, "priority": "HIGH"}]
+}`;
+
+    const response = await llmClient.generateText(prompt, {
+      maxTokens: 800,
+      temperature: 0.4,
+    });
+
+    try {
+      const cleaned = response.content.replace(/```json?\s*/g, '').replace(/```/g, '').trim();
+      return JSON.parse(cleaned);
+    } catch {
+      logger.warn('Failed to parse LLM promotion enrichment response');
+      return null;
+    }
   }
 
   /**

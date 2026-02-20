@@ -38,6 +38,16 @@ const updateGoalSchema = z.object({
   weight: z.number().min(0).max(10).optional(),
   isPrivate: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
+  metadata: z.any().optional(),
+});
+
+const bulkUpdateSchema = z.object({
+  goalIds: z.array(z.string().uuid()).min(1).max(100),
+  updates: z.object({
+    status: z.nativeEnum(GoalStatus).optional(),
+    priority: z.nativeEnum(GoalPriority).optional(),
+    dueDate: z.string().optional().nullable().transform((val) => (val ? new Date(val) : undefined)),
+  }),
 });
 
 const updateProgressSchema = z.object({
@@ -423,6 +433,82 @@ export class GoalsController {
       res.status(200).json({
         success: true,
         data: comments,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async bulkUpdate(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const parseResult = bulkUpdateSchema.safeParse(req.body);
+
+      if (!parseResult.success) {
+        throw new ValidationError('Invalid bulk update data', {
+          errors: parseResult.error.format(),
+        });
+      }
+
+      const result = await goalsService.bulkUpdate(
+        req.tenantId!,
+        req.user!.id,
+        parseResult.data.goalIds,
+        parseResult.data.updates
+      );
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getActivity(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const goalId = req.params.id;
+
+      if (goalId === undefined) {
+        throw new ValidationError('Goal ID is required');
+      }
+
+      const activity = await goalsService.getActivity(req.tenantId!, goalId);
+
+      res.status(200).json({
+        success: true,
+        data: activity,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async exportGoals(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const type = req.query.type as string | undefined;
+      const status = req.query.status as string | undefined;
+
+      const csv = await goalsService.exportGoals(req.tenantId!, {
+        type: type as any,
+        status: status as any,
+      });
+
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename=goals-export.csv');
+      res.status(200).send(csv);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async checkReminders(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await goalsService.checkDeadlineReminders(req.tenantId!);
+
+      res.status(200).json({
+        success: true,
+        data: result,
       });
     } catch (error) {
       next(error);

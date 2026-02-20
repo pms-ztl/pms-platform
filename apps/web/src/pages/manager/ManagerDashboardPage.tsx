@@ -42,6 +42,7 @@ import {
   type PIP,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -147,6 +148,7 @@ function SectionCard({
 // ---------------------------------------------------------------------------
 
 export function ManagerDashboardPage() {
+  usePageTitle('Manager Hub');
   const { user } = useAuthStore();
   const [dateRange, setDateRange] = useState<DateRange>('month');
   const [sortField, setSortField] = useState<SortField>('name');

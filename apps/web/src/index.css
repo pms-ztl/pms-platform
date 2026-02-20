@@ -2,15 +2,124 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── CSS Custom Properties for Theming ─────────────────────────────────── *
+ * Values are space-separated RGB channels (e.g. 139 92 246) so Tailwind's
+ * opacity modifier syntax (bg-primary-500/80) works via
+ * rgb(var(--c-primary-500) / <alpha-value>).
+ * ─────────────────────────────────────────────────────────────────────── */
+
+/* Default palette — purple accents, slate neutrals */
+:root {
+  --c-primary-50:  245 243 255;
+  --c-primary-100: 237 233 254;
+  --c-primary-200: 221 214 254;
+  --c-primary-300: 196 181 253;
+  --c-primary-400: 167 139 250;
+  --c-primary-500: 139 92 246;
+  --c-primary-600: 124 58 237;
+  --c-primary-700: 109 40 217;
+  --c-primary-800: 91 33 182;
+  --c-primary-900: 76 29 149;
+  --c-primary-950: 46 16 101;
+
+  --c-secondary-50:  248 250 252;
+  --c-secondary-100: 241 245 249;
+  --c-secondary-200: 226 232 240;
+  --c-secondary-300: 203 213 225;
+  --c-secondary-400: 148 163 184;
+  --c-secondary-500: 100 116 139;
+  --c-secondary-600: 71 85 105;
+  --c-secondary-700: 51 65 85;
+  --c-secondary-800: 30 41 59;
+  --c-secondary-850: 22 32 50;
+  --c-secondary-900: 15 23 42;
+  --c-secondary-925: 11 17 32;
+  --c-secondary-950: 8 11 22;
+
+  --c-surface:       15 18 40;
+  --c-surface-light: 21 25 55;
+  --c-surface-dark:  10 13 26;
+  --c-surface-card:  17 20 48;
+  --c-surface-hover: 26 30 62;
+}
+
+/* Deep Dark / Abyss — cyan accents, pure black surfaces.
+ * Scoped to .dark.deep-dark so light-mode variables are never touched.
+ *
+ * PALETTE RATIONALE (Tailwind dark mode inverts shade usage):
+ *   TEXT uses 100–500:  needs to be LIGHT (readable on black)
+ *     100 = brightest body text    → 230 230 235  (near-white, cool)
+ *     200 = headings / labels      → 200 205 215  (soft white)
+ *     300 = form labels            → 165 170 180  (visible secondary)
+ *     400 = dominant muted text    → 140 145 155  (readable gray)
+ *     500 = placeholder / disabled → 100 105 115  (dim but legible)
+ *
+ *   BACKGROUNDS use 700–950: needs to be DARK but distinguishable
+ *     700 = hover bg, secondary btn → 35 35 40    (subtle lift from black)
+ *     800 = card bg, inputs          → 18 18 22    (near-black, visible border)
+ *     850 = deeper panels            → 12 12 15
+ *     900 = stat-card bg             → 8 8 10      (very dark)
+ *     925 = deep container           → 5 5 6
+ *     950 = body / page bg           → 0 0 0       (pure black)
+ *
+ *   BORDERS use 600–700: must be VISIBLE against dark bg
+ *     600 = subtle borders    → 45 48 55     (clearly visible)
+ *     700 = dominant borders  → 32 35 42     (visible, not harsh)
+ *
+ *   50 = lightest bg (light mode equivalent, used in some dark: overrides)
+ *     50 = surface base       → 2 2 4        (near-black)
+ */
+.dark.deep-dark {
+  /* Cyan accent palette */
+  --c-primary-50:  8 51 68;
+  --c-primary-100: 14 83 128;
+  --c-primary-200: 21 128 155;
+  --c-primary-300: 103 232 249;
+  --c-primary-400: 34 211 238;
+  --c-primary-500: 6 182 212;
+  --c-primary-600: 8 145 178;
+  --c-primary-700: 14 116 144;
+  --c-primary-800: 21 94 117;
+  --c-primary-900: 22 78 99;
+  --c-primary-950: 8 51 68;
+
+  /* Neutral palette — pure-black base, cool gray text */
+  --c-secondary-50:  2 2 4;
+  --c-secondary-100: 230 230 235;
+  --c-secondary-200: 200 205 215;
+  --c-secondary-300: 165 170 180;
+  --c-secondary-400: 140 145 155;
+  --c-secondary-500: 100 105 115;
+  --c-secondary-600: 45 48 55;
+  --c-secondary-700: 32 35 42;
+  --c-secondary-800: 18 18 22;
+  --c-secondary-850: 12 12 15;
+  --c-secondary-900: 8 8 10;
+  --c-secondary-925: 5 5 6;
+  --c-secondary-950: 0 0 0;
+
+  /* Surfaces */
+  --c-surface:       2 2 5;
+  --c-surface-light: 10 10 14;
+  --c-surface-dark:  0 0 0;
+  --c-surface-card:  10 10 14;
+  --c-surface-hover: 22 22 28;
+}
+
 @layer base {
   html {
     @apply antialiased scroll-smooth;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-size: 115%;
+  }
+
+  /* Legacy class — no longer needed since html is already at 125% */
+  .dashboard-scaled {
+    font-size: 100%;
   }
 
   body {
     @apply bg-secondary-50 text-secondary-900 transition-colors duration-300;
-    background-color: #f8fafc;
     background-image:
       radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.06) 0px, transparent 50%),
       radial-gradient(at 80% 20%, rgba(6, 182, 212, 0.05) 0px, transparent 40%),
@@ -22,18 +131,32 @@
 
   .dark body {
     @apply text-secondary-100;
-    background-color: #080b16;
+    background-color: rgb(var(--c-secondary-950));
     background-image:
-      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(139, 92, 246, 0.12) 0px, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 90% 20%, rgba(109, 40, 217, 0.08) 0px, transparent 50%),
-      radial-gradient(ellipse 70% 40% at 50% 100%, rgba(91, 33, 182, 0.06) 0px, transparent 60%),
-      radial-gradient(ellipse 40% 30% at 70% 60%, rgba(6, 182, 212, 0.04) 0px, transparent 50%);
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgb(var(--c-primary-600) / 0.10) 0px, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 20%, rgb(var(--c-primary-700) / 0.06) 0px, transparent 50%),
+      radial-gradient(ellipse 70% 40% at 50% 100%, rgb(var(--c-primary-800) / 0.05) 0px, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 70% 60%, rgb(var(--c-primary-500) / 0.03) 0px, transparent 50%);
     background-attachment: fixed;
   }
+
+  /* Deep-dark body: minimal gradients, nearly pure black */
+  .dark.deep-dark body {
+    background-image:
+      radial-gradient(ellipse 60% 40% at 10% 0%, rgb(var(--c-primary-600) / 0.06) 0px, transparent 50%),
+      radial-gradient(ellipse 40% 30% at 90% 20%, rgb(var(--c-primary-700) / 0.04) 0px, transparent 40%);
+  }
+
+  /* Deep Dark body: inherits from .dark body but vars point to pure black */
 
   .dark {
     color-scheme: dark;
   }
+
+  /* Deep Dark scrollbar */
+  .deep-dark ::-webkit-scrollbar-track { background: #000; }
+  .deep-dark ::-webkit-scrollbar-thumb { background: #1a1a1a; }
+  .deep-dark ::-webkit-scrollbar-thumb:hover { background: #2a2a2a; }
 
   /* Display fonts for headings */
   h1, h2, h3 {
@@ -63,11 +186,11 @@
 
   .btn-primary {
     @apply btn bg-gradient-to-r from-primary-600 via-primary-500 to-primary-400 text-white focus:ring-primary-500;
-    box-shadow: 0 4px 15px -3px rgba(139, 92, 246, 0.4), 0 0 0 0 rgba(139, 92, 246, 0);
+    box-shadow: 0 4px 15px -3px rgb(var(--c-primary-500) / 0.4);
   }
 
   .btn-primary:hover:not(:disabled) {
-    box-shadow: 0 8px 25px -5px rgba(139, 92, 246, 0.5), 0 0 20px rgba(139, 92, 246, 0.2);
+    box-shadow: 0 8px 25px -5px rgb(var(--c-primary-500) / 0.5), 0 0 20px rgb(var(--c-primary-500) / 0.2);
   }
 
   .btn-secondary {
@@ -98,11 +221,11 @@
   }
 
   .input:focus {
-    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1), 0 4px 15px -3px rgba(139, 92, 246, 0.2);
+    box-shadow: 0 0 0 4px rgb(var(--c-primary-500) / 0.1), 0 4px 15px -3px rgb(var(--c-primary-500) / 0.2);
   }
 
   .dark .input:focus {
-    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12), 0 4px 15px -3px rgba(139, 92, 246, 0.2);
+    box-shadow: 0 0 0 4px rgb(var(--c-primary-500) / 0.12), 0 4px 15px -3px rgb(var(--c-primary-500) / 0.2);
   }
 
   .label {
@@ -126,19 +249,19 @@
   }
 
   .dark .card {
-    background: rgba(15, 18, 40, 0.7);
-    border-color: rgba(139, 92, 246, 0.08);
+    background: rgb(var(--c-surface) / 0.7);
+    border-color: rgb(var(--c-primary-500) / 0.08);
     backdrop-filter: blur(20px);
     box-shadow:
       0 4px 24px -4px rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(139, 92, 246, 0.05);
+      0 0 0 1px rgb(var(--c-primary-500) / 0.05);
   }
 
   .dark .card:hover {
-    border-color: rgba(139, 92, 246, 0.15);
+    border-color: rgb(var(--c-primary-500) / 0.15);
     box-shadow:
       0 8px 32px -4px rgba(0, 0, 0, 0.5),
-      0 0 30px -5px rgba(139, 92, 246, 0.1);
+      0 0 30px -5px rgb(var(--c-primary-500) / 0.1);
   }
 
   .card-header {
@@ -181,8 +304,8 @@
   }
 
   .dark .glass {
-    background: rgba(15, 18, 40, 0.6);
-    border-color: rgba(139, 92, 246, 0.1);
+    background: rgb(var(--c-surface) / 0.6);
+    border-color: rgb(var(--c-primary-500) / 0.1);
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -232,8 +355,8 @@
   }
 
   .dark .stat-card {
-    background: rgba(15, 18, 40, 0.7);
-    border: 1px solid rgba(139, 92, 246, 0.08);
+    background: rgb(var(--c-surface) / 0.7);
+    border: 1px solid rgb(var(--c-primary-500) / 0.08);
   }
 
   .stat-card:hover {
@@ -306,8 +429,8 @@
   }
 
   .dark .gradient-border {
-    background: linear-gradient(#0f1228, #0f1228) padding-box,
-                linear-gradient(135deg, #8b5cf6, #06b6d4) border-box;
+    background: linear-gradient(rgb(var(--c-surface)), rgb(var(--c-surface))) padding-box,
+                linear-gradient(135deg, rgb(var(--c-primary-500)), #06b6d4) border-box;
   }
 }
 
@@ -322,7 +445,7 @@
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: rgba(15, 18, 40, 0.5);
+  background: rgb(var(--c-secondary-950) / 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -331,7 +454,7 @@
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.2);
+  background: rgb(var(--c-primary-500) / 0.2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -339,7 +462,7 @@
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.35);
+  background: rgb(var(--c-primary-500) / 0.35);
 }
 
 /* Focus styles */
@@ -457,7 +580,7 @@
 }
 
 .dark .skeleton {
-  background: linear-gradient(90deg, rgba(15,18,40,0.8) 0%, rgba(25,28,50,0.8) 50%, rgba(15,18,40,0.8) 100%);
+  background: linear-gradient(90deg, rgb(var(--c-surface) / 0.8) 0%, rgb(var(--c-surface-hover) / 0.8) 50%, rgb(var(--c-surface) / 0.8) 100%);
   background-size: 200% 100%;
 }
 
@@ -550,10 +673,10 @@
 
 .dark .bg-morph {
   background: linear-gradient(-45deg,
-    rgba(139, 92, 246, 0.08),
-    rgba(6, 182, 212, 0.06),
-    rgba(167, 139, 250, 0.06),
-    rgba(139, 92, 246, 0.08)
+    rgb(var(--c-primary-500) / 0.08),
+    rgb(var(--c-primary-400) / 0.06),
+    rgb(var(--c-primary-300) / 0.06),
+    rgb(var(--c-primary-500) / 0.08)
   );
   background-size: 400% 400%;
 }
@@ -567,8 +690,8 @@
 }
 
 .dark .glass-premium {
-  background: rgba(15, 18, 40, 0.5);
-  border-color: rgba(139, 92, 246, 0.08);
+  background: rgb(var(--c-surface) / 0.5);
+  border-color: rgb(var(--c-primary-500) / 0.08);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
 }
@@ -584,20 +707,20 @@
 }
 
 .dark .glass-deep {
-  background: rgba(13, 15, 30, 0.85);
+  background: rgb(var(--c-surface) / 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-color: rgba(139, 92, 246, 0.08);
+  border-color: rgb(var(--c-primary-500) / 0.08);
   box-shadow:
     0 4px 24px -2px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .dark .glass-deep:hover {
-  border-color: rgba(139, 92, 246, 0.15);
+  border-color: rgb(var(--c-primary-500) / 0.15);
   box-shadow:
     0 8px 30px -4px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(139, 92, 246, 0.06),
+    0 0 0 1px rgb(var(--c-primary-500) / 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
@@ -613,8 +736,8 @@
 }
 
 .dark .glass-stat {
-  background: rgba(13, 15, 30, 0.9);
-  border-color: rgba(139, 92, 246, 0.08);
+  background: rgb(var(--c-surface) / 0.9);
+  border-color: rgb(var(--c-primary-500) / 0.08);
   box-shadow:
     0 2px 16px -2px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -642,10 +765,10 @@
 }
 
 .dark .glass-stat:hover {
-  border-color: rgba(139, 92, 246, 0.18);
+  border-color: rgb(var(--c-primary-500) / 0.18);
   box-shadow:
     0 16px 32px -8px rgba(0, 0, 0, 0.6),
-    0 0 40px -12px rgba(139, 92, 246, 0.12);
+    0 0 40px -12px rgb(var(--c-primary-500) / 0.12);
 }
 
 /* ═══ 3D Card Effects ═══ */
@@ -664,15 +787,15 @@
 }
 
 .dark .card-3d-tilt {
-  background: rgba(15, 18, 40, 0.7);
-  border: 1px solid rgba(139, 92, 246, 0.08);
+  background: rgb(var(--c-surface) / 0.7);
+  border: 1px solid rgb(var(--c-primary-500) / 0.08);
 }
 
 .dark .card-3d-tilt:hover {
   box-shadow:
     0 30px 60px -15px rgba(0, 0, 0, 0.5),
-    0 0 40px -10px rgba(139, 92, 246, 0.15),
-    -5px 20px 40px -10px rgba(139, 92, 246, 0.06);
+    0 0 40px -10px rgb(var(--c-primary-500) / 0.15),
+    -5px 20px 40px -10px rgb(var(--c-primary-500) / 0.06);
 }
 
 /* Float-up card with depth shadow */
@@ -1094,8 +1217,8 @@ html.transitioning *::after {
 }
 
 .dark .liquid-glass {
-  background: rgba(15, 18, 40, 0.55);
-  border-color: rgba(139, 92, 246, 0.1);
+  background: rgb(var(--c-surface) / 0.55);
+  border-color: rgb(var(--c-primary-500) / 0.1);
   box-shadow:
     0 8px 40px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
@@ -1307,10 +1430,10 @@ html.transitioning *::after {
 }
 
 .dark .glass-nav {
-  background: rgba(10, 13, 26, 0.8);
+  background: rgb(var(--c-surface-dark) / 0.8);
   backdrop-filter: blur(20px) saturate(150%);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
-  border-bottom-color: rgba(139, 92, 246, 0.06);
+  border-bottom-color: rgb(var(--c-primary-500) / 0.06);
 }
 
 /* 14. ──── Sidebar Glow Active ────────────────────────────────────────────
@@ -1371,7 +1494,7 @@ html.transitioning *::after {
 }
 
 .dark .table-modern thead {
-  background: rgba(15, 18, 40, 0.5);
+  background: rgb(var(--c-surface) / 0.5);
 }
 
 .table-modern th {
@@ -1391,5 +1514,917 @@ html.transitioning *::after {
 }
 
 .dark .table-modern tbody tr:hover {
-  background: rgba(139, 92, 246, 0.04);
+  background: rgb(var(--c-primary-500) / 0.04);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FUTURISTIC AI ANIMATIONS — 15 agentic effects
+   Organic, data-driven, predictive animation vocabulary for AI-native UX.
+   All effects are disabled by the .no-animations kill-switch.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Neural Pulse ──────────────────────────────────────────────────────
+   Concentric ripple rings expanding outward — AI processing indicator.
+   Apply to buttons/icons during AI thinking state. */
+.neural-pulse {
+  position: relative;
+}
+
+.neural-pulse::before,
+.neural-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 2px solid rgb(var(--c-primary-500) / 0.5);
+  animation: neural-ripple 1.5s ease-out infinite;
+  pointer-events: none;
+}
+
+.neural-pulse::after {
+  animation-delay: 0.5s;
+}
+
+@keyframes neural-ripple {
+  0% {
+    inset: -2px;
+    opacity: 0.8;
+    border-color: rgb(var(--c-primary-500) / 0.6);
+  }
+  50% {
+    border-color: rgb(var(--c-primary-400) / 0.3);
+  }
+  100% {
+    inset: -20px;
+    opacity: 0;
+    border-color: rgb(var(--c-primary-300) / 0);
+  }
+}
+
+/* Inner glow variant for smaller elements */
+.neural-pulse-glow {
+  animation: neural-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes neural-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 8px -2px rgb(var(--c-primary-500) / 0.3),
+      0 0 20px -4px rgb(var(--c-primary-400) / 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 16px -2px rgb(var(--c-primary-500) / 0.5),
+      0 0 40px -4px rgb(var(--c-primary-400) / 0.25),
+      0 0 60px -8px rgb(var(--c-primary-300) / 0.1);
+  }
+}
+
+/* ── 2. Data Streaming ────────────────────────────────────────────────────
+   Matrix-like vertical data rain overlay — shown during AI response gen.
+   Apply to a container div; dots fall continuously via pseudo-elements. */
+.data-stream {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-stream::before,
+.data-stream::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 8px,
+      rgb(var(--c-primary-500) / 0.06) 8px,
+      rgb(var(--c-primary-500) / 0.06) 10px
+    );
+  background-size: 3px 18px;
+  animation: data-fall 1.8s linear infinite;
+  opacity: 0.5;
+}
+
+.data-stream::after {
+  background-size: 4px 24px;
+  animation-duration: 2.4s;
+  animation-delay: 0.6s;
+  opacity: 0.35;
+  left: 2px;
+}
+
+@keyframes data-fall {
+  0% { background-position: 0 -18px; }
+  100% { background-position: 0 18px; }
+}
+
+/* Brighter variant for dark themes */
+.dark .data-stream::before {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 8px,
+      rgb(var(--c-primary-400) / 0.10) 8px,
+      rgb(var(--c-primary-400) / 0.10) 10px
+    );
+  opacity: 0.6;
+}
+
+.dark .data-stream::after {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 10px,
+      rgb(var(--c-primary-300) / 0.07) 10px,
+      rgb(var(--c-primary-300) / 0.07) 12px
+    );
+  opacity: 0.4;
+}
+
+/* ── 4. Holographic Shimmer AI (enhanced) ─────────────────────────────────
+   Wider color band, slower organic sweep for premium AI surfaces.
+   Builds on the existing .holo-shimmer but with richer spectrum. */
+.holo-shimmer-ai {
+  position: relative;
+  overflow: hidden;
+}
+
+.holo-shimmer-ai::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 15%,
+    rgba(139, 92, 246, 0.04) 25%,
+    rgba(6, 182, 212, 0.06) 35%,
+    rgba(167, 139, 250, 0.07) 42%,
+    rgba(34, 211, 238, 0.06) 50%,
+    rgba(236, 72, 153, 0.04) 58%,
+    rgba(139, 92, 246, 0.05) 65%,
+    transparent 85%
+  );
+  animation: holo-ai-slide 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes holo-ai-slide {
+  0% { left: -120%; opacity: 0; }
+  10% { opacity: 1; }
+  45% { left: 140%; opacity: 1; }
+  50%, 100% { left: 140%; opacity: 0; }
+}
+
+/* ── 5. Morphing Geometry ─────────────────────────────────────────────────
+   Smooth clip-path transitions between organic shapes.
+   Apply as a decorative background element behind score orbs or stats. */
+.morph-geometry {
+  animation: morph-clip 10s ease-in-out infinite;
+  will-change: clip-path;
+}
+
+@keyframes morph-clip {
+  0%, 100% {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+  25% {
+    clip-path: polygon(50% 5%, 95% 30%, 95% 70%, 50% 95%, 5% 70%, 5% 30%);
+  }
+  50% {
+    clip-path: circle(50% at 50% 50%);
+  }
+  75% {
+    clip-path: polygon(50% 2%, 85% 15%, 100% 50%, 85% 85%, 50% 98%, 15% 85%, 0% 50%, 15% 15%);
+  }
+}
+
+/* Subtle version for background decorations */
+.morph-geometry-subtle {
+  animation: morph-clip 16s ease-in-out infinite;
+  will-change: clip-path;
+  opacity: 0.15;
+}
+
+/* ── 7. Orbital Progress ──────────────────────────────────────────────────
+   3 dots orbiting in a circle — replaces spinner for AI loading states. */
+.orbital-progress {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.orbital-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  margin: -3px 0 0 -3px;
+  animation: orbital-spin 2s linear infinite;
+  background: rgb(var(--c-primary-500));
+}
+
+.orbital-dot:nth-child(1) {
+  animation-duration: 2s;
+  box-shadow: 0 0 8px rgb(var(--c-primary-500) / 0.5);
+}
+
+.orbital-dot:nth-child(2) {
+  animation-duration: 2.5s;
+  animation-delay: -0.8s;
+  background: rgb(var(--c-primary-400));
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  box-shadow: 0 0 6px rgb(var(--c-primary-400) / 0.4);
+}
+
+.orbital-dot:nth-child(3) {
+  animation-duration: 3s;
+  animation-delay: -1.6s;
+  background: rgb(var(--c-primary-300));
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  box-shadow: 0 0 5px rgb(var(--c-primary-300) / 0.3);
+}
+
+@keyframes orbital-spin {
+  0% { transform: rotate(0deg) translateX(16px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(16px) rotate(-360deg); }
+}
+
+/* Large variant */
+.orbital-progress-lg {
+  width: 60px;
+  height: 60px;
+}
+
+.orbital-progress-lg .orbital-dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+}
+
+.orbital-progress-lg .orbital-dot:nth-child(1) {
+  box-shadow: 0 0 12px rgb(var(--c-primary-500) / 0.5);
+}
+
+.orbital-progress-lg .orbital-dot:nth-child(2) {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+}
+
+.orbital-progress-lg .orbital-dot:nth-child(3) {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+}
+
+@keyframes orbital-spin-lg {
+  0% { transform: rotate(0deg) translateX(24px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(24px) rotate(-360deg); }
+}
+
+.orbital-progress-lg .orbital-dot {
+  animation-name: orbital-spin-lg;
+}
+
+/* ── 9. Observer Eye ──────────────────────────────────────────────────────
+   Iris-like focus ring that contracts/expands — for active AI elements. */
+.observer-eye {
+  position: relative;
+}
+
+.observer-eye::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 2px solid transparent;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+}
+
+.observer-eye:hover::before,
+.observer-eye:focus-within::before {
+  border-color: rgb(var(--c-primary-500) / 0.3);
+  animation: iris-contract 2s ease-in-out infinite;
+}
+
+@keyframes iris-contract {
+  0%, 100% {
+    inset: -3px;
+    border-color: rgb(var(--c-primary-500) / 0.25);
+    box-shadow: 0 0 12px -3px rgb(var(--c-primary-500) / 0.15);
+  }
+  50% {
+    inset: -1px;
+    border-color: rgb(var(--c-primary-400) / 0.45);
+    box-shadow: 0 0 20px -3px rgb(var(--c-primary-500) / 0.25);
+  }
+}
+
+/* ── 12. Focus Dimming ────────────────────────────────────────────────────
+   Sibling elements dim when one panel has focus — pure CSS via :focus-within. */
+.focus-dimming-container > * {
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.focus-dimming-container:focus-within > *:not(:focus-within) {
+  opacity: 0.5;
+  filter: blur(1px);
+}
+
+.focus-dimming-container:focus-within > *:focus-within {
+  opacity: 1;
+  filter: blur(0);
+}
+
+/* ── 13. Bioluminescent Highlighting ──────────────────────────────────────
+   Organic breathing glow with color-shifting between primary and cyan.
+   Apply to critical insight cards, important stat elements. */
+.bioluminescent {
+  animation: bio-glow 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+@keyframes bio-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 12px -3px rgb(var(--c-primary-500) / 0.25),
+      0 0 30px -6px rgb(var(--c-primary-600) / 0.1),
+      inset 0 0 8px -4px rgb(var(--c-primary-500) / 0.05);
+  }
+  33% {
+    box-shadow:
+      0 0 18px -3px rgba(6, 182, 212, 0.3),
+      0 0 40px -6px rgba(6, 182, 212, 0.12),
+      inset 0 0 12px -4px rgba(6, 182, 212, 0.06);
+  }
+  66% {
+    box-shadow:
+      0 0 15px -3px rgba(167, 139, 250, 0.28),
+      0 0 35px -6px rgba(167, 139, 250, 0.1),
+      inset 0 0 10px -4px rgba(167, 139, 250, 0.05);
+  }
+}
+
+/* Subtle variant for less prominent elements */
+.bioluminescent-subtle {
+  animation: bio-glow-soft 5s ease-in-out infinite;
+}
+
+@keyframes bio-glow-soft {
+  0%, 100% {
+    box-shadow: 0 0 8px -3px rgb(var(--c-primary-500) / 0.15);
+  }
+  50% {
+    box-shadow: 0 0 14px -3px rgba(6, 182, 212, 0.2);
+  }
+}
+
+/* ── 14. Glassmorphic Refraction ──────────────────────────────────────────
+   Diagonal light band traversing glass surfaces — ambient refraction.
+   Apply to glass panels for a sense of moving light source. */
+.glass-refraction {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-refraction::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.015) 38%,
+    rgba(139, 92, 246, 0.02) 42%,
+    rgba(6, 182, 212, 0.025) 46%,
+    rgba(167, 139, 250, 0.02) 50%,
+    rgba(255, 255, 255, 0.015) 54%,
+    transparent 62%
+  );
+  transform: rotate(15deg);
+  animation: refraction-sweep 12s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes refraction-sweep {
+  0% { left: -100%; opacity: 0; }
+  15% { opacity: 1; }
+  50% { left: 150%; opacity: 1; }
+  55%, 100% { left: 150%; opacity: 0; }
+}
+
+/* Dark mode: slightly brighter refraction bands */
+.dark .glass-refraction::before {
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.02) 38%,
+    rgba(139, 92, 246, 0.035) 42%,
+    rgba(6, 182, 212, 0.04) 46%,
+    rgba(167, 139, 250, 0.035) 50%,
+    rgba(255, 255, 255, 0.02) 54%,
+    transparent 62%
+  );
+}
+
+/* ── Proactive Pop-out Keyframes ──────────────────────────────────────────
+   Spring-physics entry animations for cards sliding from edges. */
+@keyframes popout-right {
+  0% {
+    opacity: 0;
+    transform: translateX(40px) scale(0.92);
+    filter: blur(4px);
+  }
+  60% {
+    transform: translateX(-6px) scale(1.02);
+    filter: blur(0);
+  }
+  80% {
+    transform: translateX(2px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes popout-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.92);
+    filter: blur(4px);
+  }
+  60% {
+    transform: translateX(6px) scale(1.02);
+    filter: blur(0);
+  }
+  80% {
+    transform: translateX(-2px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes popout-bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.92);
+    filter: blur(4px);
+  }
+  60% {
+    transform: translateY(-4px) scale(1.02);
+    filter: blur(0);
+  }
+  80% {
+    transform: translateY(2px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.popout-right {
+  animation: popout-right 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.popout-left {
+  animation: popout-left 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.popout-bottom {
+  animation: popout-bottom 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+/* ── Handshake Confirmation Keyframes ─────────────────────────────────────
+   Checkmark draw-in + particle burst on successful AI actions. */
+@keyframes checkmark-draw {
+  0% { stroke-dashoffset: 48; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes confirm-particle {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--px, 20px), var(--py, -20px)) scale(0);
+  }
+}
+
+@keyframes confirm-ring {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.8;
+    border-color: rgb(var(--c-primary-500) / 0.6);
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+    border-color: rgba(34, 197, 94, 0);
+  }
+}
+
+/* ── Prediction Ghost / Ghosting ──────────────────────────────────────────
+   Faint blurred preview of predicted content. */
+.prediction-ghost {
+  opacity: 0.25;
+  filter: blur(2px);
+  transform: translateY(4px);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+.prediction-ghost-enter {
+  animation: ghost-appear 0.5s ease-out forwards;
+}
+
+@keyframes ghost-appear {
+  0% { opacity: 0; transform: translateY(12px); filter: blur(6px); }
+  100% { opacity: 0.25; transform: translateY(4px); filter: blur(2px); }
+}
+
+/* ── Node Connection Flow Animation ───────────────────────────────────────
+   Animated dash flow for SVG connection lines between agents. */
+@keyframes dash-flow {
+  0% { stroke-dashoffset: 20; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* ── Particle Reconstitution Keyframes ────────────────────────────────────
+   Particles scatter then converge — used by React component. */
+@keyframes particle-scatter {
+  0% {
+    transform: translate(var(--scatter-x, 0), var(--scatter-y, 0)) scale(0.5);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+    transform: translate(var(--scatter-x, 0), var(--scatter-y, 0)) scale(1.2);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+.particle-reconstitute {
+  animation: particle-scatter 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* ── Time-Lapse Growth Keyframes ──────────────────────────────────────────
+   Organic growth animation for chart bars and stat counters. */
+@keyframes timelapse-grow {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+    transform-origin: bottom;
+  }
+  60% {
+    transform: scaleY(1.03);
+    opacity: 1;
+  }
+  80% {
+    transform: scaleY(0.98);
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+    transform-origin: bottom;
+  }
+}
+
+.timelapse-grow {
+  animation: timelapse-grow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  transform-origin: bottom;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEURAL SWARM — Mode transitions, cluster pulses, hexagon layout, orbit effects
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Swarm Mode Fade Transition ──────────────────────────────────────────
+   Smooth opacity+translate transition when switching between Overview/Chat/Orchestrate */
+@keyframes swarm-mode-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.swarm-mode-enter {
+  animation: swarm-mode-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Cluster Node Pulse ──────────────────────────────────────────────────
+   Pulsing glow ring around cluster nodes in the Neural Map visualization */
+@keyframes cluster-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--cluster-color, rgba(139, 92, 246, 0.4));
+  }
+  50% {
+    box-shadow: 0 0 20px 6px var(--cluster-color, rgba(139, 92, 246, 0.15));
+  }
+}
+
+.cluster-node-pulse {
+  animation: cluster-pulse 3s ease-in-out infinite;
+}
+
+/* ── Neural Connection Line Flow ─────────────────────────────────────────
+   Animated gradient stroke for connections between cluster nodes */
+@keyframes neural-flow {
+  0% { stroke-dashoffset: 30; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.neural-connection {
+  stroke-dasharray: 8 6;
+  animation: neural-flow 1.5s linear infinite;
+}
+
+/* ── Hexagon Node Hover Lift ─────────────────────────────────────────────
+   Hover effect for cluster nodes in neural map */
+@keyframes hex-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.hex-node-float {
+  animation: hex-float 4s ease-in-out infinite;
+}
+
+.hex-node-float:hover {
+  animation-play-state: paused;
+  transform: translateY(-6px) scale(1.05);
+  transition: transform 0.25s ease;
+}
+
+/* ── Swarm Stat Counter ──────────────────────────────────────────────────
+   Animated number reveal for hero stat cards */
+@keyframes stat-count-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.8);
+    filter: blur(4px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.02);
+    filter: blur(0);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stat-count-up {
+  animation: stat-count-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Orchestration Card Stagger ──────────────────────────────────────────
+   Cards appearing one after another in multi-agent view */
+@keyframes orch-card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.orch-card-enter {
+  animation: orch-card-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* ── Swarm Broadcast Ripple ──────────────────────────────────────────────
+   Expanding ring when broadcasting message to multiple agents */
+@keyframes broadcast-ripple {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+    box-shadow: 0 0 0 0 var(--ripple-color, rgba(139, 92, 246, 0.4));
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+    box-shadow: 0 0 0 20px var(--ripple-color, rgba(139, 92, 246, 0));
+  }
+}
+
+.broadcast-ripple::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  animation: broadcast-ripple 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+/* ── Mode Tab Indicator ──────────────────────────────────────────────────
+   Animated underline/glow for the active mode tab */
+@keyframes mode-tab-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px 0 var(--tab-glow, rgba(139, 92, 246, 0.3));
+  }
+  50% {
+    box-shadow: 0 0 16px 2px var(--tab-glow, rgba(139, 92, 246, 0.5));
+  }
+}
+
+.mode-tab-active {
+  animation: mode-tab-glow 2.5s ease-in-out infinite;
+}
+
+/* ── Agent Chip Hover ────────────────────────────────────────────────────
+   Micro-interaction for agent pills in overview/orchestration */
+.agent-chip-hover {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.agent-chip-hover:hover {
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.15);
+}
+
+.agent-chip-hover:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ── Neural Activity Ping ────────────────────────────────────────────────
+   Small ping indicator for live activity feed items */
+@keyframes activity-ping {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.activity-ping {
+  animation: activity-ping 2s ease-in-out infinite;
+}
+
+/* ── Swarm Grid Layout Helper ────────────────────────────────────────────
+   Responsive grid for orchestration response cards */
+.swarm-grid-1 { grid-template-columns: 1fr; }
+.swarm-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.swarm-grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+@media (max-width: 1024px) {
+  .swarm-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .swarm-grid-2,
+  .swarm-grid-3 { grid-template-columns: 1fr; }
+}
+
+/* ── Focus Dimming for Swarm Chat ────────────────────────────────────────
+   When a panel is focused, dim the other panels subtly */
+.swarm-focus-container > *:not(:focus-within) {
+  transition: opacity 0.3s ease;
+}
+
+.swarm-focus-container:has(:focus-within) > *:not(:focus-within) {
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPACT MODE — Reduces spacing throughout the UI
+   Applied via .compact class on <html>
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Reduce page-level padding */
+.compact main {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.compact main > div {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .compact main > div { padding-left: 1rem; padding-right: 1rem; }
+}
+
+@media (min-width: 1024px) {
+  .compact main > div { padding-left: 1.25rem; padding-right: 1.25rem; }
+}
+
+/* Tighter cards */
+.compact .card-body {
+  padding: 1rem;
+}
+
+.compact .card-header {
+  padding: 0.75rem 1rem;
+}
+
+/* Smaller stat cards */
+.compact .stat-card {
+  padding: 1rem;
+}
+
+.compact .glass-stat {
+  padding: 0.75rem;
+}
+
+/* Tighter form spacing */
+.compact .input {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.compact .label {
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+}
+
+/* Compact buttons */
+.compact .btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+
+/* Reduce vertical gaps globally */
+.compact [class*="space-y-6"] > * + * { margin-top: 1rem; }
+.compact [class*="space-y-4"] > * + * { margin-top: 0.5rem; }
+.compact [class*="space-y-8"] > * + * { margin-top: 1.25rem; }
+.compact [class*="gap-6"] { gap: 1rem; }
+.compact [class*="gap-4"] { gap: 0.5rem; }
+.compact [class*="gap-8"] { gap: 1.25rem; }
+
+/* Tighter grid gaps */
+.compact [class*="grid"] { gap: 0.75rem; }
+
+/* Tighter table rows */
+.compact .table-modern th {
+  padding: 0.625rem 1rem;
+}
+
+.compact .table-modern td {
+  padding: 0.625rem 1rem;
+  font-size: 0.75rem;
+}
+
+/* Compact sidebar nav */
+.compact .sidebar-glow-active::before {
+  height: 50%;
+}
+
+/* Smaller badge */
+.compact .badge {
+  padding: 0.25rem 0.5rem;
+  font-size: 10px;
+}
+
+/* Reduce section headings spacing */
+.compact h1 { font-size: 1.5rem; }
+.compact h2 { font-size: 1.25rem; }
+.compact h3 { font-size: 1rem; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NO ANIMATIONS — Disables all transitions and animations
+   Applied via .no-animations class on <html>
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.no-animations,
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
 }

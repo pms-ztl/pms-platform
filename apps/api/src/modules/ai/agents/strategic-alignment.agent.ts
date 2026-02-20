@@ -20,6 +20,7 @@ import {
   queryPerformanceSnapshots,
   queryWorkloadDistribution,
 } from '../agent-tools-v2';
+import { isManager } from '../../../utils/roles';
 
 // ── System Prompt ───────────────────────────────────────────
 
@@ -57,12 +58,15 @@ export class StrategicAlignmentAgent extends BaseAgent {
   ): Promise<Record<string, unknown> | null> {
     const lower = userMessage.toLowerCase();
     const data: Record<string, unknown> = {};
+    const managerAccess = isManager(context.userRoles);
 
-    // Always fetch goal alignment -- core to strategic alignment
-    const alignment = await queryGoalAlignment(context.tenantId);
-    data.goalAlignment = alignment.data;
+    // Goal alignment — managers see org-wide, employees see own alignment only
+    if (managerAccess) {
+      const alignment = await queryGoalAlignment(context.tenantId);
+      data.goalAlignment = alignment.data;
+    }
 
-    // Always fetch active goals for milestone tracking
+    // Always fetch user's own goals for milestone tracking
     const goals = await queryGoals(context.tenantId, {
       userId: context.userId,
       limit: 30,
@@ -101,27 +105,29 @@ export class StrategicAlignmentAgent extends BaseAgent {
       data.performanceMetrics = analytics.data;
     }
 
-    // Workload distribution for resource-aware alignment
+    // Workload distribution — manager+ only
     if (
+      managerAccess && (
       lower.includes('capacity') ||
       lower.includes('workload') ||
       lower.includes('bandwidth') ||
       lower.includes('overloaded') ||
       lower.includes('resource') ||
-      lower.includes('redistribute')
+      lower.includes('redistribute'))
     ) {
       const workload = await queryWorkloadDistribution(context.tenantId, context.userId);
       data.workloadDistribution = workload.data;
     }
 
-    // OKR-specific queries -- fetch broader goal landscape
+    // OKR-specific queries — manager+ only for org-wide goal landscape
     if (
+      managerAccess && (
       lower.includes('okr') ||
       lower.includes('objective') ||
       lower.includes('key result') ||
       lower.includes('cascade') ||
       lower.includes('alignment') ||
-      lower.includes('strateg')
+      lower.includes('strateg'))
     ) {
       const orgGoals = await queryGoals(context.tenantId, {
         status: 'active',

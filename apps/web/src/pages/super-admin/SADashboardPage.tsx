@@ -36,13 +36,15 @@ type ServiceStatus = 'healthy' | 'degraded' | 'down' | string;
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatUptime(uptimePercent: number): string {
+function formatUptime(uptimePercent: number | undefined | null): string {
+  if (uptimePercent == null) return '0.00%';
   return `${uptimePercent.toFixed(2)}%`;
 }
 
-function formatNumber(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+function formatNumber(n: number | undefined | null): string {
+  if (n == null) return '0';
+  if (n >= 1_000_000) return `${((n ?? 0) / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${((n ?? 0) / 1_000).toFixed(1)}K`;
   return n.toLocaleString();
 }
 
@@ -200,39 +202,50 @@ export function SADashboardPage() {
     );
   }
 
+  // ── Safe accessors (defence against partial API responses) ──
+  const totalTenants = stats.totalTenants ?? 0;
+  const activeTenants = stats.activeTenants ?? 0;
+  const activeUsers = stats.activeUsers ?? 0;
+  const totalUsers = stats.totalUsers ?? 0;
+  const apiRequestsToday = stats.apiRequestsToday ?? 0;
+  const errorRate = stats.errorRate ?? 0;
+  const uptime = stats.uptime ?? 0;
+  const healthStatus = stats.healthStatus ?? 'unknown';
+  const monthlyActiveUsers = stats.monthlyActiveUsers ?? 0;
+
   // ── Stat cards configuration ──
   const statCards: StatCard[] = [
     {
       label: 'Total Tenants',
-      value: stats.totalTenants,
+      value: totalTenants,
       icon: BuildingOffice2Icon,
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
       iconColor: 'text-blue-600 dark:text-blue-400',
-      subtitle: `${stats.activeTenants} active`,
+      subtitle: `${activeTenants} active`,
     },
     {
       label: 'Active Users',
-      value: formatNumber(stats.activeUsers),
+      value: formatNumber(activeUsers),
       icon: UsersIcon,
       bgColor: 'bg-green-50 dark:bg-green-900/20',
       iconColor: 'text-green-600 dark:text-green-400',
-      subtitle: `${formatNumber(stats.totalUsers)} total`,
+      subtitle: `${formatNumber(totalUsers)} total`,
     },
     {
       label: 'API Requests Today',
-      value: formatNumber(stats.apiRequestsToday),
+      value: formatNumber(apiRequestsToday),
       icon: BoltIcon,
       bgColor: 'bg-purple-50 dark:bg-purple-900/20',
       iconColor: 'text-purple-600 dark:text-purple-400',
-      subtitle: `${stats.errorRate.toFixed(2)}% error rate`,
+      subtitle: `${(errorRate ?? 0).toFixed(2)}% error rate`,
     },
     {
       label: 'System Uptime',
-      value: formatUptime(stats.uptime),
+      value: formatUptime(uptime),
       icon: ClockIcon,
       bgColor: 'bg-emerald-50 dark:bg-emerald-900/20',
       iconColor: 'text-emerald-600 dark:text-emerald-400',
-      subtitle: stats.healthStatus === 'healthy' ? 'All systems operational' : `Status: ${stats.healthStatus}`,
+      subtitle: healthStatus === 'healthy' ? 'All systems operational' : `Status: ${healthStatus}`,
     },
   ];
 
@@ -265,7 +278,7 @@ export function SADashboardPage() {
       </div>
 
       {/* Overall health banner */}
-      {stats.healthStatus !== 'healthy' && (
+      {healthStatus !== 'healthy' && (
         <div className="flex items-center gap-3 p-4 rounded-xl border bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-300">
           <ExclamationTriangleIcon className="h-5 w-5 flex-shrink-0" />
           <div>
@@ -324,7 +337,7 @@ export function SADashboardPage() {
               <div className="space-y-4">
                 {planDistribution.map((plan) => {
                   const pct = totalTenantsByPlan > 0
-                    ? ((plan.value / totalTenantsByPlan) * 100).toFixed(1)
+                    ? (((plan.value ?? 0) / totalTenantsByPlan) * 100).toFixed(1)
                     : '0';
                   const colorClass = PLAN_COLORS[plan.name.toUpperCase()] ?? PLAN_COLORS.FREE;
 
@@ -378,8 +391,8 @@ export function SADashboardPage() {
                   System Health
                 </h2>
               </div>
-              <span className={serviceStatusBadge(stats.healthStatus)}>
-                {stats.healthStatus}
+              <span className={serviceStatusBadge(healthStatus)}>
+                {healthStatus}
               </span>
             </div>
           </div>
@@ -440,7 +453,7 @@ export function SADashboardPage() {
                     Monthly Active Users
                   </p>
                   <p className="text-xs text-secondary-500 dark:text-secondary-400">
-                    {formatNumber(stats.monthlyActiveUsers)} users active this month
+                    {formatNumber(monthlyActiveUsers)} users active this month
                   </p>
                 </div>
               </div>
@@ -452,7 +465,7 @@ export function SADashboardPage() {
                     Active Tenants
                   </p>
                   <p className="text-xs text-secondary-500 dark:text-secondary-400">
-                    {stats.activeTenants} of {stats.totalTenants} tenants currently active
+                    {activeTenants} of {totalTenants} tenants currently active
                   </p>
                 </div>
               </div>
@@ -464,25 +477,25 @@ export function SADashboardPage() {
                     API Activity
                   </p>
                   <p className="text-xs text-secondary-500 dark:text-secondary-400">
-                    {formatNumber(stats.apiRequestsToday)} requests processed today
+                    {formatNumber(apiRequestsToday)} requests processed today
                   </p>
                 </div>
               </div>
 
               <div className={`flex items-center gap-3 py-2.5 px-3 rounded-lg ${
-                stats.errorRate > 1
+                errorRate > 1
                   ? 'bg-red-50 dark:bg-red-900/20'
                   : 'bg-emerald-50 dark:bg-emerald-900/20'
               }`}>
                 <div className={`flex-shrink-0 h-2 w-2 rounded-full ${
-                  stats.errorRate > 1 ? 'bg-red-500' : 'bg-emerald-500'
+                  errorRate > 1 ? 'bg-red-500' : 'bg-emerald-500'
                 }`} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-secondary-900 dark:text-white">
                     Error Rate
                   </p>
                   <p className="text-xs text-secondary-500 dark:text-secondary-400">
-                    {stats.errorRate.toFixed(2)}% of requests resulted in errors
+                    {(errorRate ?? 0).toFixed(2)}% of requests resulted in errors
                   </p>
                 </div>
               </div>

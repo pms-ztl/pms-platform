@@ -7,6 +7,8 @@
 
 import { prisma, Prisma } from '@pms/database';
 import { MS_PER_DAY, DAYS } from '../../utils/constants';
+import { llmClient } from '../../modules/ai/llm-client';
+import { logger } from '../../utils/logger';
 
 // ============================================================================
 // FEATURE 49: PIP AUTOMATION
@@ -610,7 +612,38 @@ export class OrganizationalHealthService {
     const concerns = this.identifyConcerns(riskIndicators, turnoverMetrics.turnoverRate);
 
     // Generate recommendations
-    const recommendations = this.generateHealthRecommendations(concerns, overallHealthScore);
+    let recommendations = this.generateHealthRecommendations(concerns, overallHealthScore);
+
+    // ── LLM enrichment: AI-powered organizational health insights ──
+    try {
+      if (llmClient.isAvailable) {
+        const aiInsights = await this.enrichHealthWithLLM({
+          overallHealthScore,
+          healthLevel,
+          engagementScore,
+          performanceScore,
+          cultureScore,
+          leadershipScore,
+          collaborationScore,
+          innovationScore,
+          wellbeingScore,
+          headcount,
+          turnoverRate: turnoverMetrics.turnoverRate,
+          eNPS,
+          atRisk: riskIndicators.atRisk,
+          burnout: riskIndicators.burnout,
+          strengths,
+          concerns,
+        });
+        if (aiInsights) {
+          if (aiInsights.strengths?.length) strengths.push(...aiInsights.strengths);
+          if (aiInsights.concerns?.length) concerns.push(...aiInsights.concerns);
+          if (aiInsights.recommendations?.length) recommendations = [...recommendations, ...aiInsights.recommendations];
+        }
+      }
+    } catch (err) {
+      logger.warn('LLM enrichment for org health failed, using algorithmic results', { error: (err as Error).message });
+    }
 
     // Save metrics
     const metrics = await prisma.organizationalHealthMetrics.create({
@@ -983,5 +1016,61 @@ export class OrganizationalHealthService {
     });
 
     return diagnostic;
+  }
+
+  /**
+   * LLM-powered enrichment for organizational health metrics.
+   * Generates strategic insights and actionable recommendations.
+   */
+  private async enrichHealthWithLLM(ctx: {
+    overallHealthScore: number; healthLevel: string;
+    engagementScore: number; performanceScore: number; cultureScore: number;
+    leadershipScore: number; collaborationScore: number; innovationScore: number;
+    wellbeingScore: number; headcount: number; turnoverRate: number;
+    eNPS: number; atRisk: number; burnout: number;
+    strengths: string[]; concerns: string[];
+  }) {
+    const prompt = `You are an organizational psychologist and HR strategist. Analyze this organization's health metrics and provide strategic recommendations.
+
+Organization Health: ${ctx.healthLevel} (Score: ${ctx.overallHealthScore.toFixed(1)}/100)
+Headcount: ${ctx.headcount} | Turnover: ${ctx.turnoverRate.toFixed(1)}% | eNPS: ${ctx.eNPS}
+At-Risk: ${ctx.atRisk} employees | Burnout Risk: ${ctx.burnout}
+
+Dimension Scores (0-100):
+- Engagement: ${ctx.engagementScore.toFixed(1)}
+- Performance: ${ctx.performanceScore.toFixed(1)}
+- Culture: ${ctx.cultureScore.toFixed(1)}
+- Leadership: ${ctx.leadershipScore.toFixed(1)}
+- Collaboration: ${ctx.collaborationScore.toFixed(1)}
+- Innovation: ${ctx.innovationScore.toFixed(1)}
+- Wellbeing: ${ctx.wellbeingScore.toFixed(1)}
+
+Current Strengths: ${ctx.strengths.join('; ') || 'None identified'}
+Current Concerns: ${ctx.concerns.join('; ') || 'None identified'}
+
+Respond in strict JSON (no markdown):
+{
+  "strengths": ["1-2 AI-identified organizational strengths"],
+  "concerns": ["1-2 AI-identified areas of concern"],
+  "recommendations": [
+    {"priority": "HIGH", "category": "ENGAGEMENT", "description": "specific recommendation", "expectedImpact": "what improvement to expect", "timeframe": "3 months"},
+    {"priority": "MEDIUM", "category": "CULTURE", "description": "specific recommendation", "expectedImpact": "what improvement to expect", "timeframe": "6 months"}
+  ]
+}
+
+Focus on the lowest-scoring dimensions. Generate 3-4 prioritized recommendations with specific actions.`;
+
+    const response = await llmClient.generateText(prompt, {
+      maxTokens: 800,
+      temperature: 0.4,
+    });
+
+    try {
+      const cleaned = response.content.replace(/```json?\s*/g, '').replace(/```/g, '').trim();
+      return JSON.parse(cleaned);
+    } catch {
+      logger.warn('Failed to parse LLM org health enrichment response');
+      return null;
+    }
   }
 }

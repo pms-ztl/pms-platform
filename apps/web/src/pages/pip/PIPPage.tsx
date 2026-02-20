@@ -18,6 +18,7 @@ import {
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { format, differenceInDays, parseISO } from 'date-fns';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const severityColors: Record<string, string> = {
   STANDARD: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300',
@@ -85,6 +86,7 @@ const initialFormState: CreatePIPFormState = {
 };
 
 export function PIPPage() {
+  usePageTitle('PIP Management');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { user } = useAuthStore();

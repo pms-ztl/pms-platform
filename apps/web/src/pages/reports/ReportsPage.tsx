@@ -24,6 +24,15 @@ import {
   type GeneratedReport,
   type GenerateReportInput,
 } from '@/lib/api';
+import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import {
+  TeamPerformanceChart,
+  GoalCompletionTrends,
+  FeedbackAnalysisChart,
+  PerformanceDistributionChart,
+  ScheduledReportsWidget,
+} from '@/components/analytics';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -90,7 +99,10 @@ function formatFileSize(bytes?: number): string {
 // ---------------------------------------------------------------------------
 
 export function ReportsPage() {
+  usePageTitle('Reports');
   const queryClient = useQueryClient();
+  const { user } = useAuthStore();
+  const isManager = user?.roles?.includes('MANAGER') || user?.roles?.includes('HR_ADMIN') || user?.roles?.includes('ADMIN');
 
   // Generate form state
   const [reportType, setReportType] = useState<string>(REPORT_TYPES[0]);
@@ -123,6 +135,7 @@ export function ReportsPage() {
     queryFn: () => reportsApi.list({ page, limit }),
     staleTime: 30_000,
     refetchOnWindowFocus: true,
+    retry: 1,
   });
 
   const reports = reportsData?.data || [];
@@ -136,6 +149,7 @@ export function ReportsPage() {
     queryFn: () => reportsApi.listSchedules(),
     enabled: schedulesExpanded,
     staleTime: 30_000,
+    retry: 1,
   });
 
   // -------------------------------------------------------------------------
@@ -283,6 +297,24 @@ export function ReportsPage() {
           Generate, download, and schedule performance reports
         </p>
       </div>
+
+      {/* ================================================================= */}
+      {/* Quick Analytics (managers & admins)                               */}
+      {/* ================================================================= */}
+      {isManager && (
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Quick Analytics</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <TeamPerformanceChart managerId={user?.id ?? ''} />
+            <GoalCompletionTrends months={6} />
+            <FeedbackAnalysisChart months={6} />
+            <PerformanceDistributionChart />
+          </div>
+        </div>
+      )}
+
+      {/* Scheduled Reports Widget */}
+      {isManager && <ScheduledReportsWidget />}
 
       {/* ================================================================= */}
       {/* Generate Report Section                                           */}

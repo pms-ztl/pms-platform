@@ -6,8 +6,16 @@ import { canAccess } from '@/store/auth';
 import { useThemeStore } from '@/store/theme';
 import { authApi } from '@/lib/api';
 
-// Layouts
+/** Check if user roles include any super-admin variant (handles DB name vs enum mismatch) */
+const SUPER_ADMIN_ALIASES = ['SUPER_ADMIN', 'Super Admin', 'SYSTEM_ADMIN', 'System Admin'];
+function hasSuperAdminRole(roles: string[] | undefined): boolean {
+  return roles?.some((r) => SUPER_ADMIN_ALIASES.includes(r)) ?? false;
+}
+
+// Layouts & Error handling
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { NotFoundPage } from '@/pages/NotFoundPage';
 import { SuperAdminLayout } from '@/components/layouts/SuperAdminLayout';
 import { AuthLayout } from '@/components/layouts/AuthLayout';
 
@@ -51,6 +59,7 @@ import { CompliancePage } from '@/pages/compliance/CompliancePage';
 import { AnnouncementsPage } from '@/pages/announcements/AnnouncementsPage';
 import { ReviewCyclesPage } from '@/pages/reviews/ReviewCyclesPage';
 import { GoalAlignmentPage } from '@/pages/goals/GoalAlignmentPage';
+import { OKRDashboardPage } from '@/pages/okrs/OKRDashboardPage';
 import { CareerPathPage } from '@/pages/career/CareerPathPage';
 import { ManagerDashboardPage } from '@/pages/manager/ManagerDashboardPage';
 import { LeaderboardPage } from '@/pages/leaderboard/LeaderboardPage';
@@ -59,6 +68,34 @@ import { ExcelUploadPage } from '@/pages/ExcelUploadPage';
 import { LicenseDashboardPage } from '@/pages/admin/LicenseDashboardPage';
 import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
 import { AIAccessManagementPage } from '@/pages/admin/AIAccessManagementPage';
+import { RoleManagementPage } from '@/pages/admin/RoleManagementPage';
+import { UpgradeRequestPage } from '@/pages/admin/UpgradeRequestPage';
+import ChatPage from '@/pages/chat/ChatPage';
+import { OrgChartPage } from '@/pages/org-chart/OrgChartPage';
+import { EmployeeDirectoryPage } from '@/pages/directory/EmployeeDirectoryPage';
+import { HealthDashboardPage } from '@/pages/health/HealthDashboardPage';
+import { EngagementDashboardPage } from '@/pages/engagement/EngagementDashboardPage';
+import { PulsePage } from '@/pages/pulse/PulsePage';
+import { CalendarPage } from '@/pages/calendar/CalendarPage';
+import { DataExportPage } from '@/pages/exports/DataExportPage';
+import { DelegationManagementPage } from '@/pages/admin/DelegationManagementPage';
+import { AccessPoliciesPage } from '@/pages/admin/AccessPoliciesPage';
+import { RBACDashboardPage } from '@/pages/admin/RBACDashboardPage';
+import { TeamInsightsPage } from '@/pages/team/TeamInsightsPage';
+import { SkillGapHeatmapPage } from '@/pages/skills/SkillGapHeatmapPage';
+import { ScheduledReportsPage } from '@/pages/reports/ScheduledReportsPage';
+import { WellbeingDashboardPage } from '@/pages/wellbeing/WellbeingDashboardPage';
+import { MeetingAnalyticsPage } from '@/pages/meeting-analytics/MeetingAnalyticsPage';
+import { IntegrationsHubPage } from '@/pages/admin/IntegrationsHubPage';
+import { AIInsightsDashboardPage } from '@/pages/ai-insights/AIInsightsDashboardPage';
+import { AnomalyDetectionPage } from '@/pages/anomalies/AnomalyDetectionPage';
+import { PerformanceBenchmarkPage } from '@/pages/benchmarks/PerformanceBenchmarkPage';
+import { TalentIntelligencePage } from '@/pages/talent-intelligence/TalentIntelligencePage';
+import { TeamOptimizerPage } from '@/pages/team-optimizer/TeamOptimizerPage';
+import { CultureDiagnosticsPage } from '@/pages/culture-diagnostics/CultureDiagnosticsPage';
+import { AIDevPlanPage } from '@/pages/ai-development/AIDevPlanPage';
+import { PerformanceSimulatorPage } from '@/pages/simulator/PerformanceSimulatorPage';
+import { MentoringHubPage } from '@/pages/mentoring/MentoringHubPage';
 
 // Super Admin Pages (lazy loaded for code splitting)
 const SADashboardPage = lazy(() => import('@/pages/super-admin/SADashboardPage').then(m => ({ default: m.SADashboardPage })));
@@ -69,6 +106,7 @@ const SABillingPage = lazy(() => import('@/pages/super-admin/SABillingPage').the
 const SAAuditPage = lazy(() => import('@/pages/super-admin/SAAuditPage').then(m => ({ default: m.SAAuditPage })));
 const SASecurityPage = lazy(() => import('@/pages/super-admin/SASecurityPage').then(m => ({ default: m.SASecurityPage })));
 const SASystemPage = lazy(() => import('@/pages/super-admin/SASystemPage').then(m => ({ default: m.SASystemPage })));
+const SAUpgradeRequestsPage = lazy(() => import('@/pages/super-admin/SAUpgradeRequestsPage').then(m => ({ default: m.SAUpgradeRequestsPage })));
 
 // Suspense fallback for lazy-loaded pages
 function PageLoader() {
@@ -138,7 +176,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
   if (isAuthenticated) {
     // Route Super Admin to their dedicated dashboard
-    if (user?.roles.includes('SUPER_ADMIN')) {
+    if (hasSuperAdminRole(user?.roles)) {
       return <Navigate to="/sa/dashboard" replace />;
     }
     return <Navigate to="/dashboard" replace />;
@@ -163,7 +201,7 @@ function SuperAdminGuard({ children }: { children: React.ReactNode }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (!user?.roles.includes('SUPER_ADMIN')) {
+  if (!hasSuperAdminRole(user?.roles)) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center bg-gray-50 dark:bg-gray-900">
         <div className="rounded-full bg-red-100 dark:bg-red-900/30 p-4 mb-4">
@@ -189,27 +227,16 @@ function SuperAdminGuard({ children }: { children: React.ReactNode }) {
 function SmartRedirect() {
   const { user, isAuthenticated } = useAuthStore();
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (user?.roles.includes('SUPER_ADMIN')) return <Navigate to="/sa/dashboard" replace />;
+  if (hasSuperAdminRole(user?.roles)) return <Navigate to="/sa/dashboard" replace />;
   return <Navigate to="/dashboard" replace />;
 }
 
 function App() {
   const { accessToken, setUser, setLoading, logout } = useAuthStore();
-  const { theme } = useThemeStore();
-
-  // Initialize theme on mount
-  useEffect(() => {
-    const root = document.documentElement;
-    const getSystemTheme = () =>
-      window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    const effectiveTheme = theme === 'system' ? getSystemTheme() : theme;
-
-    if (effectiveTheme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [theme]);
+  // Theme is managed entirely by useThemeStore (applyTheme + onRehydrateStorage).
+  // No useEffect needed here — the store handles class toggling on <html>
+  // for all modes: light, dark, deep-dark, and system.
+  useThemeStore();
 
   // Check auth on mount
   useEffect(() => {
@@ -268,7 +295,9 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <DashboardLayout />
+              <ErrorBoundary>
+                <DashboardLayout />
+              </ErrorBoundary>
             </ProtectedRoute>
           }
         >
@@ -310,13 +339,42 @@ function App() {
           <Route path="announcements" element={<AnnouncementsPage />} />
           <Route path="review-cycles" element={<RoleGuard path="/review-cycles"><ReviewCyclesPage /></RoleGuard>} />
           <Route path="goal-alignment" element={<GoalAlignmentPage />} />
+          <Route path="okrs" element={<OKRDashboardPage />} />
           <Route path="career" element={<CareerPathPage />} />
           <Route path="manager-dashboard" element={<RoleGuard path="/manager-dashboard"><ManagerDashboardPage /></RoleGuard>} />
           <Route path="leaderboard" element={<LeaderboardPage />} />
+          <Route path="chat" element={<ChatPage />} />
           <Route path="notifications" element={<NotificationsPage />} />
           <Route path="admin/licenses" element={<RoleGuard path="/admin/licenses"><LicenseDashboardPage /></RoleGuard>} />
           <Route path="admin/excel-upload" element={<RoleGuard path="/admin/excel-upload"><ExcelUploadPage /></RoleGuard>} />
           <Route path="admin/ai-access" element={<RoleGuard path="/admin/ai-access"><AIAccessManagementPage /></RoleGuard>} />
+          <Route path="admin/roles" element={<RoleGuard path="/admin/roles"><RoleManagementPage /></RoleGuard>} />
+          <Route path="admin/upgrade" element={<RoleGuard path="/admin/upgrade"><UpgradeRequestPage /></RoleGuard>} />
+          <Route path="admin/delegations" element={<RoleGuard path="/admin/delegations"><DelegationManagementPage /></RoleGuard>} />
+          <Route path="admin/policies" element={<RoleGuard path="/admin/policies"><AccessPoliciesPage /></RoleGuard>} />
+          <Route path="admin/rbac-dashboard" element={<RoleGuard path="/admin/rbac-dashboard"><RBACDashboardPage /></RoleGuard>} />
+          <Route path="org-chart" element={<OrgChartPage />} />
+          <Route path="directory" element={<EmployeeDirectoryPage />} />
+          <Route path="health-dashboard" element={<RoleGuard path="/health-dashboard"><HealthDashboardPage /></RoleGuard>} />
+          <Route path="engagement" element={<RoleGuard path="/engagement"><EngagementDashboardPage /></RoleGuard>} />
+          <Route path="pulse" element={<PulsePage />} />
+          <Route path="calendar" element={<CalendarPage />} />
+          <Route path="exports" element={<DataExportPage />} />
+          <Route path="team-insights" element={<RoleGuard path="/team-insights"><TeamInsightsPage /></RoleGuard>} />
+          <Route path="skill-gaps" element={<RoleGuard path="/skill-gaps"><SkillGapHeatmapPage /></RoleGuard>} />
+          <Route path="report-schedules" element={<RoleGuard path="/report-schedules"><ScheduledReportsPage /></RoleGuard>} />
+          <Route path="wellbeing" element={<RoleGuard path="/wellbeing"><WellbeingDashboardPage /></RoleGuard>} />
+          <Route path="meeting-analytics" element={<RoleGuard path="/meeting-analytics"><MeetingAnalyticsPage /></RoleGuard>} />
+          <Route path="admin/integrations" element={<RoleGuard path="/admin/integrations"><IntegrationsHubPage /></RoleGuard>} />
+          <Route path="ai-insights" element={<RoleGuard path="/ai-insights"><AIInsightsDashboardPage /></RoleGuard>} />
+          <Route path="anomalies" element={<RoleGuard path="/anomalies"><AnomalyDetectionPage /></RoleGuard>} />
+          <Route path="benchmarks" element={<RoleGuard path="/benchmarks"><PerformanceBenchmarkPage /></RoleGuard>} />
+          <Route path="talent-intelligence" element={<RoleGuard path="/talent-intelligence"><TalentIntelligencePage /></RoleGuard>} />
+          <Route path="team-optimizer" element={<RoleGuard path="/team-optimizer"><TeamOptimizerPage /></RoleGuard>} />
+          <Route path="culture-diagnostics" element={<RoleGuard path="/culture-diagnostics"><CultureDiagnosticsPage /></RoleGuard>} />
+          <Route path="ai-development" element={<RoleGuard path="/ai-development"><AIDevPlanPage /></RoleGuard>} />
+          <Route path="simulator" element={<RoleGuard path="/simulator"><PerformanceSimulatorPage /></RoleGuard>} />
+          <Route path="mentoring" element={<MentoringHubPage />} />
         </Route>
 
         {/* Super Admin routes - completely separate layout */}
@@ -338,10 +396,11 @@ function App() {
           <Route path="security" element={<Suspense fallback={<PageLoader />}><SASecurityPage /></Suspense>} />
           <Route path="system" element={<Suspense fallback={<PageLoader />}><SASystemPage /></Suspense>} />
           <Route path="settings" element={<Suspense fallback={<PageLoader />}><SASystemPage /></Suspense>} />
+          <Route path="upgrade-requests" element={<Suspense fallback={<PageLoader />}><SAUpgradeRequestsPage /></Suspense>} />
         </Route>
 
-        {/* Catch all - route based on role */}
-        <Route path="*" element={<SmartRedirect />} />
+        {/* 404 - page not found */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

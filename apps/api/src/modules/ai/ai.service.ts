@@ -48,6 +48,7 @@ class AIService {
     });
 
     // Verify conversation belongs to this user/tenant if provided
+    let validConversationId = input.conversationId;
     if (input.conversationId) {
       const convo = await prisma.agentConversation.findFirst({
         where: {
@@ -58,7 +59,13 @@ class AIService {
         },
       });
       if (!convo) {
-        throw new Error('Conversation not found or access denied');
+        // Conversation not found — start a fresh one instead of failing
+        logger.warn('Conversation not found, starting new conversation', {
+          conversationId: input.conversationId,
+          tenantId,
+          userId,
+        });
+        validConversationId = undefined;
       }
     }
 
@@ -67,7 +74,7 @@ class AIService {
       userId,
       input.message,
       input.agentType,
-      input.conversationId,
+      validConversationId,
     );
 
     return response;
@@ -248,11 +255,13 @@ class AIService {
     data: {
       rows: Record<string, unknown>[];
       errors: Array<{ row: number; field: string; message: string }>;
+      warnings?: Array<{ row: number; field: string; message: string; severity: string }>;
+      suggestions?: Array<{ row: number; field: string; currentValue: string; suggestedValue: string; reason: string }>;
     },
   ) {
     const { ExcelValidationAgent } = await import('./agents/excel-validation.agent');
     const agent = new ExcelValidationAgent();
-    return agent.analyzeExcelData(tenantId, userId, data.rows, data.errors);
+    return agent.analyzeExcelData(tenantId, userId, data.rows, data.errors, data.warnings ?? [], data.suggestions ?? []);
   }
 
   /**

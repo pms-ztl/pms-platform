@@ -13,6 +13,7 @@
  */
 
 import { BaseAgent, type AgentContext } from '../base-agent';
+import { isManager } from '../../../utils/roles';
 import { queryReviews, queryAnalytics } from '../agent-tools';
 import {
   queryBiasMetrics,
@@ -52,6 +53,14 @@ export class GovernanceAgent extends BaseAgent {
     context: AgentContext,
     userMessage: string,
   ): Promise<Record<string, unknown> | null> {
+    // RBAC: Governance/bias data is manager+ only
+    if (!isManager(context.userRoles)) {
+      return {
+        accessDenied: true,
+        message: 'Governance and bias auditing data is available to managers, HR, and admins only. If you believe a review is unfair, please raise it with your manager or HR department.',
+      };
+    }
+
     const lower = userMessage.toLowerCase();
     const data: Record<string, unknown> = {};
 

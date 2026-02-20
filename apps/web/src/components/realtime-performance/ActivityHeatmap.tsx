@@ -3,7 +3,7 @@
  * GitHub-style contribution heatmap for individual and team activity
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { CalendarDaysIcon, UserGroupIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { fetchWithAuth } from '@/lib/fetch-with-auth';
@@ -38,6 +38,15 @@ const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'S
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 
 function HeatmapGrid({ data, compact = false }: { data: HeatmapDay[]; compact?: boolean }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to the right (current date) on mount
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+    }
+  }, [data]);
+
   const { weeks, monthPositions } = useMemo(() => {
     if (!data || data.length === 0) {
       return { weeks: [], monthPositions: [] };
@@ -100,7 +109,7 @@ function HeatmapGrid({ data, compact = false }: { data: HeatmapDay[]; compact?: 
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto" ref={scrollRef}>
       <div style={{ minWidth: weeks.length * totalCellSize + 40 }}>
         {/* Month labels */}
         <div className="flex" style={{ marginLeft: compact ? 0 : 32 }}>

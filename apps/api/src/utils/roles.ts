@@ -56,6 +56,7 @@ export const ADMIN_ROLES = [
   'ADMIN',
   'Tenant Admin',
   'TENANT_ADMIN',
+  'Tenant Owner',
 ] as const;
 
 /**

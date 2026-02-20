@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { BellIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { BellAlertIcon } from '@heroicons/react/24/solid';
+import { BellIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { BellAlertIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { notificationsApi } from '@/lib/api';
+import { NotificationGroup } from '@/components/notifications';
 import clsx from 'clsx';
 
 interface Notification {
@@ -17,9 +18,15 @@ interface Notification {
   data?: any;
 }
 
+const SOUND_KEY = 'pms-notification-sound';
+
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    try { return localStorage.getItem(SOUND_KEY) !== 'false'; } catch { return true; }
+  });
   const panelRef = useRef<HTMLDivElement>(null);
+  const prevUnreadRef = useRef<number>(0);
   const queryClient = useQueryClient();
 
   const { data: notifications = [], isLoading } = useQuery({
@@ -42,6 +49,26 @@ export function NotificationBell() {
     ? notifications.filter((n: Notification) => !n.readAt).length
     : 0;
 
+  // Play sound when new unread notifications arrive
+  useEffect(() => {
+    if (soundEnabled && unreadCount > prevUnreadRef.current && prevUnreadRef.current >= 0) {
+      try {
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+      } catch { /* audio not available */ }
+    }
+    prevUnreadRef.current = unreadCount;
+  }, [unreadCount, soundEnabled]);
+
   // Close on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -53,29 +80,10 @@ export function NotificationBell() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
-  const formatTime = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) return `${diffHours}h ago`;
-    const diffDays = Math.floor(diffHours / 24);
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
-  };
-
-  const typeIcon: Record<string, string> = {
-    FEEDBACK_RECEIVED: '💬',
-    REVIEW_ASSIGNED: '📋',
-    REVIEW_COMPLETED: '✅',
-    REVIEW_REMINDER: '⏰',
-    GOAL_PROGRESS: '🎯',
-    CALIBRATION_SCHEDULED: '⚖️',
-    ONE_ON_ONE_SCHEDULED: '📅',
-    PIP_CREATED: '⚠️',
+  const toggleSound = () => {
+    const next = !soundEnabled;
+    setSoundEnabled(next);
+    try { localStorage.setItem(SOUND_KEY, String(next)); } catch { /* noop */ }
   };
 
   return (
@@ -104,68 +112,42 @@ export function NotificationBell() {
             <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">
               Notifications {unreadCount > 0 && `(${unreadCount})`}
             </h3>
-            {unreadCount > 0 && (
+            <div className="flex items-center gap-2">
               <button
-                onClick={() => markAllReadMutation.mutate()}
-                className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 font-medium flex items-center gap-1"
+                onClick={toggleSound}
+                className="p-1 rounded text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 transition-colors"
+                title={soundEnabled ? 'Mute notifications' : 'Unmute notifications'}
               >
-                <CheckIcon className="h-3.5 w-3.5" />
-                Mark all read
+                {soundEnabled ? (
+                  <SpeakerWaveIcon className="h-4 w-4" />
+                ) : (
+                  <SpeakerXMarkIcon className="h-4 w-4" />
+                )}
               </button>
-            )}
+              {unreadCount > 0 && (
+                <button
+                  onClick={() => markAllReadMutation.mutate()}
+                  className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 font-medium flex items-center gap-1"
+                >
+                  <CheckIcon className="h-3.5 w-3.5" />
+                  Mark all read
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* Notification List */}
-          <div className="overflow-y-auto max-h-[380px] divide-y divide-secondary-100 dark:divide-secondary-700">
+          {/* Grouped Notification List */}
+          <div className="overflow-y-auto max-h-[380px]">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary-600"></div>
               </div>
-            ) : !Array.isArray(notifications) || notifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-8 text-secondary-400">
-                <BellIcon className="h-10 w-10 mb-2 opacity-50" />
-                <p className="text-sm">No notifications yet</p>
-              </div>
             ) : (
-              notifications.map((notification: Notification) => (
-                <div
-                  key={notification.id}
-                  className={clsx(
-                    'px-4 py-3 hover:bg-secondary-50 dark:hover:bg-secondary-700/50 cursor-pointer transition-colors',
-                    !notification.readAt && 'bg-primary-50/50 dark:bg-primary-900/10'
-                  )}
-                  onClick={() => {
-                    if (!notification.readAt) markReadMutation.mutate(notification.id);
-                  }}
-                >
-                  <div className="flex gap-3">
-                    <span className="text-lg flex-shrink-0 mt-0.5">
-                      {typeIcon[notification.type] || '🔔'}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className={clsx(
-                          'text-sm line-clamp-1',
-                          notification.readAt
-                            ? 'text-secondary-700 dark:text-secondary-300'
-                            : 'text-secondary-900 dark:text-white font-medium'
-                        )}>
-                          {notification.title}
-                        </p>
-                        {!notification.readAt && (
-                          <span className="flex-shrink-0 h-2 w-2 rounded-full bg-primary-500 mt-1.5"></span>
-                        )}
-                      </div>
-                      <p className="text-xs text-secondary-500 dark:text-secondary-400 line-clamp-2 mt-0.5">
-                        {notification.body}
-                      </p>
-                      <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-1">
-                        {formatTime(notification.createdAt)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))
+              <NotificationGroup
+                notifications={Array.isArray(notifications) ? notifications : []}
+                onMarkRead={(id) => markReadMutation.mutate(id)}
+                compact
+              />
             )}
           </div>
 

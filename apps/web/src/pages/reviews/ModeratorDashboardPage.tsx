@@ -213,7 +213,7 @@ function RatingBar({ rating, max = 5 }: { rating: number; max?: number }) {
         />
       </div>
       <span className={clsx('text-sm font-semibold tabular-nums', getRatingColor(rating))}>
-        {rating.toFixed(1)}
+        {(rating ?? 0).toFixed(1)}
       </span>
     </div>
   );
@@ -452,7 +452,7 @@ export function ModeratorDashboardPage() {
     }
 
     return {
-      weightedAvg: parseFloat(weightedAvg.toFixed(2)),
+      weightedAvg: parseFloat((weightedAvg ?? 0).toFixed(2)),
       distribution,
       gaps,
       selfAvg,

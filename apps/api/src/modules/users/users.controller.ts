@@ -609,6 +609,61 @@ export class UsersController {
       next(error);
     }
   }
+  // ── Bulk Role Operations & History ──
+
+  async bulkAssignRole(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userIds, roleId } = req.body;
+      if (!Array.isArray(userIds) || userIds.length === 0) {
+        throw new ValidationError('userIds must be a non-empty array');
+      }
+      if (!roleId || typeof roleId !== 'string') {
+        throw new ValidationError('roleId is required');
+      }
+
+      const result = await usersService.bulkAssignRole(req.tenantId!, req.user!.id, userIds, roleId);
+      res.json({
+        success: true,
+        data: result,
+        message: `Role assigned to ${result.assigned} user(s)`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async bulkRemoveRole(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userIds, roleId } = req.body;
+      if (!Array.isArray(userIds) || userIds.length === 0) {
+        throw new ValidationError('userIds must be a non-empty array');
+      }
+      if (!roleId || typeof roleId !== 'string') {
+        throw new ValidationError('roleId is required');
+      }
+
+      const result = await usersService.bulkRemoveRole(req.tenantId!, req.user!.id, userIds, roleId);
+      res.json({
+        success: true,
+        data: result,
+        message: `Role removed from ${result.removed} user(s)`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getRoleHistory(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.params.id;
+      if (!userId) throw new ValidationError('User ID is required');
+
+      const history = await usersService.getRoleHistory(req.tenantId!, userId);
+      res.json({ success: true, data: history });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const usersController = new UsersController();

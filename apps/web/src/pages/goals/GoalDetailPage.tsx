@@ -271,25 +271,25 @@ export function GoalDetailPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
                   <div className="text-center p-3 rounded-lg bg-primary-50 dark:bg-primary-900/20">
                     <p className="text-2xl font-bold text-primary-700 dark:text-primary-300">
-                      {(contributionData.compositeScore * 100).toFixed(0)}%
+                      {((contributionData.compositeScore ?? 0) * 100).toFixed(0)}%
                     </p>
                     <p className="text-[10px] text-primary-600 dark:text-primary-400 font-medium mt-0.5">Composite Score</p>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-success-50 dark:bg-success-900/20">
                     <p className="text-2xl font-bold text-success-700 dark:text-success-300">
-                      {(contributionData.completionScore * 100).toFixed(0)}%
+                      {((contributionData.completionScore ?? 0) * 100).toFixed(0)}%
                     </p>
                     <p className="text-[10px] text-success-600 dark:text-success-400 font-medium mt-0.5">Completion</p>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20">
                     <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">
-                      {(contributionData.qualityAdjustedScore * 100).toFixed(0)}%
+                      {((contributionData.qualityAdjustedScore ?? 0) * 100).toFixed(0)}%
                     </p>
                     <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">Quality-Adj.</p>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
                     <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">
-                      {(contributionData.efficiency * 100).toFixed(0)}%
+                      {((contributionData.efficiency ?? 0) * 100).toFixed(0)}%
                     </p>
                     <p className="text-[10px] text-blue-600 dark:text-blue-400 font-medium mt-0.5">Efficiency</p>
                   </div>
@@ -320,7 +320,7 @@ export function GoalDetailPage() {
                               ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
                               : 'bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400'
                           )}>
-                            {(child.weightedContribution * 100).toFixed(1)}% contribution
+                            {((child.weightedContribution ?? 0) * 100).toFixed(1)}% contribution
                           </span>
                         </div>
                       </div>

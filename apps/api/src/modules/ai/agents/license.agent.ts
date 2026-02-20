@@ -11,6 +11,7 @@
 
 import { BaseAgent, type AgentContext } from '../base-agent';
 import * as tools from '../agent-tools';
+import { isAdmin } from '../../../utils/roles';
 import { DAYS, INACTIVE_USER_THRESHOLD_DAYS } from '../../../utils/constants';
 
 const SYSTEM_PROMPT = `You are a license and subscription optimization expert for a multi-tenant SaaS platform.
@@ -21,7 +22,10 @@ Your capabilities:
 3. **Growth Prediction**: Based on hiring trends, predict when licenses will run out
 4. **Cost Optimization**: Suggest plan changes, bulk discounts, right-sizing
 
-When answering:
+IMPORTANT: License and subscription data is restricted to Admin and Super Admin roles only.
+If the user does not have admin access, politely inform them that license data requires admin privileges.
+
+When answering (for admins):
 - Always provide specific numbers and percentages
 - Highlight urgent items (>90% usage) with warnings
 - Suggest concrete actions with expected impact
@@ -37,6 +41,14 @@ export class LicenseAgent extends BaseAgent {
     context: AgentContext,
     _userMessage: string,
   ): Promise<Record<string, unknown> | null> {
+    // RBAC: License data is admin-only
+    if (!isAdmin(context.userRoles)) {
+      return {
+        accessDenied: true,
+        message: 'License and subscription data is restricted to administrators. Please contact your admin for license information.',
+      };
+    }
+
     const [license, users, recentAudit] = await Promise.all([
       tools.queryLicenseUsage(context.tenantId),
       tools.queryUsers(context.tenantId, { limit: 100 }),

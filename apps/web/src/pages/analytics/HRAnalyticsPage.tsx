@@ -462,7 +462,7 @@ export function HRAnalyticsPage() {
                           ) : (
                             <ArrowTrendingDownIcon className="h-3.5 w-3.5" />
                           )}
-                          {emp.gapPct > 0 ? '+' : ''}{emp.gapPct.toFixed(1)}%
+                          {(emp.gapPct ?? 0) > 0 ? '+' : ''}{(emp.gapPct ?? 0).toFixed(1)}%
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm">
@@ -633,8 +633,8 @@ export function HRAnalyticsPage() {
                             {d.department}
                           </span>
                         </td>
-                        <td className="px-6 py-3 text-sm font-semibold text-primary-600 dark:text-primary-400">{d.mean.toFixed(2)}</td>
-                        <td className="px-6 py-3 text-sm text-secondary-700 dark:text-secondary-300">{d.stdDev.toFixed(2)}</td>
+                        <td className="px-6 py-3 text-sm font-semibold text-primary-600 dark:text-primary-400">{(d.mean ?? 0).toFixed(2)}</td>
+                        <td className="px-6 py-3 text-sm text-secondary-700 dark:text-secondary-300">{(d.stdDev ?? 0).toFixed(2)}</td>
                         <td className="px-6 py-3 text-sm">
                           {significant ? (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300">
@@ -664,7 +664,7 @@ export function HRAnalyticsPage() {
               Manager Rating Comparison
             </h3>
             <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
-              Average rating per manager. Red line shows the organization-wide mean ({overallMean.toFixed(2)}).
+              Average rating per manager. Red line shows the organization-wide mean ({(overallMean ?? 0).toFixed(2)}).
               Managers significantly above are flagged as lenient; below as severe.
             </p>
             <div className="h-72">
@@ -677,11 +677,11 @@ export function HRAnalyticsPage() {
                     contentStyle={TOOLTIP_STYLE}
                     labelStyle={{ color: '#fff', fontWeight: 600 }}
                     formatter={(value: number, _: string, entry: any) => [
-                      `${value.toFixed(2)} (${entry.payload.reviewCount} reviews)`,
+                      `${(value ?? 0).toFixed(2)} (${entry.payload.reviewCount} reviews)`,
                       'Avg Rating',
                     ]}
                   />
-                  <ReferenceLine y={overallMean} stroke="#ef4444" strokeDasharray="6 3" strokeWidth={2} label={{ value: `Mean: ${overallMean.toFixed(2)}`, position: 'insideTopRight', fill: '#ef4444', fontSize: 11 }} />
+                  <ReferenceLine y={overallMean} stroke="#ef4444" strokeDasharray="6 3" strokeWidth={2} label={{ value: `Mean: ${(overallMean ?? 0).toFixed(2)}`, position: 'insideTopRight', fill: '#ef4444', fontSize: 11 }} />
                   <Bar dataKey="avgRating" radius={[4, 4, 0, 0]}>
                     {managerRatings.map((entry, index) => (
                       <Cell
@@ -752,8 +752,8 @@ export function HRAnalyticsPage() {
                         <td className="px-6 py-3 text-sm font-medium text-secondary-900 dark:text-white">{row.grouping}</td>
                         <td className="px-6 py-3 text-sm text-secondary-700 dark:text-secondary-300">{row.category}</td>
                         <td className="px-6 py-3 text-sm text-secondary-500 dark:text-secondary-400">{row.count}</td>
-                        <td className="px-6 py-3 text-sm font-semibold text-primary-600 dark:text-primary-400">{row.avgRating.toFixed(2)}</td>
-                        <td className="px-6 py-3 text-sm text-secondary-500 dark:text-secondary-400">{row.stdDev.toFixed(2)}</td>
+                        <td className="px-6 py-3 text-sm font-semibold text-primary-600 dark:text-primary-400">{(row.avgRating ?? 0).toFixed(2)}</td>
+                        <td className="px-6 py-3 text-sm text-secondary-500 dark:text-secondary-400">{(row.stdDev ?? 0).toFixed(2)}</td>
                         <td className="px-6 py-3 text-sm">
                           {flagged ? (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
@@ -807,21 +807,21 @@ export function HRAnalyticsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatCard
             label="R-Squared (Fit)"
-            value={bellCurveMetrics.rSquared.toFixed(3)}
+            value={(bellCurveMetrics.rSquared ?? 0).toFixed(3)}
             icon={<ChartBarSquareIcon className="h-6 w-6 text-primary-600 dark:text-primary-400" />}
             color="primary"
             subtitle="1.0 = perfect bell curve"
           />
           <StatCard
             label="Skewness"
-            value={bellCurveMetrics.skewness.toFixed(2)}
+            value={(bellCurveMetrics.skewness ?? 0).toFixed(2)}
             icon={<ScaleIcon className="h-6 w-6 text-amber-600 dark:text-amber-400" />}
             color="warning"
             subtitle="0 = perfectly symmetric"
           />
           <StatCard
             label="Kurtosis"
-            value={bellCurveMetrics.kurtosis.toFixed(2)}
+            value={(bellCurveMetrics.kurtosis ?? 0).toFixed(2)}
             icon={<AdjustmentsHorizontalIcon className="h-6 w-6 text-green-600 dark:text-green-400" />}
             color="success"
             subtitle="3.0 = normal (mesokurtic)"
@@ -922,9 +922,9 @@ export function HRAnalyticsPage() {
                           {emp.department}
                         </span>
                       </td>
-                      <td className="px-6 py-3 text-sm text-secondary-700 dark:text-secondary-300">{emp.originalRating.toFixed(1)}</td>
-                      <td className="px-6 py-3 text-sm text-secondary-500 dark:text-secondary-400 font-mono">{emp.zScore >= 0 ? '+' : ''}{emp.zScore.toFixed(2)}</td>
-                      <td className="px-6 py-3 text-sm font-semibold text-primary-600 dark:text-primary-400">{emp.normalizedRating.toFixed(2)}</td>
+                      <td className="px-6 py-3 text-sm text-secondary-700 dark:text-secondary-300">{(emp.originalRating ?? 0).toFixed(1)}</td>
+                      <td className="px-6 py-3 text-sm text-secondary-500 dark:text-secondary-400 font-mono">{(emp.zScore ?? 0) >= 0 ? '+' : ''}{(emp.zScore ?? 0).toFixed(2)}</td>
+                      <td className="px-6 py-3 text-sm font-semibold text-primary-600 dark:text-primary-400">{(emp.normalizedRating ?? 0).toFixed(2)}</td>
                       <td className="px-6 py-3 text-sm">
                         {isNeutral ? (
                           <span className="text-secondary-500 dark:text-secondary-400 font-mono text-xs">0.00</span>
@@ -942,7 +942,7 @@ export function HRAnalyticsPage() {
                             ) : (
                               <ArrowTrendingDownIcon className="h-3.5 w-3.5" />
                             )}
-                            {isUp ? '+' : ''}{emp.adjustment.toFixed(2)}
+                            {isUp ? '+' : ''}{(emp.adjustment ?? 0).toFixed(2)}
                           </span>
                         )}
                       </td>

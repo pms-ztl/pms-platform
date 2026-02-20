@@ -3,7 +3,7 @@
  * All templates use consistent branding with PMS primary colors
  */
 
-const baseLayout = (title: string, content: string): string => `
+export const baseLayout = (title: string, content: string): string => `
 <!DOCTYPE html>
 <html>
 <head>

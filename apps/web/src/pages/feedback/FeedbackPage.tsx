@@ -18,6 +18,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 
 import { feedbackApi, usersApi, type Feedback, type CreateFeedbackInput, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const feedbackTypeConfig: Record<string, { label: string; color: string; icon: React.ElementType }> = {
   PRAISE: { label: 'Praise', color: 'bg-success-100 text-success-800', icon: SparklesIcon },
@@ -34,6 +35,7 @@ const visibilityLabels: Record<string, string> = {
 };
 
 export function FeedbackPage() {
+  usePageTitle('Feedback');
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
   const [activeTab, setActiveTab] = useState<'received' | 'given' | 'timeline'>('received');

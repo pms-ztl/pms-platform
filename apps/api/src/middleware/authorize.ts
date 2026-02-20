@@ -76,6 +76,25 @@ const ROLE_ALIASES: Record<string, string[]> = {
   'SUPER_ADMIN': ['Super Admin', 'SUPER_ADMIN'],
 };
 
+/**
+ * Maps required role names to their authorization category.
+ * Used for category-based fallback so custom roles (e.g. "VP of People" with category MANAGER)
+ * can satisfy requireRoles('Manager') checks.
+ */
+const ROLE_TO_CATEGORY: Record<string, string> = {
+  'Tenant Admin': 'ADMIN',
+  'TENANT_ADMIN': 'ADMIN',
+  'ADMIN': 'ADMIN',
+  'HR Admin': 'HR',
+  'HR_ADMIN': 'HR',
+  'HR Business Partner': 'HR',
+  'HR_BP': 'HR',
+  'Manager': 'MANAGER',
+  'MANAGER': 'MANAGER',
+  'Employee': 'EMPLOYEE',
+  'EMPLOYEE': 'EMPLOYEE',
+};
+
 export function requireRoles(...roles: string[]): RequestHandler {
   return (req, res: Response, next: NextFunction): void => {
     try {
@@ -86,8 +105,8 @@ export function requireRoles(...roles: string[]): RequestHandler {
         throw new AuthorizationError('User not authenticated');
       }
 
-      // Super admin bypass - check all possible admin role names
-      if ((ADMIN_ROLES as readonly string[]).some(alias => user.roles.includes(alias))) {
+      // Super admin bypass
+      if (user.roles.includes('Super Admin') || user.roles.includes('SUPER_ADMIN')) {
         next();
         return;
       }
@@ -103,11 +122,25 @@ export function requireRoles(...roles: string[]): RequestHandler {
         return aliases.some(alias => user.roles.includes(alias));
       });
 
-      if (!hasRole) {
-        throw new AuthorizationError(`Missing required role: ${roles.join(' or ')}`);
+      if (hasRole) {
+        next();
+        return;
       }
 
-      next();
+      // Category-based fallback: check if user's roleCategories match the required role's category
+      // This allows custom roles (e.g. "VP of People" with category MANAGER) to pass requireRoles('Manager')
+      const requiredCategories = roles.map((r) => ROLE_TO_CATEGORY[r]).filter(Boolean);
+      if (requiredCategories.length > 0 && user.roleCategories && user.roleCategories.length > 0) {
+        const hasCategoryMatch = requiredCategories.some((cat) =>
+          user.roleCategories!.includes(cat)
+        );
+        if (hasCategoryMatch) {
+          next();
+          return;
+        }
+      }
+
+      throw new AuthorizationError(`Missing required role: ${roles.join(' or ')}`);
     } catch (error) {
       next(error);
     }

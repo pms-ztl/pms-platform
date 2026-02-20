@@ -220,7 +220,7 @@ const AlertCard = ({
         {dailyProgress > 0 && (
           <div className="text-xs text-gray-500 dark:text-gray-400">
             Need <span className="font-semibold text-gray-900 dark:text-white">
-              {dailyProgress.toFixed(1)}%
+              {(dailyProgress ?? 0).toFixed(1)}%
             </span> progress per day to complete on time
           </div>
         )}

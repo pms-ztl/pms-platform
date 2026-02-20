@@ -26,8 +26,10 @@ import {
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { DataTable, type Column } from '@/components/ui';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 export function UserManagementPage() {
+  usePageTitle('User Management');
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');

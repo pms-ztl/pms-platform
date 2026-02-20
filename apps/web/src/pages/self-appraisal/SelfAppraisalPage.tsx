@@ -27,6 +27,7 @@ import { format } from 'date-fns';
 
 import { goalsApi, reviewsApi, analyticsApi, feedbackApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 interface CompetencyRating {
   id: string;
@@ -46,6 +47,7 @@ const DEFAULT_COMPETENCIES: CompetencyRating[] = [
 ];
 
 export function SelfAppraisalPage() {
+  usePageTitle('Self-Appraisal');
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const [competencies, setCompetencies] = useState<CompetencyRating[]>(DEFAULT_COMPETENCIES);

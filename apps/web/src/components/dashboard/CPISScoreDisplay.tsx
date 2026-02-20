@@ -49,6 +49,8 @@ const CPISScoreDisplay = ({
     <div className="flex flex-col items-center gap-2.5 w-full">
       {/* Radar Chart — uses viewBox so it scales with container */}
       <div className="relative w-full max-w-[300px] aspect-square mx-auto">
+        {/* Morphing geometry backdrop — subtle shape-shifting behind radar */}
+        <div className="absolute inset-[-30px] morph-geometry-subtle bg-gradient-to-br from-cyan-400/20 via-blue-500/15 to-violet-500/20" />
         {/* Multi-layer glow backdrop */}
         <div className="absolute inset-[-20px] bg-gradient-to-br from-cyan-400/25 via-blue-500/20 to-violet-500/25 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
         <div className="absolute inset-[-10px] bg-gradient-to-tr from-emerald-400/15 to-fuchsia-400/15 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
@@ -89,7 +91,15 @@ const CPISScoreDisplay = ({
           </defs>
 
           {/* Outer decorative ring */}
-          <circle cx={cx} cy={cy} r={maxR + 20} fill="none" stroke="url(#outer-ring-grad)" strokeWidth="1.5" strokeDasharray="5 8" opacity="0.6" />
+          <circle cx={cx} cy={cy} r={maxR + 20} fill="none" stroke="url(#outer-ring-grad)" strokeWidth="1.5" strokeDasharray="5 8" opacity="0.6">
+            <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="30s" repeatCount="indefinite" />
+          </circle>
+          {/* Orbital dots around center */}
+          {[0, 120, 240].map((offset, i) => (
+            <circle key={`orbital-${i}`} cx={cx} cy={cy - 52} r={i === 0 ? 3 : i === 1 ? 2.5 : 2} fill={['#22d3ee', '#a78bfa', '#34d399'][i]} opacity="0.7">
+              <animateTransform attributeName="transform" type="rotate" from={`${offset} ${cx} ${cy}`} to={`${offset + 360} ${cx} ${cy}`} dur={`${6 + i * 2}s`} repeatCount="indefinite" />
+            </circle>
+          ))}
 
           {/* Grid rings — visible concentric octagons */}
           {rings.map((pct, ri) => {

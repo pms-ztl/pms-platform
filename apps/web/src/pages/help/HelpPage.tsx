@@ -18,6 +18,7 @@ import {
   ArrowRightIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -380,6 +381,7 @@ function FAQAccordionItem({ item, isOpen, onToggle }: { item: FAQItem; isOpen: b
 // ── Main Page ────────────────────────────────────────────────────────────────
 
 export function HelpPage() {
+  usePageTitle('Help');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
   const [openFAQs, setOpenFAQs] = useState<Set<string>>(new Set());
@@ -533,22 +535,22 @@ export function HelpPage() {
           </div>
 
           {/* ── Quick Actions Sidebar ─────────────────────────────────── */}
-          <aside className="lg:w-72 flex-shrink-0">
+          <aside className="lg:w-80 flex-shrink-0">
             <div className="lg:sticky lg:top-8">
               <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
                 <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Quick Actions</h3>
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {quickActions.map((action) => {
                     const Icon = action.icon;
                     return (
                       <Link
                         key={action.path}
                         to={action.path}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-400 transition-colors group"
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-400 transition-colors group"
                       >
-                        <Icon className="h-4.5 w-4.5 text-secondary-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors" />
+                        <Icon className="h-5 w-5 text-secondary-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors" />
                         <span className="flex-1">{action.label}</span>
-                        <ArrowRightIcon className="h-3.5 w-3.5 text-secondary-300 dark:text-secondary-600 group-hover:text-primary-500 transition-colors" />
+                        <ArrowRightIcon className="h-4 w-4 text-secondary-300 dark:text-secondary-600 group-hover:text-primary-500 transition-colors" />
                       </Link>
                     );
                   })}

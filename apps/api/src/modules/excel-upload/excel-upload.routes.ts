@@ -27,8 +27,18 @@ const router = Router();
 // All routes require authentication
 router.use(authenticate);
 
+// Template download
 router.get('/template', ctrl.downloadTemplate);
+
+// Two-phase upload flow (AI-enhanced)
+router.post('/analyze', uploadRateLimiter, upload.single('file'), ctrl.analyzeUpload);
+router.post('/:id/confirm', uploadRateLimiter, ctrl.confirmUpload);
+router.get('/:id/progress', ctrl.getProgress);
+
+// Legacy single-step upload (backward compatible)
 router.post('/upload', uploadRateLimiter, upload.single('file'), ctrl.uploadExcel);
+
+// History & errors
 router.get('/history', ctrl.getUploadHistory);
 router.get('/:id/errors', ctrl.getUploadErrors);
 

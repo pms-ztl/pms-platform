@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { requireSuperAdmin } from './super-admin.middleware';
 import { authRateLimiter } from '../../middleware';
 import * as ctrl from './super-admin.controller';
+import * as upgradeCtrl from '../upgrade-requests/upgrade-requests.controller';
 
 const router = Router();
 
@@ -66,5 +67,11 @@ router.get('/security/ip/blocked', ctrl.getBlockedIps);
 router.get('/security/sessions', ctrl.getActiveSessions);
 router.delete('/security/sessions/:id', ctrl.terminateSession);
 router.delete('/security/sessions/user/:id', ctrl.terminateAllUserSessions);
+
+// --- Upgrade Requests ---
+router.get('/upgrade-requests', upgradeCtrl.listAll);
+router.get('/upgrade-requests/pending-count', upgradeCtrl.getPendingCount);
+router.post('/upgrade-requests/:id/approve', upgradeCtrl.approveRequest);
+router.post('/upgrade-requests/:id/reject', upgradeCtrl.rejectRequest);
 
 export { router as superAdminRoutes };

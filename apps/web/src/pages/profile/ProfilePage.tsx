@@ -22,6 +22,7 @@ import { format } from 'date-fns';
 import { authApi, goalsApi, reviewsApi, feedbackApi, usersApi, getAvatarUrl, type Goal } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { EmployeeCard } from '@/components/employee-card';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // AI Avatar options using DiceBear API
 const AI_AVATARS = [
@@ -34,6 +35,7 @@ const AI_AVATARS = [
 ];
 
 export function ProfilePage() {
+  usePageTitle('Profile');
   const { user, setUser } = useAuthStore();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<'overview' | 'security' | 'activity'>('overview');

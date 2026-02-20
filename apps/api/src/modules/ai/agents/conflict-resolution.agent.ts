@@ -51,6 +51,10 @@ export class ConflictResolutionAgent extends BaseAgent {
     context: AgentContext,
     userMessage: string,
   ): Promise<Record<string, unknown> | null> {
+    // RBAC: Manager+ only — accesses team health, feedback, and communication data
+    const denied = this.requireManager(context, 'Conflict resolution and team dynamics analysis');
+    if (denied) return denied;
+
     const lower = userMessage.toLowerCase();
     const data: Record<string, unknown> = {};
 

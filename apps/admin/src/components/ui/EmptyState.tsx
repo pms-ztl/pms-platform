@@ -12,16 +12,16 @@ export function EmptyState({ icon, title, description, action, className }: Empt
   return (
     <div className={clsx('flex flex-col items-center justify-center py-16 px-4 text-center', className)}>
       {icon && (
-        <div className="mb-4 rounded-2xl bg-gray-100 p-4">
-          <div className="h-10 w-10 text-gray-400">{icon}</div>
+        <div className="mb-4 rounded-2xl bg-white/[0.06] border border-white/[0.08] p-4">
+          <div className="h-10 w-10 text-white/40">{icon}</div>
         </div>
       )}
-      <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-      {description && <p className="mt-1.5 text-sm text-gray-500 max-w-sm">{description}</p>}
+      <h3 className="text-lg font-semibold text-white/80">{title}</h3>
+      {description && <p className="mt-1.5 text-sm text-white/40 max-w-sm">{description}</p>}
       {action && (
         <button
           onClick={action.onClick}
-          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors"
+          className="mt-4 btn btn-primary"
         >
           {action.label}
         </button>

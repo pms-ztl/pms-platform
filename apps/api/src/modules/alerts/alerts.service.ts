@@ -247,7 +247,33 @@ class AlertsService {
         }
       }
 
-      // 3. Cross-tenant access attempts
+      // 3. Suspicious bulk data export (5+ export events in 1 hour)
+      const recentExports = await prisma.auditEvent.count({
+        where: {
+          tenantId: tenant.id,
+          action: { in: ['DATA_EXPORTED', 'REPORT_GENERATED', 'BULK_DOWNLOAD', 'AUDIT_EXPORTED'] },
+          createdAt: { gte: oneHourAgo },
+        },
+      });
+
+      if (recentExports >= 5) {
+        const htmlEmail = securityAlertTemplate(
+          'Admin', 'Suspicious Data Export Activity',
+          `${recentExports} data export operations were performed within the last hour.`,
+          `Organization: ${tenant.name}\nExport operations: ${recentExports}\nTime window: Last 1 hour`,
+          timestamp
+        );
+        await this.sendAlert(
+          tenant.id, allRecipients,
+          'SUSPICIOUS_DATA_EXPORT',
+          `Security Alert: Unusual Data Export Activity - ${tenant.name}`,
+          `${recentExports} data export operations were detected in "${tenant.name}" within the last hour. ` +
+          `This may indicate unauthorized data exfiltration. Please review the audit log immediately.`,
+          htmlEmail
+        );
+      }
+
+      // 4. Cross-tenant access attempts
       const crossTenantAttempts = await prisma.auditEvent.count({
         where: {
           tenantId: tenant.id,
@@ -271,6 +297,82 @@ class AlertsService {
           `This may indicate unauthorized access attempts. Please review the security audit log.`,
           htmlEmail
         );
+      }
+    }
+  }
+
+  /**
+   * Process auto-renewal for subscriptions that are about to expire.
+   * If autoRenew is true and the subscription is active, extend the expiry by the plan period.
+   */
+  async processAutoRenewals(): Promise<void> {
+    const now = new Date();
+    const threeDaysFromNow = new Date(now);
+    threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+
+    // Find tenants with autoRenew enabled whose subscriptions expire within 3 days
+    const renewableSubs = await prisma.subscription.findMany({
+      where: {
+        autoRenew: true,
+        status: 'ACTIVE',
+        endDate: {
+          gte: now,
+          lte: threeDaysFromNow,
+        },
+      },
+      include: {
+        tenant: {
+          select: { id: true, name: true, ceoEmail: true },
+        },
+      },
+    });
+
+    for (const sub of renewableSubs) {
+      try {
+        // Extend subscription by the same duration (based on plan period, default 30 days)
+        const currentEnd = sub.endDate ? new Date(sub.endDate) : new Date();
+        const newEndDate = new Date(currentEnd);
+        newEndDate.setDate(newEndDate.getDate() + 30); // Default 30-day renewal
+
+        await prisma.$transaction([
+          prisma.subscription.update({
+            where: { id: sub.id },
+            data: { endDate: newEndDate },
+          }),
+          prisma.tenant.update({
+            where: { id: sub.tenantId },
+            data: { subscriptionExpiresAt: newEndDate },
+          }),
+        ]);
+
+        // Notify tenant admins about the renewal
+        const admins = await this.getTenantAdmins(sub.tenantId);
+        const ceoRecipients = sub.tenant.ceoEmail ? [sub.tenant.ceoEmail] : [];
+        const recipients = [...new Set([...admins, ...ceoRecipients])];
+
+        if (recipients.length > 0) {
+          await this.sendAlert(
+            sub.tenantId,
+            recipients,
+            'SUBSCRIPTION_AUTO_RENEWED',
+            `Subscription Auto-Renewed - ${sub.tenant.name}`,
+            `Your ${sub.plan} subscription for "${sub.tenant.name}" has been automatically renewed. ` +
+            `New expiry date: ${newEndDate.toLocaleDateString()}. ` +
+            `To disable auto-renewal, please contact the platform administrator.`,
+          );
+        }
+
+        logger.info('Subscription auto-renewed', {
+          tenantId: sub.tenantId,
+          subscriptionId: sub.id,
+          newEndDate: newEndDate.toISOString(),
+        });
+      } catch (err) {
+        logger.error('Failed to auto-renew subscription', {
+          subscriptionId: sub.id,
+          tenantId: sub.tenantId,
+          error: err,
+        });
       }
     }
   }

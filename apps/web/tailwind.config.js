@@ -1,4 +1,11 @@
 /** @type {import('tailwindcss').Config} */
+
+/**
+ * Helper to create a color value that reads from a CSS custom property (RGB channels)
+ * and supports Tailwind's opacity modifier (e.g. bg-primary-500/80).
+ */
+const withVar = (name) => `rgb(var(${name}) / <alpha-value>)`;
+
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
@@ -6,17 +13,17 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#f5f3ff',
-          100: '#ede9fe',
-          200: '#ddd6fe',
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#8b5cf6',
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
-          950: '#2e1065',
+          50:  withVar('--c-primary-50'),
+          100: withVar('--c-primary-100'),
+          200: withVar('--c-primary-200'),
+          300: withVar('--c-primary-300'),
+          400: withVar('--c-primary-400'),
+          500: withVar('--c-primary-500'),
+          600: withVar('--c-primary-600'),
+          700: withVar('--c-primary-700'),
+          800: withVar('--c-primary-800'),
+          900: withVar('--c-primary-900'),
+          950: withVar('--c-primary-950'),
         },
         accent: {
           50: '#ecfeff',
@@ -32,26 +39,26 @@ export default {
           950: '#083344',
         },
         secondary: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          850: '#162032',
-          900: '#0f172a',
-          925: '#0b1120',
-          950: '#080b16',
+          50:  withVar('--c-secondary-50'),
+          100: withVar('--c-secondary-100'),
+          200: withVar('--c-secondary-200'),
+          300: withVar('--c-secondary-300'),
+          400: withVar('--c-secondary-400'),
+          500: withVar('--c-secondary-500'),
+          600: withVar('--c-secondary-600'),
+          700: withVar('--c-secondary-700'),
+          800: withVar('--c-secondary-800'),
+          850: withVar('--c-secondary-850'),
+          900: withVar('--c-secondary-900'),
+          925: withVar('--c-secondary-925'),
+          950: withVar('--c-secondary-950'),
         },
         surface: {
-          DEFAULT: '#0f1228',
-          light: '#151937',
-          dark: '#0a0d1a',
-          card: '#111430',
-          hover: '#1a1e3e',
+          DEFAULT: withVar('--c-surface'),
+          light:   withVar('--c-surface-light'),
+          dark:    withVar('--c-surface-dark'),
+          card:    withVar('--c-surface-card'),
+          hover:   withVar('--c-surface-hover'),
         },
         success: {
           50: '#f0fdf4',
@@ -91,8 +98,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'SF Pro Display', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'Plus Jakarta Sans', 'SF Pro Display', 'sans-serif'],
+        sans: ['DM Sans', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Ranade', 'DM Sans', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'SF Mono', 'Consolas', 'monospace'],
       },
       animation: {
@@ -116,6 +123,54 @@ export default {
         'morph': 'morph 8s ease-in-out infinite',
         'levitate': 'levitate 5s ease-in-out infinite',
         'border-flow': 'borderFlow 4s linear infinite',
+        /* ── Futuristic AI Animations ── */
+        'neural-pulse': 'neuralPulse 1.5s ease-out infinite',
+        'data-stream': 'dataStream 2s linear infinite',
+        'orbital-spin': 'orbitalSpin 3s linear infinite',
+        'morph-shape': 'morphShape 8s ease-in-out infinite',
+        'bioluminescent': 'bioluminescent 4s ease-in-out infinite',
+        'refraction': 'refractionBand 10s linear infinite',
+        'iris-focus': 'irisFocus 2s ease-in-out infinite',
+        'popout-right': 'popoutRight 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) backwards',
+        'popout-left': 'popoutLeft 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) backwards',
+        'popout-bottom': 'popoutBottom 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) backwards',
+        'ghost-appear': 'ghostAppear 0.5s ease-out forwards',
+        'checkmark-draw': 'checkmarkDraw 0.5s ease-out forwards',
+        'timelapse-grow': 'timelapseGrow 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+        'mesh-float': 'meshFloat 20s ease-in-out infinite',
+        /* ── Aurora / Login page animations ── */
+        'aurora-sway': 'auroraSway 8s ease-in-out infinite',
+        'particle-rise': 'particleRise 6s ease-in-out infinite',
+        'gradient-flow': 'gradientFlow 4s ease infinite',
+        'celestial-drift': 'celestialDrift 25s ease-in-out infinite',
+        'nebula-pulse': 'nebulaPulse 8s ease-in-out infinite',
+        'star-twinkle': 'starTwinkle 3s ease-in-out infinite',
+        'text-shimmer': 'textShimmer 3s linear infinite',
+        /* ── Login page extra animations ── */
+        'slide-up-fade': 'slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'slide-right-fade': 'slideRightFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'scale-up-fade': 'scaleUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'breathe': 'breathe 4s ease-in-out infinite',
+        'float-gentle': 'floatGentle 6s ease-in-out infinite',
+        'border-shimmer': 'borderShimmer 3s linear infinite',
+        'pulse-ring': 'pulseRing 2s ease-out infinite',
+        /* ── Premium animation pack ── */
+        'icon-glow-pulse': 'iconGlowPulse 2.5s ease-in-out infinite',
+        'scanner-line': 'scannerLine 4s ease-in-out infinite',
+        'text-reveal': 'textReveal 1s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'elastic-in': 'elasticIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+        'ripple': 'ripple 0.6s ease-out',
+        'glitch': 'glitch 0.3s ease-in-out',
+        'number-shimmer': 'numberShimmer 3s linear infinite',
+        'aurora-btn': 'auroraBtn 3s ease-in-out infinite',
+        'heartbeat': 'heartbeat 2s ease-in-out infinite',
+        'focus-ring-glow': 'focusRingGlow 1.5s ease-in-out infinite',
+        'badge-float': 'badgeFloat 3s ease-in-out infinite',
+        'spotlight-sweep': 'spotlightSweep 5s ease-in-out infinite',
+        'border-rotate': 'borderRotate 4s linear infinite',
+        'slide-down-fade': 'slideDownFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'magnetic-hover': 'magneticHover 0.4s ease-out',
+        'text-glow': 'textGlow 3s ease-in-out infinite',
       },
       keyframes: {
         float: {
@@ -188,6 +243,221 @@ export default {
           '0%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
           '100%': { backgroundPosition: '0% 50%' },
+        },
+        /* ── Futuristic AI Keyframes ── */
+        neuralPulse: {
+          '0%, 100%': { boxShadow: '0 0 8px -2px rgba(139,92,246,0.3)' },
+          '50%': { boxShadow: '0 0 20px -2px rgba(139,92,246,0.5), 0 0 40px -4px rgba(6,182,212,0.2)' },
+        },
+        dataStream: {
+          '0%': { backgroundPosition: '0 -18px' },
+          '100%': { backgroundPosition: '0 18px' },
+        },
+        orbitalSpin: {
+          '0%': { transform: 'rotate(0deg) translateX(16px) rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg) translateX(16px) rotate(-360deg)' },
+        },
+        morphShape: {
+          '0%, 100%': { borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%' },
+          '25%': { borderRadius: '58% 42% 75% 25% / 76% 46% 54% 24%' },
+          '50%': { borderRadius: '50% 50% 33% 67% / 55% 27% 73% 45%' },
+          '75%': { borderRadius: '33% 67% 58% 42% / 63% 68% 32% 37%' },
+        },
+        bioluminescent: {
+          '0%, 100%': { boxShadow: '0 0 12px -3px rgba(139,92,246,0.25)' },
+          '33%': { boxShadow: '0 0 18px -3px rgba(6,182,212,0.3)' },
+          '66%': { boxShadow: '0 0 15px -3px rgba(167,139,250,0.28)' },
+        },
+        refractionBand: {
+          '0%': { left: '-100%', opacity: '0' },
+          '15%': { opacity: '1' },
+          '50%': { left: '150%', opacity: '1' },
+          '55%, 100%': { left: '150%', opacity: '0' },
+        },
+        irisFocus: {
+          '0%, 100%': { boxShadow: '0 0 0 3px rgba(139,92,246,0.15)' },
+          '50%': { boxShadow: '0 0 0 1px rgba(139,92,246,0.35), 0 0 16px -3px rgba(139,92,246,0.2)' },
+        },
+        popoutRight: {
+          '0%': { opacity: '0', transform: 'translateX(40px) scale(0.92)' },
+          '60%': { transform: 'translateX(-6px) scale(1.02)' },
+          '80%': { transform: 'translateX(2px) scale(0.99)' },
+          '100%': { opacity: '1', transform: 'translateX(0) scale(1)' },
+        },
+        popoutLeft: {
+          '0%': { opacity: '0', transform: 'translateX(-40px) scale(0.92)' },
+          '60%': { transform: 'translateX(6px) scale(1.02)' },
+          '100%': { opacity: '1', transform: 'translateX(0) scale(1)' },
+        },
+        popoutBottom: {
+          '0%': { opacity: '0', transform: 'translateY(30px) scale(0.92)' },
+          '60%': { transform: 'translateY(-4px) scale(1.02)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        ghostAppear: {
+          '0%': { opacity: '0', transform: 'translateY(12px)', filter: 'blur(6px)' },
+          '100%': { opacity: '0.25', transform: 'translateY(4px)', filter: 'blur(2px)' },
+        },
+        checkmarkDraw: {
+          '0%': { strokeDashoffset: '48' },
+          '100%': { strokeDashoffset: '0' },
+        },
+        timelapseGrow: {
+          '0%': { transform: 'scaleY(0)', opacity: '0' },
+          '60%': { transform: 'scaleY(1.03)', opacity: '1' },
+          '80%': { transform: 'scaleY(0.98)' },
+          '100%': { transform: 'scaleY(1)', opacity: '1' },
+        },
+        meshFloat: {
+          '0%, 100%': { transform: 'translate(-50%, -50%) translate(0px, 0px)' },
+          '25%': { transform: 'translate(-50%, -50%) translate(15px, -10px)' },
+          '50%': { transform: 'translate(-50%, -50%) translate(-10px, 15px)' },
+          '75%': { transform: 'translate(-50%, -50%) translate(10px, 10px)' },
+        },
+        auroraSway: {
+          '0%, 100%': { transform: 'scaleX(1) skewX(0deg)', opacity: '0.6' },
+          '25%': { transform: 'scaleX(1.15) skewX(2deg)', opacity: '1' },
+          '50%': { transform: 'scaleX(0.9) skewX(-3deg)', opacity: '0.7' },
+          '75%': { transform: 'scaleX(1.1) skewX(1deg)', opacity: '0.9' },
+        },
+        particleRise: {
+          '0%': { transform: 'translateY(0) scale(1)', opacity: '0' },
+          '10%': { opacity: '0.8' },
+          '50%': { opacity: '0.5' },
+          '100%': { transform: 'translateY(-200px) scale(0)', opacity: '0' },
+        },
+        gradientFlow: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        celestialDrift: {
+          '0%': { transform: 'translate(0, 0) rotate(0deg) scale(1)' },
+          '25%': { transform: 'translate(40px, -30px) rotate(2deg) scale(1.05)' },
+          '50%': { transform: 'translate(-20px, 20px) rotate(-1deg) scale(0.98)' },
+          '75%': { transform: 'translate(30px, 10px) rotate(1.5deg) scale(1.03)' },
+          '100%': { transform: 'translate(0, 0) rotate(0deg) scale(1)' },
+        },
+        nebulaPulse: {
+          '0%, 100%': { opacity: '0.3', transform: 'scale(1)' },
+          '50%': { opacity: '0.6', transform: 'scale(1.15)' },
+        },
+        starTwinkle: {
+          '0%, 100%': { opacity: '0.2', transform: 'scale(0.8)' },
+          '50%': { opacity: '1', transform: 'scale(1.2)' },
+        },
+        textShimmer: {
+          '0%': { backgroundPosition: '-200% center' },
+          '100%': { backgroundPosition: '200% center' },
+        },
+        /* ── Login page extra keyframes ── */
+        slideUpFade: {
+          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideRightFade: {
+          '0%': { opacity: '0', transform: 'translateX(-30px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        scaleUpFade: {
+          '0%': { opacity: '0', transform: 'scale(0.9)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        breathe: {
+          '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+          '50%': { opacity: '1', transform: 'scale(1.02)' },
+        },
+        floatGentle: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        borderShimmer: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '200% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        pulseRing: {
+          '0%': { transform: 'scale(1)', opacity: '0.6' },
+          '100%': { transform: 'scale(1.5)', opacity: '0' },
+        },
+        /* ── Premium keyframes ── */
+        iconGlowPulse: {
+          '0%, 100%': { filter: 'drop-shadow(0 0 3px rgba(255,255,255,0.1))' },
+          '50%': { filter: 'drop-shadow(0 0 12px rgba(129,140,248,0.5))' },
+        },
+        scannerLine: {
+          '0%': { top: '-2px', opacity: '0' },
+          '10%': { opacity: '1' },
+          '90%': { opacity: '1' },
+          '100%': { top: '100%', opacity: '0' },
+        },
+        textReveal: {
+          '0%': { opacity: '0', transform: 'translateY(20px)', filter: 'blur(8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)', filter: 'blur(0)' },
+        },
+        elasticIn: {
+          '0%': { opacity: '0', transform: 'translateY(40px) scale(0.8)' },
+          '50%': { transform: 'translateY(-8px) scale(1.03)' },
+          '70%': { transform: 'translateY(4px) scale(0.98)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        ripple: {
+          '0%': { transform: 'scale(0)', opacity: '0.5' },
+          '100%': { transform: 'scale(4)', opacity: '0' },
+        },
+        glitch: {
+          '0%': { transform: 'translate(0)' },
+          '20%': { transform: 'translate(-3px, 3px)' },
+          '40%': { transform: 'translate(-3px, -3px)' },
+          '60%': { transform: 'translate(3px, 3px)' },
+          '80%': { transform: 'translate(3px, -3px)' },
+          '100%': { transform: 'translate(0)' },
+        },
+        numberShimmer: {
+          '0%': { backgroundPosition: '-200% center' },
+          '100%': { backgroundPosition: '200% center' },
+        },
+        auroraBtn: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        heartbeat: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '14%': { transform: 'scale(1.15)' },
+          '28%': { transform: 'scale(1)' },
+          '42%': { transform: 'scale(1.1)' },
+          '56%': { transform: 'scale(1)' },
+        },
+        focusRingGlow: {
+          '0%, 100%': { boxShadow: '0 0 0 3px rgba(120,119,255,0.12)' },
+          '50%': { boxShadow: '0 0 0 5px rgba(120,119,255,0.25), 0 0 20px rgba(120,119,255,0.1)' },
+        },
+        badgeFloat: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-3px)' },
+        },
+        spotlightSweep: {
+          '0%': { left: '-20%', opacity: '0' },
+          '20%': { opacity: '0.6' },
+          '80%': { opacity: '0.6' },
+          '100%': { left: '120%', opacity: '0' },
+        },
+        borderRotate: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '100%': { backgroundPosition: '300% 50%' },
+        },
+        slideDownFade: {
+          '0%': { opacity: '0', transform: 'translateY(-20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        magneticHover: {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.02)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        textGlow: {
+          '0%, 100%': { textShadow: '0 0 10px rgba(129,140,248,0.3), 0 0 20px rgba(99,102,241,0.1)' },
+          '50%': { textShadow: '0 0 20px rgba(129,140,248,0.6), 0 0 40px rgba(99,102,241,0.3), 0 0 60px rgba(6,182,212,0.15)' },
         },
       },
       backgroundImage: {

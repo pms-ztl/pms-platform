@@ -117,7 +117,7 @@ export function LicenseDashboard() {
       {isNearLimit && !isAtLimit && (
         <div className="flex items-center gap-2 p-2 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 rounded-lg text-xs mb-3">
           <ExclamationTriangleIcon className="h-4 w-4 flex-shrink-0" />
-          {usage.usagePercentage.toFixed(0)}% of license seats used.
+          {(usage.usagePercentage ?? 0).toFixed(0)}% of license seats used.
         </div>
       )}
 

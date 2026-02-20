@@ -36,10 +36,38 @@ router.get(
   (req, res, next) => goalsController.getGoalTree(req, res, next)
 );
 
+// Bulk operations
+router.put(
+  '/bulk-update',
+  authorize({ resource: 'goals', action: 'update', scope: 'all' }),
+  (req, res, next) => goalsController.bulkUpdate(req, res, next)
+);
+
+// Export
+router.get(
+  '/export',
+  authorize({ resource: 'goals', action: 'read', scope: 'all' }),
+  (req, res, next) => goalsController.exportGoals(req, res, next)
+);
+
+// Deadline reminders (admin or cron)
+router.post(
+  '/check-reminders',
+  authorize({ resource: 'goals', action: 'update', scope: 'all' }),
+  (req, res, next) => goalsController.checkReminders(req, res, next)
+);
+
 router.get(
   '/team-tree',
   authorize({ resource: 'goals', action: 'read', scope: 'team' }),
   (req, res, next) => goalsController.getTeamGoalTree(req, res, next)
+);
+
+// Activity feed for a goal
+router.get(
+  '/:id/activity',
+  authorize({ resource: 'goals', action: 'read', scope: 'own' }),
+  (req, res, next) => goalsController.getActivity(req, res, next)
 );
 
 router.get(

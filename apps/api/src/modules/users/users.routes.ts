@@ -24,10 +24,15 @@ router.get(
   (req, res, next) => usersController.listDepartments(req, res, next)
 );
 
-// Org chart
+// Org chart – any authenticated user can view
 router.get(
   '/org-chart',
-  authorize({ resource: 'users', action: 'read', scope: 'all' }),
+  authorize(
+    { resource: 'users', action: 'read', scope: 'all' },
+    { resource: 'users', action: 'read', scope: 'team' },
+    { resource: 'users', action: 'read', scope: 'own' },
+    { roles: ['MANAGER', 'Manager', 'EMPLOYEE', 'Employee', 'HR_ADMIN', 'HR Admin', 'HR_BP', 'HR Business Partner'] }
+  ),
   (req, res, next) => usersController.getOrgChart(req, res, next)
 );
 
@@ -106,6 +111,19 @@ router.put(
   '/super-admin-access',
   requireRoles('Tenant Admin'),
   (req, res, next) => usersController.toggleSuperAdminAccess(req, res, next)
+);
+
+// Bulk role operations (HR Admin + Tenant Admin only)
+router.post(
+  '/bulk-assign-role',
+  requireRoles('HR Admin', 'Tenant Admin'),
+  (req, res, next) => usersController.bulkAssignRole(req, res, next)
+);
+
+router.post(
+  '/bulk-remove-role',
+  requireRoles('HR Admin', 'Tenant Admin'),
+  (req, res, next) => usersController.bulkRemoveRole(req, res, next)
 );
 
 // ── Collection routes ──
@@ -193,6 +211,13 @@ router.delete(
   '/:id/roles/:roleId',
   requireRoles('HR Admin', 'Tenant Admin'),
   (req, res, next) => usersController.removeRole(req, res, next)
+);
+
+// Role assignment history for a user
+router.get(
+  '/:id/role-history',
+  requireRoles('HR Admin', 'Tenant Admin'),
+  (req, res, next) => usersController.getRoleHistory(req, res, next)
 );
 
 // Avatar upload for specific user (admin only)

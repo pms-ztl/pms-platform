@@ -21,6 +21,7 @@ import { format } from 'date-fns';
 
 import { oneOnOnesApi, usersApi, type OneOnOne, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ---------------------------------------------------------------------------
 // Status badge configuration
@@ -67,6 +68,7 @@ function initials(firstName?: string, lastName?: string): string {
 // ---------------------------------------------------------------------------
 
 export function OneOnOnesPage() {
+  usePageTitle('1-on-1 Meetings');
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
 

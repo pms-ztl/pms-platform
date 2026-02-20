@@ -1202,6 +1202,95 @@ export class UsersService {
       );
     }
   }
+
+  // ============================================================================
+  // BULK ROLE OPERATIONS & ROLE HISTORY
+  // ============================================================================
+
+  /**
+   * Bulk assign a role to multiple users.
+   */
+  async bulkAssignRole(
+    tenantId: string,
+    adminId: string,
+    userIds: string[],
+    roleId: string,
+  ): Promise<{ assigned: number }> {
+    const role = await prisma.role.findFirst({ where: { id: roleId, tenantId, deletedAt: null } });
+    if (!role) throw new NotFoundError('Role', roleId);
+
+    let assigned = 0;
+    for (const userId of userIds) {
+      const user = await prisma.user.findFirst({ where: { id: userId, tenantId, deletedAt: null } });
+      if (!user) continue;
+      await prisma.userRole.upsert({
+        where: { userId_roleId: { userId, roleId } },
+        create: { userId, roleId, grantedBy: adminId },
+        update: {},
+      });
+      assigned++;
+    }
+
+    auditLogger('BULK_ROLE_ASSIGNED', adminId, tenantId, 'role', roleId, {
+      roleName: role.name, userIds, assignedCount: assigned,
+    });
+
+    return { assigned };
+  }
+
+  /**
+   * Bulk remove a role from multiple users.
+   */
+  async bulkRemoveRole(
+    tenantId: string,
+    adminId: string,
+    userIds: string[],
+    roleId: string,
+  ): Promise<{ removed: number }> {
+    const role = await prisma.role.findFirst({ where: { id: roleId, tenantId, deletedAt: null } });
+    if (!role) throw new NotFoundError('Role', roleId);
+
+    const result = await prisma.userRole.deleteMany({
+      where: { userId: { in: userIds }, roleId },
+    });
+
+    auditLogger('BULK_ROLE_REMOVED', adminId, tenantId, 'role', roleId, {
+      roleName: role.name, userIds, removedCount: result.count,
+    });
+
+    return { removed: result.count };
+  }
+
+  /**
+   * Get role assignment history for a user from audit events.
+   */
+  async getRoleHistory(tenantId: string, userId: string) {
+    const user = await prisma.user.findFirst({ where: { id: userId, tenantId, deletedAt: null } });
+    if (!user) throw new NotFoundError('User', userId);
+
+    const events = await prisma.auditEvent.findMany({
+      where: {
+        tenantId,
+        entityId: userId,
+        entityType: 'user',
+        action: { in: ['ROLE_ASSIGNED', 'ROLE_REMOVED', 'BULK_ROLE_ASSIGNED', 'BULK_ROLE_REMOVED'] },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+      include: {
+        user: { select: { id: true, firstName: true, lastName: true } },
+      },
+    });
+
+    return events.map((e) => ({
+      id: e.id,
+      action: e.action,
+      metadata: e.metadata,
+      performedBy: e.user ? { id: e.user.id, name: `${e.user.firstName} ${e.user.lastName}` } : null,
+      createdAt: e.createdAt,
+    }));
+  }
+
 }
 
 export const usersService = new UsersService();

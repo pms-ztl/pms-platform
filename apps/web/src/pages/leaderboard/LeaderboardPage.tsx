@@ -257,7 +257,7 @@ function Podium({ entries }: { entries: AnyEntry[] }) {
           </div>
           <p className="text-sm font-semibold text-secondary-900 dark:text-white text-center">{entry.user.firstName} {entry.user.lastName}</p>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 text-center">{entry.user.jobTitle}</p>
-          <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">{entry.score.toFixed(1)}</p>
+          <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">{(entry.score ?? 0).toFixed(1)}</p>
           <p className="text-[10px] text-secondary-400 dark:text-secondary-500 uppercase tracking-wider">{entry.user.department}</p>
           <div className={clsx('mt-2 w-24 sm:w-28 rounded-t-xl bg-gradient-to-b flex items-end justify-center', heights[idx], gradients[idx])}>
             <span className="text-xs font-bold text-secondary-500 dark:text-secondary-300 pb-2 uppercase tracking-wider">{labels[idx]}</span>
@@ -291,7 +291,7 @@ function DepartmentChart({ departments }: { departments: DepartmentScore[] }) {
               className="h-full bg-gradient-to-r from-primary-500 to-primary-400 dark:from-primary-600 dark:to-primary-400 rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-2"
               style={{ width: `${maxScore > 0 ? (dept.avgScore / maxScore) * 100 : 0}%` }}
             >
-              <span className="text-[10px] font-bold text-white">{dept.avgScore.toFixed(1)}</span>
+              <span className="text-[10px] font-bold text-white">{(dept.avgScore ?? 0).toFixed(1)}</span>
             </div>
           </div>
           <span className="w-14 text-xs text-secondary-500 dark:text-secondary-400 text-right">{dept.memberCount} ppl</span>
@@ -334,7 +334,7 @@ function ScoreDisplay({ score }: { score: number }) {
         'text-sm font-bold',
         score >= 75 ? 'text-success-600 dark:text-success-400' : score >= 50 ? 'text-primary-600 dark:text-primary-400' : 'text-warning-600 dark:text-warning-400',
       )}>
-        {score.toFixed(1)}
+        {(score ?? 0).toFixed(1)}
       </span>
       <span className="text-xs text-secondary-400"> / 100</span>
     </>
@@ -488,7 +488,7 @@ export function LeaderboardPage() {
             <div className="flex-1 max-w-[80px] h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
               <div className="h-full bg-primary-500 rounded-full transition-all duration-500" style={{ width: `${e.completionRate}%` }} />
             </div>
-            <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">{e.completionRate.toFixed(0)}%</span>
+            <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">{(e.completionRate ?? 0).toFixed(0)}%</span>
           </div>
         </td>
         <td className="px-4 py-3">
@@ -496,10 +496,10 @@ export function LeaderboardPage() {
             <div className="flex-1 max-w-[60px] h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
               <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${e.avgProgress}%` }} />
             </div>
-            <span className="text-sm text-secondary-700 dark:text-secondary-300">{e.avgProgress.toFixed(0)}%</span>
+            <span className="text-sm text-secondary-700 dark:text-secondary-300">{(e.avgProgress ?? 0).toFixed(0)}%</span>
           </div>
         </td>
-        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.onTimeRate.toFixed(0)}%</td>
+        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{(e.onTimeRate ?? 0).toFixed(0)}%</td>
       </>
     );
   }
@@ -518,7 +518,7 @@ export function LeaderboardPage() {
           </div>
         </td>
         <td className="px-4 py-3">
-          <span className="text-sm font-bold text-primary-600 dark:text-primary-400">{e.score.toFixed(1)}</span>
+          <span className="text-sm font-bold text-primary-600 dark:text-primary-400">{(e.score ?? 0).toFixed(1)}</span>
         </td>
         <td className="px-4 py-3 text-sm font-semibold text-secondary-700 dark:text-secondary-300">{e.totalReceived}</td>
         <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.praiseCount}</td>
@@ -548,12 +548,12 @@ export function LeaderboardPage() {
             <div className="flex-1 max-w-[60px] h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
               <div className="h-full bg-violet-500 rounded-full transition-all duration-500" style={{ width: `${e.avgProgress}%` }} />
             </div>
-            <span className="text-sm text-secondary-700 dark:text-secondary-300">{e.avgProgress.toFixed(0)}%</span>
+            <span className="text-sm text-secondary-700 dark:text-secondary-300">{(e.avgProgress ?? 0).toFixed(0)}%</span>
           </div>
         </td>
         <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.activitiesCompleted} / {e.activitiesTotal}</td>
         <td className="px-4 py-3">
-          <span className="text-sm font-bold text-primary-600 dark:text-primary-400">{e.score.toFixed(1)}</span>
+          <span className="text-sm font-bold text-primary-600 dark:text-primary-400">{(e.score ?? 0).toFixed(1)}</span>
         </td>
       </>
     );
@@ -744,13 +744,13 @@ export function LeaderboardPage() {
                       <div key={item.label}>
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-sm text-secondary-600 dark:text-secondary-400">{item.label}</span>
-                          <span className="text-sm font-bold text-secondary-900 dark:text-white">{item.score.toFixed(1)}</span>
+                          <span className="text-sm font-bold text-secondary-900 dark:text-white">{(item.score ?? 0).toFixed(1)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="flex-1 h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
                             <div className={clsx('h-full rounded-full transition-all duration-500', item.color)} style={{ width: `${item.percentile}%` }} />
                           </div>
-                          <span className="text-xs font-medium text-secondary-500 dark:text-secondary-400 w-14 text-right">Top {(100 - item.percentile).toFixed(0)}%</span>
+                          <span className="text-xs font-medium text-secondary-500 dark:text-secondary-400 w-14 text-right">Top {(100 - (item.percentile ?? 0)).toFixed(0)}%</span>
                         </div>
                       </div>
                     ))}
@@ -784,7 +784,7 @@ export function LeaderboardPage() {
                           Rank <span className="text-lg font-bold text-primary-600 dark:text-primary-400">#{currentUserEntry.rank}</span>
                         </span>
                         <span className="text-xs font-medium text-secondary-600 dark:text-secondary-400">
-                          Score <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{currentUserEntry.score.toFixed(1)}</span>
+                          Score <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{(currentUserEntry.score ?? 0).toFixed(1)}</span>
                         </span>
                       </div>
                     </div>

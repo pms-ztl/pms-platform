@@ -13,6 +13,7 @@ import {
   authRateLimiter,
   socketEmitMiddleware,
   subscriptionGuard,
+  sanitizeInput,
 } from './middleware';
 import { authRoutes } from './modules/auth';
 import { goalsRoutes } from './modules/goals';
@@ -44,6 +45,19 @@ import { careerRoutes } from './modules/career';
 import { superAdminRoutes } from './modules/super-admin';
 import { excelUploadRoutes } from './modules/excel-upload';
 import { aiRoutes } from './modules/ai';
+import { rolesRoutes } from './modules/roles';
+import { upgradeRequestsRoutes } from './modules/upgrade-requests';
+import { chatRoutes } from './modules/chat';
+import { healthRoutes } from './modules/health';
+import { engagementRoutes } from './modules/engagement';
+import { pulseRoutes } from './modules/pulse';
+import { delegationsRoutes } from './modules/delegations';
+import { policiesRoutes } from './modules/policies';
+import { mentoringRoutes } from './modules/mentoring';
+import { actionableInsightsRoutes } from './modules/actionable-insights';
+import { aiInsightsRoutes } from './modules/ai-insights';
+import { checkinsRoutes } from './modules/checkins';
+import { teamsRoutes } from './modules/teams';
 import { prisma } from '@pms/database';
 import { getRedisClient } from './utils/redis';
 import { logger } from './utils/logger';
@@ -100,6 +114,9 @@ export function createApp(): Express {
   // Body parsing
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+  // Input sanitization (XSS/injection prevention)
+  app.use(sanitizeInput);
 
   // Serve static files for uploads
   app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
@@ -202,6 +219,22 @@ export function createApp(): Express {
   apiRouter.use('/career', standardRateLimiter, careerRoutes);
   apiRouter.use('/excel-upload', standardRateLimiter, excelUploadRoutes);
   apiRouter.use('/ai', standardRateLimiter, aiRoutes);
+  apiRouter.use('/roles', standardRateLimiter, rolesRoutes);
+  apiRouter.use('/upgrade-requests', standardRateLimiter, upgradeRequestsRoutes);
+  apiRouter.use('/chat', standardRateLimiter, chatRoutes);
+  apiRouter.use('/health-metrics', standardRateLimiter, healthRoutes);
+  apiRouter.use('/engagement', standardRateLimiter, engagementRoutes);
+  apiRouter.use('/pulse', standardRateLimiter, pulseRoutes);
+  apiRouter.use('/delegations', standardRateLimiter, delegationsRoutes);
+  apiRouter.use('/policies', standardRateLimiter, policiesRoutes);
+  apiRouter.use('/mentoring', standardRateLimiter, mentoringRoutes);
+  apiRouter.use('/actionable-insights', standardRateLimiter, actionableInsightsRoutes);
+  apiRouter.use('/ai-insights', standardRateLimiter, aiInsightsRoutes);
+  apiRouter.use('/checkins', standardRateLimiter, checkinsRoutes);
+  apiRouter.use('/teams', standardRateLimiter, teamsRoutes);
+
+  // Alias: /conversations → /chat/conversations (some frontend pages use the wrong prefix)
+  apiRouter.use('/conversations', standardRateLimiter, chatRoutes);
 
   // Mount API routes
   app.use('/api/v1', apiRouter);

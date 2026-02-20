@@ -5,6 +5,7 @@ import { config } from './config';
 import { logger } from './utils/logger';
 import { connectRedis, disconnectRedis } from './utils/redis';
 import { initSocketIO, closeSocketIO } from './utils/socket';
+import { initChatSocket } from './modules/chat';
 import { emailService } from './services/email';
 import { initDeadlineReminderJob } from './jobs/deadline-reminder.job';
 import { startMonitoringJob, stopMonitoringJob } from './jobs/license-expiry.job';
@@ -25,7 +26,8 @@ async function bootstrap(): Promise<void> {
   }
 
   // Initialize Socket.io
-  initSocketIO(httpServer);
+  const io = initSocketIO(httpServer);
+  initChatSocket(io);
 
   // Initialize email service
   try {

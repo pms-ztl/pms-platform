@@ -9,7 +9,7 @@ interface SkeletonProps {
 }
 
 export function Skeleton({ className, variant = 'line', width, height, count = 1 }: SkeletonProps) {
-  const baseClass = 'animate-pulse bg-gray-200';
+  const baseClass = 'animate-pulse bg-white/[0.08]';
   const variantClass = {
     line: 'h-4 rounded-md',
     circle: 'rounded-full',
@@ -39,7 +39,7 @@ export function Skeleton({ className, variant = 'line', width, height, count = 1
 
 export function SkeletonCard({ className }: { className?: string }) {
   return (
-    <div className={clsx('rounded-xl border border-gray-200 bg-white p-6', className)}>
+    <div className={clsx('glass-stat p-6', className)}>
       <div className="flex items-center gap-3 mb-4">
         <Skeleton variant="circle" width={40} height={40} />
         <div className="flex-1">
@@ -56,7 +56,7 @@ export function SkeletonTableRows({ rows = 5, cols = 4 }: { rows?: number; cols?
   return (
     <>
       {Array.from({ length: rows }).map((_, r) => (
-        <tr key={r} className="border-b border-gray-100">
+        <tr key={r} className="border-b border-white/[0.06]">
           {Array.from({ length: cols }).map((_, c) => (
             <td key={c} className="px-4 py-3">
               <Skeleton width={c === 0 ? '70%' : '50%'} />

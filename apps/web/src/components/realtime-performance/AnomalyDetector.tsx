@@ -115,7 +115,7 @@ const ZScoreIndicator = ({ zScore }: { zScore: number }) => {
         'text-sm font-semibold',
         isNegative ? 'text-red-500' : 'text-green-500'
       )}>
-        {zScore > 0 ? '+' : ''}{zScore.toFixed(1)}σ
+        {(zScore ?? 0) > 0 ? '+' : ''}{(zScore ?? 0).toFixed(1)}σ
       </div>
     </div>
   );
@@ -164,7 +164,7 @@ const AnomalyCard = ({ anomaly }: { anomaly: AnomalyResult }) => {
         <div className="text-center">
           <div className="text-xs text-gray-500 dark:text-gray-400">Expected</div>
           <div className="text-lg font-semibold text-gray-900 dark:text-white">
-            {anomaly.expectedValue.toFixed(1)}
+            {(anomaly.expectedValue ?? 0).toFixed(1)}
           </div>
         </div>
         <div className="text-center">
@@ -173,7 +173,7 @@ const AnomalyCard = ({ anomaly }: { anomaly: AnomalyResult }) => {
             'text-lg font-semibold',
             isNegativeDeviation ? 'text-red-600' : 'text-green-600'
           )}>
-            {anomaly.actualValue.toFixed(1)}
+            {(anomaly.actualValue ?? 0).toFixed(1)}
           </div>
         </div>
         <div className="text-center">
@@ -182,7 +182,7 @@ const AnomalyCard = ({ anomaly }: { anomaly: AnomalyResult }) => {
             'text-lg font-semibold',
             isNegativeDeviation ? 'text-red-600' : 'text-green-600'
           )}>
-            {anomaly.deviationPercentage > 0 ? '+' : ''}{anomaly.deviationPercentage.toFixed(1)}%
+            {(anomaly.deviationPercentage ?? 0) > 0 ? '+' : ''}{(anomaly.deviationPercentage ?? 0).toFixed(1)}%
           </div>
         </div>
       </div>

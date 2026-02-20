@@ -70,7 +70,7 @@ class CareerService {
         title: nextRole?.title || cp.pathName,
         level: (nextRole?.level || userLevel) + 1,
         department: cp.department || currentDept,
-        requiredSkills: Object.keys((cp.skillRequirements as Record<string, any>) || {}).slice(0, 5),
+        requiredSkills: this.extractSkillNames((cp.skillRequirements as Record<string, any>) || {}),
         avgTimeToReach: cp.averageDuration ? `${Math.round(cp.averageDuration / 12)}y` : '1-2y',
         description: cp.pathDescription,
       };
@@ -113,17 +113,43 @@ class CareerService {
     });
 
     if (careerPath) {
-      const skillReqs = (careerPath.skillRequirements as Record<string, number>) || {};
-      const compReqs = (careerPath.competencyRequirements as Record<string, number>) || {};
+      const skillReqs = (careerPath.skillRequirements as Record<string, any>) || {};
+      const compReqs = (careerPath.competencyRequirements as Record<string, any>) || {};
+
+      // competencyRequirements can be:
+      //   { 'Role Name': { leadership: 3, communication: 4, technical: 3 }, ... }  (nested)
+      //   { competencyName: requiredLevel, ... }  (flat)
+      // We need to flatten nested structures into individual competency entries
+      const competencies: Array<{ name: string; current: number; required: number }> = [];
+      for (const [key, value] of Object.entries(compReqs)) {
+        if (typeof value === 'number') {
+          // Flat format: { competencyName: requiredLevel }
+          competencies.push({ name: key, current: Math.max(1, value - 1), required: value });
+        } else if (typeof value === 'object' && value !== null) {
+          // Nested format: { roleName: { leadership: 3, communication: 4 } }
+          // Extract individual competencies from the object
+          for (const [compName, compLevel] of Object.entries(value)) {
+            if (typeof compLevel === 'number' && !competencies.find(c => c.name === compName)) {
+              competencies.push({ name: compName.charAt(0).toUpperCase() + compName.slice(1), current: Math.max(1, compLevel - 1), required: compLevel });
+            }
+          }
+        }
+      }
+
+      // skillRequirements can be { core: [...], technical: [...] } or { skillName: level }
+      const skillGapList: string[] = [];
+      for (const [key, value] of Object.entries(skillReqs)) {
+        if (Array.isArray(value)) {
+          skillGapList.push(...value.map(String));
+        } else {
+          skillGapList.push(key);
+        }
+      }
 
       return {
         roleId,
-        competencies: Object.entries(compReqs).map(([name, required]) => ({
-          name,
-          current: Math.max(1, (required as number) - 1),
-          required: required as number,
-        })),
-        skillGaps: Object.keys(skillReqs).slice(0, 5),
+        competencies: competencies.slice(0, 10),
+        skillGaps: skillGapList.slice(0, 5),
         activities: [
           { title: 'Complete relevant training courses', type: 'TRAINING', duration: '3 months' },
           { title: 'Take on stretch assignments', type: 'PROJECT', duration: '6 months' },
@@ -182,7 +208,10 @@ class CareerService {
           department: cp.department || 'General',
           levelRange: `Level ${r.level || 1}`,
           description: r.description || cp.pathDescription || '',
-          requiredSkills: r.requiredSkills || Object.keys((cp.skillRequirements as Record<string, any>) || {}).slice(0, 5),
+          requiredSkills: (Array.isArray(r.requiredSkills) ? r.requiredSkills.map(String) : [])
+            .concat(this.extractSkillNames((cp.skillRequirements as Record<string, any>) || {}))
+            .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i)
+            .slice(0, 5),
         });
       }
     }
@@ -233,6 +262,25 @@ class CareerService {
         completed: m.completed || m.status === 'COMPLETED',
       })),
     }));
+  }
+
+  /**
+   * Extract flat skill name strings from skillRequirements JSON which may be:
+   *   { core: ['skill1', ...], technical: ['skill2', ...] }  (nested arrays)
+   *   { skillName: level, ... }  (flat)
+   */
+  private extractSkillNames(reqs: Record<string, any>): string[] {
+    const names: string[] = [];
+    for (const [key, value] of Object.entries(reqs)) {
+      if (Array.isArray(value)) {
+        names.push(...value.map(String));
+      } else if (typeof value === 'string') {
+        names.push(value);
+      } else {
+        names.push(key);
+      }
+    }
+    return names.slice(0, 5);
   }
 }
 

@@ -24,6 +24,7 @@ import {
   type ReviewCycle,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 const sessionStatusColors: Record<string, string> = {
   SCHEDULED: 'bg-secondary-100 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-200',
@@ -33,6 +34,7 @@ const sessionStatusColors: Record<string, string> = {
 };
 
 export function CalibrationPage() {
+  usePageTitle('Calibration');
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
   const [showCreateModal, setShowCreateModal] = useState(false);

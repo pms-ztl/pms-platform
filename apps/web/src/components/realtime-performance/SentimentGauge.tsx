@@ -139,7 +139,7 @@ const SentimentMeter = ({ score }: { score: number }) => {
               <FaceFrownIcon className="h-8 w-8 sm:h-10 sm:w-10 text-red-500" />
             )}
             <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mt-1">
-              {(score * 100).toFixed(0)}
+              {((score ?? 0) * 100).toFixed(0)}
             </span>
             <span className="text-[10px] sm:text-xs text-gray-500 truncate px-1">Sentiment Score</span>
           </div>
@@ -176,7 +176,7 @@ const MetricCard = ({
       {subtext && <span className="text-xs text-gray-500 flex-shrink-0">{subtext}</span>}
     </div>
     <div className={clsx('text-xl font-bold truncate', color)}>
-      {(value * 100).toFixed(0)}%
+      {((value ?? 0) * 100).toFixed(0)}%
     </div>
     <div className="text-xs text-gray-600 dark:text-gray-400 truncate">{label}</div>
     <div className="mt-2 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
@@ -223,11 +223,11 @@ const TeamMemberCard = ({ member }: { member: TeamMorale['teamMembers'][0] }) =>
       <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs">
         <div>
           <div className="text-gray-500">Positivity</div>
-          <div className="font-semibold">{(member.positivityRatio * 100).toFixed(0)}%</div>
+          <div className="font-semibold">{((member.positivityRatio ?? 0) * 100).toFixed(0)}%</div>
         </div>
         <div>
           <div className="text-gray-500">Collaboration</div>
-          <div className="font-semibold">{(member.collaborationSentiment * 100).toFixed(0)}%</div>
+          <div className="font-semibold">{((member.collaborationSentiment ?? 0) * 100).toFixed(0)}%</div>
         </div>
         <div>
           <div className="text-gray-500">Stress</div>
@@ -235,7 +235,7 @@ const TeamMemberCard = ({ member }: { member: TeamMorale['teamMembers'][0] }) =>
             'font-semibold',
             member.stressIndicators > 0.5 ? 'text-red-500' : 'text-green-500'
           )}>
-            {(member.stressIndicators * 100).toFixed(0)}%
+            {((member.stressIndicators ?? 0) * 100).toFixed(0)}%
           </div>
         </div>
       </div>

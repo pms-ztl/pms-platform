@@ -4,6 +4,7 @@ import type { AuthenticatedRequest } from '../../types';
 import { superAdminService } from './super-admin.service';
 import { authService } from '../auth/auth.service';
 import { ValidationError, AuthenticationError } from '../../utils/errors';
+import { isSuperAdmin } from '../../utils/roles';
 
 // ============================================================================
 // AUTH
@@ -50,11 +51,10 @@ export async function adminLogin(req: Request, res: Response, next: NextFunction
       throw new AuthenticationError('User not found');
     }
 
-    const isSuperAdmin = userRecord.userRoles.some(
-      (ur) => ur.role.name === 'SUPER_ADMIN'
-    );
+    const roleNames = userRecord.userRoles.map((ur) => ur.role.name);
+    const hasSuperAdminRole = isSuperAdmin(roleNames);
 
-    if (!isSuperAdmin) {
+    if (!hasSuperAdminRole) {
       throw new AuthenticationError('Access denied. Super Admin role required.');
     }
 

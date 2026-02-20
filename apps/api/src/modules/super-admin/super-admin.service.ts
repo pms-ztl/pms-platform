@@ -8,6 +8,8 @@ import { NotFoundError, ConflictError, ValidationError, AuthorizationError } fro
 import { auditLogger, logger } from '../../utils/logger';
 import { getRedisClient } from '../../utils/redis';
 import { DAYS, MS_PER_HOUR } from '../../utils/constants';
+import { PLAN_MAX_LEVELS } from './license.service';
+import { SystemRoles } from '../../types';
 
 const SALT_ROUNDS = 12;
 
@@ -138,6 +140,7 @@ export class SuperAdminService {
     maxLevel?: number;
     licenseCount?: number;
     ceoEmail?: string;
+    roles?: Array<{ name: string; description?: string; permissions?: string[]; category?: string }>;
   }, createdBy: string) {
     // Validate slug uniqueness
     const existingSlug = await prisma.tenant.findUnique({ where: { slug: data.slug } });
@@ -149,10 +152,14 @@ export class SuperAdminService {
     const existingEmail = await prisma.user.findFirst({
       where: { email: data.adminEmail.toLowerCase(), deletedAt: null },
     });
+    if (existingEmail) {
+      throw new ConflictError(`A user with email "${data.adminEmail}" already exists`);
+    }
 
     const plan = data.plan ?? 'STARTER';
     const licenseCount = data.licenseCount ?? 100;
-    const maxLevel = data.maxLevel ?? 16;
+    const planCap = PLAN_MAX_LEVELS[plan] ?? 16;
+    const maxLevel = Math.min(data.maxLevel ?? planCap, planCap); // Clamp to plan limit
 
     // Create tenant + admin user + roles in a transaction
     const result = await prisma.$transaction(async (tx) => {
@@ -199,23 +206,43 @@ export class SuperAdminService {
         },
       });
 
-      // 2. Create system roles for this tenant
-      const roleNames = ['Tenant Admin', 'HR Admin', 'HR Business Partner', 'Manager', 'Employee'];
+      // 2. Create roles for this tenant (configurable or defaults)
+      const defaultRoleDefinitions = [
+        { name: 'Tenant Admin',        description: 'Full tenant administration', category: 'ADMIN',    permissions: SystemRoles.TENANT_ADMIN.permissions.map((p) => `${p.resource}:${p.action}:${p.scope}`) },
+        { name: 'HR Admin',            description: 'HR administration',          category: 'HR',       permissions: SystemRoles.HR_ADMIN.permissions.map((p) => `${p.resource}:${p.action}:${p.scope}`) },
+        { name: 'HR Business Partner', description: 'HR business partner',        category: 'HR',       permissions: SystemRoles.HR_BP.permissions.map((p) => `${p.resource}:${p.action}:${p.scope}`) },
+        { name: 'Manager',             description: 'People manager',             category: 'MANAGER',  permissions: SystemRoles.MANAGER.permissions.map((p) => `${p.resource}:${p.action}:${p.scope}`) },
+        { name: 'Employee',            description: 'Standard employee',          category: 'EMPLOYEE', permissions: SystemRoles.EMPLOYEE.permissions.map((p) => `${p.resource}:${p.action}:${p.scope}`) },
+      ];
+
+      const roleDefinitions = data.roles && data.roles.length > 0
+        ? data.roles.map((r) => ({
+            name: r.name,
+            description: r.description ?? `Custom role: ${r.name}`,
+            permissions: r.permissions ?? [],
+            category: r.category ?? null,
+          }))
+        : defaultRoleDefinitions;
+
       const roles = await Promise.all(
-        roleNames.map((name) =>
+        roleDefinitions.map((def) =>
           tx.role.create({
             data: {
               tenantId: tenant.id,
-              name,
-              description: `System role: ${name}`,
-              permissions: [],
-              isSystem: true,
+              name: def.name,
+              description: def.description ?? `System role: ${def.name}`,
+              permissions: def.permissions,
+              category: def.category ?? null,
+              isSystem: !data.roles || data.roles.length === 0, // System roles only for defaults
             },
           })
         )
       );
 
-      const adminRole = roles.find((r) => r.name === 'Tenant Admin')!;
+      // Find admin role (by category fallback if name doesn't match exactly)
+      const adminRole = roles.find((r) => r.name === 'Tenant Admin')
+        ?? roles.find((r) => (r.category as string) === 'ADMIN')
+        ?? roles[0]; // Fallback to first role
 
       // 3. Create admin user
       const tempPassword = uuidv4().slice(0, 12);
@@ -819,12 +846,24 @@ export class SuperAdminService {
       },
     };
 
+    // Update maxLevel to match new plan cap
+    const newMaxLevel = PLAN_MAX_LEVELS[plan] ?? 16;
+
+    // Warn if existing users exceed new level cap (don't block)
+    const overLimitUsers = await prisma.user.count({
+      where: { tenantId, level: { gt: newMaxLevel }, isActive: true, deletedAt: null },
+    });
+    if (overLimitUsers > 0) {
+      logger.warn(`Plan change to ${plan}: ${overLimitUsers} user(s) exceed new level cap of ${newMaxLevel}`, { tenantId });
+    }
+
     const operations = [
       prisma.tenant.update({
         where: { id: tenantId },
         data: {
           subscriptionPlan: plan,
           subscriptionTier: plan.toLowerCase(),
+          maxLevel: newMaxLevel,
           settings: updatedSettings as any,
         },
       }),

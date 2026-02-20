@@ -25,6 +25,7 @@ import {
 import clsx from 'clsx';
 
 import { api } from '@/lib/api';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -485,6 +486,7 @@ function ActivityTimeline({ events }: { events: AuditEvent[] }) {
 // ---------------------------------------------------------------------------
 
 export function AuditLogPage() {
+  usePageTitle('Audit Log');
   const [filters, setFilters] = useState<AuditFilters>(DEFAULT_FILTERS);
   const [appliedFilters, setAppliedFilters] = useState<AuditFilters>(DEFAULT_FILTERS);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);

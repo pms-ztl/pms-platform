@@ -6,7 +6,7 @@ import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../../stores/authStore';
 import { authApi } from '../../lib/api';
-import { ShieldCheckIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { ShieldCheckIcon, EyeIcon, EyeSlashIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -52,7 +52,7 @@ export default function LoginPage() {
         response.data.token
       );
 
-      toast.success('Welcome back!');
+      toast.success('Command Center activated.');
       navigate('/dashboard');
     } catch (error: unknown) {
       const err = error as { response?: { data?: { requiresMfa?: boolean; message?: string } } };
@@ -81,21 +81,44 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0e1a] px-4 relative overflow-hidden">
+      {/* Background orbs */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div
+          className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full opacity-[0.12]"
+          style={{
+            background: 'radial-gradient(circle, rgba(139,92,246,0.4) 0%, transparent 70%)',
+            animation: 'meshFloat1 20s ease-in-out infinite',
+            filter: 'blur(80px)',
+          }}
+        />
+        <div
+          className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] rounded-full opacity-[0.1]"
+          style={{
+            background: 'radial-gradient(circle, rgba(59,130,246,0.35) 0%, transparent 70%)',
+            animation: 'meshFloat2 25s ease-in-out infinite',
+            filter: 'blur(80px)',
+          }}
+        />
+      </div>
+
+      <div className="max-w-md w-full animate-fade-in-up">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-600 rounded-2xl mb-4">
-            <ShieldCheckIcon className="h-8 w-8 text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 bg-white/[0.08] border border-white/[0.1]">
+            <ShieldCheckIcon className="h-8 w-8 text-white/70" />
           </div>
-          <h1 className="text-3xl font-bold text-white">PMS Admin</h1>
-          <p className="mt-2 text-gray-400">Sign in to access the admin dashboard</p>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <SparklesIcon className="h-5 w-5 text-white/50" />
+            <h1 className="text-3xl font-bold text-white">PMS Suite</h1>
+          </div>
+          <p className="mt-2 text-white/40">Command Center · Admin Access</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="glass-card">
           {!showMfa ? (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="block text-sm font-medium text-white/50">
                   Email address
                 </label>
                 <input
@@ -105,12 +128,12 @@ export default function LoginPage() {
                   placeholder="admin@company.com"
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                  <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="password" className="block text-sm font-medium text-white/50">
                   Password
                 </label>
                 <div className="relative mt-1">
@@ -123,7 +146,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-500"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-white/30 hover:text-white/60 transition-colors"
                   >
                     {showPassword ? (
                       <EyeSlashIcon className="h-5 w-5" />
@@ -133,7 +156,7 @@ export default function LoginPage() {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                  <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
                 )}
               </div>
 
@@ -148,7 +171,7 @@ export default function LoginPage() {
           ) : (
             <div className="space-y-6">
               <div className="text-center">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-white/50">
                   Enter the verification code from your authenticator app
                 </p>
               </div>
@@ -182,8 +205,8 @@ export default function LoginPage() {
           )}
         </div>
 
-        <p className="mt-6 text-center text-sm text-gray-400">
-          This is a restricted area. Unauthorized access is prohibited.
+        <p className="mt-6 text-center text-sm text-white/25">
+          Restricted area · Unauthorized access is prohibited
         </p>
       </div>
     </div>

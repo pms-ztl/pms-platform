@@ -37,40 +37,34 @@ class SuperAdminApiClient {
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const res = await this.client.get(url, config);
-    const body = res.data;
-    if (body && typeof body === 'object' && 'success' in body) {
-      if (!body.success) throw new Error(body.error?.message || 'Request failed');
-      return body.data as T;
-    }
-    return body as T;
+    return this.unwrap<T>(res.data);
   }
 
   async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     const res = await this.client.post(url, data, config);
-    const body = res.data;
-    if (body && typeof body === 'object' && 'success' in body) {
-      if (!body.success) throw new Error(body.error?.message || 'Request failed');
-      return body.data as T;
-    }
-    return body as T;
+    return this.unwrap<T>(res.data);
   }
 
   async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     const res = await this.client.put(url, data, config);
-    const body = res.data;
-    if (body && typeof body === 'object' && 'success' in body) {
-      if (!body.success) throw new Error(body.error?.message || 'Request failed');
-      return body.data as T;
-    }
-    return body as T;
+    return this.unwrap<T>(res.data);
   }
 
   async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const res = await this.client.delete(url, config);
-    const body = res.data;
-    if (body && typeof body === 'object' && 'success' in body) {
-      if (!body.success) throw new Error(body.error?.message || 'Request failed');
-      return body.data as T;
+    return this.unwrap<T>(res.data);
+  }
+
+  /** Unwrap API response: { success, data } or { data } → data */
+  private unwrap<T>(body: any): T {
+    if (body && typeof body === 'object') {
+      if ('success' in body) {
+        if (!body.success) throw new Error(body.error?.message || 'Request failed');
+        return body.data as T;
+      }
+      if ('data' in body && Object.keys(body).length === 1) {
+        return body.data as T;
+      }
     }
     return body as T;
   }

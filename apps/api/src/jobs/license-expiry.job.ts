@@ -43,6 +43,13 @@ export async function runMonitoringChecks(): Promise<void> {
     logger.error('Suspicious activity check failed', { error: err });
   }
 
+  try {
+    await alertsService.processAutoRenewals();
+    logger.info('Auto-renewal processing completed');
+  } catch (err) {
+    logger.error('Auto-renewal processing failed', { error: err });
+  }
+
   logger.info('Monitoring checks completed');
 }
 

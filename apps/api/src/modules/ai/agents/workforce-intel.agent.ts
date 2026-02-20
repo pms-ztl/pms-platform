@@ -14,6 +14,7 @@
  */
 
 import { BaseAgent, type AgentContext } from '../base-agent';
+import { isManager } from '../../../utils/roles';
 import {
   queryBurnoutRisk,
   queryAttritionRisk,
@@ -26,6 +27,9 @@ import {
 // ── System Prompt ───────────────────────────────────────────
 
 const SYSTEM_PROMPT = `You are a predictive workforce intelligence analyst for a Performance Management System.
+
+IMPORTANT: Workforce intelligence data (burnout risks, attrition predictions, team health scores, succession readiness) is restricted to Manager, HR, and Admin roles.
+If the user is a regular employee, politely explain that workforce analytics are available to managers and above, and offer to help with their own career development instead.
 
 Your mission is to surface hidden people risks before they become crises and recommend data-driven interventions.
 
@@ -57,6 +61,14 @@ export class WorkforceIntelAgent extends BaseAgent {
     context: AgentContext,
     userMessage: string,
   ): Promise<Record<string, unknown> | null> {
+    // RBAC: Workforce intelligence is manager+ only
+    if (!isManager(context.userRoles)) {
+      return {
+        accessDenied: true,
+        message: 'Workforce analytics (burnout risks, attrition predictions, team health) are available to managers and above. I can help you with your own career development, goals, or performance instead.',
+      };
+    }
+
     const lower = userMessage.toLowerCase();
     const data: Record<string, unknown> = {};
 

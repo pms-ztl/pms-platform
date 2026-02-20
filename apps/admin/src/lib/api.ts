@@ -220,6 +220,8 @@ export const tenantsApi = {
     api.get<{ users: number; goals: number; reviews: number; storage: number }>(`/tenants/${id}/metrics`),
   updateSettings: (id: string, settings: Partial<TenantSettings>) =>
     api.put<Tenant>(`/tenants/${id}/settings`, settings),
+  updateLicenses: (id: string, data: { licenseCount?: number; maxLevel?: number; subscriptionPlan?: string }) =>
+    api.put<Tenant>(`/tenants/${id}`, data),
   exportData: (id: string) => api.post<{ downloadUrl: string }>(`/tenants/${id}/export`),
   getDesignatedManager: (id: string) =>
     api.get<{ id: string; email: string; firstName: string; lastName: string; isActive: boolean } | null>(`/tenants/${id}/designated-manager`),

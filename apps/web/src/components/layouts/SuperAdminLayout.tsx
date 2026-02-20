@@ -14,6 +14,7 @@ import {
   CurrencyDollarIcon,
   ShieldCheckIcon,
   ServerIcon,
+  ArrowUpCircleIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
@@ -35,6 +36,7 @@ const navigation: NavItem[] = [
   { name: 'Audit Logs', href: '/sa/audit', icon: DocumentMagnifyingGlassIcon },
   { name: 'Security', href: '/sa/security', icon: ShieldCheckIcon },
   { name: 'System Config', href: '/sa/system', icon: ServerIcon },
+  { name: 'Upgrade Requests', href: '/sa/upgrade-requests', icon: ArrowUpCircleIcon },
 ];
 
 function NavLink({ item, isActive, onClick }: { item: NavItem; isActive: boolean; onClick?: () => void }) {

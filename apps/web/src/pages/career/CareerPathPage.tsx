@@ -117,7 +117,7 @@ function CompetencyBar({ name, current, required }: { name: string; current: num
       <div className="flex items-center justify-between">
         <span className="text-sm text-secondary-700 dark:text-secondary-300">{name}</span>
         <span className={clsx('text-xs font-medium', gap > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-green-600 dark:text-green-400')}>
-          {gap > 0 ? `Gap: ${gap.toFixed(1)}` : 'Met'}
+          {gap > 0 ? `Gap: ${(gap ?? 0).toFixed(1)}` : 'Met'}
         </span>
       </div>
       <div className="relative h-2.5 rounded-full bg-secondary-200 dark:bg-secondary-700">
@@ -207,7 +207,7 @@ export function CareerPathPage() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-1">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">{cp.currentPosition.title}</h2>
-                {perfBadge && <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', perfBadge.color)}>{perfBadge.label} ({cp.currentPosition.performanceScore.toFixed(1)})</span>}
+                {perfBadge && <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', perfBadge.color)}>{perfBadge.label} ({(cp.currentPosition.performanceScore ?? 0).toFixed(1)})</span>}
               </div>
               <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
                 Level {cp.currentPosition.level}{LEVEL_LABELS[cp.currentPosition.level] ? ` (${LEVEL_LABELS[cp.currentPosition.level]})` : ''} &middot; {cp.currentPosition.department} &middot; {cp.currentPosition.tenure} tenure
@@ -226,7 +226,7 @@ export function CareerPathPage() {
                     strokeLinecap="round" className="text-primary-600 dark:text-primary-400 transition-all duration-700" />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-xl font-bold text-secondary-900 dark:text-white">{cp.currentPosition.performanceScore.toFixed(1)}</span>
+                  <span className="text-xl font-bold text-secondary-900 dark:text-white">{(cp.currentPosition.performanceScore ?? 0).toFixed(1)}</span>
                 </div>
               </div>
               <span className="text-xs text-secondary-500 dark:text-secondary-400">Performance Score</span>

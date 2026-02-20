@@ -23,6 +23,7 @@ import clsx from 'clsx';
 
 import { api } from '@/lib/api';
 import { useAuthStore, hasRole } from '@/store/auth';
+import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -261,6 +262,7 @@ function Toast({
 // ─── Main Page Component ────────────────────────────────────────────────────
 
 export function SkillsMatrixPage() {
+  usePageTitle('Skills Matrix');
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const roles = user?.roles ?? [];
@@ -878,7 +880,7 @@ export function SkillsMatrixPage() {
                                   heatmapColor(rating)
                                 )}
                               >
-                                {rating.toFixed(1)}
+                                {(rating ?? 0).toFixed(1)}
                               </span>
                             ) : (
                               <span className="text-secondary-300 dark:text-secondary-600 text-xs">
@@ -913,7 +915,7 @@ export function SkillsMatrixPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { label: 'Total Skills Tracked', value: totalSkillsTracked, color: 'text-primary-600 dark:text-primary-400' },
-              { label: 'Avg Skill Level', value: avgSkillLevel.toFixed(1), color: 'text-emerald-600 dark:text-emerald-400' },
+              { label: 'Avg Skill Level', value: (avgSkillLevel ?? 0).toFixed(1), color: 'text-emerald-600 dark:text-emerald-400' },
               { label: 'Critical Gaps', value: criticalGaps, color: 'text-red-600 dark:text-red-400' },
               { label: 'Improvement Rate', value: `${improvementRate}%`, color: 'text-violet-600 dark:text-violet-400' },
             ].map((card) => (
@@ -965,10 +967,10 @@ export function SkillsMatrixPage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">
-                        <span>Avg: {gap.avgRating.toFixed(1)}</span>
+                        <span>Avg: {(gap.avgRating ?? 0).toFixed(1)}</span>
                         <span>Target: {gap.targetLevel}</span>
                         <span className="font-semibold text-red-600 dark:text-red-400">
-                          Gap: {gap.gap.toFixed(1)}
+                          Gap: {(gap.gap ?? 0).toFixed(1)}
                         </span>
                         <span>{gap.employeesAffected} affected</span>
                       </div>
@@ -1034,7 +1036,7 @@ export function SkillsMatrixPage() {
                                 )}
                                 title={`${cell.count} assessments`}
                               >
-                                {cell.avgRating.toFixed(1)}
+                                {(cell.avgRating ?? 0).toFixed(1)}
                               </span>
                             ) : (
                               <span className="text-secondary-300 dark:text-secondary-600 text-xs">

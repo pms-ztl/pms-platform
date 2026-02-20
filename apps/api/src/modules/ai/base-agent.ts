@@ -11,8 +11,30 @@
 import { prisma } from '@pms/database';
 
 import { logger, auditLogger } from '../../utils/logger';
-import { llmClient, type LLMMessage, type LLMResponse } from './llm-client';
+import { isSuperAdmin, isAdmin, isManager, isEmployeeOnly } from '../../utils/roles';
+import { llmClient, type LLMMessage, type LLMResponse, type LLMProvider } from './llm-client';
 import { agentMemory } from './agent-memory';
+
+// ── Role Category (for RBAC) ─────────────────────────────
+export type RoleCategory = 'super_admin' | 'admin' | 'manager' | 'employee';
+
+export function resolveRoleCategory(roles: string[]): RoleCategory {
+  if (isSuperAdmin(roles)) return 'super_admin';
+  if (isAdmin(roles)) return 'admin';
+  if (isManager(roles)) return 'manager';
+  return 'employee';
+}
+
+// ── Model Tier Presets ───────────────────────────────────
+
+export const MODEL_TIERS = {
+  /** Economy: Gemini Flash — fast, cheap, good for advisory agents */
+  economy: { model: 'gemini-2.0-flash', provider: 'gemini' as LLMProvider },
+  /** Standard: Uses primary provider (Claude Sonnet) — balanced */
+  standard: {},
+  /** Premium: Claude Sonnet — complex reasoning, sensitive topics */
+  premium: { model: 'claude-sonnet-4-20250514', provider: 'anthropic' as LLMProvider },
+} as const;
 
 // ── Types ──────────────────────────────────────────────────
 
@@ -20,6 +42,8 @@ export interface AgentContext {
   tenantId: string;
   userId: string;
   userRoles: string[];
+  /** Resolved RBAC tier: super_admin > admin > manager > employee */
+  roleCategory: RoleCategory;
   userName: string;
   tenantName: string;
   userLevel?: number;
@@ -109,12 +133,15 @@ export abstract class BaseAgent {
         }
       }
 
-      // 4. REASON — call LLM
+      // 4. REASON — call LLM (merge per-agent model tier options)
+      const agentLLMOpts = this.getLLMOptions();
       const llmResponse = await llmClient.chat(messages, {
         tenantId,
-        maxTokens: 2048,
-        temperature: 0.3,
+        maxTokens: agentLLMOpts.maxTokens ?? 2048,
+        temperature: agentLLMOpts.temperature ?? 0.3,
         noCache: true, // Don't cache conversation responses
+        ...(agentLLMOpts.model ? { model: agentLLMOpts.model } : {}),
+        ...(agentLLMOpts.provider ? { provider: agentLLMOpts.provider } : {}),
       });
 
       // 5. ACT — store response and return
@@ -201,10 +228,13 @@ export abstract class BaseAgent {
       }),
     ]);
 
+    const roles = user?.userRoles.map((ur) => ur.role.name) ?? [];
+
     return {
       tenantId,
       userId,
-      userRoles: user?.userRoles.map((ur) => ur.role.name) ?? [],
+      userRoles: roles,
+      roleCategory: resolveRoleCategory(roles),
       userName: user ? `${user.firstName} ${user.lastName}` : 'Unknown User',
       tenantName: tenant?.name ?? 'Unknown Tenant',
       userLevel: user?.level ?? undefined,
@@ -213,25 +243,132 @@ export abstract class BaseAgent {
   }
 
   /**
-   * Build the system message with context injection.
+   * Build the system message with context injection and RBAC enforcement.
    */
   protected buildSystemMessage(context: AgentContext): string {
+    const rbacBlock = this.buildRBACBlock(context);
+
     return `${this.systemPrompt}
 
 == User Context ==
 User: ${context.userName}
-Roles: ${context.userRoles.join(', ')}
+Role: ${context.roleCategory.toUpperCase()} (${context.userRoles.join(', ')})
 Company: ${context.tenantName}
 ${context.userLevel ? `Level: L${context.userLevel}` : ''}
 
-== Rules ==
+== General Rules ==
 - You are an AI assistant for the PMS (Performance Management System) platform.
 - Always respond helpfully and professionally.
 - Only discuss data relevant to this user's tenant (company: ${context.tenantName}).
 - Never reveal data from other companies/tenants.
 - If you don't have enough data to answer, say so clearly.
 - Format responses with markdown for readability.
-- Keep responses concise but informative.`;
+- Keep responses concise but informative.
+
+${rbacBlock}`;
+  }
+
+  /**
+   * Build role-specific access rules that the LLM MUST follow.
+   */
+  private buildRBACBlock(context: AgentContext): string {
+    switch (context.roleCategory) {
+      case 'super_admin':
+        return `== Access Level: SUPER ADMIN ==
+You have full platform access. You may discuss:
+- All tenant data, cross-tenant comparisons, platform-wide metrics
+- License counts, subscription plans, billing, revenue data
+- Security audit logs, failed login attempts, threat analysis
+- All employee data across the organization
+- System configuration, infrastructure status`;
+
+      case 'admin':
+        return `== Access Level: TENANT ADMIN ==
+You have full access within this tenant. You may discuss:
+- All employee data within ${context.tenantName}
+- License usage, seat counts, subscription status for this tenant
+- Audit logs, security events for this tenant
+- Department-level and company-wide analytics
+- User management, role assignments, settings
+
+You MUST NOT:
+- Reveal data from other tenants
+- Discuss platform-wide revenue or billing details (super admin only)`;
+
+      case 'manager':
+        return `== Access Level: MANAGER / HR ==
+You have team-level and departmental access. You may discuss:
+- Performance data for the user's direct reports and team members
+- Team-level analytics, department-level aggregates
+- Goal progress and review status for the user's team
+- Coaching recommendations for team members
+- General company announcements and policies
+
+You MUST NOT reveal or discuss:
+- License counts, seat limits, subscription plans, or billing — say "This information is restricted to administrators"
+- Security audit logs, failed logins, threat data — say "Security data requires admin access"
+- Other managers' team data or individual data outside the user's scope
+- Salary, compensation, or financial details of individuals (unless this is an HR role)
+- Platform-wide or cross-tenant data`;
+
+      case 'employee':
+      default:
+        return `== Access Level: EMPLOYEE ==
+This user is a regular employee. You may ONLY discuss:
+- The user's OWN performance reviews, goals, and feedback
+- The user's OWN career development, skills, and learning paths
+- General company policies, announcements, and public information
+- Self-improvement tips, coaching advice, and wellness guidance
+- Public team/department information (names, structure) but NOT individual performance of peers
+
+You MUST NOT reveal or discuss — politely decline with a brief explanation:
+- License counts, seat limits, subscription status — say "License information is only available to administrators."
+- Any other employee's performance data, ratings, or reviews — say "I can only share your own performance data."
+- Security logs, audit trails, login attempts — say "Security information requires admin access."
+- Workforce analytics, attrition risks, burnout scores of others — say "Workforce analytics are available to managers and above."
+- Team-level performance rankings or comparisons between employees — say "I can only discuss your individual performance."
+- Revenue, billing, financial data — say "Financial data is restricted to administrators."
+- Salary or compensation data of any employee (including their own unless provided in context)
+
+When in doubt, err on the side of caution and restrict access. Always be polite when declining.`;
+    }
+  }
+
+  /**
+   * Override in subclasses to declare model tier / LLM options.
+   * Merged into the llmClient.chat() call — allows agents to use
+   * economy (gemini-flash), standard (primary), or premium (claude) tiers.
+   *
+   * Example: `return MODEL_TIERS.economy;`
+   */
+  protected getLLMOptions(): { maxTokens?: number; temperature?: number; model?: string; provider?: LLMProvider } {
+    return {}; // defaults — uses primary provider chain
+  }
+
+  // ── RBAC Guard Helpers ─────────────────────────────────
+  // Call these inside gatherAgentData() to enforce access at the data layer.
+
+  /**
+   * Require admin (or super admin) access. Returns accessDenied payload for non-admins.
+   */
+  protected requireAdmin(context: AgentContext, featureLabel: string): Record<string, unknown> | null {
+    if (isAdmin(context.userRoles)) return null; // OK
+    return {
+      accessDenied: true,
+      message: `${featureLabel} is restricted to administrators. Please contact your admin for access.`,
+    };
+  }
+
+  /**
+   * Require manager+ (manager, HR, admin, super admin) access.
+   * Returns accessDenied payload for employees.
+   */
+  protected requireManager(context: AgentContext, featureLabel: string): Record<string, unknown> | null {
+    if (isManager(context.userRoles)) return null; // OK
+    return {
+      accessDenied: true,
+      message: `${featureLabel} is available to managers and above. As an employee, you can ask about your own performance and career development.`,
+    };
   }
 
   /**

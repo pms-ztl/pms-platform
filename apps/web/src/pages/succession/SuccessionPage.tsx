@@ -467,11 +467,11 @@ export function SuccessionPage() {
                     <div className="flex items-center gap-4 shrink-0">
                       <div className="text-center">
                         <p className="text-xs text-secondary-500 dark:text-secondary-400">Performance</p>
-                        <p className="text-sm font-bold text-secondary-900 dark:text-white">{emp.performanceScore.toFixed(1)}</p>
+                        <p className="text-sm font-bold text-secondary-900 dark:text-white">{(emp.performanceScore ?? 0).toFixed(1)}</p>
                       </div>
                       <div className="text-center">
                         <p className="text-xs text-secondary-500 dark:text-secondary-400">Potential</p>
-                        <p className="text-sm font-bold text-secondary-900 dark:text-white">{emp.potentialScore.toFixed(1)}</p>
+                        <p className="text-sm font-bold text-secondary-900 dark:text-white">{(emp.potentialScore ?? 0).toFixed(1)}</p>
                       </div>
                     </div>
                   </div>
