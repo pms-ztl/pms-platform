@@ -110,7 +110,7 @@
   html {
     @apply antialiased scroll-smooth;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-    font-size: 115%;
+    font-size: 125%;
   }
 
   /* Legacy class — no longer needed since html is already at 125% */
