@@ -39,8 +39,8 @@ export function PerformanceDistribution({ members, className }: PerformanceDistr
   const chartData = useMemo(
     () => [...members].sort((a, b) => b.score - a.score).map((m) => ({
       ...m,
-      shortName: m.name.split(' ').map((n) => n[0]).join(''),
-      displayName: m.name.length > 15 ? m.name.slice(0, 12) + '...' : m.name,
+      shortName: (m.name ?? '').split(' ').map((n) => n[0]).join(''),
+      displayName: (m.name ?? '').length > 15 ? (m.name ?? '').slice(0, 12) + '...' : (m.name ?? '—'),
     })),
     [members]
   );

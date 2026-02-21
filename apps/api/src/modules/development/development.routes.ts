@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/authenticate';
-import { authorize } from '../../middleware/authorize';
+import { authorize, requireRoles } from '../../middleware/authorize';
 import { developmentController } from './development.controller';
 
 const router = Router();
@@ -11,7 +11,11 @@ router.use(authenticate);
 router.post('/plans', (req, res, next) => developmentController.createPlan(req, res, next));
 router.get('/plans', (req, res, next) => developmentController.listPlans(req, res, next));
 router.get('/plans/team',
-  authorize({ resource: 'development', action: 'read', scope: 'team' }),
+  authorize(
+    { resource: 'development', action: 'read', scope: 'team' },
+    { resource: 'development', action: 'read', scope: 'all' },
+    { roles: ['HR Admin', 'HR_ADMIN', 'Tenant Admin', 'TENANT_ADMIN', 'Manager', 'MANAGER'] }
+  ),
   (req, res, next) => developmentController.getTeamPlans(req, res, next)
 );
 router.get('/plans/:id', (req, res, next) => developmentController.getPlanById(req, res, next));

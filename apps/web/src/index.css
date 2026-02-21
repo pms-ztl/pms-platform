@@ -2428,3 +2428,64 @@ html.transitioning *::after {
   animation-iteration-count: 1 !important;
   transition-duration: 0.001ms !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Super Admin Gradient Background — animated flowing gradient for all themes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes sa-gradient-flow {
+  0%   { background-position: 0% 50%;   }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%;   }
+}
+
+/* Light theme — soft lavender, rose, sky, mint */
+.sa-gradient-bg {
+  background: linear-gradient(
+    -45deg,
+    #eef2ff,
+    #dbeafe,
+    #fce7f3,
+    #ede9fe,
+    #e0f2fe,
+    #f0fdf4
+  );
+  background-size: 400% 400%;
+  animation: sa-gradient-flow 14s ease infinite;
+}
+
+/* Dark theme — vivid purple → electric blue → deep teal */
+.dark:not(.deep-dark) .sa-gradient-bg {
+  background: linear-gradient(
+    -45deg,
+    #3b0764,
+    #1e3a8a,
+    #0f4c75,
+    #4a1060,
+    #1a3a6b,
+    #2e0854
+  );
+  background-size: 400% 400%;
+  animation: sa-gradient-flow 12s ease infinite;
+}
+
+/* Abyss / deep-dark — black with electric cyan & deep violet pulses */
+.dark.deep-dark .sa-gradient-bg {
+  background: linear-gradient(
+    -45deg,
+    #000000,
+    #0c1a2e,
+    #001a0d,
+    #140026,
+    #001c1c,
+    #000000
+  );
+  background-size: 400% 400%;
+  animation: sa-gradient-flow 9s ease infinite;
+}
+
+/* Glassmorphism card used in SA Dashboard */
+.sa-glass-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}

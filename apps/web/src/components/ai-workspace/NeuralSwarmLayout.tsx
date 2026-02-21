@@ -165,7 +165,7 @@ export function NeuralSwarmLayout() {
 
   return (
     <div
-      className={`relative flex h-screen w-full flex-col ${T.bg(theme)} overflow-hidden`}
+      className={`fixed inset-0 z-[200] flex flex-col ${T.bg(theme)} overflow-hidden`}
     >
       {/* Particle background layer */}
       <ParticleBackground />

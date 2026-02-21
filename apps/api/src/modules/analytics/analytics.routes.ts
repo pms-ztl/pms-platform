@@ -55,6 +55,20 @@ router.get(
   analyticsController.getNormalizationAnalysis
 );
 
+// Rating distribution summary (HR analytics alias)
+router.get(
+  '/ratings',
+  authorize({ roles: ['HR_ADMIN', 'ADMIN'] }),
+  analyticsController.getRatingDistribution
+);
+
+// Department-level metrics (HR analytics alias)
+router.get(
+  '/departments',
+  authorize({ roles: ['HR_ADMIN', 'ADMIN'] }),
+  analyticsController.getDepartmentMetrics
+);
+
 // Review cycle stats
 router.get('/cycle/:cycleId/stats', analyticsController.getCycleStats);
 

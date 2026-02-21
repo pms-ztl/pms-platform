@@ -9,6 +9,13 @@ const router = Router();
 // All routes require authentication
 router.use(authenticate);
 
+// Index route — returns sessions list as the primary entry point
+router.get(
+  '/',
+  requireRoles('HR Admin', 'HR Business Partner', 'Manager', 'Tenant Admin'),
+  (req, res, next) => calibrationController.listSessions(req, res, next)
+);
+
 // Session management (HR Admin or HR BP)
 router.post(
   '/sessions',

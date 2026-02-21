@@ -99,8 +99,8 @@ function SkillGapRadar({ userId }: SkillGapRadarProps) {
       {topGaps.length > 0 && (
         <div className="mt-3 space-y-1.5">
           <p className="text-[11px] font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Top Gaps</p>
-          {topGaps.map((g) => (
-            <div key={g.skillId} className="flex items-center justify-between text-xs">
+          {topGaps.map((g, i) => (
+            <div key={g.skillId ?? g.skillName ?? i} className="flex items-center justify-between text-xs">
               <span className="text-secondary-700 dark:text-secondary-300 truncate max-w-[60%]">{g.skillName}</span>
               <Badge variant={g.gap >= 2 ? 'danger' : g.gap >= 1 ? 'warning' : 'info'} size="sm">
                 Gap: {g.gap}

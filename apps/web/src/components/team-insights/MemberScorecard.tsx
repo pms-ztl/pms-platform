@@ -53,7 +53,7 @@ export function MemberScorecard({ members, atRiskEmployees, className }: MemberS
     return [...members].sort((a, b) => {
       const dir = sortDir === 'asc' ? 1 : -1;
       switch (sortField) {
-        case 'name': return dir * a.name.localeCompare(b.name);
+        case 'name': return dir * (a.name ?? '').localeCompare(b.name ?? '');
         case 'score': return dir * (a.score - b.score);
         case 'risk': {
           const riskOrder: Record<string, number> = { HIGH: 3, MEDIUM: 2, LOW: 1 };
@@ -145,9 +145,9 @@ export function MemberScorecard({ members, atRiskEmployees, className }: MemberS
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                        {member.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                        {(member.name ?? '').split(' ').map((n) => n[0]).join('').slice(0, 2) || '?'}
                       </div>
-                      <p className="text-sm font-medium text-secondary-900 dark:text-white">{member.name}</p>
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white">{member.name ?? '—'}</p>
                     </div>
                   </td>
                   <td className="px-6 py-3">

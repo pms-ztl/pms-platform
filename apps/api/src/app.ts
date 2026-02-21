@@ -58,6 +58,7 @@ import { actionableInsightsRoutes } from './modules/actionable-insights';
 import { aiInsightsRoutes } from './modules/ai-insights';
 import { checkinsRoutes } from './modules/checkins';
 import { teamsRoutes } from './modules/teams';
+import { simulatorRoutes } from './modules/simulator';
 import { prisma } from '@pms/database';
 import { getRedisClient } from './utils/redis';
 import { logger } from './utils/logger';
@@ -232,6 +233,7 @@ export function createApp(): Express {
   apiRouter.use('/ai-insights', standardRateLimiter, aiInsightsRoutes);
   apiRouter.use('/checkins', standardRateLimiter, checkinsRoutes);
   apiRouter.use('/teams', standardRateLimiter, teamsRoutes);
+  apiRouter.use('/simulator', standardRateLimiter, simulatorRoutes);
 
   // Alias: /conversations → /chat/conversations (some frontend pages use the wrong prefix)
   apiRouter.use('/conversations', standardRateLimiter, chatRoutes);

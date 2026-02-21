@@ -271,6 +271,41 @@ export class AnalyticsController {
       next(error);
     }
   }
+  /**
+   * GET /api/v1/analytics/ratings
+   * Rating distribution summary (alias for performance-distribution with richer labels)
+   */
+  async getRatingDistribution(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { tenantId } = req.user!;
+      const distribution = await analyticsService.getPerformanceDistribution(tenantId, undefined);
+      // Map to labelled format for HR analytics consumers
+      const labelled = distribution.map((d: { rating: number; count: number; percentage: number }) => ({
+        rating: d.rating,
+        label: ['', 'Needs Improvement', 'Below Expectations', 'Meets Expectations', 'Exceeds Expectations', 'Outstanding'][d.rating] ?? String(d.rating),
+        count: d.count,
+        percentage: d.percentage,
+      }));
+      res.json({ success: true, data: labelled });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /api/v1/analytics/departments
+   * Department-level performance metrics (HR admin only)
+   */
+  async getDepartmentMetrics(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { tenantId } = req.user!;
+      // Re-use team-performance data and reshape by department
+      const teamPerf = await analyticsService.getTeamPerformance(tenantId);
+      res.json({ success: true, data: teamPerf });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const analyticsController = new AnalyticsController();

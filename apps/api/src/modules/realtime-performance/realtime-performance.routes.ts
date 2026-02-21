@@ -13,6 +13,9 @@ const router = Router();
 // All routes require authentication
 router.use(authenticate);
 
+// Index route — returns current snapshot as the primary entry point
+router.get('/', (req, res) => realtimePerformanceController.getCurrentSnapshot(req, res));
+
 // ==========================================================================
 // Feature 1: Hourly Performance Tracker
 // ==========================================================================

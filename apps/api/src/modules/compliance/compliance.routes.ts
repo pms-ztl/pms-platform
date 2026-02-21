@@ -30,4 +30,13 @@ router.put('/violations/:id', authorize({ resource: 'compliance', action: 'updat
 // User compliance
 router.get('/user/:userId', (req, res, next) => complianceController.getUserCompliance(req as AuthenticatedRequest, res, next));
 
+// Reviews
+router.get('/reviews', (req, res, next) => complianceController.listReviews(req as AuthenticatedRequest, res, next));
+router.post('/reviews', (req, res, next) => complianceController.createReview(req as AuthenticatedRequest, res, next));
+router.put('/reviews/:id', (req, res, next) => complianceController.updateReview(req as AuthenticatedRequest, res, next));
+router.post('/reviews/:id/complete', (req, res, next) => complianceController.completeReview(req as AuthenticatedRequest, res, next));
+
+// Deadlines
+router.get('/deadlines', (req, res, next) => complianceController.listDeadlines(req as AuthenticatedRequest, res, next));
+
 export { router as complianceRoutes };

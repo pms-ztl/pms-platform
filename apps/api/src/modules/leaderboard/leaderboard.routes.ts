@@ -7,6 +7,9 @@ const controller = new LeaderboardController();
 
 router.use(authenticate);
 
+// Index route — returns the performance leaderboard (most common use case)
+router.get('/', controller.getPerformanceLeaderboard.bind(controller));
+
 router.get('/performance', controller.getPerformanceLeaderboard.bind(controller));
 router.get('/goals', controller.getGoalsLeaderboard.bind(controller));
 router.get('/recognition', controller.getRecognitionLeaderboard.bind(controller));

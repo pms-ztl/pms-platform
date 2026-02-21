@@ -108,7 +108,7 @@ function DashboardSkeleton() {
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6"
+            className="sa-glass-card bg-white/75 dark:bg-secondary-900/55 rounded-xl border border-white/50 dark:border-white/10 p-6"
           >
             <div className="animate-pulse space-y-3">
               <div className="flex items-center gap-3">
@@ -127,7 +127,7 @@ function DashboardSkeleton() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6"
+            className="sa-glass-card bg-white/75 dark:bg-secondary-900/55 rounded-xl border border-white/50 dark:border-white/10 p-6"
           >
             <div className="animate-pulse space-y-4">
               <div className="h-5 w-40 bg-secondary-200 dark:bg-secondary-700 rounded" />
@@ -297,7 +297,7 @@ export function SADashboardPage() {
           return (
             <div
               key={card.label}
-              className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 hover:shadow-md transition-shadow"
+              className="sa-glass-card bg-white/75 dark:bg-secondary-900/55 rounded-xl border border-white/50 dark:border-white/10 p-6 hover:shadow-lg hover:bg-white/85 dark:hover:bg-secondary-900/65 transition-all duration-300"
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className={`p-2.5 rounded-lg ${card.bgColor}`}>
@@ -323,8 +323,8 @@ export function SADashboardPage() {
       {/* Bottom grid: Plan Distribution | System Health | Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Tenant Distribution by Plan */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="sa-glass-card bg-white/75 dark:bg-secondary-900/55 rounded-xl border border-white/50 dark:border-white/10">
+          <div className="px-6 py-4 border-b border-secondary-200/50 dark:border-white/10">
             <div className="flex items-center gap-2">
               <ChartBarIcon className="h-5 w-5 text-secondary-500" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -382,8 +382,8 @@ export function SADashboardPage() {
         </div>
 
         {/* System Health */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="sa-glass-card bg-white/75 dark:bg-secondary-900/55 rounded-xl border border-white/50 dark:border-white/10">
+          <div className="px-6 py-4 border-b border-secondary-200/50 dark:border-white/10">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ServerStackIcon className="h-5 w-5 text-secondary-500" />
@@ -434,8 +434,8 @@ export function SADashboardPage() {
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="sa-glass-card bg-white/75 dark:bg-secondary-900/55 rounded-xl border border-white/50 dark:border-white/10">
+          <div className="px-6 py-4 border-b border-secondary-200/50 dark:border-white/10">
             <div className="flex items-center gap-2">
               <SignalIcon className="h-5 w-5 text-secondary-500" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">

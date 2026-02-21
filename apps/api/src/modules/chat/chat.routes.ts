@@ -6,12 +6,14 @@ import * as ctrl from './chat.controller';
 const router = Router();
 router.use(authenticate);
 
-// Conversations
+// Conversations — specific named routes MUST come before parameterized /:conversationId
+// to prevent Express matching 'direct', 'group', 'team-channel' as UUIDs
 router.get('/conversations', ctrl.listConversations);
-router.get('/conversations/:conversationId', ctrl.getConversation);
 router.post('/conversations/direct', ctrl.getOrCreateDirect);
 router.post('/conversations/group', ctrl.createGroup);
 router.post('/conversations/team-channel', ctrl.createTeamChannel);
+// Parameterized routes after all named ones
+router.get('/conversations/:conversationId', ctrl.getConversation);
 router.post('/conversations/:conversationId/participants', ctrl.addParticipants);
 router.post('/conversations/:conversationId/leave', ctrl.leaveConversation);
 router.put('/conversations/:conversationId/name', ctrl.renameConversation);

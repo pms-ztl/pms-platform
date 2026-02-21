@@ -86,6 +86,15 @@ router.put(
   (req, res, next) => usersController.updateAiDelegation(req, res, next)
 );
 
+// Get current authenticated user's profile (prevents "me" being treated as UUID in /:id)
+router.get(
+  '/me',
+  (req: any, res, next) => {
+    req.params.id = req.user!.id;
+    return usersController.getById(req, res, next);
+  }
+);
+
 // Avatar upload for current user
 router.post(
   '/me/avatar',

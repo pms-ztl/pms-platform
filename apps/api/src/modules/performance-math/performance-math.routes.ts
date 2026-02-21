@@ -7,6 +7,20 @@ const controller = new PerformanceMathController();
 
 router.use(authenticate);
 
+// /me shortcuts — must be before /:userId to prevent "me" being passed as UUID to Prisma
+router.get('/score/me', (req: any, res, next) => {
+  req.params.userId = req.user!.id;
+  return controller.getUserPerformanceScore.bind(controller)(req, res, next);
+});
+router.get('/cpis/me', (req: any, res, next) => {
+  req.params.userId = req.user!.id;
+  return controller.getCPIS.bind(controller)(req, res, next);
+});
+router.get('/team/me', (req: any, res, next) => {
+  req.params.managerId = req.user!.id;
+  return controller.getTeamAnalytics.bind(controller)(req, res, next);
+});
+
 // GET /api/v1/performance-math/score/:userId - Get computed performance score for a user
 router.get('/score/:userId', controller.getUserPerformanceScore.bind(controller));
 

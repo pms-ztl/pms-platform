@@ -50,7 +50,6 @@ export function DashboardPage() {
   usePageTitle('Dashboard');
   const { user } = useAuthStore();
   const { isAiMode } = useAIWorkspaceStore();
-  const hasAiAccess = user?.aiAccessEnabled === true;
 
   // ── Onboarding Wizard ──────────────────────────────────────────────────
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -65,8 +64,9 @@ export function DashboardPage() {
     } catch { /* localStorage unavailable */ }
   }, [user]);
 
-  // If AI workspace mode is active and user has access, render the immersive AI workspace
-  if (isAiMode && hasAiAccess) {
+  // If AI workspace mode is active, render the immersive AI workspace
+  // (API endpoints are protected server-side; no client-side gate needed)
+  if (isAiMode) {
     return <AIWorkspacePage />;
   }
 

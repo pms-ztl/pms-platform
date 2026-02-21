@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/authenticate';
-import { authorize } from '../../middleware/authorize';
+import { authorize, requireRoles } from '../../middleware/authorize';
 import { skillsController } from './skills.controller';
 import type { AuthenticatedRequest } from '../../types';
 
@@ -21,12 +21,32 @@ router.post('/assessments/request', (req, res, next) => skillsController.request
 router.put('/assessments/:id', (req, res, next) => skillsController.updateAssessment(req as AuthenticatedRequest, res, next));
 router.post('/assessments/:id/progress', (req, res, next) => skillsController.addProgressEntry(req as AuthenticatedRequest, res, next));
 
-// Skill Matrix
+// Skill Matrix — /me shortcut must come before /:userId
+router.get('/matrix/me', (req: any, res, next) => {
+  req.params.userId = req.user!.id;
+  return skillsController.getUserSkillMatrix(req as AuthenticatedRequest, res, next);
+});
 router.get('/matrix/user/:userId', (req, res, next) => skillsController.getUserSkillMatrix(req as AuthenticatedRequest, res, next));
-router.get('/matrix/team', authorize({ resource: 'skills', action: 'read', scope: 'team' }), (req, res, next) => skillsController.getTeamSkillMatrix(req as AuthenticatedRequest, res, next));
+router.get('/matrix/team',
+  authorize(
+    { resource: 'skills', action: 'read', scope: 'team' },
+    { resource: 'skills', action: 'read', scope: 'all' },
+    { roles: ['HR Admin', 'HR_ADMIN', 'Tenant Admin', 'TENANT_ADMIN', 'Manager', 'MANAGER'] }
+  ),
+  (req, res, next) => skillsController.getTeamSkillMatrix(req as AuthenticatedRequest, res, next));
 
 // Analytics
-router.get('/gaps', authorize({ resource: 'skills', action: 'read', scope: 'all' }), (req, res, next) => skillsController.getSkillGaps(req as AuthenticatedRequest, res, next));
-router.get('/heatmap', authorize({ resource: 'skills', action: 'read', scope: 'all' }), (req, res, next) => skillsController.getOrgSkillHeatmap(req as AuthenticatedRequest, res, next));
+router.get('/gaps',
+  authorize(
+    { resource: 'skills', action: 'read', scope: 'all' },
+    { roles: ['HR Admin', 'HR_ADMIN', 'Tenant Admin', 'TENANT_ADMIN'] }
+  ),
+  (req, res, next) => skillsController.getSkillGaps(req as AuthenticatedRequest, res, next));
+router.get('/heatmap',
+  authorize(
+    { resource: 'skills', action: 'read', scope: 'all' },
+    { roles: ['HR Admin', 'HR_ADMIN', 'Tenant Admin', 'TENANT_ADMIN'] }
+  ),
+  (req, res, next) => skillsController.getOrgSkillHeatmap(req as AuthenticatedRequest, res, next));
 
 export { router as skillsRoutes };

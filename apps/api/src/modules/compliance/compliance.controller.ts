@@ -195,6 +195,94 @@ class ComplianceController {
     } catch (error) { next(error); }
   }
 
+  // Reviews (assessments exposed as compliance reviews)
+  async listReviews(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+      const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 10;
+      const data = await complianceService.listAssessments(req.tenantId!, { page, limit });
+      const reviews = (data.data as any[]).map((a: any) => ({
+        id: a.id,
+        employeeId: a.userId,
+        employee: a.user ? { id: a.user.id, firstName: a.user.firstName, lastName: a.user.lastName, jobTitle: a.user.jobTitle } : undefined,
+        type: a.assessmentType ?? 'COMPLIANCE_REVIEW',
+        status: a.status ?? 'PENDING',
+        deadline: a.dueDate ?? a.createdAt,
+        reviewer: a.assessor ? { id: a.assessor.id, firstName: a.assessor.firstName, lastName: a.assessor.lastName } : undefined,
+        reviewerId: a.assessorId,
+        notes: a.recommendations,
+        priority: a.riskLevel ?? 'MEDIUM',
+        completedAt: a.completedDate,
+        createdAt: a.createdAt,
+        updatedAt: a.updatedAt,
+      }));
+      res.json({ success: true, data: reviews, meta: data.meta });
+    } catch (error) { next(error); }
+  }
+
+  async createReview(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const assessment = await complianceService.createAssessment(req.tenantId!, {
+        userId: req.body.employeeId,
+        assessorId: req.body.reviewerId,
+        assessmentType: req.body.type ?? 'COMPLIANCE_REVIEW',
+        status: req.body.status ?? 'PENDING',
+        dueDate: req.body.deadline,
+        recommendations: req.body.notes,
+        riskLevel: req.body.priority,
+      } as any);
+      res.status(201).json({ success: true, data: assessment });
+    } catch (error) { next(error); }
+  }
+
+  async updateReview(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const assessment = await complianceService.updateAssessment(req.tenantId!, req.params.id, {
+        status: req.body.status,
+        dueDate: req.body.deadline,
+        recommendations: req.body.notes,
+        riskLevel: req.body.priority,
+      } as any);
+      res.json({ success: true, data: assessment });
+    } catch (error) { next(error); }
+  }
+
+  async completeReview(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const assessment = await complianceService.updateAssessment(req.tenantId!, req.params.id, {
+        status: 'COMPLIANT',
+        completedDate: new Date().toISOString(),
+      } as any);
+      res.json({ success: true, data: assessment });
+    } catch (error) { next(error); }
+  }
+
+  // Deadlines (upcoming pending assessments)
+  async listDeadlines(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const data = await complianceService.listAssessments(req.tenantId!, {
+        status: 'PENDING',
+        dueDateFrom: new Date().toISOString(),
+        limit: 20,
+      });
+      const now = Date.now();
+      const deadlines = (data.data as any[]).map((a: any) => {
+        const deadline = a.dueDate ? new Date(a.dueDate) : new Date(now + 7 * 24 * 60 * 60 * 1000);
+        const daysRemaining = Math.ceil((deadline.getTime() - now) / (1000 * 60 * 60 * 24));
+        return {
+          id: a.id,
+          title: `${a.assessmentType ?? 'Compliance Review'}${a.user ? ` — ${a.user.firstName ?? ''} ${a.user.lastName ?? ''}`.trimEnd() : ''}`,
+          type: a.assessmentType ?? 'REVIEW',
+          deadline: deadline.toISOString(),
+          employee: a.user ? { id: a.user.id, firstName: a.user.firstName, lastName: a.user.lastName } : undefined,
+          status: a.status ?? 'PENDING',
+          daysRemaining,
+        };
+      });
+      res.json({ success: true, data: deadlines });
+    } catch (error) { next(error); }
+  }
+
   // User Compliance
   async getUserCompliance(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
