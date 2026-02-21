@@ -22,32 +22,41 @@
 
 ---
 
-## ⚡ Quick Start (3 Commands)
+## ⚡ Quick Start
 
 > **Prerequisites:** [Node.js 18+](https://nodejs.org/), [Docker Desktop](https://www.docker.com/products/docker-desktop/), [Git](https://git-scm.com/)
 
+### First Time (2 commands)
+
 ```bash
-# 1. Clone & install
-git clone https://github.com/agdanish/pms-platform.git
-cd pms-platform
-npm install
+# 1. Clone, install & setup everything
+git clone https://github.com/agdanish/pms-platform.git && cd pms-platform && npm install && npm run setup
 
-# 2. Start databases & setup
-docker compose up -d db redis
-npm run setup
-
-# 3. Run the platform
-npm run dev
+# 2. Start the platform
+npm start
 ```
 
-Then open **http://localhost:3002** and log in:
+### Every Day After That (1 command)
+
+```bash
+npm start
+```
+
+Open **http://localhost:3002** and log in:
 
 | Account | Email | Password |
 |---------|-------|----------|
-| Super Admin | `admin@pms-platform.com` | `admin123` |
-| Demo Admin | `admin@demo.com` | `demo123` |
+| HR Admin | `agdanishr@gmail.com` | `TestPass@123` |
+| Platform Admin | `admin@pms-platform.com` | `TestPass@123` |
 
-> **Super Admin** has platform-wide access across all tenants. **Demo Admin** is a tenant admin for the Demo Company.
+> `npm start` automatically boots Docker (PostgreSQL + Redis), the API with hot-reload, and the web app with HMR — all in one command.
+
+| Service | URL |
+|---------|-----|
+| Web App | http://localhost:3002 |
+| API | http://localhost:3001 |
+| PostgreSQL | localhost:5433 |
+| Redis | localhost:6379 |
 
 ---
 
@@ -275,8 +284,9 @@ pms-platform/
 
 | Command | Description |
 |---------|-------------|
-| `npm run setup` | Bootstrap env files + generate Prisma + push schema + seed DB |
-| `npm run dev` | Start API + Web app in development mode |
+| `npm start` | **Start everything** — Docker (DB+Redis) + API + Web (daily use) |
+| `npm run setup` | First-time setup — Docker + .env files + DB migrations + seed |
+| `npm run dev` | Start API + Web dev servers (Docker must already be running) |
 | `npm run build` | Production build (all apps) |
 | `npm run db:generate` | Regenerate Prisma client |
 | `npm run db:push` | Push schema changes to database |
@@ -416,10 +426,32 @@ npm run build
 <details>
 <summary><strong>Docker containers won't start</strong></summary>
 
-Make sure Docker Desktop is running, then:
+Open Docker Desktop first and wait for it to fully start, then:
 ```bash
-docker compose down
-docker compose up -d db redis
+npm start
+```
+Or manually restart containers:
+```bash
+docker compose -f docker-compose.dev.yml down
+docker compose -f docker-compose.dev.yml up -d
+```
+</details>
+
+<details>
+<summary><strong>Port already in use (3001 or 3002)</strong></summary>
+
+```bash
+npx kill-port 3001 3002
+npm start
+```
+</details>
+
+<details>
+<summary><strong>Need to reset the database</strong></summary>
+
+```bash
+docker compose -f docker-compose.dev.yml down -v
+npm run setup
 ```
 </details>
 
