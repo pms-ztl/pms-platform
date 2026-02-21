@@ -18,6 +18,54 @@ import {
   UserIcon,
   ArrowLeftIcon,
   MagnifyingGlassIcon,
+  // Agent & cluster icons
+  AcademicCapIcon,
+  ArchiveBoxIcon,
+  ArrowsRightLeftIcon,
+  ArrowTrendingUpIcon,
+  BeakerIcon,
+  BellIcon,
+  BoltIcon,
+  BookOpenIcon,
+  BriefcaseIcon,
+  BuildingLibraryIcon,
+  CalendarDaysIcon,
+  ChartBarIcon,
+  ChatBubbleLeftRightIcon,
+  CheckBadgeIcon,
+  ClipboardDocumentListIcon,
+  ClockIcon,
+  CogIcon,
+  ComputerDesktopIcon,
+  CurrencyDollarIcon,
+  DocumentCheckIcon,
+  DocumentMagnifyingGlassIcon,
+  DocumentTextIcon,
+  ExclamationTriangleIcon,
+  EyeIcon,
+  FaceSmileIcon,
+  FireIcon,
+  GlobeAltIcon,
+  HandRaisedIcon,
+  HeartIcon,
+  HomeIcon,
+  IdentificationIcon,
+  KeyIcon,
+  LightBulbIcon,
+  LockClosedIcon,
+  MegaphoneIcon,
+  MicrophoneIcon,
+  MoonIcon,
+  PencilSquareIcon,
+  PresentationChartBarIcon,
+  ScaleIcon,
+  ShieldCheckIcon,
+  StarIcon,
+  SunIcon,
+  TableCellsIcon,
+  TrophyIcon,
+  UserGroupIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline';
 import { aiApi, type AIChatResponse } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
@@ -36,9 +84,13 @@ interface ChatMessage {
   suggestedActions?: AIChatResponse['suggestedActions'];
 }
 
+// Icon type — heroicons are ForwardRefExoticComponent; we use 'as IconComponent' to cast
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IconComponent = React.FC<any>;
+
 interface AgentDef {
   type: string;
-  icon: string;
+  icon: IconComponent;
   name: string;
   desc: string;
 }
@@ -46,7 +98,7 @@ interface AgentDef {
 interface ClusterDef {
   id: string;
   name: string;
-  icon: string;
+  icon: IconComponent;
   gradient: string;
   agents: AgentDef[];
 }
@@ -57,114 +109,114 @@ const AGENT_CLUSTERS: ClusterDef[] = [
   {
     id: 'core',
     name: 'Core',
-    icon: '\u2699\uFE0F',
+    icon: CogIcon,
     gradient: 'from-blue-500 to-indigo-500',
     agents: [
-      { type: 'performance', icon: '\uD83C\uDFAF', name: 'Performance', desc: 'Reviews & ratings' },
-      { type: 'nlp_query', icon: '\uD83D\uDD0D', name: 'Data Query', desc: 'Ask about data' },
-      { type: 'coaching', icon: '\uD83E\uDDD1\u200D\uD83C\uDFEB', name: 'Coaching', desc: 'Micro-coaching' },
-      { type: 'career', icon: '\uD83D\uDE80', name: 'Career', desc: 'Growth paths' },
-      { type: 'report', icon: '\uD83D\uDCCB', name: 'Reports', desc: 'Generate reports' },
-      { type: 'workforce_intel', icon: '\uD83E\uDDE0', name: 'Workforce', desc: 'Burnout & retention' },
-      { type: 'governance', icon: '\u2696\uFE0F', name: 'Governance', desc: 'Bias & fairness' },
-      { type: 'strategic_alignment', icon: '\uD83C\uDFAF', name: 'Strategy', desc: 'OKR alignment' },
-      { type: 'talent_marketplace', icon: '\uD83C\uDFEA', name: 'Talent Market', desc: 'Skill matching' },
-      { type: 'conflict_resolution', icon: '\uD83E\uDD1D', name: 'Conflict', desc: 'Team mediation' },
-      { type: 'security', icon: '\uD83D\uDD12', name: 'Security', desc: 'Audits & threats' },
-      { type: 'notification', icon: '\uD83D\uDD14', name: 'Notification', desc: 'Smart alerts' },
-      { type: 'onboarding', icon: '\uD83C\uDF93', name: 'Onboarding', desc: 'New hire setup' },
-      { type: 'license', icon: '\uD83D\uDD11', name: 'License', desc: 'Seats & billing' },
-      { type: 'excel_validation', icon: '\uD83D\uDCC4', name: 'Excel AI', desc: 'Data validation' },
+      { type: 'performance', icon: ChartBarIcon, name: 'Performance', desc: 'Reviews & ratings' },
+      { type: 'nlp_query', icon: MagnifyingGlassIcon, name: 'Data Query', desc: 'Ask about data' },
+      { type: 'coaching', icon: AcademicCapIcon, name: 'Coaching', desc: 'Micro-coaching' },
+      { type: 'career', icon: ArrowTrendingUpIcon, name: 'Career', desc: 'Growth paths' },
+      { type: 'report', icon: DocumentTextIcon, name: 'Reports', desc: 'Generate reports' },
+      { type: 'workforce_intel', icon: UsersIcon, name: 'Workforce', desc: 'Burnout & retention' },
+      { type: 'governance', icon: ScaleIcon, name: 'Governance', desc: 'Bias & fairness' },
+      { type: 'strategic_alignment', icon: PresentationChartBarIcon, name: 'Strategy', desc: 'OKR alignment' },
+      { type: 'talent_marketplace', icon: BriefcaseIcon, name: 'Talent Market', desc: 'Skill matching' },
+      { type: 'conflict_resolution', icon: ChatBubbleLeftRightIcon, name: 'Conflict', desc: 'Team mediation' },
+      { type: 'security', icon: ShieldCheckIcon, name: 'Security', desc: 'Audits & threats' },
+      { type: 'notification', icon: BellIcon, name: 'Notification', desc: 'Smart alerts' },
+      { type: 'onboarding', icon: AcademicCapIcon, name: 'Onboarding', desc: 'New hire setup' },
+      { type: 'license', icon: KeyIcon, name: 'License', desc: 'Seats & billing' },
+      { type: 'excel_validation', icon: TableCellsIcon, name: 'Excel AI', desc: 'Data validation' },
     ],
   },
   {
     id: 'bio',
     name: 'Bio-Performance',
-    icon: '\uD83E\uDDEC',
+    icon: BeakerIcon,
     gradient: 'from-emerald-500 to-teal-500',
     agents: [
-      { type: 'neuro_focus', icon: '\uD83E\uDDE0', name: 'Neuro Focus', desc: 'Deep work' },
-      { type: 'circadian_sync', icon: '\uD83C\uDF19', name: 'Circadian', desc: 'Body clock' },
-      { type: 'micro_break', icon: '\u23F0', name: 'Micro Break', desc: 'Rest intervals' },
-      { type: 'cortisol_monitor', icon: '\uD83D\uDCC9', name: 'Cortisol', desc: 'Stress patterns' },
-      { type: 'ergonomics', icon: '\uD83E\uDE91', name: 'Ergonomics', desc: 'Workspace setup' },
-      { type: 'sleep_optimizer', icon: '\uD83D\uDCA4', name: 'Sleep', desc: 'Sleep quality' },
-      { type: 'hydration_nutrition', icon: '\uD83D\uDCA7', name: 'Hydration', desc: 'Nutrition' },
-      { type: 'vocal_tone', icon: '\uD83C\uDFA4', name: 'Vocal Tone', desc: 'Comm style' },
-      { type: 'environment_ctrl', icon: '\uD83C\uDF21\uFE0F', name: 'Environment', desc: 'Workspace' },
-      { type: 'burnout_interceptor', icon: '\uD83D\uDEE1\uFE0F', name: 'Burnout Guard', desc: 'Early detect' },
+      { type: 'neuro_focus', icon: BoltIcon, name: 'Neuro Focus', desc: 'Deep work' },
+      { type: 'circadian_sync', icon: SunIcon, name: 'Circadian', desc: 'Body clock' },
+      { type: 'micro_break', icon: ClockIcon, name: 'Micro Break', desc: 'Rest intervals' },
+      { type: 'cortisol_monitor', icon: HeartIcon, name: 'Cortisol', desc: 'Stress patterns' },
+      { type: 'ergonomics', icon: ComputerDesktopIcon, name: 'Ergonomics', desc: 'Workspace setup' },
+      { type: 'sleep_optimizer', icon: MoonIcon, name: 'Sleep', desc: 'Sleep quality' },
+      { type: 'hydration_nutrition', icon: BeakerIcon, name: 'Hydration', desc: 'Nutrition' },
+      { type: 'vocal_tone', icon: MicrophoneIcon, name: 'Vocal Tone', desc: 'Comm style' },
+      { type: 'environment_ctrl', icon: HomeIcon, name: 'Environment', desc: 'Workspace' },
+      { type: 'burnout_interceptor', icon: FireIcon, name: 'Burnout Guard', desc: 'Early detect' },
     ],
   },
   {
     id: 'learning',
     name: 'Hyper-Learning',
-    icon: '\uD83D\uDCDA',
+    icon: BookOpenIcon,
     gradient: 'from-purple-500 to-pink-500',
     agents: [
-      { type: 'shadow_learning', icon: '\uD83D\uDC65', name: 'Shadow Learn', desc: 'Peer observe' },
-      { type: 'micro_learning', icon: '\uD83D\uDCD6', name: 'Micro Learn', desc: 'Daily lessons' },
-      { type: 'ar_mentor', icon: '\uD83E\uDD3D', name: 'AR Mentor', desc: 'Simulation' },
-      { type: 'sparring_partner', icon: '\uD83E\uDD4A', name: 'Sparring', desc: 'Debate' },
-      { type: 'skill_gap_forecaster', icon: '\uD83D\uDD2E', name: 'Skill Forecast', desc: 'Prediction' },
-      { type: 'knowledge_broker', icon: '\uD83E\uDD1D', name: 'Knowledge', desc: 'Expert transfer' },
-      { type: 'credential_ledger', icon: '\uD83C\uDF96\uFE0F', name: 'Credentials', desc: 'Cert tracking' },
-      { type: 'linguistic_refiner', icon: '\u270D\uFE0F', name: 'Linguistic', desc: 'Writing' },
-      { type: 'curiosity_scout', icon: '\uD83D\uDD2D', name: 'Curiosity', desc: 'Innovation' },
-      { type: 'logic_validator', icon: '\uD83E\uDDE9', name: 'Logic Check', desc: 'Reasoning' },
-      { type: 'cross_training', icon: '\uD83D\uDD00', name: 'Cross-Train', desc: 'Multi-dept' },
-      { type: 'career_sim', icon: '\uD83C\uDFAE', name: 'Career Sim', desc: 'What-if' },
+      { type: 'shadow_learning', icon: EyeIcon, name: 'Shadow Learn', desc: 'Peer observe' },
+      { type: 'micro_learning', icon: BookOpenIcon, name: 'Micro Learn', desc: 'Daily lessons' },
+      { type: 'ar_mentor', icon: SparklesIcon, name: 'AR Mentor', desc: 'Simulation' },
+      { type: 'sparring_partner', icon: ChatBubbleLeftRightIcon, name: 'Sparring', desc: 'Debate' },
+      { type: 'skill_gap_forecaster', icon: ChartBarIcon, name: 'Skill Forecast', desc: 'Prediction' },
+      { type: 'knowledge_broker', icon: LightBulbIcon, name: 'Knowledge', desc: 'Expert transfer' },
+      { type: 'credential_ledger', icon: IdentificationIcon, name: 'Credentials', desc: 'Cert tracking' },
+      { type: 'linguistic_refiner', icon: PencilSquareIcon, name: 'Linguistic', desc: 'Writing' },
+      { type: 'curiosity_scout', icon: LightBulbIcon, name: 'Curiosity', desc: 'Innovation' },
+      { type: 'logic_validator', icon: CheckBadgeIcon, name: 'Logic Check', desc: 'Reasoning' },
+      { type: 'cross_training', icon: ArrowsRightLeftIcon, name: 'Cross-Train', desc: 'Multi-dept' },
+      { type: 'career_sim', icon: ArrowTrendingUpIcon, name: 'Career Sim', desc: 'What-if' },
     ],
   },
   {
     id: 'workforce',
     name: 'Liquid Workforce',
-    icon: '\uD83D\uDCB0',
+    icon: CurrencyDollarIcon,
     gradient: 'from-amber-500 to-orange-500',
     agents: [
-      { type: 'task_bidder', icon: '\uD83D\uDCE6', name: 'Task Bidder', desc: 'Allocation' },
-      { type: 'gig_sourcer', icon: '\uD83C\uDFAA', name: 'Gig Sourcer', desc: 'Internal gigs' },
-      { type: 'nano_payment', icon: '\u2B50', name: 'Nano Pay', desc: 'Micro-rewards' },
-      { type: 'market_value', icon: '\uD83D\uDCCA', name: 'Market Value', desc: 'Benchmarking' },
-      { type: 'tax_optimizer', icon: '\uD83D\uDCB5', name: 'Tax Optimize', desc: 'Tax strategy' },
-      { type: 'equity_realizer', icon: '\uD83D\uDCB9', name: 'Equity', desc: 'Stock options' },
-      { type: 'pension_guard', icon: '\uD83C\uDFE6', name: 'Pension', desc: 'Retirement' },
-      { type: 'relocation_bot', icon: '\u2708\uFE0F', name: 'Relocation', desc: 'City compare' },
-      { type: 'vendor_negotiator', icon: '\uD83D\uDD0E', name: 'Vendor', desc: 'Contracts' },
-      { type: 'succession_sentry', icon: '\uD83D\uDC51', name: 'Succession', desc: 'Leadership' },
+      { type: 'task_bidder', icon: ClipboardDocumentListIcon, name: 'Task Bidder', desc: 'Allocation' },
+      { type: 'gig_sourcer', icon: BriefcaseIcon, name: 'Gig Sourcer', desc: 'Internal gigs' },
+      { type: 'nano_payment', icon: StarIcon, name: 'Nano Pay', desc: 'Micro-rewards' },
+      { type: 'market_value', icon: ChartBarIcon, name: 'Market Value', desc: 'Benchmarking' },
+      { type: 'tax_optimizer', icon: DocumentCheckIcon, name: 'Tax Optimize', desc: 'Tax strategy' },
+      { type: 'equity_realizer', icon: CurrencyDollarIcon, name: 'Equity', desc: 'Stock options' },
+      { type: 'pension_guard', icon: BuildingLibraryIcon, name: 'Pension', desc: 'Retirement' },
+      { type: 'relocation_bot', icon: GlobeAltIcon, name: 'Relocation', desc: 'City compare' },
+      { type: 'vendor_negotiator', icon: DocumentMagnifyingGlassIcon, name: 'Vendor', desc: 'Contracts' },
+      { type: 'succession_sentry', icon: TrophyIcon, name: 'Succession', desc: 'Leadership' },
     ],
   },
   {
     id: 'culture',
     name: 'Culture & Empathy',
-    icon: '\u2764\uFE0F',
+    icon: HeartIcon,
     gradient: 'from-pink-500 to-rose-500',
     agents: [
-      { type: 'culture_weaver', icon: '\uD83C\uDF10', name: 'Culture', desc: 'Values & diag' },
-      { type: 'bias_neutralizer', icon: '\u2696\uFE0F', name: 'Bias', desc: 'Fair language' },
-      { type: 'gratitude_sentinel', icon: '\uD83D\uDE4F', name: 'Gratitude', desc: 'Appreciation' },
-      { type: 'conflict_mediator', icon: '\uD83D\uDD4A\uFE0F', name: 'Mediator', desc: 'Conflict res' },
-      { type: 'inclusion_monitor', icon: '\uD83C\uDF08', name: 'Inclusion', desc: 'Diversity' },
-      { type: 'empathy_coach', icon: '\uD83D\uDCAC', name: 'Empathy', desc: 'EI training' },
-      { type: 'social_bonding', icon: '\uD83C\uDFC6', name: 'Social', desc: 'Team building' },
-      { type: 'legacy_archivist', icon: '\uD83D\uDCDC', name: 'Legacy', desc: 'Knowledge' },
-      { type: 'whistleblower', icon: '\uD83D\uDCE2', name: 'Whistleblower', desc: 'Ethics' },
-      { type: 'mood_radiator', icon: '\uD83C\uDF21\uFE0F', name: 'Mood', desc: 'Sentiment' },
+      { type: 'culture_weaver', icon: UserGroupIcon, name: 'Culture', desc: 'Values & diag' },
+      { type: 'bias_neutralizer', icon: ScaleIcon, name: 'Bias', desc: 'Fair language' },
+      { type: 'gratitude_sentinel', icon: HeartIcon, name: 'Gratitude', desc: 'Appreciation' },
+      { type: 'conflict_mediator', icon: HandRaisedIcon, name: 'Mediator', desc: 'Conflict res' },
+      { type: 'inclusion_monitor', icon: UserGroupIcon, name: 'Inclusion', desc: 'Diversity' },
+      { type: 'empathy_coach', icon: ChatBubbleLeftRightIcon, name: 'Empathy', desc: 'EI training' },
+      { type: 'social_bonding', icon: TrophyIcon, name: 'Social', desc: 'Team building' },
+      { type: 'legacy_archivist', icon: ArchiveBoxIcon, name: 'Legacy', desc: 'Knowledge' },
+      { type: 'whistleblower', icon: MegaphoneIcon, name: 'Whistleblower', desc: 'Ethics' },
+      { type: 'mood_radiator', icon: FaceSmileIcon, name: 'Mood', desc: 'Sentiment' },
     ],
   },
   {
     id: 'governance',
     name: 'Governance',
-    icon: '\uD83D\uDCDC',
+    icon: ScaleIcon,
     gradient: 'from-red-500 to-rose-500',
     agents: [
-      { type: 'posh_sentinel', icon: '\uD83D\uDEE1\uFE0F', name: 'POSH', desc: 'Harassment prev' },
-      { type: 'labor_compliance', icon: '\uD83D\uDCDC', name: 'Labor Law', desc: 'Regulations' },
-      { type: 'policy_translator', icon: '\uD83D\uDCD6', name: 'Policy', desc: 'Plain language' },
-      { type: 'data_privacy', icon: '\uD83D\uDD10', name: 'Privacy', desc: 'GDPR' },
-      { type: 'audit_trail', icon: '\uD83D\uDD0D', name: 'Audit', desc: 'Activity logs' },
-      { type: 'conflict_of_interest', icon: '\u26A0\uFE0F', name: 'COI', desc: 'Interest check' },
-      { type: 'leave_optimizer', icon: '\uD83C\uDFD6\uFE0F', name: 'Leave', desc: 'PTO planning' },
-      { type: 'onboarding_orchestrator', icon: '\uD83C\uDFAC', name: 'Onboard', desc: 'Coordination' },
+      { type: 'posh_sentinel', icon: ShieldCheckIcon, name: 'POSH', desc: 'Harassment prev' },
+      { type: 'labor_compliance', icon: DocumentCheckIcon, name: 'Labor Law', desc: 'Regulations' },
+      { type: 'policy_translator', icon: BookOpenIcon, name: 'Policy', desc: 'Plain language' },
+      { type: 'data_privacy', icon: LockClosedIcon, name: 'Privacy', desc: 'GDPR' },
+      { type: 'audit_trail', icon: DocumentMagnifyingGlassIcon, name: 'Audit', desc: 'Activity logs' },
+      { type: 'conflict_of_interest', icon: ExclamationTriangleIcon, name: 'COI', desc: 'Interest check' },
+      { type: 'leave_optimizer', icon: CalendarDaysIcon, name: 'Leave', desc: 'PTO planning' },
+      { type: 'onboarding_orchestrator', icon: UsersIcon, name: 'Onboard', desc: 'Coordination' },
     ],
   },
 ];
@@ -310,10 +362,10 @@ function AgentSidebar({
           {AGENT_CLUSTERS.map((cluster) => (
             <div
               key={cluster.id}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-sm"
+              className="flex h-8 w-8 items-center justify-center rounded-lg"
               title={cluster.name}
             >
-              {cluster.icon}
+              <cluster.icon className="h-4 w-4 text-current" />
             </div>
           ))}
         </div>
@@ -365,7 +417,7 @@ function AgentSidebar({
               onClick={() => toggleCluster(cluster.id)}
               className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors ${T.surfaceHover(theme)}`}
             >
-              <span className="text-sm">{cluster.icon}</span>
+              <cluster.icon className="h-3.5 w-3.5 flex-shrink-0 text-current" />
               <span className={`flex-1 text-xs font-medium ${T.textPrimary(theme)}`}>{cluster.name}</span>
               <span className={`text-[10px] ${T.textMuted(theme)}`}>{cluster.agents.length}</span>
               <svg
@@ -394,8 +446,8 @@ function AgentSidebar({
                           : T.surfaceHover(theme)
                       }`}
                     >
-                      <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md text-sm">
-                        {agent.icon}
+                      <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md">
+                        <agent.icon className="h-4 w-4 text-current" />
                       </span>
                       <div className="min-w-0 flex-1">
                         <div className={`truncate text-xs font-medium ${isSelected ? T.accentText(theme) : T.textPrimary(theme)}`}>
@@ -646,9 +698,9 @@ export function SwarmChat() {
               <div
                 className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${
                   currentCluster?.gradient ?? 'from-blue-500 to-indigo-500'
-                } text-lg shadow-lg`}
+                } shadow-lg`}
               >
-                {currentAgent.icon}
+                <currentAgent.icon className="h-5 w-5 text-white" />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
@@ -663,7 +715,7 @@ export function SwarmChat() {
                           : 'bg-white/[0.06] text-gray-400'
                       }`}
                     >
-                      {currentCluster.icon} {currentCluster.name}
+                      <currentCluster.icon className="h-3 w-3" /> {currentCluster.name}
                     </span>
                   )}
                 </div>
@@ -696,9 +748,9 @@ export function SwarmChat() {
                   <div
                     className={`flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${
                       currentCluster?.gradient ?? 'from-blue-500 to-indigo-500'
-                    } mb-5 text-3xl shadow-xl`}
+                    } mb-5 shadow-xl`}
                   >
-                    {currentAgent.icon}
+                    <currentAgent.icon className="h-10 w-10 text-white" />
                   </div>
                   <h3 className={`text-lg font-semibold ${T.textPrimary(theme)} mb-1.5`}>
                     {currentAgent.name} Agent Ready
@@ -736,9 +788,7 @@ export function SwarmChat() {
                           : `border-white/10 bg-white/5 ${T.textSecondary(theme)} hover:bg-white/10 hover:text-white hover:border-white/20`
                       }`}
                     >
-                      <span className="opacity-50 group-hover:opacity-100 transition-opacity mr-1">
-                        {currentAgent.icon}
-                      </span>{' '}
+                      <currentAgent.icon className="inline-block h-3.5 w-3.5 opacity-50 group-hover:opacity-100 transition-opacity mr-1 align-text-bottom" />
                       {prompt}
                     </button>
                   ))}
@@ -757,11 +807,12 @@ export function SwarmChat() {
                     className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${
                       currentCluster?.gradient ??
                       (theme === 'deep-dark' ? 'from-cyan-500/30 to-emerald-500/30' : 'from-purple-500/30 to-cyan-500/30')
-                    } mt-1 text-sm`}
+                    } mt-1`}
                   >
-                    {currentAgent?.icon ?? (
-                      <SparklesIcon className={`h-4 w-4 ${theme === 'deep-dark' ? 'text-cyan-300' : 'text-purple-300'}`} />
-                    )}
+                    {currentAgent
+                      ? <currentAgent.icon className="h-4 w-4 text-white" />
+                      : <SparklesIcon className={`h-4 w-4 ${theme === 'deep-dark' ? 'text-cyan-300' : 'text-purple-300'}`} />
+                    }
                   </div>
                 )}
 
