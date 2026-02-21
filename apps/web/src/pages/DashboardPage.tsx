@@ -338,11 +338,82 @@ export function DashboardPage() {
               <CalendarDaysIcon className="w-4 h-4" />
               {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
-            <h1 className="text-5xl lg:text-7xl font-black mb-4 text-shimmer tracking-tight">
+            <h1 className="text-5xl lg:text-7xl font-black mb-4 text-shimmer tracking-tight flex items-center flex-wrap gap-x-3">
               {getGreeting()}, {user?.firstName}!
-              <span className="inline-block ml-3 animate-bounce" style={{ animationDuration: '2s' }}>
-                {overallScore >= 80 ? '\uD83D\uDE80' : overallScore >= 50 ? '\uD83D\uDC4B' : '\uD83D\uDCAA'}
-              </span>
+              {/* Animated SVG icon — replaces emoji */}
+              {overallScore >= 80 ? (
+                /* Rocket — high performer */
+                <svg className="inline-block w-12 h-12 lg:w-16 lg:h-16 flex-shrink-0" style={{ animation: 'rocketLaunch 3s ease-in-out infinite' }} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <style>{`
+                    @keyframes rocketLaunch {
+                      0%,100% { transform: translateY(0) rotate(-45deg); }
+                      50%      { transform: translateY(-8px) rotate(-45deg); }
+                    }
+                    @keyframes flamePulse {
+                      0%,100% { opacity: 1; transform: scaleY(1); }
+                      50%      { opacity: 0.6; transform: scaleY(0.7); }
+                    }
+                  `}</style>
+                  {/* Body */}
+                  <path d="M32 4C20 4 12 20 12 32l20 20c12 0 28-8 28-20C60 20 44 4 32 4Z" fill="rgba(255,255,255,0.9)" />
+                  {/* Window */}
+                  <circle cx="34" cy="24" r="6" fill="rgba(139,92,246,0.8)" />
+                  <circle cx="34" cy="24" r="4" fill="rgba(196,181,253,0.9)" />
+                  {/* Fins */}
+                  <path d="M12 32 L4 44 L16 40Z" fill="rgba(255,255,255,0.6)" />
+                  <path d="M32 52 L24 60 L28 48Z" fill="rgba(255,255,255,0.6)" />
+                  {/* Flame */}
+                  <path d="M16 40 Q20 50 26 48 Q22 56 18 58 Q14 54 16 40Z" fill="rgba(251,146,60,0.9)" style={{ animation: 'flamePulse 0.5s ease-in-out infinite', transformOrigin: '20px 48px' }} />
+                  <path d="M18 42 Q21 50 24 49" stroke="rgba(253,224,71,0.9)" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              ) : overallScore >= 50 ? (
+                /* Upward arrow / trending — mid performer */
+                <svg className="inline-block w-12 h-12 lg:w-16 lg:h-16 flex-shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <style>{`
+                    @keyframes arrowPulse {
+                      0%,100% { transform: translateY(0); }
+                      50%      { transform: translateY(-6px); }
+                    }
+                  `}</style>
+                  <g style={{ animation: 'arrowPulse 2s ease-in-out infinite' }}>
+                    {/* Chart line */}
+                    <polyline points="8,48 20,36 32,40 44,22 56,12" stroke="rgba(255,255,255,0.9)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    {/* Arrow head */}
+                    <polyline points="44,12 56,12 56,24" stroke="rgba(255,255,255,0.9)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    {/* Dots */}
+                    <circle cx="8"  cy="48" r="3.5" fill="rgba(255,255,255,0.7)" />
+                    <circle cx="20" cy="36" r="3.5" fill="rgba(255,255,255,0.7)" />
+                    <circle cx="32" cy="40" r="3.5" fill="rgba(255,255,255,0.7)" />
+                    <circle cx="44" cy="22" r="3.5" fill="rgba(255,255,255,0.7)" />
+                    <circle cx="56" cy="12" r="4.5" fill="rgba(167,139,250,1)" />
+                  </g>
+                </svg>
+              ) : (
+                /* Spark / ignite — building performer */
+                <svg className="inline-block w-12 h-12 lg:w-16 lg:h-16 flex-shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <style>{`
+                    @keyframes sparkRotate {
+                      0%   { transform: rotate(0deg) scale(1); }
+                      25%  { transform: rotate(15deg) scale(1.1); }
+                      75%  { transform: rotate(-15deg) scale(0.95); }
+                      100% { transform: rotate(0deg) scale(1); }
+                    }
+                    @keyframes rayPulse {
+                      0%,100% { opacity: 0.5; transform: scaleX(1); }
+                      50%      { opacity: 1; transform: scaleX(1.3); }
+                    }
+                  `}</style>
+                  <g style={{ animation: 'sparkRotate 2.5s ease-in-out infinite', transformOrigin: '32px 32px' }}>
+                    {/* Star / spark core */}
+                    <path d="M32 8 L36 28 L56 32 L36 36 L32 56 L28 36 L8 32 L28 28Z" fill="rgba(255,255,255,0.95)" />
+                  </g>
+                  {/* Rays */}
+                  <line x1="32" y1="2"  x2="32" y2="10" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'rayPulse 1.5s ease-in-out infinite 0.1s', transformOrigin: '32px 6px' }} />
+                  <line x1="58" y1="32" x2="50" y2="32" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'rayPulse 1.5s ease-in-out infinite 0.3s', transformOrigin: '54px 32px' }} />
+                  <line x1="32" y1="62" x2="32" y2="54" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'rayPulse 1.5s ease-in-out infinite 0.5s', transformOrigin: '32px 58px' }} />
+                  <line x1="6"  y1="32" x2="14" y2="32" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'rayPulse 1.5s ease-in-out infinite 0.7s', transformOrigin: '10px 32px' }} />
+                </svg>
+              )}
             </h1>
             <p className="text-white/90 text-lg max-w-xl leading-relaxed">
               {cpisData
