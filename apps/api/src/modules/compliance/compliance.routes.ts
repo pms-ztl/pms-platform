@@ -8,8 +8,15 @@ const router = Router();
 
 router.use(authenticate);
 
-// Dashboard
-router.get('/dashboard', authorize({ resource: 'compliance', action: 'read', scope: 'all' }), (req, res, next) => complianceController.getDashboard(req as AuthenticatedRequest, res, next));
+// Dashboard — accessible by compliance permission OR admin/HR/manager roles
+router.get(
+  '/dashboard',
+  authorize(
+    { resource: 'compliance', action: 'read', scope: 'all' },
+    { roles: ['Tenant Admin', 'TENANT_ADMIN', 'ADMIN', 'HR Admin', 'HR_ADMIN', 'HR Business Partner', 'HR_BP', 'Manager', 'MANAGER'] },
+  ),
+  (req, res, next) => complianceController.getDashboard(req as AuthenticatedRequest, res, next),
+);
 
 // Policies
 router.get('/policies', (req, res, next) => complianceController.listPolicies(req as AuthenticatedRequest, res, next));
@@ -23,7 +30,14 @@ router.post('/assessments', authorize({ resource: 'compliance', action: 'create'
 router.put('/assessments/:id', (req, res, next) => complianceController.updateAssessment(req as AuthenticatedRequest, res, next));
 
 // Violations
-router.get('/violations', authorize({ resource: 'compliance', action: 'read', scope: 'all' }), (req, res, next) => complianceController.listViolations(req as AuthenticatedRequest, res, next));
+router.get(
+  '/violations',
+  authorize(
+    { resource: 'compliance', action: 'read', scope: 'all' },
+    { roles: ['Tenant Admin', 'TENANT_ADMIN', 'ADMIN', 'HR Admin', 'HR_ADMIN', 'HR Business Partner', 'HR_BP'] },
+  ),
+  (req, res, next) => complianceController.listViolations(req as AuthenticatedRequest, res, next),
+);
 router.post('/violations', (req, res, next) => complianceController.createViolation(req as AuthenticatedRequest, res, next));
 router.put('/violations/:id', authorize({ resource: 'compliance', action: 'update', scope: 'all' }), (req, res, next) => complianceController.updateViolation(req as AuthenticatedRequest, res, next));
 

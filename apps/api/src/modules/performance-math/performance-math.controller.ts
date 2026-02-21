@@ -74,9 +74,16 @@ export class PerformanceMathController {
       const data = await performanceMathService.getTeamAnalytics(tenantId, managerId);
 
       if (!data) {
-        return res.status(404).json({
-          success: false,
-          error: { code: 'NO_REPORTS', message: 'No direct reports found for this manager' },
+        // Return empty team state instead of 404 — no direct reports is a valid state
+        return res.json({
+          success: true,
+          data: {
+            managerId,
+            teamSize: 0,
+            memberZScores: [],
+            teamStats: null,
+            metadata: { goalsAnalyzed: 0, reviewsAnalyzed: 0, historicalPeriodsUsed: 0 },
+          },
         });
       }
 
