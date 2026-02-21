@@ -622,10 +622,22 @@ export class PerformanceMathService {
       historicalAverages.length >= 2 ? historicalAverages : undefined
     );
 
+    // 7. Enrich memberZScores with name + score (math engine only returns userId/zScore/category)
+    const enrichedMemberZScores = result.memberZScores.map(zs => {
+      const report = directReports.find(r => r.id === zs.userId);
+      const ms = memberScores.find(m => m.userId === zs.userId);
+      return {
+        ...zs,
+        name: report ? `${report.firstName} ${report.lastName}`.trim() : 'Unknown',
+        score: ms?.score ?? 0,
+      };
+    });
+
     return {
       managerId,
       teamSize: directReports.length,
       ...result,
+      memberZScores: enrichedMemberZScores,
       metadata: {
         goalsAnalyzed: allGoals.length,
         reviewsAnalyzed: allReviews.length,

@@ -213,7 +213,9 @@ export class AnalyticsService {
     const whereClause: any = {
       tenantId,
       overallRating: { not: null },
-      status: { in: ['FINALIZED', 'ACKNOWLEDGED'] },
+      deletedAt: null,
+      // Include all review statuses with ratings, not just finalized
+      status: { in: ['SUBMITTED', 'CALIBRATED', 'FINALIZED', 'ACKNOWLEDGED', 'IN_PROGRESS'] },
     };
 
     if (cycleId) {
@@ -336,13 +338,14 @@ export class AnalyticsService {
         select: { progress: true },
       });
 
-      // Get avg rating
+      // Get avg rating — include all statuses with ratings
       const reviews = await prisma.review.findMany({
         where: {
           tenantId,
           revieweeId: { in: userIds },
           overallRating: { not: null },
-          status: { in: ['FINALIZED', 'ACKNOWLEDGED'] },
+          deletedAt: null,
+          status: { in: ['SUBMITTED', 'CALIBRATED', 'FINALIZED', 'ACKNOWLEDGED', 'IN_PROGRESS'] },
         },
         select: { overallRating: true },
       });
@@ -379,7 +382,9 @@ export class AnalyticsService {
     const whereClause: any = {
       tenantId,
       overallRating: { not: null },
-      status: { in: ['FINALIZED', 'ACKNOWLEDGED'] },
+      deletedAt: null,
+      // Include all statuses with ratings for bias analysis
+      status: { in: ['SUBMITTED', 'CALIBRATED', 'FINALIZED', 'ACKNOWLEDGED', 'IN_PROGRESS'] },
     };
 
     if (cycleId) {
@@ -909,12 +914,12 @@ export class AnalyticsService {
    * Z-score normalization of ratings per department
    */
   async getNormalizationAnalysis(tenantId: string) {
-    // Fetch all completed reviews with reviewee info
+    // Fetch all reviews with ratings — include any status that has a rating set
     const reviews = await prisma.review.findMany({
       where: {
         tenantId,
         overallRating: { not: null },
-        status: { in: ['SUBMITTED', 'CALIBRATED', 'FINALIZED', 'ACKNOWLEDGED'] },
+        deletedAt: null,
       },
       select: {
         revieweeId: true,

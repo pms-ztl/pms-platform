@@ -50,13 +50,16 @@ function TeamPerformanceChart({ managerId, className = '' }: TeamPerformanceChar
     );
   }
 
-  const chartData = members.map((m) => ({
-    name: m.name.length > 12 ? m.name.split(' ')[0] : m.name,
-    fullName: m.name,
-    score: Math.round(m.score),
-    zScore: Math.round(m.zScore * 100) / 100,
-    category: m.category,
-  }));
+  const chartData = members.map((m) => {
+    const displayName = (m.name ?? m.userId ?? 'Unknown');
+    return {
+      name: displayName.length > 12 ? displayName.split(' ')[0] : displayName,
+      fullName: displayName,
+      score: Math.round(m.score ?? 0),
+      zScore: Math.round((m.zScore ?? 0) * 100) / 100,
+      category: m.category,
+    };
+  });
 
   return (
     <div className={`glass-deep rounded-2xl p-6 ${className}`}>
