@@ -97,11 +97,51 @@ export function AIWorkspaceTransition({ phase }: Props) {
     <div
       className="fixed inset-0 z-[9999] overflow-hidden flex items-center justify-center"
       style={{
-        background: `radial-gradient(ellipse 60% 55% at 50% 50%, ${a.colorDim} 0%, #050508 65%)`,
+        background: `
+          radial-gradient(ellipse 60% 55% at 50% 50%, ${a.colorDim} 0%, transparent 65%),
+          linear-gradient(135deg, #050510 0%, #080818 50%, #050510 100%)
+        `,
         animation: 'aiOverlayLifecycle 3s ease forwards',
         pointerEvents: fading ? 'none' : 'all',
       }}
     >
+      {/* ── Instant frosted backdrop — obscures dashboard during fade-in ── */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backdropFilter: 'blur(20px) saturate(0.5) brightness(0.3)',
+          WebkitBackdropFilter: 'blur(20px) saturate(0.5) brightness(0.3)',
+        }}
+      />
+
+      {/* ── Ambient glow orbs — premium glassmorphism ── */}
+      <div
+        className="absolute w-[600px] h-[600px] rounded-full opacity-20 blur-3xl pointer-events-none"
+        style={{
+          background: `radial-gradient(circle, ${a.color}40 0%, transparent 70%)`,
+          left: '10%',
+          top: '20%',
+          animation: 'aiAmbientDrift 3s ease-in-out infinite',
+        }}
+      />
+      <div
+        className="absolute w-[400px] h-[400px] rounded-full opacity-15 blur-3xl pointer-events-none"
+        style={{
+          background: `radial-gradient(circle, ${a.ringB}40 0%, transparent 70%)`,
+          right: '15%',
+          bottom: '25%',
+          animation: 'aiAmbientDrift 3s ease-in-out 0.5s infinite reverse',
+        }}
+      />
+
+      {/* ── Vignette — cinematic depth ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 70% 60% at 50% 50%, transparent 40%, rgba(0,0,0,0.5) 100%)',
+        }}
+      />
+
       {/* ── Fine grid ──────────────────────────────────────────── */}
       <div
         className="absolute inset-0"

@@ -401,7 +401,8 @@ export function DashboardLayout() {
       <div
         className={clsx(
           'hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col transition-all duration-300',
-          sidebarWidth
+          sidebarWidth,
+          aiTransitionPhase !== 'idle' && 'opacity-0 blur-sm pointer-events-none'
         )}
       >
         <div className="flex grow flex-col overflow-hidden bg-white dark:bg-surface-dark border-r border-secondary-200/60 dark:border-white/[0.06] frosted-noise">
@@ -420,7 +421,10 @@ export function DashboardLayout() {
       {/* Main content */}
       <div className={clsx('transition-all duration-300', contentPadding)}>
         {/* Top bar */}
-        <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-x-4 glass-nav px-4 sm:gap-x-6 sm:px-6 lg:px-8">
+        <div className={clsx(
+          'sticky top-0 z-40 flex h-14 shrink-0 items-center gap-x-4 glass-nav px-4 sm:gap-x-6 sm:px-6 lg:px-8 transition-all duration-300',
+          aiTransitionPhase !== 'idle' && 'opacity-0 blur-sm pointer-events-none'
+        )}>
           <button
             type="button"
             className="-m-2.5 p-2.5 text-secondary-700 dark:text-secondary-400 lg:hidden"
@@ -516,7 +520,7 @@ export function DashboardLayout() {
         </div>
 
         {/* Main content area */}
-        <main className="py-8">
+        <main className={clsx('py-8 transition-all duration-300', aiTransitionPhase !== 'idle' && 'opacity-0 blur-md')}>
           <div className="px-4 sm:px-6 lg:px-8 page-content">
             <Breadcrumbs />
             <Outlet />
