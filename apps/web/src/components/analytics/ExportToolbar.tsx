@@ -43,7 +43,7 @@ function ExportToolbar({ className = '' }: ExportToolbarProps) {
           key={type}
           onClick={() => handleExport(type)}
           disabled={isExporting}
-          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg border border-secondary-200 dark:border-secondary-700 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg border border-secondary-200/60 dark:border-white/[0.06] text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-colors disabled:opacity-50"
         >
           <ArrowDownTrayIcon className="w-3.5 h-3.5" />
           {type.charAt(0).toUpperCase() + type.slice(1)}

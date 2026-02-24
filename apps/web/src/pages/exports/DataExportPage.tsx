@@ -208,34 +208,34 @@ export function DataExportPage() {
       {activeTab === 'reports' && (
         <div className="space-y-6">
           {/* Report Generator */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Generate Report</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Report Type</label>
-                <select value={reportType} onChange={(e) => setReportType(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white">
+                <select value={reportType} onChange={(e) => setReportType(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white">
                   {REPORT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Scope</label>
-                <select value={reportScope} onChange={(e) => setReportScope(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white">
+                <select value={reportScope} onChange={(e) => setReportScope(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white">
                   {REPORT_SCOPES.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Format</label>
-                <select value={reportFormat} onChange={(e) => setReportFormat(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white">
+                <select value={reportFormat} onChange={(e) => setReportFormat(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white">
                   {REPORT_FORMATS.map((f) => <option key={f} value={f}>{f}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Period Start</label>
-                <input type="date" value={periodStart} onChange={(e) => setPeriodStart(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white" />
+                <input type="date" value={periodStart} onChange={(e) => setPeriodStart(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Period End</label>
-                <input type="date" value={periodEnd} onChange={(e) => setPeriodEnd(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white" />
+                <input type="date" value={periodEnd} onChange={(e) => setPeriodEnd(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white" />
               </div>
               <div className="flex items-end">
                 <button
@@ -285,9 +285,9 @@ function ReportsList({
 }) {
   if (loading) {
     return (
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner" />
         </div>
       </div>
     );
@@ -295,7 +295,7 @@ function ReportsList({
 
   if (reports.length === 0) {
     return (
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6 text-center py-16">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6 text-center py-16">
         <DocumentChartBarIcon className="h-12 w-12 mx-auto text-secondary-300 dark:text-secondary-600 mb-3" />
         <p className="text-lg font-medium text-secondary-500 dark:text-secondary-400">No reports yet</p>
         <p className="text-sm text-secondary-400 dark:text-secondary-500 mt-1">Generate your first report to see it here.</p>
@@ -304,8 +304,8 @@ function ReportsList({
   }
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
-      <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+      <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
         <h2 className="text-base font-semibold text-secondary-900 dark:text-white">Generated Reports</h2>
       </div>
       <div className="divide-y divide-secondary-100 dark:divide-secondary-700">
@@ -319,7 +319,7 @@ function ReportsList({
           ].filter(Boolean) as string[];
 
           return (
-            <div key={report.id} className="px-6 py-4 hover:bg-secondary-50 dark:hover:bg-secondary-700/30 transition-colors">
+            <div key={report.id} className="px-6 py-4 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/30 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">

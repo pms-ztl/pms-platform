@@ -451,7 +451,7 @@ export function CompensationPage() {
       <div className="card dark:bg-secondary-800 dark:border-secondary-700 overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner" />
           </div>
         ) : filteredDecisions.length === 0 ? (
           <div className="text-center py-16">
@@ -468,7 +468,7 @@ export function CompensationPage() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     {['Employee', 'Type', 'Current', 'Proposed', 'Change %', 'Status', 'Effective Date', 'Actions'].map(
@@ -488,7 +488,7 @@ export function CompensationPage() {
                       <TableRowGroup key={d.id}>
                         <tr
                           onClick={() => setExpandedRow(isExpanded ? null : d.id)}
-                          className="cursor-pointer hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-colors"
+                          className="cursor-pointer hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-colors"
                         >
                           <td className="px-4 py-3">
                             <div className="text-sm font-medium text-secondary-900 dark:text-white">
@@ -579,7 +579,7 @@ export function CompensationPage() {
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <p className="text-sm text-secondary-500 dark:text-secondary-400">
                 Showing {(meta.page - 1) * meta.limit + 1}
                 {' '}-{' '}
@@ -655,7 +655,7 @@ export function CompensationPage() {
                 <div className="overflow-x-auto mt-4">
                   <table className="min-w-full text-sm">
                     <thead>
-                      <tr className="border-b border-secondary-200 dark:border-secondary-700">
+                      <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
                         <th className="text-left py-2 text-secondary-500 dark:text-secondary-400 font-medium">Department</th>
                         <th className="text-right py-2 text-secondary-500 dark:text-secondary-400 font-medium">Allocated</th>
                         <th className="text-right py-2 text-secondary-500 dark:text-secondary-400 font-medium">Used</th>
@@ -701,8 +701,8 @@ export function CompensationPage() {
       {/* ---- Create / Edit Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingDecision ? 'Edit Compensation Decision' : 'New Compensation Decision'}
               </h2>
@@ -724,7 +724,7 @@ export function CompensationPage() {
                   className="input-field text-sm w-full mb-1"
                 />
                 {employeeSearch && !formState.employeeId && (
-                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white dark:bg-secondary-900">
+                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
                     {filteredUsers.map((u) => (
                       <button
                         key={u.id}
@@ -832,7 +832,7 @@ export function CompensationPage() {
             </div>
 
             {/* Modal footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => { setShowCreateModal(false); setEditingDecision(null); }}
                 className="btn-secondary text-sm"

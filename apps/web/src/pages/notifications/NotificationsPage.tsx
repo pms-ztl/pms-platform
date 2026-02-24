@@ -115,10 +115,10 @@ export function NotificationsPage() {
       </div>
 
       {/* Grouped Notification List */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm ring-1 ring-secondary-200 dark:ring-secondary-700 overflow-hidden">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm ring-1 ring-secondary-200 dark:ring-secondary-700 overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600"></div>
+            <div className="glass-spinner"></div>
           </div>
         ) : notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-secondary-400">
@@ -146,14 +146,14 @@ export function NotificationsPage() {
             <button
               onClick={() => setPage(page - 1)}
               disabled={page <= 1}
-              className="px-3 py-1.5 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1.5 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Previous
             </button>
             <button
               onClick={() => setPage(page + 1)}
               disabled={page >= meta.totalPages}
-              className="px-3 py-1.5 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1.5 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Next
             </button>

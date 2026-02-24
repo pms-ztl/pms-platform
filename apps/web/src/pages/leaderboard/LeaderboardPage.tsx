@@ -586,7 +586,7 @@ export function LeaderboardPage() {
             title="Leaderboards"
             subtitle="Celebrate top performers and track achievements"
           >
-            <div className="flex rounded-lg bg-white dark:bg-secondary-800 shadow-sm border border-secondary-200 dark:border-secondary-700 p-1">
+            <div className="flex rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-1">
               {periods.map(p => (
                 <button
                   key={p.key}
@@ -606,7 +606,7 @@ export function LeaderboardPage() {
         </div>
 
         {/* Podium */}
-        <div className="bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6 mb-8 overflow-hidden relative">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6 mb-8 overflow-hidden relative">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 via-transparent to-primary-50/50 dark:from-amber-900/10 dark:to-primary-900/10 pointer-events-none" />
           <Podium entries={entries} />
         </div>
@@ -616,7 +616,7 @@ export function LeaderboardPage() {
           <div className={clsx('transition-all duration-300', sidebarOpen ? 'flex-1 min-w-0' : 'w-full')}>
 
             {/* Tab navigation */}
-            <div className="flex items-center gap-1 mb-4 bg-white dark:bg-secondary-900 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-1.5">
+            <div className="flex items-center gap-1 mb-4 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-1.5">
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
@@ -638,7 +638,7 @@ export function LeaderboardPage() {
             </div>
 
             {/* Table */}
-            <div className="bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+            <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
               {isLoading ? (
                 <div className="flex items-center justify-center h-64">
                   <div className="animate-spin rounded-full h-10 w-10 border-2 border-primary-500 border-t-transparent" />
@@ -651,7 +651,7 @@ export function LeaderboardPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/50">
+                      <tr className="border-b border-secondary-200/60 dark:border-white/[0.06] bg-secondary-50 dark:bg-secondary-800/50">
                         {columnHeaders[activeTab].map(header => (
                           <th key={header} className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">{header}</th>
                         ))}
@@ -677,7 +677,7 @@ export function LeaderboardPage() {
             </div>
 
             {/* Department Comparison */}
-            <div className="mt-8 bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+            <div className="mt-8 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <div className="flex items-center gap-2 mb-5">
                 <UserGroupIcon className="h-5 w-5 text-primary-500" />
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Department Comparison</h2>
@@ -693,7 +693,7 @@ export function LeaderboardPage() {
           {/* Sidebar toggle */}
           <button
             onClick={() => setSidebarOpen(v => !v)}
-            className="hidden lg:flex items-center justify-center w-6 h-12 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg shadow-sm self-start mt-16 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+            className="hidden lg:flex items-center justify-center w-6 h-12 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] rounded-lg shadow-sm self-start mt-16 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
             title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
           >
             {sidebarOpen ? <ChevronRightIcon className="h-4 w-4 text-secondary-500" /> : <ChevronLeftIcon className="h-4 w-4 text-secondary-500" />}
@@ -704,7 +704,7 @@ export function LeaderboardPage() {
             <aside className="hidden lg:block w-80 shrink-0 space-y-6 animate-slide-in">
 
               {/* Rank Card */}
-              <div className="bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+              <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
                 <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
                   <BoltIcon className="h-4 w-4 text-primary-500" /> My Rankings
                 </h3>
@@ -730,7 +730,7 @@ export function LeaderboardPage() {
               </div>
 
               {/* Scores & Percentiles */}
-              <div className="bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+              <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
                 <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Scores & Percentiles</h3>
                 {myStats ? (
                   <div className="space-y-4">
@@ -753,7 +753,7 @@ export function LeaderboardPage() {
                         </div>
                       </div>
                     ))}
-                    <div className="pt-3 border-t border-secondary-200 dark:border-secondary-700">
+                    <div className="pt-3 border-t border-secondary-200/60 dark:border-white/[0.06]">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-secondary-600 dark:text-secondary-400">Total Users</span>
                         <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{myStats.totalUsers}</span>
@@ -769,7 +769,7 @@ export function LeaderboardPage() {
 
               {/* Current User Highlight */}
               {currentUserEntry && (
-                <div className="bg-white dark:bg-secondary-900 rounded-2xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+                <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
                   <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
                     <TrophyIcon className="h-4 w-4 text-amber-500" /> Your Position
                   </h3>

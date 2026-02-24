@@ -274,7 +274,7 @@ export function PIPPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+        <div className="glass-spinner" />
       </div>
     );
   }
@@ -288,7 +288,7 @@ export function PIPPage() {
       >
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 inline-flex items-center gap-2 font-medium text-sm transition-colors"
+          className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 inline-flex items-center gap-2 font-medium text-sm transition-colors"
         >
           <PlusIcon className="h-5 w-5" />
           Create PIP
@@ -307,7 +307,7 @@ export function PIPPage() {
             setStatusFilter(e.target.value);
             setPage(1);
           }}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
         >
           <option value="">All Statuses</option>
           <option value="ACTIVE">Active</option>
@@ -319,7 +319,7 @@ export function PIPPage() {
         <select
           value={severityFilter}
           onChange={(e) => setSeverityFilter(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
         >
           <option value="">All Severities</option>
           <option value="STANDARD">Standard</option>
@@ -342,7 +342,7 @@ export function PIPPage() {
 
       {/* PIP Cards */}
       {filteredPips.length === 0 ? (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-16 px-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-16 px-6">
           <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
             No Performance Improvement Plans found
@@ -355,7 +355,7 @@ export function PIPPage() {
           {!statusFilter && !severityFilter && (
             <button
               onClick={() => setShowCreateModal(true)}
-              className="mt-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 inline-flex items-center gap-2 text-sm font-medium transition-colors"
+              className="mt-4 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 inline-flex items-center gap-2 text-sm font-medium transition-colors"
             >
               <PlusIcon className="h-5 w-5" />
               Create PIP
@@ -370,7 +370,7 @@ export function PIPPage() {
               <Link
                 key={pip.id}
                 to={`/pip/${pip.id}`}
-                className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5 hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all group"
+                className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5 hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all group"
               >
                 {/* Top row: avatar + name + severity */}
                 <div className="flex items-start justify-between mb-3">
@@ -517,7 +517,7 @@ export function PIPPage() {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeftIcon className="h-4 w-4" />
               Previous
@@ -556,7 +556,7 @@ export function PIPPage() {
             <button
               onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
               disabled={page >= meta.totalPages}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Next
               <ChevronRightIcon className="h-4 w-4" />
@@ -568,7 +568,7 @@ export function PIPPage() {
       {/* Create PIP Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Create Performance Improvement Plan
@@ -594,7 +594,7 @@ export function PIPPage() {
                   value={formState.userId}
                   onChange={(e) => setFormState((prev) => ({ ...prev, userId: e.target.value }))}
                   required
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 >
                   <option value="">Select an employee...</option>
                   {(reports || []).map((r: User) => (
@@ -616,7 +616,7 @@ export function PIPPage() {
                   onChange={(e) => setFormState((prev) => ({ ...prev, pipTitle: e.target.value }))}
                   required
                   placeholder="e.g., Performance Improvement Plan - Q1 2026"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
@@ -629,7 +629,7 @@ export function PIPPage() {
                   <select
                     value={formState.pipType}
                     onChange={(e) => setFormState((prev) => ({ ...prev, pipType: e.target.value }))}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   >
                     <option value="PERFORMANCE">Performance</option>
                     <option value="BEHAVIOR">Behavior</option>
@@ -644,7 +644,7 @@ export function PIPPage() {
                   <select
                     value={formState.severity}
                     onChange={(e) => setFormState((prev) => ({ ...prev, severity: e.target.value }))}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   >
                     <option value="STANDARD">Standard</option>
                     <option value="SERIOUS">Serious</option>
@@ -664,7 +664,7 @@ export function PIPPage() {
                     value={formState.startDate}
                     onChange={(e) => setFormState((prev) => ({ ...prev, startDate: e.target.value }))}
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                 </div>
                 <div>
@@ -676,7 +676,7 @@ export function PIPPage() {
                     value={formState.endDate}
                     onChange={(e) => setFormState((prev) => ({ ...prev, endDate: e.target.value }))}
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                 </div>
               </div>
@@ -691,7 +691,7 @@ export function PIPPage() {
                   onChange={(e) =>
                     setFormState((prev) => ({ ...prev, reviewFrequency: e.target.value }))
                   }
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 >
                   <option value="WEEKLY">Weekly</option>
                   <option value="BI_WEEKLY">Bi-Weekly</option>
@@ -717,7 +717,7 @@ export function PIPPage() {
                             setFormState((prev) => ({ ...prev, performanceIssues: updated }));
                           }}
                           placeholder="Issue description"
-                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         />
                         <input
                           type="text"
@@ -728,7 +728,7 @@ export function PIPPage() {
                             setFormState((prev) => ({ ...prev, performanceIssues: updated }));
                           }}
                           placeholder="Additional details (optional)"
-                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         />
                       </div>
                       {formState.performanceIssues.length > 1 && (
@@ -772,7 +772,7 @@ export function PIPPage() {
                   }
                   rows={3}
                   placeholder="Describe how the performance issues impact the team, department, or organization..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
@@ -788,7 +788,7 @@ export function PIPPage() {
                   }
                   rows={3}
                   placeholder="Outline the expected performance standards..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
@@ -810,7 +810,7 @@ export function PIPPage() {
                             setFormState((prev) => ({ ...prev, specificGoals: updated }));
                           }}
                           placeholder="Goal description"
-                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         />
                         <input
                           type="text"
@@ -821,7 +821,7 @@ export function PIPPage() {
                             setFormState((prev) => ({ ...prev, specificGoals: updated }));
                           }}
                           placeholder="Metric (optional)"
-                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         />
                       </div>
                       {formState.specificGoals.length > 1 && (
@@ -871,7 +871,7 @@ export function PIPPage() {
                             setFormState((prev) => ({ ...prev, measurableObjectives: updated }));
                           }}
                           placeholder="Objective description"
-                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         />
                         <input
                           type="text"
@@ -882,7 +882,7 @@ export function PIPPage() {
                             setFormState((prev) => ({ ...prev, measurableObjectives: updated }));
                           }}
                           placeholder="Target (optional)"
-                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         />
                       </div>
                       {formState.measurableObjectives.length > 1 && (
@@ -936,7 +936,7 @@ export function PIPPage() {
                           setFormState((prev) => ({ ...prev, successCriteria: updated }));
                         }}
                         placeholder="Success criterion"
-                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                       />
                       {formState.successCriteria.length > 1 && (
                         <button
@@ -984,7 +984,7 @@ export function PIPPage() {
                           setFormState((prev) => ({ ...prev, supportProvided: updated }));
                         }}
                         placeholder="Support description"
-                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                       />
                       {formState.supportProvided.length > 1 && (
                         <button
@@ -1049,12 +1049,12 @@ export function PIPPage() {
                       }
                     }}
                     placeholder="Type training name and press Enter..."
-                    className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                   <button
                     type="button"
                     onClick={addTrainingTag}
-                    className="px-3 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 text-sm transition-colors"
+                    className="px-3 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] text-sm transition-colors"
                   >
                     Add
                   </button>
@@ -1076,26 +1076,26 @@ export function PIPPage() {
                   }
                   rows={3}
                   placeholder="Describe what will happen if the PIP goals are not met..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
               {/* Form actions */}
-              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => {
                     setShowCreateModal(false);
                     setFormState(initialFormState);
                   }}
-                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={createMutation.isPending}
-                  className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {createMutation.isPending ? 'Creating...' : 'Create PIP'}
                 </button>

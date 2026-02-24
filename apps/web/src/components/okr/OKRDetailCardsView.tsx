@@ -52,7 +52,7 @@ function DetailCard({
       : objective.progress;
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 shadow-sm overflow-hidden group hover:shadow-md transition-shadow">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] shadow-sm overflow-hidden group hover:shadow-md transition-shadow">
       {/* Colored top accent */}
       <div className="h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400" />
 

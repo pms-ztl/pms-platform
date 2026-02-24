@@ -75,19 +75,19 @@ function PageSkeleton() {
     <div className="space-y-6 animate-pulse">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 h-20">
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-20">
             <div className="h-3 bg-secondary-200 dark:bg-secondary-700 rounded w-16 mb-2" />
             <div className="h-6 bg-secondary-200 dark:bg-secondary-700 rounded w-12" />
           </div>
         ))}
       </div>
-      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 h-80">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-80">
         <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-40 mb-4" />
         <div className="h-60 bg-secondary-100 dark:bg-secondary-700/50 rounded-lg" />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 h-72" />
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-72" />
         ))}
       </div>
     </div>
@@ -229,14 +229,14 @@ export function WellbeingDashboardPage() {
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-2">
             <HeartIcon className="h-4 w-4 text-pink-500" />
             <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Wellbeing</p>
           </div>
           <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">{healthData?.wellbeingScore != null ? Number(healthData.wellbeingScore).toFixed(0) : '-'}</p>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-2">
             <FaceSmileIcon className="h-4 w-4 text-amber-500" />
             <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Average Mood</p>
@@ -251,7 +251,7 @@ export function WellbeingDashboardPage() {
             ) : null}
           </p>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-2">
             <FireIcon className="h-4 w-4 text-red-500" />
             <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Average Stress</p>
@@ -260,14 +260,14 @@ export function WellbeingDashboardPage() {
             {overview?.averageStress != null ? Number(overview.averageStress).toFixed(1) : '-'}
           </p>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-2">
             <ExclamationTriangleIcon className="h-4 w-4 text-red-500" />
             <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Burnout Risk</p>
           </div>
           <p className="text-xl font-bold text-red-600 dark:text-red-400 mt-1">{healthData?.flightRiskCount ?? 0}</p>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-2">
             <UserGroupIcon className="h-4 w-4 text-blue-500" />
             <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Participation</p>
@@ -276,7 +276,7 @@ export function WellbeingDashboardPage() {
             {overview?.participationRate != null ? `${Number(overview.participationRate).toFixed(0)}%` : '-'}
           </p>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-2">
             <TrendIcon className={clsx('h-4 w-4', trendColor)} />
             <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Trend</p>
@@ -289,7 +289,7 @@ export function WellbeingDashboardPage() {
 
       {/* Mood/Energy/Stress Trend */}
       {trendChartData.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Mood, Energy & Stress Trends</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Last {daysRange} days — scale 1 to 5</p>
           <div className="h-80">
@@ -337,7 +337,7 @@ export function WellbeingDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <BurnoutRiskChart data={burnoutData} />
 
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Department Wellness</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Average mood score by department</p>
           {deptBarData.length > 0 ? (
@@ -377,13 +377,13 @@ export function WellbeingDashboardPage() {
 
       {/* At-Risk Employees */}
       {atRiskEmployees.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white">At-Risk Employees</h3>
             <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{atRiskEmployees.length} employees showing engagement concerns</p>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Employee</th>
@@ -398,7 +398,7 @@ export function WellbeingDashboardPage() {
                 {atRiskEmployees.slice(0, 10).map((emp) => {
                   const badge = RISK_BADGE[emp.riskLevel || ''] || RISK_BADGE.LOW;
                   return (
-                    <tr key={emp.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/30 transition-colors">
+                    <tr key={emp.id} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/30 transition-colors">
                       <td className="px-6 py-3">
                         <div>
                           <p className="text-sm font-medium text-secondary-900 dark:text-white">{emp.firstName} {emp.lastName}</p>
@@ -440,7 +440,7 @@ export function WellbeingDashboardPage() {
       {/* Mood Distribution + Wellbeing Insights */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Mood Distribution Donut */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Mood Distribution</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">How team members are feeling overall</p>
           {moodDistData.length > 0 ? (
@@ -488,7 +488,7 @@ export function WellbeingDashboardPage() {
         </div>
 
         {/* Wellbeing Insights */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Wellbeing Insights</h3>
           <div className="space-y-6">
             {/* Strengths */}

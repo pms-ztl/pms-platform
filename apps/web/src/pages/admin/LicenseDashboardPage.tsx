@@ -77,7 +77,7 @@ export function LicenseDashboardPage() {
         <PageHeader title="License Dashboard" subtitle="Loading license information..." />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
                 <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" />
@@ -116,7 +116,7 @@ export function LicenseDashboardPage() {
       >
         <button
           onClick={() => queryClient.invalidateQueries({ queryKey: ['license-usage', 'subscription-info'] })}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-700"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-primary-50/30 dark:hover:bg-white/[0.03]"
         >
           <ArrowPathIcon className="h-4 w-4" />
           Refresh
@@ -167,7 +167,7 @@ export function LicenseDashboardPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Active Users */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/20">
               <UsersIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
@@ -190,7 +190,7 @@ export function LicenseDashboardPage() {
         </div>
 
         {/* Archived Users */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-secondary-50 dark:bg-secondary-800">
               <ArrowTrendingUpIcon className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
@@ -202,7 +202,7 @@ export function LicenseDashboardPage() {
         </div>
 
         {/* Max Org Level */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/20">
               <ChartBarIcon className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
@@ -214,7 +214,7 @@ export function LicenseDashboardPage() {
         </div>
 
         {/* Subscription Status */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/20">
               <KeyIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -238,8 +238,8 @@ export function LicenseDashboardPage() {
       {/* Details Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Subscription Details */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center gap-2">
               <BuildingOffice2Icon className="h-5 w-5 text-secondary-500" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Subscription Details</h2>
@@ -266,8 +266,8 @@ export function LicenseDashboardPage() {
         </div>
 
         {/* Designated Manager */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <UserPlusIcon className="h-5 w-5 text-secondary-500" />
@@ -306,8 +306,8 @@ export function LicenseDashboardPage() {
       </div>
 
       {/* License Usage Breakdown */}
-      <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-        <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
           <div className="flex items-center gap-2">
             <CalendarDaysIcon className="h-5 w-5 text-secondary-500" />
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">License Usage Summary</h2>
@@ -351,8 +351,8 @@ export function LicenseDashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* By Level */}
           {breakdown.byLevel.length > 0 && (
-            <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-              <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+            <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+              <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="flex items-center gap-2">
                   <ChartBarIcon className="h-5 w-5 text-secondary-500" />
                   <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Employees by Level</h2>
@@ -381,8 +381,8 @@ export function LicenseDashboardPage() {
 
           {/* By Department */}
           {breakdown.byDepartment.length > 0 && (
-            <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-              <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+            <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+              <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="flex items-center gap-2">
                   <BuildingOffice2Icon className="h-5 w-5 text-secondary-500" />
                   <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Employees by Department</h2>
@@ -413,8 +413,8 @@ export function LicenseDashboardPage() {
 
       {/* Upload History */}
       {Array.isArray(uploadHistory) && uploadHistory.length > 0 && (
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center gap-2">
               <ArrowTrendingUpIcon className="h-5 w-5 text-secondary-500" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Recent Excel Uploads</h2>
@@ -423,7 +423,7 @@ export function LicenseDashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-secondary-200 dark:border-secondary-700">
+                <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
                   <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500">File</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500">Date</th>
                   <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500">Status</th>
@@ -535,8 +535,8 @@ function AssignManagerModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-secondary-900 rounded-xl shadow-xl max-w-md w-full">
-        <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full">
+        <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Assign Designated Manager</h3>
           <p className="text-sm text-secondary-500 mt-1">Search for a user to assign as manager for Excel uploads.</p>
         </div>
@@ -548,7 +548,7 @@ function AssignManagerModal({
               onChange={(e) => setSearchEmail(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder="Search by name or email..."
-              className="flex-1 px-3 py-2 text-sm border border-secondary-300 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white placeholder-secondary-400"
+              className="flex-1 px-3 py-2 text-sm border border-secondary-300 dark:border-secondary-600 rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-secondary-900 dark:text-white placeholder-secondary-400"
             />
             <button
               onClick={handleSearch}
@@ -578,10 +578,10 @@ function AssignManagerModal({
             </div>
           )}
         </div>
-        <div className="px-6 py-4 border-t border-secondary-200 dark:border-secondary-700 flex justify-end gap-3">
+        <div className="px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06] flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-secondary-50"
+            className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-secondary-50"
           >
             Cancel
           </button>

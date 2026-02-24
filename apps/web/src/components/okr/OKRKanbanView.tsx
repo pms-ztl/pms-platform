@@ -67,7 +67,7 @@ function KanbanCard({ goal, index }: { goal: Goal; index: number }) {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           className={clsx(
-            'bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700 p-3 mb-2.5 cursor-grab transition-shadow',
+            'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg border border-secondary-200/60 dark:border-white/[0.06] p-3 mb-2.5 cursor-grab transition-shadow',
             snapshot.isDragging && 'shadow-lg ring-2 ring-primary-400/40 rotate-1'
           )}
         >

@@ -91,13 +91,13 @@ function PageSkeleton() {
     <div className="space-y-6 animate-pulse">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5 h-24">
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5 h-24">
             <div className="h-3 bg-secondary-200 dark:bg-secondary-700 rounded w-20 mb-3" />
             <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-14" />
           </div>
         ))}
       </div>
-      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 h-72">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-72">
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="h-10 bg-secondary-100 dark:bg-secondary-700/50 rounded mb-2" />
         ))}
@@ -244,7 +244,7 @@ export function ScheduledReportsPage() {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white text-sm font-medium rounded-lg transition-colors"
         >
           <PlusIcon className="h-4 w-4" />
           Create Schedule
@@ -253,7 +253,7 @@ export function ScheduledReportsPage() {
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/30">
               <CheckCircleIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -264,7 +264,7 @@ export function ScheduledReportsPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-50 dark:bg-amber-900/30">
               <PauseIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
@@ -275,7 +275,7 @@ export function ScheduledReportsPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30">
               <ArrowPathIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -286,7 +286,7 @@ export function ScheduledReportsPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-purple-50 dark:bg-purple-900/30">
               <CalendarDaysIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" />
@@ -302,8 +302,8 @@ export function ScheduledReportsPage() {
       </div>
 
       {/* Schedules Table */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700">
-        <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
           <div>
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Schedules</h3>
             <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{schedules.length} total</p>
@@ -312,13 +312,13 @@ export function ScheduledReportsPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => schedules.filter((s) => s.isActive).forEach((s) => pauseMutation.mutate(s.id))}
-                className="text-xs px-3 py-1 rounded-md border border-secondary-300 dark:border-secondary-600 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+                className="text-xs px-3 py-1 rounded-md border border-secondary-300 dark:border-secondary-600 text-secondary-600 dark:text-secondary-400 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
               >
                 Pause All
               </button>
               <button
                 onClick={() => schedules.filter((s) => !s.isActive).forEach((s) => resumeMutation.mutate(s.id))}
-                className="text-xs px-3 py-1 rounded-md border border-secondary-300 dark:border-secondary-600 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+                className="text-xs px-3 py-1 rounded-md border border-secondary-300 dark:border-secondary-600 text-secondary-600 dark:text-secondary-400 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
               >
                 Resume All
               </button>
@@ -339,7 +339,7 @@ export function ScheduledReportsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Report Type</th>
@@ -352,7 +352,7 @@ export function ScheduledReportsPage() {
               </thead>
               <tbody className="divide-y divide-secondary-100 dark:divide-secondary-700">
                 {schedules.map((sched) => (
-                  <tr key={sched.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/30 transition-colors">
+                  <tr key={sched.id} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/30 transition-colors">
                     <td className="px-6 py-3">
                       <p className="text-sm font-medium text-secondary-900 dark:text-white">
                         {REPORT_TYPES.find((t) => t.value === (sched.reportType || sched.reportDefinitionId))?.label
@@ -420,8 +420,8 @@ export function ScheduledReportsPage() {
 
       {/* Execution History */}
       {recentReports.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Recent Executions</h3>
             <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">Last {recentReports.length} generated reports</p>
           </div>
@@ -452,8 +452,8 @@ export function ScheduledReportsPage() {
       {/* Create Schedule Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl border border-secondary-200 dark:border-secondary-700 max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-secondary-200/60 dark:border-white/[0.06] max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Report Schedule</h3>
               <button onClick={() => setShowCreateModal(false)} className="p-1 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
                 <XMarkIcon className="h-5 w-5 text-secondary-500" />
@@ -466,7 +466,7 @@ export function ScheduledReportsPage() {
                 <select
                   value={reportType}
                   onChange={(e) => setReportType(e.target.value)}
-                  className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+                  className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                 >
                   {REPORT_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>{t.label}</option>
@@ -486,7 +486,7 @@ export function ScheduledReportsPage() {
                         'px-3 py-2 text-xs font-medium rounded-lg border transition-colors text-left',
                         presetKey === key
                           ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
-                          : 'border-secondary-200 dark:border-secondary-600 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+                          : 'border-secondary-200 dark:border-secondary-600 text-secondary-600 dark:text-secondary-400 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]'
                       )}
                     >
                       {preset.label}
@@ -498,7 +498,7 @@ export function ScheduledReportsPage() {
                       'px-3 py-2 text-xs font-medium rounded-lg border transition-colors text-left col-span-2',
                       presetKey === 'custom'
                         ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
-                        : 'border-secondary-200 dark:border-secondary-600 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+                        : 'border-secondary-200 dark:border-secondary-600 text-secondary-600 dark:text-secondary-400 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]'
                     )}
                   >
                     Custom cron expression
@@ -511,7 +511,7 @@ export function ScheduledReportsPage() {
                       value={customCron}
                       onChange={(e) => setCustomCron(e.target.value)}
                       placeholder="e.g., 0 9 * * 1-5"
-                      className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm font-mono bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+                      className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm font-mono bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                     />
                     <p className="text-2xs text-secondary-400 mt-1">Format: minute hour day-of-month month day-of-week</p>
                   </div>
@@ -531,7 +531,7 @@ export function ScheduledReportsPage() {
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+                    className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
                 <div>
@@ -540,13 +540,13 @@ export function ScheduledReportsPage() {
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+                    className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="px-6 py-4 border-t border-secondary-200 dark:border-secondary-700 flex justify-end gap-3">
+            <div className="px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06] flex justify-end gap-3">
               <button
                 onClick={() => setShowCreateModal(false)}
                 className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors"
@@ -556,7 +556,7 @@ export function ScheduledReportsPage() {
               <button
                 onClick={handleCreate}
                 disabled={createMutation.isPending}
-                className="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] rounded-lg transition-colors disabled:opacity-50"
               >
                 {createMutation.isPending ? 'Creating...' : 'Create Schedule'}
               </button>

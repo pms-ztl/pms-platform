@@ -261,7 +261,7 @@ export function MeetingAnalyticsPage() {
     return (
       <div className="space-y-6 p-6">
         <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Meeting Analytics</h1>
-        <div className="rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-16 text-center">
+        <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-16 text-center">
           <p className="text-secondary-400 text-sm">No meeting data available for the selected time range.</p>
         </div>
       </div>
@@ -280,7 +280,7 @@ export function MeetingAnalyticsPage() {
             One-on-one meeting insights &amp; trends
           </p>
         </div>
-        <div className="inline-flex rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-0.5">
+        <div className="inline-flex rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-0.5">
           {([3, 6, 12] as const).map((r) => (
             <button
               key={r}
@@ -308,7 +308,7 @@ export function MeetingAnalyticsPage() {
             { label: 'Action Items', value: `${stats.actionItems.done}/${stats.actionItems.total}`, sub: stats.actionItems.total ? `${((stats.actionItems.done / stats.actionItems.total) * 100).toFixed(0)}% done` : 'None tracked', color: 'text-amber-600' },
             { label: 'Average Agenda Topics', value: stats.avgAgenda, sub: 'per meeting', color: 'text-cyan-600' },
           ].map((s) => (
-            <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+            <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
               <p className={clsx('text-2xl font-bold mt-1', s.color)}>{s.value}</p>
               <p className="text-2xs text-secondary-400 mt-0.5">{s.sub}</p>
@@ -318,7 +318,7 @@ export function MeetingAnalyticsPage() {
       )}
 
       {/* Meeting frequency area chart */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Meeting Frequency</h3>
         <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">
           Meetings per {timeRange <= 3 ? 'week' : 'month'} — total vs completed
@@ -351,7 +351,7 @@ export function MeetingAnalyticsPage() {
       {/* 2-col: status distribution + action item trend */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Status distribution donut */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Status Distribution</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Meeting outcomes breakdown</p>
           <div className="h-64">
@@ -380,7 +380,7 @@ export function MeetingAnalyticsPage() {
         </div>
 
         {/* Action item completion bar chart */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Action Item Completion</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Completed vs total action items per period</p>
           <div className="h-64">
@@ -402,7 +402,7 @@ export function MeetingAnalyticsPage() {
       {/* 2-col: duration histogram + cadence heatmap */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Duration histogram */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Duration Distribution</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">How long meetings typically last</p>
           <div className="h-64">
@@ -423,7 +423,7 @@ export function MeetingAnalyticsPage() {
         </div>
 
         {/* Meeting cadence heatmap */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Meeting Cadence</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">When meetings are typically held (day × hour)</p>
           <div className="overflow-x-auto">
@@ -468,7 +468,7 @@ export function MeetingAnalyticsPage() {
 
       {/* Overdue action items table */}
       {overdueItems.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Overdue Action Items</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">
             Incomplete items from completed meetings ({overdueItems.length})
@@ -476,7 +476,7 @@ export function MeetingAnalyticsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-secondary-200 dark:border-secondary-700">
+                <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
                   {['Meeting Date', 'Participant', 'Action Item', 'Assignee'].map((h) => (
                     <th key={h} className="text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 pb-2 pr-4">
                       {h}

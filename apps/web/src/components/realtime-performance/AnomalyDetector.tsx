@@ -313,7 +313,7 @@ export function AnomalyDetector() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex space-x-2 border-b border-secondary-200 dark:border-secondary-700">
+      <div className="flex space-x-2 border-b border-secondary-200/60 dark:border-white/[0.06]">
         {['all', 'critical', 'high', 'medium', 'low'].map((level) => (
           <button
             key={level}
@@ -343,7 +343,7 @@ export function AnomalyDetector() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700">
+        <div className="text-center py-12 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
           <ChartBarIcon className="h-12 w-12 text-green-500 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-secondary-900 dark:text-white">No anomalies detected</h3>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">

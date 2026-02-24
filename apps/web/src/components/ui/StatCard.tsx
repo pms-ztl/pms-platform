@@ -18,7 +18,7 @@ export function StatCard({ label, value, icon, trend, variant = 'default', class
 
   const variantClasses = {
     default:
-      'bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700',
+      'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06]',
     gradient:
       'bg-gradient-to-br from-primary-600 to-primary-800 text-white border-0',
     glass:
@@ -28,11 +28,13 @@ export function StatCard({ label, value, icon, trend, variant = 'default', class
   return (
     <div
       className={clsx(
-        'rounded-2xl p-5 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5',
+        'group relative rounded-2xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden',
         variantClasses[variant],
         className
       )}
     >
+      {/* Gradient top-edge on hover */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary-500/60 to-cyan-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p

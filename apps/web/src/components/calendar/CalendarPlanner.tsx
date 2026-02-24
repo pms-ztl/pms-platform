@@ -323,7 +323,7 @@ export function CalendarPlanner() {
               className={clsx(
                 'min-h-[100px] p-2 rounded-lg cursor-pointer transition-colors select-none',
                 !isCurrentMonth && 'bg-secondary-50 dark:bg-secondary-900/50',
-                isCurrentMonth && !isSelected && !isToday(day) && 'bg-white dark:bg-secondary-800',
+                isCurrentMonth && !isSelected && !isToday(day) && 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl',
                 isToday(day) &&
                   !isSelected &&
                   'bg-primary-50 dark:bg-primary-900/30 ring-1 ring-primary-300 dark:ring-primary-700',
@@ -380,14 +380,14 @@ export function CalendarPlanner() {
     <div className="p-4 overflow-x-auto">
       {/* Day headers */}
       <div className="grid grid-cols-8 gap-0 mb-0 min-w-[700px]">
-        <div className="text-center text-xs font-medium text-secondary-400 dark:text-secondary-500 py-2 border-r border-secondary-200 dark:border-secondary-700 w-16" />
+        <div className="text-center text-xs font-medium text-secondary-400 dark:text-secondary-500 py-2 border-r border-secondary-200/60 dark:border-white/[0.06] w-16" />
         {weekDays.map((day) => (
           <div
             key={day.toISOString()}
             onClick={() => setSelectedDate(day)}
             onDoubleClick={() => handleDoubleClick(day)}
             className={clsx(
-              'text-center py-2 cursor-pointer select-none transition-colors border-r last:border-r-0 border-secondary-200 dark:border-secondary-700',
+              'text-center py-2 cursor-pointer select-none transition-colors border-r last:border-r-0 border-secondary-200/60 dark:border-white/[0.06]',
               isToday(day)
                 ? 'bg-primary-50 dark:bg-primary-900/20'
                 : 'hover:bg-secondary-50 dark:hover:bg-secondary-800',
@@ -413,7 +413,7 @@ export function CalendarPlanner() {
       <div className="max-h-[500px] overflow-y-auto min-w-[700px]">
         {dayHours.map((hour) => (
           <div key={hour.toISOString()} className="grid grid-cols-8 gap-0 border-t border-secondary-100 dark:border-secondary-700/50">
-            <div className="text-xs text-secondary-400 dark:text-secondary-500 py-3 pr-2 text-right w-16 border-r border-secondary-200 dark:border-secondary-700">
+            <div className="text-xs text-secondary-400 dark:text-secondary-500 py-3 pr-2 text-right w-16 border-r border-secondary-200/60 dark:border-white/[0.06]">
               {format(hour, 'h a')}
             </div>
             {weekDays.map((day) => {
@@ -447,7 +447,7 @@ export function CalendarPlanner() {
       </div>
 
       {/* All-day events bar */}
-      <div className="border-t border-secondary-200 dark:border-secondary-700 mt-2 pt-2">
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] mt-2 pt-2">
         <div className="grid grid-cols-8 gap-0 min-w-[700px]">
           <div className="text-xs text-secondary-400 dark:text-secondary-500 pr-2 text-right w-16">All day</div>
           {weekDays.map((day) => {
@@ -596,9 +596,9 @@ export function CalendarPlanner() {
   };
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
       {/* Header */}
-      <div className="p-4 border-b border-secondary-200 dark:border-secondary-700">
+      <div className="p-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
@@ -651,7 +651,7 @@ export function CalendarPlanner() {
 
       {/* Event details panel - only in month view */}
       {viewMode === 'month' && selectedDate && (
-        <div className="border-t border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="border-t border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-secondary-900 dark:text-white">
               {format(selectedDate, 'EEEE, MMMM d, yyyy')}
@@ -703,7 +703,7 @@ export function CalendarPlanner() {
       )}
 
       {/* Legend */}
-      <div className="border-t border-secondary-200 dark:border-secondary-700 px-4 py-3">
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] px-4 py-3">
         <div className="flex items-center gap-4 text-xs flex-wrap">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-blue-500" />
@@ -740,7 +740,7 @@ export function CalendarPlanner() {
               className="fixed inset-0 bg-black/50 dark:bg-black/70"
               onClick={() => setShowCreateModal(false)}
             />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Create Calendar Event
               </h2>

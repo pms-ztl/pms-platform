@@ -65,14 +65,14 @@ export function OKRExportButton({ filterType, filterStatus }: OKRExportButtonPro
     <div ref={menuRef} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-200 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors shadow-sm"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-200 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors shadow-sm"
       >
         <ArrowDownTrayIcon className="h-3.5 w-3.5" />
         Export
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 bg-white dark:bg-secondary-800 rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-600 py-1 min-w-[180px] z-50">
+        <div className="absolute right-0 top-full mt-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-600 py-1 min-w-[180px] z-50">
           <button
             onClick={() => handleExport('all')}
             disabled={exporting}

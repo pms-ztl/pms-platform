@@ -277,7 +277,7 @@ export function PerformanceBenchmarkPage() {
           { label: 'Above Benchmark', value: `${stats.abovePct}%`, icon: TrophyIcon, color: stats.abovePct >= 50 ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400' },
           { label: 'Team Average Score', value: summary?.teamAvg?.toFixed(1) ?? (stats.avgScore ?? 0).toFixed(1), icon: ArrowTrendingUpIcon, color: 'text-purple-600 dark:text-purple-400' },
         ].map((s) => (
-          <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+          <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center justify-between">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
               <s.icon className={clsx('w-4 h-4', s.color)} />
@@ -289,7 +289,7 @@ export function PerformanceBenchmarkPage() {
 
       {/* RadarChart — Team vs Org Benchmark */}
       {radarData.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">
             Team vs Organization Benchmark
           </h3>
@@ -338,7 +338,7 @@ export function PerformanceBenchmarkPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Department comparison */}
         {deptBarData.length > 0 && (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">
               Department Comparison
             </h3>
@@ -394,7 +394,7 @@ export function PerformanceBenchmarkPage() {
 
         {/* Score distribution histogram */}
         {distributionData.length > 0 && (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">
               Percentile Distribution
             </h3>
@@ -436,7 +436,7 @@ export function PerformanceBenchmarkPage() {
       </div>
 
       {/* Comparison results table */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
           Individual Comparisons
         </h3>
@@ -448,7 +448,7 @@ export function PerformanceBenchmarkPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-secondary-200 dark:border-secondary-700">
+                <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
                   {['Employee', 'Department', 'Score', 'Benchmark', 'Delta', 'Percentile'].map((h) => (
                     <th
                       key={h}
@@ -530,8 +530,8 @@ export function PerformanceBenchmarkPage() {
     if (!showCreateModal) return null;
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl w-full max-w-md">
-          <div className="flex items-center justify-between p-6 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md">
+          <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Benchmark</h3>
             <button
               onClick={() => {
@@ -583,7 +583,7 @@ export function PerformanceBenchmarkPage() {
               />
             </div>
           </div>
-          <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200 dark:border-secondary-700">
+          <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
             <button
               onClick={() => {
                 setShowCreateModal(false);

@@ -199,7 +199,7 @@ export function SurveyInsights({ overview, trends, departments, className }: Sur
                   ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50'
                   : insight.type === 'warning'
                     ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800/50'
-                    : 'bg-secondary-50 dark:bg-secondary-800/50 border-secondary-200 dark:border-secondary-700'
+                    : 'bg-secondary-50 dark:bg-secondary-800/50 border-secondary-200/60 dark:border-white/[0.06]'
               )}
             >
               <div className="flex items-start gap-3">

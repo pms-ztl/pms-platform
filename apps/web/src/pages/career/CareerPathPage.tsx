@@ -92,8 +92,8 @@ function CareerNode({ position: p, isSelected, onClick }: { position: CareerPosi
     <button onClick={onClick} className={clsx(
       'w-full text-left rounded-xl border p-4 transition-all duration-200',
       p.isCurrent ? 'border-primary-400 dark:border-primary-500 bg-primary-50 dark:bg-primary-900/20 shadow-[0_0_16px_rgba(59,130,246,0.15)] dark:shadow-[0_0_16px_rgba(96,165,250,0.2)]'
-        : isSelected ? 'border-primary-300 dark:border-primary-600 bg-white dark:bg-secondary-800 shadow-md ring-2 ring-primary-200 dark:ring-primary-800'
-        : 'border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 hover:shadow-md hover:border-primary-200 dark:hover:border-primary-700',
+        : isSelected ? 'border-primary-300 dark:border-primary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-md ring-2 ring-primary-200 dark:ring-primary-800'
+        : 'border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl hover:shadow-md hover:border-primary-200 dark:hover:border-primary-700',
     )}>
       <div className="flex items-start justify-between gap-2 mb-2">
         <h4 className="text-sm font-semibold text-secondary-900 dark:text-white leading-tight">{p.title}</h4>
@@ -133,7 +133,7 @@ function CompetencyBar({ name, current, required }: { name: string; current: num
 }
 
 function Spinner() {
-  return <div className="flex justify-center py-10"><div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" /></div>;
+  return <div className="flex justify-center py-10"><div className="glass-spinner" /></div>;
 }
 
 // ── Main Component ───────────────────────────────────────────────────────────
@@ -203,7 +203,7 @@ export function CareerPathPage() {
 
       {/* Current Position Card */}
       {pathLoading ? <Spinner /> : cp ? (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <div className="flex flex-col lg:flex-row lg:items-start gap-6">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-1">
@@ -235,14 +235,14 @@ export function CareerPathPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-12">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12">
           <BriefcaseIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <p className="mt-2 text-sm text-secondary-500 dark:text-secondary-400">Career path data not available</p>
         </div>
       )}
 
       {/* Section Tabs */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="flex gap-6" aria-label="Career sections">
           {sectionTabs.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => { setActiveSection(id); setSelectedNextRole(null); setSelectedCatalogRole(null); }}
@@ -304,8 +304,8 @@ export function CareerPathPage() {
 
           {/* Growth Requirements Panel */}
           {selectedNextRole && (
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
-              <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+              <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Growth Requirements</h3>
                 <button onClick={() => setSelectedNextRole(null)} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
                   <XMarkIcon className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
@@ -369,7 +369,7 @@ export function CareerPathPage() {
                     )}
                   </div>
                   <div className="pt-2">
-                    <button className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2 transition-colors">
+                    <button className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-5 py-2.5 text-sm font-medium inline-flex items-center gap-2 transition-colors">
                       <RocketLaunchIcon className="h-5 w-5" /> Create Development Plan
                     </button>
                   </div>
@@ -407,7 +407,7 @@ export function CareerPathPage() {
             </div>
           </div>
           {rolesLoading ? <Spinner /> : filteredRoles.length === 0 ? (
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-12">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12">
               <BriefcaseIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
               <p className="mt-2 text-sm text-secondary-500 dark:text-secondary-400">No roles match your search criteria.</p>
             </div>
@@ -416,8 +416,8 @@ export function CareerPathPage() {
               {filteredRoles.map((role) => (
                 <button key={role.id} onClick={() => setSelectedCatalogRole(selectedCatalogRole === role.id ? null : role.id)}
                   className={clsx('text-left rounded-xl border p-4 transition-all duration-200',
-                    selectedCatalogRole === role.id ? 'border-primary-300 dark:border-primary-600 bg-white dark:bg-secondary-800 ring-2 ring-primary-200 dark:ring-primary-800 shadow-md'
-                      : 'border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 hover:shadow-md hover:border-primary-200 dark:hover:border-primary-700')}>
+                    selectedCatalogRole === role.id ? 'border-primary-300 dark:border-primary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl ring-2 ring-primary-200 dark:ring-primary-800 shadow-md'
+                      : 'border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl hover:shadow-md hover:border-primary-200 dark:hover:border-primary-700')}>
                   <h4 className="text-sm font-semibold text-secondary-900 dark:text-white mb-1">{role.title}</h4>
                   <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-2">{role.department} &middot; {role.levelRange}</p>
                   <p className="text-xs text-secondary-600 dark:text-secondary-400 mb-3">{role.description}</p>
@@ -436,7 +436,7 @@ export function CareerPathPage() {
       {activeSection === 'goals' && (
         <div className="space-y-4">
           {goalsLoading ? <Spinner /> : !careerGoals || careerGoals.length === 0 ? (
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-12">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12">
               <RocketLaunchIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
               <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">No career goals yet</h3>
               <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">Set career goals to track your progression toward target roles.</p>
@@ -444,7 +444,7 @@ export function CareerPathPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {careerGoals.map((goal) => (
-                <div key={goal.id} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+                <div key={goal.id} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <h4 className="text-sm font-semibold text-secondary-900 dark:text-white">{goal.targetRole}</h4>

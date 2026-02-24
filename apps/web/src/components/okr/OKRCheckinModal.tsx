@@ -114,7 +114,7 @@ export function OKRCheckinModal({ open, onClose, keyResult, onSuccess }: OKRChec
                   'flex-1 px-3 py-2 text-xs font-medium rounded-lg border transition-all',
                   confidence === opt.value
                     ? opt.color
-                    : 'border-secondary-200 dark:border-secondary-700 text-secondary-500 dark:text-secondary-400 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+                    : 'border-secondary-200/60 dark:border-white/[0.06] text-secondary-500 dark:text-secondary-400 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]'
                 )}
               >
                 {opt.label}
@@ -142,7 +142,7 @@ export function OKRCheckinModal({ open, onClose, keyResult, onSuccess }: OKRChec
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+            className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
           >
             Cancel
           </button>
@@ -150,7 +150,7 @@ export function OKRCheckinModal({ open, onClose, keyResult, onSuccess }: OKRChec
             type="button"
             onClick={() => mutation.mutate()}
             disabled={mutation.isPending}
-            className="px-4 py-2 text-sm font-medium rounded-lg bg-primary-600 hover:bg-primary-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {mutation.isPending ? 'Saving...' : 'Save Check-in'}
           </button>

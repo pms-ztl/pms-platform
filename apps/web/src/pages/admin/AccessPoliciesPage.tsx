@@ -406,7 +406,7 @@ export function AccessPoliciesPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 animate-pulse h-16"
+              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 animate-pulse h-16"
             />
           ))}
         </div>
@@ -432,7 +432,7 @@ export function AccessPoliciesPage() {
       </PageHeader>
 
       {/* ---- Status tabs ---- */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="-mb-px flex gap-6" aria-label="Policy status tabs">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.value;
@@ -486,8 +486,8 @@ export function AccessPoliciesPage() {
           )}
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-900">
-          <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+        <div className="overflow-x-auto rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
+          <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
             <thead>
               <tr className="bg-secondary-50 dark:bg-secondary-800/50">
                 <th className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
@@ -619,7 +619,7 @@ export function AccessPoliciesPage() {
       {/* ================================================================= */}
       {/* Policy Simulator (collapsible)                                    */}
       {/* ================================================================= */}
-      <div className="rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-900">
+      <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
         <button
           type="button"
           onClick={() => setSimOpen((prev) => !prev)}
@@ -642,7 +642,7 @@ export function AccessPoliciesPage() {
         </button>
 
         {simOpen && (
-          <div className="border-t border-secondary-200 dark:border-secondary-700 px-6 py-5 space-y-4">
+          <div className="border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-5 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {/* User select */}
               <div>
@@ -652,7 +652,7 @@ export function AccessPoliciesPage() {
                 <select
                   value={simUserId}
                   onChange={(e) => setSimUserId(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 >
                   <option value="">-- Select user --</option>
                   {users.map((u) => (
@@ -673,7 +673,7 @@ export function AccessPoliciesPage() {
                   value={simResource}
                   onChange={(e) => setSimResource(e.target.value)}
                   placeholder="e.g. reviews, goals, compensation"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -687,7 +687,7 @@ export function AccessPoliciesPage() {
                   value={simAction}
                   onChange={(e) => setSimAction(e.target.value)}
                   placeholder="e.g. read, write, delete"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
             </div>
@@ -772,7 +772,7 @@ export function AccessPoliciesPage() {
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 backdrop-blur-sm p-4 sm:p-8">
           <div className="relative w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
             {/* Modal header */}
-            <div className="flex items-center justify-between border-b border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingPolicy ? 'Edit Policy' : 'Create Policy'}
               </h2>
@@ -796,7 +796,7 @@ export function AccessPoliciesPage() {
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="e.g. Manager Visibility Rule"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -810,7 +810,7 @@ export function AccessPoliciesPage() {
                   onChange={(e) => setFormDescription(e.target.value)}
                   placeholder="Brief description of this policy..."
                   rows={2}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
                 />
               </div>
 
@@ -824,7 +824,7 @@ export function AccessPoliciesPage() {
                   <select
                     value={formType}
                     onChange={(e) => setFormType(e.target.value as PolicyType)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                   >
                     {POLICY_TYPES.map((t) => (
                       <option key={t} value={t}>
@@ -846,7 +846,7 @@ export function AccessPoliciesPage() {
                       className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
                         formEffect === 'ALLOW'
                           ? 'bg-green-600 text-white'
-                          : 'bg-white dark:bg-secondary-900 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-800'
+                          : 'bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-800'
                       }`}
                     >
                       ALLOW
@@ -857,7 +857,7 @@ export function AccessPoliciesPage() {
                       className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
                         formEffect === 'DENY'
                           ? 'bg-red-600 text-white'
-                          : 'bg-white dark:bg-secondary-900 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-800'
+                          : 'bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-800'
                       }`}
                     >
                       DENY
@@ -876,7 +876,7 @@ export function AccessPoliciesPage() {
                   value={formPriority}
                   onChange={(e) => setFormPriority(parseInt(e.target.value, 10) || 0)}
                   min={0}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
                 <p className="mt-1 text-xs text-secondary-500 dark:text-secondary-400">
                   Higher values take precedence. 0 = default.
@@ -893,7 +893,7 @@ export function AccessPoliciesPage() {
                   value={formTargetRoles}
                   onChange={(e) => setFormTargetRoles(e.target.value)}
                   placeholder="ADMIN, MANAGER, HR (comma-separated)"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -907,7 +907,7 @@ export function AccessPoliciesPage() {
                   value={formTargetDepartments}
                   onChange={(e) => setFormTargetDepartments(e.target.value)}
                   placeholder="Engineering, Finance, Sales (comma-separated)"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -921,7 +921,7 @@ export function AccessPoliciesPage() {
                     type="date"
                     value={formEffectiveFrom}
                     onChange={(e) => setFormEffectiveFrom(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                   />
                 </div>
                 <div>
@@ -932,14 +932,14 @@ export function AccessPoliciesPage() {
                     type="date"
                     value={formEffectiveTo}
                     onChange={(e) => setFormEffectiveTo(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                   />
                 </div>
               </div>
             </div>
 
             {/* Modal footer */}
-            <div className="flex items-center justify-end gap-3 border-t border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <button
                 onClick={closeModal}
                 className="rounded-lg px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-secondary-100 dark:bg-secondary-800 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors"
@@ -965,7 +965,7 @@ export function AccessPoliciesPage() {
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
-            <div className="flex items-center gap-3 border-b border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center gap-3 border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/20">
                 <TrashIcon className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
@@ -987,7 +987,7 @@ export function AccessPoliciesPage() {
               </p>
             </div>
 
-            <div className="flex items-center justify-end gap-3 border-t border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <button
                 onClick={() => setDeleteTarget(null)}
                 className="rounded-lg px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-secondary-100 dark:bg-secondary-800 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors"

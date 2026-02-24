@@ -79,7 +79,7 @@ function QuickActions({ pendingReviews, atRiskGoals, goalsData }: QuickActionsPr
           <div className="text-center py-8">
             <div className="relative w-16 h-16 mx-auto mb-4">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 rounded-full animate-pulse" />
-              <div className="absolute inset-1 bg-white dark:bg-secondary-800 rounded-full flex items-center justify-center">
+              <div className="absolute inset-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-full flex items-center justify-center">
                 <CheckCircleIcon className="w-8 h-8 text-emerald-500" />
               </div>
             </div>

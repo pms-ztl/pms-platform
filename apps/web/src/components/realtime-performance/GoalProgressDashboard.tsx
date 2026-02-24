@@ -133,7 +133,7 @@ const GoalCard = ({ goal }: { goal: GoalItem }) => {
       : 'text-secondary-500 dark:text-secondary-400';
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-4 hover:shadow-md transition-all">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-4 hover:shadow-md transition-all">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
           <h4 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">
@@ -304,7 +304,7 @@ export function GoalProgressDashboard() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex space-x-2 border-b border-secondary-200 dark:border-secondary-700">
+      <div className="flex space-x-2 border-b border-secondary-200/60 dark:border-white/[0.06]">
         {[
           { key: 'all', label: 'All Goals' },
           { key: 'on_track', label: 'On Track', color: 'text-green-600' },

@@ -383,7 +383,7 @@ export function OneOnOnesPage() {
       <Link
         key={meeting.id}
         to={`/one-on-ones/${meeting.id}`}
-        className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 hover:border-primary-300 dark:hover:border-primary-600 transition-colors p-5 flex flex-col"
+        className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-600 transition-colors p-5 flex flex-col"
       >
         {/* Top: Participant + Status */}
         <div className="flex items-start justify-between gap-3">
@@ -488,7 +488,7 @@ export function OneOnOnesPage() {
   const renderEmptyState = () => {
     if (activeTab === 'upcoming') {
       return (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-16 px-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-16 px-6">
           <CalendarDaysIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
             No upcoming 1-on-1 meetings
@@ -498,7 +498,7 @@ export function OneOnOnesPage() {
           </p>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="mt-4 inline-flex items-center bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+            className="mt-4 inline-flex items-center bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
           >
             <PlusIcon className="h-5 w-5 mr-1.5" />
             Schedule 1-on-1
@@ -508,7 +508,7 @@ export function OneOnOnesPage() {
     }
 
     return (
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-16 px-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-16 px-6">
         <CheckCircleIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
         <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
           No past meetings yet
@@ -535,8 +535,8 @@ export function OneOnOnesPage() {
             className={clsx(
               'inline-flex items-center border rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
               page <= 1
-                ? 'border-secondary-200 dark:border-secondary-700 text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
-                : 'border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+                ? 'border-secondary-200/60 dark:border-white/[0.06] text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
+                : 'border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]'
             )}
           >
             <ChevronLeftIcon className="h-4 w-4 mr-1" />
@@ -548,8 +548,8 @@ export function OneOnOnesPage() {
             className={clsx(
               'inline-flex items-center border rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
               page >= totalPages
-                ? 'border-secondary-200 dark:border-secondary-700 text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
-                : 'border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+                ? 'border-secondary-200/60 dark:border-white/[0.06] text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
+                : 'border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]'
             )}
           >
             Next
@@ -570,7 +570,7 @@ export function OneOnOnesPage() {
       <PageHeader title="1-on-1 Meetings" subtitle="Schedule and track your 1-on-1 conversations">
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          className="inline-flex items-center bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
         >
           <PlusIcon className="h-5 w-5 mr-1.5" />
           Schedule 1-on-1
@@ -578,7 +578,7 @@ export function OneOnOnesPage() {
       </PageHeader>
 
       {/* Tabs */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="-mb-px flex space-x-8">
           {[
             { key: 'upcoming' as const, label: 'Upcoming' },
@@ -603,7 +603,7 @@ export function OneOnOnesPage() {
       {/* Content */}
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner" />
         </div>
       ) : meetings.length === 0 ? (
         renderEmptyState()
@@ -634,7 +634,7 @@ export function OneOnOnesPage() {
             />
 
             {/* Modal */}
-            <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-lg w-full mx-4 p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full mx-4 p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               {/* Modal header */}
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -788,14 +788,14 @@ export function OneOnOnesPage() {
                       }
                     }}
                     disabled={createMutation.isPending}
-                    className="border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+                    className="border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 rounded-lg px-4 py-2 text-sm font-medium hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={createMutation.isPending}
-                    className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {createMutation.isPending ? 'Scheduling...' : 'Schedule Meeting'}
                   </button>

@@ -347,7 +347,7 @@ export function SAUsersPage() {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-colors"
         >
           <UserPlusIcon className="h-5 w-5" />
           Create User
@@ -363,13 +363,13 @@ export function SAUsersPage() {
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Search by name or email..."
-            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 pl-10 pr-4 py-2.5 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl pl-10 pr-4 py-2.5 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           />
         </div>
         <select
           value={roleFilter}
           onChange={(e) => handleRoleFilterChange(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-3 py-2.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
         >
           {ROLES.map((r) => (
             <option key={r.value} value={r.value}>
@@ -505,14 +505,14 @@ export function SAUsersPage() {
             <button
               type="button"
               onClick={() => setShowCreateModal(false)}
-              className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+              className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={createUserMutation.isPending}
-              className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
             >
               {createUserMutation.isPending ? 'Creating...' : 'Create User'}
             </button>

@@ -621,7 +621,7 @@ export function OrgChartPage() {
                 className={clsx(
                   'p-1.5 rounded-md border transition-colors',
                   maxDepth <= MIN_DEPTH
-                    ? 'border-secondary-200 dark:border-secondary-700 text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
+                    ? 'border-secondary-200/60 dark:border-white/[0.06] text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
                     : 'border-secondary-200 dark:border-white/[0.06] text-secondary-600 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-white/[0.04]'
                 )}
                 aria-label="Decrease depth"
@@ -652,7 +652,7 @@ export function OrgChartPage() {
                 className={clsx(
                   'p-1.5 rounded-md border transition-colors',
                   maxDepth >= MAX_DEPTH
-                    ? 'border-secondary-200 dark:border-secondary-700 text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
+                    ? 'border-secondary-200/60 dark:border-white/[0.06] text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
                     : 'border-secondary-200 dark:border-white/[0.06] text-secondary-600 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-white/[0.04]'
                 )}
                 aria-label="Increase depth"

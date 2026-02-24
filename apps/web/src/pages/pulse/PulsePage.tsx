@@ -229,7 +229,7 @@ function StatCard({
     );
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
       <div className="flex items-center justify-between">
         <div className={clsx('p-3 rounded-lg', iconBg)}>
           <Icon className={clsx('h-6 w-6', iconColor)} />
@@ -649,7 +649,7 @@ export function PulsePage() {
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Mood Distribution Pie Chart */}
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
               <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Mood Distribution</h3>
               {pieData.length > 0 ? (
                 <div className="h-64">
@@ -705,7 +705,7 @@ export function PulsePage() {
             </div>
 
             {/* Trend Line Chart */}
-            <div className="lg:col-span-2 bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+            <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
               <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Mood Trends</h3>
               {trendChartData.length > 0 ? (
                 <div className="h-64">
@@ -785,7 +785,7 @@ export function PulsePage() {
 
           {/* Department Heatmap / Bar Chart */}
           {deptChartData.length > 0 && (
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
               <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Department Breakdown</h3>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">

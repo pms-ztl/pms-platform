@@ -403,12 +403,12 @@ export function CalendarPage() {
         </PageHeader>
 
         {/* Calendar Grid */}
-        <div className="flex-1 bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+        <div className="flex-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
           {/* ── MONTH VIEW ── */}
           {viewMode === 'month' && (
             <div className="h-full flex flex-col">
               {/* Day headers */}
-              <div className="grid grid-cols-7 border-b border-secondary-200 dark:border-secondary-700">
+              <div className="grid grid-cols-7 border-b border-secondary-200/60 dark:border-white/[0.06]">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
                   <div key={d} className="py-2 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     {d}
@@ -469,14 +469,14 @@ export function CalendarPage() {
           {viewMode === 'week' && (
             <div className="h-full flex flex-col">
               {/* Day headers */}
-              <div className="grid grid-cols-8 border-b border-secondary-200 dark:border-secondary-700 sticky top-0 bg-white dark:bg-secondary-800 z-10">
+              <div className="grid grid-cols-8 border-b border-secondary-200/60 dark:border-white/[0.06] sticky top-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-10">
                 <div className="py-2 px-2 text-2xs text-secondary-400">&nbsp;</div>
                 {weekDays.map((day) => (
                   <div
                     key={day.toISOString()}
                     onClick={() => setSelectedDate(day)}
                     className={clsx(
-                      'py-2 text-center cursor-pointer hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors',
+                      'py-2 text-center cursor-pointer hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors',
                       isSameDay(day, selectedDate) && 'bg-primary-50 dark:bg-primary-900/10'
                     )}
                   >
@@ -535,7 +535,7 @@ export function CalendarPage() {
                 const allDayEvents = getEventsForDay(currentDate).filter((e) => !e.startTime);
                 if (allDayEvents.length === 0) return null;
                 return (
-                  <div className="px-4 py-2 border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900/30">
+                  <div className="px-4 py-2 border-b border-secondary-200/60 dark:border-white/[0.06] bg-secondary-50 dark:bg-secondary-900/30">
                     <p className="text-2xs font-medium text-secondary-400 mb-1">All Day</p>
                     <div className="flex flex-wrap gap-1">
                       {allDayEvents.map((evt) => (
@@ -561,7 +561,7 @@ export function CalendarPage() {
                         {format(hour, 'h:mm a')}
                       </div>
                       <div
-                        className="flex-1 border-l border-secondary-200 dark:border-secondary-700 px-2 py-1"
+                        className="flex-1 border-l border-secondary-200/60 dark:border-white/[0.06] px-2 py-1"
                         onDoubleClick={() => setShowCreateForm(true)}
                       >
                         {hourEvents.map((evt) => (
@@ -588,7 +588,7 @@ export function CalendarPage() {
       {/* ── Sidebar ── */}
       <div className="w-80 flex-shrink-0 flex flex-col gap-4 overflow-y-auto hidden lg:flex">
         {/* Selected Date */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">
               {format(selectedDate, 'EEE, MMM d')}
@@ -634,7 +634,7 @@ export function CalendarPage() {
 
         {/* Create Event Form */}
         {showCreateForm && (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">New Event</h3>
               <button onClick={() => setShowCreateForm(false)} className="text-secondary-400 hover:text-secondary-600">
@@ -642,17 +642,17 @@ export function CalendarPage() {
               </button>
             </div>
             <form onSubmit={handleCreateEvent} className="space-y-3">
-              <input name="title" placeholder="Event title" required className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400" />
-              <textarea name="description" placeholder="Description (optional)" rows={2} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 resize-none" />
-              <input name="eventDate" type="date" defaultValue={format(selectedDate, 'yyyy-MM-dd')} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
+              <input name="title" placeholder="Event title" required className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400" />
+              <textarea name="description" placeholder="Description (optional)" rows={2} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 resize-none" />
+              <input name="eventDate" type="date" defaultValue={format(selectedDate, 'yyyy-MM-dd')} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
               <div className="grid grid-cols-2 gap-2">
-                <input name="startTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
-                <input name="endTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
+                <input name="startTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
+                <input name="endTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
               </div>
-              <select name="type" className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-1.5 text-sm text-secondary-900 dark:text-white">
+              <select name="type" className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white">
                 {EVENT_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
-              <select name="color" className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-1.5 text-sm text-secondary-900 dark:text-white">
+              <select name="color" className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white">
                 {EVENT_COLORS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
               </select>
               <button type="submit" disabled={createMutation.isPending} className="w-full py-2 text-sm font-medium rounded-lg bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 transition-colors">
@@ -663,7 +663,7 @@ export function CalendarPage() {
         )}
 
         {/* Event Type Legend / Filters */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-3">Event Types</h3>
           <div className="space-y-1.5">
             {Object.entries(EVENT_TYPE_CONFIG).map(([type, config]) => (
@@ -674,7 +674,7 @@ export function CalendarPage() {
                   'flex items-center gap-2 w-full px-2 py-1.5 rounded-lg text-xs transition-colors',
                   filterTypes.size > 0 && !filterTypes.has(type)
                     ? 'opacity-40'
-                    : 'hover:bg-secondary-50 dark:hover:bg-secondary-700/50'
+                    : 'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50'
                 )}
               >
                 <div className={clsx('w-3 h-3 rounded-sm', config.color)} />
@@ -693,7 +693,7 @@ export function CalendarPage() {
         </div>
 
         {/* Keyboard Shortcuts */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-2">Shortcuts</h3>
           <div className="space-y-1 text-2xs text-secondary-500 dark:text-secondary-400">
             <div className="flex justify-between"><span>Navigate</span><kbd className="px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 font-mono">← →</kbd></div>

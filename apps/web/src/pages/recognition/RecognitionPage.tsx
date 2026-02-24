@@ -263,7 +263,7 @@ export function RecognitionPage() {
                   <button
                     onClick={() => setPage(p => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-4 py-2 rounded-xl border border-secondary-200 dark:border-secondary-700 text-sm text-secondary-700 dark:text-secondary-300 disabled:opacity-40 hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-all hover:shadow-sm"
+                    className="px-4 py-2 rounded-xl border border-secondary-200/60 dark:border-white/[0.06] text-sm text-secondary-700 dark:text-secondary-300 disabled:opacity-40 hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-all hover:shadow-sm"
                   >
                     Previous
                   </button>
@@ -273,7 +273,7 @@ export function RecognitionPage() {
                   <button
                     onClick={() => setPage(p => Math.min(wall.meta!.totalPages!, p + 1))}
                     disabled={page >= (wall.meta.totalPages ?? 1)}
-                    className="px-4 py-2 rounded-xl border border-secondary-200 dark:border-secondary-700 text-sm text-secondary-700 dark:text-secondary-300 disabled:opacity-40 hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-all hover:shadow-sm"
+                    className="px-4 py-2 rounded-xl border border-secondary-200/60 dark:border-white/[0.06] text-sm text-secondary-700 dark:text-secondary-300 disabled:opacity-40 hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-all hover:shadow-sm"
                   >
                     Next
                   </button>
@@ -542,7 +542,7 @@ export function RecognitionPage() {
                   <button
                     type="button"
                     onClick={() => setShowGiveModal(false)}
-                    className="px-4 py-2.5 rounded-xl border border-secondary-200 dark:border-secondary-600 text-sm text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-all"
+                    className="px-4 py-2.5 rounded-xl border border-secondary-200 dark:border-secondary-600 text-sm text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-all"
                   >
                     Cancel
                   </button>

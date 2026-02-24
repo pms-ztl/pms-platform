@@ -116,7 +116,7 @@ export function ActionPlansWidget({ atRiskEmployees, tenantId = 'default', class
   }), [plans]);
 
   return (
-    <div className={clsx('bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6', className)}>
+    <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Action Plans</h3>
@@ -152,12 +152,12 @@ export function ActionPlansWidget({ atRiskEmployees, tenantId = 'default', class
 
       {/* Add form */}
       {showForm && (
-        <div className="mb-4 p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg border border-secondary-200 dark:border-secondary-700">
+        <div className="mb-4 p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg border border-secondary-200/60 dark:border-white/[0.06]">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <select
               value={selectedEmployee}
               onChange={(e) => setSelectedEmployee(e.target.value)}
-              className="block w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 text-sm text-secondary-900 dark:text-white px-3 py-2"
+              className="block w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-sm text-secondary-900 dark:text-white px-3 py-2"
             >
               <option value="">Select employee...</option>
               {atRiskEmployees.map((emp) => (
@@ -171,7 +171,7 @@ export function ActionPlansWidget({ atRiskEmployees, tenantId = 'default', class
               value={actionText}
               onChange={(e) => setActionText(e.target.value)}
               placeholder="Describe the action plan..."
-              className="block w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 text-sm text-secondary-900 dark:text-white px-3 py-2 placeholder:text-secondary-400"
+              className="block w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-sm text-secondary-900 dark:text-white px-3 py-2 placeholder:text-secondary-400"
               onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
             />
           </div>
@@ -206,8 +206,8 @@ export function ActionPlansWidget({ atRiskEmployees, tenantId = 'default', class
               className={clsx(
                 'flex items-start gap-3 p-3 rounded-lg border transition-colors',
                 plan.status === 'completed'
-                  ? 'bg-secondary-50 dark:bg-secondary-900/30 border-secondary-200 dark:border-secondary-700 opacity-75'
-                  : 'bg-white dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700'
+                  ? 'bg-secondary-50 dark:bg-secondary-900/30 border-secondary-200/60 dark:border-white/[0.06] opacity-75'
+                  : 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border-secondary-200/60 dark:border-white/[0.06]'
               )}
             >
               <button

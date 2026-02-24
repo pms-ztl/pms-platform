@@ -315,7 +315,7 @@ export function PromotionsPage() {
       >
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors"
+          className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white text-sm font-medium rounded-lg transition-colors"
         >
           <PlusIcon className="h-5 w-5 mr-2" />
           Nominate for Promotion
@@ -328,7 +328,7 @@ export function PromotionsPage() {
           const Icon = cardIcons[idx];
           const c = cardColorMap[card.color];
           return (
-            <div key={card.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+            <div key={card.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="flex items-center gap-3">
                 <div className={clsx('p-2 rounded-lg', c.iconBg)}>
                   <Icon className={clsx('h-5 w-5', c.iconText)} />
@@ -348,7 +348,7 @@ export function PromotionsPage() {
         <select
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
         >
           {PROMOTION_STATUSES.map((s) => (
             <option key={s} value={s}>{s === 'ALL' ? 'All Statuses' : statusLabels[s] || s}</option>
@@ -357,7 +357,7 @@ export function PromotionsPage() {
         <select
           value={typeFilter}
           onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
         >
           {PROMOTION_TYPES.map((t) => (
             <option key={t} value={t}>{t === 'ALL' ? 'All Types' : typeLabels[t] || t}</option>
@@ -370,7 +370,7 @@ export function PromotionsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by employee name..."
-            className="pl-9 pr-3 py-1.5 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 text-sm text-secondary-700 dark:text-secondary-300 placeholder-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-64"
+            className="pl-9 pr-3 py-1.5 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-sm text-secondary-700 dark:text-secondary-300 placeholder-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-64"
           />
         </div>
         {(statusFilter !== 'ALL' || typeFilter !== 'ALL' || search) && (
@@ -386,10 +386,10 @@ export function PromotionsPage() {
       {/* Table */}
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner" />
         </div>
       ) : filteredPromotions.length === 0 ? (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-16">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-16">
           <DocumentTextIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No promotions found</h3>
           <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
@@ -399,9 +399,9 @@ export function PromotionsPage() {
           </p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Employee</th>
@@ -414,7 +414,7 @@ export function PromotionsPage() {
                   <th className="px-4 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-secondary-200 dark:divide-secondary-700">
+              <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 {filteredPromotions.map((promo: PromotionDecision) => {
                   const isExpanded = expandedRowId === promo.id;
                   const empName = `${promo.employee?.firstName || ''} ${promo.employee?.lastName || ''}`.trim();
@@ -440,7 +440,7 @@ export function PromotionsPage() {
 
           {/* Pagination */}
           {meta.totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <p className="text-sm text-secondary-600 dark:text-secondary-400">
                 Showing {(meta.page - 1) * meta.limit + 1} to {Math.min(meta.page * meta.limit, meta.total)} of {meta.total}
               </p>
@@ -448,7 +448,7 @@ export function PromotionsPage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeftIcon className="h-4 w-4" /> Previous
                 </button>
@@ -458,7 +458,7 @@ export function PromotionsPage() {
                 <button
                   onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
                   disabled={page >= meta.totalPages}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Next <ChevronRightIcon className="h-4 w-4" />
                 </button>
@@ -473,7 +473,7 @@ export function PromotionsPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={resetCreateForm} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200 dark:border-secondary-700 max-h-[85vh] overflow-y-auto">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200/60 dark:border-white/[0.06] max-h-[85vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Nominate for Promotion</h2>
                 <button onClick={resetCreateForm} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
@@ -677,7 +677,7 @@ export function PromotionsPage() {
                             key={ev.id}
                             type="button"
                             onClick={() => { setFormLinkedEvidence((prev) => [...prev, ev]); setFormEvidenceSearch(''); }}
-                            className="w-full text-left px-3 py-2 text-sm hover:bg-secondary-50 dark:hover:bg-secondary-700 text-secondary-700 dark:text-secondary-300 transition-colors"
+                            className="w-full text-left px-3 py-2 text-sm hover:bg-primary-50/30 dark:hover:bg-white/[0.03] text-secondary-700 dark:text-secondary-300 transition-colors"
                           >
                             <span className="font-medium">{ev.title}</span>
                             <span className="ml-2 text-xs text-secondary-400">{ev.type}</span>
@@ -699,7 +699,7 @@ export function PromotionsPage() {
                   <button
                     type="submit"
                     disabled={createMutation.isPending}
-                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
+                    className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
                   >
                     {createMutation.isPending ? 'Submitting...' : 'Submit Nomination'}
                   </button>
@@ -715,7 +715,7 @@ export function PromotionsPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => { setShowDeferModal(null); setDeferReason(''); setDeferUntil(''); }} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-md w-full p-6 border border-secondary-200 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Defer Promotion</h2>
                 <button onClick={() => { setShowDeferModal(null); setDeferReason(''); setDeferUntil(''); }} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">

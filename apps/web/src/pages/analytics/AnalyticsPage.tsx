@@ -173,7 +173,7 @@ export function AnalyticsPage() {
     if (loadingDashboard) {
       return (
         <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner" />
         </div>
       );
     }
@@ -378,7 +378,7 @@ export function AnalyticsPage() {
         <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
           <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Team Performance Comparison</h3>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Department</th>
@@ -388,9 +388,9 @@ export function AnalyticsPage() {
                   <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Feedback</th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+              <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 {teamPerformance.map((team: TeamPerformance) => (
-                  <tr key={team.departmentId} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
+                  <tr key={team.departmentId} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50">
                     <td className="px-6 py-4 font-medium text-secondary-900 dark:text-white">{team.departmentName}</td>
                     <td className="px-6 py-4 text-center dark:text-secondary-300">{team.employeeCount}</td>
                     <td className="px-6 py-4 text-center">
@@ -558,7 +558,7 @@ export function AnalyticsPage() {
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Rating Analysis by Dimension</h3>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Dimension</th>
@@ -568,9 +568,9 @@ export function AnalyticsPage() {
                     <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Variance</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   {biasMetrics.map((metric: BiasMetric, index: number) => (
-                    <tr key={index} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
+                    <tr key={index} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50">
                       <td className="px-6 py-4 text-sm text-secondary-500 dark:text-secondary-400">{metric.dimension}</td>
                       <td className="px-6 py-4 font-medium text-secondary-900 dark:text-white">{metric.category}</td>
                       <td className="px-6 py-4 text-center dark:text-secondary-300">{metric.count}</td>
@@ -615,7 +615,7 @@ export function AnalyticsPage() {
       />
 
       {/* Tabs */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="-mb-px flex space-x-8 overflow-x-auto">
           {[
             { key: 'overview', label: 'Overview' },

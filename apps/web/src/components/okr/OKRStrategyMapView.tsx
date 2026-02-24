@@ -222,7 +222,7 @@ export function OKRStrategyMapView({ treeData, onSelect }: OKRStrategyMapViewPro
   }
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 overflow-x-auto">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 overflow-x-auto">
       {/* Column headers */}
       <div className="flex gap-12 mb-6 min-w-[780px]">
         <div className="w-56 shrink-0">
@@ -314,7 +314,7 @@ export function OKRStrategyMapView({ treeData, onSelect }: OKRStrategyMapViewPro
       </div>
 
       {/* Legend */}
-      <div className="mt-6 pt-4 border-t border-secondary-200 dark:border-secondary-700 flex items-center gap-4 flex-wrap">
+      <div className="mt-6 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06] flex items-center gap-4 flex-wrap">
         <span className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">Legend:</span>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-green-500" />

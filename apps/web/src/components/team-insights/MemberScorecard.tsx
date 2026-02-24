@@ -79,7 +79,7 @@ export function MemberScorecard({ members, atRiskEmployees, className }: MemberS
 
   if (members.length === 0) {
     return (
-      <div className={clsx('bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6', className)}>
+      <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Team Members</h3>
         <p className="text-sm text-secondary-400 text-center py-8">No team members found.</p>
       </div>
@@ -87,14 +87,14 @@ export function MemberScorecard({ members, atRiskEmployees, className }: MemberS
   }
 
   return (
-    <div className={clsx('bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700', className)}>
-      <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+    <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]', className)}>
+      <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Team Members</h3>
         <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{members.length} direct reports</p>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+        <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
           <thead className="bg-secondary-50 dark:bg-secondary-900/50">
             <tr>
               <th
@@ -139,7 +139,7 @@ export function MemberScorecard({ members, atRiskEmployees, className }: MemberS
               return (
                 <tr
                   key={member.userId}
-                  className="hover:bg-secondary-50 dark:hover:bg-secondary-700/30 cursor-pointer transition-colors"
+                  className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/30 cursor-pointer transition-colors"
                   onClick={() => window.location.href = `/employees/${member.userId}`}
                 >
                   <td className="px-6 py-3">

@@ -88,7 +88,7 @@ export function OKRBulkActions({ selectedIds, onClear }: OKRBulkActionsProps) {
             Status
           </button>
           {showStatusMenu && (
-            <div className="absolute bottom-full mb-2 left-0 bg-white dark:bg-secondary-800 rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-600 py-1 min-w-[140px]">
+            <div className="absolute bottom-full mb-2 left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-600 py-1 min-w-[140px]">
               {STATUS_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
@@ -112,7 +112,7 @@ export function OKRBulkActions({ selectedIds, onClear }: OKRBulkActionsProps) {
             Priority
           </button>
           {showPriorityMenu && (
-            <div className="absolute bottom-full mb-2 left-0 bg-white dark:bg-secondary-800 rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-600 py-1 min-w-[120px]">
+            <div className="absolute bottom-full mb-2 left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-600 py-1 min-w-[120px]">
               {PRIORITY_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
@@ -136,7 +136,7 @@ export function OKRBulkActions({ selectedIds, onClear }: OKRBulkActionsProps) {
             Due Date
           </button>
           {showDatePicker && (
-            <div className="absolute bottom-full mb-2 left-0 bg-white dark:bg-secondary-800 rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-600 p-3">
+            <div className="absolute bottom-full mb-2 left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-600 p-3">
               <input
                 type="date"
                 value={dueDate}

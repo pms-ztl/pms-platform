@@ -298,7 +298,7 @@ function GuideCard({ guide, isExpanded, onToggle }: { guide: Guide; isExpanded: 
   return (
     <div
       className={clsx(
-        'bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 transition-all duration-200',
+        'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] transition-all duration-200',
         isExpanded && 'ring-2 ring-primary-500/30'
       )}
     >
@@ -451,7 +451,7 @@ export function HelpPage() {
             placeholder="Search guides and frequently asked questions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg pl-11 pr-4 py-3 w-full text-sm text-secondary-900 dark:text-white placeholder-secondary-400 dark:placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow"
+            className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] rounded-lg pl-11 pr-4 py-3 w-full text-sm text-secondary-900 dark:text-white placeholder-secondary-400 dark:placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow"
           />
           {searchQuery && (
             <button
@@ -509,7 +509,7 @@ export function HelpPage() {
                   {filteredFAQCategories.map((category) => (
                     <div
                       key={category.name}
-                      className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6"
+                      className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6"
                     >
                       <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
                         {category.name}
@@ -537,7 +537,7 @@ export function HelpPage() {
           {/* ── Quick Actions Sidebar ─────────────────────────────────── */}
           <aside className="lg:w-80 flex-shrink-0">
             <div className="lg:sticky lg:top-8">
-              <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+              <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
                 <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Quick Actions</h3>
                 <div className="space-y-1.5">
                   {quickActions.map((action) => {

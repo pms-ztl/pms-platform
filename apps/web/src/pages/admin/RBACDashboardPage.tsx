@@ -155,7 +155,7 @@ export function RBACDashboardPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
                 <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" />
@@ -165,7 +165,7 @@ export function RBACDashboardPage() {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 h-64">
+            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-64">
               <div className="animate-pulse space-y-4">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/4" />
                 <div className="h-40 bg-secondary-200 dark:bg-secondary-700 rounded" />
@@ -185,7 +185,7 @@ export function RBACDashboardPage() {
       <PageHeader title="RBAC Dashboard" subtitle="Overview of roles, permissions, and access control across your organization">
         <button
           onClick={() => fetchData()}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-700"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-primary-50/30 dark:hover:bg-white/[0.03]"
         >
           <ArrowPathIcon className="h-4 w-4" />
           Refresh
@@ -227,8 +227,8 @@ export function RBACDashboardPage() {
       {/* Row 2: Charts & Permission Coverage */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pie Chart: Role Distribution */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Role Distribution</h2>
           </div>
           <div className="p-6">
@@ -286,8 +286,8 @@ export function RBACDashboardPage() {
         </div>
 
         {/* Permission Coverage */}
-        <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Permission Coverage</h2>
           </div>
           <div className="p-6">
@@ -333,8 +333,8 @@ export function RBACDashboardPage() {
       </div>
 
       {/* Row 3: Recent Role Changes Timeline */}
-      <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-        <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
           <div className="flex items-center gap-2">
             <ClockIcon className="h-5 w-5 text-secondary-500" />
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Recent Role Changes</h2>
@@ -414,7 +414,7 @@ function StatCard({
   iconColor: string;
 }) {
   return (
-    <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+    <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
       <div className="flex items-center gap-3 mb-3">
         <div className={`p-2 rounded-lg ${colorClass}`}>
           <Icon className={`h-5 w-5 ${iconColor}`} />

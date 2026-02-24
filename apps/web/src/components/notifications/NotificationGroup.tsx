@@ -138,7 +138,7 @@ export function NotificationGroup({ notifications, onMarkRead, compact = false, 
                   className={clsx(
                     'cursor-pointer transition-colors',
                     compact ? 'px-4 py-2.5' : 'px-4 py-3',
-                    'hover:bg-secondary-50 dark:hover:bg-secondary-700/50',
+                    'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50',
                     !notification.readAt && 'bg-primary-50/50 dark:bg-primary-900/10'
                   )}
                   onClick={() => {

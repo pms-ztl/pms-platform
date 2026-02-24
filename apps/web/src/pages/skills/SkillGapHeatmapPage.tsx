@@ -89,19 +89,19 @@ function PageSkeleton() {
     <div className="space-y-6 animate-pulse">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5 h-24">
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5 h-24">
             <div className="h-3 bg-secondary-200 dark:bg-secondary-700 rounded w-20 mb-3" />
             <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-14" />
           </div>
         ))}
       </div>
-      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 h-80">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-80">
         <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-40 mb-4" />
         <div className="h-60 bg-secondary-100 dark:bg-secondary-700/50 rounded-lg" />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 h-72">
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-72">
             <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-36 mb-4" />
             <div className="h-52 bg-secondary-100 dark:bg-secondary-700/50 rounded-lg" />
           </div>
@@ -229,7 +229,7 @@ export function SkillGapHeatmapPage() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold text-secondary-900 dark:text-white mb-6">Skill Gap Analytics</h1>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-12 text-center">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-12 text-center">
           <PuzzlePieceIcon className="h-12 w-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">No Skill Data Available</h3>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 max-w-md mx-auto">
@@ -252,7 +252,7 @@ export function SkillGapHeatmapPage() {
           <select
             value={selectedCategory ?? ''}
             onChange={(e) => setSelectedCategory(e.target.value || null)}
-            className="text-sm border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-1.5 bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+            className="text-sm border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-1.5 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
           >
             <option value="">All Categories</option>
             {uniqueCategories.map((cat) => (
@@ -264,7 +264,7 @@ export function SkillGapHeatmapPage() {
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30">
               <ChartBarIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -275,7 +275,7 @@ export function SkillGapHeatmapPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-red-50 dark:bg-red-900/30">
               <ExclamationTriangleIcon className="h-5 w-5 text-red-600 dark:text-red-400" />
@@ -286,7 +286,7 @@ export function SkillGapHeatmapPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/30">
               <PuzzlePieceIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
@@ -297,7 +297,7 @@ export function SkillGapHeatmapPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-amber-50 dark:bg-amber-900/30">
               <UserGroupIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
@@ -312,7 +312,7 @@ export function SkillGapHeatmapPage() {
 
       {/* Heatmap Table */}
       {departments.length > 0 && heatmapCategories.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Department × Skill Category Heatmap</h3>
@@ -331,7 +331,7 @@ export function SkillGapHeatmapPage() {
             <table className="min-w-full text-xs">
               <thead>
                 <tr>
-                  <th className="text-left py-2 px-3 font-medium text-secondary-500 dark:text-secondary-400 sticky left-0 bg-white dark:bg-secondary-800 z-10">Department</th>
+                  <th className="text-left py-2 px-3 font-medium text-secondary-500 dark:text-secondary-400 sticky left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-10">Department</th>
                   {heatmapCategories.map((cat) => (
                     <th key={cat} className="text-center py-2 px-2 font-medium text-secondary-500 dark:text-secondary-400 whitespace-nowrap">{cat}</th>
                   ))}
@@ -345,7 +345,7 @@ export function SkillGapHeatmapPage() {
                       'cursor-pointer transition-colors',
                       selectedDept === dept
                         ? 'bg-primary-50 dark:bg-primary-900/20'
-                        : 'hover:bg-secondary-50 dark:hover:bg-secondary-700/30'
+                        : 'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/30'
                     )}
                     onClick={() => setSelectedDept(selectedDept === dept ? null : dept)}
                   >
@@ -390,7 +390,7 @@ export function SkillGapHeatmapPage() {
 
       {/* Top Skill Gaps Bar Chart */}
       {barData.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Top Skill Gaps</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">
             {selectedCategory ? `Filtered by: ${selectedCategory}` : 'All categories'} — top {barData.length} gaps by severity
@@ -445,7 +445,7 @@ export function SkillGapHeatmapPage() {
       {/* Radar + Severity Donut */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Department Skill Radar */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">
             {selectedDept ? `${selectedDept} — Skill Profile` : 'Organization Average Skill Profile'}
           </h3>
@@ -484,7 +484,7 @@ export function SkillGapHeatmapPage() {
         </div>
 
         {/* Gap Severity Distribution */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Gap Severity Distribution</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Breakdown of skill gaps by severity level</p>
           {gaps.length > 0 ? (

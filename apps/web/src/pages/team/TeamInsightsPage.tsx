@@ -45,7 +45,7 @@ interface StatCardProps {
 
 function StatCard({ label, value, icon: Icon, color, bgColor, subtitle }: StatCardProps) {
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
       <div className="flex items-center gap-3">
         <div className={clsx('p-2 rounded-lg', bgColor)}>
           <Icon className={clsx('h-5 w-5', color)} />
@@ -68,7 +68,7 @@ function PageSkeleton() {
       {/* Stats row */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 h-20">
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-20">
             <div className="h-3 bg-secondary-200 dark:bg-secondary-700 rounded w-16 mb-2" />
             <div className="h-6 bg-secondary-200 dark:bg-secondary-700 rounded w-12" />
           </div>
@@ -77,14 +77,14 @@ function PageSkeleton() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 h-80">
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-80">
             <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-40 mb-4" />
             <div className="h-56 bg-secondary-100 dark:bg-secondary-700/50 rounded-lg" />
           </div>
         ))}
       </div>
       {/* Table */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 h-64">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-64">
         <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-32 mb-6" />
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="h-8 bg-secondary-100 dark:bg-secondary-700/50 rounded mb-2" />
@@ -266,7 +266,7 @@ export function TeamInsightsPage() {
         <PerformanceDistribution members={teamMembers} />
 
         {/* Goal Completion Trends */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Goal Completion Trends</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">6-month created vs completed goals</p>
           {goalTrends.length > 0 ? (
@@ -336,7 +336,7 @@ export function TeamInsightsPage() {
         </div>
 
         {/* Feedback Activity Trends */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Feedback Activity</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">6-month praise vs constructive feedback</p>
           {feedbackTrends.length > 0 ? (

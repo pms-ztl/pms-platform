@@ -30,7 +30,7 @@ function riskColor(energy: number, stress: number): string {
 export function BurnoutRiskChart({ data, className }: BurnoutRiskChartProps) {
   if (data.length === 0) {
     return (
-      <div className={clsx('bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6', className)}>
+      <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Burnout Risk Indicator</h3>
         <p className="text-sm text-secondary-400 text-center py-16">No trend data available for burnout analysis.</p>
       </div>
@@ -38,7 +38,7 @@ export function BurnoutRiskChart({ data, className }: BurnoutRiskChartProps) {
   }
 
   return (
-    <div className={clsx('bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6', className)}>
+    <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
       <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Burnout Risk Indicator</h3>
       <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Stress vs Energy — high stress + low energy = burnout risk</p>
       <div className="h-72">

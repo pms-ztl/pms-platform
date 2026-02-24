@@ -224,7 +224,7 @@ export function CultureDiagnosticsPage() {
       {/* Overall health gauge + 7-dimension chart */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Gauge */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6 flex flex-col items-center">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6 flex flex-col items-center">
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-2">Overall Health</h3>
           <div className="h-[100px] w-[200px] mx-auto">
             <ResponsiveContainer width="100%" height="100%">
@@ -241,7 +241,7 @@ export function CultureDiagnosticsPage() {
         </div>
 
         {/* 7-dimension bar chart */}
-        <div className="lg:col-span-2 bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Health Dimensions</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -268,7 +268,7 @@ export function CultureDiagnosticsPage() {
           { label: 'At-Risk Employees', value: health.atRiskEmployees, icon: FireIcon, color: 'text-amber-600 dark:text-amber-400' },
           { label: 'Burnout Risk', value: health.burnoutRiskCount, icon: ExclamationTriangleIcon, color: 'text-red-600 dark:text-red-400' },
         ].map((s) => (
-          <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+          <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center justify-between">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
               <s.icon className={clsx('w-4 h-4', s.color)} />
@@ -283,7 +283,7 @@ export function CultureDiagnosticsPage() {
         <>
           {/* Culture RadarChart + Dimension cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Culture Profile</h3>
               <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Competing Values Framework</p>
               <div className="h-64">
@@ -299,7 +299,7 @@ export function CultureDiagnosticsPage() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Culture Dimensions</h3>
               <div className="space-y-4">
                 {cultureDimensions.map((d) => (
@@ -319,7 +319,7 @@ export function CultureDiagnosticsPage() {
 
           {/* Cultural Strengths & Weaknesses */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <h3 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-3">Cultural Strengths</h3>
               {diagnostic.culturalStrengths?.length ? (
                 <ul className="space-y-2">
@@ -331,7 +331,7 @@ export function CultureDiagnosticsPage() {
                 </ul>
               ) : <p className="text-xs text-secondary-400">No strengths identified.</p>}
             </div>
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <h3 className="text-sm font-semibold text-red-700 dark:text-red-400 mb-3">Cultural Weaknesses</h3>
               {diagnostic.culturalWeaknesses?.length ? (
                 <ul className="space-y-2">
@@ -349,7 +349,7 @@ export function CultureDiagnosticsPage() {
 
       {/* Strengths & Concerns from health metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-green-700 dark:text-green-400 mb-3">Organizational Strengths</h3>
           {health.strengths?.length ? (
             <ul className="space-y-2">
@@ -361,7 +361,7 @@ export function CultureDiagnosticsPage() {
             </ul>
           ) : <p className="text-xs text-secondary-400">No strengths data.</p>}
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-amber-700 dark:text-amber-400 mb-3">Concerns</h3>
           {health.concerns?.length ? (
             <ul className="space-y-2">
@@ -377,7 +377,7 @@ export function CultureDiagnosticsPage() {
 
       {/* AI Recommendations */}
       {health.recommendations?.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">AI Recommendations</h3>
           <div className="space-y-3">
             {health.recommendations.map((rec: any, i: number) => (

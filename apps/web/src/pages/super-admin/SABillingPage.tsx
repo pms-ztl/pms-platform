@@ -251,15 +251,15 @@ export function SABillingPage() {
       </div>
 
       {/* Plan Feature Comparison */}
-      <div className="rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 overflow-hidden">
-        <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+      <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Plan Comparison</h2>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-0.5">Features included in each subscription tier</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/50">
+              <tr className="border-b border-secondary-200/60 dark:border-white/[0.06] bg-secondary-50 dark:bg-secondary-800/50">
                 <th className="text-left px-6 py-3 font-medium text-secondary-600 dark:text-secondary-400">Feature</th>
                 {PLAN_ORDER.map((plan) => (
                   <th key={plan} className="px-4 py-3 text-center font-medium text-secondary-600 dark:text-secondary-400">
@@ -274,7 +274,7 @@ export function SABillingPage() {
                   key={row.feature}
                   className={clsx(
                     'border-b border-secondary-100 dark:border-secondary-700/50',
-                    idx % 2 === 0 ? 'bg-white dark:bg-secondary-800' : 'bg-secondary-50/50 dark:bg-secondary-800/30',
+                    idx % 2 === 0 ? 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl' : 'bg-secondary-50/50 dark:bg-secondary-800/30',
                   )}
                 >
                   <td className="px-6 py-3 font-medium text-secondary-900 dark:text-white whitespace-nowrap">{row.feature}</td>
@@ -302,7 +302,7 @@ export function SABillingPage() {
             setStatusFilter(e.target.value);
             setPage(1);
           }}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-3 py-2.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
         >
           <option value="">All Statuses</option>
           <option value="ACTIVE">Active</option>

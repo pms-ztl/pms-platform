@@ -231,17 +231,17 @@ const AlertCard = ({
         <div className="flex space-x-2">
           <button
             onClick={() => onAcknowledge(alert.id)}
-            className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700"
+            className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]"
           >
             <CheckIcon className="h-3.5 w-3.5 mr-1" />
             Acknowledge
           </button>
           <div className="relative group">
-            <button className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700">
+            <button className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]">
               <BellSlashIcon className="h-3.5 w-3.5 mr-1" />
               Snooze
             </button>
-            <div className="absolute left-0 bottom-full mb-1 w-36 bg-white dark:bg-secondary-800 rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-700 hidden group-hover:block z-50 py-1">
+            <div className="absolute left-0 bottom-full mb-1 w-36 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg shadow-xl border border-secondary-200/60 dark:border-white/[0.06] hidden group-hover:block z-50 py-1">
               {[1, 4, 24].map((hours) => (
                 <button
                   key={hours}
@@ -381,7 +381,7 @@ export function DeadlineAlertSystem() {
               'rounded-xl p-4 border transition-all',
               filter === key
                 ? `bg-${color}-100 dark:bg-${color}-900/30 border-${color}-300 dark:border-${color}-700`
-                : 'bg-white dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700 hover:border-secondary-300'
+                : 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border-secondary-200/60 dark:border-white/[0.06] hover:border-secondary-300'
             )}
           >
             <div className={`text-2xl font-bold text-${color}-600 dark:text-${color}-400`}>
@@ -405,7 +405,7 @@ export function DeadlineAlertSystem() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700">
+        <div className="text-center py-12 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
           <CheckIcon className="h-12 w-12 text-green-500 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-secondary-900 dark:text-white">All caught up!</h3>
           <p className="text-sm text-secondary-500 dark:text-secondary-400">

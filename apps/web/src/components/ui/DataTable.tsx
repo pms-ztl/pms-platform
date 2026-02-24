@@ -58,11 +58,11 @@ export function DataTable<T>({
   const totalPages = pagination ? Math.ceil(pagination.total / pagination.pageSize) : 0;
 
   return (
-    <div className={clsx('rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 overflow-hidden', className)}>
+    <div className={clsx('rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl overflow-hidden', className)}>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/80">
+            <tr className="border-b border-secondary-200/60 dark:border-white/[0.06] bg-secondary-50/80 dark:bg-secondary-800/50">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -85,7 +85,7 @@ export function DataTable<T>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-secondary-100 dark:divide-secondary-700/50">
+          <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
             {isLoading ? (
               <SkeletonTableRows rows={5} cols={columns.length} />
             ) : data.length === 0 ? (
@@ -103,7 +103,7 @@ export function DataTable<T>({
               data.map((item, index) => (
                 <tr
                   key={keyExtractor(item)}
-                  className="hover:bg-secondary-50 dark:hover:bg-secondary-700/30 transition-colors duration-150"
+                  className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors duration-150"
                 >
                   {columns.map((col) => (
                     <td key={col.key} className={clsx('px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300', col.className)}>
@@ -119,7 +119,7 @@ export function DataTable<T>({
 
       {/* Pagination */}
       {pagination && totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-secondary-200 dark:border-secondary-700 px-4 py-3">
+        <div className="flex items-center justify-between border-t border-secondary-200/60 dark:border-white/[0.06] px-4 py-3">
           <p className="text-sm text-secondary-500 dark:text-secondary-400">
             Showing {(pagination.page - 1) * pagination.pageSize + 1}–
             {Math.min(pagination.page * pagination.pageSize, pagination.total)} of{' '}
@@ -151,8 +151,8 @@ export function DataTable<T>({
                   className={clsx(
                     'h-8 w-8 rounded-lg text-sm font-medium transition-colors',
                     pageNum === pagination.page
-                      ? 'bg-primary-600 text-white'
-                      : 'text-secondary-500 hover:bg-secondary-100 dark:text-secondary-400 dark:hover:bg-secondary-700'
+                      ? 'bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-md shadow-primary-500/25'
+                      : 'text-secondary-500 hover:bg-secondary-100/80 dark:text-secondary-400 dark:hover:bg-white/[0.05]'
                   )}
                 >
                   {pageNum}

@@ -395,7 +395,7 @@ export function DevelopmentPlanDetailPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+        <div className="glass-spinner" />
       </div>
     );
   }
@@ -469,7 +469,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {/* Plan Overview Card                                               */}
       {/* ================================================================ */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Plan Overview</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -593,7 +593,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {/* Activities Section                                               */}
       {/* ================================================================ */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Activities</h2>
           <button
@@ -612,7 +612,7 @@ export function DevelopmentPlanDetailPage() {
         ) : (
           <div className="space-y-2">
             {/* Table header */}
-            <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider border-b border-secondary-200 dark:border-secondary-700">
+            <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider border-b border-secondary-200/60 dark:border-white/[0.06]">
               <div className="col-span-1">Type</div>
               <div className="col-span-3">Title</div>
               <div className="col-span-1">Status</div>
@@ -631,7 +631,7 @@ export function DevelopmentPlanDetailPage() {
                     'grid grid-cols-1 md:grid-cols-12 gap-3 px-3 py-3 rounded-lg items-center cursor-pointer transition-colors',
                     expandedActivityId === activity.id
                       ? 'bg-primary-50 dark:bg-primary-900/10'
-                      : 'hover:bg-secondary-50 dark:hover:bg-secondary-700/50'
+                      : 'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50'
                   )}
                   onClick={() => handleExpandActivity(activity)}
                 >
@@ -722,7 +722,7 @@ export function DevelopmentPlanDetailPage() {
 
                 {/* Expanded Inline Edit */}
                 {expandedActivityId === activity.id && (
-                  <div className="mx-3 mb-2 p-4 rounded-lg border border-secondary-200 dark:border-secondary-600 bg-white dark:bg-secondary-800 space-y-4">
+                  <div className="mx-3 mb-2 p-4 rounded-lg border border-secondary-200 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl space-y-4">
                     {activity.description && (
                       <p className="text-sm text-secondary-600 dark:text-secondary-400">{activity.description}</p>
                     )}
@@ -847,7 +847,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {/* Checkpoints Timeline                                             */}
       {/* ================================================================ */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Checkpoints</h2>
           {isManager && (
@@ -883,7 +883,7 @@ export function DevelopmentPlanDetailPage() {
                         isCompleted
                           ? 'bg-green-500 border-green-500'
                           : isPending
-                          ? 'bg-white dark:bg-secondary-800 border-secondary-300 dark:border-secondary-600'
+                          ? 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border-secondary-300 dark:border-secondary-600'
                           : 'bg-blue-500 border-blue-500'
                       )}
                     >
@@ -999,7 +999,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {((plan.strengthsAssessed && plan.strengthsAssessed.length > 0) ||
         (plan.developmentAreas && plan.developmentAreas.length > 0)) && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Skill Gap Analysis</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1077,7 +1077,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {showAddActivity && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Add Activity</h2>
               <button
@@ -1218,7 +1218,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {showAddCheckpoint && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Add Checkpoint</h2>
               <button
@@ -1295,7 +1295,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {completeCheckpointId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Complete Checkpoint</h2>
               <button

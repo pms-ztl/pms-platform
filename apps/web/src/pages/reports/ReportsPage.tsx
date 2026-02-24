@@ -315,7 +315,7 @@ export function ReportsPage() {
       {/* ================================================================= */}
       {/* Generate Report Section                                           */}
       {/* ================================================================= */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <div className="flex items-center gap-2 mb-5">
           <ChartBarIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -333,7 +333,7 @@ export function ReportsPage() {
               <select
                 value={reportType}
                 onChange={(e) => setReportType(e.target.value)}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 {REPORT_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -352,7 +352,7 @@ export function ReportsPage() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
 
@@ -365,7 +365,7 @@ export function ReportsPage() {
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
 
@@ -377,7 +377,7 @@ export function ReportsPage() {
               <select
                 value={scope}
                 onChange={(e) => setScope(e.target.value)}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               >
                 {SCOPE_OPTIONS.map((s) => (
                   <option key={s} value={s}>
@@ -421,7 +421,7 @@ export function ReportsPage() {
             <button
               type="submit"
               disabled={generateMutation.isPending}
-              className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-6 py-2 inline-flex items-center gap-2 font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-6 py-2 inline-flex items-center gap-2 font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {generateMutation.isPending ? (
                 <>
@@ -442,8 +442,8 @@ export function ReportsPage() {
       {/* ================================================================= */}
       {/* Generated Reports List                                            */}
       {/* ================================================================= */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700">
-        <div className="flex items-center gap-2 px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="flex items-center gap-2 px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
           <TableCellsIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
             Generated Reports
@@ -456,7 +456,7 @@ export function ReportsPage() {
         {/* Loading state */}
         {loadingReports && (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner" />
           </div>
         )}
 
@@ -472,7 +472,7 @@ export function ReportsPage() {
             </p>
             <button
               onClick={() => queryClient.invalidateQueries({ queryKey: ['reports'] })}
-              className="mt-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+              className="mt-4 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
             >
               Retry
             </button>
@@ -496,7 +496,7 @@ export function ReportsPage() {
         {!loadingReports && !reportsError && reports.length > 0 && (
           <>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
@@ -519,7 +519,7 @@ export function ReportsPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   {reports.map((report: GeneratedReport) => {
                     const availableFormats: string[] = [];
                     if (report.pdfUrl) availableFormats.push('PDF');
@@ -530,7 +530,7 @@ export function ReportsPage() {
                     return (
                       <tr
                         key={report.id}
-                        className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
+                        className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors"
                       >
                         {/* Report Name */}
                         <td className="px-6 py-4">
@@ -587,7 +587,7 @@ export function ReportsPage() {
                                 <button
                                   key={fmt}
                                   onClick={() => handleDownload(report, fmt)}
-                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+                                  className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
                                   title={`Download ${fmt}`}
                                 >
                                   <DocumentArrowDownIcon className="h-3.5 w-3.5" />
@@ -617,7 +617,7 @@ export function ReportsPage() {
 
             {/* Pagination */}
             {meta.totalPages > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <p className="text-sm text-secondary-600 dark:text-secondary-400">
                   Showing {(meta.page - 1) * meta.limit + 1} to{' '}
                   {Math.min(meta.page * meta.limit, meta.total)} of {meta.total} reports
@@ -626,7 +626,7 @@ export function ReportsPage() {
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page <= 1}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronLeftIcon className="h-4 w-4" />
                     Previous
@@ -671,7 +671,7 @@ export function ReportsPage() {
                   <button
                     onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))}
                     disabled={page >= meta.totalPages}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     Next
                     <ChevronRightIcon className="h-4 w-4" />
@@ -686,7 +686,7 @@ export function ReportsPage() {
       {/* ================================================================= */}
       {/* Scheduled Reports Section (expandable)                            */}
       {/* ================================================================= */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
         <button
           onClick={() => setSchedulesExpanded((prev) => !prev)}
           className="w-full flex items-center justify-between px-6 py-4 text-left"
@@ -705,12 +705,12 @@ export function ReportsPage() {
         </button>
 
         {schedulesExpanded && (
-          <div className="px-6 pb-6 border-t border-secondary-200 dark:border-secondary-700 pt-4">
+          <div className="px-6 pb-6 border-t border-secondary-200/60 dark:border-white/[0.06] pt-4">
             {/* Create Schedule button */}
             <div className="flex justify-end mb-4">
               <button
                 onClick={() => setShowScheduleModal(true)}
-                className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 inline-flex items-center gap-2 font-medium text-sm transition-colors"
+                className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 inline-flex items-center gap-2 font-medium text-sm transition-colors"
               >
                 <PlusIcon className="h-4 w-4" />
                 Create Schedule
@@ -720,7 +720,7 @@ export function ReportsPage() {
             {/* Schedules loading */}
             {loadingSchedules && (
               <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary-600" />
+                <div className="glass-spinner h-6 w-6" />
               </div>
             )}
 
@@ -737,7 +737,7 @@ export function ReportsPage() {
             {/* Schedules list */}
             {!loadingSchedules && schedules && schedules.length > 0 && (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
@@ -757,11 +757,11 @@ export function ReportsPage() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                  <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                     {schedules.map((schedule: any) => (
                       <tr
                         key={schedule.id}
-                        className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
+                        className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors"
                       >
                         <td className="px-6 py-4 text-sm font-medium text-secondary-900 dark:text-white">
                           {schedule.reportDefinitionId
@@ -810,7 +810,7 @@ export function ReportsPage() {
       {/* ================================================================= */}
       {showScheduleModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Create Report Schedule
@@ -837,7 +837,7 @@ export function ReportsPage() {
                 <select
                   value={reportType}
                   onChange={(e) => setReportType(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 >
                   {REPORT_TYPES.map((type) => (
                     <option key={type} value={type}>
@@ -857,7 +857,7 @@ export function ReportsPage() {
                   value={scheduleCron}
                   onChange={(e) => setScheduleCron(e.target.value)}
                   placeholder="e.g., 0 9 * * 1 (Every Monday at 9 AM)"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
                 <p className="mt-1 text-xs text-secondary-500 dark:text-secondary-400">
                   Standard cron format: minute hour day-of-month month day-of-week
@@ -875,7 +875,7 @@ export function ReportsPage() {
                     value={scheduleStartDate}
                     onChange={(e) => setScheduleStartDate(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                 </div>
                 <div>
@@ -886,7 +886,7 @@ export function ReportsPage() {
                     type="date"
                     value={scheduleEndDate}
                     onChange={(e) => setScheduleEndDate(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                   <p className="mt-1 text-xs text-secondary-500 dark:text-secondary-400">
                     Optional. Leave empty for no end date.
@@ -895,7 +895,7 @@ export function ReportsPage() {
               </div>
 
               {/* Form actions */}
-              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => {
@@ -904,14 +904,14 @@ export function ReportsPage() {
                     setScheduleStartDate('');
                     setScheduleEndDate('');
                   }}
-                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={createScheduleMutation.isPending}
-                  className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {createScheduleMutation.isPending ? 'Creating...' : 'Create Schedule'}
                 </button>

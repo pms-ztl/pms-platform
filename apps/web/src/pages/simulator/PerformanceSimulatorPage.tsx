@@ -54,7 +54,7 @@ function ImpactCard({ impact }: { impact: SimulationImpact }) {
   };
 
   return (
-    <div className="rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-4 hover:shadow-md transition-shadow">
+    <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           {directionIcons[impact.direction]}
@@ -107,7 +107,7 @@ function ScenarioForm({
   params: Record<string, any>;
   setParams: (p: Record<string, any>) => void;
 }) {
-  const inputCls = 'w-full text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:outline-none';
+  const inputCls = 'w-full text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:outline-none';
   const labelCls = 'block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1';
 
   switch (scenario) {
@@ -218,7 +218,7 @@ export function PerformanceSimulatorPage() {
               onClick={() => handleScenarioChange(s.id)}
               className={clsx(
                 'relative rounded-xl border-2 p-4 text-left transition-all hover:shadow-md',
-                isActive ? `${c.bg} ${c.border} ring-2 ${c.ring}` : 'border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 hover:border-secondary-300'
+                isActive ? `${c.bg} ${c.border} ring-2 ${c.ring}` : 'border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl hover:border-secondary-300'
               )}
             >
               <s.icon className={clsx('h-6 w-6 mb-2', isActive ? c.text : 'text-secondary-400')} />
@@ -273,7 +273,7 @@ export function PerformanceSimulatorPage() {
           {result && (
             <>
               {/* Confidence + scenario type */}
-              <div className="flex items-center justify-between rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5">
+              <div className="flex items-center justify-between rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
                 <div>
                   <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">Simulation Results</h3>
                   <p className="text-xs text-secondary-500 mt-0.5">Scenario: {result.scenarioType.replace(/_/g, ' ')}</p>
@@ -295,7 +295,7 @@ export function PerformanceSimulatorPage() {
 
               {/* Cascading effects */}
               {result.cascadingEffects.length > 0 && (
-                <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5">
+                <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
                   <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">Cascading Effects</h3>
                   <div className="space-y-3">
                     {result.cascadingEffects.map((ce, i) => (
@@ -316,7 +316,7 @@ export function PerformanceSimulatorPage() {
 
               {/* Recommendations */}
               {result.recommendations.length > 0 && (
-                <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5">
+                <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
                   <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3 flex items-center gap-1.5">
                     <LightBulbIcon className="h-4 w-4 text-amber-500" /> Recommendations
                   </h3>
@@ -342,7 +342,7 @@ export function PerformanceSimulatorPage() {
 
               {/* Constraints */}
               {result.constraints.length > 0 && (
-                <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5">
+                <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
                   <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">Constraint Checks</h3>
                   <div className="space-y-2">
                     {result.constraints.map((c, i) => (

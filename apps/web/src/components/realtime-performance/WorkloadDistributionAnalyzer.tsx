@@ -195,7 +195,7 @@ const RedistributionCard = ({
 }: {
   opportunity: TeamWorkloadData['redistributionOpportunities'][0];
 }) => (
-  <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
+  <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
     <div className="flex items-center space-x-4">
       <div className="flex-1">
         <div className="text-sm font-medium text-secondary-900 dark:text-white">{opportunity.from.name}</div>
@@ -300,7 +300,7 @@ export function WorkloadDistributionAnalyzer() {
       {viewMode === 'personal' && personalWorkload && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Workload Gauge */}
-          <div className="lg:col-span-1 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 flex flex-col items-center">
+          <div className="lg:col-span-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 flex flex-col items-center">
             <h3 className="text-sm font-medium text-secondary-500 dark:text-secondary-400 mb-4">
               Current Workload
             </h3>
@@ -313,7 +313,7 @@ export function WorkloadDistributionAnalyzer() {
           </div>
 
           {/* Breakdown */}
-          <div className="lg:col-span-2 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Workload Breakdown</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg">
@@ -366,7 +366,7 @@ export function WorkloadDistributionAnalyzer() {
         <div className="space-y-6">
           {/* Team Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="text-sm text-secondary-500 dark:text-secondary-400">Average Workload</div>
               <div className="text-2xl font-bold text-secondary-900 dark:text-white">
                 {Math.round(teamWorkload.teamMetrics.avgWorkloadScore)}
@@ -395,7 +395,7 @@ export function WorkloadDistributionAnalyzer() {
           {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Bar Chart */}
-            <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Team Workload Scores
               </h3>
@@ -428,7 +428,7 @@ export function WorkloadDistributionAnalyzer() {
             </div>
 
             {/* Pie Chart */}
-            <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Distribution
               </h3>
@@ -464,7 +464,7 @@ export function WorkloadDistributionAnalyzer() {
           </div>
 
           {/* Team Members */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Team Members</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {teamWorkload.teamMembers.map((member) => (

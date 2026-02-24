@@ -113,7 +113,7 @@ export function TalentCard({ data, compact = false, showActions = true }: Talent
   }
 
   return (
-    <div className="rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-4 hover:shadow-lg transition-all group">
+    <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4 hover:shadow-lg transition-all group">
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
         <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-md">

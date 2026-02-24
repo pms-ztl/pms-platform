@@ -358,14 +358,14 @@ export function SuccessionPage() {
     if (nineBoxLoading) {
       return (
         <div className="flex justify-center py-16">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner" />
         </div>
       );
     }
 
     if (nineBoxError) {
       return (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-12">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12">
           <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-red-400" />
           <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">Failed to load 9-Box Grid</h3>
           <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">Please try again later.</p>
@@ -399,7 +399,7 @@ export function SuccessionPage() {
         </div>
 
         {/* 9-Box Grid */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-6">Talent 9-Box Grid</h2>
 
           <div className="flex">
@@ -471,7 +471,7 @@ export function SuccessionPage() {
 
         {/* Expanded Cell Detail */}
         {selectedCell && selectedCellConfig && (
-          <div className={clsx('rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden', selectedCellConfig.bg, selectedCellConfig.bgDark)}>
+          <div className={clsx('rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden', selectedCellConfig.bg, selectedCellConfig.bgDark)}>
             <div className="px-6 py-4 border-b border-secondary-200/50 dark:border-secondary-700/50 flex items-center justify-between">
               <div>
                 <h3 className={clsx('text-lg font-semibold', selectedCellConfig.textColor, selectedCellConfig.textColorDark)}>
@@ -535,14 +535,14 @@ export function SuccessionPage() {
     if (plansLoading) {
       return (
         <div className="flex justify-center py-16">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner" />
         </div>
       );
     }
 
     if (plansError) {
       return (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-12">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12">
           <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-red-400" />
           <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">Failed to load succession plans</h3>
           <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">Please try again later.</p>
@@ -552,13 +552,13 @@ export function SuccessionPage() {
 
     if (!effectivePlans || effectivePlans.length === 0) {
       return (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-12">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12">
           <DocumentTextIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No succession plans</h3>
           <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
             Create your first succession plan to identify and develop future leaders.
           </p>
-          <button onClick={() => setShowCreateModal(true)} className="mt-4 inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors">
+          <button onClick={() => setShowCreateModal(true)} className="mt-4 inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white text-sm font-medium rounded-lg transition-colors">
             <PlusIcon className="h-5 w-5 mr-2" />
             Create Succession Plan
           </button>
@@ -573,7 +573,7 @@ export function SuccessionPage() {
           const successors = isExpanded ? (readinessData || plan.successors || []) : [];
 
           return (
-            <div key={plan.id} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+            <div key={plan.id} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
               {/* Card header */}
               <div className="p-5">
                 <div className="flex items-start justify-between gap-4">
@@ -653,7 +653,7 @@ export function SuccessionPage() {
 
               {/* Expanded successors */}
               {isExpanded && (
-                <div className="border-t border-secondary-200 dark:border-secondary-700">
+                <div className="border-t border-secondary-200/60 dark:border-white/[0.06]">
                   <div className="px-5 py-3 bg-secondary-50 dark:bg-secondary-900/50">
                     <h4 className="text-sm font-medium text-secondary-700 dark:text-secondary-300">Successors</h4>
                   </div>
@@ -663,7 +663,7 @@ export function SuccessionPage() {
                       <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">No successors identified yet</p>
                     </div>
                   ) : (
-                    <div className="divide-y divide-secondary-200 dark:divide-secondary-700">
+                    <div className="divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                       {successors.map((successor, idx) => (
                         <div key={successor.id || idx} className="px-5 py-3 flex items-center justify-between gap-4">
                           <div className="flex items-center gap-3 min-w-0">
@@ -704,7 +704,7 @@ export function SuccessionPage() {
       <div className="fixed inset-0 z-50 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
-          <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200 dark:border-secondary-700">
+          <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Succession Plan</h2>
               <button
@@ -869,7 +869,7 @@ export function SuccessionPage() {
                 <button
                   type="submit"
                   disabled={createMutation.isPending}
-                  className="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
                 >
                   {createMutation.isPending ? 'Creating...' : 'Create Plan'}
                 </button>
@@ -895,7 +895,7 @@ export function SuccessionPage() {
         {activeTab === 'plans' && (
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white text-sm font-medium rounded-lg transition-colors"
           >
             <PlusIcon className="h-5 w-5 mr-2" />
             Create Succession Plan
@@ -904,7 +904,7 @@ export function SuccessionPage() {
       </PageHeader>
 
       {/* Tabs */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="flex gap-6" aria-label="Succession planning tabs">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -977,7 +977,7 @@ function StatCard({
   const c = colorMap[color];
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
       <div className="flex items-center gap-3">
         <div className={clsx('p-2 rounded-lg', c.iconBg)}>
           <Icon className={clsx('h-5 w-5', c.iconText)} />

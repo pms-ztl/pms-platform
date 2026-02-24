@@ -251,7 +251,7 @@ function CompetencyColumn({
   );
 
   return (
-    <div className={clsx('border-l-4 rounded-xl p-4', borderColor, 'bg-white dark:bg-secondary-800 shadow-sm border border-secondary-200 dark:border-secondary-700')}>
+    <div className={clsx('border-l-4 rounded-xl p-4', borderColor, 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]')}>
       <h4 className={clsx('text-sm font-semibold mb-3', bgAccent)}>{title}</h4>
       {!hasData ? (
         <div className="text-center py-6">
@@ -575,7 +575,7 @@ export function ModeratorDashboardPage() {
       </div>
 
       {/* Review Cycle Selector */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center gap-4">
           <label className="text-sm font-medium text-secondary-700 dark:text-secondary-300 whitespace-nowrap">
             Review Cycle:
@@ -620,14 +620,14 @@ export function ModeratorDashboardPage() {
       {/* Main Layout: Employee List + Main Panel */}
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner h-10 w-10" />
         </div>
       ) : (
         <div className="flex gap-6" style={{ minHeight: '70vh' }}>
           {/* Left Panel: Employee List (30%) */}
-          <div className="w-[30%] flex-shrink-0 flex flex-col bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+          <div className="w-[30%] flex-shrink-0 flex flex-col bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
             {/* Search & Filters */}
-            <div className="p-4 border-b border-secondary-200 dark:border-secondary-700 space-y-3">
+            <div className="p-4 border-b border-secondary-200/60 dark:border-white/[0.06] space-y-3">
               <div className="relative">
                 <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-secondary-400" />
                 <input
@@ -675,7 +675,7 @@ export function ModeratorDashboardPage() {
                       key={emp.employeeId}
                       onClick={() => setSelectedEmployeeId(emp.employeeId)}
                       className={clsx(
-                        'w-full text-left px-4 py-3 transition-colors hover:bg-secondary-50 dark:hover:bg-secondary-700/50',
+                        'w-full text-left px-4 py-3 transition-colors hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50',
                         selectedEmployeeId === emp.employeeId &&
                           'bg-primary-50 dark:bg-primary-900/20 border-l-3 border-primary-500'
                       )}
@@ -721,7 +721,7 @@ export function ModeratorDashboardPage() {
           {/* Right Panel: Main Content (70%) */}
           <div className="flex-1 space-y-6 overflow-y-auto">
             {!selectedEmployee ? (
-              <div className="flex items-center justify-center h-full bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700">
+              <div className="flex items-center justify-center h-full bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="text-center py-20 px-8">
                   <ChartBarIcon className="h-16 w-16 mx-auto text-secondary-300 dark:text-secondary-600 mb-4" />
                   <h3 className="text-lg font-medium text-secondary-700 dark:text-secondary-300">
@@ -736,7 +736,7 @@ export function ModeratorDashboardPage() {
             ) : (
               <>
                 {/* a. Review Summary Card */}
-                <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+                <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
@@ -822,7 +822,7 @@ export function ModeratorDashboardPage() {
 
                 {/* c. Compiled Summary */}
                 {compiledData && (
-                  <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6 space-y-6">
+                  <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6 space-y-6">
                     <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">
                       Compiled Summary
                     </h3>
@@ -841,7 +841,7 @@ export function ModeratorDashboardPage() {
                           Self 20% / Manager 50% / Peer 30%
                         </p>
                       </div>
-                      <div className="flex-1 border-l border-secondary-200 dark:border-secondary-700 pl-6">
+                      <div className="flex-1 border-l border-secondary-200/60 dark:border-white/[0.06] pl-6">
                         <div className="grid grid-cols-3 gap-4 text-center">
                           <div>
                             <p className="text-xs text-blue-500 font-medium">Self</p>
@@ -965,7 +965,7 @@ export function ModeratorDashboardPage() {
                 )}
 
                 {/* d. Actions */}
-                <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+                <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
                   <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-4">
                     Moderation Actions
                   </h3>
@@ -1009,7 +1009,7 @@ export function ModeratorDashboardPage() {
 
       {/* Team-Wide Rating Distribution (bottom) */}
       {employeeSummaries.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-1">
             Team Rating Distribution
           </h3>
@@ -1067,7 +1067,7 @@ export function ModeratorDashboardPage() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm"
               onClick={() => setShowCalibrateModal(false)}
             />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   Calibrate Rating
@@ -1165,7 +1165,7 @@ export function ModeratorDashboardPage() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm"
               onClick={() => setShowSendBackModal(false)}
             />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   Send Back for Revision

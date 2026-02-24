@@ -210,7 +210,7 @@ export function TalentIntelligencePage() {
       </div>
 
       {/* User lookup */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center gap-3">
           <label className="text-sm font-medium text-secondary-700 dark:text-secondary-300 whitespace-nowrap">Lookup recommendations for:</label>
           <input
@@ -231,7 +231,7 @@ export function TalentIntelligencePage() {
           { label: 'Succession Plans', value: stats.successionCount, icon: UserGroupIcon, color: 'text-indigo-600 dark:text-indigo-400' },
           { label: 'Average Confidence', value: `${stats.avgConfidence}%`, icon: ShieldCheckIcon, color: 'text-blue-600 dark:text-blue-400' },
         ].map((s) => (
-          <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+          <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center justify-between">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
               <s.icon className={clsx('w-4 h-4', s.color)} />
@@ -244,7 +244,7 @@ export function TalentIntelligencePage() {
       {/* Recommendations table + radar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Table */}
-        <div className="lg:col-span-2 bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Promotion Recommendations</h3>
           {recommendations.length === 0 ? (
             <div className="text-center py-16 text-secondary-400 text-sm">
@@ -254,7 +254,7 @@ export function TalentIntelligencePage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-secondary-200 dark:border-secondary-700">
+                  <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
                     {['Target Role', 'Overall', 'Readiness', 'Confidence', 'Success Prob.', 'Actions'].map((h) => (
                       <th key={h} className="text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 pb-2 pr-3">{h}</th>
                     ))}
@@ -269,7 +269,7 @@ export function TalentIntelligencePage() {
                         onClick={() => setSelectedRec(r)}
                         className={clsx(
                           'border-b border-secondary-100 dark:border-secondary-700/50 last:border-0 cursor-pointer transition-colors',
-                          selectedRec?.id === r.id ? 'bg-amber-50 dark:bg-amber-900/10' : 'hover:bg-secondary-50 dark:hover:bg-secondary-700/30'
+                          selectedRec?.id === r.id ? 'bg-amber-50 dark:bg-amber-900/10' : 'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/30'
                         )}
                       >
                         <td className="py-2.5 pr-3 text-xs font-medium text-secondary-900 dark:text-white">{r.targetRole}</td>
@@ -314,7 +314,7 @@ export function TalentIntelligencePage() {
         </div>
 
         {/* Radar chart */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-2">Score Breakdown</h3>
           {selectedRec ? (
             <>
@@ -367,7 +367,7 @@ export function TalentIntelligencePage() {
       </div>
 
       {/* Succession Plans */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Succession Plans</h3>
         {successionPlans.length === 0 ? (
           <div className="text-center py-12 text-secondary-400 text-sm">
@@ -378,7 +378,7 @@ export function TalentIntelligencePage() {
             {successionPlans.map((plan) => {
               const crit = CRITICALITY_BADGE[plan.criticality] || CRITICALITY_BADGE.MEDIUM;
               return (
-                <div key={plan.id} className="border border-secondary-200 dark:border-secondary-700 rounded-lg p-4 space-y-3">
+                <div key={plan.id} className="border border-secondary-200/60 dark:border-white/[0.06] rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">{plan.positionTitle}</h4>
                     <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium', crit.cls)}>{plan.criticality}</span>
@@ -415,8 +415,8 @@ export function TalentIntelligencePage() {
       {/* Generate Recommendation Modal */}
       {showGenerateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl w-full max-w-md">
-            <div className="flex items-center justify-between p-6 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Generate Promotion Recommendation</h3>
               <button onClick={() => setShowGenerateModal(false)} className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-200">
                 <XMarkIcon className="w-5 h-5" />
@@ -443,7 +443,7 @@ export function TalentIntelligencePage() {
                 </div>
               ))}
             </div>
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button onClick={() => setShowGenerateModal(false)} className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors">Cancel</button>
               <button
                 onClick={() => {
@@ -468,8 +468,8 @@ export function TalentIntelligencePage() {
       {/* Create Succession Plan Modal */}
       {showSuccessionModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl w-full max-w-md">
-            <div className="flex items-center justify-between p-6 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Succession Plan</h3>
               <button onClick={() => setShowSuccessionModal(false)} className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-200">
                 <XMarkIcon className="w-5 h-5" />
@@ -505,7 +505,7 @@ export function TalentIntelligencePage() {
                 </select>
               </div>
             </div>
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button onClick={() => setShowSuccessionModal(false)} className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors">Cancel</button>
               <button
                 onClick={() => {

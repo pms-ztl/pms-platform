@@ -85,7 +85,7 @@ export function GoalStep({ onNext, onSkip }: GoalStepProps) {
                 className={`px-4 py-1.5 text-sm font-medium rounded-lg border transition-colors ${
                   goalType === type
                     ? 'bg-primary-600 text-white border-primary-600'
-                    : 'bg-white dark:bg-secondary-800 text-secondary-600 dark:text-secondary-400 border-secondary-300 dark:border-secondary-600 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+                    : 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-secondary-600 dark:text-secondary-400 border-secondary-300 dark:border-secondary-600 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]'
                 }`}
               >
                 {type === 'SMART' ? 'SMART Goal' : 'OKR Objective'}
@@ -102,7 +102,7 @@ export function GoalStep({ onNext, onSkip }: GoalStepProps) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="What do you want to achieve?"
-              className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
 
@@ -115,7 +115,7 @@ export function GoalStep({ onNext, onSkip }: GoalStepProps) {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add details about how you'll achieve this goal..."
               rows={3}
-              className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"
+              className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"
             />
           </div>
 
@@ -128,7 +128,7 @@ export function GoalStep({ onNext, onSkip }: GoalStepProps) {
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
 

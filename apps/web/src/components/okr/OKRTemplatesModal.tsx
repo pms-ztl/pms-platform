@@ -266,9 +266,9 @@ export function OKRTemplatesModal({ open, onClose }: OKRTemplatesModalProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-3xl bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+              <Dialog.Panel className="w-full max-w-3xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
                   <div className="flex items-center gap-2">
                     <SparklesIcon className="h-5 w-5 text-amber-500" />
                     <Dialog.Title className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -303,7 +303,7 @@ export function OKRTemplatesModal({ open, onClose }: OKRTemplatesModalProps) {
                   {filtered.map((tmpl) => (
                     <div
                       key={tmpl.name}
-                      className="bg-secondary-50 dark:bg-secondary-900/40 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 hover:border-primary-300 dark:hover:border-primary-600 transition-colors group"
+                      className="bg-secondary-50 dark:bg-secondary-900/40 rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 hover:border-primary-300 dark:hover:border-primary-600 transition-colors group"
                     >
                       <div className="flex items-center gap-2">
                         <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-secondary-100 dark:bg-secondary-800`}>

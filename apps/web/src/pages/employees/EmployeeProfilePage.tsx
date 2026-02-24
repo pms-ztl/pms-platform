@@ -155,7 +155,7 @@ function StatCard({
   };
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
       <div className="flex items-center justify-between">
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
@@ -354,7 +354,7 @@ export function EmployeeProfilePage() {
   if (loadingEmployee) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+        <div className="glass-spinner" />
       </div>
     );
   }
@@ -398,7 +398,7 @@ export function EmployeeProfilePage() {
       {/* ================================================================ */}
       {/* Header Card: Avatar, Name, Info                                  */}
       {/* ================================================================ */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <div className="flex flex-col sm:flex-row items-start gap-6">
           {/* Avatar */}
           <div className="flex-shrink-0">
@@ -489,14 +489,14 @@ export function EmployeeProfilePage() {
       {/* ================================================================ */}
       {/* Performance Score Card                                           */}
       {/* ================================================================ */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           Performance Score
         </h3>
 
         {loadingScore ? (
           <div className="flex justify-center py-6">
-            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner h-6 w-6" />
           </div>
         ) : performanceScore ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -690,7 +690,7 @@ export function EmployeeProfilePage() {
           <Link
             key={link.to}
             to={link.to}
-            className="flex items-center gap-3 p-3 rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 hover:border-primary-300 dark:hover:border-primary-600 transition-colors group"
+            className="flex items-center gap-3 p-3 rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl hover:border-primary-300 dark:hover:border-primary-600 transition-colors group"
           >
             <div className={clsx('p-2 rounded-lg', link.color)}>
               <link.icon className="h-4 w-4" />
@@ -706,7 +706,7 @@ export function EmployeeProfilePage() {
       {/* ================================================================ */}
       {/* Tabs                                                             */}
       {/* ================================================================ */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="flex gap-1 overflow-x-auto -mb-px">
           {TABS.map((tab) => (
             <button
@@ -734,7 +734,7 @@ export function EmployeeProfilePage() {
       {activeTab === 'overview' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Goals Summary */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Goals Overview</h3>
               <Link to="/goals" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">View all</Link>
@@ -769,7 +769,7 @@ export function EmployeeProfilePage() {
           </div>
 
           {/* Recent Feedback */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Recent Feedback</h3>
               <Link to="/feedback" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">View all</Link>
@@ -799,7 +799,7 @@ export function EmployeeProfilePage() {
           </div>
 
           {/* Evidence Summary */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Evidence Summary</h3>
             {evidenceSummary ? (
               <div>
@@ -849,7 +849,7 @@ export function EmployeeProfilePage() {
           </div>
 
           {/* Development Plans Summary */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Development Plans</h3>
               <Link to="/development" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">View all</Link>
@@ -893,7 +893,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Goals Tab ─── */}
       {activeTab === 'goals' && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">All Goals</h3>
             <div className="flex items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">
@@ -910,7 +910,7 @@ export function EmployeeProfilePage() {
           ) : (
             <div className="space-y-2">
               {/* Table header */}
-              <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider border-b border-secondary-200 dark:border-secondary-700">
+              <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider border-b border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="col-span-4">Goal</div>
                 <div className="col-span-2">Status</div>
                 <div className="col-span-2">Priority</div>
@@ -922,7 +922,7 @@ export function EmployeeProfilePage() {
                 <Link
                   key={goal.id}
                   to={`/goals/${goal.id}`}
-                  className="grid grid-cols-1 md:grid-cols-12 gap-3 px-3 py-3 rounded-lg items-center hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
+                  className="grid grid-cols-1 md:grid-cols-12 gap-3 px-3 py-3 rounded-lg items-center hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors"
                 >
                   <div className="col-span-4">
                     <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{goal.title}</p>
@@ -963,7 +963,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Reviews Tab ─── */}
       {activeTab === 'reviews' && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Review History</h3>
 
           {!Array.isArray(reviews) || reviews.length === 0 ? (
@@ -974,7 +974,7 @@ export function EmployeeProfilePage() {
                 <Link
                   key={review.id}
                   to={`/reviews/${review.id}`}
-                  className="block p-4 rounded-lg border border-secondary-200 dark:border-secondary-700 hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
+                  className="block p-4 rounded-lg border border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
                 >
                   <div className="flex items-start justify-between">
                     <div>
@@ -1052,7 +1052,7 @@ export function EmployeeProfilePage() {
           </div>
 
           {/* Feedback List */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">All Feedback</h3>
 
             {feedbackItems.length === 0 ? (
@@ -1062,7 +1062,7 @@ export function EmployeeProfilePage() {
                 {feedbackItems.map((fb) => (
                   <div
                     key={fb.id}
-                    className="p-4 rounded-lg border border-secondary-200 dark:border-secondary-700"
+                    className="p-4 rounded-lg border border-secondary-200/60 dark:border-white/[0.06]"
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', feedbackTypeColors[fb.type] || feedbackTypeColors.PRAISE)}>
@@ -1113,7 +1113,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Development Tab ─── */}
       {activeTab === 'development' && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Development Plans</h3>
             <Link to="/development" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">
@@ -1129,7 +1129,7 @@ export function EmployeeProfilePage() {
                 <Link
                   key={plan.id}
                   to={`/development/${plan.id}`}
-                  className="block p-4 rounded-lg border border-secondary-200 dark:border-secondary-700 hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
+                  className="block p-4 rounded-lg border border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div>
@@ -1206,7 +1206,7 @@ export function EmployeeProfilePage() {
           )}
 
           {/* Evidence List */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Evidence Items</h3>
 
             {evidenceItems.length === 0 ? (
@@ -1214,7 +1214,7 @@ export function EmployeeProfilePage() {
             ) : (
               <div className="space-y-2">
                 {/* Table header */}
-                <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider border-b border-secondary-200 dark:border-secondary-700">
+                <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider border-b border-secondary-200/60 dark:border-white/[0.06]">
                   <div className="col-span-1">Type</div>
                   <div className="col-span-4">Title</div>
                   <div className="col-span-2">Source</div>
@@ -1225,7 +1225,7 @@ export function EmployeeProfilePage() {
                 {evidenceItems.map((evidence) => (
                   <div
                     key={evidence.id}
-                    className="grid grid-cols-1 md:grid-cols-12 gap-3 px-3 py-3 rounded-lg items-center hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
+                    className="grid grid-cols-1 md:grid-cols-12 gap-3 px-3 py-3 rounded-lg items-center hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors"
                   >
                     <div className="col-span-1">
                       <span className={clsx('inline-block px-2 py-0.5 rounded text-2xs font-semibold', evidenceTypeColors[evidence.type] || 'bg-secondary-100 text-secondary-700 dark:bg-secondary-700 dark:text-secondary-300')}>
@@ -1279,7 +1279,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Activity Tab ─── */}
       {activeTab === 'activity' && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-6">Activity Stream</h3>
           <ActivityStream
             userId={id!}

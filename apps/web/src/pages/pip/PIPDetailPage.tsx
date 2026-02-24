@@ -386,7 +386,7 @@ export function PIPDetailPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+        <div className="glass-spinner" />
       </div>
     );
   }
@@ -404,7 +404,7 @@ export function PIPDetailPage() {
         </p>
         <Link
           to="/pip"
-          className="mt-4 inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          className="mt-4 inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
         >
           <ArrowLeftIcon className="h-4 w-4" />
           Back to PIPs
@@ -462,7 +462,7 @@ export function PIPDetailPage() {
             <button
               onClick={() => approveMutation.mutate()}
               disabled={approveMutation.isPending}
-              className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 inline-flex items-center gap-2"
+              className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 inline-flex items-center gap-2"
             >
               <ShieldCheckIcon className="h-4 w-4" />
               {approveMutation.isPending ? 'Approving...' : 'HR Approve'}
@@ -471,7 +471,7 @@ export function PIPDetailPage() {
           {canAcknowledge && (
             <button
               onClick={() => setShowAcknowledgeModal(true)}
-              className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors inline-flex items-center gap-2"
+              className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors inline-flex items-center gap-2"
             >
               <HandRaisedIcon className="h-4 w-4" />
               Acknowledge PIP
@@ -490,7 +490,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* PIP Overview Card */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           PIP Overview
         </h2>
@@ -640,7 +640,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Performance Issues */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
           <ExclamationTriangleIcon className="h-5 w-5 text-amber-500" />
           Performance Issues
@@ -673,7 +673,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Goals & Expectations */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
           <FlagIcon className="h-5 w-5 text-primary-500" />
           Goals & Expectations
@@ -761,7 +761,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Support & Training */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
           <AcademicCapIcon className="h-5 w-5 text-teal-500" />
           Support & Training
@@ -803,7 +803,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Milestones Timeline */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
             <FlagIcon className="h-5 w-5 text-blue-500" />
@@ -812,7 +812,7 @@ export function PIPDetailPage() {
           {canManage && isPIPActive && (
             <button
               onClick={() => setShowAddMilestoneModal(true)}
-              className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-3 py-1.5 text-sm font-medium transition-colors inline-flex items-center gap-1.5"
+              className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-3 py-1.5 text-sm font-medium transition-colors inline-flex items-center gap-1.5"
             >
               <PlusIcon className="h-4 w-4" />
               Add Milestone
@@ -934,7 +934,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Check-ins Log */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
             <DocumentTextIcon className="h-5 w-5 text-green-500" />
@@ -943,7 +943,7 @@ export function PIPDetailPage() {
           {canManage && isPIPActive && (
             <button
               onClick={() => setShowAddCheckInModal(true)}
-              className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-3 py-1.5 text-sm font-medium transition-colors inline-flex items-center gap-1.5"
+              className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-3 py-1.5 text-sm font-medium transition-colors inline-flex items-center gap-1.5"
             >
               <PlusIcon className="h-4 w-4" />
               Add Check-In
@@ -977,7 +977,7 @@ export function PIPDetailPage() {
                       onClick={() =>
                         setExpandedCheckIn(isExpanded ? null : checkIn.id)
                       }
-                      className="w-full text-left p-4 hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
+                      className="w-full text-left p-4 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -1150,7 +1150,7 @@ export function PIPDetailPage() {
 
       {/* Consequences Section */}
       {pip.consequencesOfNonCompliance && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-red-200 dark:border-red-800/40 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-red-200 dark:border-red-800/40 p-6">
           <h2 className="text-lg font-semibold text-red-800 dark:text-red-300 mb-2 flex items-center gap-2">
             <ExclamationTriangleIcon className="h-5 w-5" />
             Consequences of Non-Compliance
@@ -1166,7 +1166,7 @@ export function PIPDetailPage() {
       {/* Add Milestone Modal */}
       {showAddMilestoneModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Add Milestone
@@ -1192,7 +1192,7 @@ export function PIPDetailPage() {
                   }
                   required
                   placeholder="e.g., Complete customer service training"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
@@ -1207,7 +1207,7 @@ export function PIPDetailPage() {
                   }
                   rows={3}
                   placeholder="Describe the milestone requirements..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
@@ -1222,7 +1222,7 @@ export function PIPDetailPage() {
                     setMilestoneForm((prev) => ({ ...prev, dueDate: e.target.value }))
                   }
                   required
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
@@ -1242,7 +1242,7 @@ export function PIPDetailPage() {
                           setMilestoneForm((prev) => ({ ...prev, successCriteria: updated }));
                         }}
                         placeholder="Success criterion"
-                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                       />
                       {milestoneForm.successCriteria.length > 1 && (
                         <button
@@ -1275,18 +1275,18 @@ export function PIPDetailPage() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => setShowAddMilestoneModal(false)}
-                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={addMilestoneMutation.isPending}
-                  className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+                  className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
                 >
                   {addMilestoneMutation.isPending ? 'Adding...' : 'Add Milestone'}
                 </button>
@@ -1299,7 +1299,7 @@ export function PIPDetailPage() {
       {/* Update Milestone Modal */}
       {showUpdateMilestoneModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Update Milestone
@@ -1322,7 +1322,7 @@ export function PIPDetailPage() {
                   onChange={(e) =>
                     setUpdateMilestoneForm((prev) => ({ ...prev, status: e.target.value }))
                   }
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 >
                   <option value="NOT_STARTED">Not Started</option>
                   <option value="IN_PROGRESS">In Progress</option>
@@ -1343,7 +1343,7 @@ export function PIPDetailPage() {
                       achievementLevel: e.target.value,
                     }))
                   }
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 >
                   <option value="">Select level (optional)</option>
                   <option value="EXCEEDS">Exceeds Expectations</option>
@@ -1367,22 +1367,22 @@ export function PIPDetailPage() {
                   }
                   rows={4}
                   placeholder="Provide evaluation notes for this milestone..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => setShowUpdateMilestoneModal(null)}
-                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={updateMilestoneMutation.isPending}
-                  className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+                  className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
                 >
                   {updateMilestoneMutation.isPending ? 'Updating...' : 'Update Milestone'}
                 </button>
@@ -1395,7 +1395,7 @@ export function PIPDetailPage() {
       {/* Add Check-In Modal */}
       {showAddCheckInModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Add Check-In
@@ -1421,7 +1421,7 @@ export function PIPDetailPage() {
                       setCheckInForm((prev) => ({ ...prev, checkInDate: e.target.value }))
                     }
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                 </div>
                 <div>
@@ -1433,7 +1433,7 @@ export function PIPDetailPage() {
                     onChange={(e) =>
                       setCheckInForm((prev) => ({ ...prev, checkInType: e.target.value }))
                     }
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   >
                     <option value="SCHEDULED">Scheduled</option>
                     <option value="AD_HOC">Ad Hoc</option>
@@ -1454,7 +1454,7 @@ export function PIPDetailPage() {
                   required
                   rows={3}
                   placeholder="Summarize the employee's progress since the last check-in..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
@@ -1525,7 +1525,7 @@ export function PIPDetailPage() {
                           }));
                         }}
                         placeholder="Observation"
-                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                       />
                       {checkInForm.positiveObservations.length > 1 && (
                         <button
@@ -1581,7 +1581,7 @@ export function PIPDetailPage() {
                           }));
                         }}
                         placeholder="Concern"
-                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                       />
                       {checkInForm.concernsRaised.length > 1 && (
                         <button
@@ -1630,7 +1630,7 @@ export function PIPDetailPage() {
                   required
                   rows={3}
                   placeholder="Provide your feedback..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
@@ -1645,7 +1645,7 @@ export function PIPDetailPage() {
                   }
                   rows={2}
                   placeholder="Record employee's feedback (optional)..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
@@ -1667,7 +1667,7 @@ export function PIPDetailPage() {
                             setCheckInForm((prev) => ({ ...prev, actionItems: updated }));
                           }}
                           placeholder="Action item"
-                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         />
                         <div className="grid grid-cols-2 gap-2">
                           <input
@@ -1679,7 +1679,7 @@ export function PIPDetailPage() {
                               setCheckInForm((prev) => ({ ...prev, actionItems: updated }));
                             }}
                             placeholder="Assignee (optional)"
-                            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                           />
                           <input
                             type="date"
@@ -1689,7 +1689,7 @@ export function PIPDetailPage() {
                               updated[idx] = { ...updated[idx], dueDate: e.target.value };
                               setCheckInForm((prev) => ({ ...prev, actionItems: updated }));
                             }}
-                            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                           />
                         </div>
                       </div>
@@ -1742,7 +1742,7 @@ export function PIPDetailPage() {
                           setCheckInForm((prev) => ({ ...prev, nextSteps: updated }));
                         }}
                         placeholder="Next step"
-                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="flex-1 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                       />
                       {checkInForm.nextSteps.length > 1 && (
                         <button
@@ -1773,18 +1773,18 @@ export function PIPDetailPage() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => setShowAddCheckInModal(false)}
-                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={addCheckInMutation.isPending}
-                  className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+                  className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
                 >
                   {addCheckInMutation.isPending ? 'Saving...' : 'Save Check-In'}
                 </button>
@@ -1797,7 +1797,7 @@ export function PIPDetailPage() {
       {/* Close PIP Modal */}
       {showCloseModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Close Performance Improvement Plan
@@ -1820,7 +1820,7 @@ export function PIPDetailPage() {
                   onChange={(e) =>
                     setCloseForm((prev) => ({ ...prev, outcome: e.target.value }))
                   }
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 >
                   <option value="SUCCESSFUL">Successful - Employee met PIP requirements</option>
                   <option value="UNSUCCESSFUL">
@@ -1842,15 +1842,15 @@ export function PIPDetailPage() {
                   }
                   rows={4}
                   placeholder="Provide closing notes and rationale for the outcome..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => setShowCloseModal(false)}
-                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
@@ -1870,7 +1870,7 @@ export function PIPDetailPage() {
       {/* Acknowledge PIP Modal */}
       {showAcknowledgeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Acknowledge PIP
@@ -1903,22 +1903,22 @@ export function PIPDetailPage() {
                   }
                   rows={4}
                   placeholder="Add any comments or responses you would like to include with your acknowledgment..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="flex justify-end gap-3 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => setShowAcknowledgeModal(false)}
-                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 text-sm font-medium transition-colors"
+                  className="px-4 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] text-sm font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={acknowledgeMutation.isPending}
-                  className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+                  className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
                 >
                   {acknowledgeMutation.isPending ? 'Acknowledging...' : 'Acknowledge PIP'}
                 </button>

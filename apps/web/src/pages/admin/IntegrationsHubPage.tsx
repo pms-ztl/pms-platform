@@ -213,7 +213,7 @@ export function IntegrationsHubPage() {
           { label: 'Errors', value: stats.errors, color: stats.errors > 0 ? 'text-red-500' : 'text-secondary-400' },
           { label: 'Last Sync', value: stats.lastSync ? new Date(stats.lastSync).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'Never', color: 'text-purple-600' },
         ].map((s) => (
-          <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+          <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
             <p className={clsx('text-2xl font-bold mt-1', s.color)}>{s.value}</p>
           </div>
@@ -232,7 +232,7 @@ export function IntegrationsHubPage() {
                 <div
                   key={intg.id}
                   className={clsx(
-                    'bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5 transition-shadow hover:shadow-md cursor-pointer',
+                    'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5 transition-shadow hover:shadow-md cursor-pointer',
                     selectedIntegration === intg.id && 'ring-2 ring-indigo-500',
                   )}
                   onClick={() => setSelectedIntegration(selectedIntegration === intg.id ? null : intg.id)}
@@ -286,12 +286,12 @@ export function IntegrationsHubPage() {
 
       {/* Sync history */}
       {selectedIntegration && syncHistory.length > 0 && (
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Sync History</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-secondary-200 dark:border-secondary-700">
+                <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
                   {['Status', 'Started', 'Processed', 'Created', 'Updated', 'Failed'].map((h) => (
                     <th key={h} className="text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 pb-2 pr-4">{h}</th>
                   ))}
@@ -358,7 +358,7 @@ export function IntegrationsHubPage() {
         </div>
 
         {filteredConnectors.length === 0 ? (
-          <div className="rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-12 text-center">
+          <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-12 text-center">
             <p className="text-secondary-400 text-sm">
               {integrations.length > 0 ? 'All connectors in this category are already connected.' : 'No connectors available.'}
             </p>
@@ -366,7 +366,7 @@ export function IntegrationsHubPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredConnectors.map((connector) => (
-              <div key={connector.type} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+              <div key={connector.type} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
                 <div className="flex items-start gap-3">
                   <div className={clsx('w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold', CONNECTOR_COLORS[connector.category] || 'bg-secondary-100 text-secondary-600')}>
                     {CONNECTOR_ICONS[connector.icon] || connector.type.charAt(0)}
@@ -399,8 +399,8 @@ export function IntegrationsHubPage() {
       {/* Setup modal */}
       {showSetupModal && setupConnector && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl w-full max-w-md">
-            <div className="flex items-center justify-between p-6 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <div>
                 <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Connect {setupConnector.name}</h3>
                 <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{CATEGORY_LABELS[setupConnector.category]}</p>
@@ -435,7 +435,7 @@ export function IntegrationsHubPage() {
                 </div>
               ))}
             </div>
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => setShowSetupModal(false)}
                 className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors"

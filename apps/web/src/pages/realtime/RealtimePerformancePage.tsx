@@ -85,7 +85,7 @@ function OverviewCard({
       )}
       style={{ transitionDelay: `${index * 80}ms` }}
     >
-      <div className="group relative bg-white dark:bg-secondary-800 rounded-2xl border border-secondary-200/80 dark:border-secondary-700/80 shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+      <div className="group relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/80 dark:border-secondary-700/80 shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden">
         {/* Gradient top accent bar */}
         <div className={clsx('h-1 w-full bg-gradient-to-r', gradient)} />
 
@@ -483,7 +483,7 @@ export function RealtimePerformancePage() {
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setIsMobileMenuOpen(false)}>
           <div
-            className="absolute left-0 top-16 w-72 h-[calc(100vh-4rem)] bg-white dark:bg-secondary-800 shadow-xl overflow-y-auto"
+            className="absolute left-0 top-16 w-72 h-[calc(100vh-4rem)] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 space-y-2">

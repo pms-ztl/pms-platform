@@ -96,7 +96,7 @@ const statusConfig = {
     icon: ClockIcon,
     color: 'gray',
     bg: 'bg-secondary-100 dark:bg-secondary-800',
-    border: 'border-secondary-200 dark:border-secondary-700',
+    border: 'border-secondary-200/60 dark:border-white/[0.06]',
     text: 'text-secondary-600 dark:text-secondary-400',
     label: 'Pending',
   },
@@ -331,7 +331,7 @@ const TimelineView = ({ milestones }: { milestones: Milestone[] }) => {
                   ? 'bg-green-500 border-green-500'
                   : milestone.status === 'in_progress'
                     ? 'bg-blue-500 border-blue-500'
-                    : 'bg-white dark:bg-secondary-800 border-secondary-300 dark:border-secondary-600'
+                    : 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border-secondary-300 dark:border-secondary-600'
               )}>
                 {milestone.status === 'completed' && (
                   <CheckCircleIcon className="h-3 w-3 text-white" />
@@ -490,10 +490,10 @@ export function MilestoneTracker() {
 
       {/* Summary */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="col-span-2 md:col-span-1 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 overflow-hidden">
+        <div className="col-span-2 md:col-span-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 overflow-hidden">
           <HealthGauge score={summary?.healthScore || 0} />
         </div>
-        <div className="bg-secondary-50 dark:bg-secondary-800/50 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 overflow-hidden">
+        <div className="bg-secondary-50 dark:bg-secondary-800/50 rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 overflow-hidden">
           <div className="text-sm text-secondary-500 break-words">Total</div>
           <div className="text-2xl font-bold text-secondary-900 dark:text-white break-words">{summary?.total || 0}</div>
         </div>
@@ -524,12 +524,12 @@ export function MilestoneTracker() {
             ))}
           </div>
         ) : (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <TimelineView milestones={timeline.milestones} />
           </div>
         )
       ) : (
-        <div className="text-center py-12 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700">
+        <div className="text-center py-12 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
           <FlagIcon className="h-12 w-12 text-secondary-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-secondary-900 dark:text-white">No milestones yet</h3>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
@@ -548,7 +548,7 @@ export function MilestoneTracker() {
       {/* Create Milestone Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowCreateModal(false)}>
-          <div className="bg-white dark:bg-secondary-800 rounded-xl p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Create Milestone</h3>
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               <div>

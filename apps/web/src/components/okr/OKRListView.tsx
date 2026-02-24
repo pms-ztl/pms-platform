@@ -324,11 +324,11 @@ export function OKRListView({ objectives, krByParent, onCheckin }: OKRListViewPr
   );
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/80">
+            <tr className="border-b border-secondary-200/60 dark:border-white/[0.06] bg-secondary-50 dark:bg-secondary-800/80">
               <th className="w-8 pl-4 pr-1 py-3" />
               <SortHeader field="title">Title</SortHeader>
               <th className="text-left py-3 pr-4 text-xs font-semibold text-secondary-500 dark:text-secondary-400">Tags</th>

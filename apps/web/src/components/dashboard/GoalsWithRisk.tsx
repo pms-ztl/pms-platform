@@ -44,7 +44,7 @@ function GoalsWithRisk({ goalsData, goalRisks, goalMappings }: GoalsWithRiskProp
           <div className="text-center py-12">
             <div className="relative w-24 h-24 mx-auto mb-6">
               <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-cyan-100 dark:from-primary-900/30 dark:to-cyan-900/30 rounded-full animate-pulse" />
-              <div className="absolute inset-2 bg-white dark:bg-secondary-800 rounded-full flex items-center justify-center">
+              <div className="absolute inset-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-full flex items-center justify-center">
                 <FlagIcon className="w-10 h-10 text-secondary-300 dark:text-secondary-600" />
               </div>
             </div>

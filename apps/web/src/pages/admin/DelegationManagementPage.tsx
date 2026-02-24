@@ -305,7 +305,7 @@ export function DelegationManagementPage() {
         <PageHeader title="Delegation Management" subtitle="Loading delegations..." />
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 animate-pulse h-16" />
+            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 animate-pulse h-16" />
           ))}
         </div>
       </div>
@@ -330,7 +330,7 @@ export function DelegationManagementPage() {
       </PageHeader>
 
       {/* ---- Tab bar ---- */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
           {STATUS_TABS.map((tab) => {
             const isActive = activeTab === tab.value;
@@ -371,8 +371,8 @@ export function DelegationManagementPage() {
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-900">
-          <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+        <div className="overflow-x-auto rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
+          <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
             <thead className="bg-secondary-50 dark:bg-secondary-800">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 tracking-wider">Delegator</th>
@@ -458,7 +458,7 @@ export function DelegationManagementPage() {
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 backdrop-blur-sm p-4 sm:p-8">
           <div className="relative w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Delegation</h2>
               <button onClick={closeCreateModal} className="rounded-lg p-1.5 text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
                 <XMarkIcon className="h-5 w-5" />
@@ -475,7 +475,7 @@ export function DelegationManagementPage() {
                 <select
                   value={formDelegatorId}
                   onChange={(e) => setFormDelegatorId(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 >
                   <option value="">-- Select delegator --</option>
                   {users.map((u) => (
@@ -492,7 +492,7 @@ export function DelegationManagementPage() {
                 <select
                   value={formDelegateId}
                   onChange={(e) => setFormDelegateId(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 >
                   <option value="">-- Select delegate --</option>
                   {users.map((u) => (
@@ -509,7 +509,7 @@ export function DelegationManagementPage() {
                 <select
                   value={formType}
                   onChange={(e) => setFormType(e.target.value as DelegationType)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 >
                   {TYPE_OPTIONS.map((t) => (
                     <option key={t} value={t}>{TYPE_LABELS[t]}</option>
@@ -526,7 +526,7 @@ export function DelegationManagementPage() {
                   type="date"
                   value={formStartDate}
                   onChange={(e) => setFormStartDate(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -539,7 +539,7 @@ export function DelegationManagementPage() {
                   type="date"
                   value={formEndDate}
                   onChange={(e) => setFormEndDate(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -553,13 +553,13 @@ export function DelegationManagementPage() {
                   onChange={(e) => setFormReason(e.target.value)}
                   placeholder="Reason for this delegation..."
                   rows={3}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
                 />
               </div>
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end gap-3 border-t border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <button
                 onClick={closeCreateModal}
                 className="rounded-lg px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-secondary-100 dark:bg-secondary-800 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors"
@@ -585,7 +585,7 @@ export function DelegationManagementPage() {
       {rejectId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
-            <div className="flex items-center justify-between border-b border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Reject Delegation</h2>
               <button onClick={() => setRejectId(null)} className="rounded-lg p-1.5 text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
                 <XMarkIcon className="h-5 w-5" />
@@ -600,10 +600,10 @@ export function DelegationManagementPage() {
                 onChange={(e) => setActionReason(e.target.value)}
                 placeholder="Reason for rejection..."
                 rows={3}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
+                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
               />
             </div>
-            <div className="flex items-center justify-end gap-3 border-t border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <button onClick={() => setRejectId(null)} className="rounded-lg px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-secondary-100 dark:bg-secondary-800 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors">
                 Cancel
               </button>
@@ -626,7 +626,7 @@ export function DelegationManagementPage() {
       {revokeId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
-            <div className="flex items-center justify-between border-b border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Revoke Delegation</h2>
               <button onClick={() => setRevokeId(null)} className="rounded-lg p-1.5 text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
                 <XMarkIcon className="h-5 w-5" />
@@ -641,10 +641,10 @@ export function DelegationManagementPage() {
                 onChange={(e) => setActionReason(e.target.value)}
                 placeholder="Reason for revocation..."
                 rows={3}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
+                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
               />
             </div>
-            <div className="flex items-center justify-end gap-3 border-t border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <button onClick={() => setRevokeId(null)} className="rounded-lg px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-secondary-100 dark:bg-secondary-800 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors">
                 Cancel
               </button>
@@ -668,7 +668,7 @@ export function DelegationManagementPage() {
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 backdrop-blur-sm p-4 sm:p-8">
           <div className="relative w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Audit Trail</h2>
               <button onClick={closeAuditModal} className="rounded-lg p-1.5 text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
                 <XMarkIcon className="h-5 w-5" />
@@ -720,7 +720,7 @@ export function DelegationManagementPage() {
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-end border-t border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-end border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <button
                 onClick={closeAuditModal}
                 className="rounded-lg px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-secondary-100 dark:bg-secondary-800 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors"

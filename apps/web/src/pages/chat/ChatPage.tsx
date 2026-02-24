@@ -404,7 +404,7 @@ function NewChatDialog({ onClose, onSelectUser, onCreateGroup }: {
                       'flex w-full items-center gap-3 rounded-xl p-2.5 text-left transition-all',
                       tab === 'group' && selectedUsers.find((p) => p.id === u.id)
                         ? 'bg-primary-50 dark:bg-primary-900/20 ring-1 ring-primary-200 dark:ring-primary-700'
-                        : 'hover:bg-secondary-50 dark:hover:bg-secondary-700/40'
+                        : 'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40'
                     )}>
                     <Avatar name={`${u.firstName} ${u.lastName}`} avatarUrl={u.avatarUrl} size="sm" />
                     <div className="min-w-0 flex-1">
@@ -436,7 +436,7 @@ function NewChatDialog({ onClose, onSelectUser, onCreateGroup }: {
               )}
               {teams?.map((team) => (
                 <button key={team.id} onClick={() => handleCreateTeamChannel(team.id)}
-                  className="flex w-full items-center gap-3 rounded-xl p-2.5 text-left hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-all">
+                  className="flex w-full items-center gap-3 rounded-xl p-2.5 text-left hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-all">
                   <div className={clsx('flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br', TYPE_COLORS.TEAM_CHANNEL, 'bg-opacity-10')}>
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-secondary-100 to-secondary-50 dark:from-secondary-700/60 dark:to-secondary-800/60">
                       <HashtagIcon className="h-4.5 w-4.5 text-primary-600 dark:text-primary-400" />
@@ -619,7 +619,7 @@ function ConversationMenu({ convo, onClose }: {
         <>
           {/* Mute/Unmute */}
           <button onClick={handleMute}
-            className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-all">
+            className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-all">
             <BellSlashIcon className="h-4 w-4 text-secondary-400" />
             {convo.isMuted ? 'Unmute' : 'Mute'} Conversation
           </button>
@@ -627,7 +627,7 @@ function ConversationMenu({ convo, onClose }: {
           {/* Rename - only for admin of group/channel */}
           {isGroupOrChannel && isAdmin && (
             <button onClick={() => setRenaming(true)}
-              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-all">
+              className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-all">
               <PencilIcon className="h-4 w-4 text-secondary-400" />
               Rename
             </button>
@@ -813,7 +813,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
           {!isDeleted && !isEditing && (
             <div className="relative">
               <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="flex h-6 w-6 items-center justify-center rounded-lg bg-white dark:bg-secondary-800 shadow ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-primary-500 transition-all">
+                className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-primary-500 transition-all">
                 <FaceSmileIcon className="h-3.5 w-3.5" />
               </button>
               {showEmojiPicker && (
@@ -825,7 +825,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
           {/* Reply button */}
           {!isDeleted && !isEditing && (
             <button onClick={handleReply} title="Reply"
-              className="flex h-6 w-6 items-center justify-center rounded-lg bg-white dark:bg-secondary-800 shadow ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-primary-500 transition-all">
+              className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-primary-500 transition-all">
               <ArrowUturnLeftIcon className="h-3.5 w-3.5" />
             </button>
           )}
@@ -837,7 +837,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
                 'flex h-6 w-6 items-center justify-center rounded-lg shadow ring-1 transition-all',
                 message.isPinned
                   ? 'bg-amber-50 dark:bg-amber-900/30 ring-amber-200 dark:ring-amber-700/50 text-amber-500'
-                  : 'bg-white dark:bg-secondary-800 ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-amber-500'
+                  : 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-amber-500'
               )}>
               <MapPinIcon className="h-3.5 w-3.5" />
             </button>
@@ -846,7 +846,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
           {/* Forward button */}
           {!isDeleted && !isEditing && (
             <button onClick={handleForward} title="Forward"
-              className="flex h-6 w-6 items-center justify-center rounded-lg bg-white dark:bg-secondary-800 shadow ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-primary-500 transition-all">
+              className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-primary-500 transition-all">
               <ShareIcon className="h-3.5 w-3.5" />
             </button>
           )}
@@ -855,13 +855,13 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
           {isOwn && !isDeleted && !isEditing && (
             <div className="relative" ref={menuRef}>
               <button onClick={() => setShowMenu(!showMenu)}
-                className="flex h-6 w-6 items-center justify-center rounded-lg bg-white dark:bg-secondary-800 shadow ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-primary-500 transition-all">
+                className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-primary-500 transition-all">
                 <EllipsisHorizontalIcon className="h-3.5 w-3.5" />
               </button>
               {showMenu && (
                 <div className="absolute z-20 right-0 top-full mt-1 w-36 rounded-xl glass-deep shadow-xl border border-secondary-200/60 dark:border-secondary-700/50 py-1 overflow-hidden">
                   <button onClick={() => { setEditingMessage(message.id); setEditContent(message.content); setShowMenu(false); }}
-                    className="flex w-full items-center gap-2 px-3.5 py-2 text-xs font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-all">
+                    className="flex w-full items-center gap-2 px-3.5 py-2 text-xs font-medium text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-all">
                     <PencilIcon className="h-3.5 w-3.5 text-secondary-400" />
                     Edit
                   </button>
@@ -1304,7 +1304,7 @@ function ForwardMessageDialog({ message, conversations, onClose, onForward }: {
               const TypeIcon = TYPE_ICONS[convo.type];
               return (
                 <button key={convo.id} onClick={() => { onForward(convo.id); onClose(); }}
-                  className="flex w-full items-center gap-3 rounded-xl p-2.5 text-left hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-all">
+                  className="flex w-full items-center gap-3 rounded-xl p-2.5 text-left hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-all">
                   {convo.type === 'DIRECT' ? (
                     <Avatar name={convo.name || 'User'} avatarUrl={convo.avatarUrl} size="sm" />
                   ) : (
@@ -1538,7 +1538,7 @@ function EmailComposeModal({ onClose }: { onClose: () => void }) {
                     <div className="absolute z-10 mt-1 w-full rounded-xl glass-deep shadow-xl border border-secondary-200/60 dark:border-secondary-700/50 py-1 max-h-48 overflow-y-auto">
                       {userSuggestions.map((u) => (
                         <button key={u.id} onClick={() => handleSelectRecipient(u)}
-                          className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-all">
+                          className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-all">
                           <Avatar name={`${u.firstName} ${u.lastName}`} avatarUrl={u.avatarUrl} size="sm" />
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{u.firstName} {u.lastName}</p>
@@ -2197,7 +2197,7 @@ export default function ChatPage() {
                   {/* Scroll to bottom button */}
                   {showScrollBtn && (
                     <button onClick={scrollToBottom}
-                      className="sticky bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-secondary-800 shadow-lg ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-xs font-semibold text-secondary-600 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-all z-10">
+                      className="sticky bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-lg ring-1 ring-secondary-200/60 dark:ring-secondary-700/50 text-xs font-semibold text-secondary-600 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-all z-10">
                       <ChevronDownIcon className="h-3.5 w-3.5" />
                       New messages
                     </button>

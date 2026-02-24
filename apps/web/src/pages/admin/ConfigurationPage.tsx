@@ -144,14 +144,14 @@ const DEFAULT_SECTIONS_JSON = JSON.stringify(
 function Spinner() {
   return (
     <div className="flex justify-center py-12">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+      <div className="glass-spinner" />
     </div>
   );
 }
 
 function EmptyState({ icon: Icon, title, description }: { icon: React.ElementType; title: string; description: string }) {
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 text-center py-12 px-6">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12 px-6">
       <Icon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
       <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">{title}</h3>
       <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">{description}</p>
@@ -185,7 +185,7 @@ function ModalShell({
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
         <div
           className={clsx(
-            'relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl w-full p-6 border border-secondary-200/50 dark:border-secondary-700',
+            'relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl w-full p-6 border border-secondary-200/50 dark:border-secondary-700',
             wide ? 'max-w-2xl' : 'max-w-lg',
           )}
         >
@@ -232,10 +232,10 @@ function RatingScalesTab() {
       {(scales as RatingScale[]).map((scale) => (
         <div
           key={scale.id}
-          className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden"
+          className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden"
         >
           {/* Header */}
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
             <div>
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">{scale.name}</h3>
               <p className="text-sm text-secondary-500 dark:text-secondary-400">
@@ -350,7 +350,7 @@ function ReviewTemplatesTab() {
         </p>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
         >
           <PlusIcon className="h-4 w-4" />
           Create Template
@@ -369,7 +369,7 @@ function ReviewTemplatesTab() {
           {(templates as ReviewTemplate[]).map((tpl) => (
             <div
               key={tpl.id}
-              className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5 flex flex-col"
+              className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5 flex flex-col"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2 min-w-0">
@@ -537,14 +537,14 @@ function TemplateModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+            className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isPending}
-            className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
           >
             {isPending && <ArrowPathIcon className="h-4 w-4 animate-spin" />}
             {template ? 'Save Changes' : 'Create Template'}
@@ -642,7 +642,7 @@ function CompetencyFrameworksTab() {
     const hasChildren = node.children && node.children.length > 0;
 
     return (
-      <div className={clsx(depth > 0 && 'ml-6 border-l-2 border-secondary-200 dark:border-secondary-700 pl-4')}>
+      <div className={clsx(depth > 0 && 'ml-6 border-l-2 border-secondary-200/60 dark:border-white/[0.06] pl-4')}>
         <div className="flex items-start gap-2 py-2">
           {hasChildren ? (
             <button onClick={() => setOpen(!open)} className="mt-0.5 p-0.5 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700">
@@ -713,7 +713,7 @@ function CompetencyFrameworksTab() {
         </p>
         <button
           onClick={() => setShowCreateFrameworkModal(true)}
-          className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
         >
           <PlusIcon className="h-4 w-4" />
           Create Framework
@@ -733,12 +733,12 @@ function CompetencyFrameworksTab() {
             return (
               <div
                 key={fw.id}
-                className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden"
+                className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden"
               >
                 {/* Accordion header */}
                 <button
                   onClick={() => setExpandedFramework(isExpanded ? null : fw.id)}
-                  className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
+                  className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors"
                 >
                   {isExpanded ? (
                     <ChevronDownIcon className="h-5 w-5 text-secondary-400 flex-shrink-0" />
@@ -782,7 +782,7 @@ function CompetencyFrameworksTab() {
 
                 {/* Expanded content */}
                 {isExpanded && (
-                  <div className="px-5 pb-5 border-t border-secondary-200 dark:border-secondary-700">
+                  <div className="px-5 pb-5 border-t border-secondary-200/60 dark:border-white/[0.06]">
                     <div className="flex items-center justify-between mt-4 mb-3">
                       <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Competencies
@@ -797,7 +797,7 @@ function CompetencyFrameworksTab() {
                     </div>
                     {compLoading ? (
                       <div className="flex justify-center py-6">
-                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-primary-600" />
+                        <div className="glass-spinner h-5 w-5" />
                       </div>
                     ) : !competencies || (competencies as Competency[]).length === 0 ? (
                       <p className="text-sm text-secondary-400 dark:text-secondary-500 py-4 text-center">
@@ -873,14 +873,14 @@ function CompetencyFrameworksTab() {
               <button
                 type="button"
                 onClick={() => setShowCreateFrameworkModal(false)}
-                className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+                className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={createFrameworkMutation.isPending}
-                className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
               >
                 {createFrameworkMutation.isPending && <ArrowPathIcon className="h-4 w-4 animate-spin" />}
                 Create Framework
@@ -971,14 +971,14 @@ function CompetencyFrameworksTab() {
               <button
                 type="button"
                 onClick={() => setAddCompetencyTo(null)}
-                className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+                className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={createCompetencyMutation.isPending}
-                className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
               >
                 {createCompetencyMutation.isPending && <ArrowPathIcon className="h-4 w-4 animate-spin" />}
                 Add Competency
@@ -1026,7 +1026,7 @@ function QuestionnairesTab() {
         </p>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
         >
           <PlusIcon className="h-4 w-4" />
           Create Questionnaire
@@ -1044,7 +1044,7 @@ function QuestionnairesTab() {
           {(questionnaires as Questionnaire[]).map((q) => (
             <div
               key={q.id}
-              className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 px-5 py-4 flex items-center gap-4"
+              className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] px-5 py-4 flex items-center gap-4"
             >
               <ClipboardDocumentListIcon className="h-8 w-8 text-primary-500 flex-shrink-0" />
               <div className="flex-1 min-w-0">
@@ -1182,14 +1182,14 @@ function QuestionnairesTab() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+                className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={createMutation.isPending}
-                className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
               >
                 {createMutation.isPending && <ArrowPathIcon className="h-4 w-4 animate-spin" />}
                 Create Questionnaire
@@ -1222,7 +1222,7 @@ export function ConfigurationPage() {
       <PageHeader title="Configuration" subtitle="Manage rating scales, review templates, competency frameworks, and questionnaires" />
 
       {/* Tab bar */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="-mb-px flex gap-6 overflow-x-auto" aria-label="Tabs">
           {TABS.map((tab) => {
             const Icon = tab.icon;

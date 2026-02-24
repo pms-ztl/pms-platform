@@ -170,7 +170,7 @@ export function SAAuditPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center gap-2 mb-3">
           <FunnelIcon className="h-4 w-4 text-secondary-400" />
           <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">Filters</span>
@@ -252,13 +252,13 @@ export function SAAuditPage() {
         <div className="flex items-center justify-end gap-2 mt-4">
           <button
             onClick={handleResetFilters}
-            className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+            className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
           >
             Reset
           </button>
           <button
             onClick={handleApplyFilters}
-            className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
           >
             <FunnelIcon className="h-4 w-4" />
             Apply Filters
@@ -267,15 +267,15 @@ export function SAAuditPage() {
       </div>
 
       {/* Audit Table */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
         {/* Table Header */}
-        <div className="px-5 py-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
+        <div className="px-5 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
               Audit Events
             </h2>
             {isFetching && (
-              <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary-600" />
+              <div className="glass-spinner h-4 w-4" />
             )}
             <span className="text-xs text-secondary-400 dark:text-secondary-500">
               {total.toLocaleString()} total
@@ -286,7 +286,7 @@ export function SAAuditPage() {
         {/* Table */}
         {isLoading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner" />
           </div>
         ) : logs.length === 0 ? (
           <div className="text-center py-16">
@@ -300,7 +300,7 @@ export function SAAuditPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
@@ -323,12 +323,12 @@ export function SAAuditPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-secondary-200 dark:divide-secondary-700 bg-white dark:bg-secondary-800">
+              <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl">
                 {logs.map((log) => {
                   const actionConfig = ACTION_COLORS[log.action?.toUpperCase()] ?? { variant: 'default' as const, label: log.action };
 
                   return (
-                    <tr key={log.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors">
+                    <tr key={log.id} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors">
                       {/* Timestamp */}
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
@@ -389,7 +389,7 @@ export function SAAuditPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="px-5 py-4 border-t border-secondary-200 dark:border-secondary-700 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="px-5 py-4 border-t border-secondary-200/60 dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-sm text-secondary-500 dark:text-secondary-400">
               Showing {(page - 1) * PAGE_SIZE + 1} to{' '}
               {Math.min(page * PAGE_SIZE, total)} of {total.toLocaleString()} logs

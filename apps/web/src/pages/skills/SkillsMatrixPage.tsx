@@ -565,7 +565,7 @@ export function SkillsMatrixPage() {
               placeholder="Search skills..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-secondary-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
@@ -577,7 +577,7 @@ export function SkillsMatrixPage() {
               </p>
             </div>
           ) : filteredSkills.length === 0 ? (
-            <div className="text-center py-16 bg-white dark:bg-secondary-800 rounded-2xl border border-secondary-200 dark:border-secondary-700">
+            <div className="text-center py-16 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06]">
               <AcademicCapIcon className="w-12 h-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
               <p className="text-secondary-600 dark:text-secondary-400 font-medium">
                 No skill assessments yet
@@ -590,9 +590,9 @@ export function SkillsMatrixPage() {
             Object.entries(groupedSkills).map(([category, skills]) => (
               <div
                 key={category}
-                className="bg-white dark:bg-secondary-800 rounded-2xl border border-secondary-200 dark:border-secondary-700 overflow-hidden"
+                className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden"
               >
-                <div className="px-5 py-3 bg-secondary-50 dark:bg-secondary-800/80 border-b border-secondary-200 dark:border-secondary-700">
+                <div className="px-5 py-3 bg-secondary-50 dark:bg-secondary-800/80 border-b border-secondary-200/60 dark:border-white/[0.06]">
                   <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">
                     {category}
                   </h3>
@@ -720,7 +720,7 @@ export function SkillsMatrixPage() {
                                       {skill.progressHistory.map((entry, idx) => (
                                         <div
                                           key={idx}
-                                          className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700 text-xs"
+                                          className="flex items-center gap-2 px-3 py-1.5 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg border border-secondary-200/60 dark:border-white/[0.06] text-xs"
                                         >
                                           <span className="text-secondary-400">
                                             {new Date(
@@ -761,7 +761,7 @@ export function SkillsMatrixPage() {
           {/* Team Skill Gap Summary */}
           {teamSkills && teamSkills.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="text-center p-4 rounded-xl bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
+              <div className="text-center p-4 rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06]">
                 <p className="text-2xl font-bold text-primary-600 dark:text-primary-400">
                   {teamSkills.length}
                 </p>
@@ -769,7 +769,7 @@ export function SkillsMatrixPage() {
                   Team Members
                 </p>
               </div>
-              <div className="text-center p-4 rounded-xl bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
+              <div className="text-center p-4 rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06]">
                 <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                   {teamCategories.length}
                 </p>
@@ -777,7 +777,7 @@ export function SkillsMatrixPage() {
                   Skill Categories
                 </p>
               </div>
-              <div className="text-center p-4 rounded-xl bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
+              <div className="text-center p-4 rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06]">
                 <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
                   {teamSkills.length > 0
                     ? (
@@ -795,7 +795,7 @@ export function SkillsMatrixPage() {
                   Average Rating
                 </p>
               </div>
-              <div className="text-center p-4 rounded-xl bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
+              <div className="text-center p-4 rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06]">
                 <p className="text-2xl font-bold text-violet-600 dark:text-violet-400">
                   {teamSkills.reduce(
                     (s, m) =>
@@ -820,18 +820,18 @@ export function SkillsMatrixPage() {
               </p>
             </div>
           ) : !teamSkills || teamSkills.length === 0 ? (
-            <div className="text-center py-16 bg-white dark:bg-secondary-800 rounded-2xl border border-secondary-200 dark:border-secondary-700">
+            <div className="text-center py-16 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06]">
               <UserGroupIcon className="w-12 h-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
               <p className="text-secondary-600 dark:text-secondary-400 font-medium">
                 No team skill data available
               </p>
             </div>
           ) : (
-            <div className="bg-white dark:bg-secondary-800 rounded-2xl border border-secondary-200 dark:border-secondary-700 overflow-x-auto">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-secondary-200 dark:border-secondary-700">
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-secondary-500 dark:text-secondary-400 sticky left-0 bg-white dark:bg-secondary-800 z-10">
+                  <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-secondary-500 dark:text-secondary-400 sticky left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-10">
                       Team Member
                     </th>
                     {teamCategories.map((cat) => (
@@ -853,7 +853,7 @@ export function SkillsMatrixPage() {
                       key={member.userId}
                       className="hover:bg-secondary-50 dark:hover:bg-secondary-800/50 transition-colors"
                     >
-                      <td className="px-4 py-3 sticky left-0 bg-white dark:bg-secondary-800 z-10">
+                      <td className="px-4 py-3 sticky left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-10">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-cyan-500 flex items-center justify-center text-white text-xs font-semibold">
                             {member.firstName[0]}
@@ -923,7 +923,7 @@ export function SkillsMatrixPage() {
             ].map((card) => (
               <div
                 key={card.label}
-                className="p-5 rounded-xl bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 text-center"
+                className="p-5 rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] text-center"
               >
                 <p className={clsx('text-3xl font-bold', card.color)}>
                   {card.value}
@@ -936,7 +936,7 @@ export function SkillsMatrixPage() {
           </div>
 
           {/* Top 10 Skill Gaps Bar Chart */}
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">
                 Top 10 Skill Gaps
@@ -1000,13 +1000,13 @@ export function SkillsMatrixPage() {
 
           {/* Department vs Skill Category Heatmap */}
           {heatmapDepts.length > 0 && heatmapCats.length > 0 && (
-            <div className="bg-white dark:bg-secondary-800 rounded-2xl border border-secondary-200 dark:border-secondary-700 p-6 overflow-x-auto">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] p-6 overflow-x-auto">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-5">
                 Department Skill Heatmap
               </h3>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-secondary-200 dark:border-secondary-700">
+                  <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
                     <th className="text-left px-3 py-2 text-xs font-semibold text-secondary-500 dark:text-secondary-400">
                       Department
                     </th>
@@ -1076,8 +1076,8 @@ export function SkillsMatrixPage() {
       {/* ═══════════════════ Add/Edit Assessment Modal ═══════════════════ */}
       {showAssessmentModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl border border-secondary-200 dark:border-secondary-700 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-secondary-200/60 dark:border-white/[0.06] w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingAssessment
                   ? 'Edit Skill Assessment'
@@ -1205,7 +1205,7 @@ export function SkillsMatrixPage() {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => {
                   setShowAssessmentModal(false);
@@ -1240,8 +1240,8 @@ export function SkillsMatrixPage() {
       {/* ═══════════════════ Skill Category Management Modal (HR) ═══════════════════ */}
       {showCategoryModal && isHR && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl border border-secondary-200 dark:border-secondary-700 w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-secondary-200/60 dark:border-white/[0.06] w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Manage Skill Categories
               </h2>
@@ -1286,7 +1286,7 @@ export function SkillsMatrixPage() {
               </div>
 
               {/* Existing categories list */}
-              <div className="border-t border-secondary-200 dark:border-secondary-700 pt-4">
+              <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-4">
                 <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 mb-3">
                   Existing Categories
                 </p>

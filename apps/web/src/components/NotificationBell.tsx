@@ -106,9 +106,9 @@ export function NotificationBell() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 max-h-[480px] overflow-hidden rounded-xl bg-white dark:bg-secondary-800 shadow-lg ring-1 ring-secondary-200 dark:ring-secondary-700 z-50" style={{ fontSize: 16 }}>
+        <div className="absolute right-0 mt-2 w-96 max-h-[480px] overflow-hidden rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-lg ring-1 ring-secondary-200 dark:ring-secondary-700 z-50" style={{ fontSize: 16 }}>
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">
               Notifications {unreadCount > 0 && `(${unreadCount})`}
             </h3>
@@ -140,7 +140,7 @@ export function NotificationBell() {
           <div className="overflow-y-auto max-h-[380px]">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary-600"></div>
+                <div className="glass-spinner h-6 w-6"></div>
               </div>
             ) : (
               <NotificationGroup
@@ -152,7 +152,7 @@ export function NotificationBell() {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2 border-t border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/50 flex items-center justify-between">
+          <div className="px-4 py-2 border-t border-secondary-200/60 dark:border-white/[0.06] bg-secondary-50 dark:bg-secondary-800/50 flex items-center justify-between">
             <a
               href="/notifications"
               className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 font-medium"

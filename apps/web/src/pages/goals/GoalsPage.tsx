@@ -48,7 +48,7 @@ function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
     <div>
       <div
         className={clsx(
-          'flex items-center gap-3 px-4 py-3 hover:bg-secondary-50 dark:hover:bg-secondary-700/50 border-b border-secondary-100 dark:border-secondary-700/50',
+          'flex items-center gap-3 px-4 py-3 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 border-b border-secondary-100 dark:border-secondary-700/50',
           depth > 0 && 'border-l-2 border-l-primary-200 dark:border-l-primary-800'
         )}
         style={{ paddingLeft: `${depth * 24 + 16}px` }}
@@ -355,7 +355,7 @@ export function GoalsPage() {
         <>
           {treeLoading ? (
             <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+              <div className="glass-spinner" />
             </div>
           ) : !treeData || treeData.length === 0 ? (
             <div className="text-center py-12 card card-body dark:bg-secondary-800">
@@ -369,7 +369,7 @@ export function GoalsPage() {
             </div>
           ) : (
             <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
-              <div className="px-4 py-3 bg-secondary-50 dark:bg-secondary-900 border-b border-secondary-200 dark:border-secondary-700">
+              <div className="px-4 py-3 bg-secondary-50 dark:bg-secondary-900 border-b border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium text-secondary-700 dark:text-secondary-300">
                     {isManager ? 'Team Goal Hierarchy' : 'Goal Hierarchy'}
@@ -394,7 +394,7 @@ export function GoalsPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/30 dark:bg-black/50" onClick={() => setShowCreateModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-lg w-full p-6 border border-transparent dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-transparent dark:border-secondary-700">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Create New Goal</h2>
               <form
                 onSubmit={(e) => {

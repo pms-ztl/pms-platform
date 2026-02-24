@@ -209,7 +209,7 @@ function StatCard({
     danger: 'bg-red-100 dark:bg-red-900/30',
   };
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-secondary-500 dark:text-secondary-400">{label}</p>
@@ -374,7 +374,7 @@ export function HRAnalyticsPage() {
         </div>
 
         {/* Scatter Plot */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
           <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
             Performance vs Compensation
           </h3>
@@ -423,8 +423,8 @@ export function HRAnalyticsPage() {
         </div>
 
         {/* Gap Analysis Card */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white">
               Compensation Gap Analysis
             </h3>
@@ -439,7 +439,7 @@ export function HRAnalyticsPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     {['Name', 'Department', 'Rating', 'Current Compensation', 'Expected Compensation', 'Gap %', 'Action Needed'].map((h) => (
@@ -449,9 +449,9 @@ export function HRAnalyticsPage() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   {compGapData.map((emp) => (
-                    <tr key={emp.id || emp.name} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
+                    <tr key={emp.id || emp.name} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50">
                       <td className="px-6 py-4 text-sm font-medium text-secondary-900 dark:text-white whitespace-nowrap">{emp.name}</td>
                       <td className="px-6 py-4 text-sm text-secondary-500 dark:text-secondary-400">{emp.department}</td>
                       <td className="px-6 py-4 text-sm text-center font-semibold text-primary-600 dark:text-primary-400">{emp.rating}</td>
@@ -496,12 +496,12 @@ export function HRAnalyticsPage() {
 
         {/* Compensation Ratio by Department */}
         {deptRatios.length > 0 && (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
               Compensation Ratio by Department
             </h3>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     {['Department', 'Employees', 'Average Compensation', 'Compensation Ratio (vs Median)'].map((h) => (
@@ -511,9 +511,9 @@ export function HRAnalyticsPage() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   {deptRatios.map((d) => (
-                    <tr key={d.department} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
+                    <tr key={d.department} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50">
                       <td className="px-6 py-3 text-sm font-medium text-secondary-900 dark:text-white">
                         <span className="inline-flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: getDeptColor(d.department) }} />
@@ -572,7 +572,7 @@ export function HRAnalyticsPage() {
     return (
       <div className="space-y-6">
         {/* Info banner */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 p-5">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 p-5">
           <div className="flex items-start gap-3">
             <ScaleIcon className="h-6 w-6 text-primary-600 dark:text-primary-400 mt-0.5 shrink-0" />
             <div>
@@ -588,7 +588,7 @@ export function HRAnalyticsPage() {
 
         {/* Rating Distribution by Department */}
         {deptDistribution.length > 0 && (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
               Rating Distribution by Department
             </h3>
@@ -616,12 +616,12 @@ export function HRAnalyticsPage() {
 
         {/* Statistical Indicators */}
         {deptDistribution.length > 0 && (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
               Statistical Indicators by Department
             </h3>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     {['Department', 'Mean Rating', 'Std Deviation', 'Significance'].map((h) => (
@@ -631,11 +631,11 @@ export function HRAnalyticsPage() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   {deptDistribution.map((d) => {
                     const significant = d.stdDev > stdDevThreshold;
                     return (
-                      <tr key={d.department} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
+                      <tr key={d.department} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50">
                         <td className="px-6 py-3 text-sm font-medium text-secondary-900 dark:text-white">
                           <span className="inline-flex items-center gap-2">
                             <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: getDeptColor(d.department) }} />
@@ -668,7 +668,7 @@ export function HRAnalyticsPage() {
 
         {/* Manager Comparison Chart */}
         {managerRatings.length > 0 && (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
               Manager Rating Comparison
             </h3>
@@ -733,8 +733,8 @@ export function HRAnalyticsPage() {
 
         {/* Demographic Parity Check */}
         {demographic.length > 0 && (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
-            <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+            <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-medium text-secondary-900 dark:text-white">
                 Demographic Parity Check
               </h3>
@@ -743,7 +743,7 @@ export function HRAnalyticsPage() {
               </p>
             </div>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     {['Grouping', 'Category', 'Count', 'Average Rating', 'Std Dev', 'Status'].map((h) => (
@@ -753,12 +753,12 @@ export function HRAnalyticsPage() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   {demographic.map((row, i) => {
                     const gap = Math.abs(row.avgRating - overallMean);
                     const flagged = gap > 0.3;
                     return (
-                      <tr key={i} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
+                      <tr key={i} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50">
                         <td className="px-6 py-3 text-sm font-medium text-secondary-900 dark:text-white">{row.grouping}</td>
                         <td className="px-6 py-3 text-sm text-secondary-700 dark:text-secondary-300">{row.category}</td>
                         <td className="px-6 py-3 text-sm text-secondary-500 dark:text-secondary-400">{row.count}</td>
@@ -840,7 +840,7 @@ export function HRAnalyticsPage() {
 
         {/* Before/After Visualization */}
         {distribution.length > 0 && (
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
               Before / After Distribution
             </h3>
@@ -890,8 +890,8 @@ export function HRAnalyticsPage() {
         )}
 
         {/* Normalization Preview Table */}
-        <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
             <div>
               <h3 className="text-lg font-medium text-secondary-900 dark:text-white">
                 Normalization Preview
@@ -902,14 +902,14 @@ export function HRAnalyticsPage() {
             </div>
             <button
               onClick={() => setShowNormConfirm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-secondary-800"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-secondary-800"
             >
               <ArrowPathIcon className="h-4 w-4" />
               Apply Normalization
             </button>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   {['Employee', 'Department', 'Original Rating', 'Z-Score', 'Normalized Rating', 'Adjustment'].map((h) => (
@@ -919,12 +919,12 @@ export function HRAnalyticsPage() {
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+              <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 {sortedEmployees.map((emp) => {
                   const isUp = emp.adjustment > 0;
                   const isNeutral = Math.abs(emp.adjustment) < 0.03;
                   return (
-                    <tr key={emp.id || emp.name} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
+                    <tr key={emp.id || emp.name} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50">
                       <td className="px-6 py-3 text-sm font-medium text-secondary-900 dark:text-white whitespace-nowrap">{emp.name}</td>
                       <td className="px-6 py-3 text-sm text-secondary-500 dark:text-secondary-400">
                         <span className="inline-flex items-center gap-1.5">
@@ -969,7 +969,7 @@ export function HRAnalyticsPage() {
           <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowNormConfirm(false)} />
-              <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-md w-full p-6 border border-secondary-200 dark:border-secondary-700">
+              <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="text-center">
                   <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-amber-100 dark:bg-amber-900/30 mb-4">
                     <ExclamationTriangleIcon className="h-6 w-6 text-amber-600 dark:text-amber-400" />
@@ -992,7 +992,7 @@ export function HRAnalyticsPage() {
                     </button>
                     <button
                       onClick={handleApplyNormalization}
-                      className="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
                     >
                       Confirm & Apply
                     </button>
@@ -1021,7 +1021,7 @@ export function HRAnalyticsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="-mb-px flex space-x-8">
           {tabs.map((tab) => (
             <button

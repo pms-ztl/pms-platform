@@ -362,7 +362,7 @@ function StatCard({
   const { bg, icon: iconColor } = colorMap[color];
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-5">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
       <div className="flex items-center gap-4">
         <div className={clsx('p-3 rounded-xl', bg)}>
           <Icon className={clsx('h-6 w-6', iconColor)} />
@@ -426,10 +426,10 @@ function ActivityTimeline({ events }: { events: AuditEvent[] }) {
     <div className="space-y-6">
       {Array.from(grouped.entries()).map(([dateKey, dateEvents]) => (
         <div key={dateKey}>
-          <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3 sticky top-0 bg-white dark:bg-secondary-800 py-1 z-10">
+          <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3 sticky top-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl py-1 z-10">
             {formatDateGroup(dateEvents[0].timestamp)}
           </h3>
-          <div className="relative pl-6 border-l-2 border-secondary-200 dark:border-secondary-700 space-y-4">
+          <div className="relative pl-6 border-l-2 border-secondary-200/60 dark:border-white/[0.06] space-y-4">
             {dateEvents.map((event) => {
               const TimeIcon = ACTION_TIMELINE_ICONS[event.action] ?? BoltIcon;
               const badgeStyle = ACTION_BADGE_STYLES[event.action] ?? ACTION_BADGE_STYLES.LOGIN;
@@ -616,7 +616,7 @@ export function AuditLogPage() {
               'inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-colors',
               showTimeline
                 ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300 dark:border-primary-600'
-                : 'border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700',
+                : 'border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]',
             )}
           >
             <ClockIcon className="h-4 w-4" />
@@ -624,7 +624,7 @@ export function AuditLogPage() {
           </button>
           <button
             onClick={handleExportCsv}
-            className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
           >
             <ArrowDownTrayIcon className="h-4 w-4" />
             Export CSV
@@ -633,7 +633,7 @@ export function AuditLogPage() {
       </PageHeader>
 
       {/* ── Filters Bar ────────────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center gap-2 mb-3">
           <FunnelIcon className="h-4 w-4 text-secondary-400" />
           <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">Filters</span>
@@ -722,13 +722,13 @@ export function AuditLogPage() {
         <div className="flex items-center justify-end gap-2 mt-4">
           <button
             onClick={handleResetFilters}
-            className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+            className="px-4 py-2 text-sm font-medium rounded-lg border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
           >
             Reset
           </button>
           <button
             onClick={handleApplyFilters}
-            className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
           >
             <FunnelIcon className="h-4 w-4" />
             Apply Filters
@@ -770,15 +770,15 @@ export function AuditLogPage() {
       <div className={clsx('grid gap-6', showTimeline ? 'grid-cols-1 xl:grid-cols-3' : 'grid-cols-1')}>
         {/* Table */}
         <div className={clsx(showTimeline ? 'xl:col-span-2' : '')}>
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
             {/* Table Header */}
-            <div className="px-5 py-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
+            <div className="px-5 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
                   Audit Events
                 </h2>
                 {eventsFetching && (
-                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary-600" />
+                  <div className="glass-spinner h-4 w-4" />
                 )}
                 <span className="text-xs text-secondary-400 dark:text-secondary-500">
                   {meta.total.toLocaleString()} total
@@ -789,7 +789,7 @@ export function AuditLogPage() {
             {/* Table Body */}
             {eventsLoading ? (
               <div className="flex justify-center py-16">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+                <div className="glass-spinner" />
               </div>
             ) : events.length === 0 ? (
               <div className="text-center py-16">
@@ -803,7 +803,7 @@ export function AuditLogPage() {
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
@@ -829,7 +829,7 @@ export function AuditLogPage() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-secondary-200 dark:divide-secondary-700 bg-white dark:bg-secondary-800">
+                  <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl">
                     {events.map((event) => {
                       const isExpanded = expandedRow === event.id;
                       return (
@@ -848,7 +848,7 @@ export function AuditLogPage() {
 
             {/* Pagination */}
             {meta.totalPages > 1 && (
-              <div className="px-5 py-4 border-t border-secondary-200 dark:border-secondary-700 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="px-5 py-4 border-t border-secondary-200/60 dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
                 <p className="text-sm text-secondary-500 dark:text-secondary-400">
                   Showing {(meta.page - 1) * meta.limit + 1} to{' '}
                   {Math.min(meta.page * meta.limit, meta.total)} of{' '}
@@ -892,8 +892,8 @@ export function AuditLogPage() {
         {/* Timeline Sidebar */}
         {showTimeline && (
           <div className="xl:col-span-1">
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden sticky top-6">
-              <div className="px-5 py-4 border-b border-secondary-200 dark:border-secondary-700 flex items-center justify-between">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden sticky top-6">
+              <div className="px-5 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
                 <h2 className="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
                   <ClockIcon className="h-5 w-5 text-primary-500" />
                   Activity Timeline
@@ -908,7 +908,7 @@ export function AuditLogPage() {
               <div className="p-5 max-h-[calc(100vh-16rem)] overflow-y-auto">
                 {eventsLoading ? (
                   <div className="flex justify-center py-8">
-                    <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary-600" />
+                    <div className="glass-spinner h-6 w-6" />
                   </div>
                 ) : (
                   <ActivityTimeline events={events.slice(0, 50)} />
@@ -939,7 +939,7 @@ function EventTableRow({
 
   return (
     <>
-      <tr className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors">
+      <tr className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors">
         {/* Timestamp */}
         <td className="px-4 py-3 whitespace-nowrap">
           <span className="text-sm text-secondary-700 dark:text-secondary-300">

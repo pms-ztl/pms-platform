@@ -179,7 +179,7 @@ export function FeedbackPage() {
       if (loadingReceived) {
         return (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner" />
           </div>
         );
       }
@@ -208,7 +208,7 @@ export function FeedbackPage() {
       if (loadingGiven) {
         return (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner" />
           </div>
         );
       }
@@ -237,7 +237,7 @@ export function FeedbackPage() {
       if (loadingTimeline) {
         return (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner" />
           </div>
         );
       }
@@ -340,7 +340,7 @@ export function FeedbackPage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="-mb-px flex space-x-8">
           {[
             { key: 'received', label: 'Received' },
@@ -392,7 +392,7 @@ export function FeedbackPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowGiveFeedbackModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Give Feedback</h2>
               <form
                 onSubmit={(e) => {
@@ -489,7 +489,7 @@ export function FeedbackPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowRequestFeedbackModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Request Feedback</h2>
               <form
                 onSubmit={(e) => {

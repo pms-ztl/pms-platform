@@ -598,7 +598,7 @@ export function HealthDashboardPage() {
           )}
           {/* Quick KPIs below gauge */}
           {latest && (
-            <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <div className="text-center">
                 <div className="text-lg font-bold text-secondary-900 dark:text-white">
                   {latest.headcount}
@@ -706,7 +706,7 @@ export function HealthDashboardPage() {
             </ResponsiveContainer>
           </div>
           {/* Diversity / Inclusion quick stats */}
-          <div className="mt-4 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+          <div className="mt-4 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">
               Diversity & Inclusion
             </h3>
@@ -862,7 +862,7 @@ export function HealthDashboardPage() {
 
               {/* Table */}
               <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700 overflow-x-auto">
-                <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                     <tr>
                       {['Rank', 'Department', 'Health', 'Engagement', 'Performance', 'Headcount', 'Turnover', 'vs Avg'].map(h => (
@@ -870,9 +870,9 @@ export function HealthDashboardPage() {
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                  <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                     {displayRows.map((row) => (
-                      <tr key={row.name} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors">
+                      <tr key={row.name} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors">
                         <td className="px-3 py-2.5 text-sm text-secondary-500 dark:text-secondary-400">{row.rank}</td>
                         <td className="px-3 py-2.5">
                           <div className="flex items-center gap-2">

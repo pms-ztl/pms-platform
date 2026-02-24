@@ -78,7 +78,7 @@ function TreeCard({ goal, onSelect }: { goal: Goal; onSelect?: (g: Goal) => void
       <button
         onClick={() => onSelect?.(goal)}
         className={clsx(
-          'w-64 text-left bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 shadow-sm',
+          'w-64 text-left bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] shadow-sm',
           'border-l-4 hover:shadow-md transition-all',
           typeBorderColors[goal.type] || 'border-l-secondary-300'
         )}
@@ -313,7 +313,7 @@ export function OKRHierarchyView({ treeData, onSelect }: OKRHierarchyViewProps) 
 
       {subMode === 'tree' ? (
         /* Visual Tree */
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 overflow-x-auto">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 overflow-x-auto">
           <div className="flex flex-col items-center gap-0 min-w-fit">
             {treeData.map((root) => (
               <div key={root.id} className="mb-8 last:mb-0">
@@ -324,10 +324,10 @@ export function OKRHierarchyView({ treeData, onSelect }: OKRHierarchyViewProps) 
         </div>
       ) : (
         /* Indented List */
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/80">
+              <tr className="border-b border-secondary-200/60 dark:border-white/[0.06] bg-secondary-50 dark:bg-secondary-800/80">
                 <th className="w-8 py-2.5 pl-4" />
                 <th className="text-left py-2.5 pr-4 text-xs font-semibold text-secondary-500 dark:text-secondary-400">Goal</th>
                 <th className="text-left py-2.5 pr-4 text-xs font-semibold text-secondary-500 dark:text-secondary-400">Owner</th>

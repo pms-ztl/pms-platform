@@ -36,7 +36,7 @@ export function PerformanceTimeline({ userId, className }: PerformanceTimelinePr
 
   if (isLoading) {
     return (
-      <div className={clsx('bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6', className)}>
+      <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
         <div className="h-4 w-40 bg-secondary-200 dark:bg-secondary-700 rounded animate-pulse mb-4" />
         <div className="h-48 bg-secondary-100 dark:bg-secondary-900/50 rounded animate-pulse" />
       </div>
@@ -44,7 +44,7 @@ export function PerformanceTimeline({ userId, className }: PerformanceTimelinePr
   }
 
   return (
-    <div className={clsx('bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6', className)}>
+    <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
       <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
         Performance Timeline
       </h3>

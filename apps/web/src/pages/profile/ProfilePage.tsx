@@ -412,7 +412,7 @@ export function ProfilePage() {
       />
 
       {/* Tabs */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="-mb-px flex space-x-8">
           {[
             { key: 'overview', label: 'Overview' },
@@ -445,7 +445,7 @@ export function ProfilePage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowChangePasswordModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-md w-full p-6">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Change Password</h2>
               <form
                 onSubmit={(e) => {
@@ -497,7 +497,7 @@ export function ProfilePage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowMfaModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-md w-full p-6">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Setup Two-Factor Authentication</h2>
               <div className="space-y-4">
                 <p className="text-sm text-secondary-600 dark:text-secondary-400">
@@ -558,7 +558,7 @@ export function ProfilePage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowAvatarModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-lg w-full p-6">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Change Profile Photo</h2>
 
               {/* Upload from PC */}
@@ -598,7 +598,7 @@ export function ProfilePage() {
                         key={avatar.name}
                         onClick={() => setAiAvatarMutation.mutate(avatarUrl)}
                         disabled={setAiAvatarMutation.isPending}
-                        className="flex flex-col items-center p-3 rounded-lg border border-secondary-200 dark:border-secondary-700 hover:border-primary-500 dark:hover:border-primary-500 transition-colors disabled:opacity-50"
+                        className="flex flex-col items-center p-3 rounded-lg border border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-500 dark:hover:border-primary-500 transition-colors disabled:opacity-50"
                       >
                         <img src={avatarUrl} alt={avatar.name} className="w-16 h-16 rounded-full bg-white" />
                         <span className="text-xs text-secondary-600 dark:text-secondary-400 mt-2">{avatar.name}</span>
@@ -630,7 +630,7 @@ export function ProfilePage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowEmployeeCardModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
               <EmployeeCard onClose={() => setShowEmployeeCardModal(false)} />
             </div>
           </div>

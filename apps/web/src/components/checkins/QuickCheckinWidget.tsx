@@ -127,11 +127,11 @@ export function QuickCheckinWidget() {
   const lastCheckin = entries[0];
 
   return (
-    <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 overflow-hidden shadow-sm">
+    <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl overflow-hidden shadow-sm">
       {/* Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
@@ -195,7 +195,7 @@ export function QuickCheckinWidget() {
                         'flex flex-col items-center gap-1 p-2 rounded-xl transition-all flex-1',
                         mood === m.value
                           ? 'bg-primary-50 dark:bg-primary-900/30 ring-2 ring-primary-500 scale-110'
-                          : 'hover:bg-secondary-50 dark:hover:bg-secondary-700/50'
+                          : 'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50'
                       )}
                     >
                       <MoodFaceIcon

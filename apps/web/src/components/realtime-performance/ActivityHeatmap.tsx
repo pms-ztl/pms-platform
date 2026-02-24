@@ -243,7 +243,7 @@ export function ActivityHeatmap({ mode = 'individual' }: { mode?: 'individual' |
   const isLoading = mode === 'individual' ? loadingIndividual : loadingTeam;
 
   return (
-    <div className="bg-white dark:bg-secondary-800/50 rounded-2xl border border-secondary-200/60 dark:border-secondary-700/60 overflow-hidden">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl/50 rounded-2xl border border-secondary-200/60 dark:border-secondary-700/60 overflow-hidden">
       {/* Header */}
       <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-secondary-700/60">
         <div className="flex items-center justify-between">

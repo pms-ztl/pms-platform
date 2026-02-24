@@ -72,7 +72,7 @@ export function DepartmentRadar({ departments, selectedDeptIds: initialSelected,
 
   if (departments.length === 0) {
     return (
-      <div className={clsx('bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6', className)}>
+      <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Department Comparison</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 text-center py-8">No department data available.</p>
       </div>
@@ -80,7 +80,7 @@ export function DepartmentRadar({ departments, selectedDeptIds: initialSelected,
   }
 
   return (
-    <div className={clsx('bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6', className)}>
+    <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
       <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-3">Department Comparison</h3>
 
       {/* Department selector */}

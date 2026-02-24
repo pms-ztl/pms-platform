@@ -52,7 +52,7 @@ function currentQuarterLabel(): string {
 
 function SkeletonCard() {
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 animate-pulse">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 animate-pulse">
       <div className="flex items-start gap-4">
         <div className="h-[72px] w-[72px] rounded-full bg-secondary-200 dark:bg-secondary-700" />
         <div className="flex-1 space-y-3">
@@ -458,7 +458,7 @@ export function OKRDashboardPage() {
         <select
           value={filterQuarter}
           onChange={(e) => setFilterQuarter(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500"
         >
           <option value="all">All Quarters</option>
           {quarters.map((q) => (
@@ -468,7 +468,7 @@ export function OKRDashboardPage() {
         <select
           value={filterOwner}
           onChange={(e) => setFilterOwner(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500"
         >
           <option value="all">All Owners</option>
           {owners.map((o) => (
@@ -478,7 +478,7 @@ export function OKRDashboardPage() {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500"
         >
           <option value="all">All Statuses</option>
           {statuses.map((s) => (
@@ -489,7 +489,7 @@ export function OKRDashboardPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 flex items-center gap-3">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex items-center gap-3">
           <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/30">
             <FlagIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
           </div>
@@ -498,7 +498,7 @@ export function OKRDashboardPage() {
             <p className="text-xs text-secondary-500 dark:text-secondary-400">Objectives</p>
           </div>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 flex items-center gap-3">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex items-center gap-3">
           <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/30">
             <FlagIcon className="h-5 w-5 text-orange-600 dark:text-orange-400" />
           </div>
@@ -507,14 +507,14 @@ export function OKRDashboardPage() {
             <p className="text-xs text-secondary-500 dark:text-secondary-400">Key Results</p>
           </div>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 flex items-center gap-3">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex items-center gap-3">
           <OKRProgressRing progress={stats.avgProgress} size={44} strokeWidth={4} />
           <div>
             <p className="text-2xl font-bold text-secondary-900 dark:text-white">{stats.avgProgress}%</p>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">Average Progress</p>
           </div>
         </div>
-        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 flex items-center gap-3">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex items-center gap-3">
           <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30">
             <FlagIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
           </div>

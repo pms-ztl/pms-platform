@@ -49,7 +49,7 @@ export function LicenseDashboard() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <div className="animate-pulse space-y-3">
           <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
           <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" />
@@ -61,7 +61,7 @@ export function LicenseDashboard() {
 
   if (error || !usage) {
     return (
-      <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <p className="text-sm text-secondary-500">{error || 'No license data available'}</p>
       </div>
     );
@@ -80,7 +80,7 @@ export function LicenseDashboard() {
     : null;
 
   return (
-    <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+    <div className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <UsersIcon className="h-5 w-5 text-primary-500" />
@@ -122,7 +122,7 @@ export function LicenseDashboard() {
       )}
 
       {/* Plan info */}
-      <div className="flex items-center justify-between text-xs pt-3 border-t border-secondary-200 dark:border-secondary-700">
+      <div className="flex items-center justify-between text-xs pt-3 border-t border-secondary-200/60 dark:border-white/[0.06]">
         <div className="flex items-center gap-1.5">
           <span className="text-secondary-500">Plan:</span>
           <span className="font-medium text-secondary-700 dark:text-secondary-300">{usage.subscriptionPlan}</span>

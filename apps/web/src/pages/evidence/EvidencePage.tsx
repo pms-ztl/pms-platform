@@ -586,7 +586,7 @@ export function EvidencePage() {
       <div className="card dark:bg-secondary-800 dark:border-secondary-700 overflow-hidden">
         {isLoading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner" />
           </div>
         ) : filteredEvidence.length === 0 ? (
           <div className="text-center py-16">
@@ -605,7 +605,7 @@ export function EvidencePage() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     <SortableHeader
@@ -654,7 +654,7 @@ export function EvidencePage() {
                       <TableRowGroup key={e.id}>
                         <tr
                           onClick={() => setExpandedRow(isExpanded ? null : e.id)}
-                          className="cursor-pointer hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-colors"
+                          className="cursor-pointer hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-colors"
                         >
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
@@ -814,7 +814,7 @@ export function EvidencePage() {
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <p className="text-sm text-secondary-500 dark:text-secondary-400">
                 Showing {(meta.page - 1) * meta.limit + 1}
                 {' '}-{' '}
@@ -849,8 +849,8 @@ export function EvidencePage() {
       {/* ---- Create / Edit Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingEvidence ? 'Edit Evidence' : 'New Evidence'}
               </h2>
@@ -962,7 +962,7 @@ export function EvidencePage() {
                   className="input-field text-sm w-full mb-1"
                 />
                 {employeeSearch && !formState.userId && (
-                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white dark:bg-secondary-900">
+                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
                     {filteredUsers.map((u) => (
                       <button
                         key={u.id}
@@ -1014,7 +1014,7 @@ export function EvidencePage() {
             </div>
 
             {/* Modal footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => {
                   setShowCreateModal(false);
@@ -1043,8 +1043,8 @@ export function EvidencePage() {
       {/* ---- View Detail Modal ---- */}
       {showViewModal && viewingEvidence && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Evidence Details
               </h2>
@@ -1149,7 +1149,7 @@ export function EvidencePage() {
             </div>
 
             {/* Modal footer actions */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <div className="flex gap-2">
                 {viewingEvidence.status === 'PENDING' && isManager && (
                   <button
@@ -1195,8 +1195,8 @@ export function EvidencePage() {
       {/* ---- Link to Review Modal ---- */}
       {showLinkModal && linkingEvidence && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-2xl max-w-md w-full">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-md w-full">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Link Evidence to Review
               </h2>
@@ -1228,7 +1228,7 @@ export function EvidencePage() {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => {
                   setShowLinkModal(false);

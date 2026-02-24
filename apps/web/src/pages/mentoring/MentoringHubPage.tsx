@@ -47,7 +47,7 @@ function CompatibilityBadge({ score }: { score: number }) {
 
 function MentorCard({ mentor, onRequest }: { mentor: MentorMatch; onRequest: (id: string) => void }) {
   return (
-    <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5 hover:shadow-lg transition-all group">
+    <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5 hover:shadow-lg transition-all group">
       <div className="flex items-start gap-4">
         {/* Avatar */}
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white text-lg font-bold shrink-0 shadow-lg shadow-primary-500/20">
@@ -111,7 +111,7 @@ function MentorshipCard({ mentorship }: { mentorship: Mentorship }) {
   const StatusIcon = cfg.icon;
 
   return (
-    <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5">
+    <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
@@ -165,7 +165,7 @@ function LearningItem({ item }: { item: LearningPathItem }) {
   };
 
   return (
-    <div className="flex items-center gap-4 p-4 rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 hover:shadow-md transition-shadow">
+    <div className="flex items-center gap-4 p-4 rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl hover:shadow-md transition-shadow">
       <div className={clsx(
         'w-10 h-10 rounded-lg flex items-center justify-center shrink-0',
         item.status === 'completed' ? 'bg-green-100 dark:bg-green-900/30' : 'bg-primary-100 dark:bg-primary-900/30'
@@ -237,7 +237,7 @@ export function MentoringHubPage() {
 
       {/* Quick stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-4 flex items-center gap-4">
+        <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
             <SparklesIcon className="h-6 w-6 text-violet-500" />
           </div>
@@ -246,7 +246,7 @@ export function MentoringHubPage() {
             <p className="text-xs text-secondary-500">Available Mentors</p>
           </div>
         </div>
-        <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-4 flex items-center gap-4">
+        <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
             <UserGroupIcon className="h-6 w-6 text-green-500" />
           </div>
@@ -255,7 +255,7 @@ export function MentoringHubPage() {
             <p className="text-xs text-secondary-500">Active Mentorships</p>
           </div>
         </div>
-        <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-4 flex items-center gap-4">
+        <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
             <BookOpenIcon className="h-6 w-6 text-blue-500" />
           </div>
@@ -291,7 +291,7 @@ export function MentoringHubPage() {
           {matchesLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5 animate-pulse">
+                <div key={i} className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5 animate-pulse">
                   <div className="flex gap-4"><div className="w-14 h-14 rounded-full bg-secondary-200 dark:bg-secondary-700" /><div className="flex-1 space-y-2"><div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-2/3" /><div className="h-3 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" /></div></div>
                 </div>
               ))}
@@ -336,7 +336,7 @@ export function MentoringHubPage() {
         <div>
           {/* Progress bar */}
           {learningItems.length > 0 && (
-            <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5 mb-5">
+            <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5 mb-5">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">Your Learning Journey</h3>
                 <span className="text-xs font-semibold text-primary-600 dark:text-primary-400">{completedLearning}/{learningItems.length} completed</span>

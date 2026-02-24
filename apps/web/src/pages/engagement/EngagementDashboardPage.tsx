@@ -745,7 +745,7 @@ export function EngagementDashboardPage() {
           <SkeletonTable rows={4} />
         ) : departments && departments.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">
@@ -768,14 +768,14 @@ export function EngagementDashboardPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+              <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 {departments.map((dept) => {
                   const pct = ((dept.averageScore ?? 0) / 5) * 100;
                   return (
                     <tr
                       key={dept.departmentId}
                       className={clsx(
-                        'hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors cursor-pointer',
+                        'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors cursor-pointer',
                         selectedDeptId === dept.departmentId && 'bg-primary-50/50 dark:bg-primary-900/10'
                       )}
                       onClick={() =>
@@ -859,7 +859,7 @@ export function EngagementDashboardPage() {
           <SkeletonTable rows={5} />
         ) : sortedAtRisk.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   <th
@@ -897,11 +897,11 @@ export function EngagementDashboardPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+              <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 {sortedAtRisk.map((emp) => (
                   <tr
                     key={emp.id}
-                    className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
+                    className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors"
                   >
                     <td className="px-4 py-3">
                       <span className="text-sm font-medium text-secondary-900 dark:text-white">

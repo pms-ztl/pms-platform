@@ -104,7 +104,7 @@ export function CalibrationPage() {
     if (isLoading) {
       return (
         <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner" />
         </div>
       );
     }
@@ -313,12 +313,12 @@ export function CalibrationPage() {
 
         {/* Reviews table */}
         <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Reviews for Calibration</h3>
           </div>
           {loadingReviews ? (
             <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+              <div className="glass-spinner" />
             </div>
           ) : !sessionReviews || sessionReviews.length === 0 ? (
             <div className="text-center py-12">
@@ -326,7 +326,7 @@ export function CalibrationPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Employee</th>
@@ -338,7 +338,7 @@ export function CalibrationPage() {
                     <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   {sessionReviews.map((review: CalibrationReview) => (
                     <CalibrationReviewRow
                       key={review.id}
@@ -408,7 +408,7 @@ export function CalibrationPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Create Calibration Session</h2>
               <form
                 onSubmit={(e) => {
@@ -490,7 +490,7 @@ function CalibrationReviewRow({
 
   return (
     <>
-      <tr className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50">
+      <tr className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50">
         <td className="px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
@@ -558,7 +558,7 @@ function CalibrationReviewRow({
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowAdjustModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-md w-full p-6 border border-secondary-200 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Adjust Rating for {review.reviewee.firstName} {review.reviewee.lastName}
               </h2>

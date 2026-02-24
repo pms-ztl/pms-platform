@@ -51,7 +51,7 @@ export function Skeleton({
 /** Card-shaped skeleton with header + lines */
 export function SkeletonCard({ className }: { className?: string }) {
   return (
-    <div className={clsx('rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-6', className)}>
+    <div className={clsx('rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-6', className)}>
       <div className="flex items-center gap-3 mb-4">
         <Skeleton variant="circle" width={40} height={40} />
         <div className="flex-1">

@@ -387,7 +387,7 @@ export function RoleManagementPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 animate-pulse h-40"
+              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 animate-pulse h-40"
             />
           ))}
         </div>
@@ -466,7 +466,7 @@ export function RoleManagementPage() {
             return (
               <div
                 key={role.id}
-                className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-5 flex flex-col justify-between hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
+                className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5 flex flex-col justify-between hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
               >
                 {/* Card top */}
                 <div>
@@ -567,7 +567,7 @@ export function RoleManagementPage() {
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 backdrop-blur-sm p-4 sm:p-8">
           <div className="relative w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
             {/* Modal header */}
-            <div className="flex items-center justify-between border-b border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingRole ? 'Edit Role' : 'Create Role'}
               </h2>
@@ -591,7 +591,7 @@ export function RoleManagementPage() {
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="e.g. Department Manager"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -605,7 +605,7 @@ export function RoleManagementPage() {
                   onChange={(e) => setFormDescription(e.target.value)}
                   placeholder="Brief description of this role..."
                   rows={3}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
                 />
               </div>
 
@@ -617,7 +617,7 @@ export function RoleManagementPage() {
                 <select
                   value={formCategory}
                   onChange={(e) => setFormCategory(e.target.value as Role['category'])}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 >
                   {CATEGORY_OPTIONS.map((cat) => (
                     <option key={cat} value={cat}>
@@ -642,7 +642,7 @@ export function RoleManagementPage() {
                       value={permissionSearch}
                       onChange={(e) => setPermissionSearch(e.target.value)}
                       placeholder="Search permissions..."
-                      className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 pl-9 pr-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                      className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl pl-9 pr-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                     />
                   </div>
                 )}
@@ -652,7 +652,7 @@ export function RoleManagementPage() {
                     No permissions catalog available. Permissions can be configured after the role is created.
                   </p>
                 ) : (
-                  <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 divide-y divide-secondary-200 dark:divide-secondary-700">
+                  <div className="rounded-lg border border-secondary-200/60 dark:border-white/[0.06] divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                     {filteredCatalog.map((group) => {
                       const isExpanded = expandedResources.has(group.resource);
                       const groupKeys = group.permissions.map((p) => p.key);
@@ -687,7 +687,7 @@ export function RoleManagementPage() {
                           {isExpanded && (
                             <div className="bg-secondary-50/50 dark:bg-secondary-800/30 px-4 py-3 space-y-2">
                               {/* Select all */}
-                              <label className="flex items-center gap-2 cursor-pointer pb-2 border-b border-secondary-200 dark:border-secondary-700">
+                              <label className="flex items-center gap-2 cursor-pointer pb-2 border-b border-secondary-200/60 dark:border-white/[0.06]">
                                 <input
                                   type="checkbox"
                                   checked={allSelected}
@@ -745,7 +745,7 @@ export function RoleManagementPage() {
             </div>
 
             {/* Modal footer */}
-            <div className="flex items-center justify-end gap-3 border-t border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <button
                 onClick={closeModal}
                 className="rounded-lg px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-secondary-100 dark:bg-secondary-800 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors"
@@ -774,7 +774,7 @@ export function RoleManagementPage() {
       {compareResult && (
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 backdrop-blur-sm p-4 sm:p-8">
           <div className="relative w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
-            <div className="flex items-center justify-between border-b border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Compare: {compareResult.role1.name} vs {compareResult.role2.name}
               </h2>
@@ -842,7 +842,7 @@ export function RoleManagementPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-end border-t border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-end border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <button
                 onClick={() => setCompareResult(null)}
                 className="rounded-lg px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-secondary-100 dark:bg-secondary-800 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors"
@@ -858,7 +858,7 @@ export function RoleManagementPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
             {/* Delete header */}
-            <div className="flex items-center gap-3 border-b border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center gap-3 border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/20">
                 <ExclamationTriangleIcon className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
@@ -892,7 +892,7 @@ export function RoleManagementPage() {
                   <select
                     value={fallbackRoleId}
                     onChange={(e) => setFallbackRoleId(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                   >
                     <option value="">-- Select a role --</option>
                     {roles
@@ -908,7 +908,7 @@ export function RoleManagementPage() {
             </div>
 
             {/* Delete footer */}
-            <div className="flex items-center justify-end gap-3 border-t border-secondary-200 dark:border-secondary-700 px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
               <button
                 onClick={() => setDeleteTarget(null)}
                 className="rounded-lg px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-secondary-100 dark:bg-secondary-800 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors"

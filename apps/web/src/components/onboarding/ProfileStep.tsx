@@ -157,7 +157,7 @@ export function ProfileStep({ onNext, onSkip }: ProfileStepProps) {
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder={`${user?.firstName} ${user?.lastName}`}
-            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           />
         </div>
 
@@ -170,7 +170,7 @@ export function ProfileStep({ onNext, onSkip }: ProfileStepProps) {
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
             placeholder="e.g. Software Engineer, Product Manager"
-            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           />
         </div>
 
@@ -181,7 +181,7 @@ export function ProfileStep({ onNext, onSkip }: ProfileStepProps) {
           <select
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
-            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           >
             {COMMON_TIMEZONES.map((tz) => (
               <option key={tz} value={tz}>{tz.replace(/_/g, ' ')}</option>

@@ -23,7 +23,7 @@ function AnalyticsFilters({ filters, onChange, cycles }: AnalyticsFiltersProps) 
       <select
         value={filters.months}
         onChange={(e) => onChange({ ...filters, months: Number(e.target.value) })}
-        className="text-xs rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 px-3 py-1.5 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+        className="text-xs rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-secondary-700 dark:text-secondary-300 px-3 py-1.5 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
       >
         <option value={3}>Last 3 months</option>
         <option value={6}>Last 6 months</option>
@@ -36,7 +36,7 @@ function AnalyticsFilters({ filters, onChange, cycles }: AnalyticsFiltersProps) 
         <select
           value={filters.cycleId}
           onChange={(e) => onChange({ ...filters, cycleId: e.target.value })}
-          className="text-xs rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 px-3 py-1.5 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="text-xs rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-secondary-700 dark:text-secondary-300 px-3 py-1.5 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
         >
           <option value="">All Cycles</option>
           {cycles.map((c) => (

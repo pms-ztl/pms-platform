@@ -480,7 +480,7 @@ export function CompliancePage() {
           <div className="card dark:bg-secondary-800 dark:border-secondary-700 overflow-hidden">
             {isLoading ? (
               <div className="flex justify-center py-16">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+                <div className="glass-spinner" />
               </div>
             ) : filteredReviews.length === 0 ? (
               <div className="text-center py-16">
@@ -503,7 +503,7 @@ export function CompliancePage() {
             ) : (
               <>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                  <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                     <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                       <tr>
                         {['Employee', 'Type', 'Status', 'Deadline', 'Priority', 'Reviewer', 'Last Updated', 'Actions'].map(
@@ -524,7 +524,7 @@ export function CompliancePage() {
                         return (
                           <tr
                             key={r.id}
-                            className="hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-colors"
+                            className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-colors"
                           >
                             <td className="px-4 py-3">
                               <div className="text-sm font-medium text-secondary-900 dark:text-white">
@@ -635,7 +635,7 @@ export function CompliancePage() {
                 </div>
 
                 {/* Pagination */}
-                <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200 dark:border-secondary-700">
+                <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200/60 dark:border-white/[0.06]">
                   <p className="text-sm text-secondary-500 dark:text-secondary-400">
                     Showing {(meta.page - 1) * meta.limit + 1}
                     {' '}-{' '}
@@ -785,8 +785,8 @@ export function CompliancePage() {
       {/* ---- View Details Modal ---- */}
       {viewingReview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Review Details
               </h2>
@@ -895,7 +895,7 @@ export function CompliancePage() {
               </div>
 
               {/* Dates */}
-              <div className="grid grid-cols-2 gap-4 pt-2 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="grid grid-cols-2 gap-4 pt-2 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <div>
                   <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                     Created
@@ -920,7 +920,7 @@ export function CompliancePage() {
             </div>
 
             {/* Modal footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               {viewingReview.status !== 'COMPLETED' && isManager && (
                 <button
                   onClick={() => {
@@ -947,8 +947,8 @@ export function CompliancePage() {
       {/* ---- Create / Edit Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingReview ? 'Edit Compliance Review' : 'New Compliance Review'}
               </h2>
@@ -976,7 +976,7 @@ export function CompliancePage() {
                   className="input-field text-sm w-full mb-1"
                 />
                 {employeeSearch && !formState.employeeId && (
-                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white dark:bg-secondary-900">
+                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
                     {filteredUsers.map((u) => (
                       <button
                         key={u.id}
@@ -1080,7 +1080,7 @@ export function CompliancePage() {
             </div>
 
             {/* Modal footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => {
                   setShowCreateModal(false);

@@ -68,7 +68,7 @@ const PLANS: PlanDefinition[] = [
     icon: StarIcon,
     color: 'text-secondary-500 dark:text-secondary-400',
     bgGradient: 'from-secondary-50 to-secondary-100 dark:from-secondary-800/50 dark:to-secondary-900/50',
-    borderColor: 'border-secondary-200 dark:border-secondary-700',
+    borderColor: 'border-secondary-200/60 dark:border-white/[0.06]',
     badgeColor: 'bg-secondary-100 text-secondary-700 dark:bg-secondary-700 dark:text-secondary-300',
     features: [
       'Up to 4 job levels (L1\u2013L4)',
@@ -336,7 +336,7 @@ export function UpgradeRequestPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
                 <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" />
@@ -356,7 +356,7 @@ export function UpgradeRequestPage() {
       <PageHeader title="Upgrade Plan" subtitle="Compare plans and request an upgrade for your organization">
         <button
           onClick={fetchRequests}
-          className="inline-flex items-center gap-2 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 shadow-sm hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 shadow-sm hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors"
         >
           <ArrowPathIcon className="h-4 w-4" />
           Refresh
@@ -407,7 +407,7 @@ export function UpgradeRequestPage() {
                   isCurrent
                     ? 'border-primary-500 dark:border-primary-400 ring-2 ring-primary-500/20 dark:ring-primary-400/20'
                     : plan.borderColor
-                } bg-white dark:bg-secondary-900 shadow-sm transition-all hover:shadow-md`}
+                } bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl shadow-sm transition-all hover:shadow-md`}
               >
                 {/* Popular badge */}
                 {plan.popular && !isCurrent && (
@@ -483,7 +483,7 @@ export function UpgradeRequestPage() {
                           ? 'bg-secondary-50 dark:bg-secondary-800/50 text-secondary-400 dark:text-secondary-500 cursor-not-allowed'
                           : hasPendingRequest
                             ? 'bg-secondary-100 dark:bg-secondary-800 text-secondary-400 dark:text-secondary-500 cursor-not-allowed'
-                            : 'bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white shadow-sm hover:shadow-md'
+                            : 'bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] dark:bg-primary-500 dark:hover:bg-primary-600 text-white shadow-sm hover:shadow-md'
                     }`}
                   >
                     {isCurrent
@@ -504,7 +504,7 @@ export function UpgradeRequestPage() {
       {/* Past Requests Table */}
       <div>
         <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Upgrade Request History</h3>
-        <div className="overflow-hidden rounded-xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-900 shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl shadow-sm">
           {requestsLoading ? (
             <div className="p-8 text-center">
               <ArrowPathIcon className="h-6 w-6 text-secondary-400 animate-spin mx-auto mb-2" />
@@ -587,7 +587,7 @@ export function UpgradeRequestPage() {
                             <button
                               disabled={cancelling === req.id}
                               onClick={() => handleCancel(req.id)}
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 dark:border-red-800 bg-white dark:bg-secondary-800 px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 dark:border-red-800 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
                             >
                               {cancelling === req.id ? (
                                 <ArrowPathIcon className="h-3.5 w-3.5 animate-spin" />
@@ -620,7 +620,7 @@ export function UpgradeRequestPage() {
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-900 shadow-2xl">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl shadow-2xl">
             {/* Header */}
             <div className={`sticky top-0 z-10 flex items-center justify-between rounded-t-2xl border-b border-secondary-100 dark:border-secondary-800 bg-gradient-to-r ${selectedPlan.bgGradient} px-6 py-4`}>
               <div className="flex items-center gap-3">
@@ -700,7 +700,7 @@ export function UpgradeRequestPage() {
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Explain why your organization needs this upgrade (e.g., headcount growth, need for additional levels, compliance requirements)..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-3.5 py-2.5 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 dark:placeholder-secondary-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 outline-none transition-all resize-none"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3.5 py-2.5 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 dark:placeholder-secondary-500 focus:border-primary-500 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-primary-400/20 outline-none transition-all resize-none"
                 />
                 <p className="mt-1 text-xs text-secondary-400 dark:text-secondary-500">
                   This will be reviewed by the platform administrators.
@@ -713,14 +713,14 @@ export function UpgradeRequestPage() {
               <button
                 disabled={submitting}
                 onClick={() => setSelectedPlan(null)}
-                className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors disabled:opacity-50"
+                className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 disabled={submitting || !reason.trim()}
                 onClick={handleSubmit}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] dark:bg-primary-500 dark:hover:bg-primary-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? (
                   <>

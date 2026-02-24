@@ -135,7 +135,7 @@ function SectionCard({
   return (
     <div
       className={clsx(
-        'rounded-2xl bg-white dark:bg-secondary-800 border border-secondary-100 dark:border-secondary-700 shadow-sm overflow-hidden',
+        'rounded-2xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-100 dark:border-secondary-700 shadow-sm overflow-hidden',
         className,
       )}
     >
@@ -462,7 +462,7 @@ export function ManagerDashboardPage() {
     <div className="space-y-8 pb-10">
       {/* ══════════════════════════ Header ══════════════════════════ */}
       <PageHeader title="Manager Dashboard" subtitle="Your team at a glance">
-        <div className="flex items-center rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-1">
+        <div className="flex items-center rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-1">
           {([
             ['week', 'This Week'],
             ['month', 'This Month'],
@@ -693,7 +693,7 @@ export function ManagerDashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <label className="text-xs text-secondary-500 dark:text-secondary-400">Sort by:</label>
-            <div className="flex items-center rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-0.5">
+            <div className="flex items-center rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-0.5">
               {([
                 ['name', 'Name'],
                 ['performance', 'Performance'],
@@ -1056,7 +1056,7 @@ export function ManagerDashboardPage() {
               key={action.label}
               to={action.href}
               className={clsx(
-                'group flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-secondary-800 border border-secondary-100 dark:border-secondary-700 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5',
+                'group flex items-start gap-4 p-5 rounded-2xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-100 dark:border-secondary-700 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5',
                 action.bgHover,
               )}
             >

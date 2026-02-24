@@ -53,9 +53,9 @@ function TreeNode({
         onClick={() => onSelect?.(goal)}
         className={clsx(
           'w-full text-left flex items-center gap-3 p-3 rounded-lg transition-colors',
-          'hover:bg-secondary-50 dark:hover:bg-secondary-700/50',
+          'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50',
           isObjective
-            ? 'bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 shadow-sm'
+            ? 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] shadow-sm'
             : 'bg-secondary-50/50 dark:bg-secondary-800/50'
         )}
       >

@@ -105,7 +105,7 @@ function TreeNodeCard({ goal, depth, isLast, onSelect, selectedId, expandedMap, 
           'hover:shadow-md hover:border-primary-300 dark:hover:border-primary-600',
           selectedId === goal.id
             ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/20 shadow-md ring-1 ring-primary-200 dark:ring-primary-700'
-            : 'border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800',
+            : 'border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl',
         )}
       >
         <div className="flex items-start gap-2">
@@ -156,7 +156,7 @@ function ListRow({ goal, depth, onSelect, selectedId, expandedMap, toggleExpand 
         onClick={() => onSelect(goal)}
         className={clsx(
           'flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors border-l-4',
-          'hover:bg-secondary-50 dark:hover:bg-secondary-700/50 border-b border-b-secondary-100 dark:border-b-secondary-700/50',
+          'hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 border-b border-b-secondary-100 dark:border-b-secondary-700/50',
           selectedId === goal.id ? 'bg-primary-50 dark:bg-primary-900/20' : '',
           statusBorderColors[goal.status] || 'border-l-secondary-300',
         )}
@@ -205,8 +205,8 @@ function DetailPanel({ goal, onClose }: { goal: Goal; onClose: () => void }) {
     : 'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-300';
 
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-secondary-800 border-l border-secondary-200 dark:border-secondary-700">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-secondary-200 dark:border-secondary-700">
+    <div className="h-full flex flex-col bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border-l border-secondary-200/60 dark:border-white/[0.06]">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06]">
         <h3 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">Goal Details</h3>
         <button onClick={onClose} className="p-1 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700">
           <XMarkIcon className="h-4 w-4 text-secondary-500" />
@@ -321,7 +321,7 @@ function DetailPanel({ goal, onClose }: { goal: Goal; onClose: () => void }) {
           </div>
         )}
       </div>
-      <div className="px-4 py-3 border-t border-secondary-200 dark:border-secondary-700">
+      <div className="px-4 py-3 border-t border-secondary-200/60 dark:border-white/[0.06]">
         <a href={`/goals/${goal.id}`}
           className="block w-full text-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 py-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors">
           View Full Goal
@@ -351,7 +351,7 @@ function StatsBar({ goals }: { goals: Goal[] }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
       {stats.map((s) => (
-        <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700 px-4 py-3">
+        <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg border border-secondary-200/60 dark:border-white/[0.06] px-4 py-3">
           <p className="text-2xs tracking-wide text-secondary-500 dark:text-secondary-400">{s.label}</p>
           <p className={clsx('text-xl font-bold mt-0.5', s.cls)}>{s.value}</p>
         </div>
@@ -464,7 +464,7 @@ export function GoalAlignmentPage() {
       {/* Loading */}
       {isLoading && (
         <div className="flex justify-center py-16">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner" />
         </div>
       )}
 
@@ -497,7 +497,7 @@ export function GoalAlignmentPage() {
             )}
             {effectiveView === 'list' && (
               <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
-                <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-secondary-50 dark:bg-secondary-900 border-b border-secondary-200 dark:border-secondary-700 text-2xs font-medium tracking-wider text-secondary-500 dark:text-secondary-400">
+                <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-secondary-50 dark:bg-secondary-900 border-b border-secondary-200/60 dark:border-white/[0.06] text-2xs font-medium tracking-wider text-secondary-500 dark:text-secondary-400">
                   <span className="w-5" />
                   <span className="flex-1">Goal</span>
                   <span className="min-w-[110px]">Owner</span>
@@ -516,7 +516,7 @@ export function GoalAlignmentPage() {
             )}
           </div>
           {showPanel && !isMobile && (
-            <div className="w-80 xl:w-96 flex-shrink-0 ml-4 sticky top-0 h-[calc(100vh-12rem)] rounded-lg overflow-hidden border border-secondary-200 dark:border-secondary-700 shadow-lg">
+            <div className="w-80 xl:w-96 flex-shrink-0 ml-4 sticky top-0 h-[calc(100vh-12rem)] rounded-lg overflow-hidden border border-secondary-200/60 dark:border-white/[0.06] shadow-lg">
               <DetailPanel goal={selectedGoal!} onClose={() => setSelectedGoal(null)} />
             </div>
           )}

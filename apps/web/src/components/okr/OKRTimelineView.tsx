@@ -89,12 +89,12 @@ export function OKRTimelineView({ objectives, krByParent }: OKRTimelineViewProps
   }
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 overflow-hidden">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
       <div className="overflow-x-auto">
         <div className="min-w-[900px]">
           {/* Month headers */}
-          <div className="flex border-b border-secondary-200 dark:border-secondary-700">
-            <div className="w-64 shrink-0 px-4 py-2 text-xs font-semibold text-secondary-500 dark:text-secondary-400 border-r border-secondary-200 dark:border-secondary-700">
+          <div className="flex border-b border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="w-64 shrink-0 px-4 py-2 text-xs font-semibold text-secondary-500 dark:text-secondary-400 border-r border-secondary-200/60 dark:border-white/[0.06]">
               Objective / Key Result
             </div>
             <div className="flex-1 relative h-8">
@@ -120,7 +120,7 @@ export function OKRTimelineView({ objectives, krByParent }: OKRTimelineViewProps
               <div key={obj.id}>
                 {/* Objective row */}
                 <div className="flex border-b border-secondary-100 dark:border-secondary-700/50 hover:bg-secondary-50 dark:hover:bg-secondary-800/50 transition-colors">
-                  <div className="w-64 shrink-0 px-4 py-3 border-r border-secondary-200 dark:border-secondary-700">
+                  <div className="w-64 shrink-0 px-4 py-3 border-r border-secondary-200/60 dark:border-white/[0.06]">
                     <div className="flex items-center gap-2">
                       <span className="px-1.5 py-0.5 rounded text-3xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 shrink-0">
                         OBJ
@@ -164,7 +164,7 @@ export function OKRTimelineView({ objectives, krByParent }: OKRTimelineViewProps
                     key={kr.id}
                     className="flex border-b border-secondary-50 dark:border-secondary-800 bg-secondary-50/30 dark:bg-secondary-900/10 hover:bg-secondary-100/50 dark:hover:bg-secondary-800/30 transition-colors"
                   >
-                    <div className="w-64 shrink-0 px-4 pl-10 py-2 border-r border-secondary-200 dark:border-secondary-700">
+                    <div className="w-64 shrink-0 px-4 pl-10 py-2 border-r border-secondary-200/60 dark:border-white/[0.06]">
                       <div className="flex items-center gap-2">
                         <span className="px-1.5 py-0.5 rounded text-3xs font-bold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 shrink-0">
                           KR
@@ -201,7 +201,7 @@ export function OKRTimelineView({ objectives, krByParent }: OKRTimelineViewProps
       </div>
 
       {/* Legend */}
-      <div className="px-4 py-2 border-t border-secondary-200 dark:border-secondary-700 flex items-center gap-4 text-2xs text-secondary-400 dark:text-secondary-500">
+      <div className="px-4 py-2 border-t border-secondary-200/60 dark:border-white/[0.06] flex items-center gap-4 text-2xs text-secondary-400 dark:text-secondary-500">
         <div className="flex items-center gap-1">
           <div className="w-2 h-6 bg-red-400 rounded-sm opacity-60" />
           <span>Today</span>

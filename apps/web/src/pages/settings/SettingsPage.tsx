@@ -91,7 +91,7 @@ export function SettingsPage() {
         </div>
       </div>
 
-      <div className="border-t border-secondary-200 dark:border-secondary-700 pt-6">
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-6">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Push Notifications</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Choose what push notifications you'd like to receive.</p>
         <div className="space-y-4">
@@ -144,7 +144,7 @@ export function SettingsPage() {
                 'p-4 border rounded-xl text-center transition-all duration-200',
                 theme === opt.key
                   ? 'border-primary-500 ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/30'
-                  : 'border-secondary-200 dark:border-secondary-700 hover:border-primary-300 dark:hover:border-primary-600'
+                  : 'border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-600'
               )}
             >
               <div className="w-12 h-8 mx-auto rounded mb-2" style={opt.previewStyle} />
@@ -155,7 +155,7 @@ export function SettingsPage() {
         </div>
       </div>
 
-      <div className="border-t border-secondary-200 dark:border-secondary-700 pt-6">
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-6">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Display</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Customize your display preferences.</p>
         <div className="space-y-4">
@@ -237,7 +237,7 @@ export function SettingsPage() {
         </div>
       </div>
 
-      <div className="border-t border-secondary-200 dark:border-secondary-700 pt-6">
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-6">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Feedback Settings</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Control how you receive feedback.</p>
         <div className="space-y-4">
@@ -275,7 +275,7 @@ export function SettingsPage() {
             { name: 'Google Calendar',   description: 'Sync 1-on-1 meetings',             connected: true,  Icon: CalendarDaysIcon },
             { name: 'Outlook Calendar',  description: 'Sync 1-on-1 meetings',             connected: false, Icon: CalendarDaysIcon },
           ].map((integration) => (
-            <div key={integration.name} className="flex items-center justify-between p-4 border border-secondary-200 dark:border-secondary-700 rounded-lg">
+            <div key={integration.name} className="flex items-center justify-between p-4 border border-secondary-200/60 dark:border-white/[0.06] rounded-lg">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 bg-secondary-100 dark:bg-secondary-800 rounded-lg flex items-center justify-center">
                   <integration.Icon className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
@@ -316,7 +316,7 @@ export function SettingsPage() {
         </div>
       </div>
 
-      <div className="border-t border-secondary-200 dark:border-secondary-700 pt-6">
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-6">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Review Cycle Defaults</h3>
         <div className="space-y-4 mt-4">
           <div>
@@ -338,7 +338,7 @@ export function SettingsPage() {
         </div>
       </div>
 
-      <div className="border-t border-secondary-200 dark:border-secondary-700 pt-6">
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-6">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Goal Settings</h3>
         <div className="space-y-4 mt-4">
           <div>
@@ -402,7 +402,7 @@ export function SettingsPage() {
           {activeTab === 'integrations' && renderIntegrations()}
           {activeTab === 'organization' && renderOrganization()}
 
-          <div className="border-t border-secondary-200 dark:border-secondary-700 mt-6 pt-6 flex justify-end gap-3">
+          <div className="border-t border-secondary-200/60 dark:border-white/[0.06] mt-6 pt-6 flex justify-end gap-3">
             <button className="btn-secondary">Reset to Defaults</button>
             <button onClick={handleSave} className="btn-primary">Save Changes</button>
           </div>

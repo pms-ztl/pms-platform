@@ -135,7 +135,7 @@ export function TeamPage() {
             <div className="absolute left-[-16px] top-6 w-4 border-b border-l border-secondary-300 dark:border-secondary-600 h-6 rounded-bl-lg" />
           )}
           <div className="py-2">
-            <div className="inline-flex items-center gap-3 p-3 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg shadow-sm">
+            <div className="inline-flex items-center gap-3 p-3 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] rounded-lg shadow-sm">
               <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
                 <span className="text-sm font-medium text-primary-700 dark:text-primary-300">
                   {user.firstName?.[0]}{user.lastName?.[0]}
@@ -190,7 +190,7 @@ export function TeamPage() {
             {directReports.map((report: User) => (
               <div
                 key={report.id}
-                className="flex items-center gap-3 p-3 border border-secondary-200 dark:border-secondary-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-600 transition-colors bg-white dark:bg-secondary-800/50"
+                className="flex items-center gap-3 p-3 border border-secondary-200/60 dark:border-white/[0.06] rounded-lg hover:border-primary-300 dark:hover:border-primary-600 transition-colors bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl/50"
               >
                 <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
                   <span className="text-sm font-medium text-primary-700 dark:text-primary-300">
@@ -262,7 +262,7 @@ export function TeamPage() {
       {viewMode === 'list' ? (
         isLoading ? (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner" />
           </div>
         ) : !teamMembers?.data.length ? (
           <div className="card card-body text-center py-12">

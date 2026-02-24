@@ -92,7 +92,7 @@ const StatCard = ({
   const trendColor = trend === 'up' ? 'text-green-500' : trend === 'down' ? 'text-red-500' : 'text-secondary-400';
 
   return (
-    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-4 hover:shadow-md transition-shadow">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-4 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
         <div className={clsx('p-2 rounded-lg', color)}>
           <Icon className="h-5 w-5 text-white" />
@@ -213,7 +213,7 @@ export function HourlyPerformanceTracker() {
           <select
             value={refreshInterval}
             onChange={(e) => setRefreshInterval(Number(e.target.value))}
-            className="text-xs border border-secondary-300 dark:border-secondary-600 rounded px-2 py-1 bg-white dark:bg-secondary-800"
+            className="text-xs border border-secondary-300 dark:border-secondary-600 rounded px-2 py-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl"
           >
             <option value={30000}>30s</option>
             <option value={60000}>1m</option>
@@ -261,7 +261,7 @@ export function HourlyPerformanceTracker() {
       </div>
 
       {/* Score Gauges */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-6">
         <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Performance Scores</h3>
         <div className="flex justify-around">
           <ScoreGauge
@@ -283,7 +283,7 @@ export function HourlyPerformanceTracker() {
       </div>
 
       {/* Hourly Trend Chart */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-6">
         <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Hourly Trend</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">

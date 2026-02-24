@@ -142,8 +142,8 @@ export function SASecurityPage() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
-        <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+        <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
           <nav className="flex -mb-px">
             {tabs.map((tab) => (
               <button
@@ -180,7 +180,7 @@ export function SASecurityPage() {
             <div>
               {threatsLoading ? (
                 <div className="flex justify-center py-16">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+                  <div className="glass-spinner" />
                 </div>
               ) : !threats?.recentAttempts?.length ? (
                 <div className="text-center py-16">
@@ -192,7 +192,7 @@ export function SASecurityPage() {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                  <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                     <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                       <tr>
                         <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
@@ -209,9 +209,9 @@ export function SASecurityPage() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-secondary-200 dark:divide-secondary-700">
+                    <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                       {threats.recentAttempts.map((attempt, idx) => (
-                        <tr key={idx} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors">
+                        <tr key={idx} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors">
                           <td className="px-5 py-3.5 whitespace-nowrap">
                             <span className="text-sm font-mono text-secondary-900 dark:text-white flex items-center gap-1.5">
                               <GlobeAltIcon className="h-4 w-4 text-secondary-400" />
@@ -260,7 +260,7 @@ export function SASecurityPage() {
             <div>
               {blockedLoading ? (
                 <div className="flex justify-center py-16">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+                  <div className="glass-spinner" />
                 </div>
               ) : !blockedIps?.length ? (
                 <div className="text-center py-16">
@@ -272,7 +272,7 @@ export function SASecurityPage() {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                  <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                     <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                       <tr>
                         <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
@@ -289,9 +289,9 @@ export function SASecurityPage() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-secondary-200 dark:divide-secondary-700">
+                    <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                       {blockedIps.map((blocked, idx) => (
-                        <tr key={idx} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors">
+                        <tr key={idx} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors">
                           <td className="px-5 py-3.5 whitespace-nowrap">
                             <span className="text-sm font-mono text-secondary-900 dark:text-white flex items-center gap-1.5">
                               <NoSymbolIcon className="h-4 w-4 text-red-400" />
@@ -336,7 +336,7 @@ export function SASecurityPage() {
             <div>
               {sessionsLoading ? (
                 <div className="flex justify-center py-16">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+                  <div className="glass-spinner" />
                 </div>
               ) : !sessions?.length ? (
                 <div className="text-center py-16">
@@ -348,7 +348,7 @@ export function SASecurityPage() {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                  <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                     <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                       <tr>
                         <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
@@ -368,9 +368,9 @@ export function SASecurityPage() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-secondary-200 dark:divide-secondary-700">
+                    <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                       {sessions.map((session) => (
-                        <tr key={session.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors">
+                        <tr key={session.id} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors">
                           <td className="px-5 py-3.5 whitespace-nowrap">
                             <span className="text-sm font-mono text-secondary-700 dark:text-secondary-300">
                               {session.userId}

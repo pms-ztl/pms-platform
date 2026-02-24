@@ -357,7 +357,7 @@ export function UserManagementPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Add New User</h2>
                 <button
@@ -455,7 +455,7 @@ export function UserManagementPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setEditingUser(null)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Edit User</h2>
                 <button
@@ -555,7 +555,7 @@ export function UserManagementPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowRoleModal(null)} />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-secondary-200/50 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full p-6 border border-secondary-200/50 dark:border-secondary-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   Manage Roles for {showRoleModal.firstName} {showRoleModal.lastName}

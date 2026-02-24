@@ -544,7 +544,7 @@ export function AnnouncementsPage() {
 
         {isLoading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+            <div className="glass-spinner" />
           </div>
         ) : regularAnnouncements.length === 0 && pinnedAnnouncements.length === 0 ? (
           <div className="card dark:bg-secondary-800 dark:border-secondary-700">
@@ -768,7 +768,7 @@ export function AnnouncementsPage() {
       {/* ---- Delete Confirmation Modal ---- */}
       {deleteConfirmId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-2xl max-w-sm w-full">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-sm w-full">
             <div className="px-6 py-5">
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
@@ -782,7 +782,7 @@ export function AnnouncementsPage() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => setDeleteConfirmId(null)}
                 className="btn-secondary text-sm"
@@ -804,8 +804,8 @@ export function AnnouncementsPage() {
       {/* ---- Create / Edit Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingAnnouncement ? 'Edit Announcement' : 'New Announcement'}
               </h2>
@@ -975,7 +975,7 @@ export function AnnouncementsPage() {
             </div>
 
             {/* Modal footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => { setShowCreateModal(false); setEditingAnnouncement(null); }}
                 className="btn-secondary text-sm"

@@ -164,7 +164,7 @@ function TagInput({
         <button
           type="button"
           onClick={addTag}
-          className="px-3 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-700"
+          className="px-3 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-primary-50/30 dark:hover:bg-white/[0.03]"
         >
           Add
         </button>
@@ -200,7 +200,7 @@ function PlanCard({ plan, showEmployee }: { plan: DevelopmentPlan; showEmployee?
   return (
     <Link
       to={`/development/${plan.id}`}
-      className="block bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 hover:shadow-md hover:border-primary-300 dark:hover:border-primary-700 transition-all duration-200 group"
+      className="block bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] hover:shadow-md hover:border-primary-300 dark:hover:border-primary-700 transition-all duration-200 group"
     >
       <div className="p-5">
         {/* Top row: employee avatar (team view) + badges */}
@@ -370,7 +370,7 @@ function CreatePlanModal({ onClose }: { onClose: () => void }) {
         className="fixed inset-0"
         onClick={onClose}
       />
-      <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+      <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
             Create Development Plan
@@ -533,7 +533,7 @@ function CreatePlanModal({ onClose }: { onClose: () => void }) {
             <button
               type="submit"
               disabled={createMutation.isPending}
-              className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {createMutation.isPending ? 'Creating...' : 'Create Plan'}
             </button>
@@ -620,7 +620,7 @@ export function DevelopmentPage() {
       >
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-2 transition-colors"
+          className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-2 transition-colors"
         >
           <PlusIcon className="h-5 w-5" />
           Create Plan
@@ -628,7 +628,7 @@ export function DevelopmentPage() {
       </PageHeader>
 
       {/* ── Tabs ── */}
-      <div className="border-b border-secondary-200 dark:border-secondary-700">
+      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => handleTabChange('my')}
@@ -683,10 +683,10 @@ export function DevelopmentPage() {
       {/* ── Content ── */}
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+          <div className="glass-spinner" />
         </div>
       ) : plans.length === 0 ? (
-        <div className="text-center py-16 bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700">
+        <div className="text-center py-16 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
           <AcademicCapIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
             {isTeamView ? 'No team development plans' : 'No development plans yet'}
@@ -700,7 +700,7 @@ export function DevelopmentPage() {
             <div className="mt-6">
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-2 transition-colors"
+                className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-2 transition-colors"
               >
                 <PlusIcon className="h-5 w-5" />
                 Create Plan

@@ -161,7 +161,7 @@ function AddFieldForm({ onAdd, onCancel }: { onAdd: (f: CustomField) => void; on
   };
 
   return (
-    <div className="mt-2 p-3 bg-secondary-50 dark:bg-secondary-900/30 rounded-lg border border-secondary-200 dark:border-secondary-700 space-y-2">
+    <div className="mt-2 p-3 bg-secondary-50 dark:bg-secondary-900/30 rounded-lg border border-secondary-200/60 dark:border-white/[0.06] space-y-2">
       <div className="flex items-center gap-2">
         <input
           autoFocus

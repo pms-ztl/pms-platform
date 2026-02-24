@@ -224,7 +224,7 @@ export function OneOnOneDetailPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600" />
+        <div className="glass-spinner" />
       </div>
     );
   }
@@ -241,7 +241,7 @@ export function OneOnOneDetailPage() {
         </p>
         <Link
           to="/one-on-ones"
-          className="mt-4 inline-block bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium"
+          className="mt-4 inline-block bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium"
         >
           Back to 1-on-1s
         </Link>
@@ -288,7 +288,7 @@ export function OneOnOneDetailPage() {
                 <button
                   onClick={() => startMutation.mutate()}
                   disabled={startMutation.isPending}
-                  className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium disabled:opacity-50"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium disabled:opacity-50"
                 >
                   <PlayIcon className="h-4 w-4" />
                   {startMutation.isPending ? 'Starting...' : 'Start Meeting'}
@@ -318,7 +318,7 @@ export function OneOnOneDetailPage() {
       {/* ================================================================= */}
       {/* MEETING INFO CARD                                                 */}
       {/* ================================================================= */}
-      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Date / Time */}
           <div className="flex items-start gap-3">
@@ -405,7 +405,7 @@ export function OneOnOneDetailPage() {
         {/* ---- LEFT COLUMN (2/3) ---- */}
         <div className="lg:col-span-2 space-y-6">
           {/* ─── AGENDA ─── */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <div className="flex items-center gap-2 mb-4">
               <ListBulletIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Agenda</h2>
@@ -436,7 +436,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── MANAGER NOTES ─── */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <div className="flex items-center gap-2 mb-4">
               <DocumentTextIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -467,7 +467,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── EMPLOYEE NOTES ─── */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <div className="flex items-center gap-2 mb-4">
               <DocumentTextIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -498,7 +498,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── SHARED NOTES ─── */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <div className="flex items-center gap-2 mb-4">
               <ChatBubbleLeftRightIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -525,7 +525,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── ACTION ITEMS ─── */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <div className="flex items-center gap-2 mb-4">
               <CheckCircleIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -599,7 +599,7 @@ export function OneOnOneDetailPage() {
                 <button
                   onClick={handleAddActionItem}
                   disabled={!newActionTitle.trim()}
-                  className="inline-flex items-center gap-1 bg-primary-600 hover:bg-primary-700 disabled:opacity-50 text-white rounded-lg px-3 py-2 text-sm font-medium"
+                  className="inline-flex items-center gap-1 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 text-white rounded-lg px-3 py-2 text-sm font-medium"
                 >
                   <PlusIcon className="h-4 w-4" />
                   Add
@@ -612,7 +612,7 @@ export function OneOnOneDetailPage() {
         {/* ---- RIGHT COLUMN (1/3) ---- */}
         <div className="space-y-6">
           {/* ─── MEETING TIMELINE ─── */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
               Meeting Timeline
             </h2>
@@ -647,7 +647,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── PARTICIPANT DETAILS ─── */}
-          <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
               Participants
             </h2>
@@ -723,7 +723,7 @@ export function OneOnOneDetailPage() {
               className="fixed inset-0 bg-black/30 dark:bg-black/50"
               onClick={() => setShowCancelConfirm(false)}
             />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-md w-full p-6 border border-transparent dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-transparent dark:border-secondary-700">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">
                 Cancel Meeting
               </h2>
@@ -734,7 +734,7 @@ export function OneOnOneDetailPage() {
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setShowCancelConfirm(false)}
-                  className="border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 rounded-lg px-4 py-2 text-sm font-medium"
+                  className="border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03] rounded-lg px-4 py-2 text-sm font-medium"
                 >
                   Keep Meeting
                 </button>

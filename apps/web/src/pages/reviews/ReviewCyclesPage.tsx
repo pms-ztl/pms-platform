@@ -384,7 +384,7 @@ export function ReviewCyclesPage() {
         ].map((card) => (
           <div
             key={card.label}
-            className="relative overflow-hidden rounded-xl bg-white dark:bg-secondary-800 p-5 border border-secondary-100 dark:border-secondary-700 shadow-sm hover:shadow-md transition-shadow"
+            className="relative overflow-hidden rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5 border border-secondary-100 dark:border-secondary-700 shadow-sm hover:shadow-md transition-shadow"
           >
             <div className={clsx('absolute top-0 left-0 right-0 h-1 bg-gradient-to-r', card.color)} />
             <div className="flex items-center gap-4">
@@ -451,7 +451,7 @@ export function ReviewCyclesPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-800/50">
                 <tr>
                   {['Cycle Name', 'Type', 'Status', 'Start Date', 'End Date', 'Reviews', 'Completion', 'Actions'].map(
@@ -561,7 +561,7 @@ export function ReviewCyclesPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200 dark:border-secondary-700">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-secondary-200/60 dark:border-white/[0.06]">
             <p className="text-sm text-secondary-500 dark:text-secondary-400">
               Showing {(page - 1) * PAGE_SIZE + 1}--{Math.min(page * PAGE_SIZE, filtered.length)} of{' '}
               {filtered.length}
@@ -608,7 +608,7 @@ export function ReviewCyclesPage() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm"
               onClick={() => setShowCreateModal(false)}
             />
-            <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-xl w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-xl w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   Create Review Cycle
@@ -723,9 +723,9 @@ export function ReviewCyclesPage() {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setDetailCycleId(null)}
           />
-          <div className="absolute inset-y-0 right-0 w-full max-w-lg bg-white dark:bg-secondary-800 shadow-2xl border-l border-secondary-200 dark:border-secondary-700 flex flex-col animate-slide-in-right">
+          <div className="absolute inset-y-0 right-0 w-full max-w-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-2xl border-l border-secondary-200/60 dark:border-white/[0.06] flex flex-col animate-slide-in-right">
             {/* Slide-over header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200 dark:border-secondary-700">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Cycle Details
               </h2>
