@@ -15,6 +15,7 @@ import {
   XMarkIcon,
   PlusIcon,
   BoltIcon,
+  ArrowLeftIcon,
 } from '@heroicons/react/24/outline';
 import { aiApi, type AIChatResponse } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
@@ -770,9 +771,16 @@ export function SwarmOrchestration() {
             )}
             <button
               onClick={() => setSwarmMode('overview')}
-              className={`text-2xs px-2.5 py-1 rounded-lg border transition-colors duration-150 ${T.border(theme)} ${T.textSecondary(theme)} ${T.surfaceHover(theme)}`}
+              className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium transition-all duration-200 ${
+                isLight
+                  ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                  : theme === 'dark'
+                    ? 'bg-white/10 text-gray-300 hover:bg-white/15 hover:text-white'
+                    : 'bg-white/8 text-gray-400 hover:bg-white/12 hover:text-gray-200'
+              }`}
             >
-              Back to Overview
+              <ArrowLeftIcon className="h-3.5 w-3.5" />
+              Overview
             </button>
           </div>
         </div>
@@ -801,8 +809,8 @@ export function SwarmOrchestration() {
             );
           })}
 
-          {/* Add Agent button */}
-          {agentCount < 5 && (
+          {/* Add Agent button (only show when agents exist; empty state has its own picker) */}
+          {agentCount > 0 && agentCount < 5 && (
             <div ref={pickerAnchorRef} className="relative">
               <button
                 onClick={() => setPickerOpen(!pickerOpen)}
