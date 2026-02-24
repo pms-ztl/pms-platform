@@ -963,7 +963,7 @@ export function SwarmChat() {
         )}
 
         {/* Input Area */}
-        <div className={`border-t px-4 py-3 ${T.border(theme)}`}>
+        <div className={`border-t px-4 py-3 ${T.border(theme)}`} style={{ fontSize: 14 }}>
           <form onSubmit={handleSubmit} className="flex items-end gap-3">
             <div className="relative flex-1">
               <textarea
