@@ -542,14 +542,14 @@ export function AIChatWidget() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="group fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-all duration-500 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+        className="group fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-2xl transition-all duration-500 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
         style={{
           background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4)',
-          boxShadow: '0 0 24px rgba(99, 102, 241, 0.4), 0 8px 32px rgba(0,0,0,0.3)',
+          boxShadow: '0 0 20px rgba(99, 102, 241, 0.4), 0 6px 24px rgba(0,0,0,0.3)',
         }}
         title="Open AI Assistant"
       >
-        <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6 text-white transition-transform duration-500 group-hover:scale-110" />
+        <ChatBubbleOvalLeftEllipsisIcon className="h-5 w-5 text-white transition-transform duration-500 group-hover:scale-110" />
         <span
           className="absolute inset-0 rounded-full animate-ping opacity-20"
           style={{ background: 'linear-gradient(135deg, #6366f1, #06b6d4)' }}
@@ -561,9 +561,9 @@ export function AIChatWidget() {
   // ── Chat Panel ─────────────────────────────────────────
   return (
     <div
-      className="fixed bottom-6 right-6 z-50 flex h-[600px] w-[420px] flex-col overflow-hidden rounded-3xl shadow-2xl"
+      className="fixed bottom-5 right-5 z-50 flex h-[480px] w-[360px] flex-col overflow-hidden rounded-2xl shadow-2xl"
       style={{
-        fontSize: 16,  // Reset root clamp scaling — fixed-size container
+        fontSize: 14,  // Reset root clamp scaling — compact fixed-size container
         background: t.panel,
         border: `1px solid ${t.panelBorder}`,
         boxShadow: t.panelShadow,
@@ -572,34 +572,34 @@ export function AIChatWidget() {
     >
       {/* ── Header ─────────────────────────────────────── */}
       <div
-        className="relative flex items-center justify-between px-4 py-3.5"
+        className="relative flex items-center justify-between px-3 py-2"
         style={{
           background: t.headerBg,
           borderBottom: `1px solid ${t.headerBorder}`,
         }}
       >
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <div
-            className="flex h-8 w-8 items-center justify-center rounded-xl"
+            className="flex h-7 w-7 items-center justify-center rounded-lg"
             style={{
               background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              boxShadow: '0 0 12px rgba(99, 102, 241, 0.4)',
+              boxShadow: '0 0 10px rgba(99, 102, 241, 0.4)',
             }}
           >
-            <ChatBubbleOvalLeftEllipsisIcon className="h-4 w-4 text-white" />
+            <ChatBubbleOvalLeftEllipsisIcon className="h-3.5 w-3.5 text-white" />
           </div>
           <div>
-            <h3 className={`text-sm font-bold tracking-tight ${t.titleColor}`}>Neural Swarm</h3>
-            <div className="flex items-center gap-1.5">
+            <h3 className={`text-xs font-bold tracking-tight ${t.titleColor}`}>Neural Swarm</h3>
+            <div className="flex items-center gap-1">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
               </span>
-              <span className={`text-2xs font-medium ${t.statusDotText}`}>70 Agents Active</span>
+              <span className={`text-3xs font-medium ${t.statusDotText}`}>70 Agents Active</span>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
           {/* Prominent "Open Workspace" button */}
           <button
             onClick={() => {
@@ -610,7 +610,7 @@ export function AIChatWidget() {
                 if (window.location.pathname !== '/dashboard') window.location.href = '/dashboard';
               }
             }}
-            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all hover:scale-105 active:scale-95"
+            className="flex items-center gap-1 rounded-md px-2 py-1 text-2xs font-semibold transition-all hover:scale-105 active:scale-95"
             style={{
               background: 'linear-gradient(135deg, rgba(99,102,241,0.6), rgba(139,92,246,0.6))',
               border: '1px solid rgba(255,255,255,0.2)',
@@ -619,43 +619,43 @@ export function AIChatWidget() {
             }}
             title="Open full Neural Swarm workspace"
           >
-            <ArrowsPointingOutIcon className="h-3.5 w-3.5 flex-shrink-0" />
+            <ArrowsPointingOutIcon className="h-3 w-3 flex-shrink-0" />
             <span>Full View</span>
           </button>
           <button
             onClick={handleNewChat}
-            className={`rounded-lg p-2 transition-all ${t.headerBtnClass}`}
+            className={`rounded-md p-1.5 transition-all ${t.headerBtnClass}`}
             title="New conversation"
           >
-            <ArrowPathIcon className="h-4 w-4" />
+            <ArrowPathIcon className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={() => setOpen(false)}
-            className={`rounded-lg p-2 transition-all ${t.headerBtnClass}`}
+            className={`rounded-md p-1.5 transition-all ${t.headerBtnClass}`}
           >
-            <XMarkIcon className="h-4 w-4" />
+            <XMarkIcon className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>
 
       {/* ── Agent Selector ─────────────────────────────── */}
-      <div className="relative px-3 py-2" style={{ borderBottom: `1px solid ${t.borderSub}` }}>
+      <div className="relative px-2.5 py-1.5" style={{ borderBottom: `1px solid ${t.borderSub}` }}>
         <button
           onClick={() => setAgentSelectorOpen(!agentSelectorOpen)}
-          className="flex w-full items-center gap-2 rounded-xl px-3 py-1.5 text-xs transition-all"
+          className="flex w-full items-center gap-1.5 rounded-lg px-2.5 py-1 text-2xs transition-all"
           style={{
             background: t.selectorBg,
             border: `1px solid ${t.selectorBorder}`,
           }}
         >
           {selectedAgent
-            ? <selectedAgent.icon className="h-4 w-4 flex-shrink-0" />
-            : <ChatBubbleOvalLeftEllipsisIcon className="h-4 w-4 flex-shrink-0" />}
+            ? <selectedAgent.icon className="h-3.5 w-3.5 flex-shrink-0" />
+            : <ChatBubbleOvalLeftEllipsisIcon className="h-3.5 w-3.5 flex-shrink-0" />}
           <span className={`flex-1 text-left font-medium ${t.selectorText}`}>
             {selectedAgent?.label ?? 'Auto-detect'}
           </span>
           <svg
-            className={`h-3.5 w-3.5 transition-transform ${t.selectorChevron} ${agentSelectorOpen ? 'rotate-180' : ''}`}
+            className={`h-3 w-3 transition-transform ${t.selectorChevron} ${agentSelectorOpen ? 'rotate-180' : ''}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -666,7 +666,7 @@ export function AIChatWidget() {
 
         {agentSelectorOpen && (
           <div
-            className="absolute left-3 right-3 top-full z-20 mt-1 max-h-[250px] overflow-y-auto rounded-xl py-1"
+            className="absolute left-2.5 right-2.5 top-full z-20 mt-1 max-h-[220px] overflow-y-auto rounded-lg py-1"
             style={{
               background: t.dropdownBg,
               border: `1px solid ${t.dropdownBorder}`,
@@ -676,7 +676,7 @@ export function AIChatWidget() {
             {AGENT_GROUPS.map((group) => (
               <div key={group.label || 'default'}>
                 {group.label && (
-                  <div className={`px-3 pt-2 pb-1 text-2xs font-bold tracking-wider ${t.groupLabel}`}>
+                  <div className={`px-2.5 pt-1.5 pb-0.5 text-3xs font-bold tracking-wider ${t.groupLabel}`}>
                     {group.label}
                   </div>
                 )}
@@ -687,11 +687,11 @@ export function AIChatWidget() {
                       setAgentType(opt.value || null);
                       setAgentSelectorOpen(false);
                     }}
-                    className={`flex w-full items-center gap-2 px-3 py-1.5 text-xs transition-all ${t.optionHover} ${
+                    className={`flex w-full items-center gap-1.5 px-2.5 py-1 text-2xs transition-all ${t.optionHover} ${
                       (agentType ?? '') === opt.value ? t.optionActive : t.optionText
                     }`}
                   >
-                    <opt.icon className="h-3.5 w-3.5 flex-shrink-0 opacity-75" />
+                    <opt.icon className="h-3 w-3 flex-shrink-0 opacity-75" />
                     <span>{opt.label}</span>
                   </button>
                 ))}
@@ -702,30 +702,30 @@ export function AIChatWidget() {
       </div>
 
       {/* ── Messages ───────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-4">
+      <div className="flex-1 overflow-y-auto px-2.5 py-2.5 space-y-3">
         {localMessages.length === 0 && (
-          <div className="flex h-full flex-col items-center justify-center text-center px-4">
-            <div className="relative mb-5">
+          <div className="flex h-full flex-col items-center justify-center text-center px-3">
+            <div className="relative mb-3">
               <div
-                className="h-16 w-16 rounded-2xl flex items-center justify-center"
+                className="h-11 w-11 rounded-xl flex items-center justify-center"
                 style={{
                   background: t.emptyOrbBg,
                   border: `1px solid ${t.emptyOrbBorder}`,
-                  boxShadow: '0 0 30px rgba(99,102,241,0.1)',
+                  boxShadow: '0 0 20px rgba(99,102,241,0.1)',
                 }}
               >
-                <ChatBubbleOvalLeftEllipsisIcon className="h-7 w-7 text-indigo-400" />
+                <ChatBubbleOvalLeftEllipsisIcon className="h-5 w-5 text-indigo-400" />
               </div>
               <span
-                className="absolute -inset-2 rounded-3xl animate-pulse opacity-20"
-                style={{ background: 'linear-gradient(135deg, #6366f1, #06b6d4)', filter: 'blur(8px)' }}
+                className="absolute -inset-1.5 rounded-2xl animate-pulse opacity-20"
+                style={{ background: 'linear-gradient(135deg, #6366f1, #06b6d4)', filter: 'blur(6px)' }}
               />
             </div>
-            <p className={`text-sm font-semibold ${t.emptyTitle}`}>How can I help you today?</p>
-            <p className={`mt-1 text-xs ${t.emptySubtitle}`}>
+            <p className={`text-xs font-semibold ${t.emptyTitle}`}>How can I help you today?</p>
+            <p className={`mt-0.5 text-2xs ${t.emptySubtitle}`}>
               Ask about performance, goals, team data, or anything else.
             </p>
-            <div className="mt-5 flex flex-wrap gap-2 justify-center">
+            <div className="mt-3 flex flex-wrap gap-1.5 justify-center">
               {[
                 { text: 'Who are my top performers?', icon: TrophyIcon },
                 { text: 'How many licenses left?', icon: KeyIcon },
@@ -737,13 +737,13 @@ export function AIChatWidget() {
                     setMessage(suggestion.text);
                     inputRef.current?.focus();
                   }}
-                  className="group flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs transition-all hover:scale-[1.02]"
+                  className="group flex items-center gap-1 rounded-lg px-2 py-1.5 text-2xs transition-all hover:scale-[1.02]"
                   style={{
                     background: t.suggestionBg,
                     border: `1px solid ${t.suggestionBorder}`,
                   }}
                 >
-                  <suggestion.icon className="h-3.5 w-3.5 opacity-60 flex-shrink-0" />
+                  <suggestion.icon className="h-3 w-3 opacity-60 flex-shrink-0" />
                   <span className={`transition-colors ${t.suggestionText}`}>{suggestion.text}</span>
                 </button>
               ))}
@@ -752,19 +752,19 @@ export function AIChatWidget() {
         )}
 
         {localMessages.map((msg) => (
-          <div key={msg.id} className={`flex gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+          <div key={msg.id} className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
             {/* Avatar */}
             {msg.role === 'assistant' ? (
               <div
-                className="flex-shrink-0 mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg"
-                style={{ background: t.aiAvatarBg, boxShadow: '0 0 8px rgba(99,102,241,0.3)' }}
+                className="flex-shrink-0 mt-0.5 flex h-6 w-6 items-center justify-center rounded-md"
+                style={{ background: t.aiAvatarBg, boxShadow: '0 0 6px rgba(99,102,241,0.3)' }}
               >
-                <ChatBubbleOvalLeftEllipsisIcon className="h-3.5 w-3.5 text-white" />
+                <ChatBubbleOvalLeftEllipsisIcon className="h-3 w-3 text-white" />
               </div>
             ) : (
               <div
-                className="flex-shrink-0 mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg text-xs font-bold text-white"
-                style={{ background: t.userAvatarBg, boxShadow: '0 0 8px rgba(99,102,241,0.2)' }}
+                className="flex-shrink-0 mt-0.5 flex h-6 w-6 items-center justify-center rounded-md text-2xs font-bold text-white"
+                style={{ background: t.userAvatarBg, boxShadow: '0 0 6px rgba(99,102,241,0.2)' }}
               >
                 U
               </div>
@@ -773,8 +773,8 @@ export function AIChatWidget() {
             {/* Bubble */}
             <div className="group relative max-w-[82%]">
               <div
-                className={`rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
-                  msg.role === 'user' ? 'rounded-tr-md text-white' : `rounded-tl-md ${t.assistantText}`
+                className={`rounded-xl px-3 py-2 text-xs leading-relaxed ${
+                  msg.role === 'user' ? 'rounded-tr-sm text-white' : `rounded-tl-sm ${t.assistantText}`
                 }`}
                 style={
                   msg.role === 'user'
@@ -788,7 +788,7 @@ export function AIChatWidget() {
               >
                 {msg.role === 'assistant' ? (
                   <div
-                    className="ai-msg-content break-words [&_p]:my-1.5 [&_pre]:my-2"
+                    className="ai-msg-content break-words [&_p]:my-1 [&_pre]:my-1.5"
                     dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content, isDark) }}
                   />
                 ) : (
@@ -803,28 +803,28 @@ export function AIChatWidget() {
                   {tts.isSupported && (
                     <button
                       onClick={() => handleSpeak(msg.id, msg.content)}
-                      className={`flex h-6 w-6 items-center justify-center rounded-lg ${t.copyBtnBg} transition-all`}
+                      className={`flex h-5 w-5 items-center justify-center rounded-md ${t.copyBtnBg} transition-all`}
                       style={{ border: `1px solid ${t.copyBtnBorder}` }}
                       title={speakingMsgId === msg.id ? 'Stop speaking' : 'Read aloud'}
                     >
                       {speakingMsgId === msg.id ? (
-                        <StopIcon className="h-3 w-3 text-red-400" />
+                        <StopIcon className="h-2.5 w-2.5 text-red-400" />
                       ) : (
-                        <SpeakerWaveIcon className={`h-3 w-3 ${isDark ? 'text-gray-400 hover:text-indigo-300' : 'text-gray-400 hover:text-indigo-500'}`} />
+                        <SpeakerWaveIcon className={`h-2.5 w-2.5 ${isDark ? 'text-gray-400 hover:text-indigo-300' : 'text-gray-400 hover:text-indigo-500'}`} />
                       )}
                     </button>
                   )}
                   {/* Copy button */}
                   <button
                     onClick={() => handleCopy(msg.id, msg.content)}
-                    className={`flex h-6 w-6 items-center justify-center rounded-lg ${t.copyBtnBg} ${t.copyBtnText}`}
+                    className={`flex h-5 w-5 items-center justify-center rounded-md ${t.copyBtnBg} ${t.copyBtnText}`}
                     style={{ border: `1px solid ${t.copyBtnBorder}` }}
                     title="Copy to clipboard"
                   >
                     {copiedId === msg.id ? (
-                      <CheckIcon className="h-3 w-3 text-emerald-500" />
+                      <CheckIcon className="h-2.5 w-2.5 text-emerald-500" />
                     ) : (
-                      <ClipboardDocumentIcon className="h-3 w-3" />
+                      <ClipboardDocumentIcon className="h-2.5 w-2.5" />
                     )}
                   </button>
                 </div>
@@ -832,7 +832,7 @@ export function AIChatWidget() {
 
               {/* Timestamp */}
               {msg.timestamp && (
-                <div className={`mt-1 text-2xs ${t.timestampText} ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                <div className={`mt-0.5 text-3xs ${t.timestampText} ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                   {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
               )}
@@ -842,22 +842,22 @@ export function AIChatWidget() {
 
         {/* Typing */}
         {chatMutation.isPending && (
-          <div className="flex gap-2.5">
+          <div className="flex gap-2">
             <div
-              className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg"
-              style={{ background: t.aiAvatarBg, boxShadow: '0 0 8px rgba(99,102,241,0.3)' }}
+              className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md"
+              style={{ background: t.aiAvatarBg, boxShadow: '0 0 6px rgba(99,102,241,0.3)' }}
             >
-              <SparklesIcon className="h-3.5 w-3.5 text-white" />
+              <SparklesIcon className="h-3 w-3 text-white" />
             </div>
             <div
-              className="rounded-2xl rounded-tl-md px-4 py-3"
+              className="rounded-xl rounded-tl-sm px-3 py-2"
               style={{ background: t.typingBg, border: `1px solid ${t.typingBorder}` }}
             >
-              <div className="flex items-center gap-1.5">
-                <span className={`text-2xs mr-1 ${t.typingLabel}`}>Thinking</span>
-                <div className="h-1.5 w-1.5 rounded-full animate-bounce" style={{ background: '#6366f1', animationDelay: '0ms' }} />
-                <div className="h-1.5 w-1.5 rounded-full animate-bounce" style={{ background: '#8b5cf6', animationDelay: '150ms' }} />
-                <div className="h-1.5 w-1.5 rounded-full animate-bounce" style={{ background: '#06b6d4', animationDelay: '300ms' }} />
+              <div className="flex items-center gap-1">
+                <span className={`text-3xs mr-0.5 ${t.typingLabel}`}>Thinking</span>
+                <div className="h-1 w-1 rounded-full animate-bounce" style={{ background: '#6366f1', animationDelay: '0ms' }} />
+                <div className="h-1 w-1 rounded-full animate-bounce" style={{ background: '#8b5cf6', animationDelay: '150ms' }} />
+                <div className="h-1 w-1 rounded-full animate-bounce" style={{ background: '#06b6d4', animationDelay: '300ms' }} />
               </div>
             </div>
           </div>
@@ -869,11 +869,11 @@ export function AIChatWidget() {
       {/* ── Input ──────────────────────────────────────── */}
       <form
         onSubmit={handleSubmit}
-        className="px-3 py-3"
+        className="px-2.5 py-2"
         style={{ borderTop: `1px solid ${t.inputAreaBorder}`, background: t.inputAreaBg }}
       >
         <div
-          className="flex items-center gap-2 rounded-2xl px-3 py-1"
+          className="flex items-center gap-1.5 rounded-xl px-2.5 py-0.5"
           style={{ background: t.inputBg, border: `1px solid ${t.inputBorder}` }}
         >
           <input
@@ -883,7 +883,7 @@ export function AIChatWidget() {
             onChange={(e) => setMessage(e.target.value)}
             placeholder={voice.isListening ? 'Listening...' : 'Ask anything...'}
             disabled={chatMutation.isPending}
-            className={`flex-1 bg-transparent py-2.5 text-sm focus:outline-none disabled:opacity-50 ${t.inputText}`}
+            className={`flex-1 bg-transparent py-2 text-xs focus:outline-none disabled:opacity-50 ${t.inputText}`}
           />
           {/* Voice mic button */}
           <VoiceMicButton
@@ -896,18 +896,18 @@ export function AIChatWidget() {
           <button
             type="submit"
             disabled={!message.trim() || chatMutation.isPending}
-            className="flex h-8 w-8 items-center justify-center rounded-xl text-white transition-all disabled:opacity-30"
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-white transition-all disabled:opacity-30"
             style={{
               background:
                 message.trim() && !chatMutation.isPending ? t.sendBtnActive : t.sendBtnInactive,
               boxShadow:
-                message.trim() && !chatMutation.isPending ? '0 0 12px rgba(99,102,241,0.3)' : 'none',
+                message.trim() && !chatMutation.isPending ? '0 0 10px rgba(99,102,241,0.3)' : 'none',
             }}
           >
-            <PaperAirplaneIcon className="h-4 w-4" />
+            <PaperAirplaneIcon className="h-3.5 w-3.5" />
           </button>
         </div>
-        <div className="mt-1.5 flex items-center justify-center gap-1">
+        <div className="mt-1 flex items-center justify-center gap-0.5">
           <span className={`text-3xs ${t.footerSub}`}>Powered by</span>
           <span
             className="text-3xs font-semibold"
