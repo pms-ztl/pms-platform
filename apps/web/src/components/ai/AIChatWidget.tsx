@@ -563,6 +563,7 @@ export function AIChatWidget() {
     <div
       className="fixed bottom-6 right-6 z-50 flex h-[600px] w-[420px] flex-col overflow-hidden rounded-3xl shadow-2xl"
       style={{
+        fontSize: 16,  // Reset root clamp scaling — fixed-size container
         background: t.panel,
         border: `1px solid ${t.panelBorder}`,
         boxShadow: t.panelShadow,

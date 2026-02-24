@@ -106,7 +106,7 @@ export function NotificationBell() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 max-h-[480px] overflow-hidden rounded-xl bg-white dark:bg-secondary-800 shadow-lg ring-1 ring-secondary-200 dark:ring-secondary-700 z-50">
+        <div className="absolute right-0 mt-2 w-96 max-h-[480px] overflow-hidden rounded-xl bg-white dark:bg-secondary-800 shadow-lg ring-1 ring-secondary-200 dark:ring-secondary-700 z-50" style={{ fontSize: 16 }}>
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-secondary-200 dark:border-secondary-700">
             <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">

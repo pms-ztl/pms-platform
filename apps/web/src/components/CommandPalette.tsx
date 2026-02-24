@@ -104,7 +104,7 @@ export function CommandPalette() {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95 translate-y-4"
           >
-            <Dialog.Panel className="mx-auto max-w-lg overflow-hidden rounded-2xl bg-white dark:bg-secondary-800 shadow-2xl ring-1 ring-secondary-200 dark:ring-secondary-700">
+            <Dialog.Panel className="mx-auto max-w-lg overflow-hidden rounded-2xl bg-white dark:bg-secondary-800 shadow-2xl ring-1 ring-secondary-200 dark:ring-secondary-700" style={{ fontSize: 16 }}>
               <Combobox onChange={handleSelect}>
                 {/* Search input */}
                 <div className="relative">

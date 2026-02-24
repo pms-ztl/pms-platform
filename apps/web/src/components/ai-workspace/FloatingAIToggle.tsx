@@ -72,7 +72,7 @@ export function FloatingAIToggle() {
       : 'bg-gray-950 text-cyan-400 ring-1 ring-cyan-500/30 shadow-lg shadow-cyan-500/20';
 
   return (
-    <div ref={menuRef} className="fixed bottom-5 right-5 z-50">
+    <div ref={menuRef} className="fixed bottom-5 right-5 z-50" style={{ fontSize: 16 }}>
       {/* Pop-up menu */}
       {menuOpen && (
         <div className="absolute bottom-full right-0 mb-2 min-w-[140px] rounded-xl bg-gray-900/95 backdrop-blur-xl ring-1 ring-white/10 shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
