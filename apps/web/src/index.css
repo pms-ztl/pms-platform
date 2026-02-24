@@ -2882,3 +2882,102 @@ html.transitioning *::after {
     min-width: 44px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE COMPACTION — Reduces spacing/typography for phone viewports
+   Targets < 640px (below Tailwind's sm: breakpoint).
+   Same attribute-selector technique as .compact mode (lines 2535-2604).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 639px) {
+  /* ── 1. Global component class overrides ────────────────────────────── */
+
+  .card-body {
+    padding: 1rem;              /* 24px → 16px */
+  }
+
+  .card-header {
+    padding: 0.75rem 1rem;      /* 16px/24px → 12px/16px */
+  }
+
+  .stat-card {
+    padding: 1rem;              /* 24px → 16px */
+  }
+
+  .glass-stat {
+    padding: 0.75rem;           /* → 12px */
+  }
+
+  .glass-banner,
+  .glass-banner-okr {
+    padding: 1rem;              /* typically p-6/p-8 → 16px */
+  }
+
+  /* ── 2. Inline Tailwind utility overrides via attribute selectors ───── */
+
+  /* Padding: p-6 (24px) → 16px on mobile */
+  [class*="p-6"]:not([class*="sm:p-"]):not([class*="md:p-"]) {
+    padding: 1rem;
+  }
+
+  /* Padding: p-8 (32px) → 16px on mobile */
+  [class*="p-8"]:not([class*="sm:p-"]):not([class*="md:p-"]) {
+    padding: 1rem;
+  }
+
+  /* Horizontal padding: px-6 (24px) → 12px on mobile */
+  [class*="px-6"]:not([class*="sm:px-"]):not([class*="md:px-"]) {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  /* Horizontal padding: px-8 (32px) → 16px on mobile */
+  [class*="px-8"]:not([class*="sm:px-"]):not([class*="md:px-"]) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Vertical spacing: space-y-6 (24px) → 16px */
+  [class*="space-y-6"] > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Vertical spacing: space-y-8 (32px) → 20px */
+  [class*="space-y-8"] > * + * {
+    margin-top: 1.25rem;
+  }
+
+  /* Gap: gap-6 (24px) → 16px */
+  [class*="gap-6"]:not([class*="sm:gap-"]):not([class*="md:gap-"]) {
+    gap: 1rem;
+  }
+
+  /* Gap: gap-8 (32px) → 20px */
+  [class*="gap-8"]:not([class*="sm:gap-"]):not([class*="md:gap-"]) {
+    gap: 1.25rem;
+  }
+
+  /* ── 3. Typography scaling ─────────────────────────────────────────── */
+
+  /* text-2xl (24px) → ~20px on mobile */
+  [class*="text-2xl"]:not([class*="sm:text-"]):not([class*="md:text-"]) {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  /* text-3xl (30px) → 24px on mobile */
+  [class*="text-3xl"]:not([class*="sm:text-"]):not([class*="md:text-"]) {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  /* ── 4. Border-radius reduction for tighter mobile feel ────────────── */
+
+  .card,
+  .stat-card,
+  .glass-deep,
+  .glass-banner,
+  .glass-banner-okr {
+    border-radius: 0.75rem;     /* 16px → 12px */
+  }
+}

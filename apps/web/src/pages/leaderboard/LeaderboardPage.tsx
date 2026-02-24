@@ -116,7 +116,7 @@ function Avatar({ user, size = 'md' }: {
   user: { firstName: string; lastName: string; avatarUrl?: string };
   size?: 'sm' | 'md' | 'lg' | 'xl';
 }) {
-  const sizeClasses = { sm: 'h-8 w-8 text-xs', md: 'h-10 w-10 text-sm', lg: 'h-14 w-14 text-lg', xl: 'h-20 w-20 text-2xl' };
+  const sizeClasses = { sm: 'h-8 w-8 text-xs', md: 'h-10 w-10 text-sm', lg: 'h-10 w-10 sm:h-14 sm:w-14 text-base sm:text-lg', xl: 'h-14 w-14 sm:h-20 sm:w-20 text-lg sm:text-2xl' };
   const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
 
   if (user.avatarUrl) {
@@ -229,7 +229,7 @@ function Podium({ entries }: { entries: AnyEntry[] }) {
   }
 
   const podiumOrder = [top3[1], top3[0], top3[2]];
-  const heights = ['h-28', 'h-36', 'h-24'];
+  const heights = ['h-20 sm:h-28', 'h-24 sm:h-36', 'h-16 sm:h-24'];
   const gradients = [
     'from-slate-200 via-slate-100 to-white dark:from-slate-600 dark:via-slate-700 dark:to-slate-800',
     'from-amber-200 via-amber-100 to-yellow-50 dark:from-amber-700 dark:via-amber-800 dark:to-amber-900',
@@ -606,12 +606,12 @@ export function LeaderboardPage() {
         </div>
 
         {/* Podium */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6 mb-8 overflow-hidden relative">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-3 sm:p-6 mb-6 sm:mb-8 overflow-hidden relative">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 via-transparent to-primary-50/50 dark:from-amber-900/10 dark:to-primary-900/10 pointer-events-none" />
           <Podium entries={entries} />
         </div>
 
-        <div className="flex gap-6">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           {/* Main content */}
           <div className={clsx('transition-all duration-300', sidebarOpen ? 'flex-1 min-w-0' : 'w-full')}>
 

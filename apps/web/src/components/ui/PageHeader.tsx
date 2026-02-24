@@ -61,7 +61,7 @@ export function PageHeader({
     <div
       className={clsx(
         'relative overflow-hidden rounded-2xl glass-banner shadow-lg',
-        compact ? 'p-4' : 'p-6',
+        compact ? 'p-3 sm:p-4' : 'p-4 sm:p-6',
         className,
       )}
     >
@@ -82,7 +82,7 @@ export function PageHeader({
       {/* Content */}
       <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white break-words">
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white break-words">
             {title}
           </h1>
           {subtitle && (

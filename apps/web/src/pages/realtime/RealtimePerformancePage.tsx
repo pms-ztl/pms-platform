@@ -90,7 +90,7 @@ function OverviewCard({
         <div className={clsx('h-1 w-full bg-gradient-to-r', gradient)} />
 
         {/* Section header */}
-        <div className="flex items-center justify-between px-8 pt-6 pb-2">
+        <div className="flex items-center justify-between px-4 sm:px-8 pt-4 sm:pt-6 pb-2">
           <div className="flex items-center gap-4">
             <div className={clsx(
               'flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br shadow-lg',
@@ -122,7 +122,7 @@ function OverviewCard({
         </div>
 
         {/* Card content */}
-        <div className="px-8 pb-8 pt-4">
+        <div className="px-4 sm:px-8 pb-6 sm:pb-8 pt-3 sm:pt-4">
           {children}
         </div>
       </div>
@@ -267,7 +267,7 @@ export function RealtimePerformancePage() {
         return (
           <div className="space-y-8">
             {/* Hero summary banner — frosted glassmorphism */}
-            <div className="relative overflow-hidden rounded-2xl glass-banner p-8 shadow-lg frosted-noise">
+            <div className="relative overflow-hidden rounded-2xl glass-banner p-4 sm:p-8 shadow-lg frosted-noise">
               {/* Decorative gradient orbs */}
               <div className="absolute -top-16 -right-16 w-56 h-56 bg-gradient-to-br from-primary-500/20 to-indigo-500/15 rounded-full blur-3xl" />
               <div className="absolute -bottom-12 -left-12 w-44 h-44 bg-gradient-to-tr from-cyan-500/15 to-primary-500/10 rounded-full blur-3xl" />

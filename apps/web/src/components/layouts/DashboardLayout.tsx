@@ -520,8 +520,8 @@ export function DashboardLayout() {
         </div>
 
         {/* Main content area */}
-        <main className={clsx('py-8 pb-24 sm:pb-8 transition-all duration-300', aiTransitionPhase !== 'idle' && 'opacity-0 blur-md')}>
-          <div className="px-4 sm:px-6 lg:px-8 page-content">
+        <main className={clsx('py-4 sm:py-8 pb-24 sm:pb-8 transition-all duration-300', aiTransitionPhase !== 'idle' && 'opacity-0 blur-md')}>
+          <div className="px-3 sm:px-6 lg:px-8 page-content">
             <Breadcrumbs />
             <Outlet />
           </div>

@@ -194,7 +194,7 @@ export function AnomalyDetectionPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 p-6">
+      <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
         <div className="h-8 w-64 rounded bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -210,7 +210,7 @@ export function AnomalyDetectionPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -250,7 +250,7 @@ export function AnomalyDetectionPage() {
       {/* 2-col: severity donut + timeline */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Severity donut */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 sm:p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Severity Distribution</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Anomalies by severity level</p>
           {severityDonutData.length === 0 ? (
