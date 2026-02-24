@@ -332,12 +332,14 @@ function AgentPickerDropdown({
   onClose,
   selectedAgents,
   onSelect,
+  inline = false,
 }: {
   theme: AITheme;
   open: boolean;
   onClose: () => void;
   selectedAgents: string[];
   onSelect: (agent: string) => void;
+  inline?: boolean;
 }) {
   const [search, setSearch] = useState('');
 
@@ -358,89 +360,92 @@ function AgentPickerDropdown({
 
   const atLimit = selectedAgents.length >= 5;
 
+  const panelClasses = inline
+    ? `w-full max-h-72 overflow-y-auto rounded-xl border shadow-xl ${T.border(theme)} ${
+        isLight ? 'bg-white' : theme === 'dark' ? 'bg-gray-900/95 backdrop-blur-xl' : 'bg-black/95 backdrop-blur-xl'
+      } ${T.scrollbar(theme)}`
+    : `absolute top-full left-0 mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border shadow-2xl z-50 ${T.border(theme)} ${
+        isLight ? 'bg-white' : theme === 'dark' ? 'bg-gray-900/95 backdrop-blur-xl' : 'bg-black/95 backdrop-blur-xl'
+      } ${T.scrollbar(theme)}`;
+
   return (
     <>
       {/* Invisible backdrop — clicking anywhere outside closes the dropdown */}
-      <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); onClose(); }} />
-      <div
-        className={`absolute top-full left-0 mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border shadow-2xl z-50 ${T.border(theme)} ${
-          isLight ? 'bg-white' : theme === 'dark' ? 'bg-gray-900/95 backdrop-blur-xl' : 'bg-black/95 backdrop-blur-xl'
-        } ${T.scrollbar(theme)}`}
-      >
-      {/* Search */}
-      <div className={`sticky top-0 z-10 p-3 border-b ${T.borderLight(theme)} ${
-        isLight ? 'bg-white' : theme === 'dark' ? 'bg-gray-900/95' : 'bg-black/95'
-      }`}>
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search agents..."
-          autoFocus
-          className={`w-full rounded-lg border px-3 py-2 text-xs outline-none ${T.inputField(theme)}`}
-        />
-        {atLimit && (
-          <p className="text-2xs text-amber-400 mt-1.5 text-center">Maximum 5 agents reached</p>
-        )}
-      </div>
+      {!inline && <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); onClose(); }} />}
+      <div className={panelClasses}>
+        {/* Search */}
+        <div className={`sticky top-0 z-10 p-2.5 border-b ${T.borderLight(theme)} ${
+          isLight ? 'bg-white' : theme === 'dark' ? 'bg-gray-900/95' : 'bg-black/95'
+        }`}>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search agents..."
+            autoFocus
+            className={`w-full rounded-lg border px-3 py-1.5 text-xs outline-none ${T.inputField(theme)}`}
+          />
+          {atLimit && (
+            <p className="text-2xs text-amber-400 mt-1.5 text-center">Maximum 5 agents reached</p>
+          )}
+        </div>
 
-      {/* Grouped Agent List */}
-      <div className="p-2">
-        {CLUSTER_ORDER.map((cluster) => {
-          const agents = grouped[cluster];
-          if (!agents || agents.length === 0) return null;
-          return (
-            <div key={cluster} className="mb-2">
-              <p className={`text-2xs font-bold tracking-wider px-2 py-1.5 ${
-                agents[0][1].clusterColor
-              }`}>
-                {cluster} ({agents.length})
-              </p>
-              <div className="space-y-0.5">
-                {agents.map(([key, info]) => {
-                  const isSelected = selectedAgents.includes(key);
-                  const isDisabled = atLimit && !isSelected;
-                  const PickerAgentIcon = getAgentIcon(key);
-                  return (
-                    <button
-                      key={key}
-                      disabled={isDisabled}
-                      onClick={() => {
-                        if (!isSelected) onSelect(key);
-                        if (isSelected) {
-                          // Allow deselect from picker too
-                          const { removeOrchestrationAgent } = useAIWorkspaceStore.getState();
-                          removeOrchestrationAgent(key);
-                        }
-                      }}
-                      className={`flex items-center gap-2.5 w-full text-left rounded-lg px-2.5 py-2 text-xs transition-all duration-150 ${
-                        isSelected
-                          ? isLight
-                            ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200'
-                            : 'bg-white/10 text-white ring-1 ring-white/20'
-                          : isDisabled
-                            ? `opacity-40 cursor-not-allowed ${T.textMuted(theme)}`
-                            : `${T.textSecondary(theme)} ${T.surfaceHover(theme)} hover:${isLight ? 'text-gray-900' : 'text-white'}`
-                      }`}
-                    >
-                      <PickerAgentIcon className={`h-4 w-4 flex-shrink-0 ${info.clusterColor}`} />
-                      <span className="break-words">{info.name}</span>
-                      {isSelected && (
-                        <span className={`ml-auto text-3xs font-semibold ${T.accentText(theme)}`}>
-                          Active
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
+        {/* Grouped Agent List */}
+        <div className="p-1.5">
+          {CLUSTER_ORDER.map((cluster) => {
+            const agents = grouped[cluster];
+            if (!agents || agents.length === 0) return null;
+            return (
+              <div key={cluster} className="mb-1.5">
+                <p className={`text-2xs font-bold tracking-wider uppercase px-2 py-1 ${
+                  agents[0][1].clusterColor
+                }`}>
+                  {cluster} ({agents.length})
+                </p>
+                <div className="space-y-px">
+                  {agents.map(([key, info]) => {
+                    const isSelected = selectedAgents.includes(key);
+                    const isDisabled = atLimit && !isSelected;
+                    const PickerAgentIcon = getAgentIcon(key);
+                    return (
+                      <button
+                        key={key}
+                        disabled={isDisabled}
+                        onClick={() => {
+                          if (!isSelected) onSelect(key);
+                          if (isSelected) {
+                            const { removeOrchestrationAgent } = useAIWorkspaceStore.getState();
+                            removeOrchestrationAgent(key);
+                          }
+                        }}
+                        className={`flex items-center gap-2 w-full text-left rounded-lg px-2 py-1.5 text-xs transition-all duration-150 ${
+                          isSelected
+                            ? isLight
+                              ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200'
+                              : 'bg-white/10 text-white ring-1 ring-white/20'
+                            : isDisabled
+                              ? `opacity-40 cursor-not-allowed ${T.textMuted(theme)}`
+                              : `${T.textSecondary(theme)} ${T.surfaceHover(theme)} hover:${isLight ? 'text-gray-900' : 'text-white'}`
+                        }`}
+                      >
+                        <PickerAgentIcon className={`h-3.5 w-3.5 flex-shrink-0 ${info.clusterColor}`} />
+                        <span className="truncate">{info.name}</span>
+                        {isSelected && (
+                          <span className={`ml-auto text-3xs font-semibold flex-shrink-0 ${T.accentText(theme)}`}>
+                            Active
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          );
-        })}
-        {Object.keys(grouped).length === 0 && (
-          <p className={`text-xs text-center py-6 ${T.textMuted(theme)}`}>No agents match your search</p>
-        )}
-      </div>
+            );
+          })}
+          {Object.keys(grouped).length === 0 && (
+            <p className={`text-xs text-center py-4 ${T.textMuted(theme)}`}>No agents match your search</p>
+          )}
+        </div>
       </div>
     </>
   );
@@ -852,17 +857,18 @@ export function SwarmOrchestration() {
               <PlusIcon className="h-4 w-4" />
               Add Your First Agent
             </button>
-            {/* Floating picker for empty state */}
+            {/* Inline picker for empty state — flows naturally, no clipping */}
             {pickerOpen && agentCount === 0 && (
-              <div className="relative mt-3 w-80">
+              <div className="mt-4 w-80">
                 <AgentPickerDropdown
                   theme={theme}
                   open={pickerOpen}
                   onClose={() => setPickerOpen(false)}
                   selectedAgents={orchestrationAgents}
+                  inline
                   onSelect={(agent) => {
                     addOrchestrationAgent(agent);
-                    setPickerOpen(true); // keep picker open for header view transition
+                    setPickerOpen(true);
                   }}
                 />
               </div>
