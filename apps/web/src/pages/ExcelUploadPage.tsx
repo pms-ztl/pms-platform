@@ -899,7 +899,7 @@ export function ExcelUploadPage() {
                   These must be fixed in the source file before creating accounts
                 </p>
               </div>
-              <div className="max-h-60 overflow-y-auto">
+              <div className="max-h-60 overflow-auto">
                 <table className="min-w-full text-sm">
                   <thead className="bg-gray-50/50 dark:bg-white/[0.02] sticky top-0">
                     <tr>
@@ -938,7 +938,7 @@ export function ExcelUploadPage() {
                   iconColor="bg-yellow-100/60 dark:bg-yellow-500/10"
                 />
               </div>
-              <div className="max-h-48 overflow-y-auto">
+              <div className="max-h-48 overflow-auto">
                 <table className="min-w-full text-sm">
                   <thead className="bg-gray-50/50 dark:bg-white/[0.02] sticky top-0">
                     <tr>
@@ -1149,7 +1149,7 @@ export function ExcelUploadPage() {
 
             {/* Errors if any */}
             {confirmResult.errors.length > 0 && (
-              <div className="mt-4 max-h-40 overflow-y-auto rounded-xl border border-gray-200/40 dark:border-white/[0.06]">
+              <div className="mt-4 max-h-40 overflow-auto rounded-xl border border-gray-200/40 dark:border-white/[0.06]">
                 <table className="min-w-full text-sm">
                   <thead className="bg-gray-50/50 dark:bg-white/[0.02] sticky top-0">
                     <tr>

@@ -816,7 +816,7 @@ export function CompliancePage() {
               </div>
 
               {/* Type and Status row */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                     Type
@@ -846,7 +846,7 @@ export function CompliancePage() {
               </div>
 
               {/* Priority and Deadline */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                     Priority
@@ -895,7 +895,7 @@ export function CompliancePage() {
               </div>
 
               {/* Dates */}
-              <div className="grid grid-cols-2 gap-4 pt-2 border-t border-secondary-200/60 dark:border-white/[0.06]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-secondary-200/60 dark:border-white/[0.06]">
                 <div>
                   <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                     Created

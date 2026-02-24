@@ -384,7 +384,7 @@ export function UserManagementPage() {
                 }}
                 className="space-y-4"
               >
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">First Name</label>
                     <input name="firstName" type="text" required className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white" placeholder="John" />
@@ -482,7 +482,7 @@ export function UserManagementPage() {
                 }}
                 className="space-y-4"
               >
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">First Name</label>
                     <input

@@ -406,7 +406,8 @@ export function CalendarPage() {
         <div className="flex-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
           {/* ── MONTH VIEW ── */}
           {viewMode === 'month' && (
-            <div className="h-full flex flex-col">
+            <div className="h-full flex flex-col overflow-x-auto scrollbar-hide">
+              <div className="min-w-[600px] md:min-w-0 flex flex-col flex-1">
               {/* Day headers */}
               <div className="grid grid-cols-7 border-b border-secondary-200/60 dark:border-white/[0.06]">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
@@ -462,12 +463,14 @@ export function CalendarPage() {
                   );
                 })}
               </div>
+              </div>
             </div>
           )}
 
           {/* ── WEEK VIEW ── */}
           {viewMode === 'week' && (
-            <div className="h-full flex flex-col">
+            <div className="h-full flex flex-col overflow-x-auto scrollbar-hide">
+              <div className="min-w-[700px] md:min-w-0 flex flex-col flex-1">
               {/* Day headers */}
               <div className="grid grid-cols-8 border-b border-secondary-200/60 dark:border-white/[0.06] sticky top-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-10">
                 <div className="py-2 px-2 text-2xs text-secondary-400">&nbsp;</div>
@@ -523,6 +526,7 @@ export function CalendarPage() {
                     })}
                   </div>
                 ))}
+              </div>
               </div>
             </div>
           )}
@@ -645,7 +649,7 @@ export function CalendarPage() {
               <input name="title" placeholder="Event title" required className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400" />
               <textarea name="description" placeholder="Description (optional)" rows={2} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 resize-none" />
               <input name="eventDate" type="date" defaultValue={format(selectedDate, 'yyyy-MM-dd')} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <input name="startTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
                 <input name="endTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
               </div>

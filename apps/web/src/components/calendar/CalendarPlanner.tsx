@@ -410,7 +410,7 @@ export function CalendarPlanner() {
       </div>
 
       {/* Time grid */}
-      <div className="max-h-[500px] overflow-y-auto min-w-[700px]">
+      <div className="max-h-[500px] overflow-auto min-w-[700px]">
         {dayHours.map((hour) => (
           <div key={hour.toISOString()} className="grid grid-cols-8 gap-0 border-t border-secondary-100 dark:border-secondary-700/50">
             <div className="text-xs text-secondary-400 dark:text-secondary-500 py-3 pr-2 text-right w-16 border-r border-secondary-200/60 dark:border-white/[0.06]">
@@ -804,7 +804,7 @@ export function CalendarPlanner() {
                 </div>
 
                 {/* Date + All Day */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">Date</label>
                     <input
@@ -826,7 +826,7 @@ export function CalendarPlanner() {
                 </div>
 
                 {/* Start/End Time */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">Start Time</label>
                     <input
@@ -847,7 +847,7 @@ export function CalendarPlanner() {
                 </div>
 
                 {/* Type + Color */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">Event Type</label>
                     <select
@@ -882,7 +882,7 @@ export function CalendarPlanner() {
                 </div>
 
                 {/* Recurrence */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">Recurrence</label>
                     <select

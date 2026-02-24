@@ -324,7 +324,7 @@ export function OKRHierarchyView({ treeData, onSelect }: OKRHierarchyViewProps) 
         </div>
       ) : (
         /* Indented List */
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-secondary-200/60 dark:border-white/[0.06] bg-secondary-50 dark:bg-secondary-800/80">

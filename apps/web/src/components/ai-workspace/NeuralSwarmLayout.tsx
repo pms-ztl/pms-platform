@@ -344,7 +344,7 @@ export function NeuralSwarmLayout() {
       </header>
 
       {/* ── Main Content Area ──────────────────────────────────── */}
-      <main className="relative z-10 flex flex-1 overflow-hidden">
+      <main className="relative z-10 flex flex-1 overflow-hidden landscape-scroll">
         <div
           className={`flex-1 overflow-y-auto transition-opacity duration-200 ease-in-out ${
             transitioning ? 'opacity-0' : 'opacity-100'

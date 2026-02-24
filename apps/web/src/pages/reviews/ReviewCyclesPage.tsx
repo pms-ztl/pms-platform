@@ -663,7 +663,7 @@ export function ReviewCyclesPage() {
                     ))}
                   </select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label">Start Date</label>
                     <input name="startDate" type="date" required className="input" />
@@ -773,7 +773,7 @@ export function ReviewCyclesPage() {
                       <h4 className="text-sm font-semibold text-secondary-900 dark:text-white mb-3">
                         Review Statistics
                       </h4>
-                      <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                         {[
                           { label: 'Total', value: detailStats.total, color: 'text-secondary-900 dark:text-white' },
                           { label: 'Not Started', value: detailStats.notStarted, color: 'text-secondary-500' },

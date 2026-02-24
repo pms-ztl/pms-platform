@@ -1076,9 +1076,12 @@
   animation: count-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Page content wrapper with subtle animation */
+/* Page content wrapper with subtle animation + ultra-wide containment */
 .page-content {
   animation: page-reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 1920px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @keyframes page-reveal {
@@ -2845,5 +2848,37 @@ html.transitioning *::after {
   100% {
     transform: rotate(25deg) translateX(400px);
     opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MULTI-DEVICE UTILITIES — responsive helpers for all screen sizes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide {
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE/Edge */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;                  /* Chrome/Safari/Opera */
+}
+
+/* Landscape orientation: allow vertical scroll on height-constrained pages
+   Targets landscape phones where viewport height < 500px */
+@media (orientation: landscape) and (max-height: 500px) {
+  .landscape-scroll {
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
+}
+
+/* Touch-device target sizing — ensures 44px minimum on coarse pointers */
+@media (pointer: coarse) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
   }
 }

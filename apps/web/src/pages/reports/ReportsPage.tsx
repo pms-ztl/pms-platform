@@ -865,7 +865,7 @@ export function ReportsPage() {
               </div>
 
               {/* Start date */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
                     Start Date <span className="text-red-500">*</span>

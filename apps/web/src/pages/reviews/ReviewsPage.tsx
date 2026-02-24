@@ -421,7 +421,7 @@ export function ReviewsPage() {
                     <option value="360_DEGREE">360-Degree Review</option>
                   </select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label">Start Date</label>
                     <input name="startDate" type="date" required className="input" />

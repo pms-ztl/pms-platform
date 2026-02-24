@@ -709,7 +709,7 @@ export function LeaderboardPage() {
                   <BoltIcon className="h-4 w-4 text-primary-500" /> My Rankings
                 </h3>
                 {myStats ? (
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {([
                       { label: 'Performance', rank: myStats.performance.rank, color: 'text-primary-500' },
                       { label: 'Goals', rank: myStats.goals.rank, color: 'text-success-500' },

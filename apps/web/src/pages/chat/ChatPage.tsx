@@ -1005,7 +1005,7 @@ function SearchPanel({ onSelectResult, onClose }: {
   };
 
   return (
-    <div className="w-[320px] flex-shrink-0 flex flex-col bg-white/70 dark:bg-secondary-900/50 backdrop-blur-xl border-l border-secondary-200/50 dark:border-secondary-700/30">
+    <div className="w-[320px] max-w-full flex-shrink-0 flex flex-col bg-white/70 dark:bg-secondary-900/50 backdrop-blur-xl border-l border-secondary-200/50 dark:border-secondary-700/30">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3.5 border-b border-secondary-200/50 dark:border-secondary-700/30">
         <MagnifyingGlassIcon className="h-5 w-5 text-secondary-400 flex-shrink-0" />
@@ -1103,7 +1103,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
   };
 
   return (
-    <div className="w-[320px] flex-shrink-0 flex flex-col bg-white/70 dark:bg-secondary-900/50 backdrop-blur-xl border-l border-secondary-200/50 dark:border-secondary-700/30">
+    <div className="w-[320px] max-w-full flex-shrink-0 flex flex-col bg-white/70 dark:bg-secondary-900/50 backdrop-blur-xl border-l border-secondary-200/50 dark:border-secondary-700/30">
       <div className="flex items-center gap-3 px-4 py-3.5 border-b border-secondary-200/50 dark:border-secondary-700/30">
         <MapPinIcon className="h-5 w-5 text-amber-500 flex-shrink-0" />
         <h4 className="text-sm font-display font-bold text-secondary-900 dark:text-white flex-1">Pinned Messages</h4>
@@ -1164,7 +1164,7 @@ function ConversationInfoPanel({ convo, onlineUsers, onClose }: {
   const TypeIcon = TYPE_ICONS[convo.type];
 
   return (
-    <div className="w-[320px] flex-shrink-0 flex flex-col bg-white/70 dark:bg-secondary-900/50 backdrop-blur-xl border-l border-secondary-200/50 dark:border-secondary-700/30">
+    <div className="w-[320px] max-w-full flex-shrink-0 flex flex-col bg-white/70 dark:bg-secondary-900/50 backdrop-blur-xl border-l border-secondary-200/50 dark:border-secondary-700/30">
       <div className="flex items-center gap-3 px-4 py-3.5 border-b border-secondary-200/50 dark:border-secondary-700/30">
         <InformationCircleIcon className="h-5 w-5 text-primary-500 flex-shrink-0" />
         <h4 className="text-sm font-display font-bold text-secondary-900 dark:text-white flex-1">Details</h4>
@@ -1981,7 +1981,7 @@ export default function ChatPage() {
     : displayConversations;
 
   return (
-    <div className="flex h-[calc(100vh-7.5rem)] overflow-hidden rounded-2xl card shadow-lg">
+    <div className="flex h-[calc(100vh-7.5rem)] overflow-hidden rounded-2xl card shadow-lg landscape-scroll">
       {/* ═══ Sidebar ═══ */}
       <div className={clsx(
         'flex flex-col bg-white/60 dark:bg-secondary-900/40 backdrop-blur-xl transition-all duration-300 border-r border-secondary-200/50 dark:border-secondary-700/30',

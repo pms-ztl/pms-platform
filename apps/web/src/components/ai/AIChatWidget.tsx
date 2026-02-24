@@ -561,7 +561,7 @@ export function AIChatWidget() {
   // ── Chat Panel ─────────────────────────────────────────
   return (
     <div
-      className="fixed bottom-5 right-5 z-50 flex h-[480px] w-[360px] flex-col overflow-hidden rounded-2xl shadow-2xl"
+      className="fixed bottom-5 right-5 z-50 flex h-[480px] w-[360px] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-2xl shadow-2xl"
       style={{
         fontSize: 14,  // Reset root clamp scaling — compact fixed-size container
         background: t.panel,

@@ -759,7 +759,7 @@ export function CompensationPage() {
               </div>
 
               {/* Amounts + Currency */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">Proposed Amount <span className="text-red-500">*</span></label>
                   <input

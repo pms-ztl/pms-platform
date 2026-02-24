@@ -527,7 +527,7 @@ export function GoalAlignmentPage() {
             )}
           </div>
           {showPanel && !isMobile && (
-            <div className="w-80 xl:w-96 flex-shrink-0 ml-4 sticky top-0 h-[calc(100vh-12rem)] rounded-lg overflow-hidden border border-secondary-200/60 dark:border-white/[0.06] shadow-lg">
+            <div className="w-80 xl:w-96 flex-shrink-0 ml-4 sticky top-0 h-[calc(100vh-12rem)] rounded-lg overflow-hidden border border-secondary-200/60 dark:border-white/[0.06] shadow-lg landscape-scroll">
               <DetailPanel goal={selectedGoal!} onClose={() => setSelectedGoal(null)} />
             </div>
           )}

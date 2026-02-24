@@ -1141,7 +1141,7 @@ export function DevelopmentPlanDetailPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Estimated Hours */}
                 <div>
                   <label className="label dark:text-secondary-300">Estimated Hours</label>

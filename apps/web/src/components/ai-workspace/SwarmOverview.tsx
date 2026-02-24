@@ -961,7 +961,7 @@ export function SwarmOverview() {
         </div>
 
         {/* ── Hero Stats Row ────────────────────────────────── */}
-        <div className="mb-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4">
           <HeroStatCard
             icon={CpuChipIcon}
             value={70}

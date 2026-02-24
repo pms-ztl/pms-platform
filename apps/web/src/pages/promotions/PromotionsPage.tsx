@@ -552,7 +552,7 @@ export function PromotionsPage() {
 
                 {/* Role fields — show for TITLE_CHANGE, ROLE_CHANGE, LATERAL_MOVE */}
                 {(formType === 'TITLE_CHANGE' || formType === 'ROLE_CHANGE' || formType === 'LATERAL_MOVE') && (
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">Current Role</label>
                       <input
@@ -581,7 +581,7 @@ export function PromotionsPage() {
 
                 {/* Level fields — show for LEVEL_PROMOTION, ROLE_CHANGE */}
                 {(formType === 'LEVEL_PROMOTION' || formType === 'ROLE_CHANGE') && (
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">Current Level</label>
                       <input
