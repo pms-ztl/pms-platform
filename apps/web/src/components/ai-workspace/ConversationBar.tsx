@@ -8,16 +8,11 @@ import { PlusIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
 import { aiApi, type AIConversation } from '@/lib/api';
 import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import * as T from './ai-theme';
+import { getAgentIcon } from './agentIconMap';
 
-const AGENT_ICONS: Record<string, string> = {
-  performance: '\uD83C\uDFAF', analytics: '\uD83D\uDCCA', feedback: '\uD83D\uDCAC', hr: '\uD83D\uDC65',
-  report: '\uD83D\uDCCB', goals: '\uD83C\uDFC6', onboarding: '\uD83C\uDF93', security: '\uD83D\uDD12',
-  notification: '\uD83D\uDD14', nlp_query: '\uD83D\uDD0D', career: '\uD83D\uDE80',
-};
-
-function truncate(str: string | null, max: number): string {
+function truncate(str: string | null, _max: number): string {
   if (!str) return 'New conversation';
-  return str.length > max ? str.slice(0, max) + '...' : str;
+  return str;
 }
 
 function shortTimeAgo(dateStr: string): string {
@@ -75,7 +70,7 @@ export function ConversationBar({ activeConversationId, onSelectConversation, on
 
       {conversations.map((conv) => {
         const isActive = conv.id === activeConversationId;
-        const icon = AGENT_ICONS[conv.agentType] ?? '\uD83E\uDD16';
+        const AgentIcon = getAgentIcon(conv.agentType);
 
         return (
           <button
@@ -93,8 +88,8 @@ export function ConversationBar({ activeConversationId, onSelectConversation, on
                 : 'border-white/5 bg-white/[0.02] text-gray-400 hover:border-white/10 hover:bg-white/5 hover:text-gray-300'
             }`}
           >
-            <span className="text-sm">{icon}</span>
-            <span className="text-xs whitespace-nowrap max-w-[120px] truncate">{truncate(conv.title, 20)}</span>
+            <AgentIcon className="h-3.5 w-3.5 flex-shrink-0 opacity-70" />
+            <span className="text-xs break-words">{truncate(conv.title, 20)}</span>
             <span className={`text-[10px] flex-shrink-0 ${T.textMuted(theme)}`}>{shortTimeAgo(conv.updatedAt)}</span>
             {conv.messageCount > 0 && (
               <span className={`flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[9px] ${

@@ -12,7 +12,7 @@
  * Delivers compact, high-frequency learning bursts calibrated to the user's gaps.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { querySkillGaps, queryLearningProgress } from '../../agent-tools-v2';
 
 // -- System Prompt -----------------------------------------------------------
@@ -40,7 +40,7 @@ Micro-learning principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class MicroLearningAgent extends BaseAgent {
+export class MicroLearningAgent extends AgenticBaseAgent {
   constructor() {
     super('micro_learning', SYSTEM_PROMPT);
   }

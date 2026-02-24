@@ -19,6 +19,7 @@ import clsx from 'clsx';
 import { usersApi, getAvatarUrl, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ============================================================================
 // Types
@@ -100,6 +101,55 @@ function buildTree(users: User[]): TreeNode[] {
 }
 
 /**
+ * When the API returns a flat list (no manager relationships), infer a
+ * reasonable hierarchy from job titles so the chart isn't just a flat list.
+ */
+function buildDemoHierarchy(users: User[]): TreeNode[] {
+  if (users.length <= 1) return users.map((u) => ({ user: u, children: [] }));
+
+  const titleRank = (title?: string): number => {
+    if (!title) return 99;
+    const t = title.toLowerCase();
+    if (t.includes('ceo') || t.includes('chief executive')) return 0;
+    if (t.includes('cto') || t.includes('chief technology')) return 1;
+    if (t.includes('cfo') || t.includes('chief financial')) return 1;
+    if (t.includes('coo') || t.includes('chief operating')) return 1;
+    if (t.includes('chief')) return 2;
+    if (t.includes('vp') || t.includes('vice president')) return 3;
+    if (t.includes('head of') || t.includes('head,')) return 4;
+    if (t.includes('director')) return 5;
+    if (t.includes('senior') && t.includes('manager')) return 6;
+    if (t.includes('manager')) return 7;
+    if (t.includes('senior') || t.includes('lead')) return 8;
+    return 10;
+  };
+
+  const sorted = [...users].sort((a, b) => titleRank(a.jobTitle) - titleRank(b.jobTitle));
+  const root = sorted[0];
+  const rest = sorted.slice(1);
+
+  const heads: User[] = [];
+  const ics: User[] = [];
+  for (const u of rest) {
+    if (titleRank(u.jobTitle) <= 7) heads.push(u);
+    else ics.push(u);
+  }
+
+  const assignedIcIds = new Set<string>();
+  const headNodes: TreeNode[] = heads.map((head) => {
+    const myIcs = ics.filter((ic) => ic.department?.name === head.department?.name);
+    myIcs.forEach((ic) => assignedIcIds.add(ic.id));
+    return { user: head, children: myIcs.map((ic) => ({ user: ic, children: [] })) };
+  });
+
+  const unmatched = ics
+    .filter((ic) => !assignedIcIds.has(ic.id))
+    .map((ic) => ({ user: ic, children: [] }));
+
+  return [{ user: root, children: [...headNodes, ...unmatched] }];
+}
+
+/**
  * Count the total number of descendants (all levels) for a node.
  */
 function countDescendants(node: TreeNode): number {
@@ -164,7 +214,6 @@ interface OrgChartNodeProps {
   toggleExpand: (id: string) => void;
   onNavigate: (id: string) => void;
   currentUserId?: string;
-  isRoot?: boolean;
 }
 
 function OrgChartNode({
@@ -175,7 +224,6 @@ function OrgChartNode({
   toggleExpand,
   onNavigate,
   currentUserId,
-  isRoot,
 }: OrgChartNodeProps) {
   const { user, children } = node;
   const isExpanded = expandedSet.has(user.id);
@@ -185,133 +233,159 @@ function OrgChartNode({
   const avatarSrc = getAvatarUrl(user.avatarUrl, 'sm');
   const isCurrentUser = user.id === currentUserId;
 
-  return (
-    <div className={clsx('relative', !isRoot && 'mt-1')}>
-      {/* Connector line from parent */}
-      {!isRoot && (
-        <div className="absolute left-[-20px] top-0 bottom-0 w-px bg-secondary-200 dark:bg-white/[0.06]" />
-      )}
-      {!isRoot && (
-        <div className="absolute left-[-20px] top-5 w-5 h-px bg-secondary-200 dark:bg-white/[0.06]" />
-      )}
+  const avatarGradient =
+    depth === 1
+      ? 'bg-gradient-to-br from-primary-400/30 to-primary-600/40 dark:from-primary-500/40 dark:to-primary-700/40'
+      : depth === 2
+        ? 'bg-gradient-to-br from-cyan-400/30 to-cyan-600/30 dark:from-cyan-500/30 dark:to-cyan-700/30'
+        : 'bg-gradient-to-br from-secondary-300/40 to-secondary-500/30 dark:from-secondary-500/30 dark:to-secondary-700/30';
 
-      {/* Node card */}
-      <div className="flex items-start gap-0 py-1">
-        {/* Expand/collapse toggle */}
-        {canExpand ? (
+  const avatarText =
+    depth === 1
+      ? 'text-primary-700 dark:text-primary-200'
+      : depth === 2
+        ? 'text-cyan-700 dark:text-cyan-200'
+        : 'text-secondary-600 dark:text-secondary-300';
+
+  return (
+    <div className="flex flex-col items-center">
+      {/* ── Card ── */}
+      <div className="relative">
+        <button
+          onClick={() => onNavigate(user.id)}
+          className={clsx(
+            'group relative flex flex-col items-center px-5 py-4 rounded-xl border transition-all text-center',
+            'min-w-[190px] max-w-[230px]',
+            'bg-white dark:bg-white/[0.05] backdrop-blur-sm',
+            'border-secondary-200/80 dark:border-white/[0.08]',
+            'hover:border-primary-300 dark:hover:border-primary-500/30',
+            'hover:bg-secondary-50 dark:hover:bg-white/[0.08]',
+            'hover:shadow-lg hover:shadow-primary-500/5 dark:hover:shadow-black/20',
+            isCurrentUser && 'ring-2 ring-primary-400/40 dark:ring-primary-400/30 border-primary-300 dark:border-primary-500/20'
+          )}
+        >
+          {/* Avatar */}
+          <div className="relative mb-2.5">
+            {avatarSrc ? (
+              <img
+                src={avatarSrc}
+                alt={`${user.firstName} ${user.lastName}`}
+                className={clsx(
+                  'w-12 h-12 rounded-full object-cover ring-2',
+                  depth === 1 ? 'ring-primary-300/40 dark:ring-primary-500/30' : 'ring-secondary-200/60 dark:ring-white/[0.08]'
+                )}
+              />
+            ) : (
+              <div
+                className={clsx(
+                  'w-12 h-12 rounded-full flex items-center justify-center ring-2',
+                  avatarGradient,
+                  depth === 1 ? 'ring-primary-300/40 dark:ring-primary-500/30' : 'ring-secondary-200/60 dark:ring-white/[0.08]'
+                )}
+              >
+                <span className={clsx('text-sm font-bold', avatarText)}>
+                  {getInitials(user.firstName, user.lastName)}
+                </span>
+              </div>
+            )}
+            <span
+              className={clsx(
+                'absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2',
+                'border-white dark:border-[rgb(var(--c-surface-dark))]',
+                user.isActive ? 'bg-emerald-400' : 'bg-secondary-400'
+              )}
+            />
+          </div>
+
+          {/* Name */}
+          <div className="flex items-center gap-1.5">
+            <h3 className="text-sm font-semibold text-secondary-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors">
+              {user.firstName} {user.lastName}
+            </h3>
+            {isCurrentUser && (
+              <span className="px-1.5 py-0.5 text-[9px] font-semibold bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 rounded-full uppercase tracking-wider">
+                You
+              </span>
+            )}
+          </div>
+
+          {/* Title */}
+          <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 leading-snug">
+            {user.jobTitle || 'Employee'}
+          </p>
+
+          {/* Dept + Reports */}
+          <div className="flex items-center gap-2 mt-2 flex-wrap justify-center">
+            {user.department && (
+              <span
+                className={clsx(
+                  'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium',
+                  getDeptColor(user.department.name)
+                )}
+              >
+                <BuildingOfficeIcon className="h-2.5 w-2.5" />
+                {user.department.name}
+              </span>
+            )}
+            {totalReports > 0 && (
+              <span className="inline-flex items-center gap-1 text-[10px] text-secondary-400 dark:text-secondary-500">
+                <UsersIcon className="h-2.5 w-2.5" />
+                {totalReports}
+              </span>
+            )}
+          </div>
+        </button>
+
+        {/* Expand/Collapse toggle below card */}
+        {canExpand && (
           <button
             onClick={(e) => {
               e.stopPropagation();
               toggleExpand(user.id);
             }}
             className={clsx(
-              'flex-shrink-0 w-5 h-5 mt-3 mr-1 rounded flex items-center justify-center',
-              'text-secondary-400 hover:text-secondary-700 dark:text-secondary-500 dark:hover:text-secondary-200',
-              'hover:bg-secondary-100 dark:hover:bg-white/[0.04] transition-colors'
+              'absolute -bottom-3 left-1/2 -translate-x-1/2 z-10',
+              'w-6 h-6 rounded-full flex items-center justify-center',
+              'bg-white dark:bg-[rgb(var(--c-surface-dark))]',
+              'border border-secondary-200 dark:border-white/[0.1]',
+              'text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400',
+              'hover:border-primary-300 dark:hover:border-primary-500/30',
+              'transition-colors shadow-sm'
             )}
             aria-label={isExpanded ? 'Collapse' : 'Expand'}
           >
-            {isExpanded ? (
-              <ChevronDownIcon className="h-3.5 w-3.5" />
-            ) : (
-              <ChevronRightIcon className="h-3.5 w-3.5" />
-            )}
-          </button>
-        ) : (
-          <span className="flex-shrink-0 w-5 mr-1" />
-        )}
-
-        {/* Card */}
-        <button
-          onClick={() => onNavigate(user.id)}
-          className={clsx(
-            'group flex items-center gap-3 p-3 rounded-lg border transition-all text-left w-full max-w-md',
-            'bg-white dark:bg-white/[0.04]',
-            'border-secondary-200 dark:border-white/[0.06]',
-            'hover:border-primary-300 dark:hover:border-primary-500/50',
-            'hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/20',
-            isCurrentUser && 'ring-2 ring-primary-400/50 dark:ring-primary-500/30'
-          )}
-        >
-          {/* Avatar */}
-          <div className="flex-shrink-0 relative">
-            {avatarSrc ? (
-              <img
-                src={avatarSrc}
-                alt={`${user.firstName} ${user.lastName}`}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
-                <span className="text-sm font-semibold text-primary-700 dark:text-primary-300">
-                  {getInitials(user.firstName, user.lastName)}
-                </span>
-              </div>
-            )}
-            {/* Active status dot */}
-            <span
-              className={clsx(
-                'absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white dark:border-secondary-800',
-                user.isActive ? 'bg-success-500' : 'bg-secondary-400'
-              )}
+            <ChevronDownIcon
+              className={clsx('h-3 w-3 transition-transform duration-200', isExpanded && 'rotate-180')}
             />
-          </div>
-
-          {/* Info */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-medium text-secondary-900 dark:text-white truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                {user.firstName} {user.lastName}
-              </h3>
-              {isCurrentUser && (
-                <span className="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-medium bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded">
-                  You
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
-              {user.jobTitle || 'Employee'}
-            </p>
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
-              {user.department && (
-                <span
-                  className={clsx(
-                    'inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium',
-                    getDeptColor(user.department.name)
-                  )}
-                >
-                  <BuildingOfficeIcon className="h-2.5 w-2.5" />
-                  {user.department.name}
-                </span>
-              )}
-              {totalReports > 0 && (
-                <span className="inline-flex items-center gap-1 text-[10px] text-secondary-400 dark:text-secondary-500">
-                  <UsersIcon className="h-2.5 w-2.5" />
-                  {totalReports} {totalReports === 1 ? 'report' : 'reports'}
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Chevron hint */}
-          <ChevronRightIcon className="flex-shrink-0 h-4 w-4 text-secondary-300 dark:text-secondary-600 group-hover:text-primary-400 transition-colors" />
-        </button>
+          </button>
+        )}
       </div>
 
-      {/* Children */}
+      {/* ── Children ── */}
       {canExpand && isExpanded && children.length > 0 && (
-        <div className="ml-6 pl-5 relative">
-          {/* Vertical connector for children */}
-          <div className="absolute left-0 top-0 bottom-4 w-px bg-secondary-200 dark:bg-white/[0.06]" />
-          {children.map((child, idx) => (
-            <div key={child.user.id} className="relative">
-              {/* Horizontal connector to child */}
-              <div className="absolute left-0 top-5 w-5 h-px bg-secondary-200 dark:bg-white/[0.06]" />
-              {/* Corner connector for last child */}
-              {idx === children.length - 1 && (
-                <div className="absolute left-0 top-5 bottom-0 w-px bg-white dark:bg-surface-dark" />
-              )}
-              <div className="ml-5">
+        <div className="flex flex-col items-center mt-3">
+          {/* Vertical connector from parent down to horizontal bar */}
+          <div className="w-px h-8 bg-gradient-to-b from-secondary-300 to-secondary-200 dark:from-white/[0.12] dark:to-white/[0.06]" />
+
+          {/* Children row */}
+          <div className="flex">
+            {children.map((child, i) => (
+              <div key={child.user.id} className="relative flex flex-col items-center px-5">
+                {/* Horizontal connector segments */}
+                {children.length > 1 && (
+                  <>
+                    {i > 0 && (
+                      <div className="absolute top-0 left-0 right-1/2 h-px bg-secondary-200 dark:bg-white/[0.08]" />
+                    )}
+                    {i < children.length - 1 && (
+                      <div className="absolute top-0 left-1/2 right-0 h-px bg-secondary-200 dark:bg-white/[0.08]" />
+                    )}
+                  </>
+                )}
+
+                {/* Vertical connector from horizontal bar to child */}
+                <div className="w-px h-8 bg-secondary-200 dark:bg-white/[0.08]" />
+
                 <OrgChartNode
                   node={child}
                   depth={depth + 1}
@@ -322,17 +396,15 @@ function OrgChartNode({
                   currentUserId={currentUserId}
                 />
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Truncation notice when at max depth with hidden children */}
+      {/* Truncation notice */}
       {hasChildren && depth >= maxDepth && (
-        <div className="ml-12 mt-1 mb-2">
-          <span className="text-[10px] text-secondary-400 dark:text-secondary-500 italic">
-            +{totalReports} more (increase depth to reveal)
-          </span>
+        <div className="mt-3 text-[10px] text-secondary-400 dark:text-secondary-500 italic">
+          +{totalReports} more (increase depth)
         </div>
       )}
     </div>
@@ -407,7 +479,12 @@ export function OrgChartPage() {
   // ── Build tree ──
   const tree = useMemo(() => {
     if (!orgChartUsers || orgChartUsers.length === 0) return [];
-    return buildTree(orgChartUsers);
+    const built = buildTree(orgChartUsers);
+    // If all users ended up at root level (no manager links), infer hierarchy
+    if (built.length === orgChartUsers.length && orgChartUsers.length > 1) {
+      return buildDemoHierarchy(orgChartUsers);
+    }
+    return built;
   }, [orgChartUsers]);
 
   // ── Filtered tree ──
@@ -498,15 +575,7 @@ export function OrgChartPage() {
   return (
     <div className="space-y-6">
       {/* ── Page header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
-            Organization Chart
-          </h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Explore the team hierarchy and organizational structure
-          </p>
-        </div>
+      <PageHeader title="Organization Chart" subtitle="Explore the team hierarchy and organizational structure">
         {stats && (
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1.5 text-secondary-500 dark:text-secondary-400">
@@ -519,7 +588,7 @@ export function OrgChartPage() {
             </div>
           </div>
         )}
-      </div>
+      </PageHeader>
 
       {/* ── Controls bar ── */}
       <div className="card card-body">
@@ -660,20 +729,33 @@ export function OrgChartPage() {
         </div>
       ) : (
         <div className="card card-body overflow-x-auto">
-          <div className="min-w-max p-2">
-            {filteredTree.map((rootNode) => (
+          <div className="flex justify-center py-8 px-4 min-w-max">
+            {filteredTree.length === 1 ? (
               <OrgChartNode
-                key={rootNode.user.id}
-                node={rootNode}
+                node={filteredTree[0]}
                 depth={1}
                 maxDepth={maxDepth}
                 expandedSet={expandedSet}
                 toggleExpand={toggleExpand}
                 onNavigate={handleNavigate}
                 currentUserId={currentUser?.id}
-                isRoot
               />
-            ))}
+            ) : (
+              <div className="flex gap-12 items-start">
+                {filteredTree.map((rootNode) => (
+                  <OrgChartNode
+                    key={rootNode.user.id}
+                    node={rootNode}
+                    depth={1}
+                    maxDepth={maxDepth}
+                    expandedSet={expandedSet}
+                    toggleExpand={toggleExpand}
+                    onNavigate={handleNavigate}
+                    currentUserId={currentUser?.id}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Search result count */}

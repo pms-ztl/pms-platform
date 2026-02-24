@@ -12,7 +12,7 @@
  * Analyzes session patterns and burnout risk to recommend optimal rest cadences.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { querySessionActivity } from '../../agent-tools-v3';
 import { queryBurnoutRisk } from '../../agent-tools-v2';
 import { isManager } from '../../../../utils/roles';
@@ -41,7 +41,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class MicroBreakAgent extends BaseAgent {
+export class MicroBreakAgent extends AgenticBaseAgent {
   constructor() {
     super('micro_break', SYSTEM_PROMPT);
   }

@@ -1,15 +1,19 @@
 /**
  * Agent Orchestrator — routes incoming requests to the correct specialized agent.
  *
- * Architecture (v2 — 52-agent Neural Swarm):
+ * Architecture (v3 — 70-agent Neural Swarm):
  * - Two-stage intent classification: Cluster → Agent
  * - Lazy agent instantiation via factory map (agents created on first use)
  * - If agentType is explicitly specified, skips classification entirely
+ *
+ * Agent counts: Core(20) + Bio-Performance(10) + Hyper-Learning(12) +
+ *               Liquid Workforce(10) + Culture & Empathy(10) + Governance & Logic(8) = 70
  */
 
 import { logger } from '../../utils/logger';
 import { llmClient } from './llm-client';
 import type { BaseAgent, AgentResponse } from './base-agent';
+import { agentCoordinator, type CoordinationResult } from './agent-coordinator';
 
 // ── Lazy imports: Core agents ────────────────────────────
 
@@ -28,6 +32,11 @@ import { GovernanceAgent } from './agents/governance.agent';
 import { ConflictResolutionAgent } from './agents/conflict-resolution.agent';
 import { TalentMarketplaceAgent } from './agents/talent-marketplace.agent';
 import { StrategicAlignmentAgent } from './agents/strategic-alignment.agent';
+import { GoalIntelligenceAgent } from './agents/goal-intelligence.agent';
+import { PerformanceSignalAgent } from './agents/performance-signal.agent';
+import { ReviewDrafterAgent } from './agents/review-drafter.agent';
+import { CompensationPromotionAgent } from './agents/compensation-promotion.agent';
+import { OneOnOneAdvisorAgent } from './agents/one-on-one-advisor.agent';
 
 // ── Lazy imports: Bio-Performance cluster ────────────────
 
@@ -105,15 +114,18 @@ import {
 } from './agents/governance-logic';
 
 // ══════════════════════════════════════════════════════════
-// Agent Type Registry — all 52 agents
+// Agent Type Registry — all 70 agents
 // ══════════════════════════════════════════════════════════
 
 const AGENT_TYPES = [
-  // Core (15)
+  // Core (20) — 15 original + 5 Primary Agents
   'nlp_query', 'excel_validation', 'license', 'performance', 'career',
   'onboarding', 'security', 'report', 'notification', 'coaching',
   'workforce_intel', 'governance', 'conflict_resolution', 'talent_marketplace',
   'strategic_alignment',
+  // Primary Agents (5 new)
+  'goal_intelligence', 'performance_signal', 'review_drafter', 'compensation_promotion',
+  'one_on_one_advisor',
   // Bio-Performance (10)
   'neuro_focus', 'circadian_sync', 'micro_break', 'cortisol_monitor',
   'ergonomics', 'sleep_optimizer', 'hydration_nutrition', 'vocal_tone',
@@ -151,6 +163,9 @@ const CLUSTER_MAP: Record<ClusterId, readonly string[]> = {
     'onboarding', 'security', 'report', 'notification', 'coaching',
     'workforce_intel', 'governance', 'conflict_resolution', 'talent_marketplace',
     'strategic_alignment',
+    // Primary Agents
+    'goal_intelligence', 'performance_signal', 'review_drafter', 'compensation_promotion',
+    'one_on_one_advisor',
   ],
   bio_performance: [
     'neuro_focus', 'circadian_sync', 'micro_break', 'cortisol_monitor',
@@ -186,11 +201,11 @@ const CLUSTER_IDS = Object.keys(CLUSTER_MAP) as ClusterId[];
 // Stage 1: Cluster Classification Prompt
 // ══════════════════════════════════════════════════════════
 
-const CLUSTER_CLASSIFY_PROMPT = `You are a router for a Performance Management System with 52 specialized AI agents organized into 6 clusters.
+const CLUSTER_CLASSIFY_PROMPT = `You are a router for a Performance Management System with 70 specialized AI agents organized into 6 clusters.
 Given a user message, classify which CLUSTER should handle it.
 
 Available clusters:
-- core: General PMS queries, data lookups, Excel uploads, licenses, performance reviews, career paths, onboarding, security, reports, notifications, coaching, workforce intelligence, governance/bias detection, conflict resolution, talent marketplace, strategic alignment
+- core: General PMS queries, data lookups, Excel uploads, licenses, performance reviews, career paths, onboarding, security, reports, notifications, coaching, workforce intelligence, governance/bias detection, conflict resolution, talent marketplace, strategic alignment, SMART goal writing/transformation, performance signal collection and evidence synthesis, self-review and manager review drafting, compensation benchmarking and promotion readiness
 - bio_performance: Biological & cognitive optimization — focus/attention, circadian rhythms, break scheduling, stress/cortisol monitoring, ergonomics, sleep patterns, hydration/nutrition, vocal tone, environment control, burnout detection
 - hyper_learning: Skill development & training — shadow learning, micro-learning, AR mentoring, sparring/debate practice, skill gap forecasting, knowledge brokering, credential tracking, linguistic refinement, curiosity/innovation scouting, logic validation, cross-training, career simulation
 - liquid_workforce: Economic & workforce allocation — task bidding, internal gig sourcing, nano-payment/recognition, market value analysis, tax optimization, equity realization, pension planning, relocation advice, vendor negotiation, succession planning
@@ -211,8 +226,13 @@ Available agents:
 - nlp_query: General questions about employees, teams, data queries, "who", "how many", "show me", "list"
 - excel_validation: Excel uploads, CSV, employee data imports, bulk operations
 - license: Licenses, seats, subscriptions, plans, usage limits, billing
-- performance: Goal setting, performance reviews, ratings, progress tracking
-- career: Career development, promotions, career paths, L-level progression
+- performance: General performance coaching, progress tracking, performance insights
+- goal_intelligence: Writing SMART goals, converting vague goals to measurable ones, goal quality scoring, aligning goals to OKRs, "help me write a goal", "make my goal SMART", "improve this goal"
+- performance_signal: Performance evidence collection, signal-to-goal mapping, early achievement detection, "what signals show", "evidence of performance", "activity data", "prove performance", Jira/project contribution analysis
+- review_drafter: Drafting self-reviews, drafting manager reviews, writing performance reviews, "write my review", "draft a review", "help me write a self-assessment", "review for my direct report"
+- compensation_promotion: Promotion readiness, pay equity analysis, compensation benchmarking, "ready for promotion", "should I promote", "pay gap", "salary equity", "performance trends for raise"
+- one_on_one_advisor: 1:1 meeting quality, cadence analysis, skipped meetings, talking points preparation, agenda suggestions, "prepare for my 1:1", "how are my 1:1s", "who am I neglecting", "action items from meetings"
+- career: Career development, career paths, L-level progression
 - onboarding: New employee setup, welcome emails, onboarding checklists
 - security: Security threats, login attempts, suspicious activity, audit logs
 - report: Generate reports, analytics summaries, business reviews
@@ -338,6 +358,12 @@ class AgentOrchestrator {
     f.set('conflict_resolution', () => new ConflictResolutionAgent());
     f.set('talent_marketplace', () => new TalentMarketplaceAgent());
     f.set('strategic_alignment', () => new StrategicAlignmentAgent());
+    // Primary Agents (4)
+    f.set('goal_intelligence', () => new GoalIntelligenceAgent());
+    f.set('performance_signal', () => new PerformanceSignalAgent());
+    f.set('review_drafter', () => new ReviewDrafterAgent());
+    f.set('compensation_promotion', () => new CompensationPromotionAgent());
+    f.set('one_on_one_advisor', () => new OneOnOneAdvisorAgent());
     // Bio-Performance (10)
     f.set('neuro_focus', () => new NeuroFocusAgent());
     f.set('circadian_sync', () => new CircadianSyncAgent());
@@ -424,6 +450,7 @@ class AgentOrchestrator {
     message: string,
     agentType?: string,
     conversationId?: string,
+    delegationDepth: number = 0,
   ): Promise<AgentResponse> {
     let resolvedType = agentType;
 
@@ -439,16 +466,17 @@ class AgentOrchestrator {
     if (!agent) {
       logger.warn('Unknown agent type, falling back to nlp_query', { requested: resolvedType });
       const fallback = this.getAgent('nlp_query')!;
-      return fallback.process(tenantId, userId, message, conversationId);
+      return fallback.process(tenantId, userId, message, conversationId, delegationDepth);
     }
 
     logger.info(`Routing to agent: ${resolvedType}`, {
       tenantId,
       userId,
       agentType: resolvedType,
+      delegationDepth,
     });
 
-    return agent.process(tenantId, userId, message, conversationId);
+    return agent.process(tenantId, userId, message, conversationId, delegationDepth);
   }
 
   /**
@@ -468,6 +496,15 @@ class AgentOrchestrator {
       );
 
       const cluster = clusterResponse.content.trim().toLowerCase().replace(/[^a-z_]/g, '') as ClusterId;
+
+      // R11: Log classification for accuracy monitoring
+      logger.info('Agent classification: stage 1 (cluster)', {
+        input: message.slice(0, 120),
+        cluster,
+        valid: CLUSTER_IDS.includes(cluster),
+        latencyMs: clusterResponse.latencyMs,
+        provider: clusterResponse.provider,
+      });
 
       if (!CLUSTER_IDS.includes(cluster)) {
         logger.warn('Cluster classification returned unknown cluster, defaulting to core', {
@@ -506,6 +543,15 @@ class AgentOrchestrator {
       const classified = response.content.trim().toLowerCase().replace(/[^a-z_]/g, '');
       const validAgents = CLUSTER_MAP[cluster];
 
+      // R11: Log classification for accuracy monitoring
+      logger.info('Agent classification: stage 2 (agent)', {
+        input: message.slice(0, 120),
+        cluster,
+        agent: classified,
+        valid: validAgents.includes(classified),
+        latencyMs: response.latencyMs,
+      });
+
       if (validAgents.includes(classified)) {
         return classified;
       }
@@ -528,7 +574,61 @@ class AgentOrchestrator {
   }
 
   /**
-   * Get list of all available agent types (52 total).
+   * Coordinate a multi-agent task across multiple specialists.
+   * Instead of broadcasting the same message to all agents,
+   * the coordinator decomposes the goal into sub-tasks and orchestrates execution.
+   */
+  async coordinateMessage(
+    tenantId: string,
+    userId: string,
+    message: string,
+    agentTypes: string[],
+    conversationId?: string,
+  ): Promise<AgentResponse & { coordinationResult?: CoordinationResult }> {
+    logger.info('Coordinated multi-agent request', {
+      tenantId,
+      userId,
+      agentTypes,
+      message: message.slice(0, 100),
+    });
+
+    const result = await agentCoordinator.coordinateTask(
+      tenantId,
+      userId,
+      message,
+      agentTypes,
+      conversationId,
+    );
+
+    return {
+      message: result.message,
+      conversationId: conversationId || '',
+      agentType: 'coordinator',
+      metadata: {
+        provider: 'coordinator',
+        model: 'multi-agent',
+        inputTokens: 0,
+        outputTokens: 0,
+        costCents: 0,
+        latencyMs: 0,
+      },
+      taskId: result.parentTaskId,
+      data: {
+        coordinationType: 'multi_agent',
+        totalAgents: result.totalAgents,
+        completedAgents: result.completedAgents,
+        subTasks: result.subTasks.map((st) => ({
+          agentType: st.agentType,
+          status: st.status,
+          taskId: st.taskId,
+        })),
+      },
+      coordinationResult: result,
+    };
+  }
+
+  /**
+   * Get list of all available agent types (70 total).
    */
   getAvailableAgents(): string[] {
     return [...AGENT_TYPES];

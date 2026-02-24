@@ -35,6 +35,12 @@ import {
   InformationCircleIcon,
   CheckIcon,
   ChevronDownIcon,
+  HandThumbUpIcon,
+  HeartIcon,
+  FireIcon,
+  HandRaisedIcon,
+  FaceFrownIcon,
+  StarIcon,
 } from '@heroicons/react/24/outline';
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/solid';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -66,7 +72,22 @@ const TYPE_COLORS = {
 
 const URL_REGEX = /https?:\/\/[^\s<]+[^\s<.,:;"')\]!?]/g;
 
-const EMOJI_LIST = ['👍', '❤️', '😂', '😮', '😢', '🔥', '👏', '🎉'];
+// Reaction identifiers — kept as strings for backward-compat with stored data.
+// Visual rendering uses heroicons instead of emoji glyphs.
+const EMOJI_LIST = ['👍', '❤️', '😂', '😮', '😢', '🔥', '👏', '🎉'] as const;
+
+type ReactionEmoji = typeof EMOJI_LIST[number];
+
+const REACTION_ICONS: Record<ReactionEmoji, React.FC<React.SVGProps<SVGSVGElement>>> = {
+  '👍': HandThumbUpIcon,
+  '❤️': HeartIcon,
+  '😂': FaceSmileIcon,
+  '😮': ExclamationCircleIcon,
+  '😢': FaceFrownIcon,
+  '🔥': FireIcon,
+  '👏': HandRaisedIcon,
+  '🎉': StarIcon,
+};
 
 function extractDomain(url: string): string {
   try {
@@ -187,12 +208,15 @@ function EmojiPicker({ onSelect, onClose }: { onSelect: (emoji: string) => void;
 
   return (
     <div ref={ref} className="absolute z-20 bottom-full mb-1 left-0 flex items-center gap-0.5 px-2 py-1.5 rounded-xl glass-deep shadow-lg border border-secondary-200/60 dark:border-secondary-700/50">
-      {EMOJI_LIST.map((emoji) => (
-        <button key={emoji} onClick={() => { onSelect(emoji); onClose(); }}
-          className="h-7 w-7 flex items-center justify-center rounded-lg text-base hover:bg-secondary-100 dark:hover:bg-secondary-700/50 transition-all hover:scale-110 active:scale-95">
-          {emoji}
-        </button>
-      ))}
+      {EMOJI_LIST.map((emoji) => {
+        const Icon = REACTION_ICONS[emoji as ReactionEmoji];
+        return (
+          <button key={emoji} onClick={() => { onSelect(emoji); onClose(); }}
+            className="h-7 w-7 flex items-center justify-center rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700/50 transition-all hover:scale-110 active:scale-95 text-secondary-500 dark:text-secondary-400 hover:text-secondary-700 dark:hover:text-secondary-200">
+            <Icon className="h-4 w-4" />
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -223,18 +247,23 @@ function ReactionBar({ reactions, userId, onToggle }: {
 
   return (
     <div className="flex flex-wrap gap-1 mt-1">
-      {Array.from(grouped.entries()).map(([emoji, { count, hasUser }]) => (
-        <button key={emoji} onClick={() => onToggle(emoji)}
-          className={clsx(
-            'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium transition-all',
-            hasUser
-              ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 ring-1 ring-primary-300 dark:ring-primary-700'
-              : 'bg-secondary-100 dark:bg-secondary-800/50 text-secondary-600 dark:text-secondary-400 ring-1 ring-secondary-200/60 dark:ring-secondary-700/30 hover:bg-secondary-200/80 dark:hover:bg-secondary-700/60'
-          )}>
-          <span>{emoji}</span>
-          <span>{count}</span>
-        </button>
-      ))}
+      {Array.from(grouped.entries()).map(([emoji, { count, hasUser }]) => {
+        const Icon = REACTION_ICONS[emoji as ReactionEmoji];
+        return (
+          <button key={emoji} onClick={() => onToggle(emoji)}
+            className={clsx(
+              'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium transition-all',
+              hasUser
+                ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 ring-1 ring-primary-300 dark:ring-primary-700'
+                : 'bg-secondary-100 dark:bg-secondary-800/50 text-secondary-600 dark:text-secondary-400 ring-1 ring-secondary-200/60 dark:ring-secondary-700/30 hover:bg-secondary-200/80 dark:hover:bg-secondary-700/60'
+            )}>
+            {Icon
+              ? <Icon className="h-3 w-3 flex-shrink-0" />
+              : <span>{emoji}</span>}
+            <span>{count}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -251,8 +280,8 @@ function LinkPreview({ url }: { url: string }) {
         <LinkIcon className="h-4 w-4 text-secondary-400 dark:text-secondary-500" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold text-secondary-500 dark:text-secondary-400 truncate">{domain}</p>
-        <p className="text-[10px] text-secondary-400 dark:text-secondary-500 truncate">{url}</p>
+        <p className="text-[11px] font-semibold text-secondary-500 dark:text-secondary-400 break-words">{domain}</p>
+        <p className="text-[10px] text-secondary-400 dark:text-secondary-500 break-words">{url}</p>
       </div>
       <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 flex-shrink-0 text-secondary-300 dark:text-secondary-600 group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors" />
     </a>
@@ -379,8 +408,8 @@ function NewChatDialog({ onClose, onSelectUser, onCreateGroup }: {
                     )}>
                     <Avatar name={`${u.firstName} ${u.lastName}`} avatarUrl={u.avatarUrl} size="sm" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-secondary-900 dark:text-white truncate">{u.firstName} {u.lastName}</p>
-                      <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{u.jobTitle || u.email}</p>
+                      <p className="text-sm font-semibold text-secondary-900 dark:text-white break-words">{u.firstName} {u.lastName}</p>
+                      <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{u.jobTitle || u.email}</p>
                     </div>
                     {tab === 'group' && selectedUsers.find((p) => p.id === u.id) && (
                       <span className="h-5 w-5 rounded-full bg-primary-500 flex items-center justify-center">
@@ -461,7 +490,7 @@ function ConversationItem({ convo, isActive, onClick, onlineUsers }: {
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 min-w-0">
             <p className={clsx(
-              'text-sm truncate',
+              'text-sm break-words',
               convo.hasUnread ? 'font-bold text-secondary-900 dark:text-white' : 'font-medium text-secondary-700 dark:text-secondary-300'
             )}>
               {convo.name || 'Chat'}
@@ -478,7 +507,7 @@ function ConversationItem({ convo, isActive, onClick, onlineUsers }: {
         </div>
         {convo.lastMessage && (
           <p className={clsx(
-            'text-xs truncate mt-0.5 leading-relaxed',
+            'text-xs break-words mt-0.5 leading-relaxed',
             convo.hasUnread ? 'text-secondary-600 dark:text-secondary-300' : 'text-secondary-400 dark:text-secondary-500'
           )}>
             {convo.type !== 'DIRECT' && convo.lastMessage.senderName && (
@@ -769,7 +798,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
                   : `${message.replyTo.sender.firstName} ${message.replyTo.sender.lastName}`}
               </span>
               {!message.replyTo.deletedAt && (
-                <p className="truncate opacity-80">{message.replyTo.content}</p>
+                <p className="break-wordsopacity-80">{message.replyTo.content}</p>
               )}
             </div>
           </div>
@@ -1021,17 +1050,17 @@ function SearchPanel({ onSelectResult, onClose }: {
             <Avatar name={`${result.sender.firstName} ${result.sender.lastName}`} avatarUrl={result.sender.avatarUrl} size="sm" />
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-xs font-semibold text-secondary-900 dark:text-white truncate">
+                <p className="text-xs font-semibold text-secondary-900 dark:text-white break-words">
                   {result.sender.firstName} {result.sender.lastName}
                 </p>
                 <span className="text-[10px] text-secondary-400 dark:text-secondary-500 flex-shrink-0 tabular-nums">
                   {formatTime(result.createdAt)}
                 </span>
               </div>
-              <p className="text-[11px] text-secondary-600 dark:text-secondary-300 line-clamp-2 mt-0.5 leading-relaxed">
+              <p className="text-[11px] text-secondary-600 dark:text-secondary-300 mt-0.5 leading-relaxed">
                 {highlightMatch(result.content, query)}
               </p>
-              <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-0.5 truncate">
+              <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-0.5 break-words">
                 in {result.conversationName || 'Direct Message'}
               </p>
             </div>
@@ -1102,7 +1131,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
                 <div className="flex items-center gap-2 min-w-0">
                   <Avatar name={`${msg.sender.firstName} ${msg.sender.lastName}`} avatarUrl={msg.sender.avatarUrl} size="sm" />
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold text-secondary-900 dark:text-white truncate">{msg.sender.firstName} {msg.sender.lastName}</p>
+                    <p className="text-xs font-semibold text-secondary-900 dark:text-white break-words">{msg.sender.firstName} {msg.sender.lastName}</p>
                     <p className="text-[10px] text-secondary-400">{formatTime(msg.createdAt)}</p>
                   </div>
                 </div>
@@ -1111,7 +1140,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
                   <MapPinIcon className="h-3.5 w-3.5" />
                 </button>
               </div>
-              <p className="text-xs text-secondary-600 dark:text-secondary-300 line-clamp-3 leading-relaxed">{msg.content}</p>
+              <p className="text-xs text-secondary-600 dark:text-secondary-300 leading-relaxed">{msg.content}</p>
               {msg.pinnedBy && (
                 <p className="text-[10px] text-secondary-400 dark:text-secondary-500 italic">
                   Pinned by {msg.pinnedBy.firstName} {msg.pinnedBy.lastName}
@@ -1179,7 +1208,7 @@ function ConversationInfoPanel({ convo, onlineUsers, onClose }: {
 
         {/* Members */}
         <div className="px-4 py-3">
-          <h5 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
+          <h5 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">
             Members ({convo.participants.length})
           </h5>
           <div className="space-y-1">
@@ -1192,13 +1221,13 @@ function ConversationInfoPanel({ convo, onlineUsers, onClose }: {
                   size="sm"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold text-secondary-900 dark:text-white truncate">{p.firstName} {p.lastName}</p>
+                  <p className="text-xs font-semibold text-secondary-900 dark:text-white break-words">{p.firstName} {p.lastName}</p>
                   <p className="text-[10px] text-secondary-400 dark:text-secondary-500">
                     {onlineUsers.has(p.userId) ? <span className="text-success-500">Online</span> : 'Offline'}
                   </p>
                 </div>
                 {p.role === 'ADMIN' && (
-                  <span className="text-[9px] font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Admin</span>
+                  <span className="text-[9px] font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 px-1.5 py-0.5 rounded-full tracking-wider">Admin</span>
                 )}
               </div>
             ))}
@@ -1251,7 +1280,7 @@ function ForwardMessageDialog({ message, conversations, onClose, onForward }: {
             <p className="text-[10px] font-semibold text-secondary-400 dark:text-secondary-500 mb-1">
               From: {message.sender.firstName} {message.sender.lastName}
             </p>
-            <p className="text-xs text-secondary-600 dark:text-secondary-300 line-clamp-2">{message.content}</p>
+            <p className="text-xs text-secondary-600 dark:text-secondary-300">{message.content}</p>
           </div>
         </div>
 
@@ -1284,7 +1313,7 @@ function ForwardMessageDialog({ message, conversations, onClose, onForward }: {
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-secondary-900 dark:text-white truncate">{convo.name || 'Chat'}</p>
+                    <p className="text-sm font-semibold text-secondary-900 dark:text-white break-words">{convo.name || 'Chat'}</p>
                     <p className="text-[10px] text-secondary-400 dark:text-secondary-500 capitalize">{convo.type.replace('_', ' ').toLowerCase()}</p>
                   </div>
                   <ShareIcon className="h-4 w-4 text-secondary-300 dark:text-secondary-600" />
@@ -1512,8 +1541,8 @@ function EmailComposeModal({ onClose }: { onClose: () => void }) {
                           className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-secondary-50 dark:hover:bg-secondary-700/40 transition-all">
                           <Avatar name={`${u.firstName} ${u.lastName}`} avatarUrl={u.avatarUrl} size="sm" />
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{u.firstName} {u.lastName}</p>
-                            <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{u.email}</p>
+                            <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{u.firstName} {u.lastName}</p>
+                            <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{u.email}</p>
                           </div>
                         </button>
                       ))}
@@ -1587,6 +1616,135 @@ function EmailComposeModal({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
+
+// ── Mock Data (shown when API returns no conversations) ──
+const MOCK_CONVERSATIONS: ConversationData[] = [
+  {
+    id: 'mock-conv-1',
+    type: 'DIRECT',
+    name: 'Sanjay N',
+    participants: [
+      { id: 'mock-u1', firstName: 'Sanjay', lastName: 'N', email: 'sanjay@company.com', avatarUrl: '', isOnline: true },
+    ],
+    lastMessage: {
+      id: 'mock-msg-1',
+      content: 'Hey! The sprint demo went really well. Can we discuss the feedback from stakeholders?',
+      senderId: 'mock-u1',
+      createdAt: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
+      type: 'TEXT',
+    } as any,
+    unreadCount: 2,
+    updatedAt: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
+    createdAt: '2026-01-15T10:00:00Z',
+    isMuted: false,
+    isPinned: true,
+  },
+  {
+    id: 'mock-conv-2',
+    type: 'GROUP',
+    name: 'Engineering Standup',
+    participants: [
+      { id: 'mock-u1', firstName: 'Sanjay', lastName: 'N', email: 'sanjay@company.com', avatarUrl: '', isOnline: true },
+      { id: 'mock-u2', firstName: 'Preethi', lastName: 'S', email: 'preethi@company.com', avatarUrl: '', isOnline: false },
+      { id: 'mock-u3', firstName: 'Danish', lastName: 'A G', email: 'danish@company.com', avatarUrl: '', isOnline: true },
+    ],
+    lastMessage: {
+      id: 'mock-msg-2',
+      content: 'Standup notes: All blockers resolved. Deploy scheduled for Thursday.',
+      senderId: 'mock-u2',
+      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      type: 'TEXT',
+    } as any,
+    unreadCount: 5,
+    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    createdAt: '2026-01-10T09:00:00Z',
+    isMuted: false,
+    isPinned: false,
+  },
+  {
+    id: 'mock-conv-3',
+    type: 'TEAM_CHANNEL',
+    name: 'product-engineering',
+    participants: [
+      { id: 'mock-u1', firstName: 'Sanjay', lastName: 'N', email: 'sanjay@company.com', avatarUrl: '', isOnline: true },
+      { id: 'mock-u4', firstName: 'Prasina', lastName: 'Sathish A', email: 'prasina@company.com', avatarUrl: '', isOnline: false },
+      { id: 'mock-u5', firstName: 'Danish', lastName: 'A G', email: 'danish@company.com', avatarUrl: '', isOnline: true },
+    ],
+    lastMessage: {
+      id: 'mock-msg-3',
+      content: 'New RFC posted: Microservices migration plan for Q2. Please review by Friday.',
+      senderId: 'mock-u4',
+      createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+      type: 'TEXT',
+    } as any,
+    unreadCount: 0,
+    updatedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+    createdAt: '2025-12-01T08:00:00Z',
+    isMuted: false,
+    isPinned: false,
+  },
+  {
+    id: 'mock-conv-4',
+    type: 'DIRECT',
+    name: 'Danish A G',
+    participants: [
+      { id: 'mock-u5', firstName: 'Danish', lastName: 'A G', email: 'danish@company.com', avatarUrl: '', isOnline: false },
+    ],
+    lastMessage: {
+      id: 'mock-msg-4',
+      content: 'Thanks for the infrastructure review. I\'ll update the terraform configs tonight.',
+      senderId: 'mock-u5',
+      createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      type: 'TEXT',
+    } as any,
+    unreadCount: 0,
+    updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: '2026-02-01T14:00:00Z',
+    isMuted: false,
+    isPinned: false,
+  },
+  {
+    id: 'mock-conv-5',
+    type: 'GROUP',
+    name: 'Q1 Planning',
+    participants: [
+      { id: 'mock-u1', firstName: 'Sanjay', lastName: 'N', email: 'sanjay@company.com', avatarUrl: '', isOnline: true },
+      { id: 'mock-u6', firstName: 'Preethi', lastName: 'S', email: 'preethi@company.com', avatarUrl: '', isOnline: true },
+    ],
+    lastMessage: {
+      id: 'mock-msg-5',
+      content: 'Budget approved! Let\'s finalize the hiring plan in our next meeting.',
+      senderId: 'mock-u6',
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      type: 'TEXT',
+    } as any,
+    unreadCount: 1,
+    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: '2026-01-20T11:00:00Z',
+    isMuted: true,
+    isPinned: false,
+  },
+  {
+    id: 'mock-conv-6',
+    type: 'TEAM_CHANNEL',
+    name: 'announcements',
+    participants: [
+      { id: 'mock-u4', firstName: 'Prasina', lastName: 'Sathish A', email: 'prasina@company.com', avatarUrl: '', isOnline: false },
+    ],
+    lastMessage: {
+      id: 'mock-msg-6',
+      content: 'Company all-hands moved to Friday 3PM. Updated calendar invite sent.',
+      senderId: 'mock-u4',
+      createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+      type: 'TEXT',
+    } as any,
+    unreadCount: 0,
+    updatedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: '2025-11-15T08:00:00Z',
+    isMuted: false,
+    isPinned: false,
+  },
+] as ConversationData[];
 
 // ════════════════════════════════════════════════════════════════════
 // ── Main Chat Page ──
@@ -1817,9 +1975,10 @@ export default function ChatPage() {
   })() : null;
 
   // Filtered conversations
+  const displayConversations = conversations.length > 0 ? conversations : MOCK_CONVERSATIONS;
   const filteredConvos = sidebarSearch.trim()
-    ? conversations.filter((c) => c.name?.toLowerCase().includes(sidebarSearch.toLowerCase()))
-    : conversations;
+    ? displayConversations.filter((c) => c.name?.toLowerCase().includes(sidebarSearch.toLowerCase()))
+    : displayConversations;
 
   return (
     <div className="flex h-[calc(100vh-7.5rem)] overflow-hidden rounded-2xl card shadow-lg">
@@ -1839,7 +1998,7 @@ export default function ChatPage() {
               </div>
               <div>
                 <h2 className="text-base font-display font-bold text-secondary-900 dark:text-white">Messages</h2>
-                <p className="text-[10px] text-secondary-400 dark:text-secondary-500 font-medium">{conversations.length} conversations</p>
+                <p className="text-[10px] text-secondary-400 dark:text-secondary-500 font-medium">{displayConversations.length} conversations</p>
               </div>
             </div>
             <div className="flex items-center gap-1.5">
@@ -1912,7 +2071,7 @@ export default function ChatPage() {
                 isOnline={activeConvo.type === 'DIRECT' ? onlineUsers.has(activeConvo.participants.find((p) => p.userId !== user?.id)?.userId || '') : undefined}
               />
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-display font-bold text-secondary-900 dark:text-white truncate">{activeConvo.name || 'Chat'}</h3>
+                <h3 className="text-sm font-display font-bold text-secondary-900 dark:text-white break-words">{activeConvo.name || 'Chat'}</h3>
                 <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">
                   {activeConvo.type === 'DIRECT'
                     ? (onlineUsers.has(activeConvo.participants.find((p) => p.userId !== user?.id)?.userId || '')
@@ -2008,7 +2167,7 @@ export default function ChatPage() {
                           {showDate && (
                             <div className="flex items-center gap-3 py-3">
                               <div className="flex-1 h-px bg-secondary-200/60 dark:bg-secondary-700/30" />
-                              <span className="text-[10px] font-semibold text-secondary-400 dark:text-secondary-500 uppercase tracking-wider">
+                              <span className="text-[10px] font-semibold text-secondary-400 dark:text-secondary-500 tracking-wider">
                                 {(() => {
                                   const d = new Date(msg.createdAt);
                                   const today = new Date();
@@ -2063,7 +2222,7 @@ export default function ChatPage() {
                         <p className="text-[11px] font-semibold text-primary-600 dark:text-primary-400">
                           Replying to {replyingTo.sender.firstName} {replyingTo.sender.lastName}
                         </p>
-                        <p className="text-[11px] text-secondary-500 dark:text-secondary-400 truncate">{replyingTo.content}</p>
+                        <p className="text-[11px] text-secondary-500 dark:text-secondary-400 break-words">{replyingTo.content}</p>
                       </div>
                       <button onClick={() => setReplyingTo(null)}
                         className="rounded-lg p-1 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700/50 transition-all">

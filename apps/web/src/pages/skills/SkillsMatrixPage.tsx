@@ -506,13 +506,15 @@ export function SkillsMatrixPage() {
 
   return (
     <div className="space-y-6 pb-8">
-      {/* Page Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600 via-primary-500 to-cyan-500 p-6 text-white shadow-xl">
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+      {/* Page Header — frosted glassmorphism */}
+      <div className="relative overflow-hidden rounded-2xl glass-banner p-6 shadow-lg frosted-noise">
+        {/* Decorative gradient orbs */}
+        <div className="absolute -top-16 -right-16 w-56 h-56 bg-gradient-to-br from-cyan-500/20 to-blue-500/15 rounded-full blur-3xl" />
+        <div className="absolute -bottom-12 -left-12 w-44 h-44 bg-gradient-to-tr from-indigo-500/15 to-cyan-500/10 rounded-full blur-3xl" />
         <div className="relative z-10 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Skills Matrix</h1>
-            <p className="text-white/80 text-sm mt-1">
+            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Skills Matrix</h1>
+            <p className="text-secondary-500 dark:text-secondary-400 text-sm mt-1">
               Track, assess, and develop skills across your organization
             </p>
           </div>
@@ -523,7 +525,7 @@ export function SkillsMatrixPage() {
               resetForm();
               setShowAssessmentModal(true);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl text-sm font-medium transition-colors border border-white/20"
+            className="flex items-center gap-2 px-4 py-2 bg-primary-500/10 dark:bg-white/10 hover:bg-primary-500/20 dark:hover:bg-white/20 backdrop-blur-sm rounded-xl text-sm font-medium text-primary-700 dark:text-white transition-colors border border-primary-200/40 dark:border-white/15"
           >
             <PlusIcon className="w-4 h-4" />
             Add Assessment
@@ -620,7 +622,7 @@ export function SkillsMatrixPage() {
 
                             {/* Skill Name */}
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                              <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                                 {skill.skillName}
                               </p>
                             </div>
@@ -790,7 +792,7 @@ export function SkillsMatrixPage() {
                     : '0'}
                 </p>
                 <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
-                  Avg Rating
+                  Average Rating
                 </p>
               </div>
               <div className="text-center p-4 rounded-xl bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
@@ -915,7 +917,7 @@ export function SkillsMatrixPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { label: 'Total Skills Tracked', value: totalSkillsTracked, color: 'text-primary-600 dark:text-primary-400' },
-              { label: 'Avg Skill Level', value: (avgSkillLevel ?? 0).toFixed(1), color: 'text-emerald-600 dark:text-emerald-400' },
+              { label: 'Average Skill Level', value: (avgSkillLevel ?? 0).toFixed(1), color: 'text-emerald-600 dark:text-emerald-400' },
               { label: 'Critical Gaps', value: criticalGaps, color: 'text-red-600 dark:text-red-400' },
               { label: 'Improvement Rate', value: `${improvementRate}%`, color: 'text-violet-600 dark:text-violet-400' },
             ].map((card) => (
@@ -967,7 +969,7 @@ export function SkillsMatrixPage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">
-                        <span>Avg: {(gap.avgRating ?? 0).toFixed(1)}</span>
+                        <span>Average: {(gap.avgRating ?? 0).toFixed(1)}</span>
                         <span>Target: {gap.targetLevel}</span>
                         <span className="font-semibold text-red-600 dark:text-red-400">
                           Gap: {(gap.gap ?? 0).toFixed(1)}

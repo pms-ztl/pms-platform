@@ -163,9 +163,10 @@ export class PerformanceMathController {
       }
 
       if ('noChildren' in result) {
-        return res.status(400).json({
-          success: false,
-          error: { code: 'NO_CHILDREN', message: 'No child goals found for this parent goal' },
+        // A goal with no sub-goals is a valid state — return empty data instead of an error
+        return res.status(200).json({
+          success: true,
+          data: null,
         });
       }
 

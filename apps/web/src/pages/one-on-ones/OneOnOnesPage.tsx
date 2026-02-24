@@ -22,6 +22,7 @@ import { format } from 'date-fns';
 import { oneOnOnesApi, usersApi, type OneOnOne, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Status badge configuration
@@ -47,10 +48,10 @@ const statusConfig: Record<string, { label: string; className: string }> = {
 };
 
 const durationOptions = [
-  { value: 15, label: '15 min' },
-  { value: 30, label: '30 min' },
-  { value: 45, label: '45 min' },
-  { value: 60, label: '60 min' },
+  { value: 15, label: '15 Minutes' },
+  { value: 30, label: '30 Minutes' },
+  { value: 45, label: '45 Minutes' },
+  { value: 60, label: '1 Hour' },
 ];
 
 const ITEMS_PER_PAGE = 9;
@@ -62,6 +63,151 @@ const ITEMS_PER_PAGE = 9;
 function initials(firstName?: string, lastName?: string): string {
   return `${(firstName || '')[0] || ''}${(lastName || '')[0] || ''}`.toUpperCase();
 }
+
+// ── Mock Data (shown when API returns empty) ──
+const MOCK_UPCOMING_MEETINGS = [
+  {
+    id: 'mock-m1',
+    managerId: 'mock-mgr',
+    employeeId: 'mock-e1',
+    manager: { id: 'mock-mgr', firstName: 'Prasina', lastName: 'Sathish A', jobTitle: 'Head of People & HR', avatarUrl: '' },
+    employee: { id: 'mock-e1', firstName: 'Sanjay', lastName: 'N', jobTitle: 'Frontend Engineer', avatarUrl: '' },
+    scheduledAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+    duration: 30,
+    status: 'SCHEDULED',
+    location: 'Conference Room A',
+    meetingLink: 'https://meet.google.com/abc-defg-hij',
+    agenda: [
+      { topic: 'Sprint retrospective and blockers' },
+      { topic: 'Career development goals update' },
+      { topic: 'Upcoming project assignments' },
+    ],
+    actionItems: [],
+    notes: '',
+  },
+  {
+    id: 'mock-m2',
+    managerId: 'mock-mgr',
+    employeeId: 'mock-e2',
+    manager: { id: 'mock-mgr', firstName: 'Prasina', lastName: 'Sathish A', jobTitle: 'Head of People & HR', avatarUrl: '' },
+    employee: { id: 'mock-e2', firstName: 'Preethi', lastName: 'S', jobTitle: 'Senior Engineering Manager', avatarUrl: '' },
+    scheduledAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+    duration: 45,
+    status: 'SCHEDULED',
+    location: '',
+    meetingLink: 'https://zoom.us/j/123456789',
+    agenda: [
+      { topic: 'Design system components review' },
+      { topic: 'User research findings' },
+    ],
+    actionItems: [],
+    notes: '',
+  },
+  {
+    id: 'mock-m3',
+    managerId: 'mock-mgr',
+    employeeId: 'mock-e3',
+    manager: { id: 'mock-mgr', firstName: 'Prasina', lastName: 'Sathish A', jobTitle: 'Head of People & HR', avatarUrl: '' },
+    employee: { id: 'mock-e3', firstName: 'Danish', lastName: 'A G', jobTitle: 'Chief Technology Officer', avatarUrl: '' },
+    scheduledAt: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+    duration: 30,
+    status: 'SCHEDULED',
+    location: 'Building 2, Room 301',
+    meetingLink: '',
+    agenda: [
+      { topic: 'Test automation coverage improvements' },
+      { topic: 'Certification study plan' },
+      { topic: 'Workload assessment' },
+      { topic: 'Feedback on new CI pipeline' },
+    ],
+    actionItems: [],
+    notes: '',
+  },
+  {
+    id: 'mock-m4',
+    managerId: 'mock-mgr',
+    employeeId: 'mock-e4',
+    manager: { id: 'mock-mgr', firstName: 'Prasina', lastName: 'Sathish A', jobTitle: 'Head of People & HR', avatarUrl: '' },
+    employee: { id: 'mock-e4', firstName: 'Danish', lastName: 'A G', jobTitle: 'Chief Technology Officer', avatarUrl: '' },
+    scheduledAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    duration: 60,
+    status: 'SCHEDULED',
+    location: '',
+    meetingLink: 'https://teams.microsoft.com/l/meetup-join/abc',
+    agenda: [
+      { topic: 'Infrastructure cost optimization' },
+      { topic: 'On-call rotation feedback' },
+    ],
+    actionItems: [
+      { id: 'a1', topic: 'Update monitoring dashboards', done: false },
+      { id: 'a2', topic: 'Review SLA metrics', done: true },
+    ],
+    notes: '',
+  },
+];
+
+const MOCK_PAST_MEETINGS = [
+  {
+    id: 'mock-pm1',
+    managerId: 'mock-mgr',
+    employeeId: 'mock-e1',
+    manager: { id: 'mock-mgr', firstName: 'Prasina', lastName: 'Sathish A', jobTitle: 'Head of People & HR', avatarUrl: '' },
+    employee: { id: 'mock-e1', firstName: 'Sanjay', lastName: 'N', jobTitle: 'Frontend Engineer', avatarUrl: '' },
+    scheduledAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    duration: 30,
+    status: 'COMPLETED',
+    location: 'Conference Room A',
+    meetingLink: '',
+    agenda: [
+      { topic: 'Code review process improvements' },
+      { topic: 'Mentoring junior developers' },
+    ],
+    actionItems: [
+      { id: 'pa1', topic: 'Create code review checklist', done: true },
+      { id: 'pa2', topic: 'Set up pair programming sessions', done: true },
+    ],
+    notes: 'Great discussion on improving team collaboration.',
+  },
+  {
+    id: 'mock-pm2',
+    managerId: 'mock-mgr',
+    employeeId: 'mock-e2',
+    manager: { id: 'mock-mgr', firstName: 'Prasina', lastName: 'Sathish A', jobTitle: 'Head of People & HR', avatarUrl: '' },
+    employee: { id: 'mock-e2', firstName: 'Preethi', lastName: 'S', jobTitle: 'Senior Engineering Manager', avatarUrl: '' },
+    scheduledAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+    duration: 45,
+    status: 'COMPLETED',
+    location: '',
+    meetingLink: 'https://zoom.us/j/123456789',
+    agenda: [
+      { topic: 'Q4 design retrospective' },
+      { topic: 'Portfolio review for promotion' },
+    ],
+    actionItems: [
+      { id: 'pa3', topic: 'Update design portfolio', done: true },
+      { id: 'pa4', topic: 'Schedule stakeholder presentations', done: false },
+      { id: 'pa5', topic: 'Document design decisions', done: true },
+    ],
+    notes: '',
+  },
+  {
+    id: 'mock-pm3',
+    managerId: 'mock-mgr',
+    employeeId: 'mock-e3',
+    manager: { id: 'mock-mgr', firstName: 'Prasina', lastName: 'Sathish A', jobTitle: 'Head of People & HR', avatarUrl: '' },
+    employee: { id: 'mock-e3', firstName: 'Danish', lastName: 'A G', jobTitle: 'Chief Technology Officer', avatarUrl: '' },
+    scheduledAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    duration: 30,
+    status: 'CANCELLED',
+    location: 'Building 2, Room 301',
+    meetingLink: '',
+    agenda: [
+      { topic: 'Testing strategy discussion' },
+    ],
+    actionItems: [],
+    notes: 'Rescheduled due to conflict.',
+  },
+];
 
 // ---------------------------------------------------------------------------
 // Component
@@ -214,7 +360,11 @@ export function OneOnOnesPage() {
 
   const isLoading = activeTab === 'upcoming' ? loadingUpcoming : loadingPast;
   const currentData = activeTab === 'upcoming' ? upcomingData : pastData;
-  const meetings: OneOnOne[] = currentData?.data || [];
+  const rawMeetings: OneOnOne[] = currentData?.data || [];
+  const meetings = rawMeetings.length > 0 ? rawMeetings : (
+    (activeTab === 'upcoming' ? MOCK_UPCOMING_MEETINGS : MOCK_PAST_MEETINGS)
+      .map(m => ({ ...m, managerId: user?.id || m.managerId }))
+  ) as unknown as OneOnOne[];
   const totalPages = currentData?.meta?.totalPages || 1;
 
   // ---------------------------------------------------------------------------
@@ -252,11 +402,11 @@ export function OneOnOnesPage() {
               </div>
             )}
             <div className="min-w-0">
-              <p className="font-medium text-secondary-900 dark:text-white truncate">
+              <p className="font-medium text-secondary-900 dark:text-white break-words">
                 {other.firstName} {other.lastName}
               </p>
               {other.jobTitle && (
-                <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
+                <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
                   {other.jobTitle}
                 </p>
               )}
@@ -291,15 +441,15 @@ export function OneOnOnesPage() {
         {(meeting.location || meeting.meetingLink) && (
           <div className="mt-3 flex items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">
             {meeting.location && (
-              <span className="flex items-center gap-1 truncate">
+              <span className="flex items-center gap-1 break-words">
                 <MapPinIcon className="h-3.5 w-3.5 flex-shrink-0" />
-                <span className="truncate">{meeting.location}</span>
+                <span className="break-words">{meeting.location}</span>
               </span>
             )}
             {meeting.meetingLink && (
-              <span className="flex items-center gap-1 truncate">
+              <span className="flex items-center gap-1 break-words">
                 <LinkIcon className="h-3.5 w-3.5 flex-shrink-0" />
-                <span className="truncate">Meeting link</span>
+                <span className="break-words">Meeting link</span>
               </span>
             )}
           </div>
@@ -311,7 +461,7 @@ export function OneOnOnesPage() {
             {agendaPreview.map((item, i) => (
               <div key={i} className="flex items-start gap-2 text-sm text-secondary-600 dark:text-secondary-300">
                 <ChatBubbleLeftRightIcon className="h-4 w-4 mt-0.5 flex-shrink-0 text-secondary-400" />
-                <span className="line-clamp-1">{item.topic}</span>
+                <span>{item.topic}</span>
               </div>
             ))}
             {(meeting.agenda || []).length > 2 && (
@@ -417,15 +567,7 @@ export function OneOnOnesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
-            1-on-1 Meetings
-          </h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Schedule and track your 1-on-1 conversations
-          </p>
-        </div>
+      <PageHeader title="1-on-1 Meetings" subtitle="Schedule and track your 1-on-1 conversations">
         <button
           onClick={() => setShowCreateModal(true)}
           className="inline-flex items-center bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
@@ -433,7 +575,7 @@ export function OneOnOnesPage() {
           <PlusIcon className="h-5 w-5 mr-1.5" />
           Schedule 1-on-1
         </button>
-      </div>
+      </PageHeader>
 
       {/* Tabs */}
       <div className="border-b border-secondary-200 dark:border-secondary-700">

@@ -13,7 +13,7 @@
  * Detects burnout before it happens, predicts attrition, and prescribes interventions.
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import { isManager } from '../../../utils/roles';
 import {
   queryBurnoutRisk,
@@ -52,7 +52,7 @@ Analysis principles:
 
 // ── Agent Class ─────────────────────────────────────────────
 
-export class WorkforceIntelAgent extends BaseAgent {
+export class WorkforceIntelAgent extends AgenticBaseAgent {
   constructor() {
     super('workforce_intel', SYSTEM_PROMPT);
   }

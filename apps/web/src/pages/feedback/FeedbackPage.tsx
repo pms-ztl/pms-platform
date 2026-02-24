@@ -19,6 +19,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { feedbackApi, usersApi, type Feedback, type CreateFeedbackInput, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 const feedbackTypeConfig: Record<string, { label: string; color: string; icon: React.ElementType }> = {
   PRAISE: { label: 'Praise', color: 'bg-success-100 text-success-800', icon: SparklesIcon },
@@ -285,21 +286,15 @@ export function FeedbackPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Feedback</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">Give and receive continuous feedback</p>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => setShowRequestFeedbackModal(true)} className="btn-secondary">
-            Request Feedback
-          </button>
-          <button onClick={() => setShowGiveFeedbackModal(true)} className="btn-primary">
-            <PlusIcon className="h-5 w-5 mr-2" />
-            Give Feedback
-          </button>
-        </div>
-      </div>
+      <PageHeader title="Feedback" subtitle="Give and receive continuous feedback">
+        <button onClick={() => setShowRequestFeedbackModal(true)} className="btn-secondary">
+          Request Feedback
+        </button>
+        <button onClick={() => setShowGiveFeedbackModal(true)} className="btn-primary">
+          <PlusIcon className="h-5 w-5 mr-2" />
+          Give Feedback
+        </button>
+      </PageHeader>
 
       {/* Stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

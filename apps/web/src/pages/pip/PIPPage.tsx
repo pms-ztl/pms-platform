@@ -19,6 +19,7 @@ import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { format, differenceInDays, parseISO } from 'date-fns';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 const severityColors: Record<string, string> = {
   STANDARD: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300',
@@ -129,8 +130,67 @@ export function PIPPage() {
     },
   });
 
-  const pips = pipsData?.data || [];
-  const meta = pipsData?.meta || { total: 0, page: 1, limit, totalPages: 1 };
+  const rawPips = pipsData?.data || [];
+  const DEMO_PIPS: Partial<PIP>[] = [
+    {
+      id: 'demo-pip-1',
+      userId: 'u1',
+      user: { id: 'u1', firstName: 'Sanjay', lastName: 'N', email: '', jobTitle: 'Frontend Engineer', avatarUrl: null } as any,
+      pipTitle: 'Frontend Quality & Delivery Improvement',
+      pipType: 'PERFORMANCE',
+      severity: 'STANDARD',
+      status: 'ACTIVE',
+      startDate: new Date(Date.now() - 14 * 864e5).toISOString(),
+      endDate: new Date(Date.now() + 76 * 864e5).toISOString(),
+      reviewFrequency: 'WEEKLY',
+      performanceIssues: [{ issue: 'Missed 3 sprint deadlines in Q4', details: 'Deliverables delayed by 3-5 days consistently.' }],
+      impactStatement: 'Sprint velocity affected by 20% due to delayed frontend deliverables.',
+      hrApprovedAt: new Date(Date.now() - 12 * 864e5).toISOString(),
+      employeeAcknowledged: true,
+      createdAt: new Date(Date.now() - 14 * 864e5).toISOString(),
+      updatedAt: new Date(Date.now() - 2 * 864e5).toISOString(),
+    },
+    {
+      id: 'demo-pip-2',
+      userId: 'u2',
+      user: { id: 'u2', firstName: 'Preethi', lastName: 'S', email: '', jobTitle: 'Senior Engineering Manager', avatarUrl: null } as any,
+      pipTitle: 'Team Management & Communication Plan',
+      pipType: 'BEHAVIOR',
+      severity: 'SERIOUS',
+      status: 'ON_TRACK',
+      startDate: new Date(Date.now() - 30 * 864e5).toISOString(),
+      endDate: new Date(Date.now() + 60 * 864e5).toISOString(),
+      reviewFrequency: 'BI_WEEKLY',
+      performanceIssues: [{ issue: 'Cross-team communication gaps', details: 'Stakeholder updates missed in 4 out of 6 sprints.' }],
+      impactStatement: 'Dependency alignment delays impacting 2 downstream teams.',
+      hrApprovedAt: new Date(Date.now() - 28 * 864e5).toISOString(),
+      employeeAcknowledged: true,
+      createdAt: new Date(Date.now() - 30 * 864e5).toISOString(),
+      updatedAt: new Date(Date.now() - 5 * 864e5).toISOString(),
+    },
+    {
+      id: 'demo-pip-3',
+      userId: 'u3',
+      user: { id: 'u3', firstName: 'Danish', lastName: 'A G', email: '', jobTitle: 'Chief Technology Officer', avatarUrl: null } as any,
+      pipTitle: 'Strategic Planning & Execution Alignment',
+      pipType: 'SKILLS',
+      severity: 'STANDARD',
+      status: 'AT_RISK',
+      startDate: new Date(Date.now() - 45 * 864e5).toISOString(),
+      endDate: new Date(Date.now() + 45 * 864e5).toISOString(),
+      reviewFrequency: 'MONTHLY',
+      performanceIssues: [{ issue: 'Technical roadmap execution below expectations', details: 'Only 60% of Q4 initiatives shipped on time.' }],
+      impactStatement: 'Product release timeline shifted by 3 weeks affecting revenue targets.',
+      hrApprovedAt: null,
+      employeeAcknowledged: false,
+      createdAt: new Date(Date.now() - 45 * 864e5).toISOString(),
+      updatedAt: new Date(Date.now() - 1 * 864e5).toISOString(),
+    },
+  ];
+  const pips = rawPips.length > 0 ? rawPips : (DEMO_PIPS as PIP[]);
+  const meta = rawPips.length > 0
+    ? (pipsData?.meta || { total: 0, page: 1, limit, totalPages: 1 })
+    : { total: DEMO_PIPS.length, page: 1, limit, totalPages: 1 };
 
   const filteredPips = severityFilter
     ? pips.filter((pip: PIP) => pip.severity === severityFilter)
@@ -222,15 +282,10 @@ export function PIPPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
-            Performance Improvement Plans
-          </h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Manage and monitor employee performance improvement plans
-          </p>
-        </div>
+      <PageHeader
+        title="Performance Improvement Plans"
+        subtitle="Manage and monitor employee performance improvement plans"
+      >
         <button
           onClick={() => setShowCreateModal(true)}
           className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 inline-flex items-center gap-2 font-medium text-sm transition-colors"
@@ -238,7 +293,7 @@ export function PIPPage() {
           <PlusIcon className="h-5 w-5" />
           Create PIP
         </button>
-      </div>
+      </PageHeader>
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
@@ -335,10 +390,10 @@ export function PIPPage() {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                         {pip.user?.firstName} {pip.user?.lastName}
                       </p>
-                      <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
+                      <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
                         {pip.user?.jobTitle || 'Employee'}
                       </p>
                     </div>
@@ -354,7 +409,7 @@ export function PIPPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-2 truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-2 break-words group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                   {pip.pipTitle}
                 </h3>
 

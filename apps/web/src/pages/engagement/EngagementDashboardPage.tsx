@@ -168,14 +168,14 @@ function TrendIndicator({
     return (
       <span className="inline-flex items-center gap-1 text-green-600 dark:text-green-400">
         <ArrowTrendingUpIcon className={iconClass} />
-        {change != null && <span className={textClass}>+{(change ?? 0).toFixed(1)}%</span>}
+        {change != null && <span className={textClass}>+{Number(change ?? 0).toFixed(1)}%</span>}
       </span>
     );
   }
   return (
     <span className="inline-flex items-center gap-1 text-red-600 dark:text-red-400">
       <ArrowTrendingDownIcon className={iconClass} />
-      {change != null && <span className={textClass}>{(change ?? 0).toFixed(1)}%</span>}
+      {change != null && <span className={textClass}>{Number(change ?? 0).toFixed(1)}%</span>}
     </span>
   );
 }
@@ -195,11 +195,11 @@ function getScoreColor(score: number): string {
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800">
-      <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400">{label}</p>
+    <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+      <p className="font-medium text-slate-300">{label}</p>
       {payload.map((entry: any, idx: number) => (
         <p key={idx} className="text-sm font-semibold" style={{ color: entry.color }}>
-          {entry.name}: {typeof entry.value === 'number' ? (entry.value ?? 0).toFixed(1) : entry.value}
+          {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(1) : Number(entry.value ?? 0).toFixed(1)}
         </p>
       ))}
     </div>
@@ -352,9 +352,9 @@ export function EngagementDashboardPage() {
       .slice()
       .sort((a, b) => (b.averageScore ?? 0) - (a.averageScore ?? 0))
       .map((d) => ({
-        name: d.departmentName.length > 14 ? d.departmentName.slice(0, 12) + '...' : d.departmentName,
+        name: d.departmentName,
         fullName: d.departmentName,
-        score: Number((d.averageScore ?? 0).toFixed(2)),
+        score: Number(Number(d.averageScore ?? 0).toFixed(2)),
         atRisk: d.atRiskCount,
         id: d.departmentId,
       }));
@@ -387,15 +387,15 @@ export function EngagementDashboardPage() {
         </div>
       ) : overview ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Avg Engagement Score */}
+          {/* Average Engagement Score */}
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-secondary-500 dark:text-secondary-400">
-                  Avg Engagement Score
+                  Average Engagement Score
                 </p>
                 <p className="text-2xl font-bold mt-1" style={{ color: getScoreColor(overview.averageScore ?? 0) }}>
-                  {(overview.averageScore ?? 0).toFixed(1)}
+                  {Number(overview.averageScore ?? 0).toFixed(1)}
                   <span className="text-sm font-normal text-secondary-400 dark:text-secondary-500">/5.0</span>
                 </p>
               </div>
@@ -436,7 +436,7 @@ export function EngagementDashboardPage() {
                   Participation Rate
                 </p>
                 <p className="text-2xl font-bold text-secondary-900 dark:text-white mt-1">
-                  {(overview.participationRate ?? 0).toFixed(0)}%
+                  {Number(overview.participationRate ?? 0).toFixed(0)}%
                 </p>
               </div>
               <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
@@ -510,11 +510,11 @@ export function EngagementDashboardPage() {
                     key={level.key}
                     className={clsx(level.bgClass, 'transition-all duration-500 relative group')}
                     style={{ width: `${pct}%` }}
-                    title={`${level.label}: ${count} (${(pct ?? 0).toFixed(1)}%)`}
+                    title={`${level.label}: ${count} (${Number(pct ?? 0).toFixed(1)}%)`}
                   >
                     {pct >= 8 && (
                       <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-white">
-                        {(pct ?? 0).toFixed(0)}%
+                        {Number(pct ?? 0).toFixed(0)}%
                       </span>
                     )}
                   </div>
@@ -593,7 +593,7 @@ export function EngagementDashboardPage() {
                   className="fill-secondary-500 dark:fill-secondary-400"
                   tick={{ fontSize: 12 }}
                 />
-                <Tooltip content={<ChartTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 <Line
                   type="monotone"
                   dataKey="averageScore"
@@ -601,7 +601,7 @@ export function EngagementDashboardPage() {
                   strokeWidth={2.5}
                   dot={{ fill: '#3b82f6', strokeWidth: 0, r: 4 }}
                   activeDot={{ r: 6, strokeWidth: 2, stroke: '#fff' }}
-                  name="Avg Score"
+                  name="Average Score"
                 />
                 <Line
                   type="monotone"
@@ -666,18 +666,19 @@ export function EngagementDashboardPage() {
                     tick={{ fontSize: 12 }}
                   />
                   <Tooltip
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                     content={({ active, payload }) => {
                       if (!active || !payload?.length) return null;
                       const item = payload[0].payload;
                       return (
-                        <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800">
-                          <p className="text-sm font-medium text-secondary-900 dark:text-white">
+                        <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl">
+                          <p className="text-sm font-medium text-white">
                             {item.fullName}
                           </p>
                           <p className="text-sm" style={{ color: getScoreColor(item.score) }}>
                             Score: {item.score}
                           </p>
-                          <p className="text-xs text-secondary-500 dark:text-secondary-400">
+                          <p className="text-xs text-slate-300">
                             At-Risk: {item.atRisk}
                           </p>
                         </div>
@@ -747,22 +748,22 @@ export function EngagementDashboardPage() {
             <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     Department
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     Employees
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
-                    Avg Score
+                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
+                    Average Score
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     Top Level
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     At-Risk
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     Score Bar
                   </th>
                 </tr>
@@ -792,7 +793,7 @@ export function EngagementDashboardPage() {
                           className="text-sm font-bold"
                           style={{ color: getScoreColor(dept.averageScore ?? 0) }}
                         >
-                          {(dept.averageScore ?? 0).toFixed(2)}
+                          {Number(dept.averageScore ?? 0).toFixed(2)}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-center">
@@ -802,7 +803,7 @@ export function EngagementDashboardPage() {
                             SCORE_LEVEL_STYLES[dept.topLevel] || 'text-secondary-500'
                           )}
                         >
-                          {dept.topLevel.replace('_', ' ')}
+                          {(dept.topLevel || 'Unknown').replace('_', ' ')}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-center">
@@ -862,36 +863,36 @@ export function EngagementDashboardPage() {
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   <th
-                    className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300 select-none"
+                    className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300 select-none"
                     onClick={() => toggleSort('name')}
                   >
                     Employee <SortIcon field="name" />
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     Job Title
                   </th>
                   <th
-                    className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300 select-none"
+                    className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300 select-none"
                     onClick={() => toggleSort('department')}
                   >
                     Department <SortIcon field="department" />
                   </th>
                   <th
-                    className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300 select-none"
+                    className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300 select-none"
                     onClick={() => toggleSort('score')}
                   >
                     Score <SortIcon field="score" />
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     Level
                   </th>
                   <th
-                    className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300 select-none"
+                    className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300 select-none"
                     onClick={() => toggleSort('riskLevel')}
                   >
                     Risk <SortIcon field="riskLevel" />
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     Trend
                   </th>
                 </tr>
@@ -918,7 +919,7 @@ export function EngagementDashboardPage() {
                         className="text-sm font-bold"
                         style={{ color: getScoreColor(emp.overallScore ?? 0) }}
                       >
-                        {(emp.overallScore ?? 0).toFixed(2)}
+                        {Number(emp.overallScore ?? 0).toFixed(2)}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -928,7 +929,7 @@ export function EngagementDashboardPage() {
                           SCORE_LEVEL_STYLES[emp.scoreLevel] || 'text-secondary-500'
                         )}
                       >
-                        {emp.scoreLevel.replace('_', ' ')}
+                        {(emp.scoreLevel || 'Unknown').replace('_', ' ')}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -1056,8 +1057,8 @@ export function EngagementDashboardPage() {
                             ) : (
                               <ArrowTrendingDownIcon className="h-3 w-3" />
                             )}
-                            {(event.engagementImpact ?? 0) > 0 ? '+' : ''}
-                            {(event.engagementImpact ?? 0).toFixed(1)}
+                            {Number(event.engagementImpact ?? 0) > 0 ? '+' : ''}
+                            {Number(event.engagementImpact ?? 0).toFixed(1)}
                           </span>
                           <span className="text-xs text-secondary-400 dark:text-secondary-500 whitespace-nowrap">
                             {relativeTime}
@@ -1065,7 +1066,7 @@ export function EngagementDashboardPage() {
                         </div>
                       </div>
                       <div className="mt-1 flex items-center gap-2">
-                        <span className="inline-block px-1.5 py-0.5 text-[10px] uppercase tracking-wider font-medium rounded bg-secondary-100 text-secondary-500 dark:bg-secondary-700 dark:text-secondary-400">
+                        <span className="inline-block px-1.5 py-0.5 text-[10px] tracking-wider font-medium rounded bg-secondary-100 text-secondary-500 dark:bg-secondary-700 dark:text-secondary-400">
                           {event.eventCategory.replace('_', ' ')}
                         </span>
                       </div>

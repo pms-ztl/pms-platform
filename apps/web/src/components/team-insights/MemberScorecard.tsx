@@ -99,7 +99,7 @@ export function MemberScorecard({ members, atRiskEmployees, className }: MemberS
             <tr>
               <th
                 onClick={() => toggleSort('name')}
-                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300"
+                className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300"
               >
                 <span className="inline-flex items-center gap-1">
                   Name {sortField === 'name' && <SortIcon className="h-3 w-3" />}
@@ -107,21 +107,21 @@ export function MemberScorecard({ members, atRiskEmployees, className }: MemberS
               </th>
               <th
                 onClick={() => toggleSort('score')}
-                className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300"
+                className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300"
               >
                 <span className="inline-flex items-center gap-1">
                   Score {sortField === 'score' && <SortIcon className="h-3 w-3" />}
                 </span>
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+              <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                 Category
               </th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+              <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                 Z-Score
               </th>
               <th
                 onClick={() => toggleSort('risk')}
-                className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300"
+                className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 cursor-pointer hover:text-secondary-700 dark:hover:text-secondary-300"
               >
                 <span className="inline-flex items-center gap-1">
                   Risk {sortField === 'risk' && <SortIcon className="h-3 w-3" />}

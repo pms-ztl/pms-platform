@@ -13,7 +13,7 @@
  * provide proactive ergonomic guidance.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { querySessionActivity } from '../../agent-tools-v3';
 
 // -- System Prompt -----------------------------------------------------------
@@ -40,7 +40,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class ErgonomicsAgent extends BaseAgent {
+export class ErgonomicsAgent extends AgenticBaseAgent {
   constructor() {
     super('ergonomics', SYSTEM_PROMPT);
   }

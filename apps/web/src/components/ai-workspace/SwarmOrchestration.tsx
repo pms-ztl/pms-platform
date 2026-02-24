@@ -21,6 +21,7 @@ import { useAuthStore } from '@/store/auth';
 import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import type { AITheme } from '@/store/ai-workspace';
 import * as T from './ai-theme';
+import { getAgentIcon } from './agentIconMap';
 
 // ============================================================================
 // Types
@@ -42,81 +43,86 @@ interface ConversationTurn {
 }
 
 // ============================================================================
-// Agent Lookup Map (65 agents across 6 clusters)
+// Agent Lookup Map (70 agents across 6 clusters)
 // ============================================================================
 
-const AGENT_INFO: Record<string, { name: string; icon: string; cluster: string; clusterColor: string }> = {
-  // Core (15)
-  performance:        { name: 'Performance',   icon: '\uD83C\uDFAF', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  nlp_query:          { name: 'Data Query',    icon: '\uD83D\uDD0D', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  coaching:           { name: 'Coaching',       icon: '\uD83E\uDDD1\u200D\uD83C\uDFEB', cluster: 'Core', clusterColor: 'text-blue-400' },
-  career:             { name: 'Career',         icon: '\uD83D\uDE80', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  report:             { name: 'Reports',        icon: '\uD83D\uDCCB', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  workforce_intel:    { name: 'Workforce',      icon: '\uD83E\uDDE0', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  governance:         { name: 'Governance',     icon: '\u2696\uFE0F', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  strategic_alignment:{ name: 'Strategy',       icon: '\uD83C\uDFAF', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  talent_marketplace: { name: 'Talent Market',  icon: '\uD83C\uDFEA', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  conflict_resolution:{ name: 'Conflict',       icon: '\uD83E\uDD1D', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  security:           { name: 'Security',       icon: '\uD83D\uDD12', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  notification:       { name: 'Notification',   icon: '\uD83D\uDD14', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  onboarding:         { name: 'Onboarding',     icon: '\uD83C\uDF93', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  license:            { name: 'License',        icon: '\uD83D\uDD11', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  excel_validation:   { name: 'Excel AI',       icon: '\uD83D\uDCC4', cluster: 'Core',       clusterColor: 'text-blue-400' },
+const AGENT_INFO: Record<string, { name: string; cluster: string; clusterColor: string }> = {
+  // Core (20)
+  performance:        { name: 'Performance',   cluster: 'Core',       clusterColor: 'text-blue-400' },
+  nlp_query:          { name: 'Data Query',    cluster: 'Core',       clusterColor: 'text-blue-400' },
+  coaching:           { name: 'Coaching',       cluster: 'Core',       clusterColor: 'text-blue-400' },
+  career:             { name: 'Career',         cluster: 'Core',       clusterColor: 'text-blue-400' },
+  report:             { name: 'Reports',        cluster: 'Core',       clusterColor: 'text-blue-400' },
+  workforce_intel:    { name: 'Workforce',      cluster: 'Core',       clusterColor: 'text-blue-400' },
+  governance:         { name: 'Governance',     cluster: 'Core',       clusterColor: 'text-blue-400' },
+  strategic_alignment:{ name: 'Strategy',       cluster: 'Core',       clusterColor: 'text-blue-400' },
+  talent_marketplace: { name: 'Talent Market',  cluster: 'Core',       clusterColor: 'text-blue-400' },
+  conflict_resolution:{ name: 'Conflict',       cluster: 'Core',       clusterColor: 'text-blue-400' },
+  security:           { name: 'Security',       cluster: 'Core',       clusterColor: 'text-blue-400' },
+  notification:       { name: 'Notification',   cluster: 'Core',       clusterColor: 'text-blue-400' },
+  onboarding:         { name: 'Onboarding',     cluster: 'Core',       clusterColor: 'text-blue-400' },
+  license:            { name: 'License',        cluster: 'Core',       clusterColor: 'text-blue-400' },
+  excel_validation:   { name: 'Excel AI',       cluster: 'Core',       clusterColor: 'text-blue-400' },
+  goal_intelligence:  { name: 'Goal Intel',     cluster: 'Core',       clusterColor: 'text-blue-400' },
+  performance_signal: { name: 'Perf Signal',    cluster: 'Core',       clusterColor: 'text-blue-400' },
+  review_drafter:     { name: 'Review Drafter', cluster: 'Core',       clusterColor: 'text-blue-400' },
+  compensation_promotion:{ name: 'Comp & Promo', cluster: 'Core',      clusterColor: 'text-blue-400' },
+  one_on_one_advisor: { name: '1:1 Advisor',    cluster: 'Core',       clusterColor: 'text-blue-400' },
   // Bio-Performance (10)
-  neuro_focus:        { name: 'Neuro Focus',    icon: '\uD83E\uDDE0', cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  circadian_sync:     { name: 'Circadian',      icon: '\uD83C\uDF19', cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  micro_break:        { name: 'Micro Break',    icon: '\u23F0',       cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  cortisol_monitor:   { name: 'Cortisol',       icon: '\uD83D\uDCC9', cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  ergonomics:         { name: 'Ergonomics',     icon: '\uD83E\uDE91', cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  sleep_optimizer:    { name: 'Sleep',           icon: '\uD83D\uDCA4', cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  hydration_nutrition:{ name: 'Hydration',      icon: '\uD83D\uDCA7', cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  vocal_tone:         { name: 'Vocal Tone',     icon: '\uD83C\uDFA4', cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  environment_ctrl:   { name: 'Environment',    icon: '\uD83C\uDF21\uFE0F', cluster: 'Bio',  clusterColor: 'text-emerald-400' },
-  burnout_interceptor:{ name: 'Burnout Guard',  icon: '\uD83D\uDEE1\uFE0F', cluster: 'Bio',  clusterColor: 'text-emerald-400' },
+  neuro_focus:        { name: 'Neuro Focus',    cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  circadian_sync:     { name: 'Circadian',      cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  micro_break:        { name: 'Micro Break',    cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  cortisol_monitor:   { name: 'Cortisol',       cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  ergonomics:         { name: 'Ergonomics',     cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  sleep_optimizer:    { name: 'Sleep',           cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  hydration_nutrition:{ name: 'Hydration',      cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  vocal_tone:         { name: 'Vocal Tone',     cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  environment_ctrl:   { name: 'Environment',    cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  burnout_interceptor:{ name: 'Burnout Guard',  cluster: 'Bio',        clusterColor: 'text-emerald-400' },
   // Hyper-Learning (12)
-  shadow_learning:    { name: 'Shadow Learn',   icon: '\uD83D\uDC65', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  micro_learning:     { name: 'Micro Learn',    icon: '\uD83D\uDCD6', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  ar_mentor:          { name: 'AR Mentor',      icon: '\uD83E\uDD3D', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  sparring_partner:   { name: 'Sparring',       icon: '\uD83E\uDD4A', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  skill_gap_forecaster:{ name: 'Skill Forecast',icon: '\uD83D\uDD2E', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  knowledge_broker:   { name: 'Knowledge',      icon: '\uD83E\uDD1D', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  credential_ledger:  { name: 'Credentials',    icon: '\uD83C\uDF96\uFE0F', cluster: 'Learning', clusterColor: 'text-purple-400' },
-  linguistic_refiner: { name: 'Linguistic',     icon: '\u270D\uFE0F', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  curiosity_scout:    { name: 'Curiosity',      icon: '\uD83D\uDD2D', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  logic_validator:    { name: 'Logic Check',    icon: '\uD83E\uDDE9', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  cross_training:     { name: 'Cross-Train',    icon: '\uD83D\uDD00', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  career_sim:         { name: 'Career Sim',     icon: '\uD83C\uDFAE', cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  shadow_learning:    { name: 'Shadow Learn',   cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  micro_learning:     { name: 'Micro Learn',    cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  ar_mentor:          { name: 'AR Mentor',      cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  sparring_partner:   { name: 'Sparring',       cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  skill_gap_forecaster:{ name: 'Skill Forecast', cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  knowledge_broker:   { name: 'Knowledge',      cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  credential_ledger:  { name: 'Credentials',    cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  linguistic_refiner: { name: 'Linguistic',     cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  curiosity_scout:    { name: 'Curiosity',      cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  logic_validator:    { name: 'Logic Check',    cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  cross_training:     { name: 'Cross-Train',    cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  career_sim:         { name: 'Career Sim',     cluster: 'Learning',   clusterColor: 'text-purple-400' },
   // Liquid Workforce (10)
-  task_bidder:        { name: 'Task Bidder',    icon: '\uD83D\uDCE6', cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  gig_sourcer:        { name: 'Gig Sourcer',    icon: '\uD83C\uDFAA', cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  nano_payment:       { name: 'Nano Pay',       icon: '\u2B50',       cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  market_value:       { name: 'Market Value',   icon: '\uD83D\uDCCA', cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  tax_optimizer:      { name: 'Tax Optimize',   icon: '\uD83D\uDCB5', cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  equity_realizer:    { name: 'Equity',          icon: '\uD83D\uDCB9', cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  pension_guard:      { name: 'Pension',         icon: '\uD83C\uDFE6', cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  relocation_bot:     { name: 'Relocation',     icon: '\u2708\uFE0F', cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  vendor_negotiator:  { name: 'Vendor',          icon: '\uD83D\uDD0E', cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  succession_sentry:  { name: 'Succession',     icon: '\uD83D\uDC51', cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  task_bidder:        { name: 'Task Bidder',    cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  gig_sourcer:        { name: 'Gig Sourcer',    cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  nano_payment:       { name: 'Nano Pay',       cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  market_value:       { name: 'Market Value',   cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  tax_optimizer:      { name: 'Tax Optimize',   cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  equity_realizer:    { name: 'Equity',          cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  pension_guard:      { name: 'Pension',         cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  relocation_bot:     { name: 'Relocation',     cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  vendor_negotiator:  { name: 'Vendor',          cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  succession_sentry:  { name: 'Succession',     cluster: 'Workforce',  clusterColor: 'text-amber-400' },
   // Culture & Empathy (10)
-  culture_weaver:     { name: 'Culture',         icon: '\uD83C\uDF10', cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  bias_neutralizer:   { name: 'Bias',            icon: '\u2696\uFE0F', cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  gratitude_sentinel: { name: 'Gratitude',      icon: '\uD83D\uDE4F', cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  conflict_mediator:  { name: 'Mediator',       icon: '\uD83D\uDD4A\uFE0F', cluster: 'Culture', clusterColor: 'text-pink-400' },
-  inclusion_monitor:  { name: 'Inclusion',      icon: '\uD83C\uDF08', cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  empathy_coach:      { name: 'Empathy',         icon: '\uD83D\uDCAC', cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  social_bonding:     { name: 'Social',          icon: '\uD83C\uDFC6', cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  legacy_archivist:   { name: 'Legacy',          icon: '\uD83D\uDCDC', cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  whistleblower:      { name: 'Whistleblower',  icon: '\uD83D\uDCE2', cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  mood_radiator:      { name: 'Mood',            icon: '\uD83C\uDF21\uFE0F', cluster: 'Culture', clusterColor: 'text-pink-400' },
+  culture_weaver:     { name: 'Culture',         cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  bias_neutralizer:   { name: 'Bias',            cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  gratitude_sentinel: { name: 'Gratitude',      cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  conflict_mediator:  { name: 'Mediator',       cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  inclusion_monitor:  { name: 'Inclusion',      cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  empathy_coach:      { name: 'Empathy',         cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  social_bonding:     { name: 'Social',          cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  legacy_archivist:   { name: 'Legacy',          cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  whistleblower:      { name: 'Whistleblower',  cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  mood_radiator:      { name: 'Mood',            cluster: 'Culture',    clusterColor: 'text-pink-400' },
   // Governance (8)
-  posh_sentinel:      { name: 'POSH',            icon: '\uD83D\uDEE1\uFE0F', cluster: 'Governance', clusterColor: 'text-red-400' },
-  labor_compliance:   { name: 'Labor Law',      icon: '\uD83D\uDCDC', cluster: 'Governance', clusterColor: 'text-red-400' },
-  policy_translator:  { name: 'Policy',          icon: '\uD83D\uDCD6', cluster: 'Governance', clusterColor: 'text-red-400' },
-  data_privacy:       { name: 'Privacy',         icon: '\uD83D\uDD10', cluster: 'Governance', clusterColor: 'text-red-400' },
-  audit_trail:        { name: 'Audit',           icon: '\uD83D\uDD0D', cluster: 'Governance', clusterColor: 'text-red-400' },
-  conflict_of_interest:{ name: 'COI',            icon: '\u26A0\uFE0F', cluster: 'Governance', clusterColor: 'text-red-400' },
-  leave_optimizer:    { name: 'Leave',           icon: '\uD83C\uDFD6\uFE0F', cluster: 'Governance', clusterColor: 'text-red-400' },
-  onboarding_orchestrator:{ name: 'Onboard',     icon: '\uD83C\uDFAC', cluster: 'Governance', clusterColor: 'text-red-400' },
+  posh_sentinel:      { name: 'POSH',            cluster: 'Governance', clusterColor: 'text-red-400' },
+  labor_compliance:   { name: 'Labor Law',      cluster: 'Governance', clusterColor: 'text-red-400' },
+  policy_translator:  { name: 'Policy',          cluster: 'Governance', clusterColor: 'text-red-400' },
+  data_privacy:       { name: 'Privacy',         cluster: 'Governance', clusterColor: 'text-red-400' },
+  audit_trail:        { name: 'Audit',           cluster: 'Governance', clusterColor: 'text-red-400' },
+  conflict_of_interest:{ name: 'COI',            cluster: 'Governance', clusterColor: 'text-red-400' },
+  leave_optimizer:    { name: 'Leave',           cluster: 'Governance', clusterColor: 'text-red-400' },
+  onboarding_orchestrator:{ name: 'Onboard',     cluster: 'Governance', clusterColor: 'text-red-400' },
 };
 
 /** Cluster display order */
@@ -146,7 +152,7 @@ const CLUSTER_BG_TINT: Record<string, string> = {
 // ============================================================================
 
 function getAgentInfo(agentType: string) {
-  return AGENT_INFO[agentType] ?? { name: agentType, icon: '\uD83E\uDD16', cluster: 'Other', clusterColor: 'text-gray-400' };
+  return AGENT_INFO[agentType] ?? { name: agentType, cluster: 'Other', clusterColor: 'text-gray-400' };
 }
 
 function renderMarkdown(content: string, isLight: boolean): string {
@@ -230,6 +236,7 @@ function AgentResponseCard({
   theme,
 }: AgentResponse & { theme: AITheme }) {
   const info = getAgentInfo(agentType);
+  const AgentIcon = getAgentIcon(agentType);
   const isLight = theme === 'light';
   const clusterBorder = CLUSTER_BORDER_COLOR[info.cluster] ?? 'border-t-gray-500';
 
@@ -239,8 +246,8 @@ function AgentResponseCard({
     >
       {/* Card Header */}
       <div className={`flex items-center gap-2 px-4 py-3 border-b ${T.borderLight(theme)}`}>
-        <span className="text-lg flex-shrink-0">{info.icon}</span>
-        <span className={`text-sm font-semibold truncate ${T.textPrimary(theme)}`}>{info.name}</span>
+        <AgentIcon className={`h-5 w-5 flex-shrink-0 ${info.clusterColor}`} />
+        <span className={`text-sm font-semibold break-words ${T.textPrimary(theme)}`}>{info.name}</span>
         <span className={`ml-auto text-[10px] font-medium px-2 py-0.5 rounded-full ${
           isLight ? 'bg-gray-100 text-gray-500' : 'bg-white/5 text-gray-400'
         } ${info.clusterColor}`}>
@@ -294,6 +301,7 @@ function AgentResponseCard({
 /** Ready-state card shown when agents are selected but no message has been sent yet */
 function AgentReadyCard({ agentType, theme }: { agentType: string; theme: AITheme }) {
   const info = getAgentInfo(agentType);
+  const AgentIcon = getAgentIcon(agentType);
   const isLight = theme === 'light';
   const clusterBorder = CLUSTER_BORDER_COLOR[info.cluster] ?? 'border-t-gray-500';
 
@@ -301,7 +309,7 @@ function AgentReadyCard({ agentType, theme }: { agentType: string; theme: AIThem
     <div
       className={`flex flex-col items-center justify-center rounded-xl border-t-2 ${clusterBorder} border ${T.border(theme)} ${T.surface(theme)} px-4 py-8 transition-all duration-300`}
     >
-      <span className="text-3xl mb-3">{info.icon}</span>
+      <AgentIcon className={`h-10 w-10 mb-3 ${info.clusterColor}`} />
       <p className={`text-sm font-semibold ${T.textPrimary(theme)} mb-1`}>{info.name}</p>
       <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full mb-3 ${
         isLight ? 'bg-gray-100 text-gray-500' : 'bg-white/5 text-gray-400'
@@ -351,7 +359,7 @@ function AgentPickerDropdown({
   const lowerSearch = search.toLowerCase();
 
   // Group agents by cluster, filtered by search
-  const grouped: Record<string, Array<[string, typeof AGENT_INFO[string]]>> = {};
+  const grouped: Record<string, Array<[string, (typeof AGENT_INFO)[string]]>> = {};
   for (const [key, info] of Object.entries(AGENT_INFO)) {
     if (lowerSearch && !info.name.toLowerCase().includes(lowerSearch) && !key.toLowerCase().includes(lowerSearch) && !info.cluster.toLowerCase().includes(lowerSearch)) {
       continue;
@@ -393,7 +401,7 @@ function AgentPickerDropdown({
           if (!agents || agents.length === 0) return null;
           return (
             <div key={cluster} className="mb-2">
-              <p className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1.5 ${
+              <p className={`text-[10px] font-bold tracking-wider px-2 py-1.5 ${
                 agents[0][1].clusterColor
               }`}>
                 {cluster} ({agents.length})
@@ -402,6 +410,7 @@ function AgentPickerDropdown({
                 {agents.map(([key, info]) => {
                   const isSelected = selectedAgents.includes(key);
                   const isDisabled = atLimit && !isSelected;
+                  const PickerAgentIcon = getAgentIcon(key);
                   return (
                     <button
                       key={key}
@@ -424,8 +433,8 @@ function AgentPickerDropdown({
                             : `${T.textSecondary(theme)} ${T.surfaceHover(theme)} hover:${isLight ? 'text-gray-900' : 'text-white'}`
                       }`}
                     >
-                      <span className="text-base flex-shrink-0">{info.icon}</span>
-                      <span className="truncate">{info.name}</span>
+                      <PickerAgentIcon className={`h-4 w-4 flex-shrink-0 ${info.clusterColor}`} />
+                      <span className="break-words">{info.name}</span>
                       {isSelected && (
                         <span className={`ml-auto text-[9px] font-semibold ${T.accentText(theme)}`}>
                           Active
@@ -468,6 +477,7 @@ export function SwarmOrchestration() {
   const [activeTurn, setActiveTurn] = useState<ConversationTurn | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
+  const [orchestrationMode, setOrchestrationMode] = useState<'coordinate' | 'broadcast'>('coordinate');
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -489,6 +499,65 @@ export function SwarmOrchestration() {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  // ── Coordinated multi-agent execution ──
+  const coordinateMessage = useCallback(async (msg: string) => {
+    if (orchestrationAgents.length < 2 || isBroadcasting) return;
+
+    setIsBroadcasting(true);
+
+    const turnId = `turn-${Date.now()}`;
+    const coordinatingResponse: AgentResponse = {
+      agentType: 'coordinator',
+      status: 'loading',
+      content: '',
+    };
+
+    setActiveTurn({
+      id: turnId,
+      userMessage: msg,
+      timestamp: new Date(),
+      responses: [coordinatingResponse],
+    });
+
+    try {
+      const data = await aiApi.coordinateChat(msg, orchestrationAgents);
+
+      const coordResponse: AgentResponse = {
+        agentType: 'coordinator',
+        status: 'success',
+        content: data.message,
+        metadata: data.metadata,
+      };
+
+      const completedTurn: ConversationTurn = {
+        id: turnId,
+        userMessage: msg,
+        timestamp: new Date(),
+        responses: [coordResponse],
+      };
+
+      setHistory((prev) => [...prev, completedTurn]);
+    } catch (err) {
+      const errorTurn: ConversationTurn = {
+        id: turnId,
+        userMessage: msg,
+        timestamp: new Date(),
+        responses: [{
+          agentType: 'coordinator',
+          status: 'error',
+          content: '',
+          error: err instanceof Error ? err.message : 'Coordination failed',
+        }],
+      };
+
+      setHistory((prev) => [...prev, errorTurn]);
+    }
+
+    setActiveTurn(null);
+    setIsBroadcasting(false);
+    queryClient.invalidateQueries({ queryKey: ['ai'] });
+  }, [orchestrationAgents, isBroadcasting, queryClient]);
 
   // ── Broadcast to all agents ──
   const broadcastMessage = useCallback(async (msg: string) => {
@@ -619,7 +688,11 @@ export function SwarmOrchestration() {
     if (!trimmed || isBroadcasting || orchestrationAgents.length === 0) return;
     setMessage('');
     if (inputRef.current) inputRef.current.style.height = 'auto';
-    broadcastMessageStreaming(trimmed);
+    if (orchestrationMode === 'coordinate') {
+      coordinateMessage(trimmed);
+    } else {
+      broadcastMessageStreaming(trimmed);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -640,7 +713,10 @@ export function SwarmOrchestration() {
   const hasHistory = history.length > 0 || activeTurn !== null;
 
   return (
-    <div className="flex h-full flex-col">
+    <div className={`flex h-full flex-col ${
+      theme === 'deep-dark' ? 'bg-black/50' :
+      theme === 'dark'      ? 'bg-black/35' : ''
+    }`}>
       {/* ================================================================== */}
       {/* TOP BAR                                                            */}
       {/* ================================================================== */}
@@ -657,6 +733,33 @@ export function SwarmOrchestration() {
             )}
           </div>
           <div className="flex items-center gap-2">
+            {/* Mode toggle: Coordinate vs Broadcast */}
+            {agentCount >= 2 && (
+              <div className={`flex items-center rounded-lg p-0.5 text-[10px] font-semibold ${theme === 'light' ? 'bg-gray-100' : 'bg-white/5'}`}>
+                <button
+                  onClick={() => setOrchestrationMode('coordinate')}
+                  className={`px-2.5 py-1 rounded-md transition-all duration-200 ${
+                    orchestrationMode === 'coordinate'
+                      ? `${T.accentBg(theme)} text-white shadow-sm`
+                      : `${T.textMuted(theme)} hover:${T.textSecondary(theme)}`
+                  }`}
+                  title="Agents collaborate on one task — coordinator decomposes goal into sub-tasks"
+                >
+                  Coordinate
+                </button>
+                <button
+                  onClick={() => setOrchestrationMode('broadcast')}
+                  className={`px-2.5 py-1 rounded-md transition-all duration-200 ${
+                    orchestrationMode === 'broadcast'
+                      ? `${T.accentBg(theme)} text-white shadow-sm`
+                      : `${T.textMuted(theme)} hover:${T.textSecondary(theme)}`
+                  }`}
+                  title="Same message sent to all agents independently"
+                >
+                  Broadcast
+                </button>
+              </div>
+            )}
             {agentCount > 0 && (
               <button
                 onClick={clearOrchestrationAgents}
@@ -678,6 +781,7 @@ export function SwarmOrchestration() {
         <div className="flex items-center gap-2 flex-wrap">
           {orchestrationAgents.map((agentType) => {
             const info = getAgentInfo(agentType);
+            const BadgeIcon = getAgentIcon(agentType);
             return (
               <span
                 key={agentType}
@@ -685,7 +789,7 @@ export function SwarmOrchestration() {
                   isLight ? 'bg-gray-50' : 'bg-white/5'
                 }`}
               >
-                <span className="text-sm">{info.icon}</span>
+                <BadgeIcon className={`h-3.5 w-3.5 flex-shrink-0 ${info.clusterColor}`} />
                 <span className={`font-medium ${T.textPrimary(theme)}`}>{info.name}</span>
                 <button
                   onClick={() => removeOrchestrationAgent(agentType)}

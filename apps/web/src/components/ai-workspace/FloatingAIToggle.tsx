@@ -44,7 +44,7 @@ const THEME_META: Record<AITheme, { label: string; icon: typeof SunIcon; color: 
 // ── Component ────────────────────────────────────────────────
 
 export function FloatingAIToggle() {
-  const { toggleAiMode, theme, setTheme } = useAIWorkspaceStore();
+  const { theme, setTheme, aiTransitionPhase, setAiTransitionPhase } = useAIWorkspaceStore();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -77,7 +77,7 @@ export function FloatingAIToggle() {
       {menuOpen && (
         <div className="absolute bottom-full right-0 mb-2 min-w-[140px] rounded-xl bg-gray-900/95 backdrop-blur-xl ring-1 ring-white/10 shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
           {/* Theme section label */}
-          <div className="px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+          <div className="px-2 py-1 text-[10px] font-semibold tracking-wider text-gray-500">
             Theme
           </div>
 
@@ -108,7 +108,12 @@ export function FloatingAIToggle() {
 
           {/* Exit AI mode */}
           <button
-            onClick={() => { toggleAiMode(); setMenuOpen(false); }}
+            onClick={() => {
+              if (aiTransitionPhase === 'idle') {
+                setAiTransitionPhase('exiting');
+                setMenuOpen(false);
+              }
+            }}
             className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-red-400 hover:bg-red-500/10 transition-all duration-150"
           >
             <XMarkIcon className="h-3.5 w-3.5" />

@@ -12,7 +12,7 @@
  * Validates the logical soundness of proposals, decisions, and arguments.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryPerformanceSnapshots, queryGoalAlignment } from '../../agent-tools-v2';
 
 // -- System Prompt -----------------------------------------------------------
@@ -40,7 +40,7 @@ Validation principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class LogicValidatorAgent extends BaseAgent {
+export class LogicValidatorAgent extends AgenticBaseAgent {
   constructor() {
     super('logic_validator', SYSTEM_PROMPT);
   }

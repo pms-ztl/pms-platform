@@ -12,7 +12,7 @@
  * Provides data-driven compensation insights to ensure competitive and equitable pay.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryCompensationData } from '../../agent-tools-v3';
 import {
   queryCompensationAlignment,
@@ -43,7 +43,7 @@ Analysis principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class MarketValueAgent extends BaseAgent {
+export class MarketValueAgent extends AgenticBaseAgent {
   constructor() {
     super('market_value', SYSTEM_PROMPT);
   }

@@ -12,7 +12,7 @@
  * Guides leaders through structured conflict mediation using communication and team data.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import {
   queryCommunicationPatterns,
   queryTeamHealth,
@@ -44,7 +44,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class ConflictMediatorAgent extends BaseAgent {
+export class ConflictMediatorAgent extends AgenticBaseAgent {
   constructor() {
     super('conflict_mediator', SYSTEM_PROMPT);
   }

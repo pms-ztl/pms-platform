@@ -59,7 +59,7 @@ function LearningProgress() {
         {plans.slice(0, 2).map((plan) => (
           <div key={plan.id}>
             <div className="flex items-center justify-between mb-1.5">
-              <h4 className="text-sm font-medium text-secondary-800 dark:text-secondary-200 truncate max-w-[70%]">
+              <h4 className="text-sm font-medium text-secondary-800 dark:text-secondary-200 break-words">
                 {plan.planName}
               </h4>
               <span className="text-xs font-semibold text-primary-600 dark:text-primary-400">
@@ -83,7 +83,7 @@ function LearningProgress() {
                 return (
                   <div key={activity.id} className="flex items-center gap-2 text-xs">
                     <StatusIcon className={`w-3.5 h-3.5 shrink-0 ${statusInfo.color}`} />
-                    <span className="text-secondary-600 dark:text-secondary-400 truncate">{activity.title}</span>
+                    <span className="text-secondary-600 dark:text-secondary-400 break-words">{activity.title}</span>
                     {activity.progressPercentage > 0 && activity.progressPercentage < 100 && (
                       <span className="text-secondary-400 dark:text-secondary-500 shrink-0 ml-auto">
                         {activity.progressPercentage}%

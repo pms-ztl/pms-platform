@@ -8,6 +8,7 @@ import {
   ClockIcon,
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
+import { PageHeader } from '@/components/ui';
 import toast from 'react-hot-toast';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
@@ -181,13 +182,7 @@ export function RBACDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">RBAC Dashboard</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Overview of roles, permissions, and access control across your organization
-          </p>
-        </div>
+      <PageHeader title="RBAC Dashboard" subtitle="Overview of roles, permissions, and access control across your organization">
         <button
           onClick={() => fetchData()}
           className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-700"
@@ -195,7 +190,7 @@ export function RBACDashboardPage() {
           <ArrowPathIcon className="h-4 w-4" />
           Refresh
         </button>
-      </div>
+      </PageHeader>
 
       {/* Row 1: Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -257,13 +252,19 @@ export function RBACDashboardPage() {
                     ))}
                   </Pie>
                   <Tooltip
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                     contentStyle={{
-                      backgroundColor: 'var(--color-secondary-900, #1f2937)',
-                      border: '1px solid var(--color-secondary-700, #374151)',
-                      borderRadius: '8px',
-                      color: '#fff',
-                      fontSize: '13px',
+                      background: 'rgba(15, 23, 42, 0.80)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      border: '1px solid rgba(148, 163, 184, 0.15)',
+                      borderRadius: '0.75rem',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                      fontSize: '0.75rem',
+                      color: '#f1f5f9',
                     }}
+                    labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                    itemStyle={{ color: '#e2e8f0' }}
                     formatter={(value: number) => [`${value} users`, 'Count']}
                   />
                   <Legend
@@ -300,7 +301,7 @@ export function RBACDashboardPage() {
                     return (
                       <div key={role.id} className="flex items-center gap-3">
                         <span
-                          className="text-xs font-medium text-secondary-700 dark:text-secondary-300 w-28 truncate text-right"
+                          className="text-xs font-medium text-secondary-700 dark:text-secondary-300 w-28 break-words text-right"
                           title={role.name}
                         >
                           {role.name}
@@ -369,7 +370,7 @@ export function RBACDashboardPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold uppercase tracking-wide ${getActionBadgeStyle(change.action)}`}
+                          className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold tracking-wide ${getActionBadgeStyle(change.action)}`}
                         >
                           {change.action.replace(/^(ROLE_|BULK_ROLE_)/, '').replace(/_/g, ' ')}
                         </span>

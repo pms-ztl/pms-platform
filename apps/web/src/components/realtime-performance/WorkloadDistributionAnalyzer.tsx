@@ -124,7 +124,7 @@ const WorkloadGauge = ({ score, status }: { score: number; status: string }) => 
           fill="none"
           stroke="currentColor"
           strokeWidth="12"
-          className="text-gray-200 dark:text-gray-700"
+          className="text-secondary-200 dark:text-secondary-700"
         />
         <circle
           cx="64"
@@ -139,7 +139,7 @@ const WorkloadGauge = ({ score, status }: { score: number; status: string }) => 
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold text-gray-900 dark:text-white">{Math.round(score)}</span>
+        <span className="text-2xl font-bold text-secondary-900 dark:text-white">{Math.round(score)}</span>
         <span className={clsx('text-xs font-medium', config.textColor)}>{config.label}</span>
       </div>
     </div>
@@ -153,13 +153,13 @@ const WorkloadCard = ({ data }: { data: WorkloadAnalysis }) => {
     <div className={clsx('rounded-xl border p-4', config.bgColor, config.borderColor)}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <div className="w-10 h-10 rounded-full bg-secondary-300 dark:bg-secondary-600 flex items-center justify-center">
+            <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">
               {data.name?.charAt(0) || 'U'}
             </span>
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
+            <h4 className="text-sm font-semibold text-secondary-900 dark:text-white">
               {data.name || 'User'}
             </h4>
             <span className={clsx('text-xs', config.textColor)}>{config.description}</span>
@@ -172,18 +172,18 @@ const WorkloadCard = ({ data }: { data: WorkloadAnalysis }) => {
 
       <div className="grid grid-cols-3 gap-2 text-center">
         <div>
-          <div className="text-lg font-semibold text-gray-900 dark:text-white">{data.activeGoals}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">Goals</div>
+          <div className="text-lg font-semibold text-secondary-900 dark:text-white">{data.activeGoals}</div>
+          <div className="text-xs text-secondary-500 dark:text-secondary-400">Goals</div>
         </div>
         <div>
-          <div className="text-lg font-semibold text-gray-900 dark:text-white">{data.pendingReviews}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">Reviews</div>
+          <div className="text-lg font-semibold text-secondary-900 dark:text-white">{data.pendingReviews}</div>
+          <div className="text-xs text-secondary-500 dark:text-secondary-400">Reviews</div>
         </div>
         <div>
-          <div className="text-lg font-semibold text-gray-900 dark:text-white">
+          <div className="text-lg font-semibold text-secondary-900 dark:text-white">
             {Math.round(data.capacityUtilization)}%
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">Capacity</div>
+          <div className="text-xs text-secondary-500 dark:text-secondary-400">Capacity</div>
         </div>
       </div>
     </div>
@@ -195,19 +195,19 @@ const RedistributionCard = ({
 }: {
   opportunity: TeamWorkloadData['redistributionOpportunities'][0];
 }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+  <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
     <div className="flex items-center space-x-4">
       <div className="flex-1">
-        <div className="text-sm font-medium text-gray-900 dark:text-white">{opportunity.from.name}</div>
+        <div className="text-sm font-medium text-secondary-900 dark:text-white">{opportunity.from.name}</div>
         <div className="text-xs text-red-500">Overloaded</div>
       </div>
-      <ArrowRightIcon className="h-5 w-5 text-gray-400" />
+      <ArrowRightIcon className="h-5 w-5 text-secondary-400" />
       <div className="flex-1">
-        <div className="text-sm font-medium text-gray-900 dark:text-white">{opportunity.to.name}</div>
+        <div className="text-sm font-medium text-secondary-900 dark:text-white">{opportunity.to.name}</div>
         <div className="text-xs text-blue-500">Underloaded</div>
       </div>
     </div>
-    <div className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+    <div className="mt-3 text-xs text-secondary-500 dark:text-secondary-400">
       <LightBulbIcon className="h-4 w-4 inline mr-1 text-yellow-500" />
       {opportunity.impact}
     </div>
@@ -234,8 +234,8 @@ export function WorkloadDistributionAnalyzer() {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
-        <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+        <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
+        <div className="h-64 bg-secondary-200 dark:bg-secondary-700 rounded-xl" />
       </div>
     );
   }
@@ -261,23 +261,23 @@ export function WorkloadDistributionAnalyzer() {
             <ScaleIcon className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-secondary-900 dark:text-white">
               Workload Distribution
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-secondary-500 dark:text-secondary-400">
               Real-time workload balance analysis
             </p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+        <div className="flex items-center space-x-2 bg-secondary-100 dark:bg-secondary-800 rounded-lg p-1">
           <button
             onClick={() => setViewMode('personal')}
             className={clsx(
               'px-4 py-2 text-sm font-medium rounded-md transition-colors',
               viewMode === 'personal'
-                ? 'bg-white dark:bg-gray-700 shadow text-gray-900 dark:text-white'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900'
+                ? 'bg-white dark:bg-secondary-700 shadow text-secondary-900 dark:text-white'
+                : 'text-secondary-600 dark:text-secondary-400 hover:text-secondary-900'
             )}
           >
             My Workload
@@ -287,8 +287,8 @@ export function WorkloadDistributionAnalyzer() {
             className={clsx(
               'px-4 py-2 text-sm font-medium rounded-md transition-colors',
               viewMode === 'team'
-                ? 'bg-white dark:bg-gray-700 shadow text-gray-900 dark:text-white'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900'
+                ? 'bg-white dark:bg-secondary-700 shadow text-secondary-900 dark:text-white'
+                : 'text-secondary-600 dark:text-secondary-400 hover:text-secondary-900'
             )}
           >
             <UserGroupIcon className="h-4 w-4 inline mr-1" />
@@ -300,57 +300,57 @@ export function WorkloadDistributionAnalyzer() {
       {viewMode === 'personal' && personalWorkload && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Workload Gauge */}
-          <div className="lg:col-span-1 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col items-center">
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">
+          <div className="lg:col-span-1 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 flex flex-col items-center">
+            <h3 className="text-sm font-medium text-secondary-500 dark:text-secondary-400 mb-4">
               Current Workload
             </h3>
             <WorkloadGauge score={personalWorkload.workloadScore} status={personalWorkload.balanceStatus} />
             <div className="mt-4 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-secondary-600 dark:text-secondary-300">
                 {statusConfig[personalWorkload.balanceStatus].description}
               </p>
             </div>
           </div>
 
           {/* Breakdown */}
-          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Workload Breakdown</h3>
+          <div className="lg:col-span-2 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+            <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Workload Breakdown</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="text-center p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg">
+                <div className="text-2xl font-bold text-secondary-900 dark:text-white">
                   {personalWorkload.activeGoals}
                 </div>
-                <div className="text-xs text-gray-500">Active Goals</div>
+                <div className="text-xs text-secondary-500">Active Goals</div>
               </div>
-              <div className="text-center p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="text-center p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg">
+                <div className="text-2xl font-bold text-secondary-900 dark:text-white">
                   {personalWorkload.pendingReviews}
                 </div>
-                <div className="text-xs text-gray-500">Pending Reviews</div>
+                <div className="text-xs text-secondary-500">Pending Reviews</div>
               </div>
-              <div className="text-center p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="text-center p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg">
+                <div className="text-2xl font-bold text-secondary-900 dark:text-white">
                   {Math.round(personalWorkload.estimatedHoursRequired)}h
                 </div>
-                <div className="text-xs text-gray-500">Est. Hours</div>
+                <div className="text-xs text-secondary-500">Estimated Hours</div>
               </div>
-              <div className="text-center p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="text-center p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg">
+                <div className="text-2xl font-bold text-secondary-900 dark:text-white">
                   {Math.round(personalWorkload.capacityUtilization)}%
                 </div>
-                <div className="text-xs text-gray-500">Utilization</div>
+                <div className="text-xs text-secondary-500">Utilization</div>
               </div>
             </div>
 
             {/* Recommendations */}
             {personalWorkload.recommendedActions.length > 0 && (
               <div className="mt-6">
-                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <h4 className="text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                   Recommendations
                 </h4>
                 <ul className="space-y-2">
                   {personalWorkload.recommendedActions.map((action, idx) => (
-                    <li key={idx} className="flex items-start space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                    <li key={idx} className="flex items-start space-x-2 text-sm text-secondary-600 dark:text-secondary-400">
                       <LightBulbIcon className="h-4 w-4 text-yellow-500 mt-0.5 flex-shrink-0" />
                       <span>{action}</span>
                     </li>
@@ -366,9 +366,9 @@ export function WorkloadDistributionAnalyzer() {
         <div className="space-y-6">
           {/* Team Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-              <div className="text-sm text-gray-500 dark:text-gray-400">Avg Workload</div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
+              <div className="text-sm text-secondary-500 dark:text-secondary-400">Average Workload</div>
+              <div className="text-2xl font-bold text-secondary-900 dark:text-white">
                 {Math.round(teamWorkload.teamMetrics.avgWorkloadScore)}
               </div>
             </div>
@@ -395,17 +395,17 @@ export function WorkloadDistributionAnalyzer() {
           {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Bar Chart */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+              <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Team Workload Scores
               </h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
                     <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                     <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} />
-                    <Tooltip />
+                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
                     <Bar dataKey="workload" radius={[4, 4, 0, 0]}>
                       {chartData.map((entry, index) => (
                         <Cell
@@ -428,8 +428,8 @@ export function WorkloadDistributionAnalyzer() {
             </div>
 
             {/* Pie Chart */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+              <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Distribution
               </h3>
               <div className="h-64">
@@ -448,7 +448,7 @@ export function WorkloadDistributionAnalyzer() {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -456,7 +456,7 @@ export function WorkloadDistributionAnalyzer() {
                 {pieData.map((entry) => (
                   <div key={entry.name} className="flex items-center space-x-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
-                    <span className="text-xs text-gray-600 dark:text-gray-400">{entry.name}</span>
+                    <span className="text-xs text-secondary-600 dark:text-secondary-400">{entry.name}</span>
                   </div>
                 ))}
               </div>
@@ -464,8 +464,8 @@ export function WorkloadDistributionAnalyzer() {
           </div>
 
           {/* Team Members */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Team Members</h3>
+          <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
+            <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Team Members</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {teamWorkload.teamMembers.map((member) => (
                 <WorkloadCard key={member.userId} data={member} />

@@ -80,9 +80,9 @@ function formatTimestamp(iso: string): string {
   }).format(new Date(iso));
 }
 
-function truncateString(str: string, max = 40): string {
+function truncateString(str: string, _max = 40): string {
   if (!str) return '--';
-  return str.length > max ? str.slice(0, max) + '...' : str;
+  return str;
 }
 
 // ---------------------------------------------------------------------------
@@ -303,22 +303,22 @@ export function SAAuditPage() {
             <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                     Timestamp
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                     User
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                     Action
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                     Resource
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                     Details
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                     IP Address
                   </th>
                 </tr>
@@ -360,7 +360,7 @@ export function SAAuditPage() {
                         </span>
                         {log.resourceId && (
                           <p className="text-xs text-secondary-400 dark:text-secondary-500 font-mono">
-                            {log.resourceId.slice(0, 8)}...
+                            {log.resourceId}
                           </p>
                         )}
                       </td>

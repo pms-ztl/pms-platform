@@ -110,10 +110,15 @@
   html {
     @apply antialiased scroll-smooth;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-    font-size: 125%;
+    font-size: 143.75%; /* 23px base — scales all rem units */
   }
 
-  /* Legacy class — no longer needed since html is already at 125% */
+  /* Reset font-size on auth/login pages so the inflated base doesn't affect them */
+  html:has(.auth-page) {
+    font-size: 100%;
+  }
+
+  /* Legacy class */
   .dashboard-scaled {
     font-size: 100%;
   }
@@ -145,6 +150,45 @@
     background-image:
       radial-gradient(ellipse 60% 40% at 10% 0%, rgb(var(--c-primary-600) / 0.06) 0px, transparent 50%),
       radial-gradient(ellipse 40% 30% at 90% 20%, rgb(var(--c-primary-700) / 0.04) 0px, transparent 40%);
+  }
+
+  /* ── Recharts: remove hardcoded white backgrounds ─────────────────────── *
+   * Recharts injects a white background on .recharts-wrapper in its own CSS.
+   * Force transparency so charts inherit their card/glass container bg.       */
+  .recharts-wrapper,
+  .recharts-surface {
+    background: transparent !important;
+  }
+
+  /* ── Recharts: subtle hover cursor instead of white/grey rectangle ──────── *
+   * The default cursor rectangle on bar/area charts is opaque white/grey.
+   * Replace with a very faint slate tint that works on all themes.             */
+  .recharts-rectangle.recharts-cursor,
+  .recharts-sector.recharts-cursor {
+    fill: rgba(148, 163, 184, 0.07) !important;
+    stroke: none !important;
+  }
+
+  /* ── Recharts RadarChart: style PolarGrid for dark themes ────────────── *
+   * The default concentric polygons render with #ccc stroke as inline attr.
+   * Force transparent fills and subtle strokes for glassmorphism cards.      */
+  .recharts-polar-grid-concentric-polygon path,
+  .recharts-polar-grid-concentric path {
+    fill: transparent !important;
+    stroke: rgba(148, 163, 184, 0.15) !important;
+  }
+
+  .recharts-polar-grid-angle line {
+    stroke: rgba(148, 163, 184, 0.12) !important;
+  }
+
+  /* ── Recharts RadarChart: prevent PolarAngleAxis polygon grey fill ───── *
+   * Tailwind fill-* classes on the axis group cascade to the inner polygon,
+   * overriding its SVG fill="none" attribute. Force it transparent.         */
+  .recharts-polar-angle-axis .recharts-polygon,
+  .recharts-polar-angle-axis path[fill="none"] {
+    fill: none !important;
+    fill: transparent !important;
   }
 
   /* Deep Dark body: inherits from .dark body but vars point to pure black */
@@ -722,6 +766,33 @@
     0 8px 30px -4px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgb(var(--c-primary-500) / 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* ── Page Banner Glassmorphism ────────────────────────────────────────────
+   Generic frosted glass page header — translucent surface with backdrop blur.
+   Used by <PageHeader> component across all pages. The OKR variant uses warm
+   amber orbs while the generic uses primary/cyan accent orbs. */
+.glass-banner,
+.glass-banner-okr {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.dark .glass-banner,
+.dark .glass-banner-okr {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.02);
 }
 
 /* Stat card - solid dark surface with gradient top-edge on hover */
@@ -1378,6 +1449,16 @@ html.transitioning *::after {
 @keyframes text-shimmer-move {
   0%, 100% { background-position: 100% center; }
   50% { background-position: 0% center; }
+}
+
+/* Aurora drift — slow iridescent sweep for hero heading */
+.aurora-text {
+  animation: aurora-drift 8s ease-in-out infinite;
+}
+@keyframes aurora-drift {
+  0%   { background-position: 0% center; }
+  50%  { background-position: 100% center; }
+  100% { background-position: 0% center; }
 }
 
 /* 11. ──── Elastic Scale ──────────────────────────────────────────────────
@@ -2430,62 +2511,235 @@ html.transitioning *::after {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Super Admin Gradient Background — animated flowing gradient for all themes
+   Super Admin — Frosted Glassmorphism Background
    ═══════════════════════════════════════════════════════════════════════════ */
 
-@keyframes sa-gradient-flow {
-  0%   { background-position: 0% 50%;   }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%;   }
-}
-
-/* Light theme — soft lavender, rose, sky, mint */
+/* Light theme — frosted white with subtle cool undertone */
 .sa-gradient-bg {
-  background: linear-gradient(
-    -45deg,
-    #eef2ff,
-    #dbeafe,
-    #fce7f3,
-    #ede9fe,
-    #e0f2fe,
-    #f0fdf4
-  );
-  background-size: 400% 400%;
-  animation: sa-gradient-flow 14s ease infinite;
+  background: #f0f2f5;
+  position: relative;
 }
 
-/* Dark theme — vivid purple → electric blue → deep teal */
+.sa-gradient-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dark theme — deep matte with frosted feel */
 .dark:not(.deep-dark) .sa-gradient-bg {
-  background: linear-gradient(
-    -45deg,
-    #3b0764,
-    #1e3a8a,
-    #0f4c75,
-    #4a1060,
-    #1a3a6b,
-    #2e0854
-  );
-  background-size: 400% 400%;
-  animation: sa-gradient-flow 12s ease infinite;
+  background: #0c101b;
 }
 
-/* Abyss / deep-dark — black with electric cyan & deep violet pulses */
+.dark:not(.deep-dark) .sa-gradient-bg::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
+}
+
+/* Abyss / deep-dark — true black for OLED */
 .dark.deep-dark .sa-gradient-bg {
-  background: linear-gradient(
-    -45deg,
-    #000000,
-    #0c1a2e,
-    #001a0d,
-    #140026,
-    #001c1c,
-    #000000
-  );
-  background-size: 400% 400%;
-  animation: sa-gradient-flow 9s ease infinite;
+  background: #000000;
 }
 
-/* Glassmorphism card used in SA Dashboard */
+.dark.deep-dark .sa-gradient-bg::before {
+  background: none;
+}
+
+/* Glassmorphism card used across SA pages */
 .sa-glass-card {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+}
+
+/* SA Hero Banner — frosted glass panel */
+.sa-hero-banner {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(40px) saturate(1.4);
+  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 4px 24px -6px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.dark:not(.deep-dark) .sa-hero-banner {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 8px 32px -8px rgba(0, 0, 0, 0.4),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dark.deep-dark .sa-hero-banner {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.02) inset,
+    0 8px 32px -8px rgba(0, 0, 0, 0.6);
+}
+
+/* SA Stat Card — frosted glass */
+.sa-stat-card {
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+}
+
+/* SA Sidebar — frosted glass, theme-adaptive */
+.sa-sidebar {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(40px) saturate(1.4);
+  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark:not(.deep-dark) .sa-sidebar {
+  background: rgba(15, 18, 30, 0.88);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dark.deep-dark .sa-sidebar {
+  background: #000000;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ─── Excel Upload Page Enhancements ───────────────────────────────────── */
+
+/* Quality gauge ring animation */
+@keyframes gauge-fill {
+  from { stroke-dashoffset: 283; }
+  to { stroke-dashoffset: var(--gauge-target); }
+}
+
+.gauge-ring {
+  animation: gauge-fill 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Gentle float animation for dropzone icon */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+/* Pulsing glow for active stage indicator */
+@keyframes stage-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(var(--c-primary-500) / 0.4); }
+  50% { box-shadow: 0 0 0 6px rgb(var(--c-primary-500) / 0); }
+}
+
+.stage-dot-active {
+  animation: stage-pulse 2s ease-in-out infinite;
+}
+
+/* Animated dashed border for dropzone */
+.upload-dropzone {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23a78bfa' stroke-width='2' stroke-dasharray='10%2c8' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e");
+  border-radius: 16px;
+}
+
+.dark .upload-dropzone {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%237c3aed40' stroke-width='2' stroke-dasharray='10%2c8' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e");
+}
+
+.upload-dropzone.drag-active {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%238b5cf6' stroke-width='3' stroke-dasharray='10%2c8' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e");
+  box-shadow: 0 0 30px -5px rgb(var(--c-primary-500) / 0.25);
+}
+
+/* Success bounce-in */
+@keyframes bounce-in {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.15); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Spin animation for progress ring */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* ─── Auth Screen Premium Floating Animations ─────────────────────────────── */
+
+/* Particles floating upward */
+@keyframes auth-float-up {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0;
+  }
+  5% { opacity: 1; }
+  50% {
+    transform: translateY(-50vh) translateX(20px) scale(1.2);
+    opacity: 0.8;
+  }
+  95% { opacity: 0; }
+  100% {
+    transform: translateY(-110vh) translateX(-10px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Aurora wave horizontal drift */
+@keyframes auth-aurora-drift {
+  0% { transform: rotate(-5deg) translateX(-15%); }
+  100% { transform: rotate(-5deg) translateX(15%); }
+}
+
+/* Floating orbs — gentle wandering */
+@keyframes auth-orb-float {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -20px) scale(1.1);
+  }
+  50% {
+    transform: translate(-15px, -40px) scale(0.95);
+  }
+  75% {
+    transform: translate(20px, -15px) scale(1.05);
+  }
+  100% {
+    transform: translate(-10px, 25px) scale(1);
+  }
+}
+
+/* Light streak diagonal sweep */
+@keyframes auth-streak-sweep {
+  0% {
+    transform: rotate(25deg) translateX(-200px);
+    opacity: 0;
+  }
+  15% { opacity: 1; }
+  50% {
+    transform: rotate(25deg) translateX(100px);
+    opacity: 0.8;
+  }
+  85% { opacity: 1; }
+  100% {
+    transform: rotate(25deg) translateX(400px);
+    opacity: 0;
+  }
 }

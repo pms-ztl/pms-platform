@@ -62,7 +62,7 @@ export function OKRCard({ objective, keyResults, onCheckin, className }: OKRCard
               {objective.status}
             </span>
           </div>
-          <h3 className="text-base font-semibold text-secondary-900 dark:text-white mt-1 line-clamp-2">
+          <h3 className="text-base font-semibold text-secondary-900 dark:text-white mt-1">
             {objective.title}
           </h3>
           <div className="flex items-center gap-3 mt-2 text-xs text-secondary-500 dark:text-secondary-400">
@@ -82,14 +82,14 @@ export function OKRCard({ objective, keyResults, onCheckin, className }: OKRCard
       {/* Key Results */}
       {keyResults.length > 0 && (
         <div className="mt-5 space-y-3">
-          <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+          <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
             Key Results ({keyResults.length})
           </h4>
           {keyResults.map((kr) => (
             <div key={kr.id} className="flex items-center gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm text-secondary-800 dark:text-secondary-200 truncate">
+                  <p className="text-sm text-secondary-800 dark:text-secondary-200 break-words">
                     {kr.title}
                   </p>
                   <span className="text-xs font-medium text-secondary-600 dark:text-secondary-400 shrink-0">

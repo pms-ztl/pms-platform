@@ -12,7 +12,7 @@
  * Feeds intellectual curiosity by surfacing emerging trends and sparking creative thinking.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { querySkillGaps } from '../../agent-tools-v2';
 import { queryInnovationData } from '../../agent-tools-v3';
 
@@ -41,7 +41,7 @@ Scouting principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class CuriosityScoutAgent extends BaseAgent {
+export class CuriosityScoutAgent extends AgenticBaseAgent {
   constructor() {
     super('curiosity_scout', SYSTEM_PROMPT);
   }

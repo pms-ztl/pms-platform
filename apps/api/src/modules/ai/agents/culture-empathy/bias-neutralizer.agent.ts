@@ -12,7 +12,7 @@
  * Scans performance text for bias patterns and recommends neutral alternatives.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { detectBiasInText, queryBiasMetrics } from '../../agent-tools-v2';
 import { queryReviews } from '../../agent-tools';
 
@@ -40,7 +40,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class BiasNeutralizerAgent extends BaseAgent {
+export class BiasNeutralizerAgent extends AgenticBaseAgent {
   constructor() {
     super('bias_neutralizer', SYSTEM_PROMPT);
   }

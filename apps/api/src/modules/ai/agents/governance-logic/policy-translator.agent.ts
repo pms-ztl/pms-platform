@@ -12,7 +12,7 @@
  * Uses compliance status data to ground policy explanations in the organization's actual rules.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryComplianceStatus } from '../../agent-tools-v3';
 
 // -- System Prompt -----------------------------------------------------------
@@ -40,7 +40,7 @@ Communication principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class PolicyTranslatorAgent extends BaseAgent {
+export class PolicyTranslatorAgent extends AgenticBaseAgent {
   constructor() {
     super('policy_translator', SYSTEM_PROMPT);
   }

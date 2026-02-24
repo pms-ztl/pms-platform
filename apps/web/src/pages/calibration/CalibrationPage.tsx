@@ -25,6 +25,7 @@ import {
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 const sessionStatusColors: Record<string, string> = {
   SCHEDULED: 'bg-secondary-100 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-200',
@@ -290,7 +291,7 @@ export function CalibrationPage() {
                 </dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm text-secondary-500 dark:text-secondary-400">Avg. Original</dt>
+                <dt className="text-sm text-secondary-500 dark:text-secondary-400">Average Original</dt>
                 <dd className="text-sm font-medium text-secondary-900 dark:text-white">
                   {sessionReviews && sessionReviews.length > 0
                     ? (sessionReviews.reduce((acc: number, r: CalibrationReview) => acc + (r.overallRating || 0), 0) / sessionReviews.length).toFixed(1)
@@ -298,7 +299,7 @@ export function CalibrationPage() {
                 </dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-sm text-secondary-500 dark:text-secondary-400">Avg. Calibrated</dt>
+                <dt className="text-sm text-secondary-500 dark:text-secondary-400">Average Calibrated</dt>
                 <dd className="text-sm font-medium text-primary-600 dark:text-primary-400">
                   {sessionReviews && sessionReviews.filter((r: CalibrationReview) => r.calibratedRating).length > 0
                     ? (sessionReviews.reduce((acc: number, r: CalibrationReview) => acc + (r.calibratedRating || 0), 0) /
@@ -328,13 +329,13 @@ export function CalibrationPage() {
               <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Employee</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Reviewer</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Level</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Original</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Calibrated</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Status</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Employee</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Reviewer</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Level</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Original</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Calibrated</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Status</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
@@ -366,18 +367,17 @@ export function CalibrationPage() {
       {!showWorkspace ? (
         <>
           {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Calibration</h1>
-              <p className="mt-1 text-secondary-600 dark:text-secondary-400">Ensure fair and consistent performance ratings across teams</p>
-            </div>
+          <PageHeader
+            title="Calibration"
+            subtitle="Ensure fair and consistent performance ratings across teams"
+          >
             {isHRAdmin && (
               <button onClick={() => setShowCreateModal(true)} className="btn-primary">
                 <PlusIcon className="h-5 w-5 mr-2" />
                 Create Session
               </button>
             )}
-          </div>
+          </PageHeader>
 
           {/* Info card */}
           <div className="card card-body bg-primary-50 border-primary-200 dark:bg-primary-900/20 dark:border-primary-800">

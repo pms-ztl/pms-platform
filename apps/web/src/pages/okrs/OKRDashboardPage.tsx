@@ -84,6 +84,191 @@ const views: Array<{ id: ViewMode; label: string; icon: typeof Squares2X2Icon }>
   { id: 'timeline', label: 'Timeline', icon: ChartBarIcon },
 ];
 
+// ── Mock Data (shown when API returns no OKR objectives) ──
+const MOCK_OBJECTIVES: Partial<Goal>[] = [
+  {
+    id: 'mock-okr-1',
+    title: 'Increase Platform Reliability to 99.9% Uptime',
+    type: 'OKR_OBJECTIVE',
+    status: 'ACTIVE',
+    priority: 'HIGH',
+    progress: 72,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    owner: { id: 'mock-o1', firstName: 'Prasina', lastName: 'Sathish' } as any,
+    childGoals: [],
+  },
+  {
+    id: 'mock-okr-2',
+    title: 'Accelerate Customer Onboarding Experience',
+    type: 'OKR_OBJECTIVE',
+    status: 'ACTIVE',
+    priority: 'HIGH',
+    progress: 55,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    owner: { id: 'mock-o2', firstName: 'Danish', lastName: 'A G' } as any,
+    childGoals: [],
+  },
+  {
+    id: 'mock-okr-3',
+    title: 'Build a World-Class Engineering Culture',
+    type: 'OKR_OBJECTIVE',
+    status: 'ACTIVE',
+    priority: 'MEDIUM',
+    progress: 40,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    owner: { id: 'mock-o1', firstName: 'Prasina', lastName: 'Sathish' } as any,
+    childGoals: [],
+  },
+  {
+    id: 'mock-okr-4',
+    title: 'Expand Market Reach in APAC Region',
+    type: 'OKR_OBJECTIVE',
+    status: 'DRAFT',
+    priority: 'MEDIUM',
+    progress: 15,
+    dueDate: '2026-06-30T00:00:00Z',
+    startDate: '2026-04-01T00:00:00Z',
+    owner: { id: 'mock-o3', firstName: 'Preethi', lastName: 'S' } as any,
+    childGoals: [],
+  },
+];
+
+const MOCK_KEY_RESULTS: Partial<Goal>[] = [
+  // KRs for Objective 1: Platform Reliability
+  {
+    id: 'mock-kr-1a',
+    title: 'Reduce average incident response time from 30min to 10min',
+    type: 'OKR_KEY_RESULT',
+    status: 'ACTIVE',
+    progress: 80,
+    parentGoal: { id: 'mock-okr-1' } as any,
+    owner: { id: 'mock-o1', firstName: 'Prasina', lastName: 'Sathish' } as any,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    targetValue: 10,
+    currentValue: 12,
+    unit: 'minutes',
+  },
+  {
+    id: 'mock-kr-1b',
+    title: 'Achieve 99.9% uptime for all production services',
+    type: 'OKR_KEY_RESULT',
+    status: 'ACTIVE',
+    progress: 85,
+    parentGoal: { id: 'mock-okr-1' } as any,
+    owner: { id: 'mock-o1', firstName: 'Prasina', lastName: 'Sathish' } as any,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    targetValue: 99.9,
+    currentValue: 99.85,
+    unit: '%',
+  },
+  {
+    id: 'mock-kr-1c',
+    title: 'Deploy automated rollback for 100% of critical services',
+    type: 'OKR_KEY_RESULT',
+    status: 'ACTIVE',
+    progress: 50,
+    parentGoal: { id: 'mock-okr-1' } as any,
+    owner: { id: 'mock-o1', firstName: 'Prasina', lastName: 'Sathish' } as any,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    targetValue: 100,
+    currentValue: 50,
+    unit: '%',
+  },
+  // KRs for Objective 2: Customer Onboarding
+  {
+    id: 'mock-kr-2a',
+    title: 'Reduce onboarding time from 14 days to 3 days',
+    type: 'OKR_KEY_RESULT',
+    status: 'ACTIVE',
+    progress: 60,
+    parentGoal: { id: 'mock-okr-2' } as any,
+    owner: { id: 'mock-o2', firstName: 'Danish', lastName: 'A G' } as any,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    targetValue: 3,
+    currentValue: 7,
+    unit: 'days',
+  },
+  {
+    id: 'mock-kr-2b',
+    title: 'Achieve 90% customer activation rate within first week',
+    type: 'OKR_KEY_RESULT',
+    status: 'ACTIVE',
+    progress: 45,
+    parentGoal: { id: 'mock-okr-2' } as any,
+    owner: { id: 'mock-o2', firstName: 'Danish', lastName: 'A G' } as any,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    targetValue: 90,
+    currentValue: 72,
+    unit: '%',
+  },
+  // KRs for Objective 3: Engineering Culture
+  {
+    id: 'mock-kr-3a',
+    title: 'Launch internal tech talk series with 12 sessions per quarter',
+    type: 'OKR_KEY_RESULT',
+    status: 'ACTIVE',
+    progress: 33,
+    parentGoal: { id: 'mock-okr-3' } as any,
+    owner: { id: 'mock-o1', firstName: 'Prasina', lastName: 'Sathish' } as any,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    targetValue: 12,
+    currentValue: 4,
+    unit: 'sessions',
+  },
+  {
+    id: 'mock-kr-3b',
+    title: 'Increase engineering satisfaction score from 7.2 to 9.0',
+    type: 'OKR_KEY_RESULT',
+    status: 'ACTIVE',
+    progress: 50,
+    parentGoal: { id: 'mock-okr-3' } as any,
+    owner: { id: 'mock-o1', firstName: 'Prasina', lastName: 'Sathish' } as any,
+    dueDate: '2026-03-31T00:00:00Z',
+    startDate: '2026-01-01T00:00:00Z',
+    targetValue: 9.0,
+    currentValue: 8.1,
+    unit: 'score',
+  },
+  // KRs for Objective 4: APAC Expansion
+  {
+    id: 'mock-kr-4a',
+    title: 'Sign 5 enterprise clients in APAC by Q2',
+    type: 'OKR_KEY_RESULT',
+    status: 'DRAFT',
+    progress: 20,
+    parentGoal: { id: 'mock-okr-4' } as any,
+    owner: { id: 'mock-o3', firstName: 'Preethi', lastName: 'S' } as any,
+    dueDate: '2026-06-30T00:00:00Z',
+    startDate: '2026-04-01T00:00:00Z',
+    targetValue: 5,
+    currentValue: 1,
+    unit: 'clients',
+  },
+  {
+    id: 'mock-kr-4b',
+    title: 'Localize product for 3 APAC languages',
+    type: 'OKR_KEY_RESULT',
+    status: 'DRAFT',
+    progress: 10,
+    parentGoal: { id: 'mock-okr-4' } as any,
+    owner: { id: 'mock-o3', firstName: 'Preethi', lastName: 'S' } as any,
+    dueDate: '2026-06-30T00:00:00Z',
+    startDate: '2026-04-01T00:00:00Z',
+    targetValue: 3,
+    currentValue: 0,
+    unit: 'languages',
+  },
+];
+
 export function OKRDashboardPage() {
   usePageTitle('OKRs');
   const [viewMode, setViewMode] = useState<ViewMode>('detail');
@@ -123,8 +308,10 @@ export function OKRDashboardPage() {
   // Data processing
   // -------------------------------------------------------------------------
 
-  const objectives: Goal[] = objectivesData?.data || [];
-  const keyResults: Goal[] = keyResultsData?.data || [];
+  const rawObjectives: Goal[] = objectivesData?.data || [];
+  const rawKeyResults: Goal[] = keyResultsData?.data || [];
+  const objectives = rawObjectives.length > 0 ? rawObjectives : (MOCK_OBJECTIVES as Goal[]);
+  const keyResults = rawKeyResults.length > 0 ? rawKeyResults : (MOCK_KEY_RESULTS as Goal[]);
 
   const krByParent = useMemo(() => {
     const map = new Map<string, Goal[]>();
@@ -219,13 +406,15 @@ export function OKRDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600 via-orange-500 to-red-500 p-6 text-white shadow-xl">
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
+      <div className="relative overflow-hidden rounded-2xl glass-banner-okr p-6 text-secondary-900 dark:text-white shadow-xl">
+        {/* Decorative gradient orbs — visible through the glass */}
+        <div className="absolute -top-20 -right-20 w-72 h-72 bg-gradient-to-br from-amber-500/30 to-orange-500/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-gradient-to-tr from-red-500/20 to-amber-500/15 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-40 bg-orange-500/10 rounded-full blur-3xl" />
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-2xl font-bold">OKR Dashboard</h1>
-            <p className="text-white/80 text-sm mt-1">
+            <p className="text-secondary-500 dark:text-white/80 text-sm mt-1">
               Objectives & Key Results — {currentQuarterLabel()}
             </p>
           </div>
@@ -234,7 +423,7 @@ export function OKRDashboardPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowTemplates(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors border border-white/20"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-amber-500/15 dark:bg-white/20 backdrop-blur-sm text-amber-700 dark:text-white hover:bg-amber-500/25 dark:hover:bg-white/30 transition-colors border border-amber-500/25 dark:border-white/20"
             >
               <SparklesIcon className="h-3.5 w-3.5" />
               New from Template
@@ -244,7 +433,7 @@ export function OKRDashboardPage() {
         </div>
 
         {/* View Toggle */}
-        <div className="relative z-10 flex items-center gap-0.5 bg-white/15 backdrop-blur-sm p-1 rounded-xl border border-white/20 mt-4 w-fit">
+        <div className="relative z-10 flex items-center gap-0.5 bg-secondary-100/60 dark:bg-white/15 backdrop-blur-sm p-1 rounded-xl border border-secondary-200/60 dark:border-white/20 mt-4 w-fit">
           {views.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -252,8 +441,8 @@ export function OKRDashboardPage() {
               className={clsx(
                 'px-2.5 py-1.5 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 transition-all',
                 viewMode === id
-                  ? 'bg-white text-orange-700 shadow-sm'
-                  : 'text-white/80 hover:text-white hover:bg-white/10'
+                  ? 'bg-white dark:bg-white text-orange-700 shadow-sm'
+                  : 'text-secondary-500 dark:text-white/80 hover:text-secondary-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/10'
               )}
             >
               <Icon className="h-3.5 w-3.5" />
@@ -322,7 +511,7 @@ export function OKRDashboardPage() {
           <OKRProgressRing progress={stats.avgProgress} size={44} strokeWidth={4} />
           <div>
             <p className="text-2xl font-bold text-secondary-900 dark:text-white">{stats.avgProgress}%</p>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400">Avg Progress</p>
+            <p className="text-xs text-secondary-500 dark:text-secondary-400">Average Progress</p>
           </div>
         </div>
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 flex items-center gap-3">

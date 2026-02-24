@@ -12,7 +12,7 @@
  * Uses compliance status and audit events to monitor, detect, and guide POSH compliance.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryComplianceStatus } from '../../agent-tools-v3';
 import { queryAuditEvents } from '../../agent-tools';
 
@@ -41,7 +41,7 @@ Critical principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class POSHSentinelAgent extends BaseAgent {
+export class POSHSentinelAgent extends AgenticBaseAgent {
   constructor() {
     super('posh_sentinel', SYSTEM_PROMPT);
   }

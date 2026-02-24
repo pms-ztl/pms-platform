@@ -170,6 +170,167 @@ function OrbitRing({ size, duration, delay, dotCount, color }: {
 
 
 
+// ── Floating particles — tiny glowing dots drifting upward ──────────────────
+function FloatingParticles() {
+  const particles = [
+    { size: 3, x: 8, delay: 0, dur: 18, opacity: 0.6 },
+    { size: 2, x: 15, delay: 3, dur: 22, opacity: 0.4 },
+    { size: 4, x: 25, delay: 7, dur: 16, opacity: 0.5 },
+    { size: 2, x: 35, delay: 1, dur: 24, opacity: 0.3 },
+    { size: 3, x: 45, delay: 5, dur: 20, opacity: 0.5 },
+    { size: 2, x: 55, delay: 9, dur: 19, opacity: 0.4 },
+    { size: 4, x: 65, delay: 2, dur: 17, opacity: 0.6 },
+    { size: 2, x: 72, delay: 6, dur: 23, opacity: 0.3 },
+    { size: 3, x: 80, delay: 4, dur: 21, opacity: 0.5 },
+    { size: 2, x: 88, delay: 8, dur: 18, opacity: 0.4 },
+    { size: 3, x: 93, delay: 11, dur: 20, opacity: 0.35 },
+    { size: 2, x: 20, delay: 13, dur: 25, opacity: 0.3 },
+    { size: 4, x: 50, delay: 10, dur: 15, opacity: 0.55 },
+    { size: 2, x: 60, delay: 14, dur: 22, opacity: 0.35 },
+    { size: 3, x: 78, delay: 12, dur: 19, opacity: 0.45 },
+  ];
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-[2]">
+      {particles.map((p, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: p.size,
+            height: p.size,
+            left: `${p.x}%`,
+            bottom: '-5%',
+            background: `rgba(255,255,255,${p.opacity})`,
+            boxShadow: `0 0 ${p.size * 3}px ${p.size}px rgba(255,255,255,${p.opacity * 0.5})`,
+            animation: `auth-float-up ${p.dur}s linear infinite`,
+            animationDelay: `${p.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ── Aurora wave bands — subtle flowing light ────────────────────────────────
+function AuroraWaves() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-[2] opacity-[0.12]">
+      {/* Wave 1 — wide sweep */}
+      <div
+        className="absolute w-[200%] h-[40%] -left-1/2 top-[15%]"
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 25%, rgba(200,220,255,0.1) 50%, rgba(255,255,255,0.15) 75%, transparent 100%)',
+          filter: 'blur(60px)',
+          animation: 'auth-aurora-drift 12s ease-in-out infinite alternate',
+          transform: 'rotate(-5deg)',
+        }}
+      />
+      {/* Wave 2 — thinner, faster */}
+      <div
+        className="absolute w-[200%] h-[25%] -left-1/2 top-[55%]"
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 30%, rgba(220,230,255,0.08) 50%, rgba(255,255,255,0.1) 70%, transparent 100%)',
+          filter: 'blur(50px)',
+          animation: 'auth-aurora-drift 9s ease-in-out infinite alternate-reverse',
+          transform: 'rotate(3deg)',
+        }}
+      />
+      {/* Wave 3 — bottom glow */}
+      <div
+        className="absolute w-[200%] h-[20%] -left-1/2 bottom-[5%]"
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 40%, rgba(210,220,240,0.06) 60%, transparent 100%)',
+          filter: 'blur(40px)',
+          animation: 'auth-aurora-drift 15s ease-in-out infinite alternate',
+          transform: 'rotate(-2deg)',
+        }}
+      />
+    </div>
+  );
+}
+
+// ── Floating light orbs — soft luminous spheres ─────────────────────────────
+function FloatingOrbs() {
+  const orbs = [
+    { size: 180, x: 10, y: 20, delay: 0, dur: 25, opacity: 0.04 },
+    { size: 250, x: 75, y: 60, delay: 5, dur: 30, opacity: 0.035 },
+    { size: 120, x: 40, y: 80, delay: 8, dur: 20, opacity: 0.05 },
+    { size: 200, x: 85, y: 15, delay: 12, dur: 28, opacity: 0.03 },
+    { size: 150, x: 55, y: 40, delay: 3, dur: 22, opacity: 0.04 },
+  ];
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-[2]">
+      {orbs.map((o, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: o.size,
+            height: o.size,
+            left: `${o.x}%`,
+            top: `${o.y}%`,
+            background: `radial-gradient(circle, rgba(255,255,255,${o.opacity}) 0%, transparent 70%)`,
+            filter: 'blur(30px)',
+            animation: `auth-orb-float ${o.dur}s ease-in-out infinite alternate`,
+            animationDelay: `${o.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ── Light streaks — diagonal sweeping lines ─────────────────────────────────
+function LightStreaks() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-[2] opacity-[0.08]">
+      {/* Streak 1 */}
+      <div
+        className="absolute"
+        style={{
+          width: '1px',
+          height: '200%',
+          top: '-50%',
+          left: '30%',
+          background: 'linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.8) 45%, rgba(255,255,255,0.8) 55%, transparent 100%)',
+          transform: 'rotate(25deg)',
+          animation: 'auth-streak-sweep 8s ease-in-out infinite',
+          animationDelay: '0s',
+        }}
+      />
+      {/* Streak 2 */}
+      <div
+        className="absolute"
+        style={{
+          width: '1px',
+          height: '200%',
+          top: '-50%',
+          left: '65%',
+          background: 'linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.6) 45%, rgba(255,255,255,0.6) 55%, transparent 100%)',
+          transform: 'rotate(25deg)',
+          animation: 'auth-streak-sweep 10s ease-in-out infinite',
+          animationDelay: '3s',
+        }}
+      />
+      {/* Streak 3 — wider glow */}
+      <div
+        className="absolute"
+        style={{
+          width: '2px',
+          height: '200%',
+          top: '-50%',
+          left: '48%',
+          background: 'linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.5) 40%, rgba(255,255,255,0.5) 60%, transparent 100%)',
+          filter: 'blur(2px)',
+          transform: 'rotate(25deg)',
+          animation: 'auth-streak-sweep 12s ease-in-out infinite',
+          animationDelay: '6s',
+        }}
+      />
+    </div>
+  );
+}
+
 // ── Butterfly card wrapper — gentle 3D tilt for the login card ───────────────
 function ButterflyCard({ children, className, style }: { children: ReactNode; className?: string; style?: React.CSSProperties }) {
   const { ref, handleMouseMove, handleMouseLeave } = useButterflyHover(8);
@@ -193,24 +354,23 @@ function ButterflyCard({ children, className, style }: { children: ReactNode; cl
 // ── Main layout ─────────────────────────────────────────────────────────────
 export function AuthLayout({ children }: AuthLayoutProps) {
   const screenRef = useRef<HTMLDivElement>(null);
+  const videoWrapRef = useRef<HTMLDivElement>(null);
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeVideo = useRef<'A' | 'B'>('A');
   const lastMousePos = useRef({ x: 0, y: 0, time: Date.now() });
-  const currentRate = useRef(0.6);
-  const targetRate = useRef(0.6);
   const decayRaf = useRef(0);
+
+  // Position-based state (for 3D parallax — where cursor IS)
+  const cursorNX = useRef(0);    // normalized cursor X: -1 (left) to +1 (right)
+  const cursorNY = useRef(0);    // normalized cursor Y: -1 (top) to +1 (bottom)
+  // Velocity-based state (for video speed — how fast cursor moves)
+  const velX = useRef(0);
+  const targetVelX = useRef(0);
 
   // Get whichever video element is currently "on top"
   const getActiveVideo = useCallback(() => {
     return activeVideo.current === 'A' ? videoARef.current : videoBRef.current;
-  }, []);
-
-  // Apply playback rate to BOTH videos so they stay in sync speed-wise
-  const applyRate = useCallback((rate: number) => {
-    const clamped = Math.max(0.4, Math.min(rate, 8));
-    if (videoARef.current) videoARef.current.playbackRate = clamped;
-    if (videoBRef.current) videoBRef.current.playbackRate = clamped;
   }, []);
 
   // Seamless loop: crossfade from active to standby video before end
@@ -219,39 +379,28 @@ export function AuthLayout({ children }: AuthLayoutProps) {
     const vidB = videoBRef.current;
     if (!vidA || !vidB) return;
 
-    // Both start at slow speed
-    vidA.playbackRate = 0.6;
-    vidB.playbackRate = 0.6;
-
-    // Preload video B at the start, paused and ready at t=0
+    vidA.playbackRate = 0.5;
+    vidB.playbackRate = 0.5;
     vidB.currentTime = 0;
     vidB.pause();
 
-    const CROSSFADE_OFFSET = 0.5; // Start crossfade 0.5s before end
+    const CROSSFADE_OFFSET = 0.5;
 
     const handleTimeUpdate = () => {
       const active = getActiveVideo();
       if (!active || !active.duration || active.duration === Infinity) return;
-
       const timeLeft = active.duration - active.currentTime;
 
       if (timeLeft <= CROSSFADE_OFFSET && timeLeft > 0) {
-        // Determine which is standby
         const standby = activeVideo.current === 'A' ? vidB : vidA;
         const activeEl = activeVideo.current === 'A' ? vidA : vidB;
-
-        // Start standby from beginning if it's paused / near-end
         if (standby.paused || standby.currentTime > 0.1) {
           standby.currentTime = 0;
           standby.play().catch(() => {});
         }
-
-        // Crossfade opacity: active fades out, standby fades in
         const progress = 1 - (timeLeft / CROSSFADE_OFFSET);
         activeEl.style.opacity = String(1 - progress);
         standby.style.opacity = String(progress);
-
-        // When active finishes, fully switch
         if (timeLeft <= 0.05) {
           activeEl.style.opacity = '0';
           standby.style.opacity = '1';
@@ -262,10 +411,6 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       }
     };
 
-    vidA.addEventListener('timeupdate', handleTimeUpdate);
-    vidB.addEventListener('timeupdate', handleTimeUpdate);
-
-    // Also handle the 'ended' event as a safety net
     const handleEnded = () => {
       const standby = activeVideo.current === 'A' ? vidB : vidA;
       const activeEl = activeVideo.current === 'A' ? vidA : vidB;
@@ -278,9 +423,10 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       activeVideo.current = activeVideo.current === 'A' ? 'B' : 'A';
     };
 
+    vidA.addEventListener('timeupdate', handleTimeUpdate);
+    vidB.addEventListener('timeupdate', handleTimeUpdate);
     vidA.addEventListener('ended', handleEnded);
     vidB.addEventListener('ended', handleEnded);
-
     return () => {
       vidA.removeEventListener('timeupdate', handleTimeUpdate);
       vidB.removeEventListener('timeupdate', handleTimeUpdate);
@@ -289,82 +435,161 @@ export function AuthLayout({ children }: AuthLayoutProps) {
     };
   }, [getActiveVideo]);
 
-  // Smooth RAF-based decay + rate application (no setInterval)
+  // ── MAIN RAF LOOP — position-based 3D parallax + velocity-based video speed ──
   useEffect(() => {
     let running = true;
-    const BASE_RATE = 0.6;
-    const DECAY_LERP = 0.03; // Gentle decay back to base
-    const SPEED_LERP = 0.3; // Snappy acceleration toward target
+    const BASE_RATE = 0.5;
+    const VEL_LERP = 0.08;     // gentle velocity smoothing
+    const VEL_DECAY = 0.02;    // slow velocity decay
+    const POS_LERP = 0.035;    // silky position interpolation (lower = smoother)
+    const TRANSFORM_LERP = 0.04; // double-smooth for transform output
+
+    // Smoothed cursor position (approaches cursorNX/NY gently)
+    const smoothCX = { current: 0 };
+    const smoothCY = { current: 0 };
+    // Smoothed transform output values (double-buffered for silk)
+    const smoothRotY = { current: 0 };
+    const smoothRotX = { current: 0 };
+    const smoothScale = { current: 1 };
+    const smoothTX = { current: 0 };
+    const smoothTY = { current: 0 };
+    const smoothRate = { current: BASE_RATE };
 
     const tick = () => {
       if (!running) return;
 
-      // Lerp toward target, then decay target toward base
-      currentRate.current += (targetRate.current - currentRate.current) * SPEED_LERP;
-      targetRate.current += (BASE_RATE - targetRate.current) * DECAY_LERP;
+      // ── POSITION smoothing: gently approach cursor position ──
+      smoothCX.current += (cursorNX.current - smoothCX.current) * POS_LERP;
+      smoothCY.current += (cursorNY.current - smoothCY.current) * POS_LERP;
 
-      applyRate(currentRate.current);
+      // ── VELOCITY smoothing: for video speed ──
+      velX.current += (targetVelX.current - velX.current) * VEL_LERP;
+      targetVelX.current *= (1 - VEL_DECAY);
+
+      const absVX = Math.abs(velX.current);
+
+      // ── VIDEO SPEED: horizontal velocity drives playback ──
+      let targetPlayRate = BASE_RATE;
+      const vid = getActiveVideo();
+      if (vid && vid.duration && vid.duration !== Infinity) {
+        if (velX.current > 0.03) {
+          // Moving RIGHT → play forward faster
+          targetPlayRate = BASE_RATE + absVX * 4;
+        } else if (velX.current < -0.03) {
+          // Moving LEFT → gently rewind (seek backward)
+          const rewindAmount = absVX * 0.06;
+          vid.currentTime = Math.max(0, vid.currentTime - rewindAmount);
+          targetPlayRate = 0.15;
+        }
+        targetPlayRate = Math.max(0.15, Math.min(targetPlayRate, 3));
+      }
+
+      // Smooth the playback rate
+      smoothRate.current += (targetPlayRate - smoothRate.current) * 0.06;
+      if (videoARef.current) videoARef.current.playbackRate = smoothRate.current;
+      if (videoBRef.current) videoBRef.current.playbackRate = smoothRate.current;
+
+      // ── 3D TRANSFORMS — driven by cursor POSITION (where it IS on screen) ──
+      // Target values: cursor center = neutral, edges = max tilt/shift
+      const cx = smoothCX.current;  // -1 to +1
+      const cy = smoothCY.current;  // -1 to +1
+      const dist = Math.sqrt(cx * cx + cy * cy); // distance from center (0 to ~1.4)
+
+      const tRotY = cx * 4;            // left/right tilt ±4°
+      const tRotX = -cy * 2.5;         // up/down tilt ±2.5°
+      const tScale = 1 + dist * 0.025; // subtle zoom toward edges (up to 1.035)
+      const tTX = cx * 20;             // horizontal shift ±20px
+      const tTY = cy * 12;             // vertical shift ±12px
+
+      // Double-smooth: lerp toward target transforms
+      smoothRotY.current += (tRotY - smoothRotY.current) * TRANSFORM_LERP;
+      smoothRotX.current += (tRotX - smoothRotX.current) * TRANSFORM_LERP;
+      smoothScale.current += (tScale - smoothScale.current) * TRANSFORM_LERP;
+      smoothTX.current += (tTX - smoothTX.current) * TRANSFORM_LERP;
+      smoothTY.current += (tTY - smoothTY.current) * TRANSFORM_LERP;
+
+      const wrap = videoWrapRef.current;
+      if (wrap) {
+        wrap.style.transform = `perspective(1200px) rotateY(${smoothRotY.current}deg) rotateX(${smoothRotX.current}deg) scale(${smoothScale.current}) translate(${smoothTX.current}px, ${smoothTY.current}px)`;
+      }
+
       decayRaf.current = requestAnimationFrame(tick);
     };
 
     decayRaf.current = requestAnimationFrame(tick);
-    return () => {
-      running = false;
-      cancelAnimationFrame(decayRaf.current);
-    };
-  }, [applyRate]);
+    return () => { running = false; cancelAnimationFrame(decayRaf.current); };
+  }, [getActiveVideo]);
 
-  // Cursor-reactive video speed: faster cursor = faster video
+  // ── CURSOR TRACKING — position + horizontal velocity ──
   useEffect(() => {
     const container = screenRef.current;
     if (!container) return;
 
     const handleMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
       const now = Date.now();
       const dt = now - lastMousePos.current.time;
-      if (dt < 16) return; // throttle to ~60fps
-      const dx = e.clientX - lastMousePos.current.x;
-      const dy = e.clientY - lastMousePos.current.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const speed = dist / Math.max(dt, 1); // px per ms
 
-      lastMousePos.current = { x: e.clientX, y: e.clientY, time: now };
+      // ── Position: normalized -1 to +1 based on where cursor IS on screen ──
+      cursorNX.current = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      cursorNY.current = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
 
-      // Map cursor speed to playback rate: idle=0.6x, moderate=3x, fast=8x
-      targetRate.current = Math.min(0.6 + speed * 12, 8);
+      // ── Horizontal velocity: for video speed control (throttled to ~60fps) ──
+      if (dt >= 16) {
+        const dx = e.clientX - lastMousePos.current.x;
+        const timeFactor = Math.max(dt, 1);
+        const rawVX = (dx / timeFactor) * 0.8;
+        targetVelX.current = Math.max(-1, Math.min(rawVX, 1));
+        lastMousePos.current = { x: e.clientX, y: e.clientY, time: now };
+      }
+    };
+
+    const handleLeave = () => {
+      // Smoothly return to center (refs decay via RAF loop lerp)
+      cursorNX.current = 0;
+      cursorNY.current = 0;
+      targetVelX.current = 0;
     };
 
     container.addEventListener('mousemove', handleMove);
+    container.addEventListener('mouseleave', handleLeave);
     return () => {
       container.removeEventListener('mousemove', handleMove);
+      container.removeEventListener('mouseleave', handleLeave);
     };
   }, []);
 
   return (
-    <div ref={screenRef} className="h-screen relative overflow-hidden">
-      {/* ── BG Video — dual-element seamless loop + cursor-reactive speed ── */}
-      <video
-        ref={videoARef}
-        autoPlay
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ opacity: 1, transition: 'none' }}
-        onLoadedData={() => { if (videoARef.current) videoARef.current.playbackRate = 0.6; }}
+    <div ref={screenRef} className="auth-page h-screen relative overflow-hidden">
+      {/* ── BG Video — 3D reactive wrapper ── */}
+      <div
+        ref={videoWrapRef}
+        className="absolute -inset-[5%] z-0"
+        style={{ willChange: 'transform, filter', transition: 'filter 0.3s ease-out' }}
       >
-        <source src="/bg-vid.mp4" type="video/mp4" />
-      </video>
-      <video
-        ref={videoBRef}
-        muted
-        playsInline
-        preload="auto"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ opacity: 0, transition: 'none' }}
-        onLoadedData={() => { if (videoBRef.current) videoBRef.current.playbackRate = 0.6; }}
-      >
-        <source src="/bg-vid.mp4" type="video/mp4" />
-      </video>
+        <video
+          ref={videoARef}
+          autoPlay
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 1, transition: 'none' }}
+          onLoadedData={() => { if (videoARef.current) videoARef.current.playbackRate = 0.5; }}
+        >
+          <source src="/bg-vid.webm" type="video/webm" />
+        </video>
+        <video
+          ref={videoBRef}
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0, transition: 'none' }}
+          onLoadedData={() => { if (videoBRef.current) videoBRef.current.playbackRate = 0.5; }}
+        >
+          <source src="/bg-vid.webm" type="video/webm" />
+        </video>
+      </div>
 
       {/* 35% darken overlay */}
       <div className="absolute inset-0 bg-black/[0.35] pointer-events-none" />
@@ -373,6 +598,12 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)' }} />
 
       <CursorGlow containerRef={screenRef} />
+
+      {/* ── Premium floating animations ─────────────────────────────── */}
+      <FloatingParticles />
+      <AuroraWaves />
+      <FloatingOrbs />
+      <LightStreaks />
 
       {/* ── MAIN CONTENT — 55/45 split, full height ─────────────────── */}
       <div className="relative z-10 h-full flex">
@@ -461,14 +692,14 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         <div className="flex-1 lg:w-[52%] xl:w-[50%] flex items-center justify-center px-4 sm:px-6 lg:px-6 xl:px-8 py-4 relative">
           {/* Orbiting rings behind card */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.18]">
-            <OrbitRing size={700} duration={30} delay={0} dotCount={5} color="rgba(180,190,220,0.4)" />
-            <OrbitRing size={560} duration={25} delay={2} dotCount={3} color="rgba(160,175,210,0.35)" />
-            <OrbitRing size={420} duration={20} delay={4} dotCount={2} color="rgba(140,160,200,0.3)" />
+            <OrbitRing size={700} duration={30} delay={0} dotCount={5} color="rgba(210,210,210,0.35)" />
+            <OrbitRing size={560} duration={25} delay={2} dotCount={3} color="rgba(195,195,195,0.3)" />
+            <OrbitRing size={420} duration={20} delay={4} dotCount={2} color="rgba(180,180,180,0.25)" />
           </div>
 
           {/* Card glow behind */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[680px] h-[850px] rounded-full pointer-events-none animate-nebula-pulse" style={{
-            background: 'radial-gradient(ellipse, rgba(150,165,200,0.08) 0%, rgba(120,140,180,0.04) 40%, transparent 70%)',
+            background: 'radial-gradient(ellipse, rgba(200,200,200,0.06) 0%, rgba(180,180,180,0.03) 40%, transparent 70%)',
             filter: 'blur(50px)',
           }} />
 
@@ -482,7 +713,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
                 {/* #18: Rotating border highlight — now dual color */}
                 <div className="absolute w-[200%] h-[200%] -top-1/2 -left-1/2 animate-spin-slow" style={{
                   animationDuration: '8s',
-                  background: 'conic-gradient(from 0deg, transparent 0%, rgba(180,190,210,0.4) 8%, rgba(140,160,200,0.25) 16%, transparent 24%, transparent 50%, rgba(160,170,200,0.35) 58%, rgba(130,150,190,0.2) 66%, transparent 74%)',
+                  background: 'conic-gradient(from 0deg, transparent 0%, rgba(210,210,210,0.4) 8%, rgba(180,180,180,0.25) 16%, transparent 24%, transparent 50%, rgba(200,200,200,0.35) 58%, rgba(170,170,170,0.2) 66%, transparent 74%)',
                 }} />
               </div>
 
@@ -490,7 +721,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
               <div
                 className="relative rounded-[28px] border border-white/[0.1]"
                 style={{
-                  background: 'rgba(15, 20, 35, 0.55)',
+                  background: 'rgba(20, 20, 20, 0.55)',
                   backdropFilter: 'blur(60px) saturate(1.4) brightness(0.95)',
                   WebkitBackdropFilter: 'blur(60px) saturate(1.4) brightness(0.95)',
                   boxShadow: '0 40px 100px -20px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.15)',
@@ -524,7 +755,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
 
       {/* #20: Bottom bar with text glow */}
       <div className="absolute bottom-2.5 inset-x-0 z-10 flex items-center justify-center pointer-events-none animate-slide-up-fade" style={{ animationDelay: '2s' }}>
-        <span className="text-sm text-white/35 font-medium tracking-[0.2em] uppercase animate-text-glow" style={{ animationDuration: '5s' }}>PMS Suite · Next-Gen Performance Intelligence</span>
+        <span className="text-sm text-white/35 font-medium tracking-[0.2em] animate-text-glow" style={{ animationDuration: '5s' }}>PMS Suite · Next-Gen Performance Intelligence</span>
       </div>
     </div>
   );

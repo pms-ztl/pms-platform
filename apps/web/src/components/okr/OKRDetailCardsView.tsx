@@ -73,11 +73,11 @@ function DetailCard({
         </div>
 
         {/* Title & description */}
-        <h3 className="text-base font-semibold text-secondary-900 dark:text-white mt-2.5 line-clamp-2">
+        <h3 className="text-base font-semibold text-secondary-900 dark:text-white mt-2.5">
           {objective.title}
         </h3>
         {objective.description && (
-          <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1 line-clamp-2">
+          <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
             {objective.description}
           </p>
         )}
@@ -118,7 +118,7 @@ function DetailCard({
           <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-secondary-50 dark:bg-secondary-700/30 rounded-lg">
             <LinkIcon className="h-3.5 w-3.5 text-secondary-400 shrink-0" />
             <span className="text-[10px] font-medium text-secondary-500 dark:text-secondary-400">Aligned to:</span>
-            <span className="text-xs font-medium text-primary-600 dark:text-primary-400 truncate">
+            <span className="text-xs font-medium text-primary-600 dark:text-primary-400 break-words">
               {objective.parentGoal.title}
             </span>
           </div>
@@ -130,7 +130,7 @@ function DetailCard({
             {getInitials(objective.owner)}
           </span>
           <div className="min-w-0">
-            <p className="text-xs font-medium text-secondary-900 dark:text-white truncate">
+            <p className="text-xs font-medium text-secondary-900 dark:text-white break-words">
               {objective.owner?.firstName} {objective.owner?.lastName}
             </p>
             <p className="text-[10px] text-secondary-400">Owner</p>
@@ -140,7 +140,7 @@ function DetailCard({
         {/* Key Results */}
         {keyResults.length > 0 && (
           <div className="mt-4 border-t border-secondary-100 dark:border-secondary-700 pt-3">
-            <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2.5">
+            <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2.5">
               Key Results ({keyResults.length})
             </h4>
             <div className="space-y-2.5">
@@ -152,7 +152,7 @@ function DetailCard({
                         <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
                           KR
                         </span>
-                        <span className="text-xs text-secondary-800 dark:text-secondary-200 truncate">
+                        <span className="text-xs text-secondary-800 dark:text-secondary-200 break-words">
                           {kr.title}
                         </span>
                       </div>

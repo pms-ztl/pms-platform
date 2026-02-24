@@ -158,7 +158,7 @@ function StatCard({
     <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
       <div className="flex items-center justify-between">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+          <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
             {label}
           </p>
           <p className="text-2xl font-bold text-secondary-900 dark:text-white mt-1">{value}</p>
@@ -502,7 +502,7 @@ export function EmployeeProfilePage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {/* Overall Score */}
             <div className="text-center p-3 rounded-lg bg-secondary-50 dark:bg-secondary-900/50">
-              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Overall
               </p>
               <p className={clsx('text-3xl font-bold mt-1', ratingColor(performanceScore.overallScore))}>
@@ -515,7 +515,7 @@ export function EmployeeProfilePage() {
 
             {/* Derived Rating */}
             <div className="text-center p-3 rounded-lg bg-secondary-50 dark:bg-secondary-900/50">
-              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Rating
               </p>
               <div className="flex justify-center mt-2">
@@ -528,7 +528,7 @@ export function EmployeeProfilePage() {
 
             {/* Percentile */}
             <div className="text-center p-3 rounded-lg bg-secondary-50 dark:bg-secondary-900/50">
-              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Percentile
               </p>
               <p className="text-3xl font-bold text-secondary-900 dark:text-white mt-1">
@@ -541,7 +541,7 @@ export function EmployeeProfilePage() {
 
             {/* Trajectory */}
             <div className="text-center p-3 rounded-lg bg-secondary-50 dark:bg-secondary-900/50">
-              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Trajectory
               </p>
               <div className="flex items-center justify-center gap-1 mt-2">
@@ -566,7 +566,7 @@ export function EmployeeProfilePage() {
 
             {/* Confidence */}
             <div className="text-center p-3 rounded-lg bg-secondary-50 dark:bg-secondary-900/50">
-              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Confidence
               </p>
               <p className="text-3xl font-bold text-secondary-900 dark:text-white mt-1">
@@ -579,7 +579,7 @@ export function EmployeeProfilePage() {
 
             {/* Data Points */}
             <div className="text-center p-3 rounded-lg bg-secondary-50 dark:bg-secondary-900/50">
-              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Data Points
               </p>
               <div className="flex justify-center gap-3 mt-2 text-xs">
@@ -644,7 +644,7 @@ export function EmployeeProfilePage() {
           subtitle={`${goalStats.completed} completed, ${goalStats.active} active`}
         />
         <StatCard
-          label="Avg Progress"
+          label="Average Progress"
           value={`${goalStats.avgProgress}%`}
           icon={ChartBarIcon}
           color={goalStats.avgProgress >= 70 ? 'success' : goalStats.avgProgress >= 40 ? 'warning' : 'danger'}
@@ -747,7 +747,7 @@ export function EmployeeProfilePage() {
                   <div key={goal.id} className="flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{goal.title}</p>
+                        <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{goal.title}</p>
                         <span className={clsx('px-1.5 py-0.5 rounded text-[10px] font-medium flex-shrink-0', goalStatusColors[goal.status] || goalStatusColors.ACTIVE)}>
                           {goal.status.replace(/_/g, ' ')}
                         </span>
@@ -791,7 +791,7 @@ export function EmployeeProfilePage() {
                         {format(new Date(fb.createdAt), 'MMM d')}
                       </span>
                     </div>
-                    <p className="text-sm text-secondary-700 dark:text-secondary-300 line-clamp-2">{fb.content}</p>
+                    <p className="text-sm text-secondary-700 dark:text-secondary-300">{fb.content}</p>
                   </div>
                 ))}
               </div>
@@ -814,7 +814,7 @@ export function EmployeeProfilePage() {
                 </div>
                 {evidenceSummary.byType && Object.keys(evidenceSummary.byType).length > 0 && (
                   <div>
-                    <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">By Type</p>
+                    <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">By Type</p>
                     <div className="flex flex-wrap gap-1.5">
                       {Object.entries(evidenceSummary.byType).map(([type, count]) => (
                         <span
@@ -829,7 +829,7 @@ export function EmployeeProfilePage() {
                 )}
                 {evidenceSummary.byStatus && Object.keys(evidenceSummary.byStatus).length > 0 && (
                   <div className="mt-3">
-                    <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">By Status</p>
+                    <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">By Status</p>
                     <div className="flex flex-wrap gap-1.5">
                       {Object.entries(evidenceSummary.byStatus).map(([status, count]) => (
                         <span
@@ -865,7 +865,7 @@ export function EmployeeProfilePage() {
                     className="block p-3 rounded-lg bg-secondary-50 dark:bg-secondary-900/50 hover:bg-secondary-100 dark:hover:bg-secondary-900/80 transition-colors"
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-secondary-900 dark:text-white truncate">{plan.planName}</span>
+                      <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">{plan.planName}</span>
                       <span className={clsx('px-1.5 py-0.5 rounded-full text-[10px] font-medium flex-shrink-0 ml-2', planStatusColors[plan.status] || planStatusColors.DRAFT)}>
                         {plan.status.replace(/_/g, ' ')}
                       </span>
@@ -910,7 +910,7 @@ export function EmployeeProfilePage() {
           ) : (
             <div className="space-y-2">
               {/* Table header */}
-              <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider border-b border-secondary-200 dark:border-secondary-700">
+              <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider border-b border-secondary-200 dark:border-secondary-700">
                 <div className="col-span-4">Goal</div>
                 <div className="col-span-2">Status</div>
                 <div className="col-span-2">Priority</div>
@@ -925,7 +925,7 @@ export function EmployeeProfilePage() {
                   className="grid grid-cols-1 md:grid-cols-12 gap-3 px-3 py-3 rounded-lg items-center hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
                 >
                   <div className="col-span-4">
-                    <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{goal.title}</p>
+                    <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{goal.title}</p>
                     {goal.type && <p className="text-xs text-secondary-400 dark:text-secondary-500">{goal.type}</p>}
                   </div>
                   <div className="col-span-2">
@@ -1014,7 +1014,7 @@ export function EmployeeProfilePage() {
                     </div>
                   </div>
                   {review.summary && (
-                    <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-2 line-clamp-2">{review.summary}</p>
+                    <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-2">{review.summary}</p>
                   )}
                   {review.strengths && review.strengths.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
@@ -1214,7 +1214,7 @@ export function EmployeeProfilePage() {
             ) : (
               <div className="space-y-2">
                 {/* Table header */}
-                <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider border-b border-secondary-200 dark:border-secondary-700">
+                <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider border-b border-secondary-200 dark:border-secondary-700">
                   <div className="col-span-1">Type</div>
                   <div className="col-span-4">Title</div>
                   <div className="col-span-2">Source</div>
@@ -1228,14 +1228,14 @@ export function EmployeeProfilePage() {
                     className="grid grid-cols-1 md:grid-cols-12 gap-3 px-3 py-3 rounded-lg items-center hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
                   >
                     <div className="col-span-1">
-                      <span className={clsx('inline-block px-2 py-0.5 rounded text-[10px] font-semibold uppercase', evidenceTypeColors[evidence.type] || 'bg-secondary-100 text-secondary-700 dark:bg-secondary-700 dark:text-secondary-300')}>
+                      <span className={clsx('inline-block px-2 py-0.5 rounded text-[10px] font-semibold', evidenceTypeColors[evidence.type] || 'bg-secondary-100 text-secondary-700 dark:bg-secondary-700 dark:text-secondary-300')}>
                         {evidence.type}
                       </span>
                     </div>
                     <div className="col-span-4">
-                      <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{evidence.title}</p>
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{evidence.title}</p>
                       {evidence.description && (
-                        <p className="text-xs text-secondary-400 dark:text-secondary-500 truncate">{evidence.description}</p>
+                        <p className="text-xs text-secondary-400 dark:text-secondary-500 break-words">{evidence.description}</p>
                       )}
                     </div>
                     <div className="col-span-2">

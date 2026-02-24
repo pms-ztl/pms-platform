@@ -9,7 +9,7 @@
  * - Automated follow-up suggestions
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import * as tools from '../agent-tools';
 import { DAYS } from '../../../utils/constants';
 
@@ -36,7 +36,7 @@ When writing welcome emails:
 Format onboarding checklists with checkboxes:
 - [ ] Task description (Timeline)`;
 
-export class OnboardingAgent extends BaseAgent {
+export class OnboardingAgent extends AgenticBaseAgent {
   constructor() {
     super('onboarding', SYSTEM_PROMPT);
   }

@@ -704,7 +704,7 @@ export class ExcelUploadService {
         successCount: u.successCount,
         errorCount: u.errorCount,
         status: u.status,
-        uploadedBy: `${u.uploadedBy.firstName} ${u.uploadedBy.lastName}`,
+        uploadedBy: u.uploadedBy ? `${u.uploadedBy.firstName} ${u.uploadedBy.lastName}` : 'Unknown User',
         createdAt: u.createdAt.toISOString(),
       })),
       total,

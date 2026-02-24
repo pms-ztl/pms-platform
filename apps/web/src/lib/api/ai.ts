@@ -51,6 +51,61 @@ export interface AIChatResponse {
   };
   data?: Record<string, unknown>;
   suggestedActions?: Array<{ label: string; url?: string; action?: string }>;
+  taskId?: string;
+}
+
+// ── Agentic Task Types ──────────────────────────────────────
+
+export interface AgentTaskAction {
+  id: string;
+  stepIndex: number;
+  toolName: string;
+  toolInput: Record<string, unknown>;
+  toolOutput: Record<string, unknown> | null;
+  status: string;
+  requiresApproval: boolean;
+  approvedBy: string | null;
+  approvedAt: string | null;
+  rejectionReason: string | null;
+  impactLevel: string;
+  costCents: number;
+  latencyMs: number;
+  reasoning: string | null;
+  createdAt: string;
+  updatedAt: string;
+  task?: { id: string; title: string; agentType: string; goal: string };
+}
+
+export interface AgentTask {
+  id: string;
+  tenantId: string;
+  userId: string;
+  agentType: string;
+  title: string;
+  description: string | null;
+  goal: string;
+  status: string;
+  plan: Array<{
+    toolName: string;
+    toolInput: Record<string, unknown>;
+    reasoning: string;
+    impactLevel: string;
+    requiresApproval: boolean;
+  }> | null;
+  currentStep: number;
+  totalSteps: number;
+  startedAt: string | null;
+  completedAt: string | null;
+  error: string | null;
+  totalCostCents: number;
+  totalTokens: number;
+  result: Record<string, unknown> | null;
+  isProactive: boolean;
+  parentTaskId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  actions: AgentTaskAction[];
+  childTasks?: AgentTask[];
 }
 
 export const aiApi = {
@@ -89,4 +144,39 @@ export const aiApi = {
     totalTokens: number;
     totalCostCents: number;
   }>('/ai/usage'),
+
+  // Agentic Tasks
+  getTasks: (params?: { status?: string; page?: number; limit?: number }) =>
+    api.get<AgentTask[]>('/ai/tasks', { params }),
+  getTask: (id: string) =>
+    api.get<AgentTask>(`/ai/tasks/${id}`),
+  cancelTask: (id: string) =>
+    api.post(`/ai/tasks/${id}/cancel`),
+
+  // Agentic Approvals
+  getPendingApprovals: () =>
+    api.get<AgentTaskAction[]>('/ai/actions/pending'),
+  approveAction: (id: string) =>
+    api.post(`/ai/actions/${id}/approve`),
+  rejectAction: (id: string, reason: string) =>
+    api.post(`/ai/actions/${id}/reject`, { reason }),
+
+  // Multi-Agent Coordination
+  coordinateChat: (message: string, agentTypes: string[], conversationId?: string) =>
+    api.post<AIChatResponse>('/ai/chat/coordinate', { message, agentTypes, conversationId }),
+
+  // Live Agent Activity
+  getActiveAgents: () =>
+    api.get<Array<{
+      id: string;
+      agentType: string;
+      title: string;
+      status: string;
+      currentStep: number;
+      totalSteps: number;
+      startedAt: string | null;
+      isProactive: boolean;
+      parentTaskId: string | null;
+      user: { firstName: string; lastName: string };
+    }>>('/ai/agents/active'),
 };

@@ -9,7 +9,7 @@
  * - Revenue optimization (SA only)
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import * as tools from '../agent-tools';
 import { isAdmin } from '../../../utils/roles';
 import { DAYS, INACTIVE_USER_THRESHOLD_DAYS } from '../../../utils/constants';
@@ -32,7 +32,7 @@ When answering (for admins):
 - Format financial figures clearly
 - Use emoji for status indicators (✅ ⚠️ 🔴 📊 💰)`;
 
-export class LicenseAgent extends BaseAgent {
+export class LicenseAgent extends AgenticBaseAgent {
   constructor() {
     super('license', SYSTEM_PROMPT);
   }

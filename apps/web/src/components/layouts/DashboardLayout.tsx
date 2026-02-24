@@ -1,5 +1,5 @@
-import { Fragment, useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Fragment, useState, useEffect } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Dialog, Transition, Menu } from '@headlessui/react';
 import {
   Cog6ToothIcon,
@@ -9,6 +9,7 @@ import {
   ArrowRightOnRectangleIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  CpuChipIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
@@ -27,6 +28,7 @@ import { ScrollToTop } from '@/components/ui/ScrollToTop';
 import { TopLoadingBar } from '@/components/ui/TopLoadingBar';
 import { useRouteChangeLoader } from '@/hooks/useRouteChangeLoader';
 import { navigationSections, adminSection, type NavItem, type NavSection } from '@/config/navigation';
+import { AIWorkspaceTransition } from '@/components/ai-workspace/AIWorkspaceTransition';
 
 // Navigation config imported from @/config/navigation
 
@@ -121,7 +123,7 @@ function NavSectionGroup({
           section.collapsible && 'cursor-pointer group'
         )}
       >
-        <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-secondary-600 dark:text-primary-400/40 flex-1 text-left">
+        <span className="text-[10px] font-bold tracking-[0.1em] text-secondary-600 dark:text-primary-400/40 flex-1 text-left">
           {section.label}
         </span>
         {section.collapsible && (
@@ -156,6 +158,8 @@ function SidebarContent({
   collapsed,
   onNavigate,
   onToggleCollapse,
+  onAIWorkspaceClick,
+  isAiMode,
 }: {
   userRoles: string[];
   isAdmin: boolean;
@@ -163,6 +167,8 @@ function SidebarContent({
   collapsed?: boolean;
   onNavigate?: () => void;
   onToggleCollapse?: () => void;
+  onAIWorkspaceClick: () => void;
+  isAiMode: boolean;
 }) {
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -172,7 +178,7 @@ function SidebarContent({
           {collapsed ? 'P' : 'PMS'}
         </span>
         {!collapsed && (
-          <span className="ml-2 text-[10px] font-semibold tracking-widest uppercase text-secondary-500">
+          <span className="ml-2 text-[10px] font-semibold tracking-widest text-secondary-500">
             Platform
           </span>
         )}
@@ -181,6 +187,36 @@ function SidebarContent({
             <LiveIndicator />
           </div>
         )}
+      </div>
+
+      {/* Neural Swarm AI entry button */}
+      <div className="shrink-0 px-2 py-2 border-b border-white/[0.06]">
+        <button
+          onClick={onAIWorkspaceClick}
+          title={collapsed ? (isAiMode ? 'Exit AI Workspace' : 'Neural Swarm AI') : undefined}
+          className={clsx(
+            'w-full flex items-center rounded-lg transition-all duration-300',
+            collapsed ? 'justify-center p-2.5' : 'gap-x-2.5 px-3 py-2',
+            isAiMode
+              ? 'bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.15)]'
+              : 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 hover:from-indigo-500/20 hover:to-purple-500/20 border border-indigo-500/20 hover:border-indigo-500/35 text-indigo-300 hover:text-indigo-200'
+          )}
+        >
+          <CpuChipIcon className={clsx('shrink-0', collapsed ? 'h-5 w-5' : 'h-4 w-4')} />
+          {!collapsed && (
+            <>
+              <span className="flex-1 text-left text-[12px] font-medium break-words">
+                {isAiMode ? 'Exit AI Mode' : 'Neural Swarm AI'}
+              </span>
+              {isAiMode && (
+                <span className="relative flex h-1.5 w-1.5 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan-400" />
+                </span>
+              )}
+            </>
+          )}
+        </button>
       </div>
 
       {/* Scrollable nav */}
@@ -242,8 +278,40 @@ export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout, refreshToken } = useAuthStore();
-  const { isAiMode } = useAIWorkspaceStore();
+  const { isAiMode, setAiMode, aiTransitionPhase, setAiTransitionPhase } = useAIWorkspaceStore();
+
+  // ── Cinematic transition timing ─────────────────────────────────────────
+  // When a transition is triggered (from any source), flip `isAiMode` at the
+  // halfway mark (1 500 ms) and clear the phase when the animation ends (3 000 ms).
+  useEffect(() => {
+    if (aiTransitionPhase === 'idle') return;
+
+    const flipTimer = setTimeout(() => {
+      if (aiTransitionPhase === 'entering') setAiMode(true);
+      else if (aiTransitionPhase === 'exiting') setAiMode(false);
+    }, 1_500);
+
+    const doneTimer = setTimeout(() => {
+      setAiTransitionPhase('idle');
+    }, 3_000);
+
+    return () => {
+      clearTimeout(flipTimer);
+      clearTimeout(doneTimer);
+    };
+  }, [aiTransitionPhase, setAiMode, setAiTransitionPhase]);
+
+  const handleAIWorkspaceToggle = () => {
+    if (aiTransitionPhase !== 'idle') return; // block double-trigger
+    if (isAiMode && location.pathname === '/dashboard') {
+      setAiTransitionPhase('exiting');
+    } else {
+      if (location.pathname !== '/dashboard') navigate('/dashboard');
+      setAiTransitionPhase('entering');
+    }
+  };
 
   // Route change loading bar
   useRouteChangeLoader();
@@ -319,6 +387,8 @@ export function DashboardLayout() {
                     isAdmin={isAdmin}
                     pathname={location.pathname}
                     onNavigate={() => setSidebarOpen(false)}
+                    onAIWorkspaceClick={() => { handleAIWorkspaceToggle(); setSidebarOpen(false); }}
+                    isAiMode={isAiMode}
                   />
                 </div>
               </Dialog.Panel>
@@ -341,6 +411,8 @@ export function DashboardLayout() {
             pathname={location.pathname}
             collapsed={sidebarCollapsed}
             onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+            onAIWorkspaceClick={handleAIWorkspaceToggle}
+            isAiMode={isAiMode}
           />
         </div>
       </div>
@@ -363,6 +435,25 @@ export function DashboardLayout() {
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1" />
             <div className="flex items-center gap-x-4 lg:gap-x-5">
+              {/* Neural Swarm AI quick-toggle */}
+              <button
+                onClick={handleAIWorkspaceToggle}
+                title={isAiMode ? 'Exit AI Workspace' : 'Open Neural Swarm AI'}
+                className={clsx(
+                  'relative flex h-8 w-8 items-center justify-center rounded-lg transition-all duration-200',
+                  isAiMode
+                    ? 'bg-gradient-to-br from-cyan-500/25 to-emerald-500/25 text-cyan-400 ring-1 ring-cyan-500/40 shadow-[0_0_10px_rgba(34,211,238,0.2)]'
+                    : 'text-secondary-500 dark:text-secondary-400 hover:bg-white/[0.06] hover:text-secondary-200 dark:hover:text-white'
+                )}
+              >
+                <CpuChipIcon className="h-5 w-5" />
+                {isAiMode && (
+                  <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-400" />
+                  </span>
+                )}
+              </button>
               <ThemeToggle />
               <NotificationBell />
 
@@ -440,6 +531,11 @@ export function DashboardLayout() {
       {/* Global overlays */}
       <CommandPalette />
       <KeyboardShortcuts />
+
+      {/* Cinematic AI workspace transition */}
+      {aiTransitionPhase !== 'idle' && (
+        <AIWorkspaceTransition phase={aiTransitionPhase} />
+      )}
     </div>
   );
 }

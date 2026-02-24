@@ -12,7 +12,7 @@
  * Broadens skill sets by designing structured cross-functional learning experiences.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryUsers } from '../../agent-tools';
 import { querySkillGaps, queryLearningProgress } from '../../agent-tools-v2';
 
@@ -41,7 +41,7 @@ Cross-training principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class CrossTrainingAgent extends BaseAgent {
+export class CrossTrainingAgent extends AgenticBaseAgent {
   constructor() {
     super('cross_training', SYSTEM_PROMPT);
   }

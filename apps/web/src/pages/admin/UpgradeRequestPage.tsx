@@ -14,6 +14,7 @@ import {
   ExclamationTriangleIcon,
   NoSymbolIcon,
 } from '@heroicons/react/24/outline';
+import { PageHeader } from '@/components/ui';
 import { CheckIcon } from '@heroicons/react/24/solid';
 import toast from 'react-hot-toast';
 
@@ -352,13 +353,7 @@ export function UpgradeRequestPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Upgrade Plan</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Compare plans and request an upgrade for your organization
-          </p>
-        </div>
+      <PageHeader title="Upgrade Plan" subtitle="Compare plans and request an upgrade for your organization">
         <button
           onClick={fetchRequests}
           className="inline-flex items-center gap-2 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 shadow-sm hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
@@ -366,7 +361,7 @@ export function UpgradeRequestPage() {
           <ArrowPathIcon className="h-4 w-4" />
           Refresh
         </button>
-      </div>
+      </PageHeader>
 
       {/* Current Plan Card */}
       <div className={`relative overflow-hidden rounded-xl border ${currentPlanDef.borderColor} bg-gradient-to-br ${currentPlanDef.bgGradient} p-6`}>
@@ -442,7 +437,7 @@ export function UpgradeRequestPage() {
                     </div>
                     <div>
                       <h4 className="text-lg font-bold text-secondary-900 dark:text-white">{plan.label}</h4>
-                      <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${plan.badgeColor}`}>
+                      <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide ${plan.badgeColor}`}>
                         L1 &ndash; L{plan.levelLimit}
                       </span>
                     </div>
@@ -539,19 +534,19 @@ export function UpgradeRequestPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-secondary-100 dark:border-secondary-800 bg-secondary-50 dark:bg-secondary-800/50">
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                    <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                       Requested Plan
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                    <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                       Reason
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                    <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                    <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                       Date
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                    <th className="px-6 py-3 text-right text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                       Actions
                     </th>
                   </tr>
@@ -577,7 +572,7 @@ export function UpgradeRequestPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <p className="text-sm text-secondary-600 dark:text-secondary-300 max-w-xs truncate" title={req.reason}>
+                          <p className="text-sm text-secondary-600 dark:text-secondary-300 max-w-xs break-words" title={req.reason}>
                             {req.reason || '—'}
                           </p>
                         </td>
@@ -678,7 +673,7 @@ export function UpgradeRequestPage() {
 
               {/* New features gained */}
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400 mb-2">
+                <p className="text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400 mb-2">
                   What you will get
                 </p>
                 <ul className="space-y-1.5">

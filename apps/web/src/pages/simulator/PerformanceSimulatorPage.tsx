@@ -60,7 +60,7 @@ function ImpactCard({ impact }: { impact: SimulationImpact }) {
           {directionIcons[impact.direction]}
           <h4 className="text-sm font-semibold text-secondary-900 dark:text-white">{impact.area}</h4>
         </div>
-        <span className={clsx('text-[10px] font-bold px-2 py-0.5 rounded-full uppercase', severityColors[impact.severity])}>
+        <span className={clsx('text-[10px] font-bold px-2 py-0.5 rounded-full', severityColors[impact.severity])}>
           {impact.severity}
         </span>
       </div>
@@ -90,7 +90,7 @@ function ConfidenceRing({ confidence }: { confidence: number }) {
       </svg>
       <div className="absolute flex flex-col items-center justify-center" style={{ marginTop: 28 }}>
         <span className="text-2xl font-bold text-secondary-900 dark:text-white">{Math.round(confidence)}%</span>
-        <span className="text-[9px] text-secondary-500 uppercase tracking-wider">Confidence</span>
+        <span className="text-[9px] text-secondary-500 tracking-wider">Confidence</span>
       </div>
     </div>
   );
@@ -223,7 +223,7 @@ export function PerformanceSimulatorPage() {
             >
               <s.icon className={clsx('h-6 w-6 mb-2', isActive ? c.text : 'text-secondary-400')} />
               <h3 className={clsx('text-sm font-semibold', isActive ? c.text : 'text-secondary-900 dark:text-white')}>{s.label}</h3>
-              <p className="text-[10px] text-secondary-500 dark:text-secondary-400 mt-1 line-clamp-2">{s.desc}</p>
+              <p className="text-[10px] text-secondary-500 dark:text-secondary-400 mt-1">{s.desc}</p>
             </button>
           );
         })}
@@ -285,7 +285,7 @@ export function PerformanceSimulatorPage() {
 
               {/* Impacts */}
               <div>
-                <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">Impact Analysis</h3>
+                <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">Impact Analysis</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {result.impacts.map((impact, i) => (
                     <ImpactCard key={i} impact={impact} />
@@ -296,7 +296,7 @@ export function PerformanceSimulatorPage() {
               {/* Cascading effects */}
               {result.cascadingEffects.length > 0 && (
                 <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5">
-                  <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">Cascading Effects</h3>
+                  <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">Cascading Effects</h3>
                   <div className="space-y-3">
                     {result.cascadingEffects.map((ce, i) => (
                       <div key={i} className="flex items-start gap-3">
@@ -317,7 +317,7 @@ export function PerformanceSimulatorPage() {
               {/* Recommendations */}
               {result.recommendations.length > 0 && (
                 <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5">
-                  <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                  <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3 flex items-center gap-1.5">
                     <LightBulbIcon className="h-4 w-4 text-amber-500" /> Recommendations
                   </h3>
                   <div className="space-y-3">
@@ -329,7 +329,7 @@ export function PerformanceSimulatorPage() {
                           <p className="text-xs text-secondary-500 mt-0.5">{rec.description}</p>
                         </div>
                         <span className={clsx(
-                          'text-[9px] font-bold px-2 py-0.5 rounded-full uppercase shrink-0',
+                          'text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0',
                           rec.priority === 'high' ? 'bg-red-100 dark:bg-red-900/30 text-red-600' :
                           rec.priority === 'medium' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600' :
                           'bg-blue-100 dark:bg-blue-900/30 text-blue-600'
@@ -343,7 +343,7 @@ export function PerformanceSimulatorPage() {
               {/* Constraints */}
               {result.constraints.length > 0 && (
                 <div className="rounded-2xl border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-5">
-                  <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">Constraint Checks</h3>
+                  <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">Constraint Checks</h3>
                   <div className="space-y-2">
                     {result.constraints.map((c, i) => (
                       <div key={i} className="flex items-center gap-2">

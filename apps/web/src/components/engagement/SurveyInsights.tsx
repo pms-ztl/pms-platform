@@ -1,8 +1,24 @@
 import { useMemo } from 'react';
 import clsx from 'clsx';
+import {
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
+  ChartBarIcon,
+  BoltIcon,
+  FireIcon,
+  ClipboardDocumentListIcon,
+  TrophyIcon,
+  CalendarDaysIcon,
+  FlagIcon,
+  EyeIcon,
+} from '@heroicons/react/24/outline';
+
+// Use ElementType so we can render as a component
+type IconComponent = React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface InsightCardData {
-  emoji: string;
+  icon: IconComponent;
+  iconColor: string;
   title: string;
   description: string;
   type: 'positive' | 'warning' | 'neutral';
@@ -41,21 +57,24 @@ export function SurveyInsights({ overview, trends, departments, className }: Sur
     // 1. Mood trend insight
     if (overview.trendDirection === 'up') {
       cards.push({
-        emoji: '📈',
+        icon: ArrowTrendingUpIcon,
+        iconColor: 'text-emerald-600 dark:text-emerald-400',
         title: 'Mood Improving',
         description: `Average mood is trending upward at ${(overview.averageMood ?? 0).toFixed(1)}/5.`,
         type: 'positive',
       });
     } else if (overview.trendDirection === 'down') {
       cards.push({
-        emoji: '📉',
+        icon: ArrowTrendingDownIcon,
+        iconColor: 'text-red-500 dark:text-red-400',
         title: 'Mood Declining',
         description: `Average mood is trending downward at ${(overview.averageMood ?? 0).toFixed(1)}/5. Consider a team check-in.`,
         type: 'warning',
       });
     } else {
       cards.push({
-        emoji: '📊',
+        icon: ChartBarIcon,
+        iconColor: 'text-secondary-500 dark:text-secondary-400',
         title: 'Mood Stable',
         description: `Average mood holding steady at ${(overview.averageMood ?? 0).toFixed(1)}/5.`,
         type: 'neutral',
@@ -66,14 +85,16 @@ export function SurveyInsights({ overview, trends, departments, className }: Sur
     if (overview.averageEnergy != null) {
       if (overview.averageEnergy < 2.5) {
         cards.push({
-          emoji: '🔋',
+          icon: BoltIcon,
+          iconColor: 'text-amber-500 dark:text-amber-400',
           title: 'Low Energy Alert',
           description: `Team energy is at ${(overview.averageEnergy ?? 0).toFixed(1)}/5. Consider workload balance.`,
           type: 'warning',
         });
       } else if (overview.averageEnergy >= 4.0) {
         cards.push({
-          emoji: '⚡',
+          icon: BoltIcon,
+          iconColor: 'text-emerald-600 dark:text-emerald-400',
           title: 'High Energy',
           description: `Team energy is strong at ${(overview.averageEnergy ?? 0).toFixed(1)}/5.`,
           type: 'positive',
@@ -84,7 +105,8 @@ export function SurveyInsights({ overview, trends, departments, className }: Sur
     // 3. Stress insight
     if (overview.averageStress != null && overview.averageStress >= 3.5) {
       cards.push({
-        emoji: '🔥',
+        icon: FireIcon,
+        iconColor: 'text-red-500 dark:text-red-400',
         title: 'Stress Alert',
         description: `Average stress is ${(overview.averageStress ?? 0).toFixed(1)}/5. Explore workload redistribution.`,
         type: 'warning',
@@ -94,14 +116,16 @@ export function SurveyInsights({ overview, trends, departments, className }: Sur
     // 4. Participation insight
     if (overview.participationRate < 50) {
       cards.push({
-        emoji: '📋',
+        icon: ClipboardDocumentListIcon,
+        iconColor: 'text-amber-500 dark:text-amber-400',
         title: 'Low Participation',
         description: `Only ${(overview.participationRate ?? 0).toFixed(0)}% participation. Consider reminders or incentives.`,
         type: 'warning',
       });
     } else if (overview.participationRate >= 80) {
       cards.push({
-        emoji: '🎯',
+        icon: FlagIcon,
+        iconColor: 'text-emerald-600 dark:text-emerald-400',
         title: 'Strong Participation',
         description: `${(overview.participationRate ?? 0).toFixed(0)}% participation rate — great engagement.`,
         type: 'positive',
@@ -115,7 +139,8 @@ export function SurveyInsights({ overview, trends, departments, className }: Sur
       if (peakDay && peakDay.responseCount > 0) {
         const dayName = new Date(peakDay.date).toLocaleDateString('en-US', { weekday: 'long' });
         cards.push({
-          emoji: '📅',
+          icon: CalendarDaysIcon,
+          iconColor: 'text-secondary-500 dark:text-secondary-400',
           title: 'Peak Activity Day',
           description: `Most check-ins happen on ${dayName}s (${peakDay.responseCount} responses).`,
           type: 'neutral',
@@ -131,7 +156,8 @@ export function SurveyInsights({ overview, trends, departments, className }: Sur
 
       if (topDept && bottomDept && topDept.departmentName !== bottomDept.departmentName) {
         cards.push({
-          emoji: '🏆',
+          icon: TrophyIcon,
+          iconColor: 'text-emerald-600 dark:text-emerald-400',
           title: 'Top Department',
           description: `${topDept.departmentName} leads with ${(topDept.averageMood ?? 0).toFixed(1)}/5 mood.`,
           type: 'positive',
@@ -139,7 +165,8 @@ export function SurveyInsights({ overview, trends, departments, className }: Sur
 
         if (bottomDept.averageMood < 3.0) {
           cards.push({
-            emoji: '👀',
+            icon: EyeIcon,
+            iconColor: 'text-amber-500 dark:text-amber-400',
             title: 'Needs Attention',
             description: `${bottomDept.departmentName} has the lowest mood at ${(bottomDept.averageMood ?? 0).toFixed(1)}/5.`,
             type: 'warning',
@@ -161,29 +188,32 @@ export function SurveyInsights({ overview, trends, departments, className }: Sur
         Insights
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-        {insights.map((insight, i) => (
-          <div
-            key={i}
-            className={clsx(
-              'rounded-xl border p-4 transition-colors',
-              insight.type === 'positive'
-                ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50'
-                : insight.type === 'warning'
-                  ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800/50'
-                  : 'bg-secondary-50 dark:bg-secondary-800/50 border-secondary-200 dark:border-secondary-700'
-            )}
-          >
-            <div className="flex items-start gap-3">
-              <span className="text-xl flex-shrink-0">{insight.emoji}</span>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-secondary-900 dark:text-white">{insight.title}</p>
-                <p className="text-xs text-secondary-600 dark:text-secondary-400 mt-0.5 leading-relaxed">
-                  {insight.description}
-                </p>
+        {insights.map((insight, i) => {
+          const Icon = insight.icon;
+          return (
+            <div
+              key={i}
+              className={clsx(
+                'rounded-xl border p-4 transition-colors',
+                insight.type === 'positive'
+                  ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50'
+                  : insight.type === 'warning'
+                    ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800/50'
+                    : 'bg-secondary-50 dark:bg-secondary-800/50 border-secondary-200 dark:border-secondary-700'
+              )}
+            >
+              <div className="flex items-start gap-3">
+                <Icon className={clsx('h-5 w-5 flex-shrink-0 mt-0.5', insight.iconColor)} />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-secondary-900 dark:text-white">{insight.title}</p>
+                  <p className="text-xs text-secondary-600 dark:text-secondary-400 mt-0.5 leading-relaxed">
+                    {insight.description}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

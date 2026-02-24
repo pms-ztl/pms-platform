@@ -7,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
   // extensions = [pgcrypto, uuid_ossp]  // Disabled - using Prisma's uuid() instead
 }
 
@@ -126,6 +127,7 @@ model Tenant {
   notifications               Notification[]   @relation("TenantNotifications")
   agentConversations          AgentConversation[]
   aiInsightCards              AIInsightCard[]
+  agentTasks                  AgentTask[]
   upgradeRequests             UpgradeRequest[]
   conversations               Conversation[]
   pulseSurveyResponses        PulseSurveyResponse[]
@@ -731,6 +733,8 @@ model User {
   calendarEvents     CalendarEvent[] @relation("UserCalendarEvents")
   agentConversations AgentConversation[]
   aiInsightCards     AIInsightCard[]
+  agentTasks         AgentTask[]
+  approvedActions    AgentAction[]    @relation("ActionApprover")
 
   // Upgrade Requests
   upgradeRequestsSubmitted UpgradeRequest[] @relation("UpgradeRequester")
@@ -5755,9 +5759,10 @@ model AgentConversation {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  tenant   Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages AgentMessage[]
+  tenant     Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages   AgentMessage[]
+  agentTasks AgentTask[]
 
   @@index([tenantId])
   @@index([userId])
@@ -5805,6 +5810,104 @@ model AIInsightCard {
   @@index([agentType])
   @@index([isRead, isDismissed])
   @@map("ai_insight_cards")
+}
+
+// ── Agentic AI: Task Execution + Approval ───────────────
+
+model AgentTask {
+  id             String    @id @default(uuid()) @db.Uuid
+  tenantId       String    @map("tenant_id") @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  conversationId String?   @map("conversation_id") @db.Uuid
+  agentType      String    @map("agent_type")
+
+  title          String
+  description    String?
+  goal           String
+
+  // Status machine: pending → planning → executing → awaiting_approval → completed | failed | cancelled
+  status         String    @default("pending")
+
+  // Plan (JSON array of step objects)
+  plan           Json?
+  currentStep    Int       @default(0) @map("current_step")
+  totalSteps     Int       @default(0) @map("total_steps")
+
+  // Execution tracking
+  startedAt      DateTime? @map("started_at")
+  completedAt    DateTime? @map("completed_at")
+  error          String?
+
+  // Cost tracking
+  totalCostCents Float     @default(0) @map("total_cost_cents")
+  totalTokens    Int       @default(0) @map("total_tokens")
+
+  // Result summary
+  result         Json?
+
+  // Proactive flag (system-initiated vs user-initiated)
+  isProactive    Boolean   @default(false) @map("is_proactive")
+
+  // Parent-child task hierarchy (coordinator → sub-tasks)
+  parentTaskId   String?   @map("parent_task_id") @db.Uuid
+
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  tenant       Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation AgentConversation?  @relation(fields: [conversationId], references: [id])
+  actions      AgentAction[]
+  parentTask   AgentTask?          @relation("TaskHierarchy", fields: [parentTaskId], references: [id])
+  childTasks   AgentTask[]         @relation("TaskHierarchy")
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([status])
+  @@index([agentType])
+  @@index([isProactive])
+  @@index([parentTaskId])
+  @@map("agent_tasks")
+}
+
+model AgentAction {
+  id               String    @id @default(uuid()) @db.Uuid
+  taskId           String    @map("task_id") @db.Uuid
+  stepIndex        Int       @map("step_index")
+
+  // Tool execution
+  toolName         String    @map("tool_name")
+  toolInput        Json      @map("tool_input")
+  toolOutput       Json?     @map("tool_output")
+
+  // Status: pending → executing → completed | failed | awaiting_approval | approved | rejected
+  status           String    @default("pending")
+
+  // Approval workflow
+  requiresApproval Boolean   @default(false) @map("requires_approval")
+  approvedBy       String?   @map("approved_by") @db.Uuid
+  approvedAt       DateTime? @map("approved_at")
+  rejectionReason  String?   @map("rejection_reason")
+
+  // Impact level: read | low_write | high_write
+  impactLevel      String    @default("read") @map("impact_level")
+
+  // Metrics
+  costCents        Float     @default(0) @map("cost_cents")
+  latencyMs        Int       @default(0) @map("latency_ms")
+
+  // LLM reasoning for this action
+  reasoning        String?
+
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  task     AgentTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  approver User?     @relation("ActionApprover", fields: [approvedBy], references: [id])
+
+  @@index([taskId])
+  @@index([status])
+  @@map("agent_actions")
 }
 
 // ============================================================================

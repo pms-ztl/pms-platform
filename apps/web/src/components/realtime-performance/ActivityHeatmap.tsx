@@ -279,7 +279,7 @@ export function ActivityHeatmap({ mode = 'individual' }: { mode?: 'individual' |
           <div className="space-y-6">
             {/* Team aggregate */}
             <div>
-              <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
+              <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">
                 Team Overview
               </h4>
               <HeatmapGrid data={teamData?.teamAggregate || []} />
@@ -288,7 +288,7 @@ export function ActivityHeatmap({ mode = 'individual' }: { mode?: 'individual' |
             {/* Individual members */}
             {teamData?.members && teamData.members.length > 0 && (
               <div>
-                <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
+                <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">
                   Team Members
                 </h4>
                 <div className="space-y-2">

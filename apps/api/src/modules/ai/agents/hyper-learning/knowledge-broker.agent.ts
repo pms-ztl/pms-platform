@@ -12,7 +12,7 @@
  * Connects people who need knowledge with people who have it.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryUsers } from '../../agent-tools';
 import { querySkillGaps, queryMentorMatches } from '../../agent-tools-v2';
 
@@ -40,7 +40,7 @@ Brokering principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class KnowledgeBrokerAgent extends BaseAgent {
+export class KnowledgeBrokerAgent extends AgenticBaseAgent {
   constructor() {
     super('knowledge_broker', SYSTEM_PROMPT);
   }

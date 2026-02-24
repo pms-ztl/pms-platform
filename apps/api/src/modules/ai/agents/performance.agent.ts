@@ -9,7 +9,7 @@
  * - Performance prediction & coaching insights
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import * as tools from '../agent-tools';
 import { isManager } from '../../../utils/roles';
 
@@ -35,7 +35,7 @@ When drafting reviews:
 
 Use emoji sparingly for status indicators: ✅ ⚠️ 🔴 🎯 📈`;
 
-export class PerformanceAgent extends BaseAgent {
+export class PerformanceAgent extends AgenticBaseAgent {
   constructor() {
     super('performance', SYSTEM_PROMPT);
   }

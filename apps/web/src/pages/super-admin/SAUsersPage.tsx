@@ -214,10 +214,10 @@ export function SAUsersPage() {
             </span>
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+            <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
               {user.firstName} {user.lastName}
             </p>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{user.email}</p>
+            <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{user.email}</p>
           </div>
         </div>
       ),

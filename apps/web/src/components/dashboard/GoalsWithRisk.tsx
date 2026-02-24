@@ -29,7 +29,7 @@ function GoalsWithRisk({ goalsData, goalRisks, goalMappings }: GoalsWithRiskProp
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">My Goals</h2>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">
               {goalMappings && goalMappings.length > 0
-                ? `Composite scores computed from ${goalMappings.reduce((s: number, m: any) => s + (m.childGoals?.length || 0), 0)} sub-goals`
+                ? `Composite scores computed from ${goalMappings.reduce((s: number, m: any) => s + (m?.childGoals?.length || 0), 0)} sub-goals`
                 : 'Mathematical risk assessment per goal'}
             </p>
           </div>
@@ -72,7 +72,7 @@ function GoalsWithRisk({ goalsData, goalRisks, goalMappings }: GoalsWithRiskProp
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex-1 min-w-0 pl-3">
                       <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-semibold text-secondary-900 dark:text-white truncate">
+                        <h3 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">
                           {goal.title}
                         </h3>
                         {risk && riskBadge(risk.riskLevel)}

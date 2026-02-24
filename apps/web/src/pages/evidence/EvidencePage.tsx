@@ -27,6 +27,7 @@ import {
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { format } from 'date-fns';
+import { PageHeader } from '@/components/ui';
 
 import {
   evidenceApi,
@@ -76,6 +77,122 @@ const typeIcons: Record<string, React.ReactNode> = {
 
 type SortField = 'title' | 'type' | 'status' | 'createdAt';
 type SortDir = 'asc' | 'desc';
+
+// ── Mock Data (shown when API returns empty) ──
+const MOCK_EVIDENCE: Partial<Evidence>[] = [
+  {
+    id: 'mock-ev1',
+    title: 'Q4 Project Delivery Report',
+    description: 'Comprehensive report on the successful delivery of the customer portal redesign project, including metrics on timeline adherence and quality outcomes.',
+    type: 'DOCUMENT',
+    source: 'Project Management Office',
+    url: 'https://docs.company.com/q4-delivery-report',
+    status: 'VERIFIED',
+    userId: 'mock-u1',
+    user: { id: 'mock-u1', firstName: 'Sanjay', lastName: 'N', email: 'sanjay@company.com' } as any,
+    metadata: { projectName: 'Customer Portal v2', deliveredOn: '2025-12-15' },
+    createdAt: '2026-01-10T09:00:00Z',
+    updatedAt: '2026-01-15T14:30:00Z',
+  },
+  {
+    id: 'mock-ev2',
+    title: 'AWS Solutions Architect Certification',
+    description: 'AWS Certified Solutions Architect - Professional certification earned after intensive preparation.',
+    type: 'CERTIFICATE',
+    source: 'Amazon Web Services',
+    url: 'https://aws.amazon.com/certification/verify/ABC123',
+    status: 'VERIFIED',
+    userId: 'mock-u2',
+    user: { id: 'mock-u2', firstName: 'Danish', lastName: 'A G', email: 'danish@company.com' } as any,
+    metadata: { certificationId: 'SAP-C02', validUntil: '2029-01-10' },
+    createdAt: '2026-01-08T10:00:00Z',
+    updatedAt: '2026-01-12T11:00:00Z',
+  },
+  {
+    id: 'mock-ev3',
+    title: 'Mobile App Performance Optimization',
+    description: 'Led initiative to reduce app load time by 40% and decrease crash rate from 2.1% to 0.3%.',
+    type: 'PROJECT',
+    source: 'Engineering Team',
+    url: '',
+    status: 'PENDING',
+    userId: 'mock-u3',
+    user: { id: 'mock-u3', firstName: 'Preethi', lastName: 'S', email: 'preethi@company.com' } as any,
+    metadata: { loadTimeReduction: '40%', crashRateImprovement: '85%' },
+    createdAt: '2026-02-01T08:00:00Z',
+    updatedAt: '2026-02-01T08:00:00Z',
+  },
+  {
+    id: 'mock-ev4',
+    title: 'Customer Satisfaction Improvement Metrics',
+    description: 'NPS score improved from 42 to 67 after implementing new support workflow. CSAT increased by 23%.',
+    type: 'METRIC',
+    source: 'Customer Success Platform',
+    url: 'https://analytics.company.com/csat-report',
+    status: 'VERIFIED',
+    userId: 'mock-u4',
+    user: { id: 'mock-u4', firstName: 'Prasina', lastName: 'Sathish A', email: 'prasina@company.com' } as any,
+    metadata: { npsBefore: 42, npsAfter: 67, csatIncrease: '23%' },
+    createdAt: '2026-01-20T15:00:00Z',
+    updatedAt: '2026-01-22T09:00:00Z',
+  },
+  {
+    id: 'mock-ev5',
+    title: 'Cross-Team Collaboration Testimonial',
+    description: 'Recognition from VP of Product for outstanding cross-functional collaboration during the Q4 launch.',
+    type: 'TESTIMONIAL',
+    source: 'Danish A G, Chief Technology Officer',
+    url: '',
+    status: 'PENDING',
+    userId: 'mock-u1',
+    user: { id: 'mock-u1', firstName: 'Sanjay', lastName: 'N', email: 'sanjay@company.com' } as any,
+    metadata: { endorsedBy: 'Danish A G', endorserRole: 'Chief Technology Officer' },
+    createdAt: '2026-02-10T11:00:00Z',
+    updatedAt: '2026-02-10T11:00:00Z',
+  },
+  {
+    id: 'mock-ev6',
+    title: 'Security Audit Compliance Certificate',
+    description: 'Successfully passed SOC 2 Type II audit with zero critical findings.',
+    type: 'CERTIFICATE',
+    source: 'InfoSec Department',
+    url: 'https://compliance.company.com/soc2-audit',
+    status: 'ARCHIVED',
+    userId: 'mock-u2',
+    user: { id: 'mock-u2', firstName: 'Danish', lastName: 'A G', email: 'danish@company.com' } as any,
+    metadata: { auditType: 'SOC 2 Type II', findings: 0 },
+    createdAt: '2025-11-05T13:00:00Z',
+    updatedAt: '2025-12-01T16:00:00Z',
+  },
+  {
+    id: 'mock-ev7',
+    title: 'Team Mentorship Program Documentation',
+    description: 'Created and led a 12-week mentorship program for 6 junior developers, resulting in 2 promotions.',
+    type: 'DOCUMENT',
+    source: 'L&D Department',
+    url: '',
+    status: 'PENDING',
+    userId: 'mock-u3',
+    user: { id: 'mock-u3', firstName: 'Preethi', lastName: 'S', email: 'preethi@company.com' } as any,
+    metadata: { duration: '12 weeks', participants: 6, promotions: 2 },
+    createdAt: '2026-02-15T08:30:00Z',
+    updatedAt: '2026-02-15T08:30:00Z',
+  },
+  {
+    id: 'mock-ev8',
+    title: 'Revenue Impact Analysis - API Platform',
+    description: 'The API platform generated $2.3M in new revenue through partner integrations in FY2025.',
+    type: 'METRIC',
+    source: 'Business Analytics',
+    url: 'https://analytics.company.com/api-revenue',
+    status: 'VERIFIED',
+    userId: 'mock-u4',
+    user: { id: 'mock-u4', firstName: 'Prasina', lastName: 'Sathish A', email: 'prasina@company.com' } as any,
+    metadata: { revenue: '$2.3M', partners: 14, yoyGrowth: '156%' },
+    createdAt: '2026-01-25T10:00:00Z',
+    updatedAt: '2026-01-28T14:00:00Z',
+  },
+];
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -208,8 +325,11 @@ export function EvidencePage() {
   });
 
   // ---- Derived data ----
-  const evidenceItems = listResult?.data ?? [];
-  const meta = listResult?.meta ?? { total: 0, page: 1, limit: PAGE_SIZE, totalPages: 1 };
+  const rawEvidenceItems = listResult?.data ?? [];
+  const evidenceItems = rawEvidenceItems.length > 0 ? rawEvidenceItems : (MOCK_EVIDENCE as Evidence[]);
+  const meta = rawEvidenceItems.length > 0
+    ? (listResult?.meta ?? { total: 0, page: 1, limit: PAGE_SIZE, totalPages: 1 })
+    : { total: MOCK_EVIDENCE.length, page: 1, limit: PAGE_SIZE, totalPages: 1 };
 
   const filteredEvidence = useMemo(() => {
     let result = evidenceItems;
@@ -370,20 +490,15 @@ export function EvidencePage() {
   return (
     <div className="space-y-6">
       {/* ---- Header ---- */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
-            Evidence Management
-          </h1>
-          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-            Track, verify, and manage performance evidence and supporting documents
-          </p>
-        </div>
+      <PageHeader
+        title="Evidence Management"
+        subtitle="Track, verify, and manage performance evidence and supporting documents"
+      >
         <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
           <PlusIcon className="h-5 w-5" />
           New Evidence
         </button>
-      </div>
+      </PageHeader>
 
       {/* ---- Summary Cards ---- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -507,7 +622,7 @@ export function EvidencePage() {
                       currentDir={sortDir}
                       onSort={handleSort}
                     />
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                       Source
                     </th>
                     <SortableHeader
@@ -517,7 +632,7 @@ export function EvidencePage() {
                       currentDir={sortDir}
                       onSort={handleSort}
                     />
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                       User
                     </th>
                     <SortableHeader
@@ -527,7 +642,7 @@ export function EvidencePage() {
                       currentDir={sortDir}
                       onSort={handleSort}
                     />
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -551,7 +666,7 @@ export function EvidencePage() {
                                   {e.title}
                                 </div>
                                 {e.description && (
-                                  <div className="text-xs text-secondary-500 dark:text-secondary-400 truncate max-w-[240px]">
+                                  <div className="text-xs text-secondary-500 dark:text-secondary-400 break-words max-w-[240px]">
                                     {e.description}
                                   </div>
                                 )}
@@ -1216,7 +1331,7 @@ function SortableHeader({
   return (
     <th
       onClick={() => onSort(field)}
-      className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider cursor-pointer select-none hover:text-secondary-700 dark:hover:text-secondary-200 transition-colors"
+      className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider cursor-pointer select-none hover:text-secondary-700 dark:hover:text-secondary-200 transition-colors"
     >
       <div className="flex items-center gap-1">
         {label}

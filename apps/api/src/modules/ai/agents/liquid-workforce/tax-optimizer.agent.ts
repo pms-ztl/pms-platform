@@ -12,7 +12,7 @@
  * Provides general tax-awareness insights based on compensation structure data.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryCompensationData } from '../../agent-tools-v3';
 
 // -- System Prompt -----------------------------------------------------------
@@ -40,7 +40,7 @@ Advisory principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class TaxOptimizerAgent extends BaseAgent {
+export class TaxOptimizerAgent extends AgenticBaseAgent {
   constructor() {
     super('tax_optimizer', SYSTEM_PROMPT);
   }

@@ -13,7 +13,7 @@
  * indicators for stress and cortisol levels.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import {
   queryBurnoutRisk,
   queryCommunicationPatterns,
@@ -47,7 +47,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class CortisolMonitorAgent extends BaseAgent {
+export class CortisolMonitorAgent extends AgenticBaseAgent {
   constructor() {
     super('cortisol_monitor', SYSTEM_PROMPT);
   }

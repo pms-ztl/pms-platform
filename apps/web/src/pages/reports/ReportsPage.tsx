@@ -33,6 +33,7 @@ import {
   PerformanceDistributionChart,
   ScheduledReportsWidget,
 } from '@/components/analytics';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -291,12 +292,7 @@ export function ReportsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Reports</h1>
-        <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-          Generate, download, and schedule performance reports
-        </p>
-      </div>
+      <PageHeader title="Reports" subtitle="Generate, download, and schedule performance reports" />
 
       {/* ================================================================= */}
       {/* Quick Analytics (managers & admins)                               */}
@@ -503,22 +499,22 @@ export function ReportsPage() {
               <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                       Report Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                       Type
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                       Generated Date
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                       Format
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -744,19 +740,19 @@ export function ReportsPage() {
                 <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                   <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Report Type
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Cron Expression
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Next Run
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Last Run
                       </th>
-                      <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Status
                       </th>
                     </tr>

@@ -276,7 +276,7 @@ function CompetencyColumn({
                 {data.comments.length > 0 && (
                   <div className="mt-1.5 space-y-1">
                     {data.comments.slice(0, 2).map((c, i) => (
-                      <p key={i} className="text-xs text-secondary-500 dark:text-secondary-400 italic line-clamp-2">
+                      <p key={i} className="text-xs text-secondary-500 dark:text-secondary-400 italic">
                         &ldquo;{c}&rdquo;
                       </p>
                     ))}
@@ -297,7 +297,7 @@ function CompetencyColumn({
                 .filter((s) => s.summary)
                 .slice(0, 2)
                 .map((s, i) => (
-                  <p key={i} className="text-xs text-secondary-500 dark:text-secondary-400 line-clamp-3 mb-1">
+                  <p key={i} className="text-xs text-secondary-500 dark:text-secondary-400 mb-1">
                     {s.summary}
                   </p>
                 ))}
@@ -691,10 +691,10 @@ export function ModeratorDashboardPage() {
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                          <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                             {emp.employeeName}
                           </p>
-                          <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
+                          <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
                             {emp.jobTitle}
                           </p>
                         </div>
@@ -776,7 +776,7 @@ export function ModeratorDashboardPage() {
                       {selectedEmployee.computedRating !== null && (
                         <div>
                           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-1">
-                            Avg Rating
+                            Average Rating
                           </p>
                           <p
                             className={clsx(
@@ -885,12 +885,19 @@ export function ModeratorDashboardPage() {
                               allowDecimals={false}
                             />
                             <Tooltip
+                              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                               contentStyle={{
-                                backgroundColor: '#1f2937',
-                                border: '1px solid #374151',
-                                borderRadius: '8px',
-                                color: '#f3f4f6',
+                                background: 'rgba(15, 23, 42, 0.80)',
+                                backdropFilter: 'blur(16px)',
+                                WebkitBackdropFilter: 'blur(16px)',
+                                border: '1px solid rgba(148, 163, 184, 0.15)',
+                                borderRadius: '0.75rem',
+                                boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                                fontSize: '0.75rem',
+                                color: '#f1f5f9',
                               }}
+                              labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                              itemStyle={{ color: '#e2e8f0' }}
                             />
                             <Bar
                               dataKey="count"
@@ -1025,12 +1032,19 @@ export function ModeratorDashboardPage() {
                   allowDecimals={false}
                 />
                 <Tooltip
+                  cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                   contentStyle={{
-                    backgroundColor: '#1f2937',
-                    border: '1px solid #374151',
-                    borderRadius: '8px',
-                    color: '#f3f4f6',
+                    background: 'rgba(15, 23, 42, 0.80)',
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    border: '1px solid rgba(148, 163, 184, 0.15)',
+                    borderRadius: '0.75rem',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                    fontSize: '0.75rem',
+                    color: '#f1f5f9',
                   }}
+                  labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                  itemStyle={{ color: '#e2e8f0' }}
                 />
                 <Bar
                   dataKey="count"

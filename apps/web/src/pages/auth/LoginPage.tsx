@@ -83,7 +83,7 @@ function GlassField({
   return (
     <div className="group">
       {/* #25: Label slides down on focus-within */}
-      <label className="block text-lg font-medium text-white/55 mb-3 uppercase tracking-wider group-focus-within:text-white/80 group-focus-within:tracking-[0.2em] transition-all duration-300">
+      <label className="block text-lg font-medium text-white/55 mb-3 tracking-wider group-focus-within:text-white/80 group-focus-within:tracking-[0.2em] transition-all duration-300">
         {label}
       </label>
       <div className="relative">
@@ -214,14 +214,35 @@ export function LoginPage() {
           toast.success('One more step — verify your identity');
           return;
         }
+        // 🔒 Check roles BEFORE touching the store — avoids token-flip side effects
+        const meRes = await fetch('/api/v1/auth/me', {
+          headers: { Authorization: `Bearer ${response.accessToken}` },
+        });
+        const meBody = await meRes.json();
+        const user = meBody.data;
+        if (user?.roles?.includes('Super Admin')) {
+          loginForm.reset();
+          setLoginMode('select');
+          toast.error("Super Admin accounts must sign in via Command Center, not Your Workspace.", { duration: 5000 });
+          return;
+        }
         setTokens(response.accessToken, response.refreshToken);
-        const user = await authApi.me();
         setUser(user);
         toast.success('You\u2019re in. Time to make it count.');
         navigate('/dashboard');
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Login failed');
+      const axiosErr = error as any;
+      const apiMsg: string =
+        axiosErr?.response?.data?.error?.message ||
+        axiosErr?.response?.data?.message ||
+        (error instanceof Error ? error.message : '');
+      // 🔒 Regular user trying "Command Center" — the API says "Super Admin role required"
+      if (loginMode === 'super-admin' && apiMsg.includes('Super Admin role required')) {
+        toast.error("This account doesn't have Command Center access. Please use 'Your Workspace' to sign in.", { duration: 5000 });
+      } else {
+        toast.error(apiMsg || 'Login failed');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -269,7 +290,7 @@ export function LoginPage() {
 
         <form onSubmit={mfaForm.handleSubmit(handleMfaVerify)} className="space-y-6 animate-slide-up-fade" style={{ animationDelay: '0.25s' }}>
           <div>
-            <label className="block text-sm font-medium text-white/55 mb-2 uppercase tracking-wider">Verification Code</label>
+            <label className="block text-sm font-medium text-white/55 mb-2 tracking-wider">Verification Code</label>
             <input
               type="text"
               {...mfaForm.register('code', {

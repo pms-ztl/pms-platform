@@ -34,15 +34,13 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { pulseApi, engagementApi, healthApi } from '@/lib/api';
 import type { AtRiskEmployee } from '@/lib/api';
 import { BurnoutRiskChart } from './BurnoutRiskChart';
+import { MoodFaceIcon } from '@/components/ui/MoodFaceIcon';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-const MOOD_EMOJI: Record<number, string> = { 1: '😔', 2: '😕', 3: '😐', 4: '🙂', 5: '😄' };
 const MOOD_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
 
-function moodEmoji(score: number): string {
-  return MOOD_EMOJI[Math.round(Math.max(1, Math.min(5, score)))] || '😐';
-}
+const MOOD_EMOJI: Record<number, string> = { 1: '😢', 2: '😟', 3: '😐', 4: '😊', 5: '🤩' };
 
 function stressColor(s: number): string {
   if (s >= 4) return 'text-red-600 dark:text-red-400';
@@ -59,11 +57,11 @@ const RISK_BADGE: Record<string, { bg: string; text: string }> = {
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800">
-      <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400">{label}</p>
+    <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+      <p className="font-medium text-slate-300">{label}</p>
       {payload.map((entry: any, idx: number) => (
         <p key={idx} className="text-sm font-semibold" style={{ color: entry.color }}>
-          {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(2) : entry.value}
+          {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(2) : Number(entry.value ?? 0).toFixed(2)}
         </p>
       ))}
     </div>
@@ -234,48 +232,54 @@ export function WellbeingDashboardPage() {
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <HeartIcon className="h-4 w-4 text-pink-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 uppercase font-medium">Wellbeing</p>
+            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Wellbeing</p>
           </div>
-          <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">{healthData?.wellbeingScore?.toFixed(0) ?? '-'}</p>
+          <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">{healthData?.wellbeingScore != null ? Number(healthData.wellbeingScore).toFixed(0) : '-'}</p>
         </div>
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <FaceSmileIcon className="h-4 w-4 text-amber-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 uppercase font-medium">Avg Mood</p>
+            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Average Mood</p>
           </div>
-          <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">
-            {overview?.averageMood?.toFixed(1) ?? '-'} {overview?.averageMood ? moodEmoji(overview.averageMood) : ''}
+          <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1 flex items-center gap-2">
+            {overview?.averageMood != null ? Number(overview.averageMood).toFixed(1) : '-'}
+            {overview?.averageMood ? (
+              <MoodFaceIcon
+                score={Math.round(Math.max(1, Math.min(5, overview.averageMood))) as 1|2|3|4|5}
+                className="w-6 h-6"
+              />
+            ) : null}
           </p>
         </div>
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <FireIcon className="h-4 w-4 text-red-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 uppercase font-medium">Avg Stress</p>
+            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Average Stress</p>
           </div>
           <p className={clsx('text-xl font-bold mt-1', stressColor(overview?.averageStress ?? 0))}>
-            {overview?.averageStress?.toFixed(1) ?? '-'}
+            {overview?.averageStress != null ? Number(overview.averageStress).toFixed(1) : '-'}
           </p>
         </div>
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <ExclamationTriangleIcon className="h-4 w-4 text-red-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 uppercase font-medium">Burnout Risk</p>
+            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Burnout Risk</p>
           </div>
           <p className="text-xl font-bold text-red-600 dark:text-red-400 mt-1">{healthData?.flightRiskCount ?? 0}</p>
         </div>
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <UserGroupIcon className="h-4 w-4 text-blue-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 uppercase font-medium">Participation</p>
+            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Participation</p>
           </div>
           <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">
-            {overview?.participationRate != null ? `${overview.participationRate.toFixed(0)}%` : '-'}
+            {overview?.participationRate != null ? `${Number(overview.participationRate).toFixed(0)}%` : '-'}
           </p>
         </div>
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <TrendIcon className={clsx('h-4 w-4', trendColor)} />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 uppercase font-medium">Trend</p>
+            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Trend</p>
           </div>
           <p className={clsx('text-lg font-bold mt-1', trendColor)}>
             {overview?.trendDirection?.replace('_', ' ') || 'Stable'}
@@ -318,7 +322,7 @@ export function WellbeingDashboardPage() {
                   axisLine={false}
                   tickLine={false}
                 />
-                <Tooltip content={ChartTooltip} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={ChartTooltip} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
                 <Area type="monotone" dataKey="averageMood" name="Mood" stroke="#8b5cf6" fill="url(#moodGrad)" strokeWidth={2} />
                 <Area type="monotone" dataKey="averageEnergy" name="Energy" stroke="#f59e0b" fill="url(#energyGrad)" strokeWidth={2} />
@@ -356,8 +360,8 @@ export function WellbeingDashboardPage() {
                     tickLine={false}
                     width={100}
                   />
-                  <Tooltip content={ChartTooltip} />
-                  <Bar dataKey="averageMood" name="Avg Mood" radius={[0, 6, 6, 0]} maxBarSize={20}>
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={ChartTooltip} />
+                  <Bar dataKey="averageMood" name="Average Mood" radius={[0, 6, 6, 0]} maxBarSize={20}>
                     {deptBarData.map((d, i) => (
                       <Cell key={i} fill={d.averageMood >= 4 ? '#22c55e' : d.averageMood >= 3 ? '#f59e0b' : '#ef4444'} />
                     ))}
@@ -382,12 +386,12 @@ export function WellbeingDashboardPage() {
             <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Employee</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Department</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Score</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Risk Level</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Trend</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Risk Factors</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Employee</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Department</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Score</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Risk Level</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Trend</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Risk Factors</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-secondary-100 dark:divide-secondary-700">
@@ -403,7 +407,7 @@ export function WellbeingDashboardPage() {
                       </td>
                       <td className="px-6 py-3 text-sm text-secondary-600 dark:text-secondary-400">{emp.department || '-'}</td>
                       <td className="px-6 py-3 text-center">
-                        <span className="text-sm font-semibold text-secondary-900 dark:text-white">{(emp.overallScore ?? 0).toFixed(1)}</span>
+                        <span className="text-sm font-semibold text-secondary-900 dark:text-white">{Number(emp.overallScore ?? 0).toFixed(1)}</span>
                       </td>
                       <td className="px-6 py-3 text-center">
                         <span className={clsx('inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full', badge.bg, badge.text)}>
@@ -449,13 +453,14 @@ export function WellbeingDashboardPage() {
                     ))}
                   </Pie>
                   <Tooltip
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                     content={({ active, payload }) => {
                       if (!active || !payload?.length) return null;
                       const d = payload[0].payload;
                       return (
-                        <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs">
-                          <p className="font-semibold">{MOOD_EMOJI[d.score] || ''} Mood {d.score}</p>
-                          <p className="text-secondary-500 dark:text-secondary-400">{d.value} responses</p>
+                        <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs">
+                          <p className="font-semibold text-white">{MOOD_EMOJI[d.score] || ''} Mood {d.score}</p>
+                          <p className="text-slate-300">{d.value} responses</p>
                         </div>
                       );
                     }}

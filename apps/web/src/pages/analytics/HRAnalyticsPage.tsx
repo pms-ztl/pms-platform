@@ -152,9 +152,9 @@ function CompScatterTooltip({ active, payload }: any) {
   if (!active || !payload || !payload.length) return null;
   const d = payload[0].payload;
   return (
-    <div className="bg-secondary-900 text-white text-xs rounded-lg shadow-lg p-3 border border-secondary-700">
+    <div className="bg-slate-900/80 backdrop-blur-xl text-white text-xs rounded-xl shadow-2xl p-3 border border-white/10">
       <p className="font-semibold text-sm mb-1">{d.name}</p>
-      <p className="text-secondary-300">{d.department}</p>
+      <p className="text-slate-300">{d.department}</p>
       <div className="mt-2 space-y-1">
         <p>Rating: <span className="font-medium text-primary-400">{d.rating}</span></p>
         <p>Compensation: <span className="font-medium text-green-400">${d.compensation.toLocaleString()}</span></p>
@@ -270,7 +270,16 @@ function EmptyState({ message = 'No data available' }: { message?: string }) {
 // ---------------------------------------------------------------------------
 const AXIS_STYLE = { fill: '#9ca3af', fontSize: 12 };
 const GRID_STYLE = { strokeDasharray: '3 3', stroke: '#374151' };
-const TOOLTIP_STYLE = { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px' };
+const TOOLTIP_STYLE = {
+  background: 'rgba(15, 23, 42, 0.80)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  border: '1px solid rgba(148, 163, 184, 0.15)',
+  borderRadius: '0.75rem',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+  fontSize: '0.75rem',
+  color: '#f1f5f9',
+};
 
 // ---------------------------------------------------------------------------
 // HRAnalyticsPage
@@ -356,7 +365,7 @@ export function HRAnalyticsPage() {
           {tiers.map((tier) => (
             <StatCard
               key={tier.label}
-              label={`Avg Comp: ${tier.label}`}
+              label={`Average Compensation: ${tier.label}`}
               value={`$${tier.avgComp.toLocaleString()}`}
               icon={<ChartBarSquareIcon className="h-6 w-6 text-green-600 dark:text-green-400" />}
               color="success"
@@ -403,7 +412,7 @@ export function HRAnalyticsPage() {
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
                   label={{ value: 'Compensation ($)', angle: -90, position: 'insideLeft', offset: 10, fill: '#9ca3af', fontSize: 12 }}
                 />
-                <Tooltip content={<CompScatterTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<CompScatterTooltip />} />
                 {/* Trend line */}
                 <Scatter name="Trend" data={trendLineData} fill="none" line={{ stroke: '#6b7280', strokeWidth: 2, strokeDasharray: '8 4' }} shape={() => null as any} legendType="none" />
                 {/* Employee dots */}
@@ -433,8 +442,8 @@ export function HRAnalyticsPage() {
               <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
-                    {['Name', 'Department', 'Rating', 'Current Comp', 'Expected Comp', 'Gap %', 'Action Needed'].map((h) => (
-                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    {['Name', 'Department', 'Rating', 'Current Compensation', 'Expected Compensation', 'Gap %', 'Action Needed'].map((h) => (
+                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         {h}
                       </th>
                     ))}
@@ -485,7 +494,7 @@ export function HRAnalyticsPage() {
           )}
         </div>
 
-        {/* Comp Ratio by Department */}
+        {/* Compensation Ratio by Department */}
         {deptRatios.length > 0 && (
           <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
@@ -495,8 +504,8 @@ export function HRAnalyticsPage() {
               <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
-                    {['Department', 'Employees', 'Avg Compensation', 'Comp Ratio (vs Median)'].map((h) => (
-                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    {['Department', 'Employees', 'Average Compensation', 'Compensation Ratio (vs Median)'].map((h) => (
+                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         {h}
                       </th>
                     ))}
@@ -592,7 +601,7 @@ export function HRAnalyticsPage() {
                   <CartesianGrid {...GRID_STYLE} />
                   <XAxis dataKey="department" tick={AXIS_STYLE} interval={0} angle={-20} textAnchor="end" height={60} />
                   <YAxis tick={AXIS_STYLE} />
-                  <Tooltip contentStyle={TOOLTIP_STYLE} itemStyle={{ color: '#e5e7eb' }} labelStyle={{ color: '#fff', fontWeight: 600 }} />
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} itemStyle={{ color: '#e5e7eb' }} labelStyle={{ color: '#fff', fontWeight: 600 }} />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
                   <Bar dataKey="Rating 1" fill={RATING_BAR_COLORS[0]} radius={[2, 2, 0, 0]} />
                   <Bar dataKey="Rating 2" fill={RATING_BAR_COLORS[1]} radius={[2, 2, 0, 0]} />
@@ -616,7 +625,7 @@ export function HRAnalyticsPage() {
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
                     {['Department', 'Mean Rating', 'Std Deviation', 'Significance'].map((h) => (
-                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         {h}
                       </th>
                     ))}
@@ -674,11 +683,12 @@ export function HRAnalyticsPage() {
                   <XAxis dataKey="manager" tick={AXIS_STYLE} />
                   <YAxis domain={[0, 5]} tick={AXIS_STYLE} />
                   <Tooltip
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                     contentStyle={TOOLTIP_STYLE}
                     labelStyle={{ color: '#fff', fontWeight: 600 }}
                     formatter={(value: number, _: string, entry: any) => [
                       `${(value ?? 0).toFixed(2)} (${entry.payload.reviewCount} reviews)`,
-                      'Avg Rating',
+                      'Average Rating',
                     ]}
                   />
                   <ReferenceLine y={overallMean} stroke="#ef4444" strokeDasharray="6 3" strokeWidth={2} label={{ value: `Mean: ${(overallMean ?? 0).toFixed(2)}`, position: 'insideTopRight', fill: '#ef4444', fontSize: 11 }} />
@@ -736,8 +746,8 @@ export function HRAnalyticsPage() {
               <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
-                    {['Grouping', 'Category', 'Count', 'Avg Rating', 'Std Dev', 'Status'].map((h) => (
-                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    {['Grouping', 'Category', 'Count', 'Average Rating', 'Std Dev', 'Status'].map((h) => (
+                      <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         {h}
                       </th>
                     ))}
@@ -853,7 +863,7 @@ export function HRAnalyticsPage() {
                   <CartesianGrid {...GRID_STYLE} />
                   <XAxis dataKey="rating" tick={AXIS_STYLE} label={{ value: 'Rating', position: 'insideBottom', offset: -5, fill: '#9ca3af', fontSize: 12 }} />
                   <YAxis tick={AXIS_STYLE} label={{ value: 'Count', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 12 }} />
-                  <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#fff', fontWeight: 600 }} itemStyle={{ color: '#e5e7eb' }} />
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#fff', fontWeight: 600 }} itemStyle={{ color: '#e5e7eb' }} />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
                   <Area
                     type="monotone"
@@ -903,7 +913,7 @@ export function HRAnalyticsPage() {
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   {['Employee', 'Department', 'Original Rating', 'Z-Score', 'Normalized Rating', 'Adjustment'].map((h) => (
-                    <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                    <th key={h} className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                       {h}
                     </th>
                   ))}

@@ -12,7 +12,7 @@
  * Guides ethical concern reporting and monitors compliance signals for misconduct indicators.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryComplianceStatus } from '../../agent-tools-v3';
 import { queryAuditEvents } from '../../agent-tools';
 
@@ -42,7 +42,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class WhistleblowerAgent extends BaseAgent {
+export class WhistleblowerAgent extends AgenticBaseAgent {
   constructor() {
     super('whistleblower', SYSTEM_PROMPT);
   }

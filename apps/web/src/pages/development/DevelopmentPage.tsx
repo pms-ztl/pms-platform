@@ -14,6 +14,7 @@ import {
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -222,11 +223,11 @@ function PlanCard({ plan, showEmployee }: { plan: DevelopmentPlan; showEmployee?
               </div>
             )}
             <div className="min-w-0">
-              <h3 className="text-sm font-semibold text-secondary-900 dark:text-white truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+              <h3 className="text-sm font-semibold text-secondary-900 dark:text-white break-words group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                 {plan.planName}
               </h3>
               {showEmployee && plan.user && (
-                <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
+                <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
                   {plan.user.firstName} {plan.user.lastName}
                   {plan.user.jobTitle ? ` -- ${plan.user.jobTitle}` : ''}
                 </p>
@@ -248,7 +249,7 @@ function PlanCard({ plan, showEmployee }: { plan: DevelopmentPlan; showEmployee?
 
         {/* Career goal preview */}
         {plan.careerGoal && (
-          <p className="text-sm text-secondary-600 dark:text-secondary-400 line-clamp-2 mb-3">
+          <p className="text-sm text-secondary-600 dark:text-secondary-400 mb-3">
             {plan.careerGoal}
           </p>
         )}
@@ -613,15 +614,10 @@ export function DevelopmentPage() {
   return (
     <div className="space-y-6">
       {/* ── Header ── */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
-            Development Plans
-          </h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Plan and track professional growth and skill development
-          </p>
-        </div>
+      <PageHeader
+        title="Development Plans"
+        subtitle="Plan and track professional growth and skill development"
+      >
         <button
           onClick={() => setShowCreateModal(true)}
           className="bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-2 transition-colors"
@@ -629,7 +625,7 @@ export function DevelopmentPage() {
           <PlusIcon className="h-5 w-5" />
           Create Plan
         </button>
-      </div>
+      </PageHeader>
 
       {/* ── Tabs ── */}
       <div className="border-b border-secondary-200 dark:border-secondary-700">

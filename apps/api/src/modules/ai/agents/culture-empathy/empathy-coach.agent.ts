@@ -12,7 +12,7 @@
  * Coaches individuals on empathetic communication using real feedback and performance data.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryFeedback } from '../../agent-tools';
 import {
   queryCommunicationPatterns,
@@ -43,7 +43,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class EmpathyCoachAgent extends BaseAgent {
+export class EmpathyCoachAgent extends AgenticBaseAgent {
   constructor() {
     super('empathy_coach', SYSTEM_PROMPT);
   }

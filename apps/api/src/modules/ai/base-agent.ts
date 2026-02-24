@@ -14,6 +14,7 @@ import { logger, auditLogger } from '../../utils/logger';
 import { isSuperAdmin, isAdmin, isManager, isEmployeeOnly } from '../../utils/roles';
 import { llmClient, type LLMMessage, type LLMResponse, type LLMProvider } from './llm-client';
 import { agentMemory } from './agent-memory';
+import { outputValidator } from './output-validator';
 
 // ── Role Category (for RBAC) ─────────────────────────────
 export type RoleCategory = 'super_admin' | 'admin' | 'manager' | 'employee';
@@ -66,6 +67,8 @@ export interface AgentResponse {
   data?: Record<string, unknown>;
   /** Suggested actions the user can take */
   suggestedActions?: Array<{ label: string; url?: string; action?: string }>;
+  /** Present when an agentic task was created (multi-step execution) */
+  taskId?: string;
 }
 
 // ── Base Agent ─────────────────────────────────────────────
@@ -87,6 +90,7 @@ export abstract class BaseAgent {
     userId: string,
     userMessage: string,
     conversationId?: string,
+    _delegationDepth?: number,
   ): Promise<AgentResponse> {
     const start = Date.now();
 
@@ -178,8 +182,14 @@ export abstract class BaseAgent {
       // Parse structured data from response if the agent supports it
       const parsed = this.parseResponse(llmResponse);
 
+      // VALIDATE: Run output through guardrails before returning to user
+      const validated = outputValidator.validate(parsed.message, {
+        tenantName: context.tenantName,
+        roleCategory: context.roleCategory,
+      });
+
       return {
-        message: parsed.message,
+        message: validated.content,
         conversationId: convoId,
         agentType: this.agentType,
         metadata: {

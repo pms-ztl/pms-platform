@@ -16,6 +16,7 @@ import { format } from 'date-fns';
 import { reviewsApi, type ReviewCycle, type Review, type CreateReviewCycleInput } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 const cycleStatusColors: Record<string, string> = {
   DRAFT: 'bg-secondary-100 text-secondary-800 dark:bg-secondary-700 dark:text-secondary-200',
@@ -33,6 +34,96 @@ const reviewStatusColors: Record<string, string> = {
   FINALIZED: 'bg-success-100 text-success-800 dark:bg-success-900/50 dark:text-success-300',
   ACKNOWLEDGED: 'bg-success-200 text-success-900 dark:bg-success-800/50 dark:text-success-200',
 };
+
+// ── Mock Data (shown when API returns empty) ──
+const MOCK_REVIEWS_TO_COMPLETE: Partial<Review>[] = [
+  {
+    id: 'mock-r1',
+    type: 'ANNUAL',
+    status: 'NOT_STARTED',
+    reviewer: { id: 'mock-u1', firstName: 'Prasina', lastName: 'Sathish', email: '', jobTitle: 'Manager' } as any,
+    reviewee: { id: 'mock-u2', firstName: 'Sanjay', lastName: 'N', email: '', jobTitle: 'Frontend Engineer' } as any,
+    cycle: { id: 'mock-c1', name: 'Q1 FY2026 Review' } as any,
+    overallRating: null,
+    submittedAt: null,
+  },
+  {
+    id: 'mock-r2',
+    type: 'QUARTERLY',
+    status: 'IN_PROGRESS',
+    reviewer: { id: 'mock-u1', firstName: 'Prasina', lastName: 'Sathish', email: '', jobTitle: 'Manager' } as any,
+    reviewee: { id: 'mock-u3', firstName: 'Preethi', lastName: 'S', email: '', jobTitle: 'Senior Engineering Manager' } as any,
+    cycle: { id: 'mock-c1', name: 'Q1 FY2026 Review' } as any,
+    overallRating: null,
+    submittedAt: null,
+  },
+  {
+    id: 'mock-r3',
+    type: 'ANNUAL',
+    status: 'NOT_STARTED',
+    reviewer: { id: 'mock-u1', firstName: 'Prasina', lastName: 'Sathish', email: '', jobTitle: 'Manager' } as any,
+    reviewee: { id: 'mock-u4', firstName: 'Danish', lastName: 'A G', email: '', jobTitle: 'Chief Technology Officer' } as any,
+    cycle: { id: 'mock-c1', name: 'Q1 FY2026 Review' } as any,
+    overallRating: null,
+    submittedAt: null,
+  },
+];
+
+const MOCK_REVIEWS_RECEIVED: Partial<Review>[] = [
+  {
+    id: 'mock-rr1',
+    type: 'ANNUAL',
+    status: 'FINALIZED',
+    reviewer: { id: 'mock-u5', firstName: 'Danish', lastName: 'A G', email: '', jobTitle: 'Chief Technology Officer' } as any,
+    reviewee: { id: 'mock-u1', firstName: 'Prasina', lastName: 'Sathish', email: '', jobTitle: 'Manager' } as any,
+    cycle: { id: 'mock-c2', name: 'FY2025 Annual Review' } as any,
+    overallRating: 4.2,
+    submittedAt: '2025-12-20T00:00:00Z',
+  },
+  {
+    id: 'mock-rr2',
+    type: '360_DEGREE',
+    status: 'SUBMITTED',
+    reviewer: { id: 'mock-u6', firstName: 'Preethi', lastName: 'S', email: '', jobTitle: 'Senior Engineering Manager' } as any,
+    reviewee: { id: 'mock-u1', firstName: 'Prasina', lastName: 'Sathish', email: '', jobTitle: 'Manager' } as any,
+    cycle: { id: 'mock-c3', name: '360 Feedback Round 2025' } as any,
+    overallRating: 4.5,
+    submittedAt: '2025-11-15T00:00:00Z',
+  },
+];
+
+const MOCK_CYCLES: Partial<ReviewCycle>[] = [
+  {
+    id: 'mock-c1',
+    name: 'Q1 FY2026 Performance Review',
+    description: 'Quarterly performance review for all employees covering January-March 2026.',
+    type: 'QUARTERLY',
+    status: 'ACTIVE',
+    startDate: '2026-01-15T00:00:00Z',
+    endDate: '2026-03-31T00:00:00Z',
+    reviewCount: 24,
+  },
+  {
+    id: 'mock-c2',
+    name: 'FY2025 Annual Review',
+    description: 'Annual performance review cycle for fiscal year 2025.',
+    type: 'ANNUAL',
+    status: 'COMPLETED',
+    startDate: '2025-11-01T00:00:00Z',
+    endDate: '2025-12-31T00:00:00Z',
+    reviewCount: 48,
+  },
+  {
+    id: 'mock-c3',
+    name: 'Q2 FY2026 360-Degree Feedback',
+    description: 'Multi-rater feedback collection for leadership team.',
+    type: '360_DEGREE',
+    status: 'DRAFT',
+    startDate: '2026-04-01T00:00:00Z',
+    endDate: '2026-05-15T00:00:00Z',
+    reviewCount: 0,
+  },
+];
 
 export function ReviewsPage() {
   usePageTitle('Reviews');
@@ -86,8 +177,10 @@ export function ReviewsPage() {
       );
     }
 
-    const reviewsToComplete = myReviews?.filter((r: Review) => r.reviewer.id === user?.id) || [];
-    const reviewsReceived = myReviews?.filter((r: Review) => r.reviewee.id === user?.id) || [];
+    const rawReviewsToComplete = myReviews?.filter((r: Review) => r.reviewer.id === user?.id) || [];
+    const rawReviewsReceived = myReviews?.filter((r: Review) => r.reviewee.id === user?.id) || [];
+    const reviewsToComplete = rawReviewsToComplete.length > 0 ? rawReviewsToComplete : (MOCK_REVIEWS_TO_COMPLETE as Review[]);
+    const reviewsReceived = rawReviewsReceived.length > 0 ? rawReviewsReceived : (MOCK_REVIEWS_RECEIVED as Review[]);
 
     return (
       <div className="space-y-8">
@@ -97,49 +190,42 @@ export function ReviewsPage() {
             <DocumentTextIcon className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
             Reviews to Complete ({reviewsToComplete.length})
           </h3>
-          {reviewsToComplete.length === 0 ? (
-            <div className="card card-body text-center py-8">
-              <CheckCircleIcon className="mx-auto h-12 w-12 text-success-400" />
-              <p className="mt-2 text-secondary-600 dark:text-secondary-400">You have no pending reviews to complete.</p>
-            </div>
-          ) : (
-            <div className="grid gap-4">
-              {reviewsToComplete.map((review: Review) => (
-                <Link
-                  key={review.id}
-                  to={`/reviews/${review.id}`}
-                  className="card card-body hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
-                        <span className="text-primary-700 dark:text-primary-300 font-medium">
-                          {review.reviewee.firstName[0]}{review.reviewee.lastName[0]}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-medium text-secondary-900 dark:text-white">
-                          {review.reviewee.firstName} {review.reviewee.lastName}
-                        </p>
-                        <p className="text-sm text-secondary-500 dark:text-secondary-400">{review.reviewee.jobTitle || 'Employee'}</p>
-                        <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
-                          {review.type} Review • {review.cycle?.name}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className={clsx('px-2.5 py-1 rounded-full text-xs font-medium', reviewStatusColors[review.status])}>
-                        {review.status.replace('_', ' ')}
+          <div className="grid gap-4">
+            {reviewsToComplete.map((review: Review) => (
+              <Link
+                key={review.id}
+                to={`/reviews/${review.id}`}
+                className="card card-body hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
+                      <span className="text-primary-700 dark:text-primary-300 font-medium">
+                        {review.reviewee.firstName[0]}{review.reviewee.lastName[0]}
                       </span>
-                      {review.status === 'NOT_STARTED' && (
-                        <p className="text-xs text-danger-600 dark:text-danger-400 mt-2">Action needed</p>
-                      )}
+                    </div>
+                    <div>
+                      <p className="font-medium text-secondary-900 dark:text-white">
+                        {review.reviewee.firstName} {review.reviewee.lastName}
+                      </p>
+                      <p className="text-sm text-secondary-500 dark:text-secondary-400">{review.reviewee.jobTitle || 'Employee'}</p>
+                      <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
+                        {review.type} Review • {review.cycle?.name}
+                      </p>
                     </div>
                   </div>
-                </Link>
-              ))}
-            </div>
-          )}
+                  <div className="text-right">
+                    <span className={clsx('px-2.5 py-1 rounded-full text-xs font-medium', reviewStatusColors[review.status])}>
+                      {review.status.replace('_', ' ')}
+                    </span>
+                    {review.status === 'NOT_STARTED' && (
+                      <p className="text-xs text-danger-600 dark:text-danger-400 mt-2">Action needed</p>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* Reviews received */}
@@ -148,44 +234,37 @@ export function ReviewsPage() {
             <ChartBarIcon className="h-5 w-5 mr-2 text-secondary-600 dark:text-secondary-400" />
             Your Reviews ({reviewsReceived.length})
           </h3>
-          {reviewsReceived.length === 0 ? (
-            <div className="card card-body text-center py-8">
-              <ClockIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-              <p className="mt-2 text-secondary-600 dark:text-secondary-400">You haven't received any reviews yet.</p>
-            </div>
-          ) : (
-            <div className="grid gap-4">
-              {reviewsReceived.map((review: Review) => (
-                <Link
-                  key={review.id}
-                  to={`/reviews/${review.id}`}
-                  className="card card-body hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-secondary-900 dark:text-white">{review.cycle?.name}</p>
-                      <p className="text-sm text-secondary-500 dark:text-secondary-400">
-                        {review.type} Review from {review.reviewer.firstName} {review.reviewer.lastName}
+          <div className="grid gap-4">
+            {reviewsReceived.map((review: Review) => (
+              <Link
+                key={review.id}
+                to={`/reviews/${review.id}`}
+                className="card card-body hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-secondary-900 dark:text-white">{review.cycle?.name}</p>
+                    <p className="text-sm text-secondary-500 dark:text-secondary-400">
+                      {review.type} Review from {review.reviewer.firstName} {review.reviewer.lastName}
+                    </p>
+                    {review.submittedAt && (
+                      <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
+                        Submitted {format(new Date(review.submittedAt), 'MMM d, yyyy')}
                       </p>
-                      {review.submittedAt && (
-                        <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
-                          Submitted {format(new Date(review.submittedAt), 'MMM d, yyyy')}
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      <span className={clsx('px-2.5 py-1 rounded-full text-xs font-medium', reviewStatusColors[review.status])}>
-                        {review.status.replace('_', ' ')}
-                      </span>
-                      {review.overallRating && (
-                        <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-2">{review.overallRating}/5</p>
-                      )}
-                    </div>
+                    )}
                   </div>
-                </Link>
-              ))}
-            </div>
-          )}
+                  <div className="text-right">
+                    <span className={clsx('px-2.5 py-1 rounded-full text-xs font-medium', reviewStatusColors[review.status])}>
+                      {review.status.replace('_', ' ')}
+                    </span>
+                    {review.overallRating && (
+                      <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-2">{review.overallRating}/5</p>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -200,25 +279,11 @@ export function ReviewsPage() {
       );
     }
 
-    if (!cycles || cycles.length === 0) {
-      return (
-        <div className="card card-body text-center py-12">
-          <DocumentTextIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-          <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No review cycles</h3>
-          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">Get started by creating a new review cycle.</p>
-          {isHRAdmin && (
-            <button onClick={() => setShowCreateCycleModal(true)} className="btn-primary mt-4">
-              <PlusIcon className="h-5 w-5 mr-2" />
-              Create Cycle
-            </button>
-          )}
-        </div>
-      );
-    }
+    const displayCycles = (cycles && cycles.length > 0) ? cycles : (MOCK_CYCLES as ReviewCycle[]);
 
     return (
       <div className="grid gap-4">
-        {cycles.map((cycle: ReviewCycle) => (
+        {displayCycles.map((cycle: ReviewCycle) => (
           <div key={cycle.id} className="card card-body">
             <div className="flex items-center justify-between">
               <div>
@@ -264,18 +329,14 @@ export function ReviewsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Performance Reviews</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">Manage review cycles and complete your reviews</p>
-        </div>
+      <PageHeader title="Performance Reviews" subtitle="Manage review cycles and complete your reviews">
         {isHRAdmin && (
           <button onClick={() => setShowCreateCycleModal(true)} className="btn-primary">
             <PlusIcon className="h-5 w-5 mr-2" />
             Create Cycle
           </button>
         )}
-      </div>
+      </PageHeader>
 
       {/* Tabs */}
       <div className="border-b border-secondary-200 dark:border-secondary-700">

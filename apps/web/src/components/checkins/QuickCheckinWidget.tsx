@@ -4,10 +4,12 @@ import {
   ChevronUpIcon,
   PaperAirplaneIcon,
   CheckCircleIcon,
+  ClipboardDocumentListIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/store/auth';
+import { MoodFaceIcon } from '@/components/ui/MoodFaceIcon';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -19,14 +21,14 @@ interface CheckinEntry {
   win: string;
 }
 
-// ── Mood emojis ──────────────────────────────────────────────────────────────
+// ── Mood options ──────────────────────────────────────────────────────────────
 
 const moods = [
-  { emoji: '\uD83D\uDE1E', label: 'Struggling', value: 1 },
-  { emoji: '\uD83D\uDE15', label: 'Stressed', value: 2 },
-  { emoji: '\uD83D\uDE10', label: 'Okay', value: 3 },
-  { emoji: '\uD83D\uDE0A', label: 'Good', value: 4 },
-  { emoji: '\uD83D\uDE04', label: 'Great', value: 5 },
+  { label: 'Struggling', value: 1 as const },
+  { label: 'Stressed',   value: 2 as const },
+  { label: 'Okay',       value: 3 as const },
+  { label: 'Good',       value: 4 as const },
+  { label: 'Great',      value: 5 as const },
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -133,7 +135,9 @@ export function QuickCheckinWidget() {
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-            <span className="text-lg">{submitted ? '\u2705' : '\uD83D\uDCDD'}</span>
+            {submitted
+              ? <CheckCircleIcon className="h-5 w-5 text-white" />
+              : <ClipboardDocumentListIcon className="h-5 w-5 text-white" />}
           </div>
           <div className="text-left">
             <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">Quick Check-in</h3>
@@ -194,7 +198,11 @@ export function QuickCheckinWidget() {
                           : 'hover:bg-secondary-50 dark:hover:bg-secondary-700/50'
                       )}
                     >
-                      <span className="text-2xl">{m.emoji}</span>
+                      <MoodFaceIcon
+                        score={m.value}
+                        className="w-8 h-8 transition-transform duration-200 group-hover:scale-110"
+                        selected={mood === m.value}
+                      />
                       <span className="text-[8px] font-medium text-secondary-500">{m.label}</span>
                     </button>
                   ))}

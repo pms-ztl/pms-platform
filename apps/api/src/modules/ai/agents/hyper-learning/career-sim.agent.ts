@@ -12,7 +12,7 @@
  * Lets users explore hypothetical career paths with data-driven projections.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { querySkillGaps, queryPerformanceSnapshots } from '../../agent-tools-v2';
 import { queryCareerSimulation } from '../../agent-tools-v3';
 
@@ -41,7 +41,7 @@ Simulation principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class CareerSimAgent extends BaseAgent {
+export class CareerSimAgent extends AgenticBaseAgent {
   constructor() {
     super('career_sim', SYSTEM_PROMPT);
   }

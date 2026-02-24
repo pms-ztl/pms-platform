@@ -33,6 +33,7 @@ import {
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -335,15 +336,10 @@ export function CompensationPage() {
   return (
     <div className="space-y-6">
       {/* ---- Header ---- */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
-            Compensation Management
-          </h1>
-          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-            Manage compensation decisions, approvals, and budget allocation
-          </p>
-        </div>
+      <PageHeader
+        title="Compensation Management"
+        subtitle="Manage compensation decisions, approvals, and budget allocation"
+      >
         <div className="flex items-center gap-4">
           {/* Budget utilization bar */}
           <div className="hidden md:flex items-center gap-3 min-w-[200px]">
@@ -368,7 +364,7 @@ export function CompensationPage() {
             New Compensation Decision
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* ---- Summary Cards ---- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -477,7 +473,7 @@ export function CompensationPage() {
                   <tr>
                     {['Employee', 'Type', 'Current', 'Proposed', 'Change %', 'Status', 'Effective Date', 'Actions'].map(
                       (h) => (
-                        <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           {h}
                         </th>
                       ),

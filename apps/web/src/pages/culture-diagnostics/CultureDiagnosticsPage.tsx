@@ -135,8 +135,8 @@ export function CultureDiagnosticsPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs space-y-1">
-        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
+      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+        <p className="font-semibold text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color || p.fill }}>{p.name}: {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}</p>
         ))}
@@ -226,10 +226,10 @@ export function CultureDiagnosticsPage() {
         {/* Gauge */}
         <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6 flex flex-col items-center">
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-2">Overall Health</h3>
-          <div className="h-44 w-44">
+          <div className="h-[100px] w-[200px] mx-auto">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={healthGauge} dataKey="value" startAngle={180} endAngle={0} cx="50%" cy="85%" outerRadius={80} innerRadius={55} paddingAngle={0}>
+              <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                <Pie data={healthGauge} dataKey="value" startAngle={180} endAngle={0} cx="50%" cy="100%" outerRadius={80} innerRadius={55} paddingAngle={0}>
                   <Cell fill={level.color} />
                   <Cell fill="var(--color-secondary-200, #e5e7eb)" />
                 </Pie>
@@ -249,7 +249,7 @@ export function CultureDiagnosticsPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} horizontal={false} />
                 <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
                 <YAxis type="category" dataKey="dimension" tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} width={75} />
-                <Tooltip content={<ChartTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 <Bar dataKey="score" name="Score" barSize={16} radius={[0, 6, 6, 0]}>
                   {dimensionData.map((d, i) => <Cell key={i} fill={scoreColor(d.score)} />)}
                 </Bar>
@@ -293,7 +293,7 @@ export function CultureDiagnosticsPage() {
                     <PolarAngleAxis dataKey="type" tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} />
                     <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 8, fill: 'var(--color-secondary-400, #9ca3af)' }} />
                     <Radar name="Culture Score" dataKey="score" stroke="#e11d48" fill="#e11d48" fillOpacity={0.25} />
-                    <Tooltip content={<ChartTooltip />} />
+                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>

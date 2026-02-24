@@ -52,6 +52,7 @@ import {
   PerformanceDistributionChart,
   type FilterState,
 } from '@/components/analytics';
+import { PageHeader } from '@/components/ui';
 
 const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'];
 
@@ -201,7 +202,7 @@ export function AnalyticsPage() {
             `${dashboard.goals.completed} completed`
           )}
           {renderMetricCard(
-            'Avg Goal Progress',
+            'Average Goal Progress',
             `${dashboard.goals.avgProgress}%`,
             <ChartBarIcon className="h-6 w-6 text-primary-600" />,
             undefined,
@@ -290,7 +291,7 @@ export function AnalyticsPage() {
                 <span className="text-lg font-bold dark:text-white">{dashboard.reviews.activeCycles}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-secondary-600 dark:text-secondary-400">Avg Rating</span>
+                <span className="text-sm text-secondary-600 dark:text-secondary-400">Average Rating</span>
                 <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{dashboard.reviews.avgRating}/5</span>
               </div>
               <div className="flex justify-between items-center">
@@ -320,7 +321,7 @@ export function AnalyticsPage() {
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">{dashboard.team.avgGoalsPerEmployee}</div>
-                <div className="text-sm text-secondary-500 dark:text-secondary-400">Avg Goals/Employee</div>
+                <div className="text-sm text-secondary-500 dark:text-secondary-400">Average Goals/Employee</div>
               </div>
             </div>
           </div>
@@ -358,7 +359,7 @@ export function AnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="rating" tickFormatter={(v) => `${v} Star`} />
                 <YAxis />
-                <Tooltip formatter={(value) => [`${value} employees`, 'Count']} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} formatter={(value) => [`${value} employees`, 'Count']} />
                 <Bar dataKey="count" fill="#3b82f6">
                   {distribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index]} />
@@ -380,11 +381,11 @@ export function AnalyticsPage() {
             <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Department</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Employees</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Avg Goal Progress</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Avg Rating</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Feedback</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Department</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Employees</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Average Goal Progress</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Average Rating</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Feedback</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
@@ -426,7 +427,21 @@ export function AnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
                 <XAxis dataKey="month" className="fill-secondary-500 dark:fill-secondary-400" />
                 <YAxis className="fill-secondary-500 dark:fill-secondary-400" />
-                <Tooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg, #fff)', borderColor: 'var(--tooltip-border, #e5e7eb)' }} />
+                <Tooltip
+                  cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                  contentStyle={{
+                    background: 'rgba(15, 23, 42, 0.80)',
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    border: '1px solid rgba(148, 163, 184, 0.15)',
+                    borderRadius: '0.75rem',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                    fontSize: '0.75rem',
+                    color: '#f1f5f9',
+                  }}
+                  labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                  itemStyle={{ color: '#e2e8f0' }}
+                />
                 <Legend />
                 <Line type="monotone" dataKey="created" stroke="#3b82f6" name="Created" strokeWidth={2} />
                 <Line type="monotone" dataKey="completed" stroke="#22c55e" name="Completed" strokeWidth={2} />
@@ -447,7 +462,7 @@ export function AnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
                 <XAxis dataKey="month" className="fill-secondary-500 dark:fill-secondary-400" />
                 <YAxis unit="%" className="fill-secondary-500 dark:fill-secondary-400" />
-                <Tooltip formatter={(value) => [`${value}%`, 'Completion Rate']} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} formatter={(value) => [`${value}%`, 'Completion Rate']} />
                 <Bar dataKey="completionRate" fill="#22c55e" name="Completion Rate" />
               </BarChart>
             </ResponsiveContainer>
@@ -470,7 +485,7 @@ export function AnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
                 <XAxis dataKey="month" className="fill-secondary-500 dark:fill-secondary-400" />
                 <YAxis className="fill-secondary-500 dark:fill-secondary-400" />
-                <Tooltip />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
                 <Legend />
                 <Line type="monotone" dataKey="praise" stroke="#22c55e" name="Praise" strokeWidth={2} />
                 <Line type="monotone" dataKey="constructive" stroke="#f97316" name="Constructive" strokeWidth={2} />
@@ -504,7 +519,7 @@ export function AnalyticsPage() {
                   <Cell fill="#22c55e" />
                   <Cell fill="#f97316" />
                 </Pie>
-                <Tooltip />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -546,11 +561,11 @@ export function AnalyticsPage() {
               <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                 <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Dimension</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Category</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Count</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Avg Rating</th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Variance</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Dimension</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Category</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Count</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Average Rating</th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Variance</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
@@ -588,13 +603,9 @@ export function AnalyticsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Analytics</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">Insights into performance, goals, and feedback</p>
-        </div>
+      <PageHeader title="Analytics" subtitle="Insights into performance, goals, and feedback">
         {isHRAdmin && <ExportToolbar />}
-      </div>
+      </PageHeader>
 
       {/* Filters */}
       <AnalyticsFilters

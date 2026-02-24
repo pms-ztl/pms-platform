@@ -13,7 +13,7 @@
  * communication patterns to detect and prevent burnout before it escalates.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import {
   queryBurnoutRisk,
   queryWorkloadDistribution,
@@ -47,7 +47,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class BurnoutInterceptorAgent extends BaseAgent {
+export class BurnoutInterceptorAgent extends AgenticBaseAgent {
   constructor() {
     super('burnout_interceptor', SYSTEM_PROMPT);
   }

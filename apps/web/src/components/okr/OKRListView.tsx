@@ -116,7 +116,7 @@ function ListRow({
             <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 shrink-0">
               OBJ
             </span>
-            <span className="text-sm font-medium text-secondary-900 dark:text-white truncate max-w-[260px]">
+            <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">
               {objective.title}
             </span>
           </div>
@@ -142,7 +142,7 @@ function ListRow({
             <span className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-[10px] font-bold shrink-0">
               {initials}
             </span>
-            <span className="text-xs text-secondary-600 dark:text-secondary-300 truncate max-w-[100px]">
+            <span className="text-xs text-secondary-600 dark:text-secondary-300 break-words">
               {objective.owner?.firstName} {objective.owner?.lastName}
             </span>
           </div>
@@ -204,7 +204,7 @@ function ListRow({
                   <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 shrink-0">
                     KR
                   </span>
-                  <span className="text-sm text-secondary-700 dark:text-secondary-200 truncate max-w-[240px]">
+                  <span className="text-sm text-secondary-700 dark:text-secondary-200 break-words">
                     {kr.title}
                   </span>
                 </div>

@@ -295,6 +295,193 @@ class AIController {
       next(error);
     }
   }
+
+  // ── Agentic Task Endpoints ────────────────────────────────
+
+  /**
+   * GET /ai/tasks — list user's agentic tasks
+   */
+  async listTasks(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { status, page, limit } = req.query as {
+        status?: string;
+        page?: string;
+        limit?: string;
+      };
+
+      const result = await aiService.getTasks(req.tenantId!, req.user!.id, {
+        status,
+        page: page ? parseInt(page, 10) : 1,
+        limit: limit ? parseInt(limit, 10) : 20,
+      });
+
+      res.status(200).json({
+        success: true,
+        data: result.data,
+        meta: {
+          total: result.total,
+          page: result.page,
+          limit: result.limit,
+          totalPages: result.totalPages,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /ai/tasks/:id — get task with full action details
+   */
+  async getTask(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const task = await aiService.getTask(req.tenantId!, req.user!.id, req.params.id);
+      if (!task) {
+        res.status(404).json({ success: false, error: { message: 'Task not found' } });
+        return;
+      }
+      res.status(200).json({ success: true, data: task });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * POST /ai/tasks/:id/cancel — cancel a running task
+   */
+  async cancelTask(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      await aiService.cancelTask(req.tenantId!, req.user!.id, req.params.id);
+      res.status(200).json({ success: true, message: 'Task cancelled' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /ai/actions/pending — get all pending approvals
+   */
+  async getPendingApprovals(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const actions = await aiService.getPendingApprovals(req.tenantId!, req.user!.id);
+      res.status(200).json({ success: true, data: actions });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * POST /ai/actions/:id/approve — approve a pending action
+   */
+  async approveAction(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const result = await aiService.approveAction(
+        req.tenantId!,
+        req.user!.id,
+        req.params.id,
+      );
+      res.status(200).json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * POST /ai/actions/:id/reject — reject a pending action
+   */
+  async rejectAction(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { reason } = req.body as { reason?: string };
+      if (!reason || reason.trim().length === 0) {
+        throw new ValidationError('Rejection reason is required');
+      }
+
+      const result = await aiService.rejectAction(
+        req.tenantId!,
+        req.user!.id,
+        req.params.id,
+        reason,
+      );
+      res.status(200).json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
+  }
+  // ── Coordinated Multi-Agent Chat ─────────────────────────
+
+  /**
+   * POST /ai/chat/coordinate — coordinate a multi-agent task
+   */
+  async coordinateChat(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const { message, agentTypes, conversationId } = req.body as {
+        message: string;
+        agentTypes: string[];
+        conversationId?: string;
+      };
+
+      if (!message || message.trim().length === 0) {
+        throw new ValidationError('Message is required');
+      }
+      if (!agentTypes || !Array.isArray(agentTypes) || agentTypes.length < 2) {
+        throw new ValidationError('At least 2 agent types are required for coordination');
+      }
+
+      const result = await aiService.coordinateChat(req.tenantId!, req.user!.id, {
+        message,
+        agentTypes,
+        conversationId,
+      });
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /ai/agents/active — get currently active agent tasks (for live feed)
+   */
+  async getActiveAgents(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const agents = await aiService.getActiveAgents(req.tenantId!);
+      res.status(200).json(agents);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const aiController = new AIController();

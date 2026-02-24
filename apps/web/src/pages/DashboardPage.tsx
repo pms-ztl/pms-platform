@@ -46,10 +46,29 @@ import type { StatItem, ActivityItem } from '@/components/dashboard';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────────
+
+/**
+ * DashboardPage — top-level route component.
+ *
+ * Keeps the AI-mode conditional return BEFORE any hooks by delegating
+ * the real dashboard UI to DashboardContent. This avoids the React
+ * "hooks called in different order" error that occurs when an early
+ * return sits between hook calls.
+ */
 export function DashboardPage() {
   usePageTitle('Dashboard');
-  const { user } = useAuthStore();
   const { isAiMode } = useAIWorkspaceStore();
+
+  if (isAiMode) {
+    return <AIWorkspacePage />;
+  }
+
+  return <DashboardContent />;
+}
+
+// ─── Dashboard Content (non-AI mode) ────────────────────────────────────────
+function DashboardContent() {
+  const { user } = useAuthStore();
 
   // ── Onboarding Wizard ──────────────────────────────────────────────────
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -63,12 +82,6 @@ export function DashboardPage() {
       }
     } catch { /* localStorage unavailable */ }
   }, [user]);
-
-  // If AI workspace mode is active, render the immersive AI workspace
-  // (API endpoints are protected server-side; no client-side gate needed)
-  if (isAiMode) {
-    return <AIWorkspacePage />;
-  }
 
   const isManager = (user?.roles ?? []).some((r) => MANAGER_ROLES.includes(r));
 
@@ -140,7 +153,8 @@ export function DashboardPage() {
       );
       return results
         .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled')
-        .map(r => r.value);
+        .map(r => r.value)
+        .filter(Boolean); // skip null (goals with no sub-goals return null from API)
     },
     enabled: goalIds.length > 0,
     staleTime: 60_000,
@@ -242,7 +256,7 @@ export function DashboardPage() {
       icon: FlagIcon,
       change: atRiskGoals.length > 0
         ? `${atRiskGoals.length} at risk`
-        : goalsData?.data?.length ? `${avgProgress}% avg progress` : 'No goals yet',
+        : goalsData?.data?.length ? `${avgProgress}% Average Progress` : 'No goals yet',
       changeType: atRiskGoals.length > 0 ? 'negative' : 'positive',
       gradient: 'from-blue-500 to-cyan-400',
       bgGradient: 'from-blue-500/10 to-cyan-400/10',
@@ -317,33 +331,73 @@ export function DashboardPage() {
       )}
 
       {/* ═══════════════════ Hero Section ═══════════════════ */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-700 via-primary-600 to-accent-600 p-8 text-white shadow-2xl shine-sweep">
+      <div className="relative overflow-hidden rounded-2xl border px-7 py-4 text-white shine-sweep"
+        style={{
+          background: 'linear-gradient(135deg, rgba(124,58,237,0.78) 0%, rgba(139,92,246,0.62) 38%, rgba(109,40,217,0.72) 72%, rgba(91,33,182,0.82) 100%)',
+          backdropFilter: 'blur(56px) saturate(210%) brightness(1.1)',
+          WebkitBackdropFilter: 'blur(56px) saturate(210%) brightness(1.1)',
+          borderColor: 'rgba(255,255,255,0.30)',
+          boxShadow: [
+            '0 32px 80px -8px rgba(109,40,217,0.72)',
+            '0 8px 32px -4px rgba(91,33,182,0.5)',
+            '0 0 0 1px rgba(255,255,255,0.20)',
+            'inset 0 2px 0 rgba(255,255,255,0.45)',
+            'inset 0 -2px 0 rgba(0,0,0,0.22)',
+            'inset 2px 0 0 rgba(255,255,255,0.12)',
+            '0 0 120px -20px rgba(139,92,246,0.5)',
+          ].join(', '),
+        }}>
         <AnimatedWaves />
 
-        {/* Glassmorphism overlay layer */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 pointer-events-none" />
+        {/* ── Premium frosted glass layers ── */}
+        {/* 1. Film-grain noise texture */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.05] mix-blend-overlay"
+          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundSize: 'cover' }} />
+        {/* 2. Top-edge bright reflection strip */}
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-white/75 to-transparent pointer-events-none" />
+        {/* 3. Left-edge glint */}
+        <div className="absolute inset-y-0 left-0 w-[2px] bg-gradient-to-b from-white/55 via-white/15 to-transparent pointer-events-none" />
+        {/* 4. Inner radial glow — top-left light source */}
+        <div className="absolute -top-16 -left-16 w-[260px] h-[260px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(196,181,253,0.12) 40%, transparent 68%)' }} />
+        {/* 5. Diagonal specular streak */}
+        <div className="absolute -top-full left-[38%] w-1/4 h-[300%] -rotate-12 pointer-events-none"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)' }} />
+        {/* 6. Bottom depth vignette */}
+        <div className="absolute inset-x-0 bottom-0 h-2/5 pointer-events-none"
+          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.22), transparent)' }} />
 
-        <div className="absolute top-6 right-6 opacity-20">
+        <div className="absolute top-3 right-4 opacity-20">
           <div className="relative animate-float-3d">
-            <RocketLaunchIcon className="w-20 h-20" />
+            <RocketLaunchIcon className="w-10 h-10" />
           </div>
         </div>
-        <div className="absolute bottom-20 right-40 opacity-15">
-          <SparklesIcon className="w-14 h-14 animate-spin-slow" />
+        <div className="absolute bottom-6 right-24 opacity-15">
+          <SparklesIcon className="w-7 h-7 animate-spin-slow" />
         </div>
 
-        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex-1">
-            <div className="flex items-center gap-2 text-white/80 text-sm font-medium mb-2">
-              <CalendarDaysIcon className="w-4 h-4" />
+            <div className="flex items-center gap-1.5 text-white/70 text-xs font-medium mb-1">
+              <CalendarDaysIcon className="w-3 h-3" />
               {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
-            <h1 className="text-5xl lg:text-7xl font-black mb-4 text-shimmer tracking-tight flex items-center flex-wrap gap-x-3">
-              {getGreeting()}, {user?.firstName}!
+            <h1 className="text-4xl lg:text-5xl font-bold mb-1.5 tracking-tight flex items-center flex-wrap gap-x-3" style={{
+                fontFamily: "'Libre Baskerville', Georgia, serif",
+                color: 'rgba(255,255,255,0.97)',
+                textShadow: [
+                  '0 1px 2px rgba(0,0,0,0.4)',
+                  '0 0 16px rgba(255,255,255,0.6)',
+                  '0 0 40px rgba(196,181,253,0.55)',
+                  '0 0 80px rgba(139,92,246,0.35)',
+                  '0 0 140px rgba(124,58,237,0.2)',
+                ].join(', '),
+              }}>
+              {getGreeting().replace(/\b\w/g, (c) => c.toUpperCase())}, {user?.firstName}!
               {/* Animated SVG icon — replaces emoji */}
               {overallScore >= 80 ? (
                 /* Rocket — high performer */
-                <svg className="inline-block w-12 h-12 lg:w-16 lg:h-16 flex-shrink-0" style={{ animation: 'rocketLaunch 3s ease-in-out infinite' }} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="inline-block w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0" style={{ animation: 'rocketLaunch 3s ease-in-out infinite' }} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <style>{`
                     @keyframes rocketLaunch {
                       0%,100% { transform: translateY(0) rotate(-45deg); }
@@ -368,7 +422,7 @@ export function DashboardPage() {
                 </svg>
               ) : overallScore >= 50 ? (
                 /* Upward arrow / trending — mid performer */
-                <svg className="inline-block w-12 h-12 lg:w-16 lg:h-16 flex-shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="inline-block w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <style>{`
                     @keyframes arrowPulse {
                       0%,100% { transform: translateY(0); }
@@ -390,7 +444,7 @@ export function DashboardPage() {
                 </svg>
               ) : (
                 /* Spark / ignite — building performer */
-                <svg className="inline-block w-12 h-12 lg:w-16 lg:h-16 flex-shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="inline-block w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <style>{`
                     @keyframes sparkRotate {
                       0%   { transform: rotate(0deg) scale(1); }
@@ -415,7 +469,7 @@ export function DashboardPage() {
                 </svg>
               )}
             </h1>
-            <p className="text-white/90 text-lg max-w-xl leading-relaxed">
+            <p className="text-white/80 text-xs max-w-xl leading-relaxed">
               {cpisData
                 ? overallScore >= 90
                   ? `Exceptional performance! You're ranked as "${cpisRankLabel}" with a ${cpisGrade} grade. Top-tier across all 8 dimensions.`
@@ -437,7 +491,7 @@ export function DashboardPage() {
 
             {/* Real Achievement Badges (earned from math engine) */}
             {achievements.length > 0 && (
-              <div className="flex flex-wrap gap-2.5 mt-5">
+              <div className="flex flex-wrap gap-1.5 mt-2">
                 {achievements.map((achievement, i) => (
                   <div
                     key={i}
@@ -450,38 +504,46 @@ export function DashboardPage() {
               </div>
             )}
 
-            {/* Quick Snapshot — 3 mini stat cards to fill the left side */}
-            <div className="grid grid-cols-3 gap-3 mt-6">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-                <div className="flex items-center gap-2 mb-1.5">
+            {/* Quick Snapshot — 4 mini stat cards */}
+            <div className="grid grid-cols-4 gap-2 mt-3">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
+                <div className="flex items-center gap-1.5 mb-1">
                   <FlagIcon className="w-4 h-4 text-cyan-300" />
-                  <span className="text-[11px] font-medium text-white/60 uppercase tracking-wide">Goals</span>
+                  <span className="text-[11px] font-medium text-white/60 tracking-wide">Goals</span>
                 </div>
-                <p className="text-2xl font-bold text-white">{goalsData?.data?.length ?? 0}</p>
-                <p className="text-xs text-white/50 mt-0.5">{avgProgress}% avg progress</p>
+                <p className="text-base font-bold text-white">{goalsData?.data?.length ?? 0}</p>
+                <p className="text-[10px] text-white/50 mt-0">{avgProgress}% Average Progress</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-                <div className="flex items-center gap-2 mb-1.5">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
+                <div className="flex items-center gap-1.5 mb-1">
                   <ChatBubbleLeftRightIcon className="w-4 h-4 text-emerald-300" />
-                  <span className="text-[11px] font-medium text-white/60 uppercase tracking-wide">Feedback</span>
+                  <span className="text-[11px] font-medium text-white/60 tracking-wide">Feedback</span>
                 </div>
-                <p className="text-2xl font-bold text-white">{feedbackData?.meta?.total ?? 0}</p>
-                <p className="text-xs text-white/50 mt-0.5">{feedbackScoreVal > 0 ? `${Math.round(feedbackScoreVal)}/100 sentiment` : 'No data yet'}</p>
+                <p className="text-base font-bold text-white">{feedbackData?.meta?.total ?? 0}</p>
+                <p className="text-[10px] text-white/50 mt-0">{feedbackScoreVal > 0 ? `${Math.round(feedbackScoreVal)}/100 Sentiment` : 'No Data Yet'}</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-                <div className="flex items-center gap-2 mb-1.5">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
+                <div className="flex items-center gap-1.5 mb-1">
                   <ClipboardDocumentCheckIcon className="w-4 h-4 text-violet-300" />
-                  <span className="text-[11px] font-medium text-white/60 uppercase tracking-wide">Reviews</span>
+                  <span className="text-[11px] font-medium text-white/60 tracking-wide">Reviews</span>
                 </div>
-                <p className="text-2xl font-bold text-white">{reviewsData?.length ?? 0}</p>
-                <p className="text-xs text-white/50 mt-0.5">{pendingReviews.length > 0 ? `${pendingReviews.length} pending` : 'All complete'}</p>
+                <p className="text-base font-bold text-white">{reviewsData?.length ?? 0}</p>
+                <p className="text-[10px] text-white/50 mt-0">{pendingReviews.length > 0 ? `${pendingReviews.length} Pending` : 'All Complete'}</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <TrophyIcon className="w-4 h-4 text-amber-300" />
+                  <span className="text-[11px] font-medium text-white/60 tracking-wide">Score</span>
+                </div>
+                <p className="text-base font-bold text-white">{Math.round(overallScore)}</p>
+                <p className="text-[10px] text-white/50 mt-0">Grade {cpisGrade ?? '—'}</p>
               </div>
             </div>
 
             {/* CPIS Top Dimensions — horizontal mini-bars */}
             {cpisDimensions.length > 0 && (
-              <div className="mt-5 space-y-2.5">
-                <p className="text-[11px] font-semibold text-white/50 uppercase tracking-wider">Performance Dimensions</p>
+              <div className="mt-2 space-y-1.5">
+                <p className="text-[10px] font-semibold text-white/50 tracking-wider">Performance Dimensions</p>
                 {cpisDimensions.slice(0, 4).map((dim: any, i: number) => {
                   const barColors = ['#22d3ee', '#a78bfa', '#34d399', '#fbbf24'];
                   return (
@@ -506,7 +568,7 @@ export function DashboardPage() {
           </div>
 
           {/* CPIS Score Visualization — 8-dimension radar chart */}
-          <div className="flex-shrink-0 flex flex-col items-center bg-black/20 backdrop-blur-xl rounded-3xl p-5 border border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_24px_60px_-10px_rgba(0,0,0,0.5)] hover:bg-black/25 transition-all duration-500 lg:max-w-[400px]">
+          <div className="flex-shrink-0 flex flex-col items-center bg-black/20 backdrop-blur-xl rounded-2xl p-3 border border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_24px_60px_-10px_rgba(0,0,0,0.5)] hover:bg-black/25 transition-all duration-500 lg:max-w-[320px]">
             {cpisData ? (
               <CPISScoreDisplay
                 score={overallScore}

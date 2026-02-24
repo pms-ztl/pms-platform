@@ -140,7 +140,7 @@ export function SABillingPage() {
       render: (sub) => (
         <div>
           <p className="text-sm font-medium text-secondary-900 dark:text-white">{sub.tenantName}</p>
-          <p className="text-xs text-secondary-500 dark:text-secondary-400 font-mono">{sub.tenantId.slice(0, 8)}...</p>
+          <p className="text-xs text-secondary-500 dark:text-secondary-400 font-mono">{sub.tenantId}</p>
         </div>
       ),
     },
@@ -239,7 +239,7 @@ export function SABillingPage() {
           icon={<CreditCardIcon className="h-6 w-6" />}
         />
         <StatCard
-          label="Avg Revenue / Tenant"
+          label="Average Revenue / Tenant"
           value={subsLoading || revenueLoading ? '--' : formatCurrency(avgRevenuePerTenant)}
           icon={<ChartBarIcon className="h-6 w-6" />}
         />

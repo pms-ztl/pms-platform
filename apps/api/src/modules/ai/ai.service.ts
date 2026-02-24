@@ -9,6 +9,7 @@ import { DAYS } from '../../utils/constants';
 import { agentOrchestrator } from './orchestrator';
 import { agentMemory } from './agent-memory';
 import { llmClient } from './llm-client';
+import { agenticEngine } from './agentic-engine';
 import type { AgentResponse } from './base-agent';
 
 // ── Types ──────────────────────────────────────────────────
@@ -328,6 +329,208 @@ class AIService {
       totalCostCents: Math.round(totalCostCents * 100) / 100,
       averageTokensPerMessage: messages > 0 ? Math.round(totalTokens / messages) : 0,
     };
+  }
+  // ── Agentic Task Methods ─────────────────────────────────
+
+  /**
+   * List agentic tasks for a user.
+   */
+  async getTasks(
+    tenantId: string,
+    userId: string,
+    options: { status?: string; page?: number; limit?: number } = {},
+  ) {
+    const page = options.page ?? 1;
+    const limit = Math.min(options.limit ?? 20, 100);
+    const skip = (page - 1) * limit;
+
+    const where: Record<string, unknown> = { tenantId, userId };
+    if (options.status) where.status = options.status;
+
+    const [tasks, total] = await Promise.all([
+      prisma.agentTask.findMany({
+        where,
+        include: {
+          actions: {
+            orderBy: { stepIndex: 'asc' },
+            select: {
+              id: true,
+              stepIndex: true,
+              toolName: true,
+              status: true,
+              impactLevel: true,
+              requiresApproval: true,
+              reasoning: true,
+              createdAt: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.agentTask.count({ where }),
+    ]);
+
+    return {
+      data: tasks,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  /**
+   * Get a single task with full action details.
+   */
+  async getTask(tenantId: string, userId: string, taskId: string) {
+    const task = await prisma.agentTask.findFirst({
+      where: { id: taskId, tenantId, userId },
+      include: {
+        actions: {
+          orderBy: { stepIndex: 'asc' },
+        },
+      },
+    });
+
+    return task;
+  }
+
+  /**
+   * Cancel a running task.
+   */
+  async cancelTask(tenantId: string, userId: string, taskId: string): Promise<void> {
+    const task = await prisma.agentTask.findFirst({
+      where: { id: taskId, tenantId, userId },
+    });
+
+    if (!task) throw new Error('Task not found');
+    if (['completed', 'failed', 'cancelled'].includes(task.status)) {
+      throw new Error(`Cannot cancel task with status: ${task.status}`);
+    }
+
+    await agenticEngine.cancelTask(taskId);
+
+    auditLogger(
+      'AI_TASK_CANCELLED',
+      userId,
+      tenantId,
+      'agent_task',
+      taskId,
+      { previousStatus: task.status },
+    );
+  }
+
+  /**
+   * Get all pending approval actions for a user.
+   */
+  async getPendingApprovals(tenantId: string, userId: string) {
+    const actions = await prisma.agentAction.findMany({
+      where: {
+        status: 'awaiting_approval',
+        task: { tenantId, userId },
+      },
+      include: {
+        task: {
+          select: {
+            id: true,
+            title: true,
+            agentType: true,
+            goal: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    return actions;
+  }
+
+  /**
+   * Approve a pending action and resume task execution.
+   */
+  async approveAction(tenantId: string, userId: string, actionId: string) {
+    // Verify the action belongs to this user's tenant
+    const action = await prisma.agentAction.findFirst({
+      where: {
+        id: actionId,
+        status: 'awaiting_approval',
+        task: { tenantId, userId },
+      },
+    });
+
+    if (!action) throw new Error('Action not found or not awaiting approval');
+
+    return agenticEngine.approveAction(actionId, userId);
+  }
+
+  /**
+   * Reject a pending action with reason.
+   */
+  async rejectAction(tenantId: string, userId: string, actionId: string, reason: string) {
+    const action = await prisma.agentAction.findFirst({
+      where: {
+        id: actionId,
+        status: 'awaiting_approval',
+        task: { tenantId, userId },
+      },
+    });
+
+    if (!action) throw new Error('Action not found or not awaiting approval');
+
+    return agenticEngine.rejectAction(actionId, reason);
+  }
+
+  // ── Coordinated Multi-Agent Chat ─────────────────────────
+
+  /**
+   * Coordinate a multi-agent task across multiple specialists.
+   */
+  async coordinateChat(tenantId: string, userId: string, input: {
+    message: string;
+    agentTypes: string[];
+    conversationId?: string;
+  }) {
+    const result = await agentOrchestrator.coordinateMessage(
+      tenantId,
+      userId,
+      input.message,
+      input.agentTypes,
+      input.conversationId,
+    );
+
+    return result;
+  }
+
+  // ── Active Agent Status ──────────────────────────────────
+
+  /**
+   * Get currently executing agent tasks for live activity feed.
+   */
+  async getActiveAgents(tenantId: string) {
+    const activeTasks = await prisma.agentTask.findMany({
+      where: {
+        tenantId,
+        status: { in: ['planning', 'executing', 'awaiting_approval'] },
+      },
+      select: {
+        id: true,
+        agentType: true,
+        title: true,
+        status: true,
+        currentStep: true,
+        totalSteps: true,
+        startedAt: true,
+        isProactive: true,
+        parentTaskId: true,
+        user: { select: { firstName: true, lastName: true } },
+      },
+      orderBy: { startedAt: 'desc' },
+      take: 20,
+    });
+
+    return activeTasks;
   }
 }
 

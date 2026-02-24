@@ -68,12 +68,19 @@ export function PerformanceTimeline({ userId, className }: PerformanceTimelinePr
               <XAxis dataKey="date" tick={{ fontSize: 11 }} className="fill-secondary-500 dark:fill-secondary-400" />
               <YAxis domain={[0, 5]} tick={{ fontSize: 11 }} className="fill-secondary-500 dark:fill-secondary-400" />
               <Tooltip
+                cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                 contentStyle={{
-                  backgroundColor: 'var(--tooltip-bg, #fff)',
-                  borderColor: 'var(--tooltip-border, #e5e7eb)',
-                  borderRadius: '8px',
-                  fontSize: '12px',
+                  background: 'rgba(15, 23, 42, 0.80)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(148, 163, 184, 0.15)',
+                  borderRadius: '0.75rem',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  fontSize: '0.75rem',
+                  color: '#f1f5f9',
                 }}
+                labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                itemStyle={{ color: '#e2e8f0' }}
                 formatter={(value: number) => [`${value}/5`, 'Rating']}
               />
               <Area

@@ -59,4 +59,36 @@ router.get('/usage', asyncHandler((req, res, next) =>
   aiController.getUsage(req as AuthenticatedRequest, res, next),
 ));
 
+// Agentic Tasks
+router.get('/tasks', asyncHandler((req, res, next) =>
+  aiController.listTasks(req as AuthenticatedRequest, res, next),
+));
+router.get('/tasks/:id', asyncHandler((req, res, next) =>
+  aiController.getTask(req as AuthenticatedRequest, res, next),
+));
+router.post('/tasks/:id/cancel', asyncHandler((req, res, next) =>
+  aiController.cancelTask(req as AuthenticatedRequest, res, next),
+));
+
+// Agentic Approvals
+router.get('/actions/pending', asyncHandler((req, res, next) =>
+  aiController.getPendingApprovals(req as AuthenticatedRequest, res, next),
+));
+router.post('/actions/:id/approve', asyncHandler((req, res, next) =>
+  aiController.approveAction(req as AuthenticatedRequest, res, next),
+));
+router.post('/actions/:id/reject', asyncHandler((req, res, next) =>
+  aiController.rejectAction(req as AuthenticatedRequest, res, next),
+));
+
+// Multi-Agent Coordination
+router.post('/chat/coordinate', asyncHandler((req, res, next) =>
+  aiController.coordinateChat(req as AuthenticatedRequest, res, next),
+));
+
+// Live Agent Activity
+router.get('/agents/active', asyncHandler((req, res, next) =>
+  aiController.getActiveAgents(req as AuthenticatedRequest, res, next),
+));
+
 export { router as aiRoutes };

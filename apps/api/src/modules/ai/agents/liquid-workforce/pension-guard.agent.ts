@@ -12,7 +12,7 @@
  * Helps employees plan for long-term financial security through retirement benefits analysis.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryCompensationData } from '../../agent-tools-v3';
 
 // -- System Prompt -----------------------------------------------------------
@@ -40,7 +40,7 @@ Advisory principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class PensionGuardAgent extends BaseAgent {
+export class PensionGuardAgent extends AgenticBaseAgent {
   constructor() {
     super('pension_guard', SYSTEM_PROMPT);
   }

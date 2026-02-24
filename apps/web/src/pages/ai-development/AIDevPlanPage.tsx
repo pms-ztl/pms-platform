@@ -117,7 +117,7 @@ export function AIDevPlanPage() {
   const skillGapData = useMemo(() => {
     if (!selectedPlan?.skillGapAnalysis) return [];
     return Object.entries(selectedPlan.skillGapAnalysis).map(([skill, val]: [string, any]) => ({
-      skill: skill.length > 16 ? skill.slice(0, 14) + '…' : skill,
+      skill: skill,
       current: val?.currentLevel ?? val?.current ?? 0,
       required: val?.requiredLevel ?? val?.required ?? val?.targetLevel ?? 0,
     }));
@@ -154,7 +154,7 @@ export function AIDevPlanPage() {
           {[
             { label: 'Total Plans',   value: stats.total,                     icon: BookOpenIcon,        color: 'text-blue-400' },
             { label: 'Active Plans',  value: stats.active,                    icon: RocketLaunchIcon,    color: 'text-emerald-400' },
-            { label: 'Avg Progress',  value: pct(stats.avgProgress),          icon: ChartBarIcon,        color: 'text-amber-400' },
+            { label: 'Average Progress',  value: pct(stats.avgProgress),          icon: ChartBarIcon,        color: 'text-amber-400' },
             { label: 'Total Budget',  value: money(stats.totalBudget),        icon: CurrencyDollarIcon,  color: 'text-purple-400' },
           ].map(c => (
             <div key={c.label} className="rounded-xl border border-gray-700 bg-gray-800/60 p-4">
@@ -198,7 +198,7 @@ export function AIDevPlanPage() {
             return (
               <button key={plan.id} onClick={() => setSelectedPlan(isSelected ? null : plan)} className={`text-left rounded-xl border p-4 transition-all ${isSelected ? 'border-purple-500 bg-purple-500/10' : 'border-gray-700 bg-gray-800/60 hover:border-gray-600'}`}>
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <h4 className="text-sm font-semibold text-white line-clamp-1">{plan.planName || 'Untitled Plan'}</h4>
+                  <h4 className="text-sm font-semibold text-white">{plan.planName || 'Untitled Plan'}</h4>
                   {badge(STATUS_META, plan.status)}
                 </div>
 
@@ -218,7 +218,7 @@ export function AIDevPlanPage() {
                   </div>
                 </div>
 
-                <p className="text-xs text-gray-500 line-clamp-2 mb-3">{plan.careerGoal}</p>
+                <p className="text-xs text-gray-500 mb-3">{plan.careerGoal}</p>
 
                 <div className="flex items-center gap-2 text-xs text-gray-400">
                   <span>{plan.totalActivities ?? 0} activities</span>
@@ -290,7 +290,21 @@ export function AIDevPlanPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis type="number" domain={[0, 10]} tick={{ fill: '#9ca3af', fontSize: 12 }} />
                   <YAxis type="category" dataKey="skill" width={120} tick={{ fill: '#9ca3af', fontSize: 11 }} />
-                  <Tooltip contentStyle={{ background: '#1f2937', border: '1px solid #374151', borderRadius: 8, color: '#fff' }} />
+                  <Tooltip
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                    contentStyle={{
+                      background: 'rgba(15, 23, 42, 0.80)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      border: '1px solid rgba(148, 163, 184, 0.15)',
+                      borderRadius: '0.75rem',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                      fontSize: '0.75rem',
+                      color: '#f1f5f9',
+                    }}
+                    labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                    itemStyle={{ color: '#e2e8f0' }}
+                  />
                   <Legend />
                   <Bar dataKey="current" name="Current" fill={CHART_COLORS[0]} radius={[0, 4, 4, 0]} barSize={14} />
                   <Bar dataKey="required" name="Required" fill={CHART_COLORS[1]} radius={[0, 4, 4, 0]} barSize={14} />

@@ -12,7 +12,7 @@
  * Anticipates which skills will matter most and identifies emerging gaps before they become critical.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import {
   querySkillGaps,
   queryGoalAlignment,
@@ -44,7 +44,7 @@ Forecasting principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class SkillGapForecasterAgent extends BaseAgent {
+export class SkillGapForecasterAgent extends AgenticBaseAgent {
   constructor() {
     super('skill_gap_forecaster', SYSTEM_PROMPT);
   }

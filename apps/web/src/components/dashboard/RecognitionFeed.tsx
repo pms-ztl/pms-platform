@@ -88,7 +88,7 @@ function RecognitionFeed() {
                   </span>
                   <span className="text-[10px] text-secondary-400">{timeAgo(item.createdAt)}</span>
                 </div>
-                <p className="text-xs text-secondary-600 dark:text-secondary-400 line-clamp-2 mt-0.5">
+                <p className="text-xs text-secondary-600 dark:text-secondary-400 mt-0.5">
                   {item.content}
                 </p>
                 {item.tags && item.tags.length > 0 && (

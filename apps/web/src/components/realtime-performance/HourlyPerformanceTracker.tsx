@@ -89,10 +89,10 @@ const StatCard = ({
   color: string;
 }) => {
   const TrendIcon = trend === 'up' ? ArrowTrendingUpIcon : trend === 'down' ? ArrowTrendingDownIcon : MinusIcon;
-  const trendColor = trend === 'up' ? 'text-green-500' : trend === 'down' ? 'text-red-500' : 'text-gray-400';
+  const trendColor = trend === 'up' ? 'text-green-500' : trend === 'down' ? 'text-red-500' : 'text-secondary-400';
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 hover:shadow-md transition-shadow">
+    <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-4 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
         <div className={clsx('p-2 rounded-lg', color)}>
           <Icon className="h-5 w-5 text-white" />
@@ -100,10 +100,10 @@ const StatCard = ({
         {trend && <TrendIcon className={clsx('h-4 w-4', trendColor)} />}
       </div>
       <div className="mt-3">
-        <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
-        <p className="text-2xl font-bold text-gray-900 dark:text-white">
+        <p className="text-sm text-secondary-500 dark:text-secondary-400">{title}</p>
+        <p className="text-2xl font-bold text-secondary-900 dark:text-white">
           {value}
-          {unit && <span className="text-sm font-normal text-gray-500 ml-1">{unit}</span>}
+          {unit && <span className="text-sm font-normal text-secondary-500 ml-1">{unit}</span>}
         </p>
       </div>
     </div>
@@ -134,7 +134,7 @@ const ScoreGauge = ({
             fill="none"
             stroke="currentColor"
             strokeWidth="8"
-            className="text-gray-200 dark:text-gray-700"
+            className="text-secondary-200 dark:text-secondary-700"
           />
           <circle
             cx="48"
@@ -149,10 +149,10 @@ const ScoreGauge = ({
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-xl font-bold text-gray-900 dark:text-white">{Math.round(score)}</span>
+          <span className="text-xl font-bold text-secondary-900 dark:text-white">{Math.round(score)}</span>
         </div>
       </div>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{label}</p>
+      <p className="mt-2 text-sm text-secondary-600 dark:text-secondary-400">{label}</p>
     </div>
   );
 };
@@ -177,13 +177,13 @@ export function HourlyPerformanceTracker() {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4" />
+        <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/4" />
         <div className="grid grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div key={i} className="h-24 bg-secondary-200 dark:bg-secondary-700 rounded-xl" />
           ))}
         </div>
-        <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+        <div className="h-64 bg-secondary-200 dark:bg-secondary-700 rounded-xl" />
       </div>
     );
   }
@@ -200,20 +200,20 @@ export function HourlyPerformanceTracker() {
             <ClockIcon className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-secondary-900 dark:text-white">
               Hourly Performance Tracker
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-secondary-500 dark:text-secondary-400">
               Real-time micro-performance metrics
             </p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-xs text-gray-500">Auto-refresh:</span>
+          <span className="text-xs text-secondary-500">Auto-refresh:</span>
           <select
             value={refreshInterval}
             onChange={(e) => setRefreshInterval(Number(e.target.value))}
-            className="text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-800"
+            className="text-xs border border-secondary-300 dark:border-secondary-600 rounded px-2 py-1 bg-white dark:bg-secondary-800"
           >
             <option value={30000}>30s</option>
             <option value={60000}>1m</option>
@@ -261,8 +261,8 @@ export function HourlyPerformanceTracker() {
       </div>
 
       {/* Score Gauges */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Performance Scores</h3>
+      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-6">
+        <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Performance Scores</h3>
         <div className="flex justify-around">
           <ScoreGauge
             label="Productivity"
@@ -283,8 +283,8 @@ export function HourlyPerformanceTracker() {
       </div>
 
       {/* Hourly Trend Chart */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Hourly Trend</h3>
+      <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-6">
+        <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Hourly Trend</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData}>
@@ -298,16 +298,23 @@ export function HourlyPerformanceTracker() {
                   <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
+              <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
               <XAxis dataKey="hour" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} domain={[0, 100]} />
               <Tooltip
+                cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                 contentStyle={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  border: 'none',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                  background: 'rgba(15, 23, 42, 0.80)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(148, 163, 184, 0.15)',
+                  borderRadius: '0.75rem',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  fontSize: '0.75rem',
+                  color: '#f1f5f9',
                 }}
+                labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                itemStyle={{ color: '#e2e8f0' }}
               />
               <Legend />
               <Area
@@ -333,29 +340,29 @@ export function HourlyPerformanceTracker() {
 
       {/* Current Hour Details */}
       {currentHour && (
-        <div className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-800 rounded-xl p-6 border border-cyan-100 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+        <div className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-secondary-800 dark:to-secondary-800 rounded-xl p-6 border border-cyan-100 dark:border-secondary-700">
+          <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-3">
             Current Hour Summary
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Tasks</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">{currentHour.tasksCompleted}</p>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">Tasks</p>
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">{currentHour.tasksCompleted}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Active</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">{currentHour.activeMinutes}m</p>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">Active</p>
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">{currentHour.activeMinutes}m</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Focus</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">{currentHour.focusMinutes}m</p>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">Focus</p>
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">{currentHour.focusMinutes}m</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Interactions</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">{currentHour.interactionsCount || 0}</p>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">Interactions</p>
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">{currentHour.interactionsCount || 0}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Score</p>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">Score</p>
               <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
                 {currentHour.performanceScore || 0}
               </p>

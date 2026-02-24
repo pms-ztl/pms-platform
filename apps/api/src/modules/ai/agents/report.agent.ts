@@ -9,7 +9,7 @@
  * - Workforce forecast reports
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import * as tools from '../agent-tools';
 import { isAdmin, isManager, isEmployeeOnly } from '../../../utils/roles';
 import { DAYS } from '../../../utils/constants';
@@ -37,7 +37,7 @@ IMPORTANT: Scope reports strictly by the user's role:
 - Admin: Company-wide performance and license usage
 - Super Admin: Platform-wide metrics and revenue`;
 
-export class ReportAgent extends BaseAgent {
+export class ReportAgent extends AgenticBaseAgent {
   constructor() {
     super('report', SYSTEM_PROMPT);
   }

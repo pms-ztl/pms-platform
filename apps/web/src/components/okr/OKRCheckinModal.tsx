@@ -60,7 +60,7 @@ export function OKRCheckinModal({ open, onClose, keyResult, onSuccess }: OKRChec
       <div className="space-y-5">
         {/* Key Result Title */}
         <div>
-          <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+          <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
             Key Result
           </p>
           <p className="text-sm font-semibold text-secondary-900 dark:text-white mt-1">

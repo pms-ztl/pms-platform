@@ -32,9 +32,9 @@ function computeTenure(hireDate?: string | null): string {
 const stats = [
   { key: 'tenure', label: 'Tenure', icon: CalendarDaysIcon, color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' },
   { key: 'goals', label: 'Goals Done', icon: FlagIcon, color: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' },
-  { key: 'rating', label: 'Avg Rating', icon: StarIcon, color: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' },
+  { key: 'rating', label: 'Average Rating', icon: StarIcon, color: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' },
   { key: 'feedback', label: 'Feedback', icon: ChatBubbleLeftRightIcon, color: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' },
-  { key: 'plans', label: 'Dev Plans', icon: AcademicCapIcon, color: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' },
+  { key: 'plans', label: 'Development Plans', icon: AcademicCapIcon, color: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' },
 ] as const;
 
 export function QuickStatsBanner({

@@ -12,7 +12,7 @@
  * Sharpens thinking by constructively challenging ideas and strengthening arguments.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryFeedback } from '../../agent-tools';
 import { queryPerformanceSnapshots } from '../../agent-tools-v2';
 
@@ -41,7 +41,7 @@ Sparring principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class SparringPartnerAgent extends BaseAgent {
+export class SparringPartnerAgent extends AgenticBaseAgent {
   constructor() {
     super('sparring_partner', SYSTEM_PROMPT);
   }

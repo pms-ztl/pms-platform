@@ -12,7 +12,7 @@
  * Tracks diversity and inclusion signals to guide equitable organizational practices.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryUsers } from '../../agent-tools';
 import { queryBiasMetrics } from '../../agent-tools-v2';
 import { queryCultureDiagnostics } from '../../agent-tools-v3';
@@ -42,7 +42,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class InclusionMonitorAgent extends BaseAgent {
+export class InclusionMonitorAgent extends AgenticBaseAgent {
   constructor() {
     super('inclusion_monitor', SYSTEM_PROMPT);
   }

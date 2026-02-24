@@ -83,7 +83,7 @@ function ActivityEntry({ item }: { item: ActivityItem }) {
         )}
 
         {item.content && (
-          <p className="mt-1 text-xs text-secondary-700 dark:text-secondary-300 whitespace-pre-wrap line-clamp-3">
+          <p className="mt-1 text-xs text-secondary-700 dark:text-secondary-300 whitespace-pre-wrap">
             {item.content}
           </p>
         )}
@@ -132,7 +132,7 @@ export function OKRActivityFeed({ goalId, compact = false }: OKRActivityFeedProp
 
   return (
     <div>
-      <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">
+      <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
         Activity
       </h4>
 

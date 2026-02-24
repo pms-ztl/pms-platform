@@ -13,7 +13,7 @@
  * hydration and nutrition reminders for optimal cognitive performance.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { querySessionActivity } from '../../agent-tools-v3';
 
 // -- System Prompt -----------------------------------------------------------
@@ -42,7 +42,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class HydrationNutritionAgent extends BaseAgent {
+export class HydrationNutritionAgent extends AgenticBaseAgent {
   constructor() {
     super('hydration_nutrition', SYSTEM_PROMPT);
   }

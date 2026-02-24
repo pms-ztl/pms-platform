@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type AITheme = 'light' | 'dark' | 'deep-dark';
-export type SwarmMode = 'overview' | 'chat' | 'orchestrate';
+export type SwarmMode = 'overview' | 'chat' | 'orchestrate' | 'tasks';
+export type AITransitionPhase = 'idle' | 'entering' | 'exiting';
 
 interface AIWorkspaceState {
   /** Whether the user is currently in AI Workspace mode */
@@ -41,6 +42,10 @@ interface AIWorkspaceState {
   toggleAgentPanel: () => void;
   /** Toggle insight panel */
   toggleInsightPanel: () => void;
+  /** Cinematic transition phase (NOT persisted) */
+  aiTransitionPhase: AITransitionPhase;
+  /** Set the cinematic transition phase */
+  setAiTransitionPhase: (phase: AITransitionPhase) => void;
 }
 
 const THEME_ORDER: AITheme[] = ['light', 'dark', 'deep-dark'];
@@ -55,6 +60,7 @@ export const useAIWorkspaceStore = create<AIWorkspaceState>()(
       orchestrationAgents: [] as string[],
       agentPanelOpen: true,
       insightPanelOpen: true,
+      aiTransitionPhase: 'idle' as AITransitionPhase,
 
       toggleAiMode: () =>
         set((state) => ({ isAiMode: !state.isAiMode })),
@@ -98,9 +104,22 @@ export const useAIWorkspaceStore = create<AIWorkspaceState>()(
 
       toggleInsightPanel: () =>
         set((state) => ({ insightPanelOpen: !state.insightPanelOpen })),
+
+      setAiTransitionPhase: (phase: AITransitionPhase) =>
+        set({ aiTransitionPhase: phase }),
     }),
     {
       name: 'pms-ai-workspace',
+      // Exclude transient UI state from persistence
+      partialize: (state) => ({
+        isAiMode: state.isAiMode,
+        theme: state.theme,
+        swarmMode: state.swarmMode,
+        selectedAgent: state.selectedAgent,
+        orchestrationAgents: state.orchestrationAgents,
+        agentPanelOpen: state.agentPanelOpen,
+        insightPanelOpen: state.insightPanelOpen,
+      }),
     },
   ),
 );

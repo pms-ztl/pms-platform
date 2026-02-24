@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { feedbackApi, usersApi, type Feedback, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { TrophyIcon, StarIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 const AVATAR_COLORS = [
   'bg-primary-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500',
@@ -235,24 +236,24 @@ export function RecognitionPage() {
               <div className="space-y-3">
                 {topRecognized.map((entry: any, idx: number) => (
                   <div key={entry.user.id} className="flex items-center gap-3">
-                    <div className="flex-shrink-0 w-6 text-center">
+                    <div className="flex-shrink-0 w-6 flex items-center justify-center">
                       {idx === 0 ? (
-                        <span className="text-xl">🥇</span>
+                        <TrophyIcon className="h-5 w-5 text-yellow-500" />
                       ) : idx === 1 ? (
-                        <span className="text-xl">🥈</span>
+                        <StarIcon className="h-5 w-5 text-slate-400" />
                       ) : idx === 2 ? (
-                        <span className="text-xl">🥉</span>
+                        <SparklesIcon className="h-5 w-5 text-amber-600" />
                       ) : (
                         <span className="text-sm font-semibold text-secondary-400">#{idx + 1}</span>
                       )}
                     </div>
                     <UserAvatar user={entry.user} size="sm" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                         {entry.user.firstName} {entry.user.lastName}
                       </p>
                       {entry.user.jobTitle && (
-                        <p className="text-xs text-secondary-400 truncate">{entry.user.jobTitle}</p>
+                        <p className="text-xs text-secondary-400 break-words">{entry.user.jobTitle}</p>
                       )}
                     </div>
                     <div className="flex-shrink-0">
@@ -269,9 +270,11 @@ export function RecognitionPage() {
           </div>
 
           {/* Quick Stats */}
-          <div className="bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl shadow-sm p-5 text-white">
-            <h3 className="text-lg font-semibold mb-2">Recognition Impact</h3>
-            <p className="text-amber-100 text-sm">
+          <div className="relative overflow-hidden glass-banner-okr rounded-xl shadow-sm p-5 text-secondary-900 dark:text-white">
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-amber-500/30 to-orange-500/20 rounded-full blur-3xl" />
+            <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-gradient-to-tr from-red-500/20 to-amber-500/15 rounded-full blur-3xl" />
+            <h3 className="relative z-10 text-lg font-semibold mb-2">Recognition Impact</h3>
+            <p className="relative z-10 text-secondary-500 dark:text-white/80 text-sm">
               {wall?.meta?.total ?? 0} total recognitions shared across the organization.
               Keep the appreciation flowing!
             </p>

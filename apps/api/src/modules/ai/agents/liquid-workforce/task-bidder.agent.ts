@@ -12,7 +12,7 @@
  * Matches tasks to the best-fit individuals based on skills, workload, and goals.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryWorkloadDistribution, querySkillGaps } from '../../agent-tools-v2';
 import { queryGoals } from '../../agent-tools';
 
@@ -40,7 +40,7 @@ Analysis principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class TaskBidderAgent extends BaseAgent {
+export class TaskBidderAgent extends AgenticBaseAgent {
   constructor() {
     super('task_bidder', SYSTEM_PROMPT);
   }

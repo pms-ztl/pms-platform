@@ -25,7 +25,7 @@ import {
   type Department,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
-import { DataTable, type Column } from '@/components/ui';
+import { DataTable, type Column, PageHeader } from '@/components/ui';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 export function UserManagementPage() {
@@ -252,18 +252,12 @@ export function UserManagementPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">User Management</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Manage users, roles, and permissions
-          </p>
-        </div>
+      <PageHeader title="User Management" subtitle="Manage users, roles, and permissions">
         <button onClick={() => setShowCreateModal(true)} className="btn-primary">
           <PlusIcon className="h-5 w-5 mr-2" />
           Add User
         </button>
-      </div>
+      </PageHeader>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

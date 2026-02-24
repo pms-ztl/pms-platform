@@ -125,7 +125,7 @@ export function CommandPalette() {
                   >
                     {filteredSections.map((section) => (
                       <div key={section.label}>
-                        <p className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-secondary-400 dark:text-secondary-500">
+                        <p className="px-3 py-1.5 text-[10px] font-bold tracking-widest text-secondary-400 dark:text-secondary-500">
                           {section.label}
                         </p>
                         {section.items.map((item: NavItem) => (
@@ -151,7 +151,7 @@ export function CommandPalette() {
                                       : 'text-secondary-400 dark:text-secondary-500'
                                   )}
                                 />
-                                <span className="flex-1 truncate">{item.name}</span>
+                                <span className="flex-1 break-words">{item.name}</span>
                                 {active && (
                                   <span className="text-[11px] text-secondary-400 dark:text-secondary-500">
                                     Enter ↵

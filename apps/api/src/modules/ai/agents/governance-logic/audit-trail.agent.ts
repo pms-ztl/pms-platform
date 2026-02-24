@@ -12,7 +12,7 @@
  * Uses audit events and compliance status to analyze organizational activity trails.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryAuditEvents } from '../../agent-tools';
 import { queryComplianceStatus } from '../../agent-tools-v3';
 
@@ -41,7 +41,7 @@ Analysis principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class AuditTrailAgent extends BaseAgent {
+export class AuditTrailAgent extends AgenticBaseAgent {
   constructor() {
     super('audit_trail', SYSTEM_PROMPT);
   }

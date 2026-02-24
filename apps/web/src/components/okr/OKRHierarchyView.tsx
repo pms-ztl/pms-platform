@@ -96,7 +96,7 @@ function TreeCard({ goal, onSelect }: { goal: Goal; onSelect?: (g: Goal) => void
             )}
           </div>
           {/* Title */}
-          <p className="text-sm font-medium text-secondary-900 dark:text-white mt-1.5 line-clamp-2">
+          <p className="text-sm font-medium text-secondary-900 dark:text-white mt-1.5">
             {goal.title}
           </p>
           {/* Progress bar */}
@@ -203,7 +203,7 @@ function IndentedRow({
             <span className={clsx('px-1.5 py-0.5 rounded text-[9px] font-semibold shrink-0', typeBadgeColors[goal.type] || typeBadgeColors.OKR_OBJECTIVE)}>
               {typeLabels[goal.type] || goal.type}
             </span>
-            <span className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+            <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">
               {goal.title}
             </span>
           </div>
@@ -216,7 +216,7 @@ function IndentedRow({
               <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-[9px] font-bold shrink-0">
                 {getInitials(goal.owner)}
               </span>
-              <span className="text-xs text-secondary-600 dark:text-secondary-300 truncate max-w-[90px]">
+              <span className="text-xs text-secondary-600 dark:text-secondary-300 break-words">
                 {goal.owner.firstName} {goal.owner.lastName}
               </span>
             </div>

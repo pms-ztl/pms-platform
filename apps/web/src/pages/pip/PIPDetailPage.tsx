@@ -1012,7 +1012,7 @@ export function PIPDetailPage() {
                           )}
                         </div>
                       </div>
-                      <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1 line-clamp-2">
+                      <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1">
                         {checkIn.progressSummary}
                       </p>
                     </button>
@@ -1022,7 +1022,7 @@ export function PIPDetailPage() {
                       <div className="px-4 pb-4 space-y-4 border-t border-secondary-100 dark:border-secondary-600 pt-4">
                         {/* Progress Summary */}
                         <div>
-                          <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                          <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                             Progress Summary
                           </h4>
                           <p className="text-sm text-secondary-700 dark:text-secondary-300">
@@ -1033,7 +1033,7 @@ export function PIPDetailPage() {
                         {/* Positive Observations */}
                         {checkIn.positiveObservations.length > 0 && (
                           <div>
-                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                               Positive Observations
                             </h4>
                             <ul className="space-y-1">
@@ -1053,7 +1053,7 @@ export function PIPDetailPage() {
                         {/* Concerns */}
                         {checkIn.concernsRaised.length > 0 && (
                           <div>
-                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                               Concerns Raised
                             </h4>
                             <ul className="space-y-1">
@@ -1073,7 +1073,7 @@ export function PIPDetailPage() {
                         {/* Feedback */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                               Manager Feedback
                             </h4>
                             <p className="text-sm text-secondary-700 dark:text-secondary-300">
@@ -1081,7 +1081,7 @@ export function PIPDetailPage() {
                             </p>
                           </div>
                           <div>
-                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                               Employee Feedback
                             </h4>
                             <p className="text-sm text-secondary-700 dark:text-secondary-300">
@@ -1093,7 +1093,7 @@ export function PIPDetailPage() {
                         {/* Action Items */}
                         {checkIn.actionItems.length > 0 && (
                           <div>
-                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                               Action Items
                             </h4>
                             <div className="space-y-1.5">
@@ -1123,7 +1123,7 @@ export function PIPDetailPage() {
                         {/* Next Steps */}
                         {checkIn.nextSteps.length > 0 && (
                           <div>
-                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                            <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                               Next Steps
                             </h4>
                             <ul className="space-y-1">

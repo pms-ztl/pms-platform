@@ -40,6 +40,7 @@ import { goalsApi, type Goal } from '@/lib/api/goals';
 import { reviewsApi } from '@/lib/api';
 import { oneOnOnesApi, type OneOnOne } from '@/lib/api/one-on-ones';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ── Types ──
 
@@ -362,49 +363,44 @@ export function CalendarPage() {
       {/* ── Main Calendar Area ── */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
-              {viewMode === 'day'
-                ? format(currentDate, 'EEEE, MMMM d, yyyy')
-                : format(currentDate, 'MMMM yyyy')}
-            </h1>
-            <div className="flex items-center gap-1">
-              <button onClick={() => navigate('prev')} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-500 dark:text-secondary-400 transition-colors">
-                <ChevronLeftIcon className="h-5 w-5" />
-              </button>
+        <PageHeader
+          title={viewMode === 'day'
+            ? format(currentDate, 'EEEE, MMMM d, yyyy')
+            : format(currentDate, 'MMMM yyyy')}
+          compact
+          className="mb-4"
+        >
+          <div className="flex items-center gap-1">
+            <button onClick={() => navigate('prev')} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-500 dark:text-secondary-400 transition-colors">
+              <ChevronLeftIcon className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }}
+              className="px-3 py-1 text-xs font-medium rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors"
+            >
+              Today
+            </button>
+            <button onClick={() => navigate('next')} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-500 dark:text-secondary-400 transition-colors">
+              <ChevronRightIcon className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="flex gap-0.5 p-1 bg-secondary-100 dark:bg-secondary-800 rounded-lg">
+            {VIEW_OPTIONS.map((opt) => (
               <button
-                onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }}
-                className="px-3 py-1 text-xs font-medium rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors"
+                key={opt.value}
+                onClick={() => setViewMode(opt.value)}
+                className={clsx(
+                  'px-3 py-1 text-xs font-medium rounded-md transition-colors',
+                  viewMode === opt.value
+                    ? 'bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white shadow-sm'
+                    : 'text-secondary-500 dark:text-secondary-400 hover:text-secondary-700'
+                )}
               >
-                Today
+                {opt.label}
               </button>
-              <button onClick={() => navigate('next')} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-500 dark:text-secondary-400 transition-colors">
-                <ChevronRightIcon className="h-5 w-5" />
-              </button>
-            </div>
+            ))}
           </div>
-
-          <div className="flex items-center gap-2">
-            {/* View toggle */}
-            <div className="flex gap-0.5 p-1 bg-secondary-100 dark:bg-secondary-800 rounded-lg">
-              {VIEW_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => setViewMode(opt.value)}
-                  className={clsx(
-                    'px-3 py-1 text-xs font-medium rounded-md transition-colors',
-                    viewMode === opt.value
-                      ? 'bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white shadow-sm'
-                      : 'text-secondary-500 dark:text-secondary-400 hover:text-secondary-700'
-                  )}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
+        </PageHeader>
 
         {/* Calendar Grid */}
         <div className="flex-1 bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden">
@@ -414,13 +410,16 @@ export function CalendarPage() {
               {/* Day headers */}
               <div className="grid grid-cols-7 border-b border-secondary-200 dark:border-secondary-700">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-                  <div key={d} className="py-2 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">
+                  <div key={d} className="py-2 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">
                     {d}
                   </div>
                 ))}
               </div>
               {/* Day cells */}
-              <div className="flex-1 grid grid-cols-7 grid-rows-[repeat(auto-fill,minmax(0,1fr))]">
+              <div
+                className="flex-1 grid grid-cols-7"
+                style={{ gridTemplateRows: `repeat(${Math.ceil(monthDays.length / 7)}, minmax(0, 1fr))` }}
+              >
                 {monthDays.map((day) => {
                   const dayEvents = getEventsForDay(day);
                   const isCurrentMonth = isSameMonth(day, currentDate);
@@ -447,7 +446,7 @@ export function CalendarPage() {
                         {dayEvents.slice(0, 3).map((evt) => (
                           <div
                             key={evt.id}
-                            className={clsx('text-[10px] leading-tight px-1 py-0.5 rounded truncate text-white font-medium', evt.color)}
+                            className={clsx('text-[10px] leading-tight px-1 py-0.5 rounded break-words text-white font-medium', evt.color)}
                             title={evt.title}
                           >
                             {evt.title}
@@ -481,7 +480,7 @@ export function CalendarPage() {
                       isSameDay(day, selectedDate) && 'bg-primary-50 dark:bg-primary-900/10'
                     )}
                   >
-                    <div className="text-[10px] font-medium text-secondary-400 uppercase">{format(day, 'EEE')}</div>
+                    <div className="text-[10px] font-medium text-secondary-400">{format(day, 'EEE')}</div>
                     <div className={clsx(
                       'text-sm font-bold mt-0.5 font-sans',
                       isToday(day) ? 'text-primary-600 dark:text-primary-400' : 'text-secondary-700 dark:text-secondary-300'
@@ -513,7 +512,7 @@ export function CalendarPage() {
                           {hourEvents.map((evt) => (
                             <div
                               key={evt.id}
-                              className={clsx('text-[10px] px-1.5 py-0.5 rounded text-white font-medium truncate', evt.color)}
+                              className={clsx('text-[10px] px-1.5 py-0.5 rounded text-white font-medium break-words', evt.color)}
                               title={evt.title}
                             >
                               {evt.title}
@@ -537,7 +536,7 @@ export function CalendarPage() {
                 if (allDayEvents.length === 0) return null;
                 return (
                   <div className="px-4 py-2 border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900/30">
-                    <p className="text-[10px] font-medium text-secondary-400 uppercase mb-1">All Day</p>
+                    <p className="text-[10px] font-medium text-secondary-400 mb-1">All Day</p>
                     <div className="flex flex-wrap gap-1">
                       {allDayEvents.map((evt) => (
                         <div key={evt.id} className={clsx('text-xs px-2 py-1 rounded text-white font-medium', evt.color)}>
@@ -613,7 +612,7 @@ export function CalendarPage() {
                 >
                   <div className={clsx('w-2 h-2 rounded-full mt-1.5 flex-shrink-0', evt.color)} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-secondary-900 dark:text-white truncate">{evt.title}</p>
+                    <p className="text-xs font-medium text-secondary-900 dark:text-white break-words">{evt.title}</p>
                     {evt.startTime && (
                       <p className="text-[10px] text-secondary-400">{format(new Date(evt.startTime), 'h:mm a')}</p>
                     )}

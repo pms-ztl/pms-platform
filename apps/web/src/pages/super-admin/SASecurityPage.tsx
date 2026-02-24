@@ -36,9 +36,9 @@ function formatDate(iso: string): string {
   }).format(new Date(iso));
 }
 
-function truncateUA(ua: string, max = 60): string {
+function truncateUA(ua: string, _max = 60): string {
   if (!ua) return '--';
-  return ua.length > max ? ua.slice(0, max) + '...' : ua;
+  return ua;
 }
 
 // ---------------------------------------------------------------------------
@@ -195,16 +195,16 @@ export function SASecurityPage() {
                   <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                     <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                       <tr>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           IP Address
                         </th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           Attempt Count
                         </th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           Last Attempt
                         </th>
-                        <th className="px-5 py-3 text-right text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-right text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           Actions
                         </th>
                       </tr>
@@ -275,16 +275,16 @@ export function SASecurityPage() {
                   <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                     <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                       <tr>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           IP Address
                         </th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           Reason
                         </th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           Blocked Date
                         </th>
-                        <th className="px-5 py-3 text-right text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-right text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           Actions
                         </th>
                       </tr>
@@ -351,19 +351,19 @@ export function SASecurityPage() {
                   <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                     <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                       <tr>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           User
                         </th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           IP Address
                         </th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           User Agent
                         </th>
-                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           Created At
                         </th>
-                        <th className="px-5 py-3 text-right text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                        <th className="px-5 py-3 text-right text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                           Actions
                         </th>
                       </tr>
@@ -373,7 +373,7 @@ export function SASecurityPage() {
                         <tr key={session.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors">
                           <td className="px-5 py-3.5 whitespace-nowrap">
                             <span className="text-sm font-mono text-secondary-700 dark:text-secondary-300">
-                              {session.userId.slice(0, 8)}...
+                              {session.userId}
                             </span>
                           </td>
                           <td className="px-5 py-3.5 whitespace-nowrap">

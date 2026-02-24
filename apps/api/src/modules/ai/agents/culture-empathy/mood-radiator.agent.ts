@@ -12,7 +12,7 @@
  * Aggregates communication and engagement signals to surface team emotional climate.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import {
   queryCommunicationPatterns,
   queryTeamHealth,
@@ -44,7 +44,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class MoodRadiatorAgent extends BaseAgent {
+export class MoodRadiatorAgent extends AgenticBaseAgent {
   constructor() {
     super('mood_radiator', SYSTEM_PROMPT);
   }

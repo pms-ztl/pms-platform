@@ -12,7 +12,7 @@
  * Analyzes organizational culture signals to guide transformation and reinforce values.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryCultureDiagnostics } from '../../agent-tools-v3';
 import { queryTeamHealth, queryCommunicationPatterns } from '../../agent-tools-v2';
 
@@ -40,7 +40,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class CultureWeaverAgent extends BaseAgent {
+export class CultureWeaverAgent extends AgenticBaseAgent {
   constructor() {
     super('culture_weaver', SYSTEM_PROMPT);
   }

@@ -1,7 +1,7 @@
 /**
  * SwarmOverview - Mode 1 of the Neural Swarm UI
  *
- * A visual dashboard showing all 65 AI agents organized into 6 clusters
+ * A visual dashboard showing all 70 AI agents organized into 6 clusters
  * with a neural-network-style visualization. Features:
  *
  * - Hero stat cards (glassmorphism)
@@ -22,9 +22,16 @@ import {
   ChevronUpIcon,
   PlayIcon,
   SignalIcon,
+  HeartIcon,
+  BookOpenIcon,
+  BriefcaseIcon,
+  UserGroupIcon,
+  ScaleIcon,
 } from '@heroicons/react/24/outline';
+import { getAgentIcon, type AgentIconComponent } from './agentIconMap';
 import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import type { AITheme } from '@/store/ai-workspace';
+import { aiApi } from '@/lib/api/ai';
 import * as T from './ai-theme';
 
 // ── Cluster data ────────────────────────────────────────────
@@ -32,13 +39,13 @@ import * as T from './ai-theme';
 interface ClusterAgent {
   type: string;
   name: string;
-  icon: string;
 }
 
 interface Cluster {
   id: string;
   name: string;
-  icon: string;
+  icon: AgentIconComponent;
+  svgLabel: string;
   color: string;
   glow: string;
   textColor: string;
@@ -52,35 +59,42 @@ const CLUSTER_DATA: Cluster[] = [
   {
     id: 'core',
     name: 'Core Intelligence',
-    icon: '\u2699\uFE0F',
+    icon: CpuChipIcon,
+    svgLabel: 'Core',
     color: 'from-blue-500 to-indigo-600',
     glow: 'shadow-blue-500/40',
     textColor: 'text-blue-400',
     bgAccent: 'bg-blue-500/10',
     borderAccent: 'border-blue-500/20',
-    agentCount: 15,
+    agentCount: 20,
     agents: [
-      { type: 'performance', name: 'Performance', icon: '\uD83C\uDFAF' },
-      { type: 'nlp_query', name: 'Data Query', icon: '\uD83D\uDD0D' },
-      { type: 'coaching', name: 'Coaching', icon: '\uD83E\uDDD1\u200D\uD83C\uDFEB' },
-      { type: 'career', name: 'Career', icon: '\uD83D\uDE80' },
-      { type: 'report', name: 'Reports', icon: '\uD83D\uDCCB' },
-      { type: 'workforce_intel', name: 'Workforce Intel', icon: '\uD83E\uDDE0' },
-      { type: 'governance', name: 'Governance', icon: '\u2696\uFE0F' },
-      { type: 'strategic_alignment', name: 'Strategy', icon: '\uD83C\uDFAF' },
-      { type: 'talent_marketplace', name: 'Talent Market', icon: '\uD83C\uDFEA' },
-      { type: 'conflict_resolution', name: 'Conflict', icon: '\uD83E\uDD1D' },
-      { type: 'security', name: 'Security', icon: '\uD83D\uDD12' },
-      { type: 'notification', name: 'Notification', icon: '\uD83D\uDD14' },
-      { type: 'onboarding', name: 'Onboarding', icon: '\uD83C\uDF93' },
-      { type: 'license', name: 'License', icon: '\uD83D\uDD11' },
-      { type: 'excel_validation', name: 'Excel AI', icon: '\uD83D\uDCC4' },
+      { type: 'performance', name: 'Performance' },
+      { type: 'nlp_query', name: 'Data Query' },
+      { type: 'coaching', name: 'Coaching' },
+      { type: 'career', name: 'Career' },
+      { type: 'report', name: 'Reports' },
+      { type: 'workforce_intel', name: 'Workforce Intel' },
+      { type: 'governance', name: 'Governance' },
+      { type: 'strategic_alignment', name: 'Strategy' },
+      { type: 'talent_marketplace', name: 'Talent Market' },
+      { type: 'conflict_resolution', name: 'Conflict' },
+      { type: 'security', name: 'Security' },
+      { type: 'notification', name: 'Notification' },
+      { type: 'onboarding', name: 'Onboarding' },
+      { type: 'license', name: 'License' },
+      { type: 'excel_validation', name: 'Excel AI' },
+      { type: 'goal_intelligence', name: 'Goal Intel' },
+      { type: 'performance_signal', name: 'Perf Signal' },
+      { type: 'review_drafter', name: 'Review Drafter' },
+      { type: 'compensation_promotion', name: 'Comp & Promo' },
+      { type: 'one_on_one_advisor', name: '1:1 Advisor' },
     ],
   },
   {
     id: 'bio_performance',
     name: 'Bio-Performance',
-    icon: '\uD83E\uDDEC',
+    icon: HeartIcon,
+    svgLabel: 'Bio',
     color: 'from-emerald-500 to-teal-600',
     glow: 'shadow-emerald-500/40',
     textColor: 'text-emerald-400',
@@ -88,22 +102,23 @@ const CLUSTER_DATA: Cluster[] = [
     borderAccent: 'border-emerald-500/20',
     agentCount: 10,
     agents: [
-      { type: 'neuro_focus', name: 'Neuro Focus', icon: '\uD83E\uDDE0' },
-      { type: 'circadian_sync', name: 'Circadian Sync', icon: '\uD83C\uDF19' },
-      { type: 'micro_break', name: 'Micro Break', icon: '\u23F0' },
-      { type: 'cortisol_monitor', name: 'Cortisol Monitor', icon: '\uD83D\uDCC9' },
-      { type: 'ergonomics', name: 'Ergonomics', icon: '\uD83E\uDE91' },
-      { type: 'sleep_optimizer', name: 'Sleep Optimizer', icon: '\uD83D\uDCA4' },
-      { type: 'hydration_nutrition', name: 'Hydration', icon: '\uD83D\uDCA7' },
-      { type: 'vocal_tone', name: 'Vocal Tone', icon: '\uD83C\uDFA4' },
-      { type: 'environment_ctrl', name: 'Environment', icon: '\uD83C\uDF21\uFE0F' },
-      { type: 'burnout_interceptor', name: 'Burnout Guard', icon: '\uD83D\uDEE1\uFE0F' },
+      { type: 'neuro_focus', name: 'Neuro Focus' },
+      { type: 'circadian_sync', name: 'Circadian Sync' },
+      { type: 'micro_break', name: 'Micro Break' },
+      { type: 'cortisol_monitor', name: 'Cortisol Monitor' },
+      { type: 'ergonomics', name: 'Ergonomics' },
+      { type: 'sleep_optimizer', name: 'Sleep Optimizer' },
+      { type: 'hydration_nutrition', name: 'Hydration' },
+      { type: 'vocal_tone', name: 'Vocal Tone' },
+      { type: 'environment_ctrl', name: 'Environment' },
+      { type: 'burnout_interceptor', name: 'Burnout Guard' },
     ],
   },
   {
     id: 'hyper_learning',
     name: 'Hyper-Learning',
-    icon: '\uD83D\uDCDA',
+    icon: BookOpenIcon,
+    svgLabel: 'Learn',
     color: 'from-purple-500 to-pink-600',
     glow: 'shadow-purple-500/40',
     textColor: 'text-purple-400',
@@ -111,24 +126,25 @@ const CLUSTER_DATA: Cluster[] = [
     borderAccent: 'border-purple-500/20',
     agentCount: 12,
     agents: [
-      { type: 'shadow_learning', name: 'Shadow Learn', icon: '\uD83D\uDC65' },
-      { type: 'micro_learning', name: 'Micro Learn', icon: '\uD83D\uDCD6' },
-      { type: 'ar_mentor', name: 'AR Mentor', icon: '\uD83E\uDD3D' },
-      { type: 'sparring_partner', name: 'Sparring', icon: '\uD83E\uDD4A' },
-      { type: 'skill_gap_forecaster', name: 'Skill Forecast', icon: '\uD83D\uDD2E' },
-      { type: 'knowledge_broker', name: 'Knowledge Broker', icon: '\uD83E\uDD1D' },
-      { type: 'credential_ledger', name: 'Credentials', icon: '\uD83C\uDF96\uFE0F' },
-      { type: 'linguistic_refiner', name: 'Linguistic', icon: '\u270D\uFE0F' },
-      { type: 'curiosity_scout', name: 'Curiosity Scout', icon: '\uD83D\uDD2D' },
-      { type: 'logic_validator', name: 'Logic Check', icon: '\uD83E\uDDE9' },
-      { type: 'cross_training', name: 'Cross-Training', icon: '\uD83D\uDD00' },
-      { type: 'career_sim', name: 'Career Sim', icon: '\uD83C\uDFAE' },
+      { type: 'shadow_learning', name: 'Shadow Learn' },
+      { type: 'micro_learning', name: 'Micro Learn' },
+      { type: 'ar_mentor', name: 'AR Mentor' },
+      { type: 'sparring_partner', name: 'Sparring' },
+      { type: 'skill_gap_forecaster', name: 'Skill Forecast' },
+      { type: 'knowledge_broker', name: 'Knowledge Broker' },
+      { type: 'credential_ledger', name: 'Credentials' },
+      { type: 'linguistic_refiner', name: 'Linguistic' },
+      { type: 'curiosity_scout', name: 'Curiosity Scout' },
+      { type: 'logic_validator', name: 'Logic Check' },
+      { type: 'cross_training', name: 'Cross-Training' },
+      { type: 'career_sim', name: 'Career Sim' },
     ],
   },
   {
     id: 'liquid_workforce',
     name: 'Liquid Workforce',
-    icon: '\uD83D\uDCB0',
+    icon: BriefcaseIcon,
+    svgLabel: 'Work',
     color: 'from-amber-500 to-orange-600',
     glow: 'shadow-amber-500/40',
     textColor: 'text-amber-400',
@@ -136,22 +152,23 @@ const CLUSTER_DATA: Cluster[] = [
     borderAccent: 'border-amber-500/20',
     agentCount: 10,
     agents: [
-      { type: 'task_bidder', name: 'Task Bidder', icon: '\uD83D\uDCE6' },
-      { type: 'gig_sourcer', name: 'Gig Sourcer', icon: '\uD83C\uDFAA' },
-      { type: 'nano_payment', name: 'Nano Payment', icon: '\u2B50' },
-      { type: 'market_value', name: 'Market Value', icon: '\uD83D\uDCCA' },
-      { type: 'tax_optimizer', name: 'Tax Optimizer', icon: '\uD83D\uDCB5' },
-      { type: 'equity_realizer', name: 'Equity', icon: '\uD83D\uDCB9' },
-      { type: 'pension_guard', name: 'Pension Guard', icon: '\uD83C\uDFE6' },
-      { type: 'relocation_bot', name: 'Relocation', icon: '\u2708\uFE0F' },
-      { type: 'vendor_negotiator', name: 'Vendor Nego', icon: '\uD83D\uDD0E' },
-      { type: 'succession_sentry', name: 'Succession', icon: '\uD83D\uDC51' },
+      { type: 'task_bidder', name: 'Task Bidder' },
+      { type: 'gig_sourcer', name: 'Gig Sourcer' },
+      { type: 'nano_payment', name: 'Nano Payment' },
+      { type: 'market_value', name: 'Market Value' },
+      { type: 'tax_optimizer', name: 'Tax Optimizer' },
+      { type: 'equity_realizer', name: 'Equity' },
+      { type: 'pension_guard', name: 'Pension Guard' },
+      { type: 'relocation_bot', name: 'Relocation' },
+      { type: 'vendor_negotiator', name: 'Vendor Nego' },
+      { type: 'succession_sentry', name: 'Succession' },
     ],
   },
   {
     id: 'culture_empathy',
     name: 'Culture & Empathy',
-    icon: '\u2764\uFE0F',
+    icon: UserGroupIcon,
+    svgLabel: 'Culture',
     color: 'from-pink-500 to-rose-600',
     glow: 'shadow-pink-500/40',
     textColor: 'text-pink-400',
@@ -159,22 +176,23 @@ const CLUSTER_DATA: Cluster[] = [
     borderAccent: 'border-pink-500/20',
     agentCount: 10,
     agents: [
-      { type: 'culture_weaver', name: 'Culture Weaver', icon: '\uD83C\uDF10' },
-      { type: 'bias_neutralizer', name: 'Bias Neutralizer', icon: '\u2696\uFE0F' },
-      { type: 'gratitude_sentinel', name: 'Gratitude', icon: '\uD83D\uDE4F' },
-      { type: 'conflict_mediator', name: 'Mediator', icon: '\uD83D\uDD4A\uFE0F' },
-      { type: 'inclusion_monitor', name: 'Inclusion', icon: '\uD83C\uDF08' },
-      { type: 'empathy_coach', name: 'Empathy Coach', icon: '\uD83D\uDCAC' },
-      { type: 'social_bonding', name: 'Social Bonding', icon: '\uD83C\uDFC6' },
-      { type: 'legacy_archivist', name: 'Legacy Archive', icon: '\uD83D\uDCDC' },
-      { type: 'whistleblower', name: 'Whistleblower', icon: '\uD83D\uDCE2' },
-      { type: 'mood_radiator', name: 'Mood Radiator', icon: '\uD83C\uDF21\uFE0F' },
+      { type: 'culture_weaver', name: 'Culture Weaver' },
+      { type: 'bias_neutralizer', name: 'Bias Neutralizer' },
+      { type: 'gratitude_sentinel', name: 'Gratitude' },
+      { type: 'conflict_mediator', name: 'Mediator' },
+      { type: 'inclusion_monitor', name: 'Inclusion' },
+      { type: 'empathy_coach', name: 'Empathy Coach' },
+      { type: 'social_bonding', name: 'Social Bonding' },
+      { type: 'legacy_archivist', name: 'Legacy Archive' },
+      { type: 'whistleblower', name: 'Whistleblower' },
+      { type: 'mood_radiator', name: 'Mood Radiator' },
     ],
   },
   {
     id: 'governance_logic',
     name: 'Governance & Logic',
-    icon: '\uD83D\uDCDC',
+    icon: ScaleIcon,
+    svgLabel: 'Gov',
     color: 'from-red-500 to-rose-600',
     glow: 'shadow-red-500/40',
     textColor: 'text-red-400',
@@ -182,14 +200,14 @@ const CLUSTER_DATA: Cluster[] = [
     borderAccent: 'border-red-500/20',
     agentCount: 8,
     agents: [
-      { type: 'posh_sentinel', name: 'POSH Sentinel', icon: '\uD83D\uDEE1\uFE0F' },
-      { type: 'labor_compliance', name: 'Labor Law', icon: '\uD83D\uDCDC' },
-      { type: 'policy_translator', name: 'Policy Translate', icon: '\uD83D\uDCD6' },
-      { type: 'data_privacy', name: 'Data Privacy', icon: '\uD83D\uDD10' },
-      { type: 'audit_trail', name: 'Audit Trail', icon: '\uD83D\uDD0D' },
-      { type: 'conflict_of_interest', name: 'COI Detector', icon: '\u26A0\uFE0F' },
-      { type: 'leave_optimizer', name: 'Leave Optimizer', icon: '\uD83C\uDFD6\uFE0F' },
-      { type: 'onboarding_orchestrator', name: 'Onboard Orch', icon: '\uD83C\uDFAC' },
+      { type: 'posh_sentinel', name: 'POSH Sentinel' },
+      { type: 'labor_compliance', name: 'Labor Law' },
+      { type: 'policy_translator', name: 'Policy Translate' },
+      { type: 'data_privacy', name: 'Data Privacy' },
+      { type: 'audit_trail', name: 'Audit Trail' },
+      { type: 'conflict_of_interest', name: 'COI Detector' },
+      { type: 'leave_optimizer', name: 'Leave Optimizer' },
+      { type: 'onboarding_orchestrator', name: 'Onboard Orch' },
     ],
   },
 ];
@@ -245,19 +263,21 @@ function HeroStatCard({
   value,
   label,
   gradient,
+  glowColor,
   theme,
 }: {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   value: number;
   label: string;
   gradient: string;
+  glowColor: string;
   theme: AITheme;
 }) {
   const display = useAnimatedCounter(value);
 
   const cardBg =
     theme === 'light'
-      ? 'bg-white/70 border-gray-200/60'
+      ? 'bg-white/80 border-gray-200/60 shadow-sm'
       : theme === 'dark'
         ? 'bg-white/[0.06] border-white/[0.08]'
         : 'bg-white/[0.03] border-white/[0.05]';
@@ -265,24 +285,30 @@ function HeroStatCard({
   return (
     <div
       className={`
-        relative overflow-hidden rounded-2xl border p-5
+        group relative overflow-hidden rounded-2xl border p-5
         backdrop-blur-xl transition-all duration-300
-        hover:scale-[1.02] hover:shadow-lg
+        hover:scale-[1.03] hover:-translate-y-0.5
         ${cardBg}
       `}
+      style={{ boxShadow: `0 0 0 0 ${glowColor}` }}
+      onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.boxShadow = `0 8px 32px -4px ${glowColor}`; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 0 0 ${glowColor}`; }}
     >
       {/* Gradient accent strip */}
-      <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${gradient}`} />
+      <div className={`absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r ${gradient}`} />
+      {/* Subtle bottom color bleed */}
+      <div className={`pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t ${gradient} opacity-[0.04] group-hover:opacity-[0.08] transition-opacity duration-300`} />
 
-      <div className="flex items-center gap-4">
-        <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} shadow-lg`}>
+      <div className="relative flex items-center gap-4">
+        <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} shadow-lg`}
+          style={{ boxShadow: `0 4px 16px -2px ${glowColor}` }}>
           <Icon className="h-6 w-6 text-white" />
         </div>
         <div>
-          <p className={`text-3xl font-bold tabular-nums ${T.textPrimary(theme)}`}>
+          <p className={`text-3xl font-bold tabular-nums leading-none ${T.textPrimary(theme)}`}>
             {display}
           </p>
-          <p className={`text-sm font-medium ${T.textSecondary(theme)}`}>
+          <p className={`mt-1 text-xs font-semibold tracking-wide ${T.textMuted(theme)}`}>
             {label}
           </p>
         </div>
@@ -422,7 +448,7 @@ function NeuralNetworkVis({
           fill={theme === 'light' ? '#6366f1' : theme === 'dark' ? '#a78bfa' : '#22d3ee'}
           fontWeight="bold"
         >
-          65
+          70
         </text>
 
         {/* Cluster nodes */}
@@ -457,15 +483,17 @@ function NeuralNetworkVis({
                 strokeWidth={2}
                 opacity={0.95}
               />
-              {/* Icon */}
+              {/* Abbreviated label */}
               <text
                 x={pos.x}
                 y={pos.y - 6}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize="18"
+                fontSize="9"
+                fill={color}
+                fontWeight="600"
               >
-                {cluster.icon}
+                {cluster.svgLabel}
               </text>
               {/* Agent count */}
               <text
@@ -555,7 +583,9 @@ function ClusterCard({
         className="flex w-full items-center justify-between px-5 py-4"
       >
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{cluster.icon}</span>
+          <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${cluster.color}`}>
+            <cluster.icon className="h-5 w-5 text-white" />
+          </div>
           <div className="text-left">
             <h3 className={`font-semibold ${T.textPrimary(theme)}`}>
               {cluster.name}
@@ -588,22 +618,25 @@ function ClusterCard({
       >
         <div className="px-5 pb-4">
           <div className="flex flex-wrap gap-2">
-            {cluster.agents.map((agent) => (
-              <button
-                key={agent.type}
-                onClick={() => onAgentClick(agent.type)}
-                className={`
-                  inline-flex items-center gap-1.5 rounded-full border
-                  px-3 py-1.5 text-xs font-medium
-                  transition-all duration-200 hover:scale-105
-                  ${chipBg}
-                `}
-                title={`Chat with ${agent.name}`}
-              >
-                <span className="text-sm">{agent.icon}</span>
-                {agent.name}
-              </button>
-            ))}
+            {cluster.agents.map((agent) => {
+              const ChipIcon = getAgentIcon(agent.type);
+              return (
+                <button
+                  key={agent.type}
+                  onClick={() => onAgentClick(agent.type)}
+                  className={`
+                    inline-flex items-center gap-1.5 rounded-full border
+                    px-3 py-1.5 text-xs font-medium
+                    transition-all duration-200 hover:scale-105
+                    ${chipBg}
+                  `}
+                  title={`Chat with ${agent.name}`}
+                >
+                  <ChipIcon className={`h-3.5 w-3.5 flex-shrink-0 ${cluster.textColor}`} />
+                  {agent.name}
+                </button>
+              );
+            })}
           </div>
 
           {/* Orchestrate button */}
@@ -667,6 +700,142 @@ function ActivityItem({
   );
 }
 
+// ── Live Activity Feed (Real-Time Agent Status) ────────────
+
+function LiveActivityFeed({ theme }: { theme: AITheme }) {
+  const [activeAgents, setActiveAgents] = useState<Array<{
+    id: string;
+    agentType: string;
+    title: string;
+    status: string;
+    currentStep: number;
+    totalSteps: number;
+    startedAt: string | null;
+    isProactive: boolean;
+    parentTaskId: string | null;
+    user: { firstName: string; lastName: string };
+  }>>([]);
+
+  // Poll for active agents every 8 seconds
+  useEffect(() => {
+    let mounted = true;
+    const poll = async () => {
+      try {
+        const data = await aiApi.getActiveAgents();
+        if (mounted) setActiveAgents(data);
+      } catch {
+        // Silently fail — feed is non-critical
+      }
+    };
+    poll();
+    const interval = setInterval(poll, 8000);
+    return () => { mounted = false; clearInterval(interval); };
+  }, []);
+
+  const hasLiveData = activeAgents.length > 0;
+
+  return (
+    <div className="mb-6">
+      <div className="mb-4 flex items-center gap-2">
+        <span className="relative flex h-2.5 w-2.5">
+          <span className={`absolute inline-flex h-full w-full animate-ping rounded-full ${hasLiveData ? 'bg-green-400' : 'bg-gray-400'} opacity-60`} />
+          <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${hasLiveData ? 'bg-green-500' : 'bg-gray-500'}`} />
+        </span>
+        <h2 className={`text-lg font-semibold ${T.textPrimary(theme)}`}>
+          Live Swarm Activity
+        </h2>
+        {hasLiveData && (
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">
+            {activeAgents.length} active
+          </span>
+        )}
+      </div>
+      <div
+        className={`
+          max-h-[340px] overflow-y-auto rounded-2xl border backdrop-blur-xl
+          ${T.scrollbar(theme)}
+          ${theme === 'light'
+            ? 'border-gray-200/60 bg-white/50'
+            : theme === 'dark'
+              ? 'border-white/[0.06] bg-white/[0.02]'
+              : 'border-white/[0.04] bg-white/[0.01]'
+          }
+        `}
+      >
+        <div className="divide-y divide-transparent p-2">
+          {/* Real-time active tasks */}
+          {activeAgents.map((agent) => {
+            const progress = agent.totalSteps > 0
+              ? Math.round((agent.currentStep / agent.totalSteps) * 100)
+              : 0;
+            const statusText =
+              agent.status === 'planning' ? 'Planning...' :
+              agent.status === 'executing' ? `Step ${agent.currentStep + 1}/${agent.totalSteps}` :
+              agent.status === 'awaiting_approval' ? 'Awaiting approval' : agent.status;
+
+            return (
+              <div
+                key={agent.id}
+                className={`
+                  flex items-start gap-3 rounded-xl px-4 py-3
+                  transition-colors duration-200
+                  ${theme === 'light' ? 'hover:bg-gray-50' : theme === 'dark' ? 'hover:bg-white/[0.03]' : 'hover:bg-white/[0.02]'}
+                `}
+              >
+                <div className="mt-1.5 flex-shrink-0">
+                  <div className={`h-2 w-2 rounded-full ${
+                    agent.status === 'executing' ? 'bg-amber-400 animate-pulse' :
+                    agent.status === 'awaiting_approval' ? 'bg-orange-400' :
+                    'bg-blue-400 animate-pulse'
+                  }`} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className={`text-sm ${T.textPrimary(theme)}`}>
+                    <span className={`font-semibold ${T.accentText(theme)}`}>
+                      {agent.agentType.replace(/_/g, ' ')}
+                    </span>{' '}
+                    <span className={T.textSecondary(theme)}>
+                      {agent.title}
+                    </span>
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={`text-[10px] font-medium ${
+                      agent.status === 'executing' ? 'text-amber-400' :
+                      agent.status === 'awaiting_approval' ? 'text-orange-400' :
+                      'text-blue-400'
+                    }`}>
+                      {statusText}
+                    </span>
+                    {agent.isProactive && (
+                      <span className="text-[10px] text-cyan-400">Proactive</span>
+                    )}
+                    {agent.parentTaskId && (
+                      <span className="text-[10px] text-purple-400">Sub-task</span>
+                    )}
+                    {agent.totalSteps > 0 && (
+                      <div className={`flex-1 h-1 rounded-full max-w-[80px] ${theme === 'light' ? 'bg-gray-200' : 'bg-white/5'}`}>
+                        <div
+                          className={`h-full rounded-full bg-gradient-to-r ${T.accentGradient(theme)} transition-all duration-500`}
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Fallback: static activity feed when no live data */}
+          {!hasLiveData && ACTIVITY_FEED.map((entry, i) => (
+            <ActivityItem key={i} entry={entry} theme={theme} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main Component ──────────────────────────────────────────
 
 export function SwarmOverview() {
@@ -705,16 +874,89 @@ export function SwarmOverview() {
   const titleGradient = `bg-gradient-to-r ${T.accentGradient(theme)} bg-clip-text text-transparent`;
 
   return (
-    <div className={`min-h-full ${T.bg(theme)} transition-colors duration-300`}>
+    <div className={`relative min-h-full transition-colors duration-300 ${theme === 'light' ? 'bg-gray-50' : ''}`}>
+      {/* Ambient floating background orbs — dark themes only */}
+      {theme !== 'light' && (
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div
+            className="absolute -top-64 -left-64 h-[44rem] w-[44rem] rounded-full blur-3xl"
+            style={{
+              background: theme === 'deep-dark'
+                ? 'radial-gradient(circle, rgba(34,211,238,0.08) 0%, transparent 68%)'
+                : 'radial-gradient(circle, rgba(167,139,250,0.09) 0%, transparent 68%)',
+              animation: 'floatOrb 20s ease-in-out infinite',
+            }}
+          />
+          <div
+            className="absolute -bottom-64 -right-64 h-[44rem] w-[44rem] rounded-full blur-3xl"
+            style={{
+              background: theme === 'deep-dark'
+                ? 'radial-gradient(circle, rgba(52,211,153,0.07) 0%, transparent 68%)'
+                : 'radial-gradient(circle, rgba(129,140,248,0.08) 0%, transparent 68%)',
+              animation: 'floatOrb 26s ease-in-out infinite reverse',
+              animationDelay: '4s',
+            }}
+          />
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[32rem] w-[32rem] rounded-full blur-3xl"
+            style={{
+              background: theme === 'deep-dark'
+                ? 'radial-gradient(circle, rgba(45,212,191,0.05) 0%, transparent 68%)'
+                : 'radial-gradient(circle, rgba(192,132,252,0.06) 0%, transparent 68%)',
+              animation: 'floatOrb 32s ease-in-out infinite',
+              animationDelay: '8s',
+            }}
+          />
+        </div>
+      )}
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
 
         {/* ── Hero Header ───────────────────────────────────── */}
-        <div className="mb-8 text-center">
-          <h1 className={`text-3xl font-bold sm:text-4xl ${titleGradient}`}>
-            Neural Swarm
+        <div
+          className={`relative mb-8 overflow-hidden rounded-2xl border p-8 text-center backdrop-blur-xl
+            ${theme === 'light'
+              ? 'border-indigo-200/60 bg-gradient-to-br from-indigo-50/80 to-purple-50/60'
+              : theme === 'dark'
+              ? 'border-white/[0.06] bg-gradient-to-br from-indigo-950/60 to-purple-950/40'
+              : 'border-white/[0.04] bg-gradient-to-br from-black/60 to-indigo-950/30'}`}
+        >
+          {/* Decorative ambient orbs */}
+          <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl" />
+          <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-purple-500/10 blur-3xl" />
+
+          {/* Live badge */}
+          <div className="mb-4 flex items-center justify-center gap-3">
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-wider
+                ${theme === 'light'
+                  ? 'border-emerald-300/60 bg-emerald-50 text-emerald-700'
+                  : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'}`}
+            >
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              </span>
+              Live
+            </span>
+            <span className={`text-[11px] font-medium tracking-wide ${T.textMuted(theme)}`}>
+              Swarm Intelligence Active
+            </span>
+          </div>
+
+          <h1
+            className={`mb-3 ${titleGradient}`}
+            style={{
+              fontSize: 'clamp(2.2rem, 5vw, 3.6rem)',
+              lineHeight: 1.1,
+              fontFamily: "'Playfair Display', Georgia, serif",
+            }}
+          >
+            <span style={{ fontWeight: 400, fontStyle: 'italic' }}>Neural</span>
+            {' '}
+            <span style={{ fontWeight: 700 }}>Swarm</span>
           </h1>
-          <p className={`mt-2 text-sm ${T.textSecondary(theme)}`}>
-            65 AI agents across 6 intelligent clusters, working in harmony.
+          <p className={`text-sm ${T.textSecondary(theme)} max-w-md mx-auto leading-relaxed`}>
+            70 AI agents across 6 intelligent clusters, working in harmony to power your performance intelligence.
           </p>
         </div>
 
@@ -722,9 +964,10 @@ export function SwarmOverview() {
         <div className="mb-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
           <HeroStatCard
             icon={CpuChipIcon}
-            value={65}
+            value={70}
             label="Total Agents"
             gradient="from-blue-500 to-indigo-600"
+            glowColor="rgba(99,102,241,0.35)"
             theme={theme}
           />
           <HeroStatCard
@@ -732,6 +975,7 @@ export function SwarmOverview() {
             value={6}
             label="Active Clusters"
             gradient="from-emerald-500 to-teal-600"
+            glowColor="rgba(16,185,129,0.35)"
             theme={theme}
           />
           <HeroStatCard
@@ -739,6 +983,7 @@ export function SwarmOverview() {
             value={38}
             label="Economy Tier"
             gradient="from-amber-500 to-orange-600"
+            glowColor="rgba(245,158,11,0.35)"
             theme={theme}
           />
           <HeroStatCard
@@ -746,6 +991,7 @@ export function SwarmOverview() {
             value={8}
             label="Premium Tier"
             gradient="from-purple-500 to-pink-600"
+            glowColor="rgba(168,85,247,0.35)"
             theme={theme}
           />
         </div>
@@ -805,35 +1051,7 @@ export function SwarmOverview() {
         </div>
 
         {/* ── Live Activity Feed ────────────────────────────── */}
-        <div className="mb-6">
-          <div className="mb-4 flex items-center gap-2">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-60" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
-            </span>
-            <h2 className={`text-lg font-semibold ${T.textPrimary(theme)}`}>
-              Live Swarm Activity
-            </h2>
-          </div>
-          <div
-            className={`
-              max-h-[340px] overflow-y-auto rounded-2xl border backdrop-blur-xl
-              ${T.scrollbar(theme)}
-              ${theme === 'light'
-                ? 'border-gray-200/60 bg-white/50'
-                : theme === 'dark'
-                  ? 'border-white/[0.06] bg-white/[0.02]'
-                  : 'border-white/[0.04] bg-white/[0.01]'
-              }
-            `}
-          >
-            <div className="divide-y divide-transparent p-2">
-              {ACTIVITY_FEED.map((entry, i) => (
-                <ActivityItem key={i} entry={entry} theme={theme} />
-              ))}
-            </div>
-          </div>
-        </div>
+        <LiveActivityFeed theme={theme} />
 
       </div>
     </div>

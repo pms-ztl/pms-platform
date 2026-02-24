@@ -56,7 +56,7 @@ function Ring({
       {label && (
         <p style={{
           fontSize: '9px', fontWeight: 600, color: '#64748b',
-          marginTop: '2px', letterSpacing: '0.06em', textTransform: 'uppercase',
+          marginTop: '2px', letterSpacing: '0.06em',
         }}>{label}</p>
       )}
     </div>
@@ -353,7 +353,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
               flex: 1, padding: '8px 12px', borderRadius: '8px',
               background: '#f8fafc', border: '1px solid #e8ecf1',
             }}>
-              <p style={{ fontSize: '8px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '2px' }}>
+              <p style={{ fontSize: '8px', fontWeight: 700, color: '#94a3b8', letterSpacing: '0.08em', marginBottom: '2px' }}>
                 Confidence
               </p>
               <p style={{ fontSize: '16px', fontWeight: 800, color: '#1e293b' }}>
@@ -368,7 +368,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
               flex: 1, padding: '8px 12px', borderRadius: '8px',
               background: '#f8fafc', border: '1px solid #e8ecf1',
             }}>
-              <p style={{ fontSize: '8px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '2px' }}>
+              <p style={{ fontSize: '8px', fontWeight: 700, color: '#94a3b8', letterSpacing: '0.08em', marginBottom: '2px' }}>
                 Trajectory
               </p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -392,7 +392,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
               background: fairness?.biasDetected ? '#fef3c7' : '#f0fdf4',
               border: `1px solid ${fairness?.biasDetected ? '#fcd34d' : '#bbf7d0'}`,
             }}>
-              <p style={{ fontSize: '8px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '2px' }}>
+              <p style={{ fontSize: '8px', fontWeight: 700, color: '#94a3b8', letterSpacing: '0.08em', marginBottom: '2px' }}>
                 ML Fairness
               </p>
               <p style={{ fontSize: '12px', fontWeight: 700, color: fairness?.biasDetected ? '#b45309' : '#15803d' }}>
@@ -408,7 +408,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
               flex: 1, padding: '8px 12px', borderRadius: '8px',
               background: '#f8fafc', border: '1px solid #e8ecf1',
             }}>
-              <p style={{ fontSize: '8px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '2px' }}>
+              <p style={{ fontSize: '8px', fontWeight: 700, color: '#94a3b8', letterSpacing: '0.08em', marginBottom: '2px' }}>
                 Data Points
               </p>
               <p style={{ fontSize: '16px', fontWeight: 800, color: '#1e293b' }}>
@@ -459,7 +459,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
             }}>
               <p style={{
                 fontSize: '9px', fontWeight: 700, color: '#94a3b8',
-                textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px',
+                letterSpacing: '0.1em', marginBottom: '8px',
               }}>
                 Dimension Weights & Scores
               </p>
@@ -494,7 +494,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
                 flex: 1, padding: '10px 14px',
                 background: '#f0fdf4', borderRadius: '10px', border: '1px solid #bbf7d0',
               }}>
-                <p style={{ fontSize: '9px', fontWeight: 700, color: '#15803d', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                <p style={{ fontSize: '9px', fontWeight: 700, color: '#15803d', letterSpacing: '0.08em', marginBottom: '6px' }}>
                   Top Strengths
                 </p>
                 {strengths.length > 0 ? strengths.map((s: string, i: number) => (
@@ -514,7 +514,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
                 flex: 1, padding: '10px 14px',
                 background: '#fefce8', borderRadius: '10px', border: '1px solid #fde68a',
               }}>
-                <p style={{ fontSize: '9px', fontWeight: 700, color: '#a16207', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                <p style={{ fontSize: '9px', fontWeight: 700, color: '#a16207', letterSpacing: '0.08em', marginBottom: '6px' }}>
                   Growth Areas
                 </p>
                 {growthAreas.length > 0 ? growthAreas.map((g: string, i: number) => (
@@ -535,7 +535,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
                   padding: '8px 12px', background: '#fef3c7', borderRadius: '8px',
                   border: '1px solid #fcd34d',
                 }}>
-                  <p style={{ fontSize: '8px', fontWeight: 700, color: '#b45309', textTransform: 'uppercase', marginBottom: '4px' }}>
+                  <p style={{ fontSize: '8px', fontWeight: 700, color: '#b45309', marginBottom: '4px' }}>
                     Fairness Notes
                   </p>
                   {fairness.reviewerBiasFlags.map((flag: string, i: number) => (
@@ -560,7 +560,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
                   background: '#fafbfc', border: '1px solid #f1f5f9',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                    <p style={{ fontSize: '9px', fontWeight: 700, color: DIM_COLORS[d.code], textTransform: 'uppercase' }}>
+                    <p style={{ fontSize: '9px', fontWeight: 700, color: DIM_COLORS[d.code] }}>
                       {d.name}
                     </p>
                     <Grade grade={d.grade} />

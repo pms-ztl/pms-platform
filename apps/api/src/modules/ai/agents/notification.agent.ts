@@ -9,7 +9,7 @@
  * - Learning user interaction patterns
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import * as tools from '../agent-tools';
 import { MS_PER_DAY } from '../../../utils/constants';
 
@@ -33,7 +33,7 @@ When creating digests:
 - Keep the total under 10 items
 - Use clear, scannable formatting`;
 
-export class NotificationAgent extends BaseAgent {
+export class NotificationAgent extends AgenticBaseAgent {
   constructor() {
     super('notification', SYSTEM_PROMPT);
   }

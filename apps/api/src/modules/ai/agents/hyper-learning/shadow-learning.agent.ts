@@ -12,7 +12,7 @@
  * Matches employees with shadow opportunities that accelerate hands-on skill acquisition.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryUsers } from '../../agent-tools';
 import { querySkillGaps, queryMentorMatches } from '../../agent-tools-v2';
 
@@ -40,7 +40,7 @@ Shadowing principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class ShadowLearningAgent extends BaseAgent {
+export class ShadowLearningAgent extends AgenticBaseAgent {
   constructor() {
     super('shadow_learning', SYSTEM_PROMPT);
   }

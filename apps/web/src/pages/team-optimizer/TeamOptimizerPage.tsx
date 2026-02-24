@@ -110,8 +110,8 @@ export function TeamOptimizerPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs space-y-1">
-        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
+      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+        <p className="font-semibold text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color || p.fill }}>{p.name}: {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}</p>
         ))}
@@ -200,7 +200,7 @@ export function TeamOptimizerPage() {
                     <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 9, fill: 'var(--color-secondary-500, #6b7280)' }} />
                     <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 8 }} />
                     <Radar name="Score" dataKey="score" stroke="#6366f1" fill="#6366f1" fillOpacity={0.3} />
-                    <Tooltip content={<ChartTooltip />} />
+                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
@@ -288,7 +288,7 @@ export function TeamOptimizerPage() {
                 <div className="space-y-2">
                   {Object.entries(optimization.skillGaps).slice(0, 6).map(([skill, gap]: [string, any]) => (
                     <div key={skill} className="flex items-center gap-2 text-xs">
-                      <span className="w-28 truncate text-secondary-600 dark:text-secondary-400">{skill}</span>
+                      <span className="w-28 break-words text-secondary-600 dark:text-secondary-400">{skill}</span>
                       <div className="flex-1 h-1.5 rounded-full bg-secondary-200 dark:bg-secondary-600 overflow-hidden">
                         <div className="h-full rounded-full bg-amber-500" style={{ width: `${((gap.current || 0) / (gap.required || 5)) * 100}%` }} />
                       </div>
@@ -340,8 +340,8 @@ export function TeamOptimizerPage() {
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Team Composition Analysis</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="text-center"><p className="text-xl font-bold text-indigo-600 dark:text-indigo-400">{analysis.teamSize}</p><p className="text-xs text-secondary-500">Team Size</p></div>
-              <div className="text-center"><p className="text-xl font-bold text-blue-600 dark:text-blue-400">{analysis.avgTenure?.toFixed(1) ?? '—'}</p><p className="text-xs text-secondary-500">Avg Tenure (yrs)</p></div>
-              <div className="text-center"><p className="text-xl font-bold text-purple-600 dark:text-purple-400">{analysis.avgPerformanceScore?.toFixed(1) ?? '—'}</p><p className="text-xs text-secondary-500">Avg Performance</p></div>
+              <div className="text-center"><p className="text-xl font-bold text-blue-600 dark:text-blue-400">{analysis.avgTenure?.toFixed(1) ?? '—'}</p><p className="text-xs text-secondary-500">Average Tenure (yrs)</p></div>
+              <div className="text-center"><p className="text-xl font-bold text-purple-600 dark:text-purple-400">{analysis.avgPerformanceScore?.toFixed(1) ?? '—'}</p><p className="text-xs text-secondary-500">Average Performance</p></div>
               <div className="text-center"><p className="text-xl font-bold text-green-600 dark:text-green-400">{analysis.productivityScore?.toFixed(0) ?? '—'}</p><p className="text-xs text-secondary-500">Productivity</p></div>
             </div>
 
@@ -369,7 +369,7 @@ export function TeamOptimizerPage() {
                         <Pie data={seniorityData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} innerRadius={35} label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
                           {seniorityData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                         </Pie>
-                        <Tooltip />
+                        <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
@@ -384,7 +384,7 @@ export function TeamOptimizerPage() {
                         <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
                         <XAxis dataKey="skill" tick={{ fontSize: 9, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
                         <YAxis tick={{ fontSize: 9 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                        <Tooltip content={<ChartTooltip />} />
+                        <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                         <Bar dataKey="count" name="Count" fill="#6366f1" barSize={20} radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>

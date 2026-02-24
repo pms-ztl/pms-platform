@@ -36,11 +36,11 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const DURATION_BUCKETS = [
-  { label: '0–15 min', min: 0, max: 15 },
-  { label: '15–30 min', min: 15, max: 30 },
-  { label: '30–45 min', min: 30, max: 45 },
-  { label: '45–60 min', min: 45, max: 60 },
-  { label: '60+ min', min: 60, max: Infinity },
+  { label: '0–15 Minutes', min: 0, max: 15 },
+  { label: '15–30 Minutes', min: 15, max: 30 },
+  { label: '30–45 Minutes', min: 30, max: 45 },
+  { label: '45–60 Minutes', min: 45, max: 60 },
+  { label: '60+ Minutes', min: 60, max: Infinity },
 ];
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -224,8 +224,8 @@ export function MeetingAnalyticsPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs space-y-1">
-        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
+      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+        <p className="font-semibold text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color }}>
             {p.name}: {p.value}
@@ -304,9 +304,9 @@ export function MeetingAnalyticsPage() {
           {[
             { label: 'Total Meetings', value: stats.total, sub: `${stats.upcomingCount} upcoming`, color: 'text-indigo-600' },
             { label: 'Completion Rate', value: `${(stats.completionRate ?? 0).toFixed(0)}%`, sub: `${meetings.filter((m) => m.status === 'COMPLETED').length} completed`, color: 'text-green-600' },
-            { label: 'Avg Duration', value: `${stats.avgDuration} min`, sub: 'per meeting', color: 'text-purple-600' },
+            { label: 'Average Duration', value: `${stats.avgDuration} minutes`, sub: 'per meeting', color: 'text-purple-600' },
             { label: 'Action Items', value: `${stats.actionItems.done}/${stats.actionItems.total}`, sub: stats.actionItems.total ? `${((stats.actionItems.done / stats.actionItems.total) * 100).toFixed(0)}% done` : 'None tracked', color: 'text-amber-600' },
-            { label: 'Avg Agenda Topics', value: stats.avgAgenda, sub: 'per meeting', color: 'text-cyan-600' },
+            { label: 'Average Agenda Topics', value: stats.avgAgenda, sub: 'per meeting', color: 'text-cyan-600' },
           ].map((s) => (
             <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
@@ -339,7 +339,7 @@ export function MeetingAnalyticsPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
               <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} allowDecimals={false} />
-              <Tooltip content={<ChartTooltip />} />
+              <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
               <Area type="monotone" dataKey="count" name="Total" stroke="#6366f1" fill="url(#gradTotal)" strokeWidth={2} />
               <Area type="monotone" dataKey="completed" name="Completed" stroke="#22c55e" fill="url(#gradCompleted)" strokeWidth={2} />
@@ -373,7 +373,7 @@ export function MeetingAnalyticsPage() {
                     <Cell key={i} fill={e.color} />
                   ))}
                 </Pie>
-                <Tooltip content={<ChartTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -389,7 +389,7 @@ export function MeetingAnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
                 <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip content={<ChartTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
                 <Bar dataKey="total" name="Total" fill="#e0e7ff" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="done" name="Done" fill="#6366f1" radius={[4, 4, 0, 0]} />
@@ -411,7 +411,7 @@ export function MeetingAnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
                 <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip content={<ChartTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 <Bar dataKey="count" name="Meetings" fill="#8b5cf6" radius={[4, 4, 0, 0]}>
                   {durationData.map((_, i) => (
                     <Cell key={i} fill={['#c4b5fd', '#a78bfa', '#8b5cf6', '#7c3aed', '#6d28d9'][i]} />
@@ -493,7 +493,7 @@ export function MeetingAnalyticsPage() {
                     <td className="py-2.5 pr-4 text-xs text-secondary-900 dark:text-white font-medium whitespace-nowrap">
                       {item.participant}
                     </td>
-                    <td className="py-2.5 pr-4 text-xs text-secondary-700 dark:text-secondary-300 max-w-xs truncate">
+                    <td className="py-2.5 pr-4 text-xs text-secondary-700 dark:text-secondary-300 max-w-xs break-words">
                       {item.title}
                     </td>
                     <td className="py-2.5 pr-4">

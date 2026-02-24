@@ -71,15 +71,16 @@ export function BurnoutRiskChart({ data, className }: BurnoutRiskChartProps) {
             {/* Safe zone: low stress + high energy */}
             <ReferenceArea x1={3.5} x2={5} y1={1} y2={2.5} fill="#22c55e" fillOpacity={0.06} />
             <Tooltip
+              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
                 const d = payload[0].payload as BurnoutDataPoint;
                 const risk = d.stress >= 3.5 && d.energy <= 2.5 ? 'High' : d.stress >= 3 && d.energy <= 3 ? 'Moderate' : 'Low';
                 return (
-                  <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs space-y-1">
-                    <p className="font-semibold text-secondary-900 dark:text-white">{d.date}</p>
-                    <p className="text-secondary-500 dark:text-secondary-400">Energy: {(d.energy ?? 0).toFixed(1)}</p>
-                    <p className="text-secondary-500 dark:text-secondary-400">Stress: {(d.stress ?? 0).toFixed(1)}</p>
+                  <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+                    <p className="font-semibold text-white">{d.date}</p>
+                    <p className="text-slate-300">Energy: {(d.energy ?? 0).toFixed(1)}</p>
+                    <p className="text-slate-300">Stress: {(d.stress ?? 0).toFixed(1)}</p>
                     <p style={{ color: riskColor(d.energy, d.stress) }}>Risk: {risk}</p>
                   </div>
                 );

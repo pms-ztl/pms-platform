@@ -5,6 +5,9 @@ import {
   ShieldCheckIcon,
   LinkIcon,
   BuildingOfficeIcon,
+  ChatBubbleLeftRightIcon,
+  ComputerDesktopIcon,
+  CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -12,6 +15,7 @@ import clsx from 'clsx';
 import { useAuthStore } from '@/store/auth';
 import { useThemeStore } from '@/store/theme';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 type SettingsTab = 'notifications' | 'appearance' | 'integrations' | 'privacy' | 'organization';
 
@@ -266,15 +270,15 @@ export function SettingsPage() {
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Manage your connected applications and services.</p>
         <div className="space-y-4">
           {[
-            { name: 'Slack', description: 'Receive notifications in Slack', connected: false, icon: '💬' },
-            { name: 'Microsoft Teams', description: 'Receive notifications in Teams', connected: false, icon: '💼' },
-            { name: 'Google Calendar', description: 'Sync 1-on-1 meetings', connected: true, icon: '📅' },
-            { name: 'Outlook Calendar', description: 'Sync 1-on-1 meetings', connected: false, icon: '📆' },
+            { name: 'Slack',             description: 'Receive notifications in Slack',   connected: false, Icon: ChatBubbleLeftRightIcon },
+            { name: 'Microsoft Teams',   description: 'Receive notifications in Teams',   connected: false, Icon: ComputerDesktopIcon },
+            { name: 'Google Calendar',   description: 'Sync 1-on-1 meetings',             connected: true,  Icon: CalendarDaysIcon },
+            { name: 'Outlook Calendar',  description: 'Sync 1-on-1 meetings',             connected: false, Icon: CalendarDaysIcon },
           ].map((integration) => (
             <div key={integration.name} className="flex items-center justify-between p-4 border border-secondary-200 dark:border-secondary-700 rounded-lg">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-secondary-100 dark:bg-secondary-800 rounded-lg flex items-center justify-center text-xl">
-                  {integration.icon}
+                <div className="w-10 h-10 bg-secondary-100 dark:bg-secondary-800 rounded-lg flex items-center justify-center">
+                  <integration.Icon className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-secondary-900 dark:text-white">{integration.name}</p>
@@ -363,10 +367,7 @@ export function SettingsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Settings</h1>
-        <p className="mt-1 text-secondary-600 dark:text-secondary-400">Manage your account settings and preferences</p>
-      </div>
+      <PageHeader title="Settings" subtitle="Manage your account settings and preferences" />
 
       <div className="flex gap-8">
         {/* Sidebar */}

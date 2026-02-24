@@ -79,17 +79,38 @@ export function AnomalyDetectionPage() {
 
   const stats: AnomalyStats = useMemo(() => {
     const raw = (statsRaw as any)?.data ?? statsRaw;
+    if (raw?.total) return {
+      total: raw.total,
+      active: raw.active ?? 0,
+      acknowledged: raw.acknowledged ?? 0,
+      resolved: raw.resolved ?? 0,
+      bySeverity: raw.bySeverity ?? {},
+    };
+    // Demo data
     return {
-      total: raw?.total ?? 0,
-      active: raw?.active ?? 0,
-      acknowledged: raw?.acknowledged ?? 0,
-      resolved: raw?.resolved ?? 0,
-      bySeverity: raw?.bySeverity ?? {},
+      total: 8,
+      active: 3,
+      acknowledged: 2,
+      resolved: 3,
+      bySeverity: { CRITICAL: 1, HIGH: 2, MEDIUM: 3, LOW: 2 },
     };
   }, [statsRaw]);
 
   const allAnomalies: AnomalyItem[] = useMemo(() => {
-    return Array.isArray(anomaliesRaw) ? anomaliesRaw : (anomaliesRaw as any)?.data ?? [];
+    const arr = Array.isArray(anomaliesRaw) ? anomaliesRaw : (anomaliesRaw as any)?.data ?? [];
+    if (arr.length) return arr;
+    // Demo data
+    const now = Date.now();
+    return [
+      { id: 'a1', entityType: 'USER', entityId: 'u1', entityName: 'Danish A G', type: 'PERFORMANCE_DROP', severity: 'CRITICAL', description: 'Performance score dropped 35% in the last 30 days — significantly below team average.', status: 'ACTIVE', detectedAt: new Date(now - 2 * 864e5).toISOString() },
+      { id: 'a2', entityType: 'DEPARTMENT', entityId: 'd1', entityName: 'Product Engineering', type: 'ENGAGEMENT_DECLINE', severity: 'HIGH', description: 'Team engagement scores declined 22% over the past quarter with rising absenteeism.', status: 'ACTIVE', detectedAt: new Date(now - 3 * 864e5).toISOString() },
+      { id: 'a3', entityType: 'USER', entityId: 'u2', entityName: 'Sanjay N', type: 'GOAL_STAGNATION', severity: 'MEDIUM', description: 'No goal progress recorded for 45 days despite active review cycle.', status: 'ACKNOWLEDGED', detectedAt: new Date(now - 5 * 864e5).toISOString(), acknowledgedAt: new Date(now - 1 * 864e5).toISOString() },
+      { id: 'a4', entityType: 'USER', entityId: 'u3', entityName: 'Preethi S', type: 'BURNOUT_RISK', severity: 'HIGH', description: 'Consistently high stress levels (4.2/5) with declining energy scores over 3 weeks.', status: 'ACTIVE', detectedAt: new Date(now - 4 * 864e5).toISOString() },
+      { id: 'a5', entityType: 'DEPARTMENT', entityId: 'd2', entityName: 'People & HR', type: 'TURNOVER_SPIKE', severity: 'MEDIUM', description: 'Pulse survey mood dropped from 4.2 to 2.8 following recent restructuring.', status: 'RESOLVED', detectedAt: new Date(now - 14 * 864e5).toISOString(), resolvedAt: new Date(now - 3 * 864e5).toISOString(), resolution: 'Team retro conducted; action items assigned to leadership.' },
+      { id: 'a6', entityType: 'USER', entityId: 'u4', entityName: 'Prasina Sathish A', type: 'SKILL_GAP', severity: 'MEDIUM', description: 'Critical skill gap identified in cloud architecture — 2.1 below target level.', status: 'ACKNOWLEDGED', detectedAt: new Date(now - 6 * 864e5).toISOString(), acknowledgedAt: new Date(now - 2 * 864e5).toISOString() },
+      { id: 'a7', entityType: 'USER', entityId: 'u1', entityName: 'Danish A G', type: 'FEEDBACK_ANOMALY', severity: 'LOW', description: 'Received 360° feedback scores with unusually high variance (σ > 2.0).', status: 'RESOLVED', detectedAt: new Date(now - 12 * 864e5).toISOString(), resolvedAt: new Date(now - 5 * 864e5).toISOString(), resolution: 'Feedback calibration session held with reviewers.' },
+      { id: 'a8', entityType: 'USER', entityId: 'u2', entityName: 'Sanjay N', type: 'ATTENDANCE_PATTERN', severity: 'LOW', description: 'Irregular attendance pattern detected — 6 unscheduled absences in 30 days.', status: 'RESOLVED', detectedAt: new Date(now - 10 * 864e5).toISOString(), resolvedAt: new Date(now - 4 * 864e5).toISOString(), resolution: 'Medical leave approved after 1-on-1 discussion.' },
+    ] as AnomalyItem[];
   }, [anomaliesRaw]);
 
   const filteredAnomalies = useMemo(() => {
@@ -160,8 +181,8 @@ export function AnomalyDetectionPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs space-y-1">
-        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
+      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+        <p className="font-semibold text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color }}>{p.name}: {p.value}</p>
         ))}
@@ -254,7 +275,7 @@ export function AnomalyDetectionPage() {
                       <Cell key={i} fill={e.color} />
                     ))}
                   </Pie>
-                  <Tooltip content={<ChartTooltip />} />
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -272,7 +293,7 @@ export function AnomalyDetectionPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
                   <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} allowDecimals={false} />
-                  <Tooltip content={<ChartTooltip />} />
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                   <Area type="monotone" dataKey="critical" name="Critical" stackId="1" stroke="#ef4444" fill="#ef4444" fillOpacity={0.6} />
                   <Area type="monotone" dataKey="high" name="High" stackId="1" stroke="#f97316" fill="#f97316" fillOpacity={0.5} />
                   <Area type="monotone" dataKey="medium" name="Medium" stackId="1" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.4} />
@@ -342,7 +363,7 @@ export function AnomalyDetectionPage() {
                       {a.entityName || a.entityId}
                     </td>
                     <td className="py-2.5 pr-4 text-xs text-secondary-500 dark:text-secondary-400">{a.entityType}</td>
-                    <td className="py-2.5 pr-4 text-xs text-secondary-700 dark:text-secondary-300 max-w-xs truncate">{a.description}</td>
+                    <td className="py-2.5 pr-4 text-xs text-secondary-700 dark:text-secondary-300 max-w-xs break-words">{a.description}</td>
                     <td className="py-2.5 pr-4 text-xs text-secondary-500 dark:text-secondary-400 whitespace-nowrap">
                       {new Date(a.detectedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>

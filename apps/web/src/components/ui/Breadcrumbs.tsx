@@ -85,13 +85,13 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
                 <ChevronRightIcon className="h-3.5 w-3.5 text-secondary-400 dark:text-secondary-600 shrink-0" />
               )}
               {isLast || !crumb.href ? (
-                <span className="font-medium text-secondary-900 dark:text-white truncate max-w-[200px]">
+                <span className="font-medium text-secondary-900 dark:text-white break-words">
                   {crumb.label}
                 </span>
               ) : (
                 <Link
                   to={crumb.href}
-                  className="text-secondary-500 dark:text-secondary-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors truncate max-w-[200px]"
+                  className="text-secondary-500 dark:text-secondary-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors break-words"
                 >
                   {index === 0 ? (
                     <span className="flex items-center gap-1">

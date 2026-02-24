@@ -247,7 +247,7 @@ export function ProfilePage() {
             {myGoals.data.slice(0, 5).map((goal: Goal) => (
               <div key={goal.id} className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-secondary-900 dark:text-white truncate">{goal.title}</p>
+                  <p className="text-sm text-secondary-900 dark:text-white break-words">{goal.title}</p>
                   <p className="text-xs text-secondary-500 dark:text-secondary-400">{goal.type}</p>
                 </div>
                 <div className="ml-4 flex items-center gap-2">

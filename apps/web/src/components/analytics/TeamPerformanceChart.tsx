@@ -69,7 +69,7 @@ function TeamPerformanceChart({ managerId, className = '' }: TeamPerformanceChar
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Team Performance</h3>
         </div>
         <div className="text-xs text-secondary-500 dark:text-secondary-400">
-          {members.length} members &middot; Avg {Math.round(teamData?.avgScore ?? 0)}
+          {members.length} members &middot; Average: {Math.round(teamData?.avgScore ?? 0)}
         </div>
       </div>
 
@@ -90,12 +90,19 @@ function TeamPerformanceChart({ managerId, className = '' }: TeamPerformanceChar
               tickLine={false}
             />
             <Tooltip
+              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
               contentStyle={{
-                backgroundColor: 'var(--color-surface-card, #fff)',
-                border: '1px solid var(--color-secondary-200, #e2e8f0)',
+                background: 'rgba(15, 23, 42, 0.80)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(148, 163, 184, 0.15)',
                 borderRadius: '0.75rem',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
                 fontSize: '0.75rem',
+                color: '#f1f5f9',
               }}
+              labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+              itemStyle={{ color: '#e2e8f0' }}
               formatter={(value: number, _name: string, props: any) => [
                 `Score: ${value} (z: ${props.payload.zScore})`,
                 props.payload.fullName,

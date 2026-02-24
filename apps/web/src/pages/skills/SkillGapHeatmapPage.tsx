@@ -27,6 +27,7 @@ import {
 import clsx from 'clsx';
 
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 import { skillsApi } from '@/lib/api';
 
 // ── Local Types (API returns `any`) ─────────────────────────────────────────
@@ -70,8 +71,8 @@ const SEVERITY_LABELS = ['Critical (>2)', 'Moderate (1-2)', 'Minor (0.5-1)', 'On
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800">
-      <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400">{label}</p>
+    <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+      <p className="font-medium text-slate-300">{label}</p>
       {payload.map((entry: any, idx: number) => (
         <p key={idx} className="text-sm font-semibold" style={{ color: entry.color }}>
           {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(2) : entry.value}
@@ -171,7 +172,7 @@ export function SkillGapHeatmapPage() {
     return [...filteredGaps]
       .sort((a, b) => b.gap - a.gap)
       .slice(0, 15)
-      .map((g) => ({ ...g, displayName: g.skillName.length > 25 ? g.skillName.slice(0, 22) + '...' : g.skillName }));
+      .map((g) => ({ ...g, displayName: g.skillName }));
   }, [filteredGaps]);
 
   // Severity distribution
@@ -242,13 +243,10 @@ export function SkillGapHeatmapPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Skill Gap Analytics</h1>
-          <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
-            Organization-wide skill gap analysis and department heatmap
-          </p>
-        </div>
+      <PageHeader
+        title="Skill Gap Analytics"
+        subtitle="Organization-wide skill gap analysis and department heatmap"
+      >
         <div className="flex items-center gap-2">
           <FunnelIcon className="h-4 w-4 text-secondary-400" />
           <select
@@ -262,7 +260,7 @@ export function SkillGapHeatmapPage() {
             ))}
           </select>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -294,7 +292,7 @@ export function SkillGapHeatmapPage() {
               <PuzzlePieceIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <p className="text-xs text-secondary-500 dark:text-secondary-400">Avg Skill Level</p>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400">Average Skill Level</p>
               <p className="text-2xl font-bold text-secondary-900 dark:text-white">{(stats.avgLevel ?? 0).toFixed(1)}</p>
             </div>
           </div>
@@ -306,7 +304,7 @@ export function SkillGapHeatmapPage() {
             </div>
             <div>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Most Common Gap</p>
-              <p className="text-lg font-bold text-secondary-900 dark:text-white truncate max-w-[140px]" title={stats.mostCommon}>{stats.mostCommon}</p>
+              <p className="text-sm font-bold text-secondary-900 dark:text-white break-words" title={stats.mostCommon}>{stats.mostCommon}</p>
             </div>
           </div>
         </div>
@@ -418,16 +416,17 @@ export function SkillGapHeatmapPage() {
                   width={140}
                 />
                 <Tooltip
+                  cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                   content={({ active, payload }) => {
                     if (!active || !payload?.length) return null;
                     const d = payload[0].payload as SkillGap;
                     return (
-                      <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs space-y-1">
-                        <p className="font-semibold text-secondary-900 dark:text-white">{d.skillName}</p>
-                        <p className="text-secondary-500 dark:text-secondary-400">Category: {d.category}</p>
-                        <p className="text-secondary-500 dark:text-secondary-400">Avg Level: {(d.avgRating ?? 0).toFixed(2)} / Target: {(d.targetLevel ?? 0).toFixed(1)}</p>
+                      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+                        <p className="font-semibold text-white">{d.skillName}</p>
+                        <p className="text-slate-300">Category: {d.category}</p>
+                        <p className="text-slate-300">Average Level: {(d.avgRating ?? 0).toFixed(2)} / Target: {(d.targetLevel ?? 0).toFixed(1)}</p>
                         <p style={{ color: gapColor(d.gap) }}>Gap: {(d.gap ?? 0).toFixed(2)}</p>
-                        <p className="text-secondary-500 dark:text-secondary-400">Employees Affected: {d.employeesAffected}</p>
+                        <p className="text-slate-300">Employees Affected: {d.employeesAffected}</p>
                       </div>
                     );
                   }}
@@ -448,7 +447,7 @@ export function SkillGapHeatmapPage() {
         {/* Department Skill Radar */}
         <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">
-            {selectedDept ? `${selectedDept} — Skill Profile` : 'Organization Avg Skill Profile'}
+            {selectedDept ? `${selectedDept} — Skill Profile` : 'Organization Average Skill Profile'}
           </h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">
             {selectedDept ? 'Click another department in the heatmap to compare' : 'Select a department from the heatmap above'}
@@ -475,7 +474,7 @@ export function SkillGapHeatmapPage() {
                     fillOpacity={0.2}
                     strokeWidth={2}
                   />
-                  <Tooltip content={ChartTooltip} />
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={ChartTooltip} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
@@ -506,13 +505,14 @@ export function SkillGapHeatmapPage() {
                     ))}
                   </Pie>
                   <Tooltip
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                     content={({ active, payload }) => {
                       if (!active || !payload?.length) return null;
                       const d = payload[0];
                       return (
-                        <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs">
+                        <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs">
                           <p className="font-semibold" style={{ color: d.payload.fill }}>{d.name}</p>
-                          <p className="text-secondary-500 dark:text-secondary-400">{d.value} skills</p>
+                          <p className="text-slate-300">{d.value} skills</p>
                         </div>
                       );
                     }}

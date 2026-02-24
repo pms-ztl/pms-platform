@@ -5,7 +5,7 @@
  * Examples: "Who are my top performers?", "How many licenses left?", "Show me Q2 goals"
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import * as tools from '../agent-tools';
 import { isAdmin, isManager, isEmployeeOnly } from '../../../utils/roles';
 
@@ -20,7 +20,7 @@ When answering:
 - Be concise but thorough
 - IMPORTANT: Always respect the user's access level. Only answer with data that was provided to you.`;
 
-export class NLPQueryAgent extends BaseAgent {
+export class NLPQueryAgent extends AgenticBaseAgent {
   constructor() {
     super('nlp_query', SYSTEM_PROMPT);
   }

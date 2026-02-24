@@ -31,7 +31,7 @@ interface DepartmentRadarProps {
   className?: string;
 }
 
-const RADAR_COLORS = ['#3b82f6', '#f59e0b', '#10b981'];
+const RADAR_COLORS = ['#818cf8', '#fbbf24', '#34d399'];
 const AXIS_LABELS: Record<string, string> = {
   participation: 'Participation',
   communication: 'Communication',
@@ -116,17 +116,24 @@ export function DepartmentRadar({ departments, selectedDeptIds: initialSelected,
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={chartData} cx="50%" cy="50%" outerRadius="75%">
-              <PolarGrid className="stroke-secondary-200 dark:stroke-secondary-700" />
+              <PolarGrid
+                className="stroke-secondary-300/40 dark:stroke-secondary-600/25"
+                gridType="polygon"
+                radialLines={true}
+              />
               <PolarAngleAxis
                 dataKey="axis"
-                tick={{ fontSize: 11 }}
-                className="fill-secondary-600 dark:fill-secondary-400"
+                tick={{ fontSize: 11, fill: 'currentColor' }}
+                className="[&_text]:fill-secondary-600 dark:[&_text]:fill-secondary-300"
+                stroke="transparent"
+                axisLine={{ stroke: 'transparent', fill: 'none' }}
               />
               <PolarRadiusAxis
                 angle={90}
                 domain={[0, 100]}
                 tick={{ fontSize: 9 }}
                 className="fill-secondary-400 dark:fill-secondary-500"
+                stroke="transparent"
               />
               {selectedDepts.map((dept, i) => (
                 <Radar
@@ -135,20 +142,41 @@ export function DepartmentRadar({ departments, selectedDeptIds: initialSelected,
                   dataKey={dept.departmentName}
                   stroke={RADAR_COLORS[i]}
                   fill={RADAR_COLORS[i]}
-                  fillOpacity={0.15}
+                  fillOpacity={0.08}
                   strokeWidth={2}
+                  dot={{
+                    r: 4,
+                    fill: RADAR_COLORS[i],
+                    fillOpacity: 1,
+                    stroke: '#1e293b',
+                    strokeWidth: 2,
+                  }}
+                  activeDot={{
+                    r: 6,
+                    fill: RADAR_COLORS[i],
+                    fillOpacity: 1,
+                    stroke: RADAR_COLORS[i],
+                    strokeWidth: 2,
+                  }}
                 />
               ))}
               <Legend
                 wrapperStyle={{ fontSize: '11px' }}
               />
               <Tooltip
+                cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                 contentStyle={{
-                  backgroundColor: 'var(--tooltip-bg, #fff)',
-                  borderColor: 'var(--tooltip-border, #e5e7eb)',
-                  borderRadius: '8px',
-                  fontSize: '12px',
+                  background: 'rgba(15, 23, 42, 0.80)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(148, 163, 184, 0.15)',
+                  borderRadius: '0.75rem',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
+                  fontSize: '0.75rem',
+                  color: '#f1f5f9',
                 }}
+                labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
+                itemStyle={{ color: '#e2e8f0' }}
                 formatter={(value: number) => [`${value}%`, '']}
               />
             </RadarChart>

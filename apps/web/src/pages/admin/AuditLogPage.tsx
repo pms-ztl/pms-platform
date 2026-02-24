@@ -26,6 +26,7 @@ import clsx from 'clsx';
 
 import { api } from '@/lib/api';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -203,9 +204,9 @@ function formatTime(iso: string): string {
   }).format(new Date(iso));
 }
 
-function truncateId(id: string, max = 8): string {
+function truncateId(id: string, _max = 8): string {
   if (!id) return '--';
-  return id.length > max ? id.slice(0, max) + '...' : id;
+  return id;
 }
 
 function getInitials(firstName: string, lastName: string): string {
@@ -255,7 +256,7 @@ function JsonDiffViewer({
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
       {/* Previous State */}
       <div>
-        <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">
+        <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
           Previous State
         </h4>
         <div className="bg-red-50/50 dark:bg-red-900/10 rounded-lg border border-red-200/50 dark:border-red-800/30 p-3 font-mono text-xs overflow-x-auto max-h-64 overflow-y-auto">
@@ -287,7 +288,7 @@ function JsonDiffViewer({
 
       {/* New State */}
       <div>
-        <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">
+        <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
           New State
         </h4>
         <div className="bg-green-50/50 dark:bg-green-900/10 rounded-lg border border-green-200/50 dark:border-green-800/30 p-3 font-mono text-xs overflow-x-auto max-h-64 overflow-y-auto">
@@ -425,7 +426,7 @@ function ActivityTimeline({ events }: { events: AuditEvent[] }) {
     <div className="space-y-6">
       {Array.from(grouped.entries()).map(([dateKey, dateEvents]) => (
         <div key={dateKey}>
-          <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3 sticky top-0 bg-white dark:bg-secondary-800 py-1 z-10">
+          <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3 sticky top-0 bg-white dark:bg-secondary-800 py-1 z-10">
             {formatDateGroup(dateEvents[0].timestamp)}
           </h3>
           <div className="relative pl-6 border-l-2 border-secondary-200 dark:border-secondary-700 space-y-4">
@@ -607,13 +608,7 @@ export function AuditLogPage() {
   return (
     <div className="space-y-6">
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Audit Trail</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Track all system activities and changes
-          </p>
-        </div>
+      <PageHeader title="Audit Trail" subtitle="Track all system activities and changes">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowTimeline(!showTimeline)}
@@ -635,7 +630,7 @@ export function AuditLogPage() {
             Export CSV
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* ── Filters Bar ────────────────────────────────────────────────────── */}
       <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
@@ -811,25 +806,25 @@ export function AuditLogPage() {
                 <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                   <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Timestamp
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                         User
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Action
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Entity Type
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Entity ID
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                         IP Address
                       </th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-center text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Details
                       </th>
                     </tr>
@@ -969,10 +964,10 @@ function EventTableRow({
               </div>
             )}
             <div className="min-w-0">
-              <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+              <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                 {event.user.firstName} {event.user.lastName}
               </p>
-              <p className="text-xs text-secondary-400 dark:text-secondary-500 truncate">
+              <p className="text-xs text-secondary-400 dark:text-secondary-500 break-words">
                 {event.user.email}
               </p>
             </div>
@@ -1047,9 +1042,7 @@ function EventTableRow({
                 {event.userAgent && (
                   <span>
                     <span className="font-medium text-secondary-600 dark:text-secondary-300">User Agent:</span>{' '}
-                    {event.userAgent.length > 80
-                      ? event.userAgent.slice(0, 80) + '...'
-                      : event.userAgent}
+                    {event.userAgent}
                   </span>
                 )}
                 <span>

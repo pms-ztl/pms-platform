@@ -10,7 +10,7 @@ interface OKRAlignmentTreeProps {
 
 const typeLabels: Record<string, string> = {
   COMPANY: 'Company',
-  DEPARTMENT: 'Dept',
+  DEPARTMENT: 'Department',
   TEAM: 'Team',
   INDIVIDUAL: 'Individual',
   OKR_OBJECTIVE: 'Objective',
@@ -74,7 +74,7 @@ function TreeNode({
               {Math.round(goal.progress)}%
             </span>
           </div>
-          <p className="text-sm font-medium text-secondary-900 dark:text-white mt-0.5 truncate">
+          <p className="text-sm font-medium text-secondary-900 dark:text-white mt-0.5 break-words">
             {goal.title}
           </p>
           {goal.owner && (

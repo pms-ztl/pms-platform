@@ -16,6 +16,7 @@ import { usersApi, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { ActivityHeatmap } from '@/components/realtime-performance/ActivityHeatmap';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 export function TeamPage() {
   usePageTitle('Team');
@@ -173,12 +174,10 @@ export function TeamPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Team</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">View your team members and organization structure</p>
-        </div>
-      </div>
+      <PageHeader
+        title="Team"
+        subtitle="View your team members and organization structure"
+      />
 
       {/* Direct reports section (for managers) */}
       {isManager && directReports && directReports.length > 0 && (
@@ -199,10 +198,10 @@ export function TeamPage() {
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                  <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                     {report.firstName} {report.lastName}
                   </p>
-                  <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{report.jobTitle}</p>
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{report.jobTitle}</p>
                 </div>
                 <Link
                   to={`/reviews?reviewee=${report.id}`}

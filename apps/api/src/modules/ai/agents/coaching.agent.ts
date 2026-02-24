@@ -12,7 +12,7 @@
  * Delivers specific, data-backed coaching rather than generic advice.
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import { queryFeedback } from '../agent-tools';
 import {
   querySkillGaps,
@@ -44,7 +44,7 @@ Coaching principles:
 
 // ── Agent Class ─────────────────────────────────────────────
 
-export class CoachingAgent extends BaseAgent {
+export class CoachingAgent extends AgenticBaseAgent {
   constructor() {
     super('coaching', SYSTEM_PROMPT);
   }

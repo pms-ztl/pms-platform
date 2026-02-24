@@ -28,6 +28,7 @@ import {
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -308,13 +309,10 @@ export function PromotionsPage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Promotion Management</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Manage promotion nominations and approvals
-          </p>
-        </div>
+      <PageHeader
+        title="Promotion Management"
+        subtitle="Manage promotion nominations and approvals"
+      >
         <button
           onClick={() => setShowCreateModal(true)}
           className="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors"
@@ -322,7 +320,7 @@ export function PromotionsPage() {
           <PlusIcon className="h-5 w-5 mr-2" />
           Nominate for Promotion
         </button>
-      </div>
+      </PageHeader>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -336,7 +334,7 @@ export function PromotionsPage() {
                   <Icon className={clsx('h-5 w-5', c.iconText)} />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{card.label}</p>
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{card.label}</p>
                   <p className="text-lg font-bold text-secondary-900 dark:text-white">{card.value}</p>
                 </div>
               </div>
@@ -406,14 +404,14 @@ export function PromotionsPage() {
             <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Employee</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Type</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Role Change</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Level</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Nominated By</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Date</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Employee</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Type</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Role Change</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Level</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Nominated By</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Date</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-secondary-200 dark:divide-secondary-700">
@@ -823,10 +821,10 @@ function PromotionRow({
               {initials}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-secondary-900 dark:text-white truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+              <p className="text-sm font-medium text-secondary-900 dark:text-white break-words group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                 {empName || 'Unknown'}
               </p>
-              <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
                 {promo.employee?.jobTitle || 'No title'}
               </p>
             </div>
@@ -846,9 +844,9 @@ function PromotionRow({
         {/* Role Change */}
         <td className="px-4 py-3">
           <div className="flex items-center gap-1.5 text-sm text-secondary-700 dark:text-secondary-300">
-            <span className="truncate max-w-[100px]">{promo.currentRole || 'N/A'}</span>
+            <span className="break-wordsmax-w-[100px]">{promo.currentRole || 'N/A'}</span>
             <ArrowRightIcon className="h-3.5 w-3.5 text-secondary-400 shrink-0" />
-            <span className="truncate max-w-[100px] font-medium">{promo.proposedRole || 'N/A'}</span>
+            <span className="break-wordsmax-w-[100px] font-medium">{promo.proposedRole || 'N/A'}</span>
           </div>
         </td>
         {/* Level */}
@@ -913,20 +911,20 @@ function PromotionRow({
               {/* Justification */}
               {promo.justification && (
                 <div>
-                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">Justification</p>
+                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">Justification</p>
                   <p className="text-sm text-secondary-700 dark:text-secondary-300 whitespace-pre-wrap">{promo.justification}</p>
                 </div>
               )}
               {/* Effective Date */}
               {promo.effectiveDate && (
                 <div>
-                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">Effective Date</p>
+                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">Effective Date</p>
                   <p className="text-sm text-secondary-700 dark:text-secondary-300">{format(new Date(promo.effectiveDate), 'MMMM d, yyyy')}</p>
                 </div>
               )}
               {/* Approval Timeline placeholder */}
               <div>
-                <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">Timeline</p>
+                <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">Timeline</p>
                 <div className="flex items-center gap-2 text-xs text-secondary-500 dark:text-secondary-400">
                   <span>Created {format(new Date(promo.createdAt), 'MMM d, yyyy')}</span>
                   {promo.status !== 'DRAFT' && promo.status !== 'NOMINATED' && (

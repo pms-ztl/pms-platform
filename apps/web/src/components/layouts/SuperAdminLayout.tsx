@@ -21,6 +21,7 @@ import clsx from 'clsx';
 import { useAuthStore } from '@/store/auth';
 import { authApi } from '@/lib/api';
 import { LiveIndicator } from '@/components/ui/ConnectionStatus';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 type NavItem = {
   name: string;
@@ -48,13 +49,13 @@ function NavLink({ item, isActive, onClick }: { item: NavItem; isActive: boolean
         'group flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200',
         isActive
           ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/25'
-          : 'text-gray-300 hover:bg-white/10 hover:text-white'
+          : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white'
       )}
     >
       <item.icon
         className={clsx(
           'h-5 w-5 shrink-0 transition-colors',
-          isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
+          isActive ? 'text-white' : 'text-gray-400 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-white'
         )}
         aria-hidden="true"
       />
@@ -67,14 +68,14 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex shrink-0 items-center h-16 px-6 border-b border-white/10">
+      <div className="flex shrink-0 items-center h-16 px-6 border-b border-gray-200 dark:border-white/10">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
             <ShieldCheckIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <span className="text-lg font-bold text-white">PMS</span>
-            <span className="ml-1.5 text-xs font-medium text-indigo-300 uppercase tracking-wider">Super Admin</span>
+            <span className="text-lg font-bold text-gray-900 dark:text-white">PMS</span>
+            <span className="ml-1.5 text-xs font-medium text-indigo-500 dark:text-indigo-300 tracking-wider">Super Admin</span>
           </div>
         </div>
         <div className="ml-auto">
@@ -95,7 +96,7 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string; onNavigate
       </nav>
 
       {/* Footer */}
-      <div className="shrink-0 border-t border-white/10 px-3 py-3">
+      <div className="shrink-0 border-t border-gray-200 dark:border-white/10 px-3 py-3">
         <NavLink
           item={{ name: 'Settings', href: '/sa/settings', icon: Cog6ToothIcon }}
           isActive={pathname === '/sa/settings'}
@@ -164,7 +165,7 @@ export function SuperAdminLayout() {
                     </button>
                   </div>
                 </Transition.Child>
-                <div className="flex grow flex-col bg-gray-900">
+                <div className="flex grow flex-col sa-sidebar">
                   <SidebarContent pathname={location.pathname} onNavigate={() => setSidebarOpen(false)} />
                 </div>
               </Dialog.Panel>
@@ -175,7 +176,7 @@ export function SuperAdminLayout() {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex grow flex-col bg-gray-900">
+        <div className="flex grow flex-col sa-sidebar">
           <SidebarContent pathname={location.pathname} />
         </div>
       </div>
@@ -201,6 +202,8 @@ export function SuperAdminLayout() {
               </h1>
             </div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
+              <ThemeToggle />
+
               <div className="hidden sm:flex sm:items-center sm:gap-2">
                 <span className="inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-900/30 px-2.5 py-0.5 text-xs font-medium text-indigo-700 dark:text-indigo-300">
                   SUPER ADMIN

@@ -9,3 +9,4 @@ export { ConnectionStatus, LiveIndicator } from './ConnectionStatus';
 export { ScrollToTop } from './ScrollToTop';
 export { Breadcrumbs } from './Breadcrumbs';
 export { TopLoadingBar } from './TopLoadingBar';
+export { PageHeader } from './PageHeader';

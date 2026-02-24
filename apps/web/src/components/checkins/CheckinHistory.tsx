@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ClockIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { useAuthStore } from '@/store/auth';
+import { MoodFaceIcon } from '@/components/ui/MoodFaceIcon';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -13,15 +14,7 @@ interface CheckinEntry {
   win: string;
 }
 
-// ── Mood emojis ──────────────────────────────────────────────────────────────
-
-const moodEmojis: Record<number, string> = {
-  1: '\uD83D\uDE1E',
-  2: '\uD83D\uDE15',
-  3: '\uD83D\uDE10',
-  4: '\uD83D\uDE0A',
-  5: '\uD83D\uDE04',
-};
+// ── Mood labels ──────────────────────────────────────────────────────────────
 
 const moodLabels: Record<number, string> = {
   1: 'Struggling',
@@ -65,7 +58,7 @@ function MoodTrend({ entries }: { entries: CheckinEntry[] }) {
 
   return (
     <div className="mb-5">
-      <h4 className="text-[10px] font-semibold text-secondary-400 uppercase tracking-wider mb-2">Mood Trend (Last 7)</h4>
+      <h4 className="text-[10px] font-semibold text-secondary-400 tracking-wider mb-2">Mood Trend (Last 7)</h4>
       <div className="flex items-end gap-1.5 h-16">
         {last7.map((entry) => {
           const pct = (entry.mood / 5) * 100;
@@ -77,7 +70,7 @@ function MoodTrend({ entries }: { entries: CheckinEntry[] }) {
                 style={{ height: `${pct}%` }}
                 title={`${moodLabels[entry.mood]} - ${formatDate(entry.date)}`}
               />
-              <span className="text-[8px] text-secondary-400">{moodEmojis[entry.mood]}</span>
+              <MoodFaceIcon score={entry.mood as 1 | 2 | 3 | 4 | 5} className="w-4 h-4" />
             </div>
           );
         })}
@@ -93,7 +86,7 @@ function TimelineEntry({ entry }: { entry: CheckinEntry }) {
     <div className="flex gap-3 py-3">
       {/* Mood icon */}
       <div className="flex flex-col items-center">
-        <span className="text-xl">{moodEmojis[entry.mood] || '\uD83D\uDE10'}</span>
+        <MoodFaceIcon score={((entry.mood as 1 | 2 | 3 | 4 | 5) || 3)} className="w-8 h-8" />
         <div className="flex-1 w-px bg-secondary-200 dark:bg-secondary-700 mt-2" />
       </div>
 
@@ -111,14 +104,14 @@ function TimelineEntry({ entry }: { entry: CheckinEntry }) {
 
         {entry.blocker && (
           <div className="mb-1.5">
-            <span className="text-[9px] font-semibold text-red-500 uppercase tracking-wider">Blocker: </span>
+            <span className="text-[9px] font-semibold text-red-500 tracking-wider">Blocker: </span>
             <span className="text-xs text-secondary-600 dark:text-secondary-400">{entry.blocker}</span>
           </div>
         )}
 
         {entry.win && (
           <div>
-            <span className="text-[9px] font-semibold text-green-500 uppercase tracking-wider">Win: </span>
+            <span className="text-[9px] font-semibold text-green-500 tracking-wider">Win: </span>
             <span className="text-xs text-secondary-600 dark:text-secondary-400">{entry.win}</span>
           </div>
         )}
@@ -155,7 +148,7 @@ export function CheckinHistory({ maxItems = 10 }: CheckinHistoryProps) {
 
   return (
     <div>
-      <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
+      <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">
         Check-in History
       </h3>
 

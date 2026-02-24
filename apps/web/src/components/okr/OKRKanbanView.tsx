@@ -93,7 +93,7 @@ function KanbanCard({ goal, index }: { goal: Goal; index: number }) {
           </div>
 
           {/* Title */}
-          <p className="text-xs font-medium text-secondary-900 dark:text-white mt-1.5 line-clamp-2">
+          <p className="text-xs font-medium text-secondary-900 dark:text-white mt-1.5">
             {goal.title}
           </p>
 
@@ -115,7 +115,7 @@ function KanbanCard({ goal, index }: { goal: Goal; index: number }) {
             <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-[8px] font-bold shrink-0">
               {initials}
             </span>
-            <span className="text-[10px] text-secondary-500 dark:text-secondary-400 truncate">
+            <span className="text-[10px] text-secondary-500 dark:text-secondary-400 break-words">
               {goal.owner?.firstName} {goal.owner?.lastName}
             </span>
             {(goal.tags || []).length > 0 && (
@@ -211,7 +211,7 @@ export function OKRKanbanView({ objectives, krByParent }: OKRKanbanViewProps) {
               {/* Column header */}
               <div className="p-3 flex items-center gap-2">
                 <div className={clsx('h-2.5 w-2.5 rounded-full', col.headerBg)} />
-                <h3 className={clsx('text-xs font-bold uppercase tracking-wider', col.color)}>{col.label}</h3>
+                <h3 className={clsx('text-xs font-bold tracking-wider', col.color)}>{col.label}</h3>
                 <span className="ml-auto px-1.5 py-0.5 rounded-full bg-white/60 dark:bg-secondary-700/60 text-[10px] font-semibold text-secondary-600 dark:text-secondary-300">
                   {items.length}
                 </span>

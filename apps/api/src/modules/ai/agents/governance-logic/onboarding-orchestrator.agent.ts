@@ -12,7 +12,7 @@
  * Uses user data, learning progress, and compliance status to coordinate onboarding workflows.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryUsers } from '../../agent-tools';
 import { queryLearningProgress } from '../../agent-tools-v2';
 import { queryComplianceStatus } from '../../agent-tools-v3';
@@ -42,7 +42,7 @@ Orchestration principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class OnboardingOrchestratorAgent extends BaseAgent {
+export class OnboardingOrchestratorAgent extends AgenticBaseAgent {
   constructor() {
     super('onboarding_orchestrator', SYSTEM_PROMPT);
   }

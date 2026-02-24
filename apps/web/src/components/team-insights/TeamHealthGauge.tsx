@@ -35,8 +35,8 @@ export function TeamHealthGauge({ score, flightRiskCount, turnoverRate, retentio
 
   const stats = [
     { label: 'Flight Risk', value: flightRiskCount, color: flightRiskCount > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400' },
-    { label: 'Turnover', value: `${(turnoverRate ?? 0).toFixed(1)}%`, color: turnoverRate > 15 ? 'text-amber-600 dark:text-amber-400' : 'text-secondary-700 dark:text-secondary-300' },
-    { label: 'Retention', value: `${(retentionRate ?? 0).toFixed(1)}%`, color: retentionRate >= 85 ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400' },
+    { label: 'Turnover', value: `${Number(turnoverRate ?? 0).toFixed(1)}%`, color: Number(turnoverRate) > 15 ? 'text-amber-600 dark:text-amber-400' : 'text-secondary-700 dark:text-secondary-300' },
+    { label: 'Retention', value: `${Number(retentionRate ?? 0).toFixed(1)}%`, color: Number(retentionRate) >= 85 ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400' },
   ];
 
   return (

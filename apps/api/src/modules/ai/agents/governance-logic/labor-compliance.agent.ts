@@ -12,7 +12,7 @@
  * Uses compliance status, leave calendars, and session activity to monitor labor law adherence.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryComplianceStatus, queryLeaveCalendar, querySessionActivity } from '../../agent-tools-v3';
 
 // -- System Prompt -----------------------------------------------------------
@@ -39,7 +39,7 @@ Compliance principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class LaborComplianceAgent extends BaseAgent {
+export class LaborComplianceAgent extends AgenticBaseAgent {
   constructor() {
     super('labor_compliance', SYSTEM_PROMPT);
   }

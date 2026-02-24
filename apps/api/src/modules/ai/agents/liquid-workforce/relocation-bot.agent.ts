@@ -12,7 +12,7 @@
  * Helps employees and HR teams navigate internal transfers with data-driven location insights.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryUsers } from '../../agent-tools';
 import { queryCompensationData } from '../../agent-tools-v3';
 
@@ -41,7 +41,7 @@ Advisory principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class RelocationBotAgent extends BaseAgent {
+export class RelocationBotAgent extends AgenticBaseAgent {
   constructor() {
     super('relocation_bot', SYSTEM_PROMPT);
   }

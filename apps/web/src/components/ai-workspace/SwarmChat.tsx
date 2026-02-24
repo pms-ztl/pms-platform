@@ -44,6 +44,7 @@ import {
   ExclamationTriangleIcon,
   EyeIcon,
   FaceSmileIcon,
+  FlagIcon,
   FireIcon,
   GlobeAltIcon,
   HandRaisedIcon,
@@ -127,6 +128,11 @@ const AGENT_CLUSTERS: ClusterDef[] = [
       { type: 'onboarding', icon: AcademicCapIcon, name: 'Onboarding', desc: 'New hire setup' },
       { type: 'license', icon: KeyIcon, name: 'License', desc: 'Seats & billing' },
       { type: 'excel_validation', icon: TableCellsIcon, name: 'Excel AI', desc: 'Data validation' },
+      { type: 'goal_intelligence', icon: FlagIcon, name: 'Goal Intel', desc: 'SMART goals & OKRs' },
+      { type: 'performance_signal', icon: ArrowTrendingUpIcon, name: 'Perf Signal', desc: 'Evidence & signals' },
+      { type: 'review_drafter', icon: PencilSquareIcon, name: 'Review Drafter', desc: 'Draft reviews' },
+      { type: 'compensation_promotion', icon: TrophyIcon, name: 'Comp & Promo', desc: 'Promotion readiness' },
+      { type: 'one_on_one_advisor', icon: ChatBubbleLeftRightIcon, name: '1:1 Advisor', desc: 'Meeting intelligence' },
     ],
   },
   {
@@ -159,7 +165,7 @@ const AGENT_CLUSTERS: ClusterDef[] = [
       { type: 'sparring_partner', icon: ChatBubbleLeftRightIcon, name: 'Sparring', desc: 'Debate' },
       { type: 'skill_gap_forecaster', icon: ChartBarIcon, name: 'Skill Forecast', desc: 'Prediction' },
       { type: 'knowledge_broker', icon: LightBulbIcon, name: 'Knowledge', desc: 'Expert transfer' },
-      { type: 'credential_ledger', icon: IdentificationIcon, name: 'Credentials', desc: 'Cert tracking' },
+      { type: 'credential_ledger', icon: IdentificationIcon, name: 'Credentials', desc: 'Certificate Tracking' },
       { type: 'linguistic_refiner', icon: PencilSquareIcon, name: 'Linguistic', desc: 'Writing' },
       { type: 'curiosity_scout', icon: LightBulbIcon, name: 'Curiosity', desc: 'Innovation' },
       { type: 'logic_validator', icon: CheckBadgeIcon, name: 'Logic Check', desc: 'Reasoning' },
@@ -450,10 +456,10 @@ function AgentSidebar({
                         <agent.icon className="h-4 w-4 text-current" />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <div className={`truncate text-xs font-medium ${isSelected ? T.accentText(theme) : T.textPrimary(theme)}`}>
+                        <div className={`break-wordstext-xs font-medium ${isSelected ? T.accentText(theme) : T.textPrimary(theme)}`}>
                           {agent.name}
                         </div>
-                        <div className={`truncate text-[10px] ${T.textMuted(theme)}`}>{agent.desc}</div>
+                        <div className={`break-wordstext-[10px] ${T.textMuted(theme)}`}>{agent.desc}</div>
                       </div>
                     </button>
                   );
@@ -671,7 +677,33 @@ export function SwarmChat() {
   // ── Render ─────────────────────────────────────────────────
 
   return (
-    <div className={`flex h-full overflow-hidden rounded-2xl border ${T.border(theme)} ${T.bg(theme)}`}>
+    <div className={`relative flex h-full overflow-hidden rounded-2xl border ${T.border(theme)} ${
+      theme === 'light' ? 'bg-gray-50' : 'bg-black/20'
+    }`}>
+      {/* Ambient floating background orbs — dark themes only */}
+      {theme !== 'light' && (
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div
+            className="absolute -top-40 -right-40 h-[30rem] w-[30rem] rounded-full blur-3xl"
+            style={{
+              background: theme === 'deep-dark'
+                ? 'radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 68%)'
+                : 'radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 68%)',
+              animation: 'floatOrb 22s ease-in-out infinite',
+            }}
+          />
+          <div
+            className="absolute -bottom-40 -left-40 h-[26rem] w-[26rem] rounded-full blur-3xl"
+            style={{
+              background: theme === 'deep-dark'
+                ? 'radial-gradient(circle, rgba(52,211,153,0.06) 0%, transparent 68%)'
+                : 'radial-gradient(circle, rgba(129,140,248,0.07) 0%, transparent 68%)',
+              animation: 'floatOrb 28s ease-in-out infinite reverse',
+              animationDelay: '6s',
+            }}
+          />
+        </div>
+      )}
       {/* Left Sidebar - Agent Selector */}
       <AgentSidebar
         theme={theme}
@@ -704,7 +736,7 @@ export function SwarmChat() {
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <h2 className={`text-sm font-semibold truncate ${T.textPrimary(theme)}`}>
+                  <h2 className={`text-sm font-semibold break-words ${T.textPrimary(theme)}`}>
                     {currentAgent.name} Agent
                   </h2>
                   {currentCluster && (
@@ -719,7 +751,7 @@ export function SwarmChat() {
                     </span>
                   )}
                 </div>
-                <p className={`text-xs truncate ${T.textMuted(theme)}`}>{currentAgent.desc}</p>
+                <p className={`text-xs break-words ${T.textMuted(theme)}`}>{currentAgent.desc}</p>
               </div>
             </div>
           ) : (

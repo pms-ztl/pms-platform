@@ -16,7 +16,7 @@ function AnalyticsFilters({ filters, onChange, cycles }: AnalyticsFiltersProps) 
     <div className="flex flex-wrap items-center gap-3 px-1">
       <div className="flex items-center gap-1.5 text-secondary-500 dark:text-secondary-400">
         <FunnelIcon className="w-4 h-4" />
-        <span className="text-xs font-medium uppercase tracking-wider">Filters</span>
+        <span className="text-xs font-medium tracking-wider">Filters</span>
       </div>
 
       {/* Time range */}

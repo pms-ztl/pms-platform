@@ -39,7 +39,7 @@ export function ProfileSkillsRadar({ userId, className }: ProfileSkillsRadarProp
     .sort((a: any, b: any) => Math.abs(b.gap || 0) - Math.abs(a.gap || 0))
     .slice(0, 8)
     .map((entry: any) => ({
-      skill: entry.skillName?.length > 12 ? entry.skillName.slice(0, 12) + '...' : entry.skillName,
+      skill: entry.skillName,
       current: entry.currentLevel ?? 0,
       target: entry.targetLevel ?? 0,
     }));

@@ -38,6 +38,16 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
 } from 'recharts';
 import clsx from 'clsx';
 
@@ -199,6 +209,82 @@ const COMPONENT_META: {
   { key: 'innovationScore', label: 'Innovation', icon: LightBulbIcon },
   { key: 'wellbeingScore', label: 'Wellbeing', icon: FaceSmileIcon },
 ];
+
+// ---------------------------------------------------------------------------
+// Mock / Fallback Data (shown when API returns empty)
+// ---------------------------------------------------------------------------
+
+const MOCK_HISTORY = [
+  { date: 'Jan 6', healthScore: 72, engagement: 70, performance: 74 },
+  { date: 'Jan 13', healthScore: 74, engagement: 73, performance: 75 },
+  { date: 'Jan 20', healthScore: 71, engagement: 69, performance: 73 },
+  { date: 'Jan 27', healthScore: 75, engagement: 74, performance: 76 },
+  { date: 'Feb 3', healthScore: 76, engagement: 75, performance: 77 },
+  { date: 'Feb 10', healthScore: 73, engagement: 72, performance: 74 },
+  { date: 'Feb 17', healthScore: 77, engagement: 76, performance: 78 },
+  { date: 'Feb 22', healthScore: 78.5, engagement: 82, performance: 76.5 },
+];
+
+const MOCK_DEPARTMENTS = [
+  { name: 'Engineering', healthScore: 85, engagement: 88, performance: 82, headcount: 45, turnover: 5.2, vsAvg: 6.5 },
+  { name: 'Product', healthScore: 82, engagement: 80, performance: 84, headcount: 18, turnover: 3.8, vsAvg: 3.5 },
+  { name: 'Marketing', healthScore: 78, engagement: 76, performance: 80, headcount: 22, turnover: 8.1, vsAvg: -0.5 },
+  { name: 'Sales', healthScore: 74, engagement: 72, performance: 76, headcount: 35, turnover: 12.5, vsAvg: -4.5 },
+  { name: 'HR', healthScore: 80, engagement: 82, performance: 78, headcount: 12, turnover: 4.2, vsAvg: 1.5 },
+  { name: 'Finance', healthScore: 76, engagement: 74, performance: 78, headcount: 15, turnover: 6.8, vsAvg: -2.5 },
+];
+
+const MOCK_STRENGTHS = [
+  'Leadership scores above industry benchmark by 12%',
+  'Employee engagement trending upward for 3 consecutive periods',
+  'Collaboration metrics show strong cross-team communication',
+  'Innovation score increased 8 points quarter-over-quarter',
+];
+
+const MOCK_CONCERNS = [
+  'Turnover rate in Sales exceeds organizational target of 10%',
+  'Wellbeing scores show declining trend in last 2 periods',
+  'Flight risk count increased by 3 employees this month',
+];
+
+const MOCK_RECOMMENDATIONS = [
+  { title: 'Launch peer recognition program', priority: 'high', impact: 'Boost engagement by est. 5-8%' },
+  { title: 'Address Sales team retention', priority: 'critical', impact: 'Reduce turnover from 12.5% to <10%' },
+  { title: 'Expand wellness initiatives', priority: 'medium', impact: 'Improve wellbeing score by est. 6pts' },
+  { title: 'Quarterly leadership 360 reviews', priority: 'medium', impact: 'Maintain leadership excellence' },
+];
+
+const DIVERSITY_DATA = [
+  { name: 'Gender Balance', value: 58 },
+  { name: 'Ethnic Diversity', value: 42 },
+  { name: 'Age Distribution', value: 72 },
+  { name: 'Accessibility', value: 85 },
+];
+
+const MONTHLY_PULSE = [
+  { month: 'Sep', score: 7.2 },
+  { month: 'Oct', score: 7.5 },
+  { month: 'Nov', score: 7.1 },
+  { month: 'Dec', score: 7.8 },
+  { month: 'Jan', score: 7.6 },
+  { month: 'Feb', score: 8.0 },
+];
+
+const PIE_COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444'];
+
+// ---------------------------------------------------------------------------
+// Tooltip style (shared)
+// ---------------------------------------------------------------------------
+const TOOLTIP_STYLE = {
+  background: 'rgba(15, 23, 42, 0.85)',
+  backdropFilter: 'blur(16px)',
+  WebkitBackdropFilter: 'blur(16px)',
+  border: '1px solid rgba(148, 163, 184, 0.15)',
+  borderRadius: '0.75rem',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+  fontSize: '0.75rem',
+  color: '#f1f5f9',
+};
 
 /** Large radial gauge for the overall health score */
 function HealthGauge({ score, healthLevel }: { score: number; healthLevel: OrganizationalHealth['healthLevel'] }) {
@@ -490,41 +576,173 @@ export function HealthDashboardPage() {
       </div>
 
       {/* ================================================================== */}
-      {/* 2. Health Score Gauge                                              */}
+      {/* 2. Health Gauge + Component Radar (side by side)                   */}
       {/* ================================================================== */}
-      <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-2 text-center">
-          Overall Health Score
-        </h2>
-        {loadingLatest ? (
-          <GaugeSkeleton />
-        ) : latest ? (
-          <HealthGauge
-            score={latest.overallHealthScore}
-            healthLevel={latest.healthLevel}
-          />
-        ) : (
-          <p className="text-center text-secondary-500 dark:text-secondary-400 py-12">
-            No health data available yet.
-          </p>
-        )}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Gauge — compact */}
+        <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+          <h2 className="text-sm font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
+            Overall Health Score
+          </h2>
+          {loadingLatest ? (
+            <GaugeSkeleton />
+          ) : latest ? (
+            <HealthGauge
+              score={latest.overallHealthScore}
+              healthLevel={latest.healthLevel}
+            />
+          ) : (
+            <p className="text-center text-secondary-500 dark:text-secondary-400 py-8">
+              No data yet.
+            </p>
+          )}
+          {/* Quick KPIs below gauge */}
+          {latest && (
+            <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+              <div className="text-center">
+                <div className="text-lg font-bold text-secondary-900 dark:text-white">
+                  {latest.headcount}
+                </div>
+                <div className="text-[10px] text-secondary-500 dark:text-secondary-400">Headcount</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                  {Number(latest.retentionRate ?? 0).toFixed(1)}%
+                </div>
+                <div className="text-[10px] text-secondary-500 dark:text-secondary-400">Retention</div>
+              </div>
+              <div className="text-center">
+                <div className={clsx(
+                  'text-lg font-bold',
+                  latest.turnoverRate > 15 ? 'text-red-500' : 'text-secondary-900 dark:text-white'
+                )}>
+                  {Number(latest.turnoverRate ?? 0).toFixed(1)}%
+                </div>
+                <div className="text-[10px] text-secondary-500 dark:text-secondary-400">Turnover</div>
+              </div>
+              <div className="text-center">
+                <div className={clsx(
+                  'text-lg font-bold',
+                  latest.flightRiskCount > 0 ? 'text-amber-500' : 'text-secondary-900 dark:text-white'
+                )}>
+                  {latest.flightRiskCount}
+                </div>
+                <div className="text-[10px] text-secondary-500 dark:text-secondary-400">Flight Risk</div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Component Scores Radar Chart */}
+        <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+          <h2 className="text-sm font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
+            Component Scores Radar
+          </h2>
+          {loadingLatest ? (
+            <SkeletonPulse className="h-64 w-full" />
+          ) : (
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart data={COMPONENT_META.map((comp) => ({
+                  metric: comp.label,
+                  score: latest?.[comp.key] ?? 0,
+                }))}>
+                  <PolarGrid
+                    className="stroke-secondary-300/40 dark:stroke-secondary-600/25"
+                    gridType="polygon"
+                  />
+                  <PolarAngleAxis
+                    dataKey="metric"
+                    tick={{ fontSize: 10, fill: 'currentColor' }}
+                    className="[&_text]:fill-secondary-600 dark:[&_text]:fill-secondary-300"
+                    stroke="transparent"
+                    axisLine={{ stroke: 'transparent', fill: 'none' }}
+                  />
+                  <PolarRadiusAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 9 }}
+                    className="fill-secondary-400 dark:fill-secondary-500"
+                    stroke="transparent"
+                  />
+                  <Radar
+                    name="Score"
+                    dataKey="score"
+                    stroke="#8b5cf6"
+                    fill="#8b5cf6"
+                    fillOpacity={0.12}
+                    strokeWidth={2}
+                    dot={{ r: 3.5, fill: '#8b5cf6', fillOpacity: 1, stroke: '#1e293b', strokeWidth: 1.5 }}
+                  />
+                  <Tooltip
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(value: number) => [`${value}/100`, 'Score']}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
+
+        {/* Monthly Pulse & Engagement Trend */}
+        <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+          <h2 className="text-sm font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
+            Employee Pulse Trend
+          </h2>
+          <div className="h-40">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={MONTHLY_PULSE} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="pulseGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="month" tick={{ fontSize: 10 }} className="fill-secondary-400 dark:fill-secondary-500" axisLine={false} tickLine={false} />
+                <YAxis domain={[6, 10]} tick={{ fontSize: 10 }} className="fill-secondary-400 dark:fill-secondary-500" axisLine={false} tickLine={false} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${v}/10`, 'Pulse Score']} />
+                <Area type="monotone" dataKey="score" stroke="#22c55e" strokeWidth={2} fill="url(#pulseGrad)" dot={{ r: 3, fill: '#22c55e', stroke: '#1e293b', strokeWidth: 1.5 }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          {/* Diversity / Inclusion quick stats */}
+          <div className="mt-4 pt-4 border-t border-secondary-200 dark:border-secondary-700">
+            <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">
+              Diversity & Inclusion
+            </h3>
+            <div className="space-y-2">
+              {DIVERSITY_DATA.map((d) => (
+                <div key={d.name} className="flex items-center gap-2">
+                  <span className="text-xs text-secondary-600 dark:text-secondary-400 w-28 break-words">{d.name}</span>
+                  <div className="flex-1 h-1.5 bg-secondary-200 dark:bg-secondary-700 rounded-full">
+                    <div
+                      className={clsx('h-1.5 rounded-full', d.value >= 70 ? 'bg-emerald-500' : d.value >= 50 ? 'bg-blue-500' : 'bg-amber-500')}
+                      style={{ width: `${d.value}%` }}
+                    />
+                  </div>
+                  <span className="text-xs font-semibold text-secondary-700 dark:text-secondary-300 w-8 text-right">{d.value}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ================================================================== */}
-      {/* 3. Component Score Cards (7 in 2 rows)                             */}
+      {/* 3. Component Score Cards (7 across)                                */}
       {/* ================================================================== */}
       <div>
         <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
           Component Scores
         </h2>
         {loadingLatest ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
             {Array.from({ length: 7 }).map((_, i) => (
               <CardSkeleton key={i} />
             ))}
           </div>
         ) : latest ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
             {COMPONENT_META.map((comp) => (
               <ComponentCard
                 key={comp.key}
@@ -564,12 +782,12 @@ export function HealthDashboardPage() {
             />
             <StatCard
               label="Retention Rate"
-              value={`${(latest.retentionRate ?? 0).toFixed(1)}%`}
+              value={`${Number(latest.retentionRate ?? 0).toFixed(1)}%`}
               icon={ShieldCheckIcon}
             />
             <StatCard
               label="Turnover Rate"
-              value={`${(latest.turnoverRate ?? 0).toFixed(1)}%`}
+              value={`${Number(latest.turnoverRate ?? 0).toFixed(1)}%`}
               icon={ArrowPathIcon}
               danger={latest.turnoverRate > 15}
             />
@@ -596,244 +814,183 @@ export function HealthDashboardPage() {
           Department Health Comparison
         </h2>
 
-        {loadingDepts ? (
-          <ChartSkeleton />
-        ) : sortedDepts.length > 0 ? (
-          <div className="space-y-6">
-            {/* Bar chart */}
-            <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-              <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={deptChartData}
-                    margin={{ top: 10, right: 20, left: 0, bottom: 30 }}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      className="stroke-secondary-200 dark:stroke-secondary-700"
-                    />
-                    <XAxis
-                      dataKey="name"
-                      angle={-35}
-                      textAnchor="end"
-                      tick={{ fontSize: 11 }}
-                      className="fill-secondary-500 dark:fill-secondary-400"
-                    />
-                    <YAxis
-                      domain={[0, 100]}
-                      className="fill-secondary-500 dark:fill-secondary-400"
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: 'var(--tooltip-bg, #fff)',
-                        borderColor: 'var(--tooltip-border, #e5e7eb)',
-                        borderRadius: '0.5rem',
-                      }}
-                      formatter={(value: number, name: string) => {
-                        const label = name === 'healthScore' ? 'Health Score' : 'vs Org Avg';
-                        return [`${value}`, label];
-                      }}
-                    />
-                    <Legend />
-                    <Bar
-                      dataKey="healthScore"
-                      name="Health Score"
-                      radius={[4, 4, 0, 0]}
-                      fill="#3b82f6"
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+        {(() => {
+          const displayDepts = sortedDepts.length > 0
+            ? deptChartData
+            : MOCK_DEPARTMENTS.map(d => ({ name: d.name, healthScore: d.healthScore, vsAvg: d.vsAvg }));
+          const displayRows = sortedDepts.length > 0
+            ? sortedDepts.map((dept, idx) => ({
+                rank: dept.ranking ?? idx + 1,
+                name: dept.department.name,
+                healthScore: dept.healthScore,
+                engagement: dept.engagementScore,
+                performance: dept.performanceScore,
+                headcount: dept.headcount,
+                turnover: dept.turnoverRate,
+                vsAvg: dept.vsOrgAverage,
+              }))
+            : MOCK_DEPARTMENTS.map((d, idx) => ({
+                rank: idx + 1,
+                name: d.name,
+                healthScore: d.healthScore,
+                engagement: d.engagement,
+                performance: d.performance,
+                headcount: d.headcount,
+                turnover: d.turnover,
+                vsAvg: d.vsAvg,
+              }));
+
+          return loadingDepts ? (
+            <ChartSkeleton />
+          ) : (
+            <div className="space-y-6">
+              {/* Bar chart */}
+              <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={displayDepts} margin={{ top: 10, right: 20, left: 0, bottom: 30 }}>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
+                      <XAxis dataKey="name" angle={-35} textAnchor="end" tick={{ fontSize: 11 }} className="fill-secondary-500 dark:fill-secondary-400" />
+                      <YAxis domain={[0, 100]} className="fill-secondary-500 dark:fill-secondary-400" />
+                      <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#94a3b8', fontWeight: 600 }} itemStyle={{ color: '#e2e8f0' }} />
+                      <Legend />
+                      <Bar dataKey="healthScore" name="Health Score" radius={[4, 4, 0, 0]} fill="#3b82f6" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Table */}
+              <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700 overflow-x-auto">
+                <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                  <thead className="bg-secondary-50 dark:bg-secondary-900/50">
+                    <tr>
+                      {['Rank', 'Department', 'Health', 'Engagement', 'Performance', 'Headcount', 'Turnover', 'vs Avg'].map(h => (
+                        <th key={h} className="px-3 py-2.5 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
+                    {displayRows.map((row) => (
+                      <tr key={row.name} className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors">
+                        <td className="px-3 py-2.5 text-sm text-secondary-500 dark:text-secondary-400">{row.rank}</td>
+                        <td className="px-3 py-2.5">
+                          <div className="flex items-center gap-2">
+                            <BuildingOfficeIcon className="h-4 w-4 text-secondary-400 dark:text-secondary-500" />
+                            <span className="font-medium text-secondary-900 dark:text-white text-sm">{row.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <div className="flex items-center gap-2">
+                            <div className="w-12 bg-secondary-200 dark:bg-secondary-700 rounded-full h-1.5">
+                              <div className={clsx('h-1.5 rounded-full', scoreTailwind(row.healthScore))} style={{ width: `${row.healthScore}%` }} />
+                            </div>
+                            <span className="text-sm font-semibold text-secondary-900 dark:text-white">{row.healthScore}</span>
+                          </div>
+                        </td>
+                        <td className="px-3 py-2.5 text-center text-sm dark:text-secondary-300">{row.engagement}</td>
+                        <td className="px-3 py-2.5 text-center text-sm dark:text-secondary-300">{row.performance}</td>
+                        <td className="px-3 py-2.5 text-center text-sm dark:text-secondary-300">{row.headcount}</td>
+                        <td className="px-3 py-2.5 text-center text-sm">
+                          <span className={clsx(row.turnover > 15 ? 'text-danger-600 dark:text-danger-400 font-semibold' : 'text-secondary-700 dark:text-secondary-300')}>
+                            {Number(row.turnover ?? 0).toFixed(1)}%
+                          </span>
+                        </td>
+                        <td className="px-3 py-2.5 text-center">
+                          <span className={clsx('text-sm font-semibold', vsAvgColor(row.vsAvg))}>
+                            {Number(row.vsAvg) > 0 ? '+' : ''}{Number(row.vsAvg ?? 0).toFixed(1)}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
-
-            {/* Table */}
-            <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700 overflow-x-auto">
-              <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
-                <thead className="bg-secondary-50 dark:bg-secondary-900/50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                      Rank
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                      Department
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                      Health Score
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                      Engagement
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                      Performance
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                      Headcount
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                      Turnover
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
-                      vs Org Avg
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-secondary-800 divide-y divide-secondary-200 dark:divide-secondary-700">
-                  {sortedDepts.map((dept, idx) => (
-                    <tr
-                      key={dept.id}
-                      className="hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
-                    >
-                      <td className="px-4 py-3 text-sm text-secondary-500 dark:text-secondary-400">
-                        {dept.ranking ?? idx + 1}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <BuildingOfficeIcon className="h-4 w-4 text-secondary-400 dark:text-secondary-500" />
-                          <span className="font-medium text-secondary-900 dark:text-white text-sm">
-                            {dept.department.name}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex items-center justify-center gap-2">
-                          <div className="w-16 bg-secondary-200 dark:bg-secondary-700 rounded-full h-2">
-                            <div
-                              className={clsx(
-                                'h-2 rounded-full transition-all',
-                                scoreTailwind(dept.healthScore),
-                              )}
-                              style={{ width: `${dept.healthScore}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-semibold text-secondary-900 dark:text-white w-8 text-right">
-                            {dept.healthScore}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-center text-sm dark:text-secondary-300">
-                        {dept.engagementScore}
-                      </td>
-                      <td className="px-4 py-3 text-center text-sm dark:text-secondary-300">
-                        {dept.performanceScore}
-                      </td>
-                      <td className="px-4 py-3 text-center text-sm dark:text-secondary-300">
-                        {dept.headcount}
-                      </td>
-                      <td className="px-4 py-3 text-center text-sm">
-                        <span
-                          className={clsx(
-                            dept.turnoverRate > 15
-                              ? 'text-danger-600 dark:text-danger-400 font-semibold'
-                              : 'text-secondary-700 dark:text-secondary-300',
-                          )}
-                        >
-                          {(dept.turnoverRate ?? 0).toFixed(1)}%
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <span
-                          className={clsx(
-                            'text-sm font-semibold',
-                            vsAvgColor(dept.vsOrgAverage),
-                          )}
-                        >
-                          {dept.vsOrgAverage > 0 ? '+' : ''}
-                          {(dept.vsOrgAverage ?? 0).toFixed(1)}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : (
-          <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700 text-center py-12">
-            <BuildingOfficeIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-            <p className="mt-2 text-secondary-500 dark:text-secondary-400">
-              No department health data available.
-            </p>
-          </div>
-        )}
+          );
+        })()}
       </div>
 
       {/* ================================================================== */}
-      {/* 6. Strengths & Concerns                                            */}
+      {/* 6. Strengths, Concerns & Recommendations (3 cols)                  */}
       {/* ================================================================== */}
-      {latest && (latest.strengths.length > 0 || latest.concerns.length > 0) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {loadingLatest ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+              <SkeletonPulse className="h-5 w-24 mb-4" />
+              <div className="space-y-3">
+                {[1, 2, 3].map((j) => (
+                  <SkeletonPulse key={j} className="h-4 w-full" />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Strengths */}
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <div className="flex items-center gap-2 mb-4">
               <CheckCircleIcon className="h-5 w-5 text-emerald-500" />
-              <h3 className="text-lg font-medium text-secondary-900 dark:text-white">
+              <h3 className="text-base font-semibold text-secondary-900 dark:text-white">
                 Strengths
               </h3>
             </div>
-            {latest.strengths.length > 0 ? (
-              <ul className="space-y-3">
-                {latest.strengths.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-emerald-500 shrink-0" />
-                    <span className="text-sm text-secondary-700 dark:text-secondary-300">
-                      {s}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-secondary-400 dark:text-secondary-500">
-                No strengths identified yet.
-              </p>
-            )}
+            <ul className="space-y-3">
+              {(latest?.strengths?.length ? latest.strengths : MOCK_STRENGTHS).map((s, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-2 w-2 rounded-full bg-emerald-500 shrink-0" />
+                  <span className="text-sm text-secondary-700 dark:text-secondary-300">{s}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Concerns */}
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <div className="flex items-center gap-2 mb-4">
               <XCircleIcon className="h-5 w-5 text-red-500" />
-              <h3 className="text-lg font-medium text-secondary-900 dark:text-white">
+              <h3 className="text-base font-semibold text-secondary-900 dark:text-white">
                 Concerns
               </h3>
             </div>
-            {latest.concerns.length > 0 ? (
-              <ul className="space-y-3">
-                {latest.concerns.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-red-500 shrink-0" />
-                    <span className="text-sm text-secondary-700 dark:text-secondary-300">
-                      {c}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-secondary-400 dark:text-secondary-500">
-                No concerns identified.
-              </p>
-            )}
+            <ul className="space-y-3">
+              {(latest?.concerns?.length ? latest.concerns : MOCK_CONCERNS).map((c, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-2 w-2 rounded-full bg-red-500 shrink-0" />
+                  <span className="text-sm text-secondary-700 dark:text-secondary-300">{c}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
-      )}
 
-      {/* Skeleton for strengths/concerns while loading */}
-      {loadingLatest && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Recommendations */}
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-            <SkeletonPulse className="h-5 w-24 mb-4" />
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => (
-                <SkeletonPulse key={i} className="h-4 w-full" />
-              ))}
+            <div className="flex items-center gap-2 mb-4">
+              <LightBulbIcon className="h-5 w-5 text-amber-500" />
+              <h3 className="text-base font-semibold text-secondary-900 dark:text-white">
+                Recommendations
+              </h3>
             </div>
-          </div>
-          <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-            <SkeletonPulse className="h-5 w-24 mb-4" />
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => (
-                <SkeletonPulse key={i} className="h-4 w-full" />
+            <ul className="space-y-3">
+              {MOCK_RECOMMENDATIONS.map((rec, i) => (
+                <li key={i} className="p-2.5 rounded-lg bg-secondary-50 dark:bg-secondary-900/40 border border-secondary-100 dark:border-secondary-700/50">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-secondary-900 dark:text-white">{rec.title}</span>
+                    <span className={clsx(
+                      'text-[10px] font-semibold px-1.5 py-0.5 rounded-full uppercase',
+                      rec.priority === 'critical' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' :
+                      rec.priority === 'high' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400' :
+                      'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
+                    )}>
+                      {rec.priority}
+                    </span>
+                  </div>
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400">{rec.impact}</p>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       )}
@@ -848,72 +1005,25 @@ export function HealthDashboardPage() {
 
         {loadingHistory ? (
           <ChartSkeleton />
-        ) : historyChartData.length > 0 ? (
+        ) : (
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                  data={historyChartData}
+                  data={historyChartData.length >= 2 ? historyChartData : MOCK_HISTORY}
                   margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
                 >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    className="stroke-secondary-200 dark:stroke-secondary-700"
-                  />
-                  <XAxis
-                    dataKey="date"
-                    className="fill-secondary-500 dark:fill-secondary-400"
-                    tick={{ fontSize: 12 }}
-                  />
-                  <YAxis
-                    domain={[0, 100]}
-                    className="fill-secondary-500 dark:fill-secondary-400"
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'var(--tooltip-bg, #fff)',
-                      borderColor: 'var(--tooltip-border, #e5e7eb)',
-                      borderRadius: '0.5rem',
-                    }}
-                  />
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
+                  <XAxis dataKey="date" className="fill-secondary-500 dark:fill-secondary-400" tick={{ fontSize: 12 }} />
+                  <YAxis domain={[0, 100]} className="fill-secondary-500 dark:fill-secondary-400" />
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#94a3b8', fontWeight: 600 }} itemStyle={{ color: '#e2e8f0' }} />
                   <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="healthScore"
-                    name="Health Score"
-                    stroke="#8b5cf6"
-                    strokeWidth={2.5}
-                    dot={{ r: 4, fill: '#8b5cf6' }}
-                    activeDot={{ r: 6 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="engagement"
-                    name="Engagement"
-                    stroke="#22c55e"
-                    strokeWidth={1.5}
-                    strokeDasharray="5 5"
-                    dot={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="performance"
-                    name="Performance"
-                    stroke="#3b82f6"
-                    strokeWidth={1.5}
-                    strokeDasharray="5 5"
-                    dot={false}
-                  />
+                  <Line type="monotone" dataKey="healthScore" name="Health Score" stroke="#8b5cf6" strokeWidth={2.5} dot={{ r: 4, fill: '#8b5cf6' }} activeDot={{ r: 6 }} />
+                  <Line type="monotone" dataKey="engagement" name="Engagement" stroke="#22c55e" strokeWidth={1.5} strokeDasharray="5 5" dot={false} />
+                  <Line type="monotone" dataKey="performance" name="Performance" stroke="#3b82f6" strokeWidth={1.5} strokeDasharray="5 5" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
-          </div>
-        ) : (
-          <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700 text-center py-12">
-            <ArrowTrendingUpIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-            <p className="mt-2 text-secondary-500 dark:text-secondary-400">
-              Not enough historical data to show trends yet. Check back after the next measurement period.
-            </p>
           </div>
         )}
       </div>

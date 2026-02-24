@@ -12,13 +12,62 @@
     <title>PMS - Performance Management System</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
     <link href="https://api.fontshare.com/v2/css?f[]=ranade@400,500,600,700&display=swap" rel="stylesheet" />
     <style>
       @keyframes gradientFlow {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
+      }
+      @keyframes floatOrb {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25% { transform: translate(40px, -30px) scale(1.06); }
+        50% { transform: translate(15px, 40px) scale(0.94); }
+        75% { transform: translate(-35px, -15px) scale(1.03); }
+      }
+      /* ── AI Workspace cinematic transition ───────────── */
+      @keyframes aiOverlayLifecycle {
+        0%   { opacity: 0; }
+        7%   { opacity: 1; }
+        80%  { opacity: 1; }
+        100% { opacity: 0; }
+      }
+      @keyframes aiGridFade {
+        0%   { opacity: 0; }
+        12%  { opacity: 1; }
+        78%  { opacity: 0.5; }
+        100% { opacity: 0; }
+      }
+      @keyframes aiScanLine {
+        0%   { top: -4px; opacity: 0; }
+        4%   { opacity: 1; }
+        94%  { opacity: 0.85; }
+        100% { top: 100%; opacity: 0; }
+      }
+      @keyframes aiRingExpand {
+        0%   { transform: scale(0.3); opacity: 0.9; }
+        100% { transform: scale(5.5); opacity: 0; }
+      }
+      @keyframes aiLogoReveal {
+        0%   { opacity: 0; transform: scale(0.4) rotate(-25deg); filter: blur(12px); }
+        45%  { opacity: 1; transform: scale(1.12) rotate(6deg); filter: blur(2px); }
+        70%  { transform: scale(0.96) rotate(-2deg); filter: blur(0); }
+        100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0); }
+      }
+      @keyframes aiTextReveal {
+        0%   { opacity: 0; transform: translateY(22px); filter: blur(14px); }
+        50%  { opacity: 1; transform: translateY(-4px); filter: blur(2px); }
+        75%  { transform: translateY(2px); filter: blur(0); }
+        100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+      }
+      @keyframes aiStatusBlink {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.15; }
+      }
+      @keyframes aiNodePulse {
+        0%, 100% { transform: scale(1);   opacity: 0.3; }
+        50%       { transform: scale(2.2); opacity: 1; }
       }
     </style>
   </head>

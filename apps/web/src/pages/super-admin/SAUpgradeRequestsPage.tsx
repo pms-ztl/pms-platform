@@ -301,13 +301,13 @@ export function SAUpgradeRequestsPage() {
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-800/50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tenant</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Current Plan</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Requested Plan</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider max-w-[200px]">Reason</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wider">Tenant</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wider">Current Plan</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wider">Requested Plan</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wider max-w-[200px]">Reason</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -335,7 +335,7 @@ export function SAUpgradeRequestsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 max-w-[200px]">
-                        <p className="text-sm text-gray-600 dark:text-gray-300 truncate" title={req.reason}>{req.reason || '--'}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 break-words" title={req.reason}>{req.reason || '--'}</p>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={clsx('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium', STATUS_BADGE_STYLES[req.status] ?? STATUS_BADGE_STYLES.CANCELLED)}>

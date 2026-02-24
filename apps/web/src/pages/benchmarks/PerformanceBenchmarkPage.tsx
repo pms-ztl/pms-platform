@@ -170,8 +170,8 @@ export function PerformanceBenchmarkPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs space-y-1">
-        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
+      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+        <p className="font-semibold text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color || p.fill }}>
             {p.name}: {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}
@@ -275,7 +275,7 @@ export function PerformanceBenchmarkPage() {
           { label: 'Total Benchmarks', value: stats.totalBenchmarks, icon: ChartBarSquareIcon, color: 'text-indigo-600 dark:text-indigo-400' },
           { label: 'Comparisons Run', value: stats.comparisonsRun, icon: UserGroupIcon, color: 'text-blue-600 dark:text-blue-400' },
           { label: 'Above Benchmark', value: `${stats.abovePct}%`, icon: TrophyIcon, color: stats.abovePct >= 50 ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400' },
-          { label: 'Team Avg Score', value: summary?.teamAvg?.toFixed(1) ?? (stats.avgScore ?? 0).toFixed(1), icon: ArrowTrendingUpIcon, color: 'text-purple-600 dark:text-purple-400' },
+          { label: 'Team Average Score', value: summary?.teamAvg?.toFixed(1) ?? (stats.avgScore ?? 0).toFixed(1), icon: ArrowTrendingUpIcon, color: 'text-purple-600 dark:text-purple-400' },
         ].map((s) => (
           <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
             <div className="flex items-center justify-between">
@@ -310,7 +310,7 @@ export function PerformanceBenchmarkPage() {
                   tick={{ fontSize: 9, fill: 'var(--color-secondary-400, #9ca3af)' }}
                 />
                 <Radar
-                  name="Team Avg"
+                  name="Team Average"
                   dataKey="team"
                   stroke="#6366f1"
                   fill="#6366f1"
@@ -327,7 +327,7 @@ export function PerformanceBenchmarkPage() {
                   wrapperStyle={{ fontSize: 11 }}
                   iconType="circle"
                 />
-                <Tooltip content={<ChartTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
               </RadarChart>
             </ResponsiveContainer>
           </div>
@@ -373,8 +373,8 @@ export function PerformanceBenchmarkPage() {
                     tickLine={false}
                     width={55}
                   />
-                  <Tooltip content={<ChartTooltip />} />
-                  <Bar dataKey="avgScore" name="Dept Avg" fill="#6366f1" barSize={14} radius={[0, 4, 4, 0]}>
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                  <Bar dataKey="avgScore" name="Department Average" fill="#6366f1" barSize={14} radius={[0, 4, 4, 0]}>
                     {deptBarData.map((_, i) => (
                       <Cell key={i} fill={DEPT_COLORS[i % DEPT_COLORS.length]} />
                     ))}
@@ -421,7 +421,7 @@ export function PerformanceBenchmarkPage() {
                     tickLine={false}
                     allowDecimals={false}
                   />
-                  <Tooltip content={<ChartTooltip />} />
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                   <Bar dataKey="count" name="Employees" barSize={40} radius={[6, 6, 0, 0]}>
                     {distributionData.map((entry, i) => {
                       const colors = ['#ef4444', '#f97316', '#f59e0b', '#22c55e', '#6366f1'];

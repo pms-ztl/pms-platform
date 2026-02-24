@@ -323,7 +323,7 @@ function ReportsList({
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{report.title}</p>
+                    <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{report.title}</p>
                     <span className={clsx('inline-flex items-center gap-1 text-[10px] font-medium', statusCfg.color)}>
                       <StatusIcon className={clsx('h-3.5 w-3.5', report.generationStatus === 'PROCESSING' && 'animate-spin')} />
                       {statusCfg.label}

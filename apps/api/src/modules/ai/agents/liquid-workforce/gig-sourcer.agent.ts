@@ -12,7 +12,7 @@
  * Matches employees to internal gig opportunities based on skills and project needs.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryProjectContributions } from '../../agent-tools-v3';
 import { querySkillGaps } from '../../agent-tools-v2';
 import { queryUsers } from '../../agent-tools';
@@ -41,7 +41,7 @@ Matching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class GigSourcerAgent extends BaseAgent {
+export class GigSourcerAgent extends AgenticBaseAgent {
   constructor() {
     super('gig_sourcer', SYSTEM_PROMPT);
   }

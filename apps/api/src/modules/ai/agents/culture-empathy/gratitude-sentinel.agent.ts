@@ -12,7 +12,7 @@
  * Monitors recognition behaviors to ensure appreciation is consistent and equitable.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryFeedback } from '../../agent-tools';
 import { queryEngagementPatterns } from '../../agent-tools-v3';
 import { queryCommunicationPatterns } from '../../agent-tools-v2';
@@ -41,7 +41,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class GratitudeSentinelAgent extends BaseAgent {
+export class GratitudeSentinelAgent extends AgenticBaseAgent {
   constructor() {
     super('gratitude_sentinel', SYSTEM_PROMPT);
   }

@@ -293,7 +293,7 @@ export function ScheduledReportsPage() {
             </div>
             <div>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Next Execution</p>
-              <p className="text-sm font-bold text-secondary-900 dark:text-white truncate max-w-[140px]">
+              <p className="text-sm font-bold text-secondary-900 dark:text-white break-words max-w-[140px]">
                 {stats.nextExecution ? formatRelative(stats.nextExecution) : 'None'}
               </p>
             </div>
@@ -342,12 +342,12 @@ export function ScheduledReportsPage() {
             <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Report Type</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Frequency</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Next Run</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Last Run</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Status</th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Report Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400">Frequency</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Next Run</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Last Run</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Status</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-secondary-500 dark:text-secondary-400">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-secondary-100 dark:divide-secondary-700">
@@ -435,7 +435,7 @@ export function ScheduledReportsPage() {
                       <ClockIcon className="h-4 w-4 text-primary-600 dark:text-primary-400" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{report.title || report.reportType}</p>
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{report.title || report.reportType}</p>
                       <p className="text-[10px] text-secondary-400">{formatDate(report.createdAt)}</p>
                     </div>
                   </div>

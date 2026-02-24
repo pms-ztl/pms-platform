@@ -12,7 +12,7 @@
  * Uses leave calendars, workload distribution, and team health to optimize leave planning.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryLeaveCalendar } from '../../agent-tools-v3';
 import {
   queryWorkloadDistribution,
@@ -44,7 +44,7 @@ Planning principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class LeaveOptimizerAgent extends BaseAgent {
+export class LeaveOptimizerAgent extends AgenticBaseAgent {
   constructor() {
     super('leave_optimizer', SYSTEM_PROMPT);
   }

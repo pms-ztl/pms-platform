@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 import { goalsApi, usersApi, type Goal, type CreateGoalInput, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
-import { DataTable, type Column } from '@/components/ui';
+import { DataTable, type Column, PageHeader } from '@/components/ui';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 const statusColors: Record<string, string> = {
@@ -73,7 +73,7 @@ function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
         {/* Title */}
         <a
           href={`/goals/${goal.id}`}
-          className="flex-1 text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 truncate"
+          className="flex-1 text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 break-words"
         >
           {goal.title}
         </a>
@@ -83,7 +83,7 @@ function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
           <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[10px] font-bold text-primary-700 dark:text-primary-300">
             {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
           </div>
-          <span className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
+          <span className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
             {goal.owner?.firstName} {goal.owner?.lastName}
           </span>
         </div>
@@ -272,18 +272,12 @@ export function GoalsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Goals</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Track and manage your goals and OKRs
-          </p>
-        </div>
+      <PageHeader title="Goals" subtitle="Track and manage your goals and OKRs">
         <button onClick={() => setShowCreateModal(true)} className="btn-primary">
           <PlusIcon className="h-5 w-5 mr-2" />
           Create Goal
         </button>
-      </div>
+      </PageHeader>
 
       {/* Filters + View Toggle */}
       <div className="flex items-center justify-between">

@@ -13,7 +13,7 @@
  * impacts on performance and recommend schedule adjustments.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { querySessionActivity } from '../../agent-tools-v3';
 import { queryBurnoutRisk } from '../../agent-tools-v2';
 import { isManager } from '../../../../utils/roles';
@@ -44,7 +44,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class SleepOptimizerAgent extends BaseAgent {
+export class SleepOptimizerAgent extends AgenticBaseAgent {
   constructor() {
     super('sleep_optimizer', SYSTEM_PROMPT);
   }

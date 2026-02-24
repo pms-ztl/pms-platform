@@ -9,22 +9,53 @@ import {
 import clsx from 'clsx';
 import { useThemeStore, type Theme } from '@/store/theme';
 
-const THEMES: { key: Theme; label: string; icon: typeof SunIcon; description: string }[] = [
-  { key: 'light', label: 'Light', icon: SunIcon, description: 'Bright & clean' },
-  { key: 'dark', label: 'Dark', icon: MoonIcon, description: 'Easy on the eyes' },
-  { key: 'deep-dark', label: 'Deep Dark', icon: MoonIcon, description: 'Pure black OLED' },
-  { key: 'system', label: 'System', icon: ComputerDesktopIcon, description: 'Match OS setting' },
+// ── Custom "Deep Dark / OLED" icon — crescent moon + 3 stars ──────────────
+
+function DeepDarkIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+      {...props}
+    >
+      {/* Crescent moon */}
+      <path d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+      {/* Three stars scattered around the moon */}
+      <circle cx="18.5" cy="4"   r="0.85" fill="currentColor" stroke="none" />
+      <circle cx="21"   cy="7.5" r="0.65" fill="currentColor" stroke="none" />
+      <circle cx="20"   cy="2.5" r="0.55" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+// ── Theme config ───────────────────────────────────────────────────────────
+
+type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
+const THEMES: { key: Theme; label: string; icon: IconComponent; description: string }[] = [
+  { key: 'light',     label: 'Light',     icon: SunIcon,          description: 'Bright & clean'   },
+  { key: 'dark',      label: 'Dark',      icon: MoonIcon,         description: 'Easy on the eyes' },
+  { key: 'deep-dark', label: 'Deep Dark', icon: DeepDarkIcon,     description: 'Pure black OLED'  },
+  { key: 'system',    label: 'System',    icon: ComputerDesktopIcon, description: 'Match OS setting' },
 ];
 
-function getCurrentIcon(theme: Theme) {
+function getCurrentIcon(theme: Theme): IconComponent {
   switch (theme) {
-    case 'light': return SunIcon;
-    case 'dark': return MoonIcon;
-    case 'deep-dark': return MoonIcon;
-    case 'system': return ComputerDesktopIcon;
-    default: return MoonIcon;
+    case 'light':     return SunIcon;
+    case 'dark':      return MoonIcon;
+    case 'deep-dark': return DeepDarkIcon;
+    case 'system':    return ComputerDesktopIcon;
+    default:          return MoonIcon;
   }
 }
+
+// ── Component ──────────────────────────────────────────────────────────────
 
 export function ThemeToggle() {
   const { theme, setTheme } = useThemeStore();
@@ -54,7 +85,7 @@ export function ThemeToggle() {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2.5 w-52 origin-top-right rounded-xl bg-white/90 dark:bg-surface-card/90 backdrop-blur-2xl py-1.5 shadow-xl ring-1 ring-secondary-900/5 dark:ring-white/[0.08] focus:outline-none">
           <div className="px-3 py-2 border-b border-secondary-100 dark:border-white/[0.06]">
-            <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+            <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
               Theme
             </p>
           </div>

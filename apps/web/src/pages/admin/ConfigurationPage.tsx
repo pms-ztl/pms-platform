@@ -21,6 +21,7 @@ import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
 import { adminConfigApi } from '@/lib/api';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -275,11 +276,11 @@ function RatingScalesTab() {
                     {lvl.value}
                   </span>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                    <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                       {lvl.label}
                     </p>
                     {lvl.description && (
-                      <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 line-clamp-2">
+                      <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">
                         {lvl.description}
                       </p>
                     )}
@@ -373,7 +374,7 @@ function ReviewTemplatesTab() {
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2 min-w-0">
                   <DocumentTextIcon className="h-5 w-5 text-primary-500 flex-shrink-0" />
-                  <h3 className="text-sm font-semibold text-secondary-900 dark:text-white truncate">
+                  <h3 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">
                     {tpl.name}
                   </h3>
                 </div>
@@ -385,7 +386,7 @@ function ReviewTemplatesTab() {
                 )}
               </div>
               {tpl.description && (
-                <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-3 line-clamp-2">
+                <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-3">
                   {tpl.description}
                 </p>
               )}
@@ -674,7 +675,7 @@ function CompetencyFrameworksTab() {
                     className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
                     title={lvl.description}
                   >
-                    L{lvl.level}: {lvl.description.length > 30 ? lvl.description.slice(0, 30) + '...' : lvl.description}
+                    L{lvl.level}: {lvl.description}
                   </span>
                 ))}
               </div>
@@ -759,7 +760,7 @@ function CompetencyFrameworksTab() {
                       )}
                     </div>
                     {fw.description && (
-                      <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 truncate">
+                      <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 break-words">
                         {fw.description}
                       </p>
                     )}
@@ -783,7 +784,7 @@ function CompetencyFrameworksTab() {
                 {isExpanded && (
                   <div className="px-5 pb-5 border-t border-secondary-200 dark:border-secondary-700">
                     <div className="flex items-center justify-between mt-4 mb-3">
-                      <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                      <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                         Competencies
                       </p>
                       <button
@@ -1048,13 +1049,13 @@ function QuestionnairesTab() {
               <ClipboardDocumentListIcon className="h-8 w-8 text-primary-500 flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-semibold text-secondary-900 dark:text-white truncate">{q.name}</h3>
+                  <h3 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">{q.name}</h3>
                   <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', typeBadgeColor(q.type))}>
                     {q.type?.replace(/_/g, ' ')}
                   </span>
                 </div>
                 {q.description && (
-                  <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 truncate">
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 break-words">
                     {q.description}
                   </p>
                 )}
@@ -1218,12 +1219,7 @@ export function ConfigurationPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Configuration</h1>
-        <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-          Manage rating scales, review templates, competency frameworks, and questionnaires
-        </p>
-      </div>
+      <PageHeader title="Configuration" subtitle="Manage rating scales, review templates, competency frameworks, and questionnaires" />
 
       {/* Tab bar */}
       <div className="border-b border-secondary-200 dark:border-secondary-700">

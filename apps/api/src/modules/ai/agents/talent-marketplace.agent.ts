@@ -11,7 +11,7 @@
  * and dynamically redistributes goals when priorities shift.
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import { queryUsers, queryGoals } from '../agent-tools';
 import {
   querySkillGaps,
@@ -41,7 +41,7 @@ Marketplace principles:
 
 // ── Agent Class ─────────────────────────────────────────────
 
-export class TalentMarketplaceAgent extends BaseAgent {
+export class TalentMarketplaceAgent extends AgenticBaseAgent {
   constructor() {
     super('talent_marketplace', SYSTEM_PROMPT);
   }

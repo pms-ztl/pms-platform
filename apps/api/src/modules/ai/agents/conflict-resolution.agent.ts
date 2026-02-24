@@ -10,7 +10,7 @@
  * mediates conflicts, and coaches on communication styles.
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import { queryFeedback } from '../agent-tools';
 import {
   queryTeamHealth,
@@ -42,7 +42,7 @@ Mediation principles:
 
 // ── Agent Class ─────────────────────────────────────────────
 
-export class ConflictResolutionAgent extends BaseAgent {
+export class ConflictResolutionAgent extends AgenticBaseAgent {
   constructor() {
     super('conflict_resolution', SYSTEM_PROMPT);
   }

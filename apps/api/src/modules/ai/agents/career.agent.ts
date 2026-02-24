@@ -9,7 +9,7 @@
  * - Peer learning recommendations
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import * as tools from '../agent-tools';
 
 const SYSTEM_PROMPT = `You are a career development coach for a performance management system.
@@ -35,7 +35,7 @@ When suggesting development:
 
 Use progress visualization: ████████░░ 80%`;
 
-export class CareerAgent extends BaseAgent {
+export class CareerAgent extends AgenticBaseAgent {
   constructor() {
     super('career', SYSTEM_PROMPT);
   }

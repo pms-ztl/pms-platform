@@ -57,7 +57,7 @@ export function ForgotPasswordPage() {
     }
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/;
     if (!passwordRegex.test(password)) {
-      setError('Password must contain uppercase, lowercase, number, and special character (@$!%*?&)');
+      setError('Password must contain, lowercase, number, and special character (@$!%*?&)');
       return;
     }
     if (password !== confirmPassword) {
@@ -192,7 +192,7 @@ export function ForgotPasswordPage() {
               required
             />
             <p className="mt-1 text-xs text-secondary-500 dark:text-secondary-400">
-              Must include uppercase, lowercase, number, and special character
+              Must include, lowercase, number, and special character
             </p>
           </div>
 

@@ -9,6 +9,7 @@ import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
 import { api, usersApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { PageHeader } from '@/components/ui';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -66,7 +67,7 @@ function fmtDate(d: string) { try { return new Date(d).toLocaleDateString('en-US
 function SkillBar({ name, level, maxLevel }: SkillProficiency) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-sm text-secondary-700 dark:text-secondary-300 w-28 truncate">{name}</span>
+      <span className="text-sm text-secondary-700 dark:text-secondary-300 w-28 break-words">{name}</span>
       <div className="flex-1 h-2 rounded-full bg-secondary-200 dark:bg-secondary-700">
         <div className="h-2 rounded-full bg-primary-600 dark:bg-primary-500 transition-all duration-500" style={{ width: `${Math.round((level / maxLevel) * 100)}%` }} />
       </div>
@@ -96,7 +97,7 @@ function CareerNode({ position: p, isSelected, onClick }: { position: CareerPosi
     )}>
       <div className="flex items-start justify-between gap-2 mb-2">
         <h4 className="text-sm font-semibold text-secondary-900 dark:text-white leading-tight">{p.title}</h4>
-        {p.isCurrent && <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary-600 text-white">Current</span>}
+        {p.isCurrent && <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wider bg-primary-600 text-white">Current</span>}
       </div>
       <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-2">
         Level {p.level} {LEVEL_LABELS[p.level] ? `(${LEVEL_LABELS[p.level]})` : ''} &middot; {p.department}
@@ -195,10 +196,10 @@ export function CareerPathPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Career Pathways</h1>
-        <p className="mt-1 text-secondary-600 dark:text-secondary-400">Explore career growth opportunities and plan your progression</p>
-      </div>
+      <PageHeader
+        title="Career Pathways"
+        subtitle="Explore career growth opportunities and plan your progression"
+      />
 
       {/* Current Position Card */}
       {pathLoading ? <Spinner /> : cp ? (
@@ -213,7 +214,7 @@ export function CareerPathPage() {
                 Level {cp.currentPosition.level}{LEVEL_LABELS[cp.currentPosition.level] ? ` (${LEVEL_LABELS[cp.currentPosition.level]})` : ''} &middot; {cp.currentPosition.department} &middot; {cp.currentPosition.tenure} tenure
               </p>
               <div className="space-y-2.5">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-secondary-400 dark:text-secondary-500">Top Skills</h3>
+                <h3 className="text-xs font-semibold tracking-wider text-secondary-400 dark:text-secondary-500">Top Skills</h3>
                 {cp.currentPosition.skills.slice(0, 5).map((s) => <SkillBar key={s.name} {...s} />)}
               </div>
             </div>
@@ -260,7 +261,7 @@ export function CareerPathPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Previous Roles */}
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-secondary-400 dark:text-secondary-500 flex items-center gap-2">
+              <h3 className="text-sm font-semibold tracking-wider text-secondary-400 dark:text-secondary-500 flex items-center gap-2">
                 <ClockIcon className="h-4 w-4" /> Previous Roles
               </h3>
               {cp.previousRoles.length === 0
@@ -274,20 +275,20 @@ export function CareerPathPage() {
             </div>
             {/* Current Role */}
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-primary-600 dark:text-primary-400 flex items-center gap-2">
+              <h3 className="text-sm font-semibold tracking-wider text-primary-600 dark:text-primary-400 flex items-center gap-2">
                 <StarSolidIcon className="h-4 w-4" /> Current Role
               </h3>
               <CareerNode position={{ id: 'current', title: cp.currentPosition.title, level: cp.currentPosition.level, department: cp.currentPosition.department, requiredSkills: cp.currentPosition.skills.map((s) => s.name), avgTimeToReach: cp.currentPosition.tenure, isCurrent: true }} isSelected={false} onClick={() => {}} />
               {cp.lateralMoves.length > 0 && (
                 <div className="mt-4 space-y-2">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-secondary-400 dark:text-secondary-500">Lateral Moves</h4>
+                  <h4 className="text-xs font-semibold tracking-wider text-secondary-400 dark:text-secondary-500">Lateral Moves</h4>
                   {cp.lateralMoves.map((r) => <CareerNode key={r.id} position={r} isSelected={selectedNextRole === r.id} onClick={() => toggleRole(r.id)} />)}
                 </div>
               )}
             </div>
             {/* Next Roles */}
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-secondary-400 dark:text-secondary-500 flex items-center gap-2">
+              <h3 className="text-sm font-semibold tracking-wider text-secondary-400 dark:text-secondary-500 flex items-center gap-2">
                 <ArrowTrendingUpIcon className="h-4 w-4" /> Next Roles
               </h3>
               {cp.nextRoles.length === 0
@@ -419,7 +420,7 @@ export function CareerPathPage() {
                       : 'border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 hover:shadow-md hover:border-primary-200 dark:hover:border-primary-700')}>
                   <h4 className="text-sm font-semibold text-secondary-900 dark:text-white mb-1">{role.title}</h4>
                   <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-2">{role.department} &middot; {role.levelRange}</p>
-                  <p className="text-xs text-secondary-600 dark:text-secondary-400 line-clamp-2 mb-3">{role.description}</p>
+                  <p className="text-xs text-secondary-600 dark:text-secondary-400 mb-3">{role.description}</p>
                   <div className="flex flex-wrap gap-1">
                     {role.requiredSkills.slice(0, 5).map((s) => <span key={s} className="bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full px-2 py-0.5 text-[11px]">{s}</span>)}
                     {role.requiredSkills.length > 5 && <span className="text-[11px] text-secondary-400 py-0.5">+{role.requiredSkills.length - 5}</span>}

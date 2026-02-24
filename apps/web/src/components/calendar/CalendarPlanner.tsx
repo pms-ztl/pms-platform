@@ -303,7 +303,7 @@ export function CalendarPlanner() {
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
           <div
             key={day}
-            className="text-center text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400 py-2.5 bg-secondary-50 dark:bg-secondary-800/50 rounded-lg"
+            className="text-center text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400 py-2.5 bg-secondary-50 dark:bg-secondary-800/50 rounded-lg"
           >
             {day}
           </div>
@@ -353,13 +353,13 @@ export function CalendarPlanner() {
                   <div
                     key={event.id}
                     className={clsx(
-                      'text-xs px-1.5 py-0.5 rounded truncate text-white flex items-center gap-1',
+                      'text-xs px-1.5 py-0.5 rounded break-words text-white flex items-center gap-1',
                       event.color
                     )}
                     title={event.title}
                   >
                     <EventIcon type={event.type} />
-                    <span className="truncate">{event.title}</span>
+                    <span className="break-words">{event.title}</span>
                   </div>
                 ))}
                 {dayEvents.length > 3 && (
@@ -433,7 +433,7 @@ export function CalendarPlanner() {
                   {hourEvents.map((event) => (
                     <div
                       key={event.id}
-                      className={clsx('text-[10px] px-1.5 py-0.5 rounded truncate text-white mb-0.5', event.color)}
+                      className={clsx('text-[10px] px-1.5 py-0.5 rounded break-words text-white mb-0.5', event.color)}
                       title={event.title}
                     >
                       {event.title}
@@ -459,11 +459,11 @@ export function CalendarPlanner() {
                 {allDayEvents.slice(0, 2).map((event) => (
                   <div
                     key={event.id}
-                    className={clsx('text-[10px] px-1.5 py-0.5 rounded truncate text-white flex items-center gap-0.5', event.color)}
+                    className={clsx('text-[10px] px-1.5 py-0.5 rounded break-words text-white flex items-center gap-0.5', event.color)}
                     title={event.title}
                   >
                     <EventIcon type={event.type} />
-                    <span className="truncate">{event.title}</span>
+                    <span className="break-words">{event.title}</span>
                   </div>
                 ))}
                 {allDayEvents.length > 2 && (
@@ -513,7 +513,7 @@ export function CalendarPlanner() {
         {/* All-day events */}
         {allDayEvents.length > 0 && (
           <div className="mb-4">
-            <div className="text-xs font-semibold text-secondary-400 dark:text-secondary-500 uppercase tracking-wider mb-2">
+            <div className="text-xs font-semibold text-secondary-400 dark:text-secondary-500 tracking-wider mb-2">
               All Day
             </div>
             <div className="space-y-1">
@@ -919,7 +919,7 @@ export function CalendarPlanner() {
                     <option value="30">30 minutes before</option>
                     <option value="60">1 hour before</option>
                     <option value="1440">1 day before</option>
-                    <option value="15,60">15 min and 1 hour before</option>
+                    <option value="15,60">15 minutes and 1 hour before</option>
                     <option value="60,1440">1 hour and 1 day before</option>
                   </select>
                 </div>

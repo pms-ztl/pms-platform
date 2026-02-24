@@ -510,7 +510,7 @@ export function CompliancePage() {
                           (h) => (
                             <th
                               key={h}
-                              className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider"
+                              className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider"
                             >
                               {h}
                             </th>
@@ -725,7 +725,7 @@ export function CompliancePage() {
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                            <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                               {d.title}
                             </p>
                             {d.employee && (
@@ -800,7 +800,7 @@ export function CompliancePage() {
             <div className="px-6 py-5 space-y-4">
               {/* Employee info */}
               <div>
-                <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                   Employee
                 </p>
                 <p className="text-sm font-medium text-secondary-900 dark:text-white">
@@ -818,7 +818,7 @@ export function CompliancePage() {
               {/* Type and Status row */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                     Type
                   </p>
                   <span
@@ -831,7 +831,7 @@ export function CompliancePage() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                     Status
                   </p>
                   <span
@@ -848,7 +848,7 @@ export function CompliancePage() {
               {/* Priority and Deadline */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                     Priority
                   </p>
                   <span
@@ -861,7 +861,7 @@ export function CompliancePage() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                     Deadline
                   </p>
                   <p className="text-sm text-secondary-700 dark:text-secondary-300">
@@ -874,7 +874,7 @@ export function CompliancePage() {
 
               {/* Reviewer */}
               <div>
-                <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                   Reviewer
                 </p>
                 <p className="text-sm text-secondary-700 dark:text-secondary-300">
@@ -886,7 +886,7 @@ export function CompliancePage() {
 
               {/* Notes */}
               <div>
-                <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                   Notes
                 </p>
                 <p className="text-sm text-secondary-700 dark:text-secondary-400">
@@ -897,7 +897,7 @@ export function CompliancePage() {
               {/* Dates */}
               <div className="grid grid-cols-2 gap-4 pt-2 border-t border-secondary-200 dark:border-secondary-700">
                 <div>
-                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                  <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                     Created
                   </p>
                   <p className="text-sm text-secondary-700 dark:text-secondary-300">
@@ -908,7 +908,7 @@ export function CompliancePage() {
                 </div>
                 {viewingReview.completedAt && (
                   <div>
-                    <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-1">
+                    <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-1">
                       Completed
                     </p>
                     <p className="text-sm text-secondary-700 dark:text-secondary-300">

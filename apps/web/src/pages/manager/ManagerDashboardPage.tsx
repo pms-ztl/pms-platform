@@ -43,6 +43,7 @@ import {
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -460,15 +461,7 @@ export function ManagerDashboardPage() {
   return (
     <div className="space-y-8 pb-10">
       {/* ══════════════════════════ Header ══════════════════════════ */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-secondary-900 dark:text-white">
-            Manager Dashboard
-          </h1>
-          <p className="mt-1 text-secondary-500 dark:text-secondary-400">
-            Your team at a glance
-          </p>
-        </div>
+      <PageHeader title="Manager Dashboard" subtitle="Your team at a glance">
         <div className="flex items-center rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 p-1">
           {([
             ['week', 'This Week'],
@@ -489,7 +482,7 @@ export function ManagerDashboardPage() {
             </button>
           ))}
         </div>
-      </div>
+      </PageHeader>
 
       {/* ══════════════════════════ Summary Cards ══════════════════════════ */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -513,7 +506,7 @@ export function ManagerDashboardPage() {
           </div>
         </SectionCard>
 
-        {/* Avg Goal Progress */}
+        {/* Average Goal Progress */}
         <SectionCard>
           <div className="p-5">
             <div className="flex items-center gap-3 mb-3">
@@ -521,7 +514,7 @@ export function ManagerDashboardPage() {
                 <FlagIcon className="h-5 w-5 text-white" />
               </div>
               <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">
-                Avg Goal Progress
+                Average Goal Progress
               </span>
             </div>
             <p className={clsx('text-3xl font-bold', progressColor(avgGoalProgress))}>
@@ -662,7 +655,7 @@ export function ManagerDashboardPage() {
                 {recentUploads.map((upload: any) => (
                   <div key={upload.id} className="flex items-center justify-between py-1.5 border-b border-secondary-100 dark:border-secondary-800 last:border-0">
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{upload.fileName}</p>
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{upload.fileName}</p>
                       <p className="text-xs text-secondary-400">{new Date(upload.createdAt).toLocaleDateString()}</p>
                     </div>
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ml-2 ${
@@ -725,7 +718,7 @@ export function ManagerDashboardPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-secondary-100 dark:border-secondary-700 text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <tr className="border-b border-secondary-100 dark:border-secondary-700 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 <th className="px-6 py-3">Team Member</th>
                 <th className="px-6 py-3">Job Title</th>
                 <th className="px-6 py-3">Goal Progress</th>
@@ -853,7 +846,7 @@ export function ManagerDashboardPage() {
                 <item.icon className="h-5 w-5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                   {item.description}
                 </p>
                 <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">
@@ -947,7 +940,7 @@ export function ManagerDashboardPage() {
                     className="flex items-center gap-3 p-3 rounded-lg bg-secondary-50 dark:bg-secondary-800/50"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                         {g.title}
                       </p>
                       <p className="text-xs text-secondary-400 dark:text-secondary-500">
@@ -980,7 +973,7 @@ export function ManagerDashboardPage() {
                     className="flex items-center gap-3 p-3 rounded-lg bg-secondary-50 dark:bg-secondary-800/50"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                      <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                         {g.title}
                       </p>
                       <p className="text-xs text-secondary-400 dark:text-secondary-500">
@@ -1137,7 +1130,7 @@ export function ManagerDashboardPage() {
                   <p className="text-sm font-medium text-secondary-900 dark:text-white">
                     {event.title}
                   </p>
-                  <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 truncate">
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 break-words">
                     {event.description}
                   </p>
                 </div>

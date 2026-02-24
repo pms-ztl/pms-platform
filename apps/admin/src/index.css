@@ -5,7 +5,7 @@
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
-    font-size: 125%;
+    font-size: 100%;
   }
 
   body {
@@ -93,6 +93,32 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
   }
+
+  /* Hero welcome banner */
+  .glass-hero {
+    @apply rounded-2xl border border-white/[0.12] p-6 relative overflow-hidden;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25) 0%, rgba(79, 70, 229, 0.18) 40%, rgba(15, 20, 35, 0.7) 100%);
+    backdrop-filter: blur(40px) saturate(1.4);
+    -webkit-backdrop-filter: blur(40px) saturate(1.4);
+    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.5),
+                0 0 60px -20px rgba(124, 58, 237, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Metric mini cards */
+  .metric-card {
+    @apply rounded-xl border border-white/[0.06] p-4 relative overflow-hidden;
+    background: rgba(15, 20, 35, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.25s ease;
+  }
+
+  .metric-card:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(15, 20, 35, 0.55);
+    transform: translateY(-1px);
+  }
 }
 
 /* ── Animated mesh background ─────────────────────────────────────────── */
@@ -162,3 +188,7 @@
 .stagger-6 { animation-delay: 0.3s; }
 .stagger-7 { animation-delay: 0.35s; }
 .stagger-8 { animation-delay: 0.4s; }
+.stagger-9 { animation-delay: 0.45s; }
+.stagger-10 { animation-delay: 0.5s; }
+.stagger-11 { animation-delay: 0.55s; }
+.stagger-12 { animation-delay: 0.6s; }

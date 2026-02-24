@@ -89,9 +89,9 @@ const ZScoreIndicator = ({ zScore }: { zScore: number }) => {
   return (
     <div className="flex items-center space-x-2">
       <div className="flex-1">
-        <div className="relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="relative h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
           {/* Center marker */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-400 z-10" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-secondary-400 z-10" />
           {/* Z-score bar */}
           <div
             className={clsx(
@@ -105,7 +105,7 @@ const ZScoreIndicator = ({ zScore }: { zScore: number }) => {
             }}
           />
         </div>
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
+        <div className="flex justify-between text-xs text-secondary-500 mt-1">
           <span>-3σ</span>
           <span>0</span>
           <span>+3σ</span>
@@ -141,14 +141,14 @@ const AnomalyCard = ({ anomaly }: { anomaly: AnomalyResult }) => {
               <span className={clsx('text-xs font-semibold px-2 py-0.5 rounded-full', config.bg, config.text)}>
                 {config.label}
               </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
+              <span className="text-xs text-secondary-500 dark:text-secondary-400 capitalize">
                 {anomaly.anomalyType?.replace('_', ' ')}
               </span>
             </div>
-            <h4 className="text-sm font-semibold text-gray-900 dark:text-white mt-1">
+            <h4 className="text-sm font-semibold text-secondary-900 dark:text-white mt-1">
               {metricLabels[anomaly.metricName] || anomaly.metricName}
             </h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
               {config.description}
             </p>
           </div>
@@ -162,13 +162,13 @@ const AnomalyCard = ({ anomaly }: { anomaly: AnomalyResult }) => {
       {/* Values comparison */}
       <div className="mt-4 grid grid-cols-3 gap-4">
         <div className="text-center">
-          <div className="text-xs text-gray-500 dark:text-gray-400">Expected</div>
-          <div className="text-lg font-semibold text-gray-900 dark:text-white">
+          <div className="text-xs text-secondary-500 dark:text-secondary-400">Expected</div>
+          <div className="text-lg font-semibold text-secondary-900 dark:text-white">
             {(anomaly.expectedValue ?? 0).toFixed(1)}
           </div>
         </div>
         <div className="text-center">
-          <div className="text-xs text-gray-500 dark:text-gray-400">Actual</div>
+          <div className="text-xs text-secondary-500 dark:text-secondary-400">Actual</div>
           <div className={clsx(
             'text-lg font-semibold',
             isNegativeDeviation ? 'text-red-600' : 'text-green-600'
@@ -177,7 +177,7 @@ const AnomalyCard = ({ anomaly }: { anomaly: AnomalyResult }) => {
           </div>
         </div>
         <div className="text-center">
-          <div className="text-xs text-gray-500 dark:text-gray-400">Deviation</div>
+          <div className="text-xs text-secondary-500 dark:text-secondary-400">Deviation</div>
           <div className={clsx(
             'text-lg font-semibold',
             isNegativeDeviation ? 'text-red-600' : 'text-green-600'
@@ -189,7 +189,7 @@ const AnomalyCard = ({ anomaly }: { anomaly: AnomalyResult }) => {
 
       {/* Z-Score indicator */}
       <div className="mt-4">
-        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">Statistical Deviation (Z-Score)</div>
+        <div className="text-xs text-secondary-500 dark:text-secondary-400 mb-2">Statistical Deviation (Z-Score)</div>
         <ZScoreIndicator zScore={anomaly.zScore} />
       </div>
     </div>
@@ -214,7 +214,7 @@ const SeveritySummary = ({ anomalies }: { anomalies: AnomalyResult[] }) => {
             className={clsx('rounded-xl border p-4 text-center', config.bg, config.border)}
           >
             <div className={clsx('text-2xl font-bold', config.text)}>{count}</div>
-            <div className="text-xs text-gray-600 dark:text-gray-400 capitalize">{severity}</div>
+            <div className="text-xs text-secondary-600 dark:text-secondary-400 capitalize">{severity}</div>
           </div>
         );
       })}
@@ -239,15 +239,15 @@ export function AnomalyDetector() {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+        <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
         <div className="grid grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div key={i} className="h-20 bg-secondary-200 dark:bg-secondary-700 rounded-xl" />
           ))}
         </div>
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-48 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div key={i} className="h-48 bg-secondary-200 dark:bg-secondary-700 rounded-xl" />
           ))}
         </div>
       </div>
@@ -263,10 +263,10 @@ export function AnomalyDetector() {
             <ShieldExclamationIcon className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-secondary-900 dark:text-white">
               Performance Anomaly Detector
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-secondary-500 dark:text-secondary-400">
               AI-powered pattern detection with instant alerts
             </p>
           </div>
@@ -313,7 +313,7 @@ export function AnomalyDetector() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex space-x-2 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex space-x-2 border-b border-secondary-200 dark:border-secondary-700">
         {['all', 'critical', 'high', 'medium', 'low'].map((level) => (
           <button
             key={level}
@@ -322,12 +322,12 @@ export function AnomalyDetector() {
               'px-4 py-2 text-sm font-medium border-b-2 transition-colors capitalize',
               filter === level
                 ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                : 'border-transparent text-secondary-500 hover:text-secondary-700'
             )}
           >
             {level}
             {level !== 'all' && (
-              <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-gray-100 dark:bg-gray-800">
+              <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-secondary-100 dark:bg-secondary-800">
                 {detectedAnomalies.filter(a => a.severity === level).length}
               </span>
             )}
@@ -343,10 +343,10 @@ export function AnomalyDetector() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="text-center py-12 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700">
           <ChartBarIcon className="h-12 w-12 text-green-500 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">No anomalies detected</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <h3 className="text-lg font-medium text-secondary-900 dark:text-white">No anomalies detected</h3>
+          <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
             {filter !== 'all'
               ? `No ${filter} severity anomalies found`
               : 'Your performance metrics are within normal ranges'}
@@ -355,7 +355,7 @@ export function AnomalyDetector() {
       )}
 
       {/* Last checked timestamp */}
-      <div className="flex items-center justify-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
+      <div className="flex items-center justify-center space-x-2 text-xs text-secondary-500 dark:text-secondary-400">
         <ClockIcon className="h-4 w-4" />
         <span>Last analyzed: {new Date().toLocaleString()}</span>
       </div>

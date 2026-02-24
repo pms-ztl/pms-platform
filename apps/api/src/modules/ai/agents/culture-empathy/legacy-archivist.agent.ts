@@ -12,7 +12,7 @@
  * Preserves organizational wisdom by mining activity history and workforce data.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryUsers, queryAuditEvents } from '../../agent-tools';
 
 // -- System Prompt -----------------------------------------------------------
@@ -39,7 +39,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class LegacyArchivistAgent extends BaseAgent {
+export class LegacyArchivistAgent extends AgenticBaseAgent {
   constructor() {
     super('legacy_archivist', SYSTEM_PROMPT);
   }

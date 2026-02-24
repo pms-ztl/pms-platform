@@ -13,7 +13,7 @@
  * Ensures every individual contribution maps to organizational objectives.
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import { queryGoals, queryAnalytics } from '../agent-tools';
 import {
   queryGoalAlignment,
@@ -47,7 +47,7 @@ Alignment principles:
 
 // ── Agent Class ─────────────────────────────────────────────
 
-export class StrategicAlignmentAgent extends BaseAgent {
+export class StrategicAlignmentAgent extends AgenticBaseAgent {
   constructor() {
     super('strategic_alignment', SYSTEM_PROMPT);
   }

@@ -4,11 +4,23 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   XMarkIcon,
   SparklesIcon,
+  BanknotesIcon,
+  StarIcon,
+  RocketLaunchIcon,
+  UserGroupIcon,
+  WrenchScrewdriverIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
+  BoltIcon,
+  BookOpenIcon,
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
 
 import { goalsApi, type CreateGoalInput } from '@/lib/api';
+
+type TemplateIconComponent = React.FC<React.SVGProps<SVGSVGElement>>;
 
 // ---------------------------------------------------------------------------
 // Template Data
@@ -17,7 +29,8 @@ import { goalsApi, type CreateGoalInput } from '@/lib/api';
 interface GoalTemplate {
   name: string;
   category: string;
-  icon: string;
+  icon: TemplateIconComponent;
+  iconColor: string;
   description: string;
   objective: { title: string; type: string; priority: string };
   keyResults: Array<{ title: string; type: string }>;
@@ -29,7 +42,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Revenue Growth',
     category: 'Business',
-    icon: '\uD83D\uDCB0',
+    icon: BanknotesIcon,
+    iconColor: 'text-emerald-600',
     description: 'Drive quarterly revenue targets with focused sales and conversion goals.',
     objective: { title: 'Increase quarterly revenue by X%', type: 'OKR_OBJECTIVE', priority: 'HIGH' },
     keyResults: [
@@ -41,7 +55,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Customer Satisfaction',
     category: 'Business',
-    icon: '\u2B50',
+    icon: StarIcon,
+    iconColor: 'text-amber-500',
     description: 'Improve NPS and customer retention through better service and product quality.',
     objective: { title: 'Achieve industry-leading customer satisfaction', type: 'OKR_OBJECTIVE', priority: 'HIGH' },
     keyResults: [
@@ -53,7 +68,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Product Launch',
     category: 'Product',
-    icon: '\uD83D\uDE80',
+    icon: RocketLaunchIcon,
+    iconColor: 'text-violet-600',
     description: 'Successfully launch a new product feature or version on schedule.',
     objective: { title: 'Successfully launch [Product/Feature] by [Date]', type: 'OKR_OBJECTIVE', priority: 'CRITICAL' },
     keyResults: [
@@ -65,7 +81,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Employee Engagement',
     category: 'People',
-    icon: '\uD83D\uDE4C',
+    icon: UserGroupIcon,
+    iconColor: 'text-blue-600',
     description: 'Build a more engaged and motivated workforce through culture improvements.',
     objective: { title: 'Improve employee engagement and satisfaction', type: 'OKR_OBJECTIVE', priority: 'HIGH' },
     keyResults: [
@@ -77,7 +94,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Engineering Quality',
     category: 'Engineering',
-    icon: '\u2699\uFE0F',
+    icon: WrenchScrewdriverIcon,
+    iconColor: 'text-slate-600',
     description: 'Elevate code quality, testing coverage, and deployment reliability.',
     objective: { title: 'Achieve engineering excellence and reliability', type: 'OKR_OBJECTIVE', priority: 'HIGH' },
     keyResults: [
@@ -89,7 +107,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Marketing Growth',
     category: 'Marketing',
-    icon: '\uD83D\uDCC8',
+    icon: ArrowTrendingUpIcon,
+    iconColor: 'text-pink-600',
     description: 'Drive awareness, traffic, and lead generation through marketing initiatives.',
     objective: { title: 'Accelerate brand awareness and lead generation', type: 'OKR_OBJECTIVE', priority: 'MEDIUM' },
     keyResults: [
@@ -101,7 +120,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Hiring & Onboarding',
     category: 'People',
-    icon: '\uD83D\uDC65',
+    icon: UserGroupIcon,
+    iconColor: 'text-teal-600',
     description: 'Scale the team effectively with a streamlined hiring and onboarding process.',
     objective: { title: 'Build a world-class hiring and onboarding process', type: 'OKR_OBJECTIVE', priority: 'MEDIUM' },
     keyResults: [
@@ -113,7 +133,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Cost Reduction',
     category: 'Business',
-    icon: '\uD83D\uDCCA',
+    icon: ArrowTrendingDownIcon,
+    iconColor: 'text-red-600',
     description: 'Optimize operational costs without compromising quality or growth.',
     objective: { title: 'Reduce operational costs by X%', type: 'OKR_OBJECTIVE', priority: 'MEDIUM' },
     keyResults: [
@@ -125,7 +146,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Team Productivity',
     category: 'Engineering',
-    icon: '\u26A1',
+    icon: BoltIcon,
+    iconColor: 'text-yellow-600',
     description: 'Improve team velocity and delivery predictability.',
     objective: { title: 'Increase team delivery velocity by X%', type: 'OKR_OBJECTIVE', priority: 'HIGH' },
     keyResults: [
@@ -137,7 +159,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Learning & Development',
     category: 'People',
-    icon: '\uD83D\uDCDA',
+    icon: BookOpenIcon,
+    iconColor: 'text-indigo-600',
     description: 'Invest in continuous learning and professional growth for the team.',
     objective: { title: 'Foster a culture of continuous learning', type: 'OKR_OBJECTIVE', priority: 'MEDIUM' },
     keyResults: [
@@ -149,7 +172,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Customer Retention',
     category: 'Business',
-    icon: '\uD83D\uDD04',
+    icon: ArrowPathIcon,
+    iconColor: 'text-cyan-600',
     description: 'Reduce churn and increase lifetime value through proactive retention strategies.',
     objective: { title: 'Maximize customer retention and lifetime value', type: 'OKR_OBJECTIVE', priority: 'HIGH' },
     keyResults: [
@@ -161,7 +185,8 @@ const TEMPLATES: GoalTemplate[] = [
   {
     name: 'Process Improvement',
     category: 'Engineering',
-    icon: '\uD83D\uDD27',
+    icon: WrenchScrewdriverIcon,
+    iconColor: 'text-orange-600',
     description: 'Streamline workflows and eliminate bottlenecks across engineering.',
     objective: { title: 'Streamline engineering processes and eliminate bottlenecks', type: 'OKR_OBJECTIVE', priority: 'MEDIUM' },
     keyResults: [
@@ -281,7 +306,9 @@ export function OKRTemplatesModal({ open, onClose }: OKRTemplatesModalProps) {
                       className="bg-secondary-50 dark:bg-secondary-900/40 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 hover:border-primary-300 dark:hover:border-primary-600 transition-colors group"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-xl">{tmpl.icon}</span>
+                        <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-secondary-100 dark:bg-secondary-800`}>
+                          <tmpl.icon className={`h-4 w-4 ${tmpl.iconColor}`} />
+                        </div>
                         <div>
                           <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">
                             {tmpl.name}
@@ -291,7 +318,7 @@ export function OKRTemplatesModal({ open, onClose }: OKRTemplatesModalProps) {
                           </span>
                         </div>
                       </div>
-                      <p className="text-[11px] text-secondary-500 dark:text-secondary-400 mt-2 line-clamp-2">
+                      <p className="text-[11px] text-secondary-500 dark:text-secondary-400 mt-2">
                         {tmpl.description}
                       </p>
 
@@ -302,7 +329,7 @@ export function OKRTemplatesModal({ open, onClose }: OKRTemplatesModalProps) {
                             <span className="px-1 py-0.5 rounded text-[7px] font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
                               KR
                             </span>
-                            <span className="text-[10px] text-secondary-600 dark:text-secondary-300 truncate">
+                            <span className="text-[10px] text-secondary-600 dark:text-secondary-300 break-words">
                               {kr.title}
                             </span>
                           </div>

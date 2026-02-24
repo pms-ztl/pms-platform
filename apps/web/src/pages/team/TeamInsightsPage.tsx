@@ -52,7 +52,7 @@ function StatCard({ label, value, icon: Icon, color, bgColor, subtitle }: StatCa
         </div>
         <div className="min-w-0">
           <p className="text-xs text-secondary-500 dark:text-secondary-400 font-medium">{label}</p>
-          <p className="text-xl font-bold text-secondary-900 dark:text-white truncate">{value}</p>
+          <p className="text-xl font-bold text-secondary-900 dark:text-white break-words">{value}</p>
           {subtitle && <p className="text-[10px] text-secondary-400 dark:text-secondary-500">{subtitle}</p>}
         </div>
       </div>
@@ -162,9 +162,9 @@ export function TeamInsightsPage() {
 
   const velocityLabel = useMemo(() => {
     if (!teamAnalytics) return '-';
-    const v = teamAnalytics.velocityTrend;
-    if (v > 0.05) return `+${((v ?? 0) * 100).toFixed(1)}%`;
-    if (v < -0.05) return `${((v ?? 0) * 100).toFixed(1)}%`;
+    const v = Number(teamAnalytics.velocityTrend ?? 0);
+    if (v > 0.05) return `+${(v * 100).toFixed(1)}%`;
+    if (v < -0.05) return `${(v * 100).toFixed(1)}%`;
     return 'Stable';
   }, [teamAnalytics]);
 
@@ -219,8 +219,8 @@ export function TeamInsightsPage() {
           subtitle="Direct reports"
         />
         <StatCard
-          label="Avg Score"
-          value={teamAnalytics?.avgScore?.toFixed(1) ?? '-'}
+          label="Average Score"
+          value={teamAnalytics?.avgScore != null ? Number(teamAnalytics.avgScore).toFixed(1) : '-'}
           icon={ChartBarIcon}
           color="text-emerald-600 dark:text-emerald-400"
           bgColor="bg-emerald-50 dark:bg-emerald-900/30"
@@ -228,7 +228,7 @@ export function TeamInsightsPage() {
         />
         <StatCard
           label="Score Spread"
-          value={teamAnalytics?.scoreSpread?.toFixed(2) ?? '-'}
+          value={teamAnalytics?.scoreSpread != null ? Number(teamAnalytics.scoreSpread).toFixed(2) : '-'}
           icon={ArrowsPointingOutIcon}
           color="text-purple-600 dark:text-purple-400"
           bgColor="bg-purple-50 dark:bg-purple-900/30"
@@ -251,8 +251,8 @@ export function TeamInsightsPage() {
           subtitle="High risk members"
         />
         <StatCard
-          label="Predicted Avg"
-          value={teamAnalytics?.predictedNextAvg?.toFixed(1) ?? '-'}
+          label="Predicted Average"
+          value={teamAnalytics?.predictedNextAvg != null ? Number(teamAnalytics.predictedNextAvg).toFixed(1) : '-'}
           icon={SparklesIcon}
           color="text-amber-600 dark:text-amber-400"
           bgColor="bg-amber-50 dark:bg-amber-900/30"
@@ -296,11 +296,12 @@ export function TeamInsightsPage() {
                     tickLine={false}
                   />
                   <Tooltip
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                     content={({ active, payload, label }) => {
                       if (!active || !payload?.length) return null;
                       return (
-                        <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs space-y-1">
-                          <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
+                        <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs space-y-1">
+                          <p className="font-semibold text-white">{label}</p>
                           {payload.map((p) => (
                             <p key={p.name} style={{ color: p.color }}>
                               {p.name}: {p.value}
@@ -365,11 +366,12 @@ export function TeamInsightsPage() {
                     tickLine={false}
                   />
                   <Tooltip
+                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                     content={({ active, payload, label }) => {
                       if (!active || !payload?.length) return null;
                       return (
-                        <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs space-y-1">
-                          <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
+                        <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs space-y-1">
+                          <p className="font-semibold text-white">{label}</p>
                           {payload.map((p) => (
                             <p key={p.name} style={{ color: p.color }}>
                               {p.name}: {p.value}

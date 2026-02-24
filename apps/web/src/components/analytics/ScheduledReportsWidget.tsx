@@ -55,7 +55,7 @@ function ScheduledReportsWidget({ className = '' }: ScheduledReportsWidgetProps)
               className="flex items-center justify-between p-2.5 rounded-lg bg-secondary-50 dark:bg-secondary-800/50"
             >
               <div className="min-w-0">
-                <p className="text-xs font-medium text-secondary-800 dark:text-secondary-200 truncate">
+                <p className="text-xs font-medium text-secondary-800 dark:text-secondary-200 break-words">
                   {schedule.reportType ?? schedule.name ?? 'Report'}
                 </p>
                 <p className="text-[11px] text-secondary-500 dark:text-secondary-400">

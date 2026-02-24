@@ -45,16 +45,18 @@ import {
 } from '@/lib/api/pulse';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 import { SurveyInsights, EngagementHeatmap } from '@/components/engagement';
+import { MoodFaceIcon } from '@/components/ui/MoodFaceIcon';
 
 // ── Constants ──
 
 const MOOD_OPTIONS = [
-  { score: 1, emoji: '\ud83d\ude22', label: 'Very Low', color: 'from-red-400 to-red-500', bg: 'bg-red-50 dark:bg-red-950/30', border: 'border-red-300 dark:border-red-700', ring: 'ring-red-400', text: 'text-red-700 dark:text-red-300' },
-  { score: 2, emoji: '\ud83d\ude1f', label: 'Low', color: 'from-orange-400 to-orange-500', bg: 'bg-orange-50 dark:bg-orange-950/30', border: 'border-orange-300 dark:border-orange-700', ring: 'ring-orange-400', text: 'text-orange-700 dark:text-orange-300' },
-  { score: 3, emoji: '\ud83d\ude10', label: 'Neutral', color: 'from-yellow-400 to-yellow-500', bg: 'bg-yellow-50 dark:bg-yellow-950/30', border: 'border-yellow-300 dark:border-yellow-700', ring: 'ring-yellow-400', text: 'text-yellow-700 dark:text-yellow-300' },
-  { score: 4, emoji: '\ud83d\ude42', label: 'Good', color: 'from-lime-400 to-green-500', bg: 'bg-green-50 dark:bg-green-950/30', border: 'border-green-300 dark:border-green-700', ring: 'ring-green-400', text: 'text-green-700 dark:text-green-300' },
-  { score: 5, emoji: '\ud83d\ude04', label: 'Great', color: 'from-emerald-400 to-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-950/30', border: 'border-emerald-300 dark:border-emerald-700', ring: 'ring-emerald-400', text: 'text-emerald-700 dark:text-emerald-300' },
+  { score: 1 as const, label: 'Very Low', color: 'from-red-400 to-red-500', bg: 'bg-red-50 dark:bg-red-950/30', border: 'border-red-300 dark:border-red-700', ring: 'ring-red-400', text: 'text-red-700 dark:text-red-300' },
+  { score: 2 as const, label: 'Low', color: 'from-orange-400 to-orange-500', bg: 'bg-orange-50 dark:bg-orange-950/30', border: 'border-orange-300 dark:border-orange-700', ring: 'ring-orange-400', text: 'text-orange-700 dark:text-orange-300' },
+  { score: 3 as const, label: 'Neutral', color: 'from-yellow-400 to-yellow-500', bg: 'bg-yellow-50 dark:bg-yellow-950/30', border: 'border-yellow-300 dark:border-yellow-700', ring: 'ring-yellow-400', text: 'text-yellow-700 dark:text-yellow-300' },
+  { score: 4 as const, label: 'Good', color: 'from-lime-400 to-green-500', bg: 'bg-green-50 dark:bg-green-950/30', border: 'border-green-300 dark:border-green-700', ring: 'ring-green-400', text: 'text-green-700 dark:text-green-300' },
+  { score: 5 as const, label: 'Great', color: 'from-emerald-400 to-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-950/30', border: 'border-emerald-300 dark:border-emerald-700', ring: 'ring-emerald-400', text: 'text-emerald-700 dark:text-emerald-300' },
 ];
 
 const PIE_COLORS = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e'];
@@ -67,12 +69,13 @@ const TREND_LINE_COLORS = {
 
 // ── Helpers ──
 
-function getMoodEmoji(score: number): string {
-  return MOOD_OPTIONS.find((m) => m.score === score)?.emoji || '\ud83d\ude10';
-}
-
 function getMoodLabel(score: number): string {
   return MOOD_OPTIONS.find((m) => m.score === score)?.label || 'Unknown';
+}
+
+function getMoodEmoji(score: number): string {
+  const emojis: Record<number, string> = { 1: '😢', 2: '😟', 3: '😐', 4: '😊', 5: '🤩' };
+  return emojis[score] || '😐';
 }
 
 // ── Sub-Components ──
@@ -147,14 +150,16 @@ function PersonalSparkline({ history }: { history: PulseResponse[] }) {
             <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#9ca3af" />
             <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 10 }} stroke="#9ca3af" width={20} />
             <Tooltip
+              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
                 const d = payload[0].payload;
                 return (
-                  <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs">
-                    <p className="font-medium text-secondary-900 dark:text-white">{d.date}</p>
-                    <p className="text-secondary-600 dark:text-secondary-400">
-                      {getMoodEmoji(d.mood)} {getMoodLabel(d.mood)} ({d.mood}/5)
+                  <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs">
+                    <p className="font-medium text-white">{d.date}</p>
+                    <p className="text-slate-300 flex items-center gap-1.5">
+                      <MoodFaceIcon score={d.mood as 1|2|3|4|5} className="w-4 h-4" />
+                      {getMoodLabel(d.mood)} ({d.mood}/5)
                     </p>
                   </div>
                 );
@@ -363,7 +368,7 @@ export function PulsePage() {
 
   // Department bar chart data
   const deptChartData = (departmentData || []).map((d: PulseDepartmentData) => ({
-    name: d.departmentName.length > 12 ? d.departmentName.slice(0, 12) + '...' : d.departmentName,
+    name: d.departmentName,
     fullName: d.departmentName,
     mood: Number((d.averageMood ?? 0).toFixed(1)),
     participation: d.participationRate,
@@ -373,12 +378,7 @@ export function PulsePage() {
   return (
     <div className="space-y-8">
       {/* ── Page Header ── */}
-      <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Pulse Survey & Mood Tracker</h1>
-        <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-          How are you feeling today? Your well-being matters.
-        </p>
-      </div>
+      <PageHeader title="Pulse Survey & Mood Tracker" subtitle="How are you feeling today? Your well-being matters." />
 
       {/* ══════════════════════════════════════════════════════════════════════
          SECTION 1: MOOD CHECK-IN (All Users)
@@ -442,9 +442,11 @@ export function PulsePage() {
                           : 'border-secondary-200 dark:border-secondary-600 bg-white dark:bg-secondary-700/50 hover:border-secondary-300 dark:hover:border-secondary-500'
                       )}
                     >
-                      <span className="text-3xl sm:text-4xl transition-transform duration-200 group-hover:scale-110">
-                        {mood.emoji}
-                      </span>
+                      <MoodFaceIcon
+                        score={mood.score}
+                        className="w-10 h-10 sm:w-12 sm:h-12 transition-transform duration-200 group-hover:scale-110"
+                        selected={selectedMood === mood.score}
+                      />
                       <span
                         className={clsx(
                           'text-xs sm:text-sm font-medium transition-colors',
@@ -603,7 +605,7 @@ export function PulsePage() {
           {/* Stat Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
-              label="Avg Team Mood"
+              label="Average Team Mood"
               value={analyticsOverview?.averageMood?.toFixed(1) || '--'}
               suffix="/5"
               icon={HeartIcon}
@@ -612,7 +614,7 @@ export function PulsePage() {
               trend={analyticsOverview?.trendDirection}
             />
             <StatCard
-              label="Avg Energy"
+              label="Average Energy"
               value={analyticsOverview?.averageEnergy?.toFixed(1) || '--'}
               suffix="/5"
               icon={BoltIcon}
@@ -671,15 +673,16 @@ export function PulsePage() {
                         ))}
                       </Pie>
                       <Tooltip
+                        cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                         content={({ active, payload }) => {
                           if (!active || !payload?.length) return null;
                           const d = payload[0].payload;
                           return (
-                            <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs">
-                              <p className="font-medium text-secondary-900 dark:text-white">
+                            <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs">
+                              <p className="font-medium text-white">
                                 {getMoodEmoji(d.score)} {d.name}
                               </p>
-                              <p className="text-secondary-600 dark:text-secondary-400">
+                              <p className="text-slate-300">
                                 {d.value} responses
                               </p>
                             </div>
@@ -712,11 +715,12 @@ export function PulsePage() {
                       <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="#9ca3af" />
                       <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 11 }} stroke="#9ca3af" width={25} />
                       <Tooltip
+                        cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                         content={({ active, payload, label }) => {
                           if (!active || !payload?.length) return null;
                           return (
-                            <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs space-y-1">
-                              <p className="font-medium text-secondary-900 dark:text-white">{label}</p>
+                            <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs space-y-1">
+                              <p className="font-medium text-white">{label}</p>
                               {payload.map((p: any) => (
                                 <p key={p.dataKey} style={{ color: p.color }}>
                                   {p.dataKey === 'mood' ? 'Mood' : p.dataKey === 'energy' ? 'Energy' : 'Stress'}: {p.value}
@@ -796,19 +800,20 @@ export function PulsePage() {
                       width={100}
                     />
                     <Tooltip
+                      cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                       content={({ active, payload }) => {
                         if (!active || !payload?.length) return null;
                         const d = payload[0].payload;
                         return (
-                          <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs space-y-1">
-                            <p className="font-medium text-secondary-900 dark:text-white">{d.fullName}</p>
-                            <p className="text-secondary-600 dark:text-secondary-400">
-                              Avg Mood: {getMoodEmoji(Math.round(d.mood))} {d.mood}/5
+                          <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs space-y-1">
+                            <p className="font-medium text-white">{d.fullName}</p>
+                            <p className="text-slate-300">
+                              Average Mood: {getMoodEmoji(Math.round(d.mood))} {d.mood}/5
                             </p>
-                            <p className="text-secondary-600 dark:text-secondary-400">
+                            <p className="text-slate-300">
                               Participation: {d.participation}%
                             </p>
-                            <p className="text-secondary-600 dark:text-secondary-400">
+                            <p className="text-slate-300">
                               Responses: {d.responses}
                             </p>
                           </div>
@@ -845,7 +850,7 @@ export function PulsePage() {
                     >
                       <span className="text-2xl">{getMoodEmoji(Math.round(dept.averageMood))}</span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                        <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                           {dept.departmentName}
                         </p>
                         <div className="flex items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">

@@ -17,6 +17,7 @@ import {
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api/client';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -381,10 +382,7 @@ export function RoleManagementPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Role Management</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading roles...</p>
-        </div>
+        <PageHeader title="Role Management" subtitle="Loading roles..." />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <div
@@ -404,13 +402,7 @@ export function RoleManagementPage() {
   return (
     <div className="space-y-6">
       {/* ---- Page header ---- */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Role Management</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Create and manage roles and their permissions for your organization.
-          </p>
-        </div>
+      <PageHeader title="Role Management" subtitle="Create and manage roles and their permissions for your organization.">
         <div className="flex items-center gap-2">
           <button
             onClick={() => { setCompareMode(!compareMode); setCompareSelection([]); setCompareResult(null); }}
@@ -431,7 +423,7 @@ export function RoleManagementPage() {
             Create Role
           </button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* ---- Compare mode bar ---- */}
       {compareMode && (
@@ -480,7 +472,7 @@ export function RoleManagementPage() {
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
-                      <h3 className="text-base font-semibold text-secondary-900 dark:text-white truncate">
+                      <h3 className="text-base font-semibold text-secondary-900 dark:text-white break-words">
                         {role.name}
                       </h3>
                       {role.isSystem && (
@@ -494,7 +486,7 @@ export function RoleManagementPage() {
                   </div>
 
                   {role.description && (
-                    <p className="mt-2 text-sm text-secondary-600 dark:text-secondary-400 line-clamp-2">
+                    <p className="mt-2 text-sm text-secondary-600 dark:text-secondary-400">
                       {role.description}
                     </p>
                   )}
@@ -724,11 +716,11 @@ export function RoleManagementPage() {
                                       className="h-4 w-4 rounded border-secondary-300 dark:border-secondary-600 text-primary-600 focus:ring-primary-500"
                                     />
                                     <div className="min-w-0">
-                                      <span className="block text-xs font-mono text-secondary-800 dark:text-secondary-200 truncate">
+                                      <span className="block text-xs font-mono text-secondary-800 dark:text-secondary-200 break-words">
                                         {perm.key}
                                       </span>
                                       {perm.description && (
-                                        <span className="block text-xs text-secondary-500 dark:text-secondary-400 truncate">
+                                        <span className="block text-xs text-secondary-500 dark:text-secondary-400 break-words">
                                           {perm.description}
                                         </span>
                                       )}

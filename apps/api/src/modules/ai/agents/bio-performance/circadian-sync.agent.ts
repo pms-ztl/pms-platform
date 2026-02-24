@@ -12,7 +12,7 @@
  * Uses session activity and performance data to align work with natural energy cycles.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { querySessionActivity } from '../../agent-tools-v3';
 import { queryPerformanceSnapshots } from '../../agent-tools-v2';
 
@@ -40,7 +40,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class CircadianSyncAgent extends BaseAgent {
+export class CircadianSyncAgent extends AgenticBaseAgent {
   constructor() {
     super('circadian_sync', SYSTEM_PROMPT);
   }

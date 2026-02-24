@@ -12,7 +12,7 @@
  * Ensures organizational continuity by analyzing succession readiness and leadership bench depth.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import {
   querySuccessionReadiness,
   queryAttritionRisk,
@@ -43,7 +43,7 @@ Analysis principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class SuccessionSentryAgent extends BaseAgent {
+export class SuccessionSentryAgent extends AgenticBaseAgent {
   constructor() {
     super('succession_sentry', SYSTEM_PROMPT);
   }

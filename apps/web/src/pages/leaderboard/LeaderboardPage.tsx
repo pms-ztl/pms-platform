@@ -25,6 +25,7 @@ import clsx from 'clsx';
 
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { PageHeader } from '@/components/ui';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -258,9 +259,9 @@ function Podium({ entries }: { entries: AnyEntry[] }) {
           <p className="text-sm font-semibold text-secondary-900 dark:text-white text-center">{entry.user.firstName} {entry.user.lastName}</p>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 text-center">{entry.user.jobTitle}</p>
           <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">{(entry.score ?? 0).toFixed(1)}</p>
-          <p className="text-[10px] text-secondary-400 dark:text-secondary-500 uppercase tracking-wider">{entry.user.department}</p>
+          <p className="text-[10px] text-secondary-400 dark:text-secondary-500 tracking-wider">{entry.user.department}</p>
           <div className={clsx('mt-2 w-24 sm:w-28 rounded-t-xl bg-gradient-to-b flex items-end justify-center', heights[idx], gradients[idx])}>
-            <span className="text-xs font-bold text-secondary-500 dark:text-secondary-300 pb-2 uppercase tracking-wider">{labels[idx]}</span>
+            <span className="text-xs font-bold text-secondary-500 dark:text-secondary-300 pb-2 tracking-wider">{labels[idx]}</span>
           </div>
         </div>
       ))}
@@ -285,7 +286,7 @@ function DepartmentChart({ departments }: { departments: DepartmentScore[] }) {
     <div className="space-y-3">
       {departments.map((dept, i) => (
         <div key={dept.id} className="group flex items-center gap-3 animate-slide-up" style={{ animationDelay: `${i * 60}ms` }}>
-          <span className="w-24 sm:w-28 text-xs font-medium text-secondary-600 dark:text-secondary-400 text-right truncate">{dept.name}</span>
+          <span className="w-24 sm:w-28 text-xs font-medium text-secondary-600 dark:text-secondary-400 text-right break-words">{dept.name}</span>
           <div className="flex-1 h-7 bg-secondary-100 dark:bg-secondary-800 rounded-full overflow-hidden relative">
             <div
               className="h-full bg-gradient-to-r from-primary-500 to-primary-400 dark:from-primary-600 dark:to-primary-400 rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-2"
@@ -294,7 +295,7 @@ function DepartmentChart({ departments }: { departments: DepartmentScore[] }) {
               <span className="text-[10px] font-bold text-white">{(dept.avgScore ?? 0).toFixed(1)}</span>
             </div>
           </div>
-          <span className="w-14 text-xs text-secondary-500 dark:text-secondary-400 text-right">{dept.memberCount} ppl</span>
+          <span className="w-14 text-xs text-secondary-500 dark:text-secondary-400 text-right">{dept.memberCount} Members</span>
         </div>
       ))}
     </div>
@@ -561,9 +562,9 @@ export function LeaderboardPage() {
 
   const columnHeaders: Record<LeaderboardTab, string[]> = {
     performance: ['Rank', 'Employee', 'Department', 'Score', 'Goals', 'Review', 'Trend'],
-    goals: ['Rank', 'Employee', 'Completed / Total', 'Completion Rate', 'Avg Progress', 'On-Time'],
-    recognition: ['Rank', 'Employee', 'Score', 'Received', 'Praise', 'Avg Sentiment'],
-    learning: ['Rank', 'Employee', 'Plans', 'Avg Progress', 'Activities', 'Score'],
+    goals: ['Rank', 'Employee', 'Completed / Total', 'Completion Rate', 'Average Progress', 'On-Time'],
+    recognition: ['Rank', 'Employee', 'Score', 'Received', 'Praise', 'Average Sentiment'],
+    learning: ['Rank', 'Employee', 'Plans', 'Average Progress', 'Activities', 'Score'],
   };
 
   const rowRenderers: Record<LeaderboardTab, (e: AnyEntry) => JSX.Element> = {
@@ -580,30 +581,28 @@ export function LeaderboardPage() {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-display font-bold text-secondary-900 dark:text-white flex items-center gap-3">
-              <TrophyIcon className="h-8 w-8 text-amber-500" />
-              Leaderboards
-            </h1>
-            <p className="mt-1 text-secondary-500 dark:text-secondary-400">Celebrate top performers and track achievements</p>
-          </div>
-          <div className="flex rounded-lg bg-white dark:bg-secondary-800 shadow-sm border border-secondary-200 dark:border-secondary-700 p-1">
-            {periods.map(p => (
-              <button
-                key={p.key}
-                onClick={() => setPeriod(p.key)}
-                className={clsx(
-                  'px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200',
-                  period === p.key
-                    ? 'bg-primary-500 text-white shadow-sm'
-                    : 'text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700',
-                )}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
+        <div className="mb-8">
+          <PageHeader
+            title="Leaderboards"
+            subtitle="Celebrate top performers and track achievements"
+          >
+            <div className="flex rounded-lg bg-white dark:bg-secondary-800 shadow-sm border border-secondary-200 dark:border-secondary-700 p-1">
+              {periods.map(p => (
+                <button
+                  key={p.key}
+                  onClick={() => setPeriod(p.key)}
+                  className={clsx(
+                    'px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200',
+                    period === p.key
+                      ? 'bg-primary-500 text-white shadow-sm'
+                      : 'text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700',
+                  )}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </PageHeader>
         </div>
 
         {/* Podium */}
@@ -654,7 +653,7 @@ export function LeaderboardPage() {
                     <thead>
                       <tr className="border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-800/50">
                         {columnHeaders[activeTab].map(header => (
-                          <th key={header} className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">{header}</th>
+                          <th key={header} className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">{header}</th>
                         ))}
                       </tr>
                     </thead>

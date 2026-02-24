@@ -519,13 +519,13 @@ export function AIAccessManagementPage() {
                     className="h-4 w-4 text-violet-600 rounded border-secondary-300 dark:border-secondary-600 focus:ring-violet-500"
                   />
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                   User
                 </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                   Role / Title
                 </th>
-                <th className="text-center px-6 py-3 text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                <th className="text-center px-6 py-3 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                   AI Access
                 </th>
               </tr>
@@ -577,10 +577,10 @@ export function AIAccessManagementPage() {
                             </span>
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                            <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                               {u.firstName} {u.lastName}
                             </p>
-                            <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
+                            <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
                               {u.email}
                             </p>
                           </div>

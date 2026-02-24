@@ -12,7 +12,7 @@
  * Recommends team bonding activities informed by team health and engagement data.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryTeamHealth } from '../../agent-tools-v2';
 import {
   queryCultureDiagnostics,
@@ -43,7 +43,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class SocialBondingAgent extends BaseAgent {
+export class SocialBondingAgent extends AgenticBaseAgent {
   constructor() {
     super('social_bonding', SYSTEM_PROMPT);
   }

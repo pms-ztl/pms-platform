@@ -119,7 +119,7 @@ export function NotificationPreferences({ className }: { className?: string }) {
 
       {/* Channels */}
       <div className="mb-5">
-        <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">Channels</p>
+        <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">Channels</p>
         <div className="divide-y divide-secondary-100 dark:divide-secondary-700">
           <Toggle label="Email" enabled={local.emailEnabled} onChange={(v) => update('emailEnabled', v)} />
           <Toggle label="Push" enabled={local.pushEnabled} onChange={(v) => update('pushEnabled', v)} />
@@ -129,7 +129,7 @@ export function NotificationPreferences({ className }: { className?: string }) {
 
       {/* Notification Types */}
       <div>
-        <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">Notification Types</p>
+        <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">Notification Types</p>
         <div className="divide-y divide-secondary-100 dark:divide-secondary-700">
           <Toggle label="Feedback" enabled={local.feedbackNotifications} onChange={(v) => update('feedbackNotifications', v)} />
           <Toggle label="Reviews" enabled={local.reviewNotifications} onChange={(v) => update('reviewNotifications', v)} />

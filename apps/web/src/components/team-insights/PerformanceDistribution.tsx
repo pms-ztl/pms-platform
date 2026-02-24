@@ -40,7 +40,7 @@ export function PerformanceDistribution({ members, className }: PerformanceDistr
     () => [...members].sort((a, b) => b.score - a.score).map((m) => ({
       ...m,
       shortName: (m.name ?? '').split(' ').map((n) => n[0]).join(''),
-      displayName: (m.name ?? '').length > 15 ? (m.name ?? '').slice(0, 12) + '...' : (m.name ?? '—'),
+      displayName: m.name ?? '—',
     })),
     [members]
   );
@@ -99,14 +99,15 @@ export function PerformanceDistribution({ members, className }: PerformanceDistr
               width={100}
             />
             <Tooltip
+              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
                 const d = payload[0].payload as MemberScore & { displayName: string };
                 return (
-                  <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs space-y-1">
-                    <p className="font-semibold text-secondary-900 dark:text-white">{d.name}</p>
-                    <p className="text-secondary-600 dark:text-secondary-400">Score: {(d.score ?? 0).toFixed(2)}</p>
-                    <p className="text-secondary-600 dark:text-secondary-400">Z-Score: {(d.zScore ?? 0).toFixed(2)}</p>
+                  <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs space-y-1">
+                    <p className="font-semibold text-white">{d.name}</p>
+                    <p className="text-slate-300">Score: {(d.score ?? 0).toFixed(2)}</p>
+                    <p className="text-slate-300">Z-Score: {(d.zScore ?? 0).toFixed(2)}</p>
                     <p style={{ color: CATEGORY_COLORS[d.category] }}>{CATEGORY_LABELS[d.category]}</p>
                   </div>
                 );

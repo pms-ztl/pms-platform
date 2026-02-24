@@ -12,6 +12,7 @@ import { prisma } from '@pms/database';
 import { logger } from '../utils/logger';
 import { DAYS, MS_PER_DAY, INACTIVE_USER_THRESHOLD_DAYS } from '../utils/constants';
 import { createInsightCard } from '../modules/ai/agent-tools';
+import { proactiveScheduler } from '../modules/ai/proactive-scheduler';
 
 /**
  * Initialize AI insight cron jobs.
@@ -57,6 +58,9 @@ async function runDailyInsights(): Promise<void> {
       await checkLicenseUsageInsight(tenant.id, tenant.licenseCount);
       await checkInactiveUsersInsight(tenant.id);
       await checkGoalDeadlinesInsight(tenant.id);
+
+      // Proactive agentic AI checks
+      await proactiveScheduler.runDailyProactive(tenant.id);
     } catch (err) {
       logger.error('[AI CRON] Tenant insight check failed', {
         tenantId: tenant.id,
@@ -82,6 +86,9 @@ async function runWeeklyInsights(): Promise<void> {
   for (const tenant of tenants) {
     try {
       await generateWeeklySummary(tenant.id, tenant.name);
+
+      // Proactive agentic AI checks
+      await proactiveScheduler.runWeeklyProactive(tenant.id);
     } catch (err) {
       logger.error('[AI CRON] Weekly summary failed', {
         tenantId: tenant.id,

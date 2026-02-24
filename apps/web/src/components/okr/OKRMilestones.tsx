@@ -227,7 +227,7 @@ export function OKRMilestones({ goal }: OKRMilestonesProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+        <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
           Milestones
         </h4>
         {total > 0 && (

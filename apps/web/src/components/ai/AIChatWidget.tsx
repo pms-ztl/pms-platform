@@ -23,108 +23,170 @@ import {
   ArrowsPointingOutIcon,
   ClipboardDocumentIcon,
   CheckIcon,
+  MagnifyingGlassIcon,
+  ChartBarIcon,
+  AcademicCapIcon,
+  RocketLaunchIcon,
+  FlagIcon,
+  UsersIcon,
+  ClipboardDocumentListIcon,
+  KeyIcon,
+  LockClosedIcon,
+  ScaleIcon,
+  BriefcaseIcon,
+  HandRaisedIcon,
+  BellIcon,
+  DocumentTextIcon,
+  CpuChipIcon,
+  MoonIcon,
+  ClockIcon,
+  ArrowTrendingDownIcon,
+  ShieldCheckIcon,
+  CloudIcon,
+  ComputerDesktopIcon,
+  BeakerIcon,
+  SpeakerWaveIcon,
+  SunIcon,
+  BookOpenIcon,
+  BoltIcon,
+  EyeIcon,
+  CursorArrowRaysIcon,
+  LightBulbIcon,
+  PencilSquareIcon,
+  PuzzlePieceIcon,
+  UserGroupIcon,
+  StarIcon,
+  ArrowsRightLeftIcon,
+  ArchiveBoxIcon,
+  TrophyIcon,
+  BanknotesIcon,
+  ArrowTrendingUpIcon,
+  BuildingLibraryIcon,
+  ChatBubbleLeftRightIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
+  GlobeAltIcon,
+  HeartIcon,
+  FaceSmileIcon,
+  MegaphoneIcon,
+  ExclamationTriangleIcon,
+  PlayIcon,
+  StopIcon,
 } from '@heroicons/react/24/outline';
 import { aiApi } from '../../lib/api';
 import { useAIChatStore } from '../../store/ai-chat';
 import { useAIWorkspaceStore } from '../../store/ai-workspace';
+import { useVoiceInput } from '../../hooks/useVoiceInput';
+import { useTextToSpeech } from '../../hooks/useTextToSpeech';
+import { VoiceMicButton } from './VoiceMicButton';
+
+// Icon type alias for agent options
+type AgentIcon = React.FC<React.SVGProps<SVGSVGElement>>;
 
 // ── Agent Options (grouped by cluster) ─────────────────────
 
-const AGENT_GROUPS = [
-  { label: '', options: [{ value: '', label: 'Auto-detect (52 agents)', icon: '🤖' }] },
+const AGENT_GROUPS: Array<{
+  label: string;
+  options: Array<{ value: string; label: string; icon: AgentIcon }>;
+}> = [
+  { label: '', options: [{ value: '', label: 'Auto-detect (70 agents)', icon: SparklesIcon }] },
   {
     label: 'Core PMS',
     options: [
-      { value: 'nlp_query', label: 'Data Query', icon: '🔍' },
-      { value: 'performance', label: 'Performance', icon: '🎯' },
-      { value: 'coaching', label: 'Coaching', icon: '🧑‍🏫' },
-      { value: 'career', label: 'Career Dev', icon: '🚀' },
-      { value: 'strategic_alignment', label: 'Strategy', icon: '🎯' },
-      { value: 'workforce_intel', label: 'Workforce Intel', icon: '🧠' },
-      { value: 'report', label: 'Reports', icon: '📋' },
-      { value: 'license', label: 'License', icon: '🔑' },
-      { value: 'security', label: 'Security', icon: '🔒' },
-      { value: 'governance', label: 'Governance', icon: '⚖️' },
-      { value: 'talent_marketplace', label: 'Talent Market', icon: '🏪' },
-      { value: 'conflict_resolution', label: 'Conflict', icon: '🤝' },
-      { value: 'onboarding', label: 'Onboarding', icon: '🎓' },
-      { value: 'notification', label: 'Notifications', icon: '🔔' },
-      { value: 'excel_validation', label: 'Excel AI', icon: '📄' },
+      { value: 'nlp_query',           label: 'Data Query',      icon: MagnifyingGlassIcon },
+      { value: 'performance',          label: 'Performance',     icon: ChartBarIcon },
+      { value: 'coaching',             label: 'Coaching',        icon: AcademicCapIcon },
+      { value: 'career',               label: 'Career Dev',      icon: RocketLaunchIcon },
+      { value: 'strategic_alignment',  label: 'Strategy',        icon: FlagIcon },
+      { value: 'workforce_intel',      label: 'Workforce Intel', icon: UsersIcon },
+      { value: 'report',               label: 'Reports',         icon: ClipboardDocumentListIcon },
+      { value: 'license',              label: 'License',         icon: KeyIcon },
+      { value: 'security',             label: 'Security',        icon: LockClosedIcon },
+      { value: 'governance',           label: 'Governance',      icon: ScaleIcon },
+      { value: 'talent_marketplace',   label: 'Talent Market',   icon: BriefcaseIcon },
+      { value: 'conflict_resolution',  label: 'Conflict',        icon: HandRaisedIcon },
+      { value: 'onboarding',           label: 'Onboarding',      icon: AcademicCapIcon },
+      { value: 'notification',         label: 'Notifications',   icon: BellIcon },
+      { value: 'excel_validation',     label: 'Excel AI',        icon: DocumentTextIcon },
+      { value: 'goal_intelligence',    label: 'Goal Intelligence', icon: FlagIcon },
+      { value: 'performance_signal',   label: 'Perf Signal',     icon: ArrowTrendingUpIcon },
+      { value: 'review_drafter',       label: 'Review Drafter',  icon: PencilSquareIcon },
+      { value: 'compensation_promotion', label: 'Comp & Promo',  icon: TrophyIcon },
+      { value: 'one_on_one_advisor',   label: '1:1 Advisor',     icon: ChatBubbleLeftRightIcon },
     ],
   },
   {
     label: 'Bio-Performance',
     options: [
-      { value: 'neuro_focus', label: 'Neuro Focus', icon: '🧠' },
-      { value: 'circadian_sync', label: 'Circadian Sync', icon: '🌙' },
-      { value: 'micro_break', label: 'Micro Break', icon: '⏰' },
-      { value: 'cortisol_monitor', label: 'Cortisol Monitor', icon: '📉' },
-      { value: 'burnout_interceptor', label: 'Burnout Guard', icon: '🛡️' },
-      { value: 'sleep_optimizer', label: 'Sleep Optimizer', icon: '💤' },
-      { value: 'ergonomics', label: 'Ergonomics', icon: '🪑' },
-      { value: 'hydration_nutrition', label: 'Hydration', icon: '💧' },
-      { value: 'vocal_tone', label: 'Vocal Tone', icon: '🎤' },
-      { value: 'environment_ctrl', label: 'Environment', icon: '🌡️' },
+      { value: 'neuro_focus',         label: 'Neuro Focus',      icon: CpuChipIcon },
+      { value: 'circadian_sync',      label: 'Circadian Sync',   icon: MoonIcon },
+      { value: 'micro_break',         label: 'Micro Break',      icon: ClockIcon },
+      { value: 'cortisol_monitor',    label: 'Cortisol Monitor', icon: ArrowTrendingDownIcon },
+      { value: 'burnout_interceptor', label: 'Burnout Guard',    icon: ShieldCheckIcon },
+      { value: 'sleep_optimizer',     label: 'Sleep Optimizer',  icon: CloudIcon },
+      { value: 'ergonomics',          label: 'Ergonomics',       icon: ComputerDesktopIcon },
+      { value: 'hydration_nutrition', label: 'Hydration',        icon: BeakerIcon },
+      { value: 'vocal_tone',          label: 'Vocal Tone',       icon: SpeakerWaveIcon },
+      { value: 'environment_ctrl',    label: 'Environment',      icon: SunIcon },
     ],
   },
   {
     label: 'Hyper-Learning',
     options: [
-      { value: 'micro_learning', label: 'Micro Learn', icon: '📖' },
-      { value: 'sparring_partner', label: 'Sparring', icon: '🥊' },
-      { value: 'skill_gap_forecaster', label: 'Skill Forecast', icon: '🔮' },
-      { value: 'career_sim', label: 'Career Sim', icon: '🎮' },
-      { value: 'knowledge_broker', label: 'Knowledge Broker', icon: '🤝' },
-      { value: 'linguistic_refiner', label: 'Linguistic', icon: '✍️' },
-      { value: 'curiosity_scout', label: 'Curiosity Scout', icon: '🔭' },
-      { value: 'logic_validator', label: 'Logic Check', icon: '🧩' },
-      { value: 'shadow_learning', label: 'Shadow Learn', icon: '👥' },
-      { value: 'ar_mentor', label: 'AR Mentor', icon: '🤽' },
-      { value: 'credential_ledger', label: 'Credentials', icon: '🎖️' },
-      { value: 'cross_training', label: 'Cross-Training', icon: '🔀' },
+      { value: 'micro_learning',        label: 'Micro Learn',      icon: BookOpenIcon },
+      { value: 'sparring_partner',      label: 'Sparring',         icon: BoltIcon },
+      { value: 'skill_gap_forecaster',  label: 'Skill Forecast',   icon: EyeIcon },
+      { value: 'career_sim',            label: 'Career Sim',       icon: CursorArrowRaysIcon },
+      { value: 'knowledge_broker',      label: 'Knowledge Broker', icon: LightBulbIcon },
+      { value: 'linguistic_refiner',    label: 'Linguistic',       icon: PencilSquareIcon },
+      { value: 'curiosity_scout',       label: 'Curiosity Scout',  icon: MagnifyingGlassIcon },
+      { value: 'logic_validator',       label: 'Logic Check',      icon: PuzzlePieceIcon },
+      { value: 'shadow_learning',       label: 'Shadow Learn',     icon: UserGroupIcon },
+      { value: 'ar_mentor',             label: 'AR Mentor',        icon: SparklesIcon },
+      { value: 'credential_ledger',     label: 'Credentials',      icon: StarIcon },
+      { value: 'cross_training',        label: 'Cross-Training',   icon: ArrowsRightLeftIcon },
     ],
   },
   {
     label: 'Liquid Workforce',
     options: [
-      { value: 'market_value', label: 'Market Value', icon: '📊' },
-      { value: 'task_bidder', label: 'Task Bidder', icon: '📦' },
-      { value: 'gig_sourcer', label: 'Gig Sourcer', icon: '🎪' },
-      { value: 'nano_payment', label: 'Nano Payment', icon: '⭐' },
-      { value: 'succession_sentry', label: 'Succession', icon: '👑' },
-      { value: 'tax_optimizer', label: 'Tax Optimizer', icon: '💵' },
-      { value: 'equity_realizer', label: 'Equity', icon: '💹' },
-      { value: 'pension_guard', label: 'Pension Guard', icon: '🏦' },
-      { value: 'relocation_bot', label: 'Relocation', icon: '✈️' },
-      { value: 'vendor_negotiator', label: 'Vendor Nego', icon: '🔎' },
+      { value: 'market_value',       label: 'Market Value',  icon: ChartBarIcon },
+      { value: 'task_bidder',        label: 'Task Bidder',   icon: ArchiveBoxIcon },
+      { value: 'gig_sourcer',        label: 'Gig Sourcer',   icon: BriefcaseIcon },
+      { value: 'nano_payment',       label: 'Nano Payment',  icon: StarIcon },
+      { value: 'succession_sentry',  label: 'Succession',    icon: TrophyIcon },
+      { value: 'tax_optimizer',      label: 'Tax Optimizer', icon: BanknotesIcon },
+      { value: 'equity_realizer',    label: 'Equity',        icon: ArrowTrendingUpIcon },
+      { value: 'pension_guard',      label: 'Pension Guard', icon: BuildingLibraryIcon },
+      { value: 'relocation_bot',     label: 'Relocation',    icon: PaperAirplaneIcon },
+      { value: 'vendor_negotiator',  label: 'Vendor Nego',   icon: MagnifyingGlassIcon },
     ],
   },
   {
     label: 'Culture & Empathy',
     options: [
-      { value: 'empathy_coach', label: 'Empathy Coach', icon: '💬' },
-      { value: 'culture_weaver', label: 'Culture Weaver', icon: '🌐' },
-      { value: 'mood_radiator', label: 'Mood Radiator', icon: '🌡️' },
-      { value: 'bias_neutralizer', label: 'Bias Neutralizer', icon: '⚖️' },
-      { value: 'conflict_mediator', label: 'Mediator', icon: '🕊️' },
-      { value: 'inclusion_monitor', label: 'Inclusion', icon: '🌈' },
-      { value: 'gratitude_sentinel', label: 'Gratitude', icon: '🙏' },
-      { value: 'social_bonding', label: 'Social Bonding', icon: '🏆' },
-      { value: 'legacy_archivist', label: 'Legacy Archive', icon: '📜' },
-      { value: 'whistleblower', label: 'Whistleblower', icon: '📢' },
+      { value: 'empathy_coach',       label: 'Empathy Coach',    icon: ChatBubbleLeftRightIcon },
+      { value: 'culture_weaver',      label: 'Culture Weaver',   icon: GlobeAltIcon },
+      { value: 'mood_radiator',       label: 'Mood Radiator',    icon: HeartIcon },
+      { value: 'bias_neutralizer',    label: 'Bias Neutralizer', icon: ScaleIcon },
+      { value: 'conflict_mediator',   label: 'Mediator',         icon: HandRaisedIcon },
+      { value: 'inclusion_monitor',   label: 'Inclusion',        icon: FaceSmileIcon },
+      { value: 'gratitude_sentinel',  label: 'Gratitude',        icon: HeartIcon },
+      { value: 'social_bonding',      label: 'Social Bonding',   icon: UserGroupIcon },
+      { value: 'legacy_archivist',    label: 'Legacy Archive',   icon: DocumentTextIcon },
+      { value: 'whistleblower',       label: 'Whistleblower',    icon: MegaphoneIcon },
     ],
   },
   {
     label: 'Governance & Logic',
     options: [
-      { value: 'posh_sentinel', label: 'POSH Sentinel', icon: '🛡️' },
-      { value: 'labor_compliance', label: 'Labor Law', icon: '📜' },
-      { value: 'policy_translator', label: 'Policy Translate', icon: '📖' },
-      { value: 'data_privacy', label: 'Data Privacy', icon: '🔐' },
-      { value: 'audit_trail', label: 'Audit Trail', icon: '🔍' },
-      { value: 'conflict_of_interest', label: 'COI Detector', icon: '⚠️' },
-      { value: 'leave_optimizer', label: 'Leave Optimizer', icon: '🏖️' },
-      { value: 'onboarding_orchestrator', label: 'Onboard Orch', icon: '🎬' },
+      { value: 'posh_sentinel',            label: 'POSH Sentinel',    icon: ShieldCheckIcon },
+      { value: 'labor_compliance',         label: 'Labor Law',         icon: DocumentTextIcon },
+      { value: 'policy_translator',        label: 'Policy Translate',  icon: BookOpenIcon },
+      { value: 'data_privacy',             label: 'Data Privacy',      icon: LockClosedIcon },
+      { value: 'audit_trail',              label: 'Audit Trail',       icon: MagnifyingGlassIcon },
+      { value: 'conflict_of_interest',     label: 'COI Detector',      icon: ExclamationTriangleIcon },
+      { value: 'leave_optimizer',          label: 'Leave Optimizer',   icon: SunIcon },
+      { value: 'onboarding_orchestrator',  label: 'Onboard Orch',      icon: PlayIcon },
     ],
   },
 ];
@@ -174,8 +236,8 @@ function renderMarkdown(content: string, isDark: boolean): string {
   html = html.replace(
     /^### (.+)$/gm,
     isDark
-      ? '<h4 class="mt-2.5 mb-1 text-[13px] font-bold uppercase tracking-wide text-indigo-400">$1</h4>'
-      : '<h4 class="mt-2.5 mb-1 text-[13px] font-bold uppercase tracking-wide text-indigo-600">$1</h4>',
+      ? '<h4 class="mt-2.5 mb-1 text-[13px] font-bold tracking-wide text-indigo-400">$1</h4>'
+      : '<h4 class="mt-2.5 mb-1 text-[13px] font-bold tracking-wide text-indigo-600">$1</h4>',
   );
   html = html.replace(
     /^## (.+)$/gm,
@@ -267,9 +329,38 @@ export function AIChatWidget() {
   >([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [agentSelectorOpen, setAgentSelectorOpen] = useState(false);
+  const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+
+  // ── Voice Input (Speech-to-Text) ────────────────────────────
+  const voice = useVoiceInput({
+    lang: 'en-US',
+    continuous: true,
+    onResult: (finalTranscript) => {
+      setMessage(finalTranscript);
+    },
+    onError: (err) => {
+      console.warn('[VoiceInput]', err);
+    },
+  });
+
+  // ── Text-to-Speech ──────────────────────────────────────────
+  const tts = useTextToSpeech({ lang: 'en-US', rate: 1 });
+
+  // Track which message is being spoken
+  useEffect(() => {
+    if (!tts.isSpeaking) setSpeakingMsgId(null);
+  }, [tts.isSpeaking]);
+
+  // Live-fill input with voice interim text while user is still speaking
+  useEffect(() => {
+    if (voice.isListening && voice.interimTranscript) {
+      const base = voice.transcript ? `${voice.transcript} ` : '';
+      setMessage(`${base}${voice.interimTranscript}`);
+    }
+  }, [voice.interimTranscript, voice.transcript, voice.isListening]);
 
   // Fetch conversation history
   const { data: conversationData } = useQuery({
@@ -333,6 +424,9 @@ export function AIChatWidget() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!message.trim() || chatMutation.isPending) return;
+    // Stop voice listening if active
+    if (voice.isListening) voice.stopListening();
+    voice.clearTranscript();
     setLocalMessages((prev) => [
       ...prev,
       { role: 'user', content: message.trim(), id: `user-${Date.now()}`, timestamp: Date.now() },
@@ -340,6 +434,17 @@ export function AIChatWidget() {
     chatMutation.mutate(message.trim());
     setMessage('');
   };
+
+  const handleSpeak = useCallback((msgId: string, content: string) => {
+    if (speakingMsgId === msgId) {
+      tts.stop();
+      setSpeakingMsgId(null);
+    } else {
+      tts.stop();
+      setSpeakingMsgId(msgId);
+      tts.speak(content);
+    }
+  }, [speakingMsgId, tts]);
 
   const handleNewChat = () => {
     setConversation(null);
@@ -444,7 +549,7 @@ export function AIChatWidget() {
         }}
         title="Open AI Assistant"
       >
-        <SparklesIcon className="h-6 w-6 text-white transition-transform duration-500 group-hover:rotate-12" />
+        <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6 text-white transition-transform duration-500 group-hover:scale-110" />
         <span
           className="absolute inset-0 rounded-full animate-ping opacity-20"
           style={{ background: 'linear-gradient(135deg, #6366f1, #06b6d4)' }}
@@ -480,7 +585,7 @@ export function AIChatWidget() {
               boxShadow: '0 0 12px rgba(99, 102, 241, 0.4)',
             }}
           >
-            <SparklesIcon className="h-4 w-4 text-white" />
+            <ChatBubbleOvalLeftEllipsisIcon className="h-4 w-4 text-white" />
           </div>
           <div>
             <h3 className={`text-sm font-bold tracking-tight ${t.titleColor}`}>Neural Swarm</h3>
@@ -489,21 +594,32 @@ export function AIChatWidget() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
               </span>
-              <span className={`text-[10px] font-medium ${t.statusDotText}`}>65 Agents Active</span>
+              <span className={`text-[10px] font-medium ${t.statusDotText}`}>70 Agents Active</span>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-1.5">
+          {/* Prominent "Open Workspace" button */}
           <button
             onClick={() => {
-              useAIWorkspaceStore.getState().setAiMode(true);
-              setOpen(false);
-              if (window.location.pathname !== '/dashboard') window.location.href = '/dashboard';
+              const ws = useAIWorkspaceStore.getState();
+              if (ws.aiTransitionPhase === 'idle') {
+                ws.setAiTransitionPhase('entering');
+                setOpen(false);
+                if (window.location.pathname !== '/dashboard') window.location.href = '/dashboard';
+              }
             }}
-            className={`rounded-lg p-2 transition-all ${t.headerBtnClass}`}
-            title="Open full AI Workspace"
+            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-all hover:scale-105 active:scale-95"
+            style={{
+              background: 'linear-gradient(135deg, rgba(99,102,241,0.6), rgba(139,92,246,0.6))',
+              border: '1px solid rgba(255,255,255,0.2)',
+              color: 'white',
+              boxShadow: '0 0 10px rgba(99,102,241,0.4)',
+            }}
+            title="Open full Neural Swarm workspace"
           >
-            <ArrowsPointingOutIcon className="h-4 w-4" />
+            <ArrowsPointingOutIcon className="h-3.5 w-3.5 flex-shrink-0" />
+            <span>Full View</span>
           </button>
           <button
             onClick={handleNewChat}
@@ -531,7 +647,9 @@ export function AIChatWidget() {
             border: `1px solid ${t.selectorBorder}`,
           }}
         >
-          <span className="text-base">{selectedAgent?.icon ?? '🤖'}</span>
+          {selectedAgent
+            ? <selectedAgent.icon className="h-4 w-4 flex-shrink-0" />
+            : <ChatBubbleOvalLeftEllipsisIcon className="h-4 w-4 flex-shrink-0" />}
           <span className={`flex-1 text-left font-medium ${t.selectorText}`}>
             {selectedAgent?.label ?? 'Auto-detect'}
           </span>
@@ -557,7 +675,7 @@ export function AIChatWidget() {
             {AGENT_GROUPS.map((group) => (
               <div key={group.label || 'default'}>
                 {group.label && (
-                  <div className={`px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-wider ${t.groupLabel}`}>
+                  <div className={`px-3 pt-2 pb-1 text-[10px] font-bold tracking-wider ${t.groupLabel}`}>
                     {group.label}
                   </div>
                 )}
@@ -572,7 +690,7 @@ export function AIChatWidget() {
                       (agentType ?? '') === opt.value ? t.optionActive : t.optionText
                     }`}
                   >
-                    <span>{opt.icon}</span>
+                    <opt.icon className="h-3.5 w-3.5 flex-shrink-0 opacity-75" />
                     <span>{opt.label}</span>
                   </button>
                 ))}
@@ -595,7 +713,7 @@ export function AIChatWidget() {
                   boxShadow: '0 0 30px rgba(99,102,241,0.1)',
                 }}
               >
-                <SparklesIcon className="h-7 w-7 text-indigo-400" />
+                <ChatBubbleOvalLeftEllipsisIcon className="h-7 w-7 text-indigo-400" />
               </div>
               <span
                 className="absolute -inset-2 rounded-3xl animate-pulse opacity-20"
@@ -608,9 +726,9 @@ export function AIChatWidget() {
             </p>
             <div className="mt-5 flex flex-wrap gap-2 justify-center">
               {[
-                { text: 'Who are my top performers?', emoji: '🏆' },
-                { text: 'How many licenses left?', emoji: '🔑' },
-                { text: 'Help me set Q2 goals', emoji: '🎯' },
+                { text: 'Who are my top performers?', icon: TrophyIcon },
+                { text: 'How many licenses left?', icon: KeyIcon },
+                { text: 'Help me set Q2 goals', icon: FlagIcon },
               ].map((suggestion) => (
                 <button
                   key={suggestion.text}
@@ -624,7 +742,7 @@ export function AIChatWidget() {
                     border: `1px solid ${t.suggestionBorder}`,
                   }}
                 >
-                  <span>{suggestion.emoji}</span>
+                  <suggestion.icon className="h-3.5 w-3.5 opacity-60 flex-shrink-0" />
                   <span className={`transition-colors ${t.suggestionText}`}>{suggestion.text}</span>
                 </button>
               ))}
@@ -640,7 +758,7 @@ export function AIChatWidget() {
                 className="flex-shrink-0 mt-0.5 flex h-7 w-7 items-center justify-center rounded-lg"
                 style={{ background: t.aiAvatarBg, boxShadow: '0 0 8px rgba(99,102,241,0.3)' }}
               >
-                <SparklesIcon className="h-3.5 w-3.5 text-white" />
+                <ChatBubbleOvalLeftEllipsisIcon className="h-3.5 w-3.5 text-white" />
               </div>
             ) : (
               <div
@@ -677,20 +795,38 @@ export function AIChatWidget() {
                 )}
               </div>
 
-              {/* Copy */}
+              {/* Copy + Speak buttons */}
               {msg.role === 'assistant' && (
-                <button
-                  onClick={() => handleCopy(msg.id, msg.content)}
-                  className={`absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-lg opacity-0 transition-all group-hover:opacity-100 ${t.copyBtnBg} ${t.copyBtnText}`}
-                  style={{ border: `1px solid ${t.copyBtnBorder}` }}
-                  title="Copy to clipboard"
-                >
-                  {copiedId === msg.id ? (
-                    <CheckIcon className="h-3 w-3 text-emerald-500" />
-                  ) : (
-                    <ClipboardDocumentIcon className="h-3 w-3" />
+                <div className="absolute -right-1 -top-1 flex items-center gap-0.5 opacity-0 transition-all group-hover:opacity-100">
+                  {/* TTS Speaker button */}
+                  {tts.isSupported && (
+                    <button
+                      onClick={() => handleSpeak(msg.id, msg.content)}
+                      className={`flex h-6 w-6 items-center justify-center rounded-lg ${t.copyBtnBg} transition-all`}
+                      style={{ border: `1px solid ${t.copyBtnBorder}` }}
+                      title={speakingMsgId === msg.id ? 'Stop speaking' : 'Read aloud'}
+                    >
+                      {speakingMsgId === msg.id ? (
+                        <StopIcon className="h-3 w-3 text-red-400" />
+                      ) : (
+                        <SpeakerWaveIcon className={`h-3 w-3 ${isDark ? 'text-gray-400 hover:text-indigo-300' : 'text-gray-400 hover:text-indigo-500'}`} />
+                      )}
+                    </button>
                   )}
-                </button>
+                  {/* Copy button */}
+                  <button
+                    onClick={() => handleCopy(msg.id, msg.content)}
+                    className={`flex h-6 w-6 items-center justify-center rounded-lg ${t.copyBtnBg} ${t.copyBtnText}`}
+                    style={{ border: `1px solid ${t.copyBtnBorder}` }}
+                    title="Copy to clipboard"
+                  >
+                    {copiedId === msg.id ? (
+                      <CheckIcon className="h-3 w-3 text-emerald-500" />
+                    ) : (
+                      <ClipboardDocumentIcon className="h-3 w-3" />
+                    )}
+                  </button>
+                </div>
               )}
 
               {/* Timestamp */}
@@ -744,9 +880,17 @@ export function AIChatWidget() {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Ask anything..."
+            placeholder={voice.isListening ? 'Listening...' : 'Ask anything...'}
             disabled={chatMutation.isPending}
             className={`flex-1 bg-transparent py-2.5 text-sm focus:outline-none disabled:opacity-50 ${t.inputText}`}
+          />
+          {/* Voice mic button */}
+          <VoiceMicButton
+            isListening={voice.isListening}
+            isSupported={voice.isSupported}
+            onClick={voice.toggleListening}
+            isDark={isDark}
+            interimTranscript={voice.interimTranscript}
           />
           <button
             type="submit"

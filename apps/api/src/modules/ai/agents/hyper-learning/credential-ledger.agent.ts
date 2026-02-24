@@ -12,7 +12,7 @@
  * Maintains a complete ledger of professional credentials and drives timely renewals.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryLearningProgress, querySkillGaps } from '../../agent-tools-v2';
 
 // -- System Prompt -----------------------------------------------------------
@@ -40,7 +40,7 @@ Credential management principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class CredentialLedgerAgent extends BaseAgent {
+export class CredentialLedgerAgent extends AgenticBaseAgent {
   constructor() {
     super('credential_ledger', SYSTEM_PROMPT);
   }

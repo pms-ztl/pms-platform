@@ -13,7 +13,7 @@
  * guidance on tone, delivery, and communication effectiveness.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryFeedback } from '../../agent-tools';
 import { queryCommunicationPatterns } from '../../agent-tools-v2';
 
@@ -42,7 +42,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class VocalToneAgent extends BaseAgent {
+export class VocalToneAgent extends AgenticBaseAgent {
   constructor() {
     super('vocal_tone', SYSTEM_PROMPT);
   }

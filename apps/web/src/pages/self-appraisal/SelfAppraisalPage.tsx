@@ -28,6 +28,7 @@ import { format } from 'date-fns';
 import { goalsApi, reviewsApi, analyticsApi, feedbackApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 interface CompetencyRating {
   id: string;
@@ -132,12 +133,7 @@ export function SelfAppraisalPage() {
   return (
     <div className="space-y-6 pb-8">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Self Appraisal</h1>
-        <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-          Review your performance and submit your self-assessment
-        </p>
-      </div>
+      <PageHeader title="Self Appraisal" subtitle="Review your performance and submit your self-assessment" />
 
       {/* Performance Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -161,7 +157,7 @@ export function SelfAppraisalPage() {
               <ArrowTrendingUpIcon className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <p className="text-sm text-secondary-500 dark:text-secondary-400">Avg Progress</p>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">Average Progress</p>
               <p className="text-2xl font-bold text-secondary-900 dark:text-white">{avgProgress}%</p>
             </div>
           </div>

@@ -113,7 +113,7 @@ export function KeyboardShortcuts() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {SHORTCUT_GROUPS.map((group) => (
           <div key={group.label}>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">
+            <h3 className="text-xs font-bold tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">
               {group.label}
             </h3>
             <ul className="space-y-2">

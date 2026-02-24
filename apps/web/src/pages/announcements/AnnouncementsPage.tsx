@@ -29,6 +29,7 @@ import { format } from 'date-fns';
 
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -118,9 +119,8 @@ const priorityIcons: Record<string, React.ReactNode> = {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function truncateContent(content: string, maxLength = 150): string {
-  if (content.length <= maxLength) return content;
-  return content.slice(0, maxLength).trimEnd() + '...';
+function truncateContent(content: string, _maxLength = 150): string {
+  return content;
 }
 
 function getInitials(firstName?: string, lastName?: string): string {
@@ -360,22 +360,14 @@ export function AnnouncementsPage() {
   return (
     <div className="space-y-6">
       {/* ---- Header ---- */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
-            Announcements
-          </h1>
-          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-            Stay informed with company-wide announcements, policy updates, and recognitions
-          </p>
-        </div>
+      <PageHeader title="Announcements" subtitle="Stay informed with company-wide announcements, policy updates, and recognitions">
         {isManager && (
           <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
             <PlusIcon className="h-5 w-5" />
             New Announcement
           </button>
         )}
-      </div>
+      </PageHeader>
 
       {/* ---- Summary Cards ---- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -467,7 +459,7 @@ export function AnnouncementsPage() {
       {/* ---- Pinned Announcements ---- */}
       {pinnedAnnouncements.length > 0 && (
         <div className="space-y-3">
-          <h2 className="flex items-center gap-2 text-sm font-semibold text-secondary-700 dark:text-secondary-300 uppercase tracking-wider">
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-secondary-700 dark:text-secondary-300 tracking-wider">
             <MapPinIcon className="h-4 w-4 text-amber-500" />
             Pinned Announcements
           </h2>
@@ -493,7 +485,7 @@ export function AnnouncementsPage() {
                     <h3 className="text-base font-semibold text-secondary-900 dark:text-white mt-2">
                       {a.title}
                     </h3>
-                    <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1 line-clamp-2">
+                    <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1">
                       {truncateContent(a.content, 200)}
                     </p>
                     <div className="flex items-center gap-3 mt-3 text-xs text-secondary-500 dark:text-secondary-400">
@@ -544,7 +536,7 @@ export function AnnouncementsPage() {
       {/* ---- Main Announcements List ---- */}
       <div className="space-y-3">
         {pinnedAnnouncements.length > 0 && regularAnnouncements.length > 0 && (
-          <h2 className="flex items-center gap-2 text-sm font-semibold text-secondary-700 dark:text-secondary-300 uppercase tracking-wider">
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-secondary-700 dark:text-secondary-300 tracking-wider">
             <MegaphoneIcon className="h-4 w-4" />
             All Announcements
           </h2>
@@ -955,7 +947,7 @@ export function AnnouncementsPage() {
               {/* Preview */}
               {formState.title && (
                 <div className="border border-dashed border-secondary-300 dark:border-secondary-600 rounded-lg p-4">
-                  <p className="text-xs font-medium text-secondary-400 dark:text-secondary-500 uppercase tracking-wider mb-2">
+                  <p className="text-xs font-medium text-secondary-400 dark:text-secondary-500 tracking-wider mb-2">
                     Preview
                   </p>
                   <div className="flex items-center gap-2 mb-2">
@@ -970,7 +962,7 @@ export function AnnouncementsPage() {
                     {formState.title}
                   </h4>
                   {formState.content && (
-                    <p className="text-xs text-secondary-600 dark:text-secondary-400 mt-1 line-clamp-3 whitespace-pre-line">
+                    <p className="text-xs text-secondary-600 dark:text-secondary-400 mt-1 whitespace-pre-line">
                       {truncateContent(formState.content, 200)}
                     </p>
                   )}

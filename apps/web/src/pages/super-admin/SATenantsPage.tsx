@@ -440,7 +440,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Organization Info */}
             <fieldset className="space-y-4">
-              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Organization
               </legend>
 
@@ -479,7 +479,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
 
             {/* Subscription Settings */}
             <fieldset className="space-y-4">
-              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Subscription
               </legend>
 
@@ -536,7 +536,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
 
             {/* Initial Admin Account */}
             <fieldset className="space-y-4">
-              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Initial Admin Account
               </legend>
 
@@ -586,7 +586,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
 
             {/* Optional Settings */}
             <fieldset className="space-y-4">
-              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Optional Settings
               </legend>
 
@@ -634,7 +634,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
 
             {/* Roles Configuration */}
             <fieldset className="space-y-4">
-              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Roles Configuration
               </legend>
 

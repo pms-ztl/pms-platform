@@ -37,7 +37,7 @@ export function SetPasswordPage() {
     }
 
     if (!passwordRegex.test(password)) {
-      setError('Password must contain uppercase, lowercase, number, and special character (@$!%*?&)');
+      setError('Password must contain, lowercase, number, and special character (@$!%*?&)');
       return;
     }
 

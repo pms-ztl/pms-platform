@@ -267,7 +267,7 @@ export function OKRCustomFields({ goal }: OKRCustomFieldsProps) {
 
   return (
     <div>
-      <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">
+      <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
         Custom Fields
       </h4>
 
@@ -279,7 +279,7 @@ export function OKRCustomFields({ goal }: OKRCustomFieldsProps) {
       <div className="space-y-1.5">
         {fields.map((field) => (
           <div key={field.key} className="group flex items-center gap-2 py-1">
-            <span className="text-[10px] font-medium text-secondary-500 dark:text-secondary-400 w-24 shrink-0 truncate">
+            <span className="text-[10px] font-medium text-secondary-500 dark:text-secondary-400 w-24 shrink-0 break-words">
               {field.label}
             </span>
             {editingKey === field.key ? (

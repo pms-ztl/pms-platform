@@ -13,6 +13,7 @@ import {
   BoltIcon,
   NoSymbolIcon,
 } from '@heroicons/react/24/outline';
+import { PageHeader } from '@/components/ui';
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api/client';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -142,9 +143,9 @@ function formatDate(iso: string | null): string {
 function targetSummary(policy: AccessPolicy): string {
   const parts: string[] = [];
   if (policy.targetRoles?.length) parts.push(`${policy.targetRoles.length} role(s)`);
-  if (policy.targetDepartments?.length) parts.push(`${policy.targetDepartments.length} dept(s)`);
+  if (policy.targetDepartments?.length) parts.push(`${policy.targetDepartments.length} department(s)`);
   if (policy.targetTeams?.length) parts.push(`${policy.targetTeams.length} team(s)`);
-  if (policy.targetLevels?.length) parts.push(`Lvl ${policy.targetLevels.join(',')}`);
+  if (policy.targetLevels?.length) parts.push(`Level ${policy.targetLevels.join(',')}`);
   return parts.length > 0 ? parts.join(', ') : 'No targets';
 }
 
@@ -420,13 +421,7 @@ export function AccessPoliciesPage() {
   return (
     <div className="space-y-6">
       {/* ---- Page header ---- */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Access Policies</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Create and manage access control policies for your organization.
-          </p>
-        </div>
+      <PageHeader title="Access Policies" subtitle="Create and manage access control policies for your organization.">
         <button
           onClick={openCreateModal}
           className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-colors"
@@ -434,7 +429,7 @@ export function AccessPoliciesPage() {
           <PlusIcon className="h-5 w-5" />
           Create Policy
         </button>
-      </div>
+      </PageHeader>
 
       {/* ---- Status tabs ---- */}
       <div className="border-b border-secondary-200 dark:border-secondary-700">
@@ -495,25 +490,25 @@ export function AccessPoliciesPage() {
           <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
             <thead>
               <tr className="bg-secondary-50 dark:bg-secondary-800/50">
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                <th className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                   Name
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                <th className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                   Type
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                <th className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                   Status
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                <th className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                   Effect
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                <th className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                   Priority
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                <th className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                   Targets
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                <th className="px-4 py-3 text-right text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400">
                   Actions
                 </th>
               </tr>
@@ -529,11 +524,11 @@ export function AccessPoliciesPage() {
                     {/* Name */}
                     <td className="px-4 py-3">
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-secondary-900 dark:text-white truncate max-w-[220px]">
+                        <p className="text-sm font-medium text-secondary-900 dark:text-white break-words max-w-[220px]">
                           {policy.name}
                         </p>
                         {policy.description && (
-                          <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate max-w-[220px]">
+                          <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words max-w-[220px]">
                             {policy.description}
                           </p>
                         )}
@@ -569,7 +564,7 @@ export function AccessPoliciesPage() {
                       {policy.priority}
                     </td>
                     {/* Targets */}
-                    <td className="px-4 py-3 text-xs text-secondary-600 dark:text-secondary-400 max-w-[180px] truncate">
+                    <td className="px-4 py-3 text-xs text-secondary-600 dark:text-secondary-400 max-w-[180px] break-words">
                       {targetSummary(policy)}
                     </td>
                     {/* Actions */}

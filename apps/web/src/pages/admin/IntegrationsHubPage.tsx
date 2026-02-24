@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { integrationsApi, type IntegrationConnector, type Integration, type SyncHistoryEntry } from '@/lib/api/integrations';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -202,14 +203,7 @@ export function IntegrationsHubPage() {
   return (
     <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Integrations Hub</h1>
-          <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
-            Connect your HRIS, productivity, and collaboration tools
-          </p>
-        </div>
-      </div>
+      <PageHeader title="Integrations Hub" subtitle="Connect your HRIS, productivity, and collaboration tools" />
 
       {/* Stats row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -379,7 +373,7 @@ export function IntegrationsHubPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-secondary-900 dark:text-white text-sm">{connector.name}</p>
-                    <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 line-clamp-2">{connector.description}</p>
+                    <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{connector.description}</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-1 mt-3">

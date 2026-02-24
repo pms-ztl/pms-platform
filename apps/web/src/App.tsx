@@ -5,6 +5,7 @@ import { useAuthStore } from '@/store/auth';
 import { canAccess } from '@/store/auth';
 import { useThemeStore } from '@/store/theme';
 import { authApi } from '@/lib/api';
+import { ServerUnavailableError } from '@/lib/api/client';
 
 /** Check if user roles include any super-admin variant (handles DB name vs enum mismatch) */
 const SUPER_ADMIN_ALIASES = ['SUPER_ADMIN', 'Super Admin', 'SYSTEM_ADMIN', 'System Admin'];
@@ -238,7 +239,7 @@ function App() {
   // for all modes: light, dark, deep-dark, and system.
   useThemeStore();
 
-  // Check auth on mount
+  // Check auth on mount — with startup-race retry
   useEffect(() => {
     async function checkAuth() {
       if (!accessToken) {
@@ -246,11 +247,26 @@ function App() {
         return;
       }
 
-      try {
-        const user = await authApi.me();
-        setUser(user);
-      } catch {
-        logout();
+      // Retry up to 3 times with exponential backoff (1.5 s → 3 s → 4.5 s).
+      // This covers the race condition where the API server is still initialising
+      // when the Vite dev server (and browser) are already ready.
+      const MAX_ATTEMPTS = 3;
+      for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+        try {
+          const user = await authApi.me();
+          setUser(user);
+          return; // success — stop retrying
+        } catch (err) {
+          const isUnavailable = err instanceof ServerUnavailableError;
+          if (isUnavailable && attempt < MAX_ATTEMPTS - 1) {
+            // API not ready yet — wait then retry
+            await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+            continue;
+          }
+          // Real auth failure (401/403) or retries exhausted — clear session
+          logout();
+          return;
+        }
       }
     }
 

@@ -12,7 +12,7 @@
  * Helps employees understand and optimize their equity compensation components.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryCompensationData } from '../../agent-tools-v3';
 
 // -- System Prompt -----------------------------------------------------------
@@ -40,7 +40,7 @@ Advisory principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class EquityRealizerAgent extends BaseAgent {
+export class EquityRealizerAgent extends AgenticBaseAgent {
   constructor() {
     super('equity_realizer', SYSTEM_PROMPT);
   }

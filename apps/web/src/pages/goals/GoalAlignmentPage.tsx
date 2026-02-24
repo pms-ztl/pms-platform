@@ -7,6 +7,7 @@ import {
 import clsx from 'clsx';
 import { goalsApi, type Goal } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { PageHeader } from '@/components/ui';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 const GOAL_TYPES = ['STRATEGIC', 'DEPARTMENTAL', 'TEAM', 'INDIVIDUAL'] as const;
@@ -117,9 +118,9 @@ function TreeNodeCard({ goal, depth, isLast, onSelect, selectedId, expandedMap, 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <span className={clsx('w-2 h-2 rounded-full flex-shrink-0', typeDotColors[goal.type] || 'bg-secondary-400')} />
-              <span className="text-sm font-medium text-secondary-900 dark:text-white truncate">{goal.title}</span>
+              <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">{goal.title}</span>
             </div>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-2 truncate">
+            <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-2 break-words">
               {goal.owner?.firstName} {goal.owner?.lastName}
             </p>
             <div className="flex items-center gap-2">
@@ -166,12 +167,12 @@ function ListRow({ goal, depth, onSelect, selectedId, expandedMap, toggleExpand 
           {expanded ? <ChevronDownIcon className="h-4 w-4 text-secondary-400" /> : <ChevronRightIcon className="h-4 w-4 text-secondary-400" />}
         </button>
         {depth > 0 && <span className="text-[10px] text-secondary-400 font-mono flex-shrink-0">{'--'.repeat(depth)}</span>}
-        <span className="flex-1 text-sm font-medium text-secondary-900 dark:text-white truncate min-w-0">{goal.title}</span>
+        <span className="flex-1 text-sm font-medium text-secondary-900 dark:text-white break-words min-w-0">{goal.title}</span>
         <div className="hidden sm:flex items-center gap-1.5 min-w-[110px]">
           <div className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[9px] font-bold text-primary-700 dark:text-primary-300 flex-shrink-0">
             {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
           </div>
-          <span className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{goal.owner?.firstName} {goal.owner?.lastName}</span>
+          <span className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{goal.owner?.firstName} {goal.owner?.lastName}</span>
         </div>
         <span className={clsx('hidden md:inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded flex-shrink-0', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
           {goal.type?.replace('_', ' ')}
@@ -206,7 +207,7 @@ function DetailPanel({ goal, onClose }: { goal: Goal; onClose: () => void }) {
   return (
     <div className="h-full flex flex-col bg-white dark:bg-secondary-800 border-l border-secondary-200 dark:border-secondary-700">
       <div className="flex items-center justify-between px-4 py-3 border-b border-secondary-200 dark:border-secondary-700">
-        <h3 className="text-sm font-semibold text-secondary-900 dark:text-white truncate">Goal Details</h3>
+        <h3 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">Goal Details</h3>
         <button onClick={onClose} className="p-1 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700">
           <XMarkIcon className="h-4 w-4 text-secondary-500" />
         </button>
@@ -253,11 +254,11 @@ function DetailPanel({ goal, onClose }: { goal: Goal; onClose: () => void }) {
         {goal.targetValue != null && (
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-secondary-50 dark:bg-secondary-900 rounded-lg p-3">
-              <p className="text-[10px] uppercase tracking-wide text-secondary-500 dark:text-secondary-400 mb-0.5">Target</p>
+              <p className="text-[10px] tracking-wide text-secondary-500 dark:text-secondary-400 mb-0.5">Target</p>
               <p className="text-sm font-bold text-secondary-900 dark:text-white">{goal.targetValue}{goal.unit ? ` ${goal.unit}` : ''}</p>
             </div>
             <div className="bg-secondary-50 dark:bg-secondary-900 rounded-lg p-3">
-              <p className="text-[10px] uppercase tracking-wide text-secondary-500 dark:text-secondary-400 mb-0.5">Current</p>
+              <p className="text-[10px] tracking-wide text-secondary-500 dark:text-secondary-400 mb-0.5">Current</p>
               <p className="text-sm font-bold text-secondary-900 dark:text-white">{goal.currentValue ?? 0}{goal.unit ? ` ${goal.unit}` : ''}</p>
             </div>
           </div>
@@ -283,7 +284,7 @@ function DetailPanel({ goal, onClose }: { goal: Goal; onClose: () => void }) {
         {/* Parent Goal */}
         {goal.parentGoal && (
           <div>
-            <p className="text-[10px] uppercase tracking-wide text-secondary-500 dark:text-secondary-400 mb-1">Parent Goal</p>
+            <p className="text-[10px] tracking-wide text-secondary-500 dark:text-secondary-400 mb-1">Parent Goal</p>
             <a href={`/goals/${goal.parentGoal.id}`} className="text-sm text-primary-600 dark:text-primary-400 hover:underline inline-flex items-center gap-1">
               {goal.parentGoal.title} <ArrowTopRightOnSquareIcon className="h-3 w-3" />
             </a>
@@ -292,7 +293,7 @@ function DetailPanel({ goal, onClose }: { goal: Goal; onClose: () => void }) {
         {/* Contribution Weight */}
         {goal.weight != null && (
           <div>
-            <p className="text-[10px] uppercase tracking-wide text-secondary-500 dark:text-secondary-400 mb-1">Contribution Weight</p>
+            <p className="text-[10px] tracking-wide text-secondary-500 dark:text-secondary-400 mb-1">Contribution Weight</p>
             <div className="flex items-center gap-2">
               <div className="w-full h-1.5 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
                 <div className="h-full rounded-full bg-primary-500" style={{ width: `${Math.min((goal.weight / 10) * 100, 100)}%` }} />
@@ -304,12 +305,12 @@ function DetailPanel({ goal, onClose }: { goal: Goal; onClose: () => void }) {
         {/* Child Goals */}
         {goal.childGoals && goal.childGoals.length > 0 && (
           <div>
-            <p className="text-[10px] uppercase tracking-wide text-secondary-500 dark:text-secondary-400 mb-2">Child Goals ({goal.childGoals.length})</p>
+            <p className="text-[10px] tracking-wide text-secondary-500 dark:text-secondary-400 mb-2">Child Goals ({goal.childGoals.length})</p>
             <div className="space-y-2">
               {goal.childGoals.map((child) => (
                 <div key={child.id} className="flex items-center gap-2 bg-secondary-50 dark:bg-secondary-900 rounded-lg p-2">
                   <span className={clsx('w-1.5 h-1.5 rounded-full flex-shrink-0', typeDotColors[child.type] || 'bg-secondary-400')} />
-                  <span className="text-xs text-secondary-800 dark:text-secondary-200 truncate flex-1">{child.title}</span>
+                  <span className="text-xs text-secondary-800 dark:text-secondary-200 break-words flex-1">{child.title}</span>
                   <div className="w-10 h-1 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden flex-shrink-0">
                     <div className={clsx('h-full rounded-full', getProgressColor(child))} style={{ width: `${Math.min(child.progress, 100)}%` }} />
                   </div>
@@ -345,13 +346,13 @@ function StatsBar({ goals }: { goals: Goal[] }) {
     { label: 'On Track', value: pct(onTrack), cls: 'text-success-600 dark:text-success-400' },
     { label: 'At Risk', value: pct(atRisk), cls: 'text-warning-600 dark:text-warning-400' },
     { label: 'Behind', value: pct(behind), cls: 'text-danger-600 dark:text-danger-400' },
-    { label: 'Avg Progress', value: `${avg}%`, cls: 'text-primary-600 dark:text-primary-400' },
+    { label: 'Average Progress', value: `${avg}%`, cls: 'text-primary-600 dark:text-primary-400' },
   ];
   return (
     <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
       {stats.map((s) => (
         <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700 px-4 py-3">
-          <p className="text-[10px] uppercase tracking-wide text-secondary-500 dark:text-secondary-400">{s.label}</p>
+          <p className="text-[10px] tracking-wide text-secondary-500 dark:text-secondary-400">{s.label}</p>
           <p className={clsx('text-xl font-bold mt-0.5', s.cls)}>{s.value}</p>
         </div>
       ))}
@@ -413,13 +414,9 @@ export function GoalAlignmentPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Goal Alignment</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">Visualize how goals cascade across the organization</p>
-        </div>
+      <PageHeader title="Goal Alignment" subtitle="Visualize how goals cascade across the organization">
         {!isMobile && (
-          <div className="flex items-center gap-1 bg-secondary-100 dark:bg-secondary-800 rounded-lg p-1 self-start">
+          <div className="flex items-center gap-1 bg-secondary-100 dark:bg-secondary-800 rounded-lg p-1">
             {(['tree', 'list'] as const).map((mode) => (
               <button key={mode} onClick={() => setViewMode(mode)}
                 className={clsx('px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1',
@@ -435,7 +432,7 @@ export function GoalAlignmentPage() {
             ))}
           </div>
         )}
-      </div>
+      </PageHeader>
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
@@ -500,7 +497,7 @@ export function GoalAlignmentPage() {
             )}
             {effectiveView === 'list' && (
               <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
-                <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-secondary-50 dark:bg-secondary-900 border-b border-secondary-200 dark:border-secondary-700 text-[10px] font-medium uppercase tracking-wider text-secondary-500 dark:text-secondary-400">
+                <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-secondary-50 dark:bg-secondary-900 border-b border-secondary-200 dark:border-secondary-700 text-[10px] font-medium tracking-wider text-secondary-500 dark:text-secondary-400">
                   <span className="w-5" />
                   <span className="flex-1">Goal</span>
                   <span className="min-w-[110px]">Owner</span>

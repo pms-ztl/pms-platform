@@ -60,7 +60,7 @@ function ManagerGoalCascade({ teamTreeData, userId }: ManagerGoalCascadeProps) {
           </div>
           <div className="text-center p-4 rounded-xl border transition-all duration-300 elastic-scale bg-blue-50 dark:bg-blue-500/[0.08] border-blue-100 dark:border-blue-500/10">
             <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{avgTeamProgress}%</p>
-            <p className="text-xs text-blue-600 dark:text-blue-400">Avg Progress</p>
+            <p className="text-xs text-blue-600 dark:text-blue-400">Average Progress</p>
           </div>
           <div className="text-center p-4 rounded-xl border transition-all duration-300 elastic-scale bg-amber-50 dark:bg-amber-500/[0.08] border-amber-100 dark:border-amber-500/10">
             <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">{cascadeStats.owners.size}</p>
@@ -89,7 +89,7 @@ function ManagerGoalCascade({ teamTreeData, userId }: ManagerGoalCascadeProps) {
                     )}>
                       {goal.type?.replace('_', ' ')}
                     </span>
-                    <span className="text-sm font-medium text-secondary-900 dark:text-white truncate">{goal.title}</span>
+                    <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">{goal.title}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     {childCount > 0 && (

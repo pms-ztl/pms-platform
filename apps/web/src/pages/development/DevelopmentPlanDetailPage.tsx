@@ -475,7 +475,7 @@ export function DevelopmentPlanDetailPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Career Goal */}
           <div>
-            <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+            <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
               Career Goal
             </dt>
             <dd className="mt-1 text-sm text-secondary-900 dark:text-white">{plan.careerGoal}</dd>
@@ -484,7 +484,7 @@ export function DevelopmentPlanDetailPage() {
           {/* Target Role */}
           {plan.targetRole && (
             <div>
-              <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Target Role
               </dt>
               <dd className="mt-1 text-sm text-secondary-900 dark:text-white">{plan.targetRole}</dd>
@@ -493,7 +493,7 @@ export function DevelopmentPlanDetailPage() {
 
           {/* Level Progression */}
           <div>
-            <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+            <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
               Level Progression
             </dt>
             <dd className="mt-1 flex items-center gap-2 text-sm text-secondary-900 dark:text-white">
@@ -515,7 +515,7 @@ export function DevelopmentPlanDetailPage() {
 
           {/* Timeline */}
           <div>
-            <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+            <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
               Timeline
             </dt>
             <dd className="mt-1 text-sm text-secondary-900 dark:text-white">
@@ -553,7 +553,7 @@ export function DevelopmentPlanDetailPage() {
           {/* Development Areas */}
           {plan.developmentAreas && plan.developmentAreas.length > 0 && (
             <div>
-              <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">
+              <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
                 Development Areas
               </dt>
               <div className="flex flex-wrap gap-1.5">
@@ -572,7 +572,7 @@ export function DevelopmentPlanDetailPage() {
           {/* Strengths */}
           {plan.strengthsAssessed && plan.strengthsAssessed.length > 0 && (
             <div>
-              <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-2">
+              <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
                 Strengths
               </dt>
               <div className="flex flex-wrap gap-1.5">
@@ -612,7 +612,7 @@ export function DevelopmentPlanDetailPage() {
         ) : (
           <div className="space-y-2">
             {/* Table header */}
-            <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider border-b border-secondary-200 dark:border-secondary-700">
+            <div className="hidden md:grid md:grid-cols-12 gap-3 px-3 py-2 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider border-b border-secondary-200 dark:border-secondary-700">
               <div className="col-span-1">Type</div>
               <div className="col-span-3">Title</div>
               <div className="col-span-1">Status</div>
@@ -639,7 +639,7 @@ export function DevelopmentPlanDetailPage() {
                   <div className="col-span-1">
                     <span
                       className={clsx(
-                        'inline-block px-2 py-0.5 rounded text-[10px] font-semibold uppercase',
+                        'inline-block px-2 py-0.5 rounded text-[10px] font-semibold',
                         activityTypeColors[activity.activityType] || activityTypeColors.TRAINING
                       )}
                     >
@@ -1005,7 +1005,7 @@ export function DevelopmentPlanDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Strengths column */}
             <div>
-              <h3 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-3 uppercase tracking-wider">
+              <h3 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-3 tracking-wider">
                 Strengths
               </h3>
               <div className="space-y-2.5">
@@ -1038,7 +1038,7 @@ export function DevelopmentPlanDetailPage() {
 
             {/* Development Areas column */}
             <div>
-              <h3 className="text-sm font-semibold text-orange-700 dark:text-orange-400 mb-3 uppercase tracking-wider">
+              <h3 className="text-sm font-semibold text-orange-700 dark:text-orange-400 mb-3 tracking-wider">
                 Development Areas
               </h3>
               <div className="space-y-2.5">

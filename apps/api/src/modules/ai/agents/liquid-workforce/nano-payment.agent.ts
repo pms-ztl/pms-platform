@@ -12,7 +12,7 @@
  * Analyzes recognition patterns and recommends timely micro-rewards for sustained engagement.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryFeedback } from '../../agent-tools';
 import {
   queryPerformanceSnapshots,
@@ -43,7 +43,7 @@ Recommendation principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class NanoPaymentAgent extends BaseAgent {
+export class NanoPaymentAgent extends AgenticBaseAgent {
   constructor() {
     super('nano_payment', SYSTEM_PROMPT);
   }

@@ -159,8 +159,8 @@ export function TalentIntelligencePage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs">
-        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
+      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+        <p className="font-semibold text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color }}>{p.name}: {p.value?.toFixed(1)}</p>
         ))}
@@ -229,7 +229,7 @@ export function TalentIntelligencePage() {
           { label: 'Total Recommendations', value: stats.totalRecs, icon: LightBulbIcon, color: 'text-amber-600 dark:text-amber-400' },
           { label: 'Ready Now', value: stats.readyNow, icon: CheckCircleIcon, color: 'text-green-600 dark:text-green-400' },
           { label: 'Succession Plans', value: stats.successionCount, icon: UserGroupIcon, color: 'text-indigo-600 dark:text-indigo-400' },
-          { label: 'Avg Confidence', value: `${stats.avgConfidence}%`, icon: ShieldCheckIcon, color: 'text-blue-600 dark:text-blue-400' },
+          { label: 'Average Confidence', value: `${stats.avgConfidence}%`, icon: ShieldCheckIcon, color: 'text-blue-600 dark:text-blue-400' },
         ].map((s) => (
           <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
             <div className="flex items-center justify-between">
@@ -326,7 +326,7 @@ export function TalentIntelligencePage() {
                     <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 9, fill: 'var(--color-secondary-500, #6b7280)' }} />
                     <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 8, fill: 'var(--color-secondary-400, #9ca3af)' }} />
                     <Radar name="Score" dataKey="score" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.3} />
-                    <Tooltip content={<ChartTooltip />} />
+                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
@@ -336,7 +336,7 @@ export function TalentIntelligencePage() {
                   <h4 className="text-xs font-semibold text-secondary-700 dark:text-secondary-300">Skill Gaps</h4>
                   {Object.entries(selectedRec.skillGaps).slice(0, 5).map(([skill, gap]: [string, any]) => (
                     <div key={skill} className="flex items-center gap-2 text-xs">
-                      <span className="w-24 truncate text-secondary-600 dark:text-secondary-400">{skill}</span>
+                      <span className="w-24 break-words text-secondary-600 dark:text-secondary-400">{skill}</span>
                       <div className="flex-1 h-1.5 rounded-full bg-secondary-200 dark:bg-secondary-600 overflow-hidden">
                         <div className="h-full rounded-full bg-red-400" style={{ width: `${((gap.current || 0) / (gap.required || 5)) * 100}%` }} />
                       </div>
@@ -380,7 +380,7 @@ export function TalentIntelligencePage() {
               return (
                 <div key={plan.id} className="border border-secondary-200 dark:border-secondary-700 rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold text-secondary-900 dark:text-white truncate">{plan.positionTitle}</h4>
+                    <h4 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">{plan.positionTitle}</h4>
                     <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium', crit.cls)}>{plan.criticality}</span>
                   </div>
                   {plan.currentIncumbent && (
@@ -392,7 +392,7 @@ export function TalentIntelligencePage() {
                   </div>
                   {Array.isArray(plan.successors) && plan.successors.length > 0 && (
                     <div className="space-y-1">
-                      <p className="text-[10px] font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Successors</p>
+                      <p className="text-[10px] font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Successors</p>
                       {plan.successors.slice(0, 3).map((s: any, i: number) => (
                         <div key={i} className="flex items-center justify-between text-xs">
                           <span className="text-secondary-700 dark:text-secondary-300">{s.name || s.userId || `Candidate ${i + 1}`}</span>

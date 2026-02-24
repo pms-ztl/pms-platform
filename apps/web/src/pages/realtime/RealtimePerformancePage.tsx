@@ -85,7 +85,7 @@ function OverviewCard({
       )}
       style={{ transitionDelay: `${index * 80}ms` }}
     >
-      <div className="group relative bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700/80 shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+      <div className="group relative bg-white dark:bg-secondary-800 rounded-2xl border border-secondary-200/80 dark:border-secondary-700/80 shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden">
         {/* Gradient top accent bar */}
         <div className={clsx('h-1 w-full bg-gradient-to-r', gradient)} />
 
@@ -99,10 +99,10 @@ function OverviewCard({
               <Icon className="h-5.5 w-5.5 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white tracking-tight">
+              <h3 className="text-xl font-semibold text-secondary-900 dark:text-white tracking-tight">
                 {title}
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-0.5">
                 {subtitle}
               </p>
             </div>
@@ -266,27 +266,30 @@ export function RealtimePerformancePage() {
       case 'overview':
         return (
           <div className="space-y-8">
-            {/* Hero summary banner */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 p-8 shadow-xl">
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjEuNSIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-60" />
-              <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            {/* Hero summary banner — frosted glassmorphism */}
+            <div className="relative overflow-hidden rounded-2xl glass-banner p-8 shadow-lg frosted-noise">
+              {/* Decorative gradient orbs */}
+              <div className="absolute -top-16 -right-16 w-56 h-56 bg-gradient-to-br from-primary-500/20 to-indigo-500/15 rounded-full blur-3xl" />
+              <div className="absolute -bottom-12 -left-12 w-44 h-44 bg-gradient-to-tr from-cyan-500/15 to-primary-500/10 rounded-full blur-3xl" />
+
+              <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-white tracking-tight">
+                  <h2 className="text-2xl font-bold text-secondary-900 dark:text-white tracking-tight">
                     Performance Overview
                   </h2>
-                  <p className="text-indigo-100 mt-1 text-sm max-w-xl">
+                  <p className="text-secondary-500 dark:text-secondary-400 mt-1 text-sm max-w-xl">
                     A comprehensive, real-time snapshot of your productivity, goals, workload, and team health — all in one place.
                   </p>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
-                  <div className="flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-2 text-white text-sm font-medium">
+                  <div className="flex items-center gap-2 bg-primary-500/10 dark:bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-primary-700 dark:text-white text-sm font-medium border border-primary-200/40 dark:border-white/10">
                     <span className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                     </span>
                     Live Data
                   </div>
-                  <div className="bg-white/15 backdrop-blur-sm rounded-full px-4 py-2 text-white text-sm">
+                  <div className="bg-secondary-100/60 dark:bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-secondary-700 dark:text-secondary-300 text-sm border border-secondary-200/40 dark:border-white/10">
                     {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
                   </div>
                 </div>
@@ -398,9 +401,9 @@ export function RealtimePerformancePage() {
   const currentTab = tabs.find(t => t.id === activeTab)!;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="sticky top-0 z-30 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+      <div className="sticky top-0 z-30 bg-white dark:bg-surface-dark/80 backdrop-blur-md border-b border-secondary-200 dark:border-white/[0.06] shadow-sm">
         <div className={clsx(
           'mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300',
           activeTab === 'overview' ? 'max-w-[1400px] lg:px-10' : 'max-w-7xl'
@@ -410,12 +413,12 @@ export function RealtimePerformancePage() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="lg:hidden p-2 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700"
               >
                 {isMobileMenuOpen ? (
-                  <XMarkIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                  <XMarkIcon className="h-6 w-6 text-secondary-600 dark:text-secondary-300" />
                 ) : (
-                  <Bars3BottomLeftIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                  <Bars3BottomLeftIcon className="h-6 w-6 text-secondary-600 dark:text-secondary-300" />
                 )}
               </button>
 
@@ -427,10 +430,10 @@ export function RealtimePerformancePage() {
                   <currentTab.icon className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+                  <h1 className="text-lg font-bold text-secondary-900 dark:text-white">
                     Real-Time Performance
                   </h1>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 hidden sm:block">
                     {currentTab.description}
                   </p>
                 </div>
@@ -443,29 +446,29 @@ export function RealtimePerformancePage() {
 
               <button
                 onClick={handleRefresh}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
+                className="p-2 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-600 dark:text-secondary-300"
                 title="Refresh data"
               >
                 <ArrowPathIcon className="h-5 w-5" />
               </button>
 
-              <div className="hidden sm:block text-xs text-gray-500 dark:text-gray-400">
+              <div className="hidden sm:block text-xs text-secondary-500 dark:text-secondary-400">
                 Updated: {lastUpdated.toLocaleTimeString()}
               </div>
             </div>
           </div>
 
-          {/* Desktop Tabs */}
-          <div className="hidden lg:flex space-x-1 pb-2 overflow-x-auto">
+          {/* Desktop Tabs — evenly distributed across full width */}
+          <div className="hidden lg:flex gap-1 pb-2 w-full">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={clsx(
-                  'flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all',
+                  'flex-1 flex items-center justify-center gap-2 px-2 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all',
                   activeTab === tab.id
                     ? 'bg-gradient-to-r text-white shadow-lg ' + tab.color
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    : 'text-secondary-600 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700/60'
                 )}
               >
                 <tab.icon className="h-4 w-4" />
@@ -480,7 +483,7 @@ export function RealtimePerformancePage() {
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setIsMobileMenuOpen(false)}>
           <div
-            className="absolute left-0 top-16 w-72 h-[calc(100vh-4rem)] bg-white dark:bg-gray-800 shadow-xl overflow-y-auto"
+            className="absolute left-0 top-16 w-72 h-[calc(100vh-4rem)] bg-white dark:bg-secondary-800 shadow-xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 space-y-2">
@@ -495,7 +498,7 @@ export function RealtimePerformancePage() {
                     'w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all',
                     activeTab === tab.id
                       ? 'bg-gradient-to-r text-white shadow-lg ' + tab.color
-                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      : 'text-secondary-700 dark:text-secondary-200 hover:bg-secondary-100 dark:hover:bg-secondary-700'
                   )}
                 >
                   <tab.icon className="h-5 w-5" />
@@ -503,7 +506,7 @@ export function RealtimePerformancePage() {
                     <div className="font-medium">{tab.label}</div>
                     <div className={clsx(
                       'text-xs',
-                      activeTab === tab.id ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'
+                      activeTab === tab.id ? 'text-white/80' : 'text-secondary-500 dark:text-secondary-400'
                     )}>
                       {tab.description}
                     </div>

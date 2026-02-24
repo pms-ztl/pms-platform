@@ -125,7 +125,7 @@ export function OKRTimelineView({ objectives, krByParent }: OKRTimelineViewProps
                       <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 shrink-0">
                         OBJ
                       </span>
-                      <span className="text-sm font-medium text-secondary-900 dark:text-white truncate">
+                      <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                         {obj.title}
                       </span>
                     </div>
@@ -169,7 +169,7 @@ export function OKRTimelineView({ objectives, krByParent }: OKRTimelineViewProps
                         <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 shrink-0">
                           KR
                         </span>
-                        <span className="text-xs text-secondary-700 dark:text-secondary-300 truncate">
+                        <span className="text-xs text-secondary-700 dark:text-secondary-300 break-words">
                           {kr.title}
                         </span>
                       </div>

@@ -58,7 +58,7 @@ function getPotentialBadge(potential?: string) {
   };
   const c = config[potential] || config.medium;
   return (
-    <span className={clsx('text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full', c.bg, c.text)}>
+    <span className={clsx('text-[9px] font-bold px-1.5 py-0.5 rounded-full', c.bg, c.text)}>
       {potential} potential
     </span>
   );
@@ -104,8 +104,8 @@ export function TalentCard({ data, compact = false, showActions = true }: Talent
           {getInitials(data.firstName, data.lastName)}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-secondary-900 dark:text-white truncate">{data.firstName} {data.lastName}</p>
-          <p className="text-[10px] text-secondary-400 truncate">{data.jobTitle || 'Team Member'}</p>
+          <p className="text-xs font-medium text-secondary-900 dark:text-white break-words">{data.firstName} {data.lastName}</p>
+          <p className="text-[10px] text-secondary-400 break-words">{data.jobTitle || 'Team Member'}</p>
         </div>
         {data.performanceScore !== undefined && <ScoreRing score={data.performanceScore} size={32} />}
       </div>
@@ -120,10 +120,10 @@ export function TalentCard({ data, compact = false, showActions = true }: Talent
           {getInitials(data.firstName, data.lastName)}
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-semibold text-secondary-900 dark:text-white truncate">
+          <h4 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">
             {data.firstName} {data.lastName}
           </h4>
-          <p className="text-[11px] text-secondary-500 truncate">{data.jobTitle || 'Team Member'}</p>
+          <p className="text-[11px] text-secondary-500 break-words">{data.jobTitle || 'Team Member'}</p>
           {data.department && <p className="text-[10px] text-secondary-400">{data.department}</p>}
         </div>
         {data.performanceScore !== undefined && <ScoreRing score={data.performanceScore} />}

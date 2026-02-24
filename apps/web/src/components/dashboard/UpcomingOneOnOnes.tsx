@@ -52,7 +52,7 @@ function UpcomingOneOnOnes() {
                   {otherPerson.firstName[0]}{otherPerson.lastName[0]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-secondary-900 dark:text-white truncate">
+                  <p className="text-sm font-semibold text-secondary-900 dark:text-white break-words">
                     {otherPerson.firstName} {otherPerson.lastName}
                   </p>
                   <div className="flex items-center gap-2 text-xs text-secondary-500 dark:text-secondary-400">
@@ -63,7 +63,7 @@ function UpcomingOneOnOnes() {
                     <span>{meeting.duration} min</span>
                   </div>
                   {meeting.agenda && meeting.agenda.length > 0 && (
-                    <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5 truncate">
+                    <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5 break-words">
                       {meeting.agenda[0].topic}
                     </p>
                   )}

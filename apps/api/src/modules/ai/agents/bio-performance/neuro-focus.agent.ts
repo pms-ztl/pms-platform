@@ -12,7 +12,7 @@
  * Analyzes session activity and performance data to maximize productive focus time.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { querySessionActivity } from '../../agent-tools-v3';
 import {
   queryPerformanceSnapshots,
@@ -43,7 +43,7 @@ Coaching principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class NeuroFocusAgent extends BaseAgent {
+export class NeuroFocusAgent extends AgenticBaseAgent {
   constructor() {
     super('neuro_focus', SYSTEM_PROMPT);
   }

@@ -145,7 +145,7 @@ export function GoalStep({ onNext, onSkip }: GoalStepProps) {
                   onClick={() => applyTemplate(template)}
                   className="text-xs px-2.5 py-1 rounded-full bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-200 dark:hover:bg-secondary-600 transition-colors"
                 >
-                  {template.length > 45 ? template.slice(0, 42) + '...' : template}
+                  {template}
                 </button>
               ))}
             </div>

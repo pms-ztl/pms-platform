@@ -12,7 +12,7 @@
  * Ensures fair, unbiased, and transparent performance decisions.
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import { isManager } from '../../../utils/roles';
 import { queryReviews, queryAnalytics } from '../agent-tools';
 import {
@@ -44,7 +44,7 @@ Auditing principles:
 
 // ── Agent Class ─────────────────────────────────────────────
 
-export class GovernanceAgent extends BaseAgent {
+export class GovernanceAgent extends AgenticBaseAgent {
   constructor() {
     super('governance', SYSTEM_PROMPT);
   }

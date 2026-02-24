@@ -1,0 +1,694 @@
+
+[1m================================================================[0m
+[1m  PMS PLATFORM — API HEALTH CHECK[0m
+[1m================================================================[0m
+  [2mURL:[0m  http://127.0.0.1:3001
+  [2mDate:[0m 2026-02-23T17:59:51.038Z
+  [2mEndpoints:[0m 514
+[1m================================================================[0m
+
+[36m[AUTH][0m Logging in as Tenant Admin (admin@demo.com)... [32mOK[0m [2m(token: eyJhbGciOiJIUzI1NiIs...)[0m
+[36m[AUTH][0m Logging in as Super Admin (admin@pms-platform.com)... [32mOK[0m [2m(token: eyJhbGciOiJIUzI1NiIs...)[0m
+
+[1m── health-check (2 endpoints) ──────────────────────────────────────[0m
+  [32m✓[0m  [32m200[0m  [2mGET   [0m /health  [2m   4ms[0m
+  [32m✓[0m  [32m200[0m  [2mGET   [0m /ready  [2m   6ms[0m
+  [32m✓ health-check: 2/2 passed[0m
+
+[1m── auth (12 endpoints) ──────────────────────────────────────────────[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/auth/login  [2m   9ms[0m
+  [32m✓[0m  [33m400[0m  [2mPOST  [0m /api/v1/auth/mfa/verify  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/auth/refresh  [2m   4ms[0m
+  [32m✓[0m  [32m200[0m  [2mPOST  [0m /api/v1/auth/password/forgot  [2m   7ms[0m
+  [32m✓[0m  [33m400[0m  [2mPOST  [0m /api/v1/auth/password/reset  [2m   4ms[0m
+  [32m✓[0m  [33m400[0m  [2mPOST  [0m /api/v1/auth/password/set  [2m   3ms[0m
+  [32m✓[0m  [32m200[0m  [2mPOST  [0m /api/v1/auth/logout  [2m  17ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/auth/me  [2m   5ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/auth/password/change  [2m   5ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/auth/mfa/setup  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/auth/mfa/setup/verify  [2m   5ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/auth/mfa/disable  [2m   5ms[0m
+  [32m✓ auth: 12/12 passed[0m
+
+[1m── users (34 endpoints) ─────────────────────────────────────────────[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/roles  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/departments  [2m   5ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/org-chart  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/my-reports  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/team-members  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/license/usage  [2m   5ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/subscription  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/breakdown  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/ai-access/stats  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/users/ai-access/bulk  [2m   5ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/users/ai-access/delegation  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/me  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/me/avatar  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/me/ai-avatar  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/users/designated-manager  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/users/super-admin-access  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/bulk-assign-role  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/bulk-remove-role  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/users/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/00000000-0000-0000-0000-000000000000/deactivate  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/00000000-0000-0000-0000-000000000000/reactivate  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/00000000-0000-0000-0000-000000000000/archive  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/00000000-0000-0000-0000-000000000000/resend-credentials  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mDELETE[0m /api/v1/users/00000000-0000-0000-0000-000000000000  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/00000000-0000-0000-0000-000000000000/reports  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/00000000-0000-0000-0000-000000000000/roles  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mDELETE[0m /api/v1/users/00000000-0000-0000-0000-000000000000/roles/00000000-0000-0000-0000-000000000001  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/users/00000000-0000-0000-0000-000000000000/role-history  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/00000000-0000-0000-0000-000000000000/avatar  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/users/00000000-0000-0000-0000-000000000000/ai-avatar  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/users/00000000-0000-0000-0000-000000000000/ai-access  [2m   3ms[0m
+  [32m✓ users: 34/34 passed[0m
+
+[1m── goals (18 endpoints) ─────────────────────────────────────────────[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/goals  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/goals  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/goals/my  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/goals/tree  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/goals/bulk-update  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/goals/export  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/goals/check-reminders  [2m   6ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/goals/team-tree  [2m   9ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/goals/00000000-0000-0000-0000-000000000000/activity  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/goals/00000000-0000-0000-0000-000000000000  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/goals/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mDELETE[0m /api/v1/goals/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/goals/00000000-0000-0000-0000-000000000000/progress  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/goals/00000000-0000-0000-0000-000000000000/progress/history  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/goals/00000000-0000-0000-0000-000000000000/align  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mDELETE[0m /api/v1/goals/00000000-0000-0000-0000-000000000000/align/00000000-0000-0000-0000-000000000001  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/goals/00000000-0000-0000-0000-000000000000/comments  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/goals/00000000-0000-0000-0000-000000000000/comments  [2m   4ms[0m
+  [32m✓ goals: 18/18 passed[0m
+
+[1m── reviews (13 endpoints) ───────────────────────────────────────────[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/reviews/cycles  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/reviews/cycles  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/reviews/cycles/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/reviews/cycles/00000000-0000-0000-0000-000000000000  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/reviews/cycles/00000000-0000-0000-0000-000000000000/launch  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/reviews/cycles/00000000-0000-0000-0000-000000000000/advance  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/reviews/cycles/00000000-0000-0000-0000-000000000000/stats  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/reviews/my  [2m   5ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/reviews/00000000-0000-0000-0000-000000000000  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/reviews/00000000-0000-0000-0000-000000000000/start  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPUT   [0m /api/v1/reviews/00000000-0000-0000-0000-000000000000/draft  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/reviews/00000000-0000-0000-0000-000000000000/submit  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/reviews/00000000-0000-0000-0000-000000000000/acknowledge  [2m   3ms[0m
+  [32m✓ reviews: 13/13 passed[0m
+
+[1m── feedback (12 endpoints) ──────────────────────────────────────────[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/feedback  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/feedback/received  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/feedback/given  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/feedback/team  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/feedback/timeline  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/feedback/timeline/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/feedback/recognition-wall  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/feedback/top-recognized  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/feedback/request  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/feedback/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/feedback/00000000-0000-0000-0000-000000000000/acknowledge  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mDELETE[0m /api/v1/feedback/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓ feedback: 12/12 passed[0m
+
+[1m── calibration (10 endpoints) ───────────────────────────────────────[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/calibration  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/calibration/sessions  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/calibration/sessions  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/calibration/sessions/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/calibration/sessions/00000000-0000-0000-0000-000000000000/start  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/calibration/sessions/00000000-0000-0000-0000-000000000000/complete  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/calibration/sessions/00000000-0000-0000-0000-000000000000/participants  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/calibration/sessions/00000000-0000-0000-0000-000000000000/reviews  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mPOST  [0m /api/v1/calibration/sessions/00000000-0000-0000-0000-000000000000/ratings  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/calibration/sessions/00000000-0000-0000-0000-000000000000/ratings  [2m   4ms[0m
+  [32m✓ calibration: 10/10 passed[0m
+
+[1m── analytics (13 endpoints) ─────────────────────────────────────────[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/dashboard  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/performance-distribution  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/goal-trends  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/feedback-trends  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/team-performance  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/bias-metrics  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/compensation  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/bias  [2m   4ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/normalization  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/ratings  [2m   3ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/departments  [2m   2ms[0m
+  [32m✓[0m  [33m401[0m  [2mGET   [0m /api/v1/analytics/cycle/00000000-0000-0000-0000-000000000000/stats  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/analytics/export/performance  [2m   1ms[0m
+  [32m✓ analytics: 13/13 passed[0m
+
+[1m── notifications (6 endpoints) ─────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/notifications  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/notifications/unread-count  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/notifications/preferences  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/notifications/preferences  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/notifications/read-all  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/notifications/00000000-0000-0000-0000-000000000000/read  [2m   2ms[0m
+  [32m✓ notifications: 6/6 passed[0m
+
+[1m── integrations (10 endpoints) ──────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/integrations/webhook/webhook/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/integrations/connectors  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/integrations  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/integrations/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/integrations  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/integrations/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/integrations/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/integrations/00000000-0000-0000-0000-000000000000/test  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/integrations/00000000-0000-0000-0000-000000000000/sync  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/integrations/00000000-0000-0000-0000-000000000000/sync-history  [2m   2ms[0m
+  [32m✓ integrations: 10/10 passed[0m
+
+[1m── compensation (11 endpoints) ──────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compensation  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compensation  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compensation/budget-summary  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compensation/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPATCH [0m /api/v1/compensation/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compensation/00000000-0000-0000-0000-000000000000/submit  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compensation/00000000-0000-0000-0000-000000000000/approve  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compensation/00000000-0000-0000-0000-000000000000/reject  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compensation/00000000-0000-0000-0000-000000000000/implement  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compensation/link-evidence  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/compensation/00000000-0000-0000-0000-000000000000/evidence/00000000-0000-0000-0000-000000000001  [2m   2ms[0m
+  [32m✓ compensation: 11/11 passed[0m
+
+[1m── evidence (10 endpoints) ──────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/evidence  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/evidence  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/evidence/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPATCH [0m /api/v1/evidence/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/evidence/00000000-0000-0000-0000-000000000000/verify  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/evidence/link-to-review  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/evidence/00000000-0000-0000-0000-000000000000/reviews/00000000-0000-0000-0000-000000000001  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/evidence/00000000-0000-0000-0000-000000000000/archive  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/evidence/import  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/evidence/employees/00000000-0000-0000-0000-000000000000/summary  [2m   1ms[0m
+  [32m✓ evidence: 10/10 passed[0m
+
+[1m── promotions (12 endpoints) ────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/promotions  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/promotions  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/promotions/summary  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/promotions/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPATCH [0m /api/v1/promotions/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/promotions/00000000-0000-0000-0000-000000000000/start-review  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/promotions/00000000-0000-0000-0000-000000000000/approve  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/promotions/00000000-0000-0000-0000-000000000000/reject  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/promotions/00000000-0000-0000-0000-000000000000/defer  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/promotions/00000000-0000-0000-0000-000000000000/implement  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/promotions/link-evidence  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/promotions/00000000-0000-0000-0000-000000000000/evidence/00000000-0000-0000-0000-000000000001  [2m   1ms[0m
+  [32m✓ promotions: 12/12 passed[0m
+
+[1m── reports (14 endpoints) ───────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/reports/generate  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/reports  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/reports/schedules  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/reports/schedules/00000000-0000-0000-0000-000000000000/stats  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/reports/00000000-0000-0000-0000-000000000000/download  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/reports/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/reports/schedules  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPATCH [0m /api/v1/reports/schedules/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/reports/schedules/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/reports/schedules/00000000-0000-0000-0000-000000000000/pause  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/reports/schedules/00000000-0000-0000-0000-000000000000/resume  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/reports/jobs/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/reports/cache/stats  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/reports/cache/invalidate  [2m   2ms[0m
+  [32m✓ reports: 14/14 passed[0m
+
+[1m── realtime-performance (24 endpoints) ──────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/hourly  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/realtime-performance/hourly  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/snapshot  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/realtime-performance/activity  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/activity  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/activity/summary  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/goals/dashboard  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/deadlines/check  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/deadlines/alerts  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/realtime-performance/deadlines/alerts/00000000-0000-0000-0000-000000000000/acknowledge  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/realtime-performance/deadlines/alerts/00000000-0000-0000-0000-000000000000/snooze  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/workload  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/workload/team  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/anomalies/detect  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/sentiment  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/sentiment/team  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/realtime-performance/milestones  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPATCH [0m /api/v1/realtime-performance/milestones/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/milestones  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/milestones/timeline  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/realtime-performance/milestones/detect  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/heatmap/individual  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/realtime-performance/heatmap/team  [2m   2ms[0m
+  [32m✓ realtime-performance: 24/24 passed[0m
+
+[1m── performance-math (9 endpoints) ──────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/performance-math/score/me  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/performance-math/cpis/me  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/performance-math/team/me  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/performance-math/score/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/performance-math/goal-risk/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/performance-math/team/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/performance-math/calibrate  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/performance-math/goal-mapping/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/performance-math/cpis/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓ performance-math: 9/9 passed[0m
+
+[1m── calendar (5 endpoints) ──────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/calendar/events  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/calendar/events  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/calendar/events/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/calendar/events/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/calendar/events/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓ calendar: 5/5 passed[0m
+
+[1m── one-on-ones (8 endpoints) ───────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/one-on-ones  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/one-on-ones  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/one-on-ones/upcoming  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/one-on-ones/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/one-on-ones/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/one-on-ones/00000000-0000-0000-0000-000000000000/start  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/one-on-ones/00000000-0000-0000-0000-000000000000/complete  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/one-on-ones/00000000-0000-0000-0000-000000000000/cancel  [2m   2ms[0m
+  [32m✓ one-on-ones: 8/8 passed[0m
+
+[1m── development (12 endpoints) ───────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/development/plans  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/development/plans  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/development/plans/team  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/development/plans/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/development/plans/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/development/plans/00000000-0000-0000-0000-000000000000/approve  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/development/recommendations  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/development/recommendations/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/development/plans/00000000-0000-0000-0000-000000000000/activities  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/development/activities/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/development/plans/00000000-0000-0000-0000-000000000000/checkpoints  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/development/checkpoints/00000000-0000-0000-0000-000000000000/complete  [2m   1ms[0m
+  [32m✓ development: 12/12 passed[0m
+
+[1m── pip (9 endpoints) ───────────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/pip  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/pip  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/pip/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/pip/00000000-0000-0000-0000-000000000000/approve  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/pip/00000000-0000-0000-0000-000000000000/check-ins  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/pip/00000000-0000-0000-0000-000000000000/milestones  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/pip/milestones/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/pip/00000000-0000-0000-0000-000000000000/close  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/pip/00000000-0000-0000-0000-000000000000/acknowledge  [2m   2ms[0m
+  [32m✓ pip: 9/9 passed[0m
+
+[1m── succession (7 endpoints) ────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/succession  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/succession  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/succession/nine-box  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/succession/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/succession/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/succession/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/succession/00000000-0000-0000-0000-000000000000/readiness  [2m   2ms[0m
+  [32m✓ succession: 7/7 passed[0m
+
+[1m── admin-config (19 endpoints) ──────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/admin-config/templates  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/admin-config/templates/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/admin-config/templates  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/admin-config/templates/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/admin-config/templates/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/admin-config/frameworks  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/admin-config/frameworks/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/admin-config/frameworks  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/admin-config/frameworks/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/admin-config/frameworks/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/admin-config/frameworks/00000000-0000-0000-0000-000000000000/competencies  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/admin-config/frameworks/00000000-0000-0000-0000-000000000000/competencies  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/admin-config/competencies/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/admin-config/competencies/00000000-0000-0000-0000-000000000000  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/admin-config/questionnaires  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/admin-config/questionnaires  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/admin-config/questionnaires/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/admin-config/questionnaires/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/admin-config/rating-scales  [2m   2ms[0m
+  [32m✓ admin-config: 19/19 passed[0m
+
+[1m── audit (6 endpoints) ─────────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/audit  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/audit/stats  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/audit/entity/USER/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/audit/user/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/audit/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/audit/purge  [2m   2ms[0m
+  [32m✓ audit: 6/6 passed[0m
+
+[1m── skills (14 endpoints) ────────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/skills/categories  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/skills/categories  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/skills/categories/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/skills/categories/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/skills/assessments  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/skills/assessments  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/skills/assessments/request  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/skills/assessments/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/skills/assessments/00000000-0000-0000-0000-000000000000/progress  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/skills/matrix/me  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/skills/matrix/user/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/skills/matrix/team  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/skills/gaps  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/skills/heatmap  [2m   2ms[0m
+  [32m✓ skills: 14/14 passed[0m
+
+[1m── compliance (17 endpoints) ────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compliance/dashboard  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compliance/policies  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compliance/policies  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/compliance/policies/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/compliance/policies/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compliance/assessments  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compliance/assessments  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/compliance/assessments/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compliance/violations  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compliance/violations  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/compliance/violations/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compliance/user/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compliance/reviews  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compliance/reviews  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/compliance/reviews/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/compliance/reviews/00000000-0000-0000-0000-000000000000/complete  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/compliance/deadlines  [2m   1ms[0m
+  [32m✓ compliance: 17/17 passed[0m
+
+[1m── announcements (8 endpoints) ─────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/announcements/active  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/announcements  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/announcements/stats  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/announcements  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/announcements/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/announcements/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/announcements/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/announcements/00000000-0000-0000-0000-000000000000/pin  [2m   2ms[0m
+  [32m✓ announcements: 8/8 passed[0m
+
+[1m── leaderboard (7 endpoints) ───────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/leaderboard  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/leaderboard/performance  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/leaderboard/goals  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/leaderboard/recognition  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/leaderboard/learning  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/leaderboard/departments  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/leaderboard/my-stats  [2m   2ms[0m
+  [32m✓ leaderboard: 7/7 passed[0m
+
+[1m── career (6 endpoints) ────────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/career/path/me  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/career/goals/me  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/career/path/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/career/growth-requirements/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/career/roles  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/career/goals/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓ career: 6/6 passed[0m
+
+[1m── excel-upload (7 endpoints) ──────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/excel-upload/template  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/excel-upload/analyze  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/excel-upload/00000000-0000-0000-0000-000000000000/confirm  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/excel-upload/00000000-0000-0000-0000-000000000000/progress  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/excel-upload/upload  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/excel-upload/history  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/excel-upload/00000000-0000-0000-0000-000000000000/errors  [2m   2ms[0m
+  [32m✓ excel-upload: 7/7 passed[0m
+
+[1m── ai (19 endpoints) ────────────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai/chat  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai/conversations  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai/conversations/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/ai/conversations/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai/excel/analyze  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai/insights/summary  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai/insights  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/ai/insights/00000000-0000-0000-0000-000000000000/read  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/ai/insights/00000000-0000-0000-0000-000000000000/dismiss  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai/reports/generate  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai/usage  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai/tasks  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai/tasks/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai/tasks/00000000-0000-0000-0000-000000000000/cancel  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai/actions/pending  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai/actions/00000000-0000-0000-0000-000000000000/approve  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai/actions/00000000-0000-0000-0000-000000000000/reject  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai/chat/coordinate  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai/agents/active  [2m   2ms[0m
+  [32m✓ ai: 19/19 passed[0m
+
+[1m── roles (8 endpoints) ─────────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/roles  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/roles/permissions-catalog  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/roles/compare  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/roles/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/roles  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/roles/00000000-0000-0000-0000-000000000000/clone  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/roles/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/roles/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓ roles: 8/8 passed[0m
+
+[1m── upgrade-requests (3 endpoints) ──────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/upgrade-requests  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/upgrade-requests  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/upgrade-requests/00000000-0000-0000-0000-000000000000/cancel  [2m   2ms[0m
+  [32m✓ upgrade-requests: 3/3 passed[0m
+
+[1m── chat (24 endpoints) ──────────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/chat/conversations  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/direct  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/group  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/team-channel  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/participants  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/leave  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/name  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/mute  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/pinned  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/chat/messages/search  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/chat/messages/unread-counts  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/messages  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/messages  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/messages/00000000-0000-0000-0000-000000000001  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/messages/00000000-0000-0000-0000-000000000001  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/messages/00000000-0000-0000-0000-000000000001/reactions  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/messages/00000000-0000-0000-0000-000000000001/pin  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/messages/00000000-0000-0000-0000-000000000001/forward  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/conversations/00000000-0000-0000-0000-000000000000/read  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/email/send  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/chat/email/ai-draft  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/chat/users/search  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/chat/teams  [2m   2ms[0m
+  [32m✓ chat: 24/24 passed[0m
+
+[1m── health-metrics (3 endpoints) ────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/health-metrics  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/health-metrics/history  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/health-metrics/departments  [2m   2ms[0m
+  [32m✓ health-metrics: 3/3 passed[0m
+
+[1m── engagement (6 endpoints) ────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/engagement/overview  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/engagement/dashboard  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/engagement/trends  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/engagement/departments  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/engagement/at-risk  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/engagement/events  [2m   2ms[0m
+  [32m✓ engagement: 6/6 passed[0m
+
+[1m── pulse (7 endpoints) ─────────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/pulse/submit  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/pulse/can-submit  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/pulse/my-history  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/pulse/analytics/overview  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/pulse/analytics/trends  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/pulse/analytics/departments  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/pulse/analytics/distribution  [2m   2ms[0m
+  [32m✓ pulse: 7/7 passed[0m
+
+[1m── delegations (7 endpoints) ───────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/delegations  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/delegations/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/delegations  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/delegations/00000000-0000-0000-0000-000000000000/approve  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/delegations/00000000-0000-0000-0000-000000000000/reject  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/delegations/00000000-0000-0000-0000-000000000000/revoke  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/delegations/00000000-0000-0000-0000-000000000000/audit  [2m   2ms[0m
+  [32m✓ delegations: 7/7 passed[0m
+
+[1m── policies (8 endpoints) ──────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/policies  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/policies/simulate  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/policies  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/policies/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/policies/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/policies/00000000-0000-0000-0000-000000000000/activate  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/policies/00000000-0000-0000-0000-000000000000/deactivate  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/v1/policies/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓ policies: 8/8 passed[0m
+
+[1m── mentoring (5 endpoints) ─────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/mentoring/matches  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/mentoring/my-mentorships  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/mentoring/learning-path  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/mentoring/sessions  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/mentoring/request  [2m   2ms[0m
+  [32m✓ mentoring: 5/5 passed[0m
+
+[1m── actionable-insights (14 endpoints) ───────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/actionable-insights/promotion/recommend  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/actionable-insights/promotion/user/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/actionable-insights/promotion/00000000-0000-0000-0000-000000000000/approve  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/actionable-insights/promotion/00000000-0000-0000-0000-000000000000/reject  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/actionable-insights/succession/create  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/actionable-insights/succession/plans  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/actionable-insights/development/generate  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/actionable-insights/development/user/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/v1/actionable-insights/development/00000000-0000-0000-0000-000000000000/progress  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/actionable-insights/development/00000000-0000-0000-0000-000000000000/complete  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/actionable-insights/team/optimize  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/actionable-insights/team/00000000-0000-0000-0000-000000000000/analyze  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/actionable-insights/health/calculate  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/actionable-insights/health/culture-diagnostic  [2m   2ms[0m
+  [32m✓ actionable-insights: 14/14 passed[0m
+
+[1m── ai-insights (16 endpoints) ───────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai-insights/sentiment/analyze  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai-insights/sentiment/trend  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai-insights/sentiment/history  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai-insights/anomaly/detect  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai-insights/anomaly/active  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai-insights/anomaly/statistics  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai-insights/anomaly/00000000-0000-0000-0000-000000000000/acknowledge  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai-insights/anomaly/00000000-0000-0000-0000-000000000000/resolve  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai-insights/benchmark/create  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai-insights/benchmark/compare  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai-insights/benchmark/comparisons  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai-insights/benchmark/team-summary  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/ai-insights/productivity/predict  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai-insights/productivity/predictions  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai-insights/engagement/history  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/ai-insights/engagement/at-risk  [2m   2ms[0m
+  [32m✓ ai-insights: 16/16 passed[0m
+
+[1m── checkins (6 endpoints) ──────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/checkins/my  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/checkins/templates  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/checkins/upcoming  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/checkins/history  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/checkins  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/checkins  [2m   2ms[0m
+  [32m✓ checkins: 6/6 passed[0m
+
+[1m── teams (6 endpoints) ─────────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/teams/my  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/teams  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/teams/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/teams/00000000-0000-0000-0000-000000000000/members  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/teams/00000000-0000-0000-0000-000000000000/goals  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/v1/teams/00000000-0000-0000-0000-000000000000/analytics  [2m   1ms[0m
+  [32m✓ teams: 6/6 passed[0m
+
+[1m── simulator (1 endpoints) ─────────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/v1/simulator/run  [2m   2ms[0m
+  [32m✓ simulator: 1/1 passed[0m
+
+[1m── super-admin (46 endpoints) ───────────────────────────────────────[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/auth/login  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/auth/refresh  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/auth/mfa/verify  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/auth/logout  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/tenants  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/tenants/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/tenants  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/admin/tenants/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/admin/tenants/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/tenants/00000000-0000-0000-0000-000000000000/suspend  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/tenants/00000000-0000-0000-0000-000000000000/activate  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/tenants/00000000-0000-0000-0000-000000000000/metrics  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/admin/tenants/00000000-0000-0000-0000-000000000000/settings  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/tenants/00000000-0000-0000-0000-000000000000/export  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/tenants/00000000-0000-0000-0000-000000000000/designated-manager  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/tenants/00000000-0000-0000-0000-000000000000/designated-manager  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/users  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/users  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/users/00000000-0000-0000-0000-000000000000  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/users/00000000-0000-0000-0000-000000000000/suspend  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/users/00000000-0000-0000-0000-000000000000/activate  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/users/00000000-0000-0000-0000-000000000000/reset-password  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/users/00000000-0000-0000-0000-000000000000/disable-mfa  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/system/dashboard  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/system/metrics  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/system/config  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/admin/system/config  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/system/health  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/system/cache/clear  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/audit  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/audit/export  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/billing  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/billing/revenue  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPUT   [0m /api/admin/billing/tenants/00000000-0000-0000-0000-000000000000/plan  [2m   3ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/billing/tenants/00000000-0000-0000-0000-000000000000/invoices  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/security/threats  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/security/ip/block  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/security/ip/unblock  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/security/ip/blocked  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/security/sessions  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/admin/security/sessions/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mDELETE[0m /api/admin/security/sessions/user/00000000-0000-0000-0000-000000000000  [2m   1ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/upgrade-requests  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mGET   [0m /api/admin/upgrade-requests/pending-count  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/upgrade-requests/00000000-0000-0000-0000-000000000000/approve  [2m   2ms[0m
+  [32m✓[0m  [33m429[0m  [2mPOST  [0m /api/admin/upgrade-requests/00000000-0000-0000-0000-000000000000/reject  [2m   1ms[0m
+  [32m✓ super-admin: 46/46 passed[0m
+
+
+[1m================================================================[0m
+[1m                    FINAL SUMMARY[0m
+[1m================================================================[0m
+  Total:  [1m514[0m   Passed: [32m[1m514[0m (100.0%)   Failed: 0
+[1m────────────────────────────────────────────────────────────────[0m
+  [32m✓[0m health-check              2/2      [32m✓[0m auth                      12/12
+  [32m✓[0m users                     34/34      [32m✓[0m goals                     18/18
+  [32m✓[0m reviews                   13/13      [32m✓[0m feedback                  12/12
+  [32m✓[0m calibration               10/10      [32m✓[0m analytics                 13/13
+  [32m✓[0m notifications             6/6      [32m✓[0m integrations              10/10
+  [32m✓[0m compensation              11/11      [32m✓[0m evidence                  10/10
+  [32m✓[0m promotions                12/12      [32m✓[0m reports                   14/14
+  [32m✓[0m realtime-performance      24/24      [32m✓[0m performance-math          9/9
+  [32m✓[0m calendar                  5/5      [32m✓[0m one-on-ones               8/8
+  [32m✓[0m development               12/12      [32m✓[0m pip                       9/9
+  [32m✓[0m succession                7/7      [32m✓[0m admin-config              19/19
+  [32m✓[0m audit                     6/6      [32m✓[0m skills                    14/14
+  [32m✓[0m compliance                17/17      [32m✓[0m announcements             8/8
+  [32m✓[0m leaderboard               7/7      [32m✓[0m career                    6/6
+  [32m✓[0m excel-upload              7/7      [32m✓[0m ai                        19/19
+  [32m✓[0m roles                     8/8      [32m✓[0m upgrade-requests          3/3
+  [32m✓[0m chat                      24/24      [32m✓[0m health-metrics            3/3
+  [32m✓[0m engagement                6/6      [32m✓[0m pulse                     7/7
+  [32m✓[0m delegations               7/7      [32m✓[0m policies                  8/8
+  [32m✓[0m mentoring                 5/5      [32m✓[0m actionable-insights       14/14
+  [32m✓[0m ai-insights               16/16      [32m✓[0m checkins                  6/6
+  [32m✓[0m teams                     6/6      [32m✓[0m simulator                 1/1
+  [32m✓[0m super-admin               46/46
+[1m================================================================[0m
+
+[32m[1m  RESULT: ALL PASS — Every endpoint is healthy![0m
+

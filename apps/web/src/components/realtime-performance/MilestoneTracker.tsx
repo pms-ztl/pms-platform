@@ -95,9 +95,9 @@ const statusConfig = {
   pending: {
     icon: ClockIcon,
     color: 'gray',
-    bg: 'bg-gray-100 dark:bg-gray-800',
-    border: 'border-gray-200 dark:border-gray-700',
-    text: 'text-gray-600 dark:text-gray-400',
+    bg: 'bg-secondary-100 dark:bg-secondary-800',
+    border: 'border-secondary-200 dark:border-secondary-700',
+    text: 'text-secondary-600 dark:text-secondary-400',
     label: 'Pending',
   },
   in_progress: {
@@ -152,7 +152,7 @@ const HealthGauge = ({ score }: { score: number }) => {
             fill="none"
             stroke="currentColor"
             strokeWidth="6"
-            className="text-gray-200 dark:text-gray-700"
+            className="text-secondary-200 dark:text-secondary-700"
           />
           <circle
             cx="32"
@@ -171,8 +171,8 @@ const HealthGauge = ({ score }: { score: number }) => {
         </div>
       </div>
       <div className="text-center w-full max-w-full">
-        <div className="text-xs font-medium text-gray-900 dark:text-white truncate px-1">Project Health</div>
-        <div className={clsx('text-[10px] truncate px-1', getColor())}>
+        <div className="text-xs font-medium text-secondary-900 dark:text-white break-words px-1">Project Health</div>
+        <div className={clsx('text-[10px] break-words px-1', getColor())}>
           {score >= 80 ? 'Excellent' : score >= 60 ? 'Good' : 'Attention'}
         </div>
       </div>
@@ -222,16 +222,16 @@ const MilestoneCard = ({
                 </span>
               )}
             </div>
-            <h4 className="text-sm font-semibold text-gray-900 dark:text-white mt-1">
+            <h4 className="text-sm font-semibold text-secondary-900 dark:text-white mt-1">
               {milestone.title}
             </h4>
             {milestone.description && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
                 {milestone.description}
               </p>
             )}
             {milestone.goal && (
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
+              <div className="text-xs text-secondary-500 dark:text-secondary-400 mt-1 flex items-center">
                 <FlagIcon className="h-3 w-3 mr-1" />
                 {milestone.goal.title}
               </div>
@@ -242,11 +242,11 @@ const MilestoneCard = ({
 
       {/* Progress */}
       <div className="mt-4">
-        <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+        <div className="flex justify-between text-xs text-secondary-500 dark:text-secondary-400 mb-1">
           <span>Progress</span>
           <span>{milestone.progressPercentage}%</span>
         </div>
-        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full">
+        <div className="w-full h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full">
           <div
             className={clsx(
               'h-2 rounded-full transition-all',
@@ -261,14 +261,14 @@ const MilestoneCard = ({
       <div className="mt-4 flex items-center justify-between text-xs">
         <div className={clsx(
           'flex items-center',
-          isPastDue ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'
+          isPastDue ? 'text-red-500' : 'text-secondary-500 dark:text-secondary-400'
         )}>
           <CalendarIcon className="h-3.5 w-3.5 mr-1" />
           {plannedDate.toLocaleDateString()}
           {isPastDue && <span className="ml-1">(overdue)</span>}
         </div>
         {milestone.velocityBasedEta && milestone.status !== 'completed' && (
-          <div className="text-gray-500 dark:text-gray-400">
+          <div className="text-secondary-500 dark:text-secondary-400">
             ETA: {new Date(milestone.velocityBasedEta).toLocaleDateString()}
           </div>
         )}
@@ -289,7 +289,7 @@ const MilestoneCard = ({
             <>
               <button
                 onClick={() => onUpdate(milestone.id, milestone.status, Math.min(100, milestone.progressPercentage + 25))}
-                className="flex-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                className="flex-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-200"
               >
                 +25%
               </button>
@@ -315,7 +315,7 @@ const TimelineView = ({ milestones }: { milestones: Milestone[] }) => {
   return (
     <div className="relative">
       {/* Timeline line */}
-      <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700" />
+      <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-secondary-200 dark:bg-secondary-700" />
 
       <div className="space-y-4">
         {sortedMilestones.map((milestone, index) => {
@@ -331,7 +331,7 @@ const TimelineView = ({ milestones }: { milestones: Milestone[] }) => {
                   ? 'bg-green-500 border-green-500'
                   : milestone.status === 'in_progress'
                     ? 'bg-blue-500 border-blue-500'
-                    : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'
+                    : 'bg-white dark:bg-secondary-800 border-secondary-300 dark:border-secondary-600'
               )}>
                 {milestone.status === 'completed' && (
                   <CheckCircleIcon className="h-3 w-3 text-white" />
@@ -345,7 +345,7 @@ const TimelineView = ({ milestones }: { milestones: Milestone[] }) => {
                 config.border
               )}>
                 <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <h4 className="text-sm font-semibold text-secondary-900 dark:text-white">
                     {milestone.title}
                   </h4>
                   <span className={clsx('text-xs', config.text)}>
@@ -354,7 +354,7 @@ const TimelineView = ({ milestones }: { milestones: Milestone[] }) => {
                 </div>
                 {milestone.status !== 'completed' && (
                   <div className="mt-2">
-                    <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full">
+                    <div className="w-full h-1.5 bg-secondary-200 dark:bg-secondary-700 rounded-full">
                       <div
                         className={clsx(
                           'h-1.5 rounded-full',
@@ -421,10 +421,10 @@ export function MilestoneTracker() {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+        <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
         <div className="grid grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div key={i} className="h-24 bg-secondary-200 dark:bg-secondary-700 rounded-xl" />
           ))}
         </div>
       </div>
@@ -442,10 +442,10 @@ export function MilestoneTracker() {
             <FlagIcon className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-secondary-900 dark:text-white">
               Project Milestones
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-secondary-500 dark:text-secondary-400">
               Live milestone tracking with dynamic timelines
             </p>
           </div>
@@ -453,14 +453,14 @@ export function MilestoneTracker() {
 
         <div className="flex items-center space-x-4">
           {/* View Toggle */}
-          <div className="flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center space-x-2 bg-secondary-100 dark:bg-secondary-800 rounded-lg p-1">
             <button
               onClick={() => setViewMode('cards')}
               className={clsx(
                 'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
                 viewMode === 'cards'
-                  ? 'bg-white dark:bg-gray-700 shadow text-gray-900 dark:text-white'
-                  : 'text-gray-600 dark:text-gray-400'
+                  ? 'bg-white dark:bg-secondary-700 shadow text-secondary-900 dark:text-white'
+                  : 'text-secondary-600 dark:text-secondary-400'
               )}
             >
               Cards
@@ -470,8 +470,8 @@ export function MilestoneTracker() {
               className={clsx(
                 'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
                 viewMode === 'timeline'
-                  ? 'bg-white dark:bg-gray-700 shadow text-gray-900 dark:text-white'
-                  : 'text-gray-600 dark:text-gray-400'
+                  ? 'bg-white dark:bg-secondary-700 shadow text-secondary-900 dark:text-white'
+                  : 'text-secondary-600 dark:text-secondary-400'
               )}
             >
               Timeline
@@ -490,24 +490,24 @@ export function MilestoneTracker() {
 
       {/* Summary */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="col-span-2 md:col-span-1 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 overflow-hidden">
+        <div className="col-span-2 md:col-span-1 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 overflow-hidden">
           <HealthGauge score={summary?.healthScore || 0} />
         </div>
-        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 p-4 overflow-hidden">
-          <div className="text-sm text-gray-500 truncate">Total</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white truncate">{summary?.total || 0}</div>
+        <div className="bg-secondary-50 dark:bg-secondary-800/50 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 overflow-hidden">
+          <div className="text-sm text-secondary-500 break-words">Total</div>
+          <div className="text-2xl font-bold text-secondary-900 dark:text-white break-words">{summary?.total || 0}</div>
         </div>
         <div className="bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800 p-4 overflow-hidden">
-          <div className="text-sm text-green-600 truncate">Completed</div>
-          <div className="text-2xl font-bold text-green-700 dark:text-green-300 truncate">{summary?.completed || 0}</div>
+          <div className="text-sm text-green-600 break-words">Completed</div>
+          <div className="text-2xl font-bold text-green-700 dark:text-green-300 break-words">{summary?.completed || 0}</div>
         </div>
         <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 p-4 overflow-hidden">
-          <div className="text-sm text-blue-600 truncate">In Progress</div>
-          <div className="text-2xl font-bold text-blue-700 dark:text-blue-300 truncate">{summary?.inProgress || 0}</div>
+          <div className="text-sm text-blue-600 break-words">In Progress</div>
+          <div className="text-2xl font-bold text-blue-700 dark:text-blue-300 break-words">{summary?.inProgress || 0}</div>
         </div>
         <div className="bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800 p-4 overflow-hidden">
-          <div className="text-sm text-red-600 truncate">Delayed</div>
-          <div className="text-2xl font-bold text-red-700 dark:text-red-300 truncate">{summary?.delayed || 0}</div>
+          <div className="text-sm text-red-600 break-words">Delayed</div>
+          <div className="text-2xl font-bold text-red-700 dark:text-red-300 break-words">{summary?.delayed || 0}</div>
         </div>
       </div>
 
@@ -524,15 +524,15 @@ export function MilestoneTracker() {
             ))}
           </div>
         ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
             <TimelineView milestones={timeline.milestones} />
           </div>
         )
       ) : (
-        <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-          <FlagIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">No milestones yet</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+        <div className="text-center py-12 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700">
+          <FlagIcon className="h-12 w-12 text-secondary-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-secondary-900 dark:text-white">No milestones yet</h3>
+          <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
             Create your first milestone to start tracking project progress
           </p>
           <button
@@ -548,50 +548,50 @@ export function MilestoneTracker() {
       {/* Create Milestone Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowCreateModal(false)}>
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Create Milestone</h3>
+          <div className="bg-white dark:bg-secondary-800 rounded-xl p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Create Milestone</h3>
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
                   Title *
                 </label>
                 <input
                   type="text"
                   name="title"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-secondary-300 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white"
                   placeholder="Milestone title"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
                   Description
                 </label>
                 <textarea
                   name="description"
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-secondary-300 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white"
                   placeholder="Milestone description"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
                   Planned Date *
                 </label>
                 <input
                   type="date"
                   name="plannedDate"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-secondary-300 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
                   Type
                 </label>
                 <select
                   name="milestoneType"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-secondary-300 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white"
                 >
                   <option value="checkpoint">Checkpoint</option>
                   <option value="deliverable">Deliverable</option>
@@ -603,7 +603,7 @@ export function MilestoneTracker() {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                  className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg"
                 >
                   Cancel
                 </button>

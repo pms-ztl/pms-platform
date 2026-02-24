@@ -16,6 +16,7 @@ import { aiApi, type AIInsightCard } from '@/lib/api';
 import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import * as T from './ai-theme';
 import { ProactivePopout } from './FuturisticEffects';
+import { getAgentIcon } from './agentIconMap';
 
 // ── Priority Config ───────────────────────────────────────────
 
@@ -31,11 +32,6 @@ const PRIORITY_CONFIG_LIGHT: Record<string, { badge: string; badgeText: string; 
   high: { badge: 'bg-orange-100 text-orange-700 border-orange-200', badgeText: 'High', dotColor: 'bg-orange-500' },
   medium: { badge: 'bg-yellow-100 text-yellow-700 border-yellow-200', badgeText: 'Warning', dotColor: 'bg-yellow-500' },
   low: { badge: 'bg-emerald-100 text-emerald-700 border-emerald-200', badgeText: 'Info', dotColor: 'bg-emerald-500' },
-};
-
-const AGENT_ICONS: Record<string, string> = {
-  performance: '\uD83C\uDFAF', analytics: '\uD83D\uDCCA', feedback: '\uD83D\uDCAC', hr: '\uD83D\uDC65',
-  report: '\uD83D\uDCCB', goals: '\uD83C\uDFC6', onboarding: '\uD83C\uDF93', security: '\uD83D\uDD12', notification: '\uD83D\uDD14',
 };
 
 function timeAgo(dateStr: string): string {
@@ -151,7 +147,7 @@ export function InsightFeed({ className = '' }: InsightFeedProps) {
 
         {insights.map((insight, index) => {
           const priority = priorityMap[insight.priority] ?? priorityMap.low;
-          const agentIcon = AGENT_ICONS[insight.agentType] ?? '\u2728';
+          const AgentIcon = getAgentIcon(insight.agentType);
           const isCritical = insight.priority === 'critical' || insight.priority === 'high';
 
           return (
@@ -166,15 +162,15 @@ export function InsightFeed({ className = '' }: InsightFeedProps) {
               } ${isCritical && !insight.isRead ? 'bioluminescent-subtle' : ''}`}
             >
               <div className="flex items-start gap-2">
-                <span className="text-base flex-shrink-0 mt-0.5">{agentIcon}</span>
+                <AgentIcon className={`h-4 w-4 flex-shrink-0 mt-0.5 ${T.accentText(theme)}`} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <h4 className={`text-xs font-semibold truncate ${T.textPrimary(theme)}`}>{insight.title}</h4>
+                    <h4 className={`text-xs font-semibold break-words ${T.textPrimary(theme)}`}>{insight.title}</h4>
                     <span className={`flex-shrink-0 rounded-full border px-1.5 py-0 text-[9px] font-medium ${priority.badge}`}>
                       {priority.badgeText}
                     </span>
                   </div>
-                  <p className={`text-[11px] leading-relaxed line-clamp-2 ${T.textSecondary(theme)}`}>{insight.description}</p>
+                  <p className={`text-[11px] leading-relaxed ${T.textSecondary(theme)}`}>{insight.description}</p>
                 </div>
               </div>
 

@@ -12,7 +12,7 @@
  * Analyzes project contribution data to provide vendor effectiveness insights and negotiation tips.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryProjectContributions } from '../../agent-tools-v3';
 
 // -- System Prompt -----------------------------------------------------------
@@ -40,7 +40,7 @@ Analysis principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class VendorNegotiatorAgent extends BaseAgent {
+export class VendorNegotiatorAgent extends AgenticBaseAgent {
   constructor() {
     super('vendor_negotiator', SYSTEM_PROMPT);
   }

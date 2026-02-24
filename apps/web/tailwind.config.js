@@ -101,6 +101,7 @@ export default {
         sans: ['DM Sans', 'Inter', 'system-ui', 'sans-serif'],
         display: ['Ranade', 'DM Sans', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'SF Mono', 'Consolas', 'monospace'],
+        baskerville: ['Libre Baskerville', 'Georgia', 'serif'],
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',

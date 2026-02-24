@@ -65,7 +65,7 @@ function QuickActions({ pendingReviews, atRiskGoals, goalsData }: QuickActionsPr
                   <ExclamationTriangleIcon className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{goalTitle}</p>
+                  <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{goalTitle}</p>
                   <p className="text-xs text-red-600 dark:text-red-400 mt-0.5">
                     Risk: {risk.riskScore}% &bull; {velocityText}
                   </p>

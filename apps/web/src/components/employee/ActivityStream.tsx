@@ -149,10 +149,10 @@ export function ActivityStream({
                   {format(item.date, 'MMM d, yyyy')}
                 </span>
               </div>
-              <p className="text-sm font-medium text-secondary-900 dark:text-white mt-1 truncate">
+              <p className="text-sm font-medium text-secondary-900 dark:text-white mt-1 break-words">
                 {item.title}
               </p>
-              <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 line-clamp-2">
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">
                 {item.description}
               </p>
             </div>

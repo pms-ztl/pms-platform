@@ -111,7 +111,7 @@ const ProbabilityMeter = ({ probability }: { probability: number }) => {
 
   return (
     <div className="flex items-center space-x-2">
-      <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <div className="flex-1 h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
         <div
           className={clsx('h-full rounded-full transition-all', getBgColor())}
           style={{ width: `${probability}%` }}
@@ -178,10 +178,10 @@ const AlertCard = ({
                 {config.title}
               </span>
             </div>
-            <h4 className="text-sm font-semibold text-gray-900 dark:text-white mt-1 truncate">
+            <h4 className="text-sm font-semibold text-secondary-900 dark:text-white mt-1 break-words">
               {alert.entityTitle}
             </h4>
-            <div className="flex items-center space-x-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
+            <div className="flex items-center space-x-3 mt-2 text-xs text-secondary-500 dark:text-secondary-400">
               <div className="flex items-center">
                 <CalendarDaysIcon className="h-3.5 w-3.5 mr-1" />
                 {new Date(alert.deadline).toLocaleDateString()}
@@ -198,11 +198,11 @@ const AlertCard = ({
       {/* Progress & Probability */}
       <div className="mt-4 space-y-3">
         <div>
-          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+          <div className="flex justify-between text-xs text-secondary-500 dark:text-secondary-400 mb-1">
             <span>Current Progress</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full">
+          <div className="w-full h-1.5 bg-secondary-200 dark:bg-secondary-700 rounded-full">
             <div
               className="h-full bg-blue-500 rounded-full"
               style={{ width: `${progress}%` }}
@@ -211,15 +211,15 @@ const AlertCard = ({
         </div>
 
         <div>
-          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+          <div className="flex justify-between text-xs text-secondary-500 dark:text-secondary-400 mb-1">
             <span>Completion Probability</span>
           </div>
           <ProbabilityMeter probability={probability} />
         </div>
 
         {dailyProgress > 0 && (
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            Need <span className="font-semibold text-gray-900 dark:text-white">
+          <div className="text-xs text-secondary-500 dark:text-secondary-400">
+            Need <span className="font-semibold text-secondary-900 dark:text-white">
               {(dailyProgress ?? 0).toFixed(1)}%
             </span> progress per day to complete on time
           </div>
@@ -231,22 +231,22 @@ const AlertCard = ({
         <div className="flex space-x-2">
           <button
             onClick={() => onAcknowledge(alert.id)}
-            className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700"
           >
             <CheckIcon className="h-3.5 w-3.5 mr-1" />
             Acknowledge
           </button>
           <div className="relative group">
-            <button className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+            <button className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700">
               <BellSlashIcon className="h-3.5 w-3.5 mr-1" />
               Snooze
             </button>
-            <div className="absolute left-0 bottom-full mb-1 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 hidden group-hover:block z-50 py-1">
+            <div className="absolute left-0 bottom-full mb-1 w-36 bg-white dark:bg-secondary-800 rounded-lg shadow-xl border border-secondary-200 dark:border-secondary-700 hidden group-hover:block z-50 py-1">
               {[1, 4, 24].map((hours) => (
                 <button
                   key={hours}
                   onClick={() => onSnooze(alert.id, hours)}
-                  className="w-full px-3 py-2 text-left text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className="w-full px-3 py-2 text-left text-xs text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors"
                 >
                   {hours === 1 ? '1 hour' : hours === 4 ? '4 hours' : '1 day'}
                 </button>
@@ -317,10 +317,10 @@ export function DeadlineAlertSystem() {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+        <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-48 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+            <div key={i} className="h-48 bg-secondary-200 dark:bg-secondary-700 rounded-xl" />
           ))}
         </div>
       </div>
@@ -336,10 +336,10 @@ export function DeadlineAlertSystem() {
             <BellAlertIcon className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-secondary-900 dark:text-white">
               Deadline Alerts
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-secondary-500 dark:text-secondary-400">
               Track approaching deadlines with completion forecasts
             </p>
           </div>
@@ -381,13 +381,13 @@ export function DeadlineAlertSystem() {
               'rounded-xl p-4 border transition-all',
               filter === key
                 ? `bg-${color}-100 dark:bg-${color}-900/30 border-${color}-300 dark:border-${color}-700`
-                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                : 'bg-white dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700 hover:border-secondary-300'
             )}
           >
             <div className={`text-2xl font-bold text-${color}-600 dark:text-${color}-400`}>
               {alertCounts[key as keyof typeof alertCounts]}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">{label}</div>
+            <div className="text-sm text-secondary-600 dark:text-secondary-400">{label}</div>
           </button>
         ))}
       </div>
@@ -405,10 +405,10 @@ export function DeadlineAlertSystem() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="text-center py-12 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700">
           <CheckIcon className="h-12 w-12 text-green-500 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">All caught up!</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <h3 className="text-lg font-medium text-secondary-900 dark:text-white">All caught up!</h3>
+          <p className="text-sm text-secondary-500 dark:text-secondary-400">
             No deadline alerts at the moment
           </p>
         </div>

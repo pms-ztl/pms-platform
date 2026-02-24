@@ -56,7 +56,7 @@ function StrategyNode({
     >
       <div className="flex items-center gap-2">
         <div className={clsx('h-2.5 w-2.5 rounded-full shrink-0', statusDot(goal.progress))} />
-        <p className={clsx('text-xs font-semibold truncate', color.text)}>
+        <p className={clsx('text-xs font-semibold break-words', color.text)}>
           {goal.title}
         </p>
       </div>
@@ -72,7 +72,7 @@ function StrategyNode({
         </span>
       </div>
       {goal.owner && (
-        <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-1.5 truncate">
+        <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-1.5 break-words">
           {goal.owner.firstName} {goal.owner.lastName}
         </p>
       )}
@@ -226,19 +226,19 @@ export function OKRStrategyMapView({ treeData, onSelect }: OKRStrategyMapViewPro
       {/* Column headers */}
       <div className="flex gap-12 mb-6 min-w-[780px]">
         <div className="w-56 shrink-0">
-          <h3 className="text-xs font-bold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-secondary-500 dark:text-secondary-400 tracking-wider">
             Strategic Pillars
           </h3>
           <p className="text-[10px] text-secondary-400 mt-0.5">Company-level goals</p>
         </div>
         <div className="w-56 shrink-0">
-          <h3 className="text-xs font-bold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-secondary-500 dark:text-secondary-400 tracking-wider">
             Annual Goals
           </h3>
           <p className="text-[10px] text-secondary-400 mt-0.5">Department & team goals</p>
         </div>
         <div className="w-56 shrink-0">
-          <h3 className="text-xs font-bold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+          <h3 className="text-xs font-bold text-secondary-500 dark:text-secondary-400 tracking-wider">
             Quarterly OKRs
           </h3>
           <p className="text-[10px] text-secondary-400 mt-0.5">Objectives & key results</p>
@@ -315,7 +315,7 @@ export function OKRStrategyMapView({ treeData, onSelect }: OKRStrategyMapViewPro
 
       {/* Legend */}
       <div className="mt-6 pt-4 border-t border-secondary-200 dark:border-secondary-700 flex items-center gap-4 flex-wrap">
-        <span className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Legend:</span>
+        <span className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">Legend:</span>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
           <span className="text-[10px] text-secondary-500 dark:text-secondary-400">On Track (&ge;70%)</span>

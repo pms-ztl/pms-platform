@@ -12,7 +12,7 @@
  * Creates rich, interactive training simulations grounded in real performance data.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import {
   querySkillGaps,
   queryLearningProgress,
@@ -44,7 +44,7 @@ Simulation principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class ARMentorAgent extends BaseAgent {
+export class ARMentorAgent extends AgenticBaseAgent {
   constructor() {
     super('ar_mentor', SYSTEM_PROMPT);
   }

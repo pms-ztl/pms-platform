@@ -19,6 +19,7 @@ import toast from 'react-hot-toast';
 import { licenseApi, type LicenseUsageData, type SubscriptionInfo } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
@@ -73,10 +74,7 @@ export function LicenseDashboardPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">License Dashboard</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading license information...</p>
-        </div>
+        <PageHeader title="License Dashboard" subtitle="Loading license information..." />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6">
@@ -112,13 +110,10 @@ export function LicenseDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">License Dashboard</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Manage licenses, seats, and subscription for {subscription?.companyName || 'your organization'}
-          </p>
-        </div>
+      <PageHeader
+        title="License Dashboard"
+        subtitle={`Manage licenses, seats, and subscription for ${subscription?.companyName || 'your organization'}`}
+      >
         <button
           onClick={() => queryClient.invalidateQueries({ queryKey: ['license-usage', 'subscription-info'] })}
           className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-700"
@@ -126,7 +121,7 @@ export function LicenseDashboardPage() {
           <ArrowPathIcon className="h-4 w-4" />
           Refresh
         </button>
-      </div>
+      </PageHeader>
 
       {/* Alerts */}
       {usage && usage.usagePercent >= 90 && (
@@ -399,7 +394,7 @@ export function LicenseDashboardPage() {
                   const pct = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
                   return (
                     <div key={item.name} className="flex items-center gap-3">
-                      <span className="text-xs text-secondary-500 w-24 truncate text-right" title={item.name}>{item.name}</span>
+                      <span className="text-xs text-secondary-500 w-24 break-words text-right" title={item.name}>{item.name}</span>
                       <div className="flex-1 h-5 bg-secondary-100 dark:bg-secondary-800 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-indigo-500 rounded-full transition-all duration-300"
@@ -429,18 +424,18 @@ export function LicenseDashboardPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-secondary-200 dark:border-secondary-700">
-                  <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500 uppercase">File</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500 uppercase">Date</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500 uppercase">Status</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-secondary-500 uppercase">Rows</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-secondary-500 uppercase">Success</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-secondary-500 uppercase">Errors</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500">File</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500">Date</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-secondary-500">Status</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-secondary-500">Rows</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-secondary-500">Success</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-secondary-500">Errors</th>
                 </tr>
               </thead>
               <tbody>
                 {uploadHistory.map((upload: any) => (
                   <tr key={upload.id} className="border-b border-secondary-100 dark:border-secondary-800 last:border-0">
-                    <td className="px-6 py-3 text-secondary-900 dark:text-white font-medium truncate max-w-[200px]" title={upload.fileName}>
+                    <td className="px-6 py-3 text-secondary-900 dark:text-white font-medium break-words max-w-[200px]" title={upload.fileName}>
                       {upload.fileName}
                     </td>
                     <td className="px-6 py-3 text-secondary-500">

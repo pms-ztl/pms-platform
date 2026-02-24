@@ -12,7 +12,7 @@
  * Uses user data, project contributions, and compliance status to identify potential COI situations.
  */
 
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../../agentic-base-agent';
 import { queryUsers } from '../../agent-tools';
 import { queryProjectContributions, queryComplianceStatus } from '../../agent-tools-v3';
 
@@ -41,7 +41,7 @@ Ethics principles:
 
 // -- Agent Class -------------------------------------------------------------
 
-export class ConflictOfInterestAgent extends BaseAgent {
+export class ConflictOfInterestAgent extends AgenticBaseAgent {
   constructor() {
     super('conflict_of_interest', SYSTEM_PROMPT);
   }

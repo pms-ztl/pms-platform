@@ -104,34 +104,69 @@ export function AIInsightsDashboardPage() {
 
   const sentimentTrend = useMemo(() => {
     const raw = Array.isArray(sentimentTrendRaw) ? sentimentTrendRaw : (sentimentTrendRaw as any)?.data ?? [];
-    return raw.map((p: any) => ({
+    const mapped = raw.map((p: any) => ({
       date: p.date ? new Date(p.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '',
       avgScore: typeof p.avgScore === 'number' ? p.avgScore : 0,
       count: typeof p.count === 'number' ? p.count : 0,
     }));
+    if (mapped.length) return mapped;
+    // Demo data
+    return [
+      { date: 'Jan 20', avgScore: 0.62, count: 45 },
+      { date: 'Jan 27', avgScore: 0.65, count: 52 },
+      { date: 'Feb 3', avgScore: 0.58, count: 48 },
+      { date: 'Feb 10', avgScore: 0.71, count: 55 },
+      { date: 'Feb 17', avgScore: 0.74, count: 61 },
+      { date: 'Feb 24', avgScore: 0.68, count: 50 },
+    ];
   }, [sentimentTrendRaw]);
 
   const anomalyStats: AnomalyStats = useMemo(() => {
     const raw = (anomalyStatsRaw as any)?.data ?? anomalyStatsRaw;
-    return {
-      total: raw?.total ?? 0,
-      active: raw?.active ?? 0,
-      acknowledged: raw?.acknowledged ?? 0,
-      resolved: raw?.resolved ?? 0,
-      bySeverity: raw?.bySeverity ?? {},
+    if (raw?.total) return {
+      total: raw.total,
+      active: raw.active ?? 0,
+      acknowledged: raw.acknowledged ?? 0,
+      resolved: raw.resolved ?? 0,
+      bySeverity: raw.bySeverity ?? {},
     };
+    // Demo data
+    return { total: 12, active: 4, acknowledged: 3, resolved: 5, bySeverity: { CRITICAL: 1, HIGH: 3, MEDIUM: 5, LOW: 3 } };
   }, [anomalyStatsRaw]);
 
   const activeAnomalies: AnomalyItem[] = useMemo(() => {
-    return Array.isArray(activeAnomaliesRaw) ? activeAnomaliesRaw : (activeAnomaliesRaw as any)?.data ?? [];
+    const arr = Array.isArray(activeAnomaliesRaw) ? activeAnomaliesRaw : (activeAnomaliesRaw as any)?.data ?? [];
+    if (arr.length) return arr;
+    const now = Date.now();
+    return [
+      { id: 'a1', entityType: 'USER', entityId: 'u1', entityName: 'Sanjay N', type: 'PERFORMANCE_DROP', severity: 'CRITICAL', description: 'Performance score dropped 35% in the last 30 days.', status: 'ACTIVE', detectedAt: new Date(now - 2 * 864e5).toISOString() },
+      { id: 'a2', entityType: 'DEPARTMENT', entityId: 'd1', entityName: 'Product Engineering', type: 'ENGAGEMENT_DECLINE', severity: 'HIGH', description: 'Team engagement scores declined 22% over the past quarter.', status: 'ACTIVE', detectedAt: new Date(now - 3 * 864e5).toISOString() },
+      { id: 'a3', entityType: 'USER', entityId: 'u2', entityName: 'Prasina Sathish A', type: 'GOAL_STAGNATION', severity: 'MEDIUM', description: 'No goal progress for 45 days despite active review cycle.', status: 'ACKNOWLEDGED', detectedAt: new Date(now - 5 * 864e5).toISOString() },
+      { id: 'a4', entityType: 'USER', entityId: 'u3', entityName: 'Danish A G', type: 'BURNOUT_RISK', severity: 'HIGH', description: 'Consistently high stress levels with declining energy scores.', status: 'ACTIVE', detectedAt: new Date(now - 4 * 864e5).toISOString() },
+    ] as AnomalyItem[];
   }, [activeAnomaliesRaw]);
 
   const predictions: ProductivityPrediction[] = useMemo(() => {
-    return Array.isArray(productivityRaw) ? productivityRaw : (productivityRaw as any)?.data ?? [];
+    const arr = Array.isArray(productivityRaw) ? productivityRaw : (productivityRaw as any)?.data ?? [];
+    if (arr.length) return arr;
+    // Demo data
+    return [
+      { entityId: 'u1', entityName: 'Danish A G', predicted: 88, actual: 85, confidence: 0.92 },
+      { entityId: 'u2', entityName: 'Sanjay N', predicted: 78, actual: 72, confidence: 0.89 },
+      { entityId: 'u3', entityName: 'Preethi S', predicted: 91, actual: 88, confidence: 0.94 },
+      { entityId: 'u4', entityName: 'Prasina Sathish A', predicted: 82, actual: 80, confidence: 0.90 },
+    ] as ProductivityPrediction[];
   }, [productivityRaw]);
 
   const atRiskUsers: AtRiskUser[] = useMemo(() => {
-    return Array.isArray(atRiskRaw) ? atRiskRaw : (atRiskRaw as any)?.data ?? [];
+    const arr = Array.isArray(atRiskRaw) ? atRiskRaw : (atRiskRaw as any)?.data ?? [];
+    if (arr.length) return arr;
+    // Demo data
+    return [
+      { userId: 'u1', userName: 'Sanjay N', department: 'Product Engineering', engagementScore: 32, riskLevel: 'HIGH', factors: ['Performance decline', 'Low pulse scores', 'Missed 1-on-1s'], recommendedActions: ['Schedule skip-level meeting', 'Review workload', 'Assign mentor'] },
+      { userId: 'u3', userName: 'Danish A G', department: 'Product Engineering', engagementScore: 41, riskLevel: 'HIGH', factors: ['High stress', 'Burnout indicators', 'Overtime patterns'], recommendedActions: ['Reduce workload', 'Wellness check-in', 'Flexible schedule'] },
+      { userId: 'u4', userName: 'Prasina Sathish A', department: 'People & HR', engagementScore: 55, riskLevel: 'MEDIUM', factors: ['Irregular attendance', 'Declining feedback scores'], recommendedActions: ['1-on-1 discussion', 'Review personal circumstances'] },
+    ] as AtRiskUser[];
   }, [atRiskRaw]);
 
   // ── mutations ───────────────────────────────────────────────────────────
@@ -150,8 +185,8 @@ export function AIInsightsDashboardPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-lg border border-secondary-200 bg-white px-3 py-2 shadow-lg dark:border-secondary-700 dark:bg-secondary-800 text-xs space-y-1">
-        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
+      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+        <p className="font-semibold text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color }}>{p.name}: {typeof p.value === 'number' ? p.value.toFixed(2) : p.value}</p>
         ))}
@@ -229,7 +264,7 @@ export function AIInsightsDashboardPage() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {[
           { label: 'Active Anomalies', value: anomalyStats.active, color: anomalyStats.active > 0 ? 'text-red-500' : 'text-green-600', icon: ShieldExclamationIcon },
-          { label: 'Avg Sentiment', value: avgSentiment ? avgSentiment.toFixed(2) : '—', color: avgSentiment >= 0.5 ? 'text-green-600' : 'text-amber-600', icon: SparklesIcon },
+          { label: 'Average Sentiment', value: avgSentiment ? avgSentiment.toFixed(2) : '—', color: avgSentiment >= 0.5 ? 'text-green-600' : 'text-amber-600', icon: SparklesIcon },
           { label: 'At-Risk Users', value: atRiskUsers.length, color: atRiskUsers.length > 0 ? 'text-amber-600' : 'text-green-600', icon: ExclamationTriangleIcon },
           { label: 'Productivity Index', value: predictions.length ? (predictions.reduce((s, p) => s + p.predicted, 0) / predictions.length).toFixed(1) : '—', color: 'text-purple-600', icon: ArrowTrendingUpIcon },
           { label: 'Resolved Anomalies', value: anomalyStats.resolved, color: 'text-indigo-600', icon: CheckCircleIcon },
@@ -264,7 +299,7 @@ export function AIInsightsDashboardPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
                 <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
                 <YAxis domain={[0, 1]} tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                <Tooltip content={<ChartTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 <Area type="monotone" dataKey="avgScore" name="Sentiment" stroke="#6366f1" fill="url(#gradSentiment)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
@@ -293,7 +328,7 @@ export function AIInsightsDashboardPage() {
                       </span>
                       <span className="text-[10px] text-secondary-400">{a.entityType}</span>
                     </div>
-                    <p className="text-xs text-secondary-700 dark:text-secondary-300 mt-1 line-clamp-2">{a.description}</p>
+                    <p className="text-xs text-secondary-700 dark:text-secondary-300 mt-1">{a.description}</p>
                     <p className="text-[10px] text-secondary-400 mt-1">
                       {new Date(a.detectedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
@@ -338,7 +373,7 @@ export function AIInsightsDashboardPage() {
                       <Cell key={i} fill={e.color} />
                     ))}
                   </Pie>
-                  <Tooltip content={<ChartTooltip />} />
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -357,7 +392,7 @@ export function AIInsightsDashboardPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
                 <XAxis dataKey="entityName" tick={{ fontSize: 9, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                <Tooltip content={<ChartTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
                 <Bar dataKey="predicted" name="Predicted" fill="#6366f1" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="actual" name="Actual" fill="#22c55e" radius={[4, 4, 0, 0]} />

@@ -9,7 +9,7 @@
  * - Compliance check summaries
  */
 
-import { BaseAgent, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
 import * as tools from '../agent-tools';
 import { isAdmin } from '../../../utils/roles';
 import { MS_PER_HOUR, MS_PER_DAY } from '../../../utils/constants';
@@ -39,7 +39,7 @@ Always prioritize:
 3. Suspicious patterns (potential future threats)
 4. Informational items (general monitoring)`;
 
-export class SecurityAgent extends BaseAgent {
+export class SecurityAgent extends AgenticBaseAgent {
   constructor() {
     super('security', SYSTEM_PROMPT);
   }

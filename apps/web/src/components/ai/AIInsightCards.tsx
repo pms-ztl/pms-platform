@@ -150,7 +150,7 @@ export function AIInsightCards({ maxItems = 5, className = '' }: AIInsightCardsP
                 <Icon className={`mt-0.5 h-4 w-4 flex-shrink-0 ${config.iconColor}`} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
-                    <h4 className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">
+                    <h4 className="text-xs font-semibold text-gray-800 dark:text-gray-200 break-words">
                       {insight.title}
                     </h4>
                     <span
@@ -161,7 +161,7 @@ export function AIInsightCards({ maxItems = 5, className = '' }: AIInsightCardsP
                       {insight.priority}
                     </span>
                   </div>
-                  <p className="text-[11px] text-gray-600 dark:text-gray-400 line-clamp-2">
+                  <p className="text-[11px] text-gray-600 dark:text-gray-400">
                     {insight.description}
                   </p>
                   {insight.actionUrl && insight.actionLabel && (

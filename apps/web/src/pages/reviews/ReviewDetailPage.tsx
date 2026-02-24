@@ -455,7 +455,7 @@ export function ReviewDetailPage() {
                 {revieweeGoals.data.slice(0, 5).map((goal: Goal) => (
                   <div key={goal.id} className="text-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-secondary-900 dark:text-white font-medium truncate">{goal.title}</span>
+                      <span className="text-secondary-900 dark:text-white font-medium break-words">{goal.title}</span>
                       <span className="text-secondary-500">{goal.progress}%</span>
                     </div>
                     <div className="mt-1 w-full bg-secondary-200 rounded-full h-1.5">

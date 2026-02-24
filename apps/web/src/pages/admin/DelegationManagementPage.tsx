@@ -11,6 +11,7 @@ import {
 import toast from 'react-hot-toast';
 import { api } from '@/lib/api/client';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 import {
   delegationsApi,
   type Delegation,
@@ -301,10 +302,7 @@ export function DelegationManagementPage() {
   if (loading) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Delegation Management</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading delegations...</p>
-        </div>
+        <PageHeader title="Delegation Management" subtitle="Loading delegations..." />
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="bg-white dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 animate-pulse h-16" />
@@ -321,13 +319,7 @@ export function DelegationManagementPage() {
   return (
     <div className="space-y-6">
       {/* ---- Page header ---- */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Delegation Management</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Create and manage delegation assignments across your organization.
-          </p>
-        </div>
+      <PageHeader title="Delegation Management" subtitle="Create and manage delegation assignments across your organization.">
         <button
           onClick={openCreateModal}
           className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 transition-colors"
@@ -335,7 +327,7 @@ export function DelegationManagementPage() {
           <PlusIcon className="h-5 w-5" />
           Create Delegation
         </button>
-      </div>
+      </PageHeader>
 
       {/* ---- Tab bar ---- */}
       <div className="border-b border-secondary-200 dark:border-secondary-700">
@@ -383,13 +375,13 @@ export function DelegationManagementPage() {
           <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
             <thead className="bg-secondary-50 dark:bg-secondary-800">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 uppercase tracking-wider">Delegator</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 uppercase tracking-wider">Delegate</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 uppercase tracking-wider">Type</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 uppercase tracking-wider">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 uppercase tracking-wider">Start Date</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 uppercase tracking-wider">End Date</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-secondary-600 dark:text-secondary-400 uppercase tracking-wider">Actions</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 tracking-wider">Delegator</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 tracking-wider">Delegate</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 tracking-wider">Type</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 tracking-wider">Start Date</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-600 dark:text-secondary-400 tracking-wider">End Date</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-secondary-600 dark:text-secondary-400 tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-secondary-100 dark:divide-secondary-800">

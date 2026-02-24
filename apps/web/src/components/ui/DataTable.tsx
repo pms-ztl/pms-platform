@@ -67,7 +67,7 @@ export function DataTable<T>({
                 <th
                   key={col.key}
                   className={clsx(
-                    'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary-500 dark:text-secondary-400',
+                    'px-4 py-3 text-left text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400',
                     col.sortable && 'cursor-pointer select-none hover:text-secondary-700 dark:hover:text-secondary-200 transition-colors',
                     col.className
                   )}

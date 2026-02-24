@@ -16,6 +16,7 @@ import clsx from 'clsx';
 import { usersApi, getAvatarUrl, type User, type Department } from '@/lib/api';
 import { useDebounce } from '@/hooks/useDebounce';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { PageHeader } from '@/components/ui';
 
 // Deterministic color from user name for avatar initials
 const AVATAR_COLORS = [
@@ -239,19 +240,19 @@ export function EmployeeDirectoryPage() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-secondary-200 dark:border-white/[0.06]">
-              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Title
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Department
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Manager
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Status
               </th>
             </tr>
@@ -364,14 +365,7 @@ export function EmployeeDirectoryPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
-          Employee Directory
-        </h1>
-        <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-          Browse and search employees across your organization
-        </p>
-      </div>
+      <PageHeader title="Employee Directory" subtitle="Browse and search employees across your organization" />
 
       {/* Filters bar */}
       <div className="card card-body">

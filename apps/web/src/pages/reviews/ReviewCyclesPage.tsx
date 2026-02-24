@@ -30,6 +30,7 @@ import {
   type CreateReviewCycleInput,
 } from '@/lib/api';
 import { useAuthStore, hasRole } from '@/store/auth';
+import { PageHeader } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -265,20 +266,14 @@ export function ReviewCyclesPage() {
   return (
     <div className="space-y-6">
       {/* ── Header ───────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Review Cycles</h1>
-          <p className="mt-1 text-secondary-600 dark:text-secondary-400">
-            Create and manage performance review cycles
-          </p>
-        </div>
+      <PageHeader title="Review Cycles" subtitle="Create and manage performance review cycles">
         {isHR && (
           <button onClick={() => setShowCreateModal(true)} className="btn-primary">
             <PlusIcon className="h-5 w-5 mr-2" />
             Create New Cycle
           </button>
         )}
-      </div>
+      </PageHeader>
 
       {/* ── Active Cycle Banner ──────────────────────────────────────────── */}
       {activeCycle && (
@@ -295,7 +290,7 @@ export function ReviewCyclesPage() {
                     {activeDaysRemaining} day{activeDaysRemaining !== 1 ? 's' : ''} remaining
                   </span>
                 </div>
-                <h2 className="text-xl font-bold text-secondary-900 dark:text-white truncate">
+                <h2 className="text-xl font-bold text-secondary-900 dark:text-white break-words">
                   {activeCycle.name}
                 </h2>
                 <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
@@ -342,7 +337,7 @@ export function ReviewCyclesPage() {
                     Send Reminders
                   </button>
                   <button
-                    onClick={() => toast('Cycle closure initiated', { icon: '🔒' })}
+                    onClick={() => toast('Cycle closure initiated', { icon: <ExclamationTriangleIcon className="h-5 w-5 text-amber-500" /> })}
                     className="btn-secondary text-sm text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-700 hover:bg-amber-50 dark:hover:bg-amber-900/20"
                   >
                     <XMarkIcon className="h-4 w-4 mr-1.5" />
@@ -373,7 +368,7 @@ export function ReviewCyclesPage() {
             bg: 'bg-blue-500',
           },
           {
-            label: 'Avg Completion Rate',
+            label: 'Average Completion Rate',
             value: `${cycleStats.avgCompletion}%`,
             icon: ChartBarIcon,
             color: 'from-emerald-500 to-teal-400',
@@ -463,7 +458,7 @@ export function ReviewCyclesPage() {
                     (h) => (
                       <th
                         key={h}
-                        className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider"
+                        className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider"
                       >
                         {h}
                       </th>

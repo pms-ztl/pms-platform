@@ -13,7 +13,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@pms/database';
-import { BaseAgent, MODEL_TIERS, type AgentContext } from '../base-agent';
+import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../agentic-base-agent';
 import type { LLMProvider } from '../llm-client';
 import { logger } from '../../../utils/logger';
 
@@ -98,7 +98,7 @@ CRITICAL RULES:
 
 // ── Agent Class ────────────────────────────────────────────
 
-export class ExcelValidationAgent extends BaseAgent {
+export class ExcelValidationAgent extends AgenticBaseAgent {
   constructor() {
     super('excel_validation', SYSTEM_PROMPT);
   }

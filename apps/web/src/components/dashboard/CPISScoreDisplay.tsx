@@ -11,56 +11,48 @@ export interface CPISScoreDisplayProps {
   trajectory: { direction: string; slope: number };
 }
 
-/** CPIS Score Display — vivid neon radar + central score orb */
+/** CPIS Score Display — clean radar + central score orb */
 const CPISScoreDisplay = ({
   score, grade, starRating, rankLabel, dimensions, confidence, trajectory,
 }: CPISScoreDisplayProps) => {
-  // SVG viewBox is fixed; the container scales it responsively
-  const vb = 380; // viewBox size
+  const vb = 380;
   const cx = vb / 2;
   const cy = vb / 2;
   const maxR = 120;
+  const orbR = 44;
   const dimCount = dimensions.length || 8;
 
-  // Neon dimension colors for each axis
   const neonColors = ['#22d3ee', '#a78bfa', '#34d399', '#fbbf24', '#fb7185', '#818cf8', '#2dd4bf', '#e879f9'];
 
-  // Generate radar polygon points
   const radarPoints = dimensions.map((d, i) => {
     const angle = (Math.PI * 2 * i) / dimCount - Math.PI / 2;
-    const r = Math.max(6, (d.rawScore / 100) * maxR);
+    const r = ((d.rawScore ?? 0) / 100) * maxR; // no Math.max — 0 stays at center, hidden by orb
     return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
   }).join(' ');
 
-  // Grid rings
   const rings = [25, 50, 75, 100];
 
-  // Grade color
   const gradeColor = grade === 'A+' || grade === 'A' ? '#10b981'
     : grade === 'B+' || grade === 'B' ? '#3b82f6'
     : grade === 'C+' || grade === 'C' ? '#f59e0b'
     : '#ef4444';
 
-  // Trajectory
-  const trajIcon = trajectory.direction === 'improving' ? '\u25B2' : trajectory.direction === 'declining' ? '\u25BC' : '\u25CF';
+  const trajIcon = trajectory.direction === 'improving' ? '▲' : trajectory.direction === 'declining' ? '▼' : '●';
   const trajColor = trajectory.direction === 'improving' ? '#34d399' : trajectory.direction === 'declining' ? '#fb7185' : '#d4d4d8';
 
   return (
     <div className="flex flex-col items-center gap-2.5 w-full">
-      {/* Radar Chart — uses viewBox so it scales with container */}
+      {/* Radar Chart */}
       <div className="relative w-full max-w-[300px] aspect-square mx-auto">
-        {/* Morphing geometry backdrop — subtle shape-shifting behind radar */}
-        <div className="absolute inset-[-30px] morph-geometry-subtle bg-gradient-to-br from-cyan-400/20 via-blue-500/15 to-violet-500/20" />
-        {/* Multi-layer glow backdrop */}
-        <div className="absolute inset-[-20px] bg-gradient-to-br from-cyan-400/25 via-blue-500/20 to-violet-500/25 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute inset-[-10px] bg-gradient-to-tr from-emerald-400/15 to-fuchsia-400/15 rounded-full blur-2xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
+        {/* Soft ambient glow behind chart */}
+        <div className="absolute inset-[-16px] bg-gradient-to-br from-cyan-500/20 via-violet-500/15 to-blue-500/20 rounded-full blur-3xl" />
 
-        <svg viewBox={`0 0 ${vb} ${vb}`} className="relative z-10 w-full h-full" style={{ filter: 'drop-shadow(0 0 20px rgba(56,189,248,0.3))' }}>
+        <svg viewBox={`0 0 ${vb} ${vb}`} className="relative z-10 w-full h-full" style={{ filter: 'drop-shadow(0 0 16px rgba(56,189,248,0.25))' }}>
           <defs>
             <radialGradient id="cpis-fill-v2" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.65" />
-              <stop offset="60%" stopColor="#3b82f6" stopOpacity="0.40" />
-              <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.20" />
+              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.55" />
+              <stop offset="70%" stopColor="#3b82f6" stopOpacity="0.30" />
+              <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.15" />
             </radialGradient>
             <linearGradient id="cpis-stroke-v2" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#22d3ee" />
@@ -68,8 +60,8 @@ const CPISScoreDisplay = ({
               <stop offset="100%" stopColor="#a78bfa" />
             </linearGradient>
             <filter id="neon-glow">
-              <feGaussianBlur stdDeviation="4" result="blur1" />
-              <feGaussianBlur stdDeviation="8" result="blur2" />
+              <feGaussianBlur stdDeviation="3" result="blur1" />
+              <feGaussianBlur stdDeviation="6" result="blur2" />
               <feMerge>
                 <feMergeNode in="blur2" />
                 <feMergeNode in="blur1" />
@@ -83,25 +75,13 @@ const CPISScoreDisplay = ({
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
-            <linearGradient id="outer-ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.5" />
-              <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.5" />
-            </linearGradient>
+            <radialGradient id="orb-fill" cx="40%" cy="35%" r="60%">
+              <stop offset="0%" stopColor="rgba(56,189,248,0.25)" />
+              <stop offset="100%" stopColor="rgba(0,0,0,0.75)" />
+            </radialGradient>
           </defs>
 
-          {/* Outer decorative ring */}
-          <circle cx={cx} cy={cy} r={maxR + 20} fill="none" stroke="url(#outer-ring-grad)" strokeWidth="1.5" strokeDasharray="5 8" opacity="0.6">
-            <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="30s" repeatCount="indefinite" />
-          </circle>
-          {/* Orbital dots around center */}
-          {[0, 120, 240].map((offset, i) => (
-            <circle key={`orbital-${i}`} cx={cx} cy={cy - 52} r={i === 0 ? 3 : i === 1 ? 2.5 : 2} fill={['#22d3ee', '#a78bfa', '#34d399'][i]} opacity="0.7">
-              <animateTransform attributeName="transform" type="rotate" from={`${offset} ${cx} ${cy}`} to={`${offset + 360} ${cx} ${cy}`} dur={`${6 + i * 2}s`} repeatCount="indefinite" />
-            </circle>
-          ))}
-
-          {/* Grid rings — visible concentric octagons */}
+          {/* Grid rings — concentric octagons */}
           {rings.map((pct, ri) => {
             const r = (pct / 100) * maxR;
             return (
@@ -112,132 +92,97 @@ const CPISScoreDisplay = ({
                   return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
                 }).join(' ')}
                 fill="none"
-                stroke={`rgba(255,255,255,${ri === 3 ? 0.3 : 0.12})`}
-                strokeWidth={ri === 3 ? '1.2' : '0.8'}
+                stroke={`rgba(255,255,255,${ri === 3 ? 0.25 : 0.08})`}
+                strokeWidth={ri === 3 ? '1.2' : '0.7'}
               />
             );
           })}
 
-          {/* Axis lines with score ticks */}
-          {dimensions.map((d, i) => {
+          {/* Axis lines — from orb edge to maxR only */}
+          {dimensions.map((_, i) => {
             const angle = (Math.PI * 2 * i) / dimCount - Math.PI / 2;
             return (
-              <g key={`axis-${i}`}>
-                <line
-                  x1={cx} y1={cy}
-                  x2={cx + maxR * Math.cos(angle)}
-                  y2={cy + maxR * Math.sin(angle)}
-                  stroke="rgba(255,255,255,0.15)"
-                  strokeWidth="0.8"
-                />
-                {(() => {
-                  const r = Math.max(6, (d.rawScore / 100) * maxR);
-                  const px = cx + r * Math.cos(angle);
-                  const py = cy + r * Math.sin(angle);
-                  const perpX = -Math.sin(angle) * 4;
-                  const perpY = Math.cos(angle) * 4;
-                  return (
-                    <line
-                      x1={px - perpX} y1={py - perpY}
-                      x2={px + perpX} y2={py + perpY}
-                      stroke={neonColors[i]}
-                      strokeWidth="2"
-                      opacity="0.6"
-                    />
-                  );
-                })()}
-              </g>
+              <line
+                key={`axis-${i}`}
+                x1={cx + (orbR + 2) * Math.cos(angle)}
+                y1={cy + (orbR + 2) * Math.sin(angle)}
+                x2={cx + maxR * Math.cos(angle)}
+                y2={cy + maxR * Math.sin(angle)}
+                stroke="rgba(255,255,255,0.12)"
+                strokeWidth="0.8"
+              />
             );
           })}
 
           {/* Data polygon — filled area */}
           {dimensions.length > 0 && (
-            <>
-              <polygon
-                points={radarPoints}
-                fill="url(#cpis-fill-v2)"
-                stroke="url(#cpis-stroke-v2)"
-                strokeWidth="2.5"
-                strokeLinejoin="round"
-                filter="url(#neon-glow)"
-              />
-              <polygon
-                points={dimensions.map((d, i) => {
-                  const angle = (Math.PI * 2 * i) / dimCount - Math.PI / 2;
-                  const r = Math.max(4, (d.rawScore / 100) * maxR * 0.6);
-                  return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
-                }).join(' ')}
-                fill="rgba(56,189,248,0.08)"
-                stroke="none"
-              />
-            </>
+            <polygon
+              points={radarPoints}
+              fill="url(#cpis-fill-v2)"
+              stroke="url(#cpis-stroke-v2)"
+              strokeWidth="2"
+              strokeLinejoin="round"
+              filter="url(#neon-glow)"
+            />
           )}
 
-          {/* Data points — bright neon dots */}
+          {/* Center orb */}
+          <circle cx={cx} cy={cy} r={orbR} fill="url(#orb-fill)" stroke="url(#cpis-stroke-v2)" strokeWidth="2" filter="url(#soft-glow)" />
+          <circle cx={cx} cy={cy} r={orbR - 4} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+          <text x={cx} y={cy - 10} textAnchor="middle" dominantBaseline="central"
+            fill="white" fontSize="38" fontWeight="800"
+            style={{ textShadow: '0 0 16px rgba(56,189,248,0.7)' }}
+          >
+            {Math.round(score)}
+          </text>
+          <text x={cx} y={cy + 18} textAnchor="middle" dominantBaseline="central"
+            fill="rgba(147,197,253,0.9)" fontSize="12" fontWeight="700" letterSpacing="3"
+          >
+            CPIS
+          </text>
+
+          {/* Data point dots — only outside the orb, guard against 0/null/NaN */}
           {dimensions.map((d, i) => {
             const angle = (Math.PI * 2 * i) / dimCount - Math.PI / 2;
-            const r = Math.max(6, (d.rawScore / 100) * maxR);
+            const r = ((d.rawScore ?? 0) / 100) * maxR;
+            if (!d.rawScore || isNaN(r) || r < orbR + 10) return null;
             const px = cx + r * Math.cos(angle);
             const py = cy + r * Math.sin(angle);
             return (
               <g key={`pt-${d.code}`}>
-                <circle cx={px} cy={py} r="8" fill={neonColors[i]} opacity="0.2" />
-                <circle cx={px} cy={py} r="4.5" fill={neonColors[i]} stroke="white" strokeWidth="2" filter="url(#soft-glow)" />
+                <circle cx={px} cy={py} r="6" fill={neonColors[i]} opacity="0.25" />
+                <circle cx={px} cy={py} r="3.5" fill={neonColors[i]} stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" filter="url(#soft-glow)" />
               </g>
             );
           })}
 
-          {/* Dimension labels — stacked: score + code at single anchor point */}
+          {/* Dimension labels — always show all, dim when no score */}
           {dimensions.map((d, i) => {
             const angle = (Math.PI * 2 * i) / dimCount - Math.PI / 2;
-            const labelR = maxR + 40;
+            const labelR = maxR + 38;
             const x = cx + labelR * Math.cos(angle);
             const y = cy + labelR * Math.sin(angle);
+            const hasScore = d.rawScore && d.rawScore > 0;
             return (
-              <g key={`lbl-${d.code}`}>
-                <text
-                  x={x} y={y - 8}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fill="rgba(255,255,255,0.85)"
-                  fontSize="14"
-                  fontWeight="700"
+              <g key={`lbl-${d.code}`} opacity={hasScore ? 1 : 0.35}>
+                <text x={x} y={y - 8} textAnchor="middle" dominantBaseline="central"
+                  fill="rgba(255,255,255,0.85)" fontSize="13" fontWeight="700"
                 >
-                  {Math.round(d.rawScore)}
+                  {hasScore ? Math.round(d.rawScore) : '—'}
                 </text>
-                <text
-                  x={x} y={y + 9}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fill={neonColors[i]}
-                  fontSize="12"
-                  fontWeight="800"
-                  style={{ textShadow: `0 0 8px ${neonColors[i]}80` }}
+                <text x={x} y={y + 9} textAnchor="middle" dominantBaseline="central"
+                  fill={hasScore ? neonColors[i] : 'rgba(255,255,255,0.4)'} fontSize="11" fontWeight="800"
+                  style={hasScore ? { textShadow: `0 0 6px ${neonColors[i]}70` } : undefined}
                 >
                   {d.code}
                 </text>
               </g>
             );
           })}
-
-          {/* Center orb — dark glass with score */}
-          <circle cx={cx} cy={cy} r="44" fill="rgba(0,0,0,0.6)" stroke="url(#cpis-stroke-v2)" strokeWidth="2.5" filter="url(#soft-glow)" />
-          <circle cx={cx} cy={cy} r="40" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-          <text x={cx} y={cy - 10} textAnchor="middle" dominantBaseline="central"
-            fill="white" fontSize="38" fontWeight="800"
-            style={{ textShadow: '0 0 16px rgba(56,189,248,0.6)' }}
-          >
-            {Math.round(score)}
-          </text>
-          <text x={cx} y={cy + 18} textAnchor="middle" dominantBaseline="central"
-            fill="rgba(147,197,253,0.95)" fontSize="13" fontWeight="700" letterSpacing="3"
-          >
-            CPIS
-          </text>
         </svg>
       </div>
 
-      {/* Grade + Stars + Trajectory row */}
+      {/* Grade + Stars + Trajectory */}
       <div className="flex items-center justify-center gap-4 flex-wrap">
         <span
           className="text-lg font-black px-3 py-1 rounded-lg border-2"
@@ -256,22 +201,22 @@ const CPISScoreDisplay = ({
           ))}
         </div>
         <span className="text-sm font-bold flex items-center gap-1" style={{ color: trajColor }}>
-          {trajIcon} {trajectory.direction}
+          {trajIcon} {trajectory.direction.charAt(0).toUpperCase() + trajectory.direction.slice(1)}
         </span>
       </div>
 
       {/* Rank label */}
-      <p className="text-white text-base font-bold tracking-wider uppercase text-center"
+      <p className="text-white text-base font-bold tracking-wider text-center"
         style={{ textShadow: '0 0 12px rgba(139,92,246,0.4)' }}
       >
-        {rankLabel}
+        {rankLabel.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
       </p>
 
       {/* Confidence bar */}
       <div className="w-full max-w-[250px] mx-auto">
         <div className="flex justify-between text-[11px] mb-1">
           <span className="text-cyan-300/70 font-semibold">{Math.round(confidence.lowerBound)}</span>
-          <span className="font-bold text-white/80">{Math.round(confidence.level * 100)}% conf.</span>
+          <span className="font-bold text-white/80">{Math.round(confidence.level * 100)}% Confidence</span>
           <span className="text-violet-300/70 font-semibold">{Math.round(confidence.upperBound)}</span>
         </div>
         <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
