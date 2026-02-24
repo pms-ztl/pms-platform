@@ -620,7 +620,7 @@ export function AIChatWidget() {
             title="Open full Neural Swarm workspace"
           >
             <ArrowsPointingOutIcon className="h-3 w-3 flex-shrink-0" />
-            <span>Full View</span>
+            <span>Workspace</span>
           </button>
           <button
             onClick={handleNewChat}

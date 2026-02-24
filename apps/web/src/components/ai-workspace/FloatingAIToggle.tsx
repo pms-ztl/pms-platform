@@ -72,10 +72,10 @@ export function FloatingAIToggle() {
       : 'bg-gray-950 text-cyan-400 ring-1 ring-cyan-500/30 shadow-lg shadow-cyan-500/20';
 
   return (
-    <div ref={menuRef} className="fixed bottom-5 right-5 z-50" style={{ fontSize: 16 }}>
+    <div ref={menuRef} className="fixed bottom-5 left-5 z-50" style={{ fontSize: 16 }}>
       {/* Pop-up menu */}
       {menuOpen && (
-        <div className="absolute bottom-full right-0 mb-2 min-w-[140px] rounded-xl bg-gray-900/95 backdrop-blur-xl ring-1 ring-white/10 shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <div className="absolute bottom-full left-0 mb-2 min-w-[140px] rounded-xl bg-gray-900/95 backdrop-blur-xl ring-1 ring-white/10 shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
           {/* Theme section label */}
           <div className="px-2 py-1 text-2xs font-semibold tracking-wider text-gray-500">
             Theme
@@ -102,23 +102,6 @@ export function FloatingAIToggle() {
               </button>
             );
           })}
-
-          {/* Divider */}
-          <div className="my-1.5 border-t border-white/10" />
-
-          {/* Exit AI mode */}
-          <button
-            onClick={() => {
-              if (aiTransitionPhase === 'idle') {
-                setAiTransitionPhase('exiting');
-                setMenuOpen(false);
-              }
-            }}
-            className="w-full flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-red-400 hover:bg-red-500/10 transition-all duration-150"
-          >
-            <XMarkIcon className="h-3.5 w-3.5" />
-            <span className="flex-1 text-left">Exit AI Mode</span>
-          </button>
         </div>
       )}
 

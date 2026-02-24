@@ -381,7 +381,7 @@ function AgentSidebar({
 
   return (
     <div
-      className={`flex w-[280px] flex-shrink-0 flex-col border-r transition-all duration-300 ${T.surface(theme)} ${T.border(theme)}`}
+      className={`flex w-56 flex-shrink-0 flex-col border-r transition-all duration-300 ${T.surface(theme)} ${T.border(theme)}`}
     >
       {/* Header */}
       <div className={`flex items-center justify-between border-b px-3 py-3 ${T.borderLight(theme)}`}>

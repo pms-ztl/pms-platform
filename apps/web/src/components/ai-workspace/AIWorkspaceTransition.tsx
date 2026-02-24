@@ -98,70 +98,82 @@ export function AIWorkspaceTransition({ phase }: Props) {
       className="fixed inset-0 z-[9999] overflow-hidden flex items-center justify-center"
       style={{
         background: `
-          radial-gradient(ellipse 60% 55% at 50% 50%, ${a.colorDim} 0%, transparent 65%),
-          linear-gradient(135deg, #050510 0%, #080818 50%, #050510 100%)
+          radial-gradient(ellipse 70% 65% at 50% 50%, ${a.color}18 0%, transparent 65%),
+          radial-gradient(ellipse 50% 45% at 30% 40%, ${a.ringB}10 0%, transparent 60%),
+          linear-gradient(135deg, rgba(15,20,40,0.85) 0%, rgba(10,15,35,0.9) 50%, rgba(15,20,40,0.85) 100%)
         `,
         animation: 'aiOverlayLifecycle 3s ease forwards',
         pointerEvents: fading ? 'none' : 'all',
       }}
     >
-      {/* ── Instant frosted backdrop — obscures dashboard during fade-in ── */}
+      {/* ── Frosted glass backdrop — premium glassmorphism feel ── */}
       <div
         className="absolute inset-0"
         style={{
-          backdropFilter: 'blur(20px) saturate(0.5) brightness(0.3)',
-          WebkitBackdropFilter: 'blur(20px) saturate(0.5) brightness(0.3)',
+          backdropFilter: 'blur(32px) saturate(1.3) brightness(0.55)',
+          WebkitBackdropFilter: 'blur(32px) saturate(1.3) brightness(0.55)',
         }}
       />
 
-      {/* ── Ambient glow orbs — premium glassmorphism ── */}
+      {/* ── Ambient glow orbs — larger, more luminous ── */}
       <div
-        className="absolute w-[600px] h-[600px] rounded-full opacity-20 blur-3xl pointer-events-none"
+        className="absolute w-[700px] h-[700px] rounded-full opacity-30 blur-3xl pointer-events-none"
         style={{
-          background: `radial-gradient(circle, ${a.color}40 0%, transparent 70%)`,
-          left: '10%',
-          top: '20%',
+          background: `radial-gradient(circle, ${a.color}50 0%, ${a.color}15 40%, transparent 70%)`,
+          left: '5%',
+          top: '15%',
           animation: 'aiAmbientDrift 3s ease-in-out infinite',
         }}
       />
       <div
-        className="absolute w-[400px] h-[400px] rounded-full opacity-15 blur-3xl pointer-events-none"
+        className="absolute w-[500px] h-[500px] rounded-full opacity-25 blur-3xl pointer-events-none"
         style={{
-          background: `radial-gradient(circle, ${a.ringB}40 0%, transparent 70%)`,
-          right: '15%',
-          bottom: '25%',
+          background: `radial-gradient(circle, ${a.ringB}50 0%, ${a.ringB}15 40%, transparent 70%)`,
+          right: '10%',
+          bottom: '20%',
           animation: 'aiAmbientDrift 3s ease-in-out 0.5s infinite reverse',
         }}
       />
-
-      {/* ── Vignette — cinematic depth ── */}
+      {/* Third orb for extra depth */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute w-[350px] h-[350px] rounded-full opacity-15 blur-3xl pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse 70% 60% at 50% 50%, transparent 40%, rgba(0,0,0,0.5) 100%)',
+          background: `radial-gradient(circle, ${a.color}40 0%, transparent 65%)`,
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          animation: 'aiAmbientDrift 4s ease-in-out 1s infinite',
         }}
       />
 
-      {/* ── Fine grid ──────────────────────────────────────────── */}
+      {/* ── Soft vignette — frosted glass edge ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 75% 65% at 50% 50%, transparent 45%, rgba(0,0,0,0.25) 100%)',
+        }}
+      />
+
+      {/* ── Fine grid — more visible ─────────────────────────── */}
       <div
         className="absolute inset-0"
         style={{
           backgroundImage: `
-            linear-gradient(${a.color}0A 1px, transparent 1px),
-            linear-gradient(90deg, ${a.color}0A 1px, transparent 1px)
+            linear-gradient(${a.color}12 1px, transparent 1px),
+            linear-gradient(90deg, ${a.color}12 1px, transparent 1px)
           `,
           backgroundSize: '52px 52px',
           animation: 'aiGridFade 3s ease forwards',
         }}
       />
 
-      {/* ── Horizontal scanning line ───────────────────────────── */}
+      {/* ── Horizontal scanning line — ethereal glow ──────────── */}
       <div
         className="absolute left-0 right-0"
         style={{
           height: 2,
-          background: `linear-gradient(90deg, transparent 0%, ${a.scanMid} 30%, ${a.scanMid} 70%, transparent 100%)`,
-          boxShadow: `0 0 14px 4px ${a.color}70`,
+          background: `linear-gradient(90deg, transparent 0%, ${a.scanMid} 20%, ${a.scanMid} 80%, transparent 100%)`,
+          boxShadow: `0 0 24px 8px ${a.color}60, 0 0 60px 16px ${a.color}25`,
           animation: 'aiScanLine 2.2s ease-in-out 0.25s both',
         }}
       />
@@ -195,7 +207,7 @@ export function AIWorkspaceTransition({ phase }: Props) {
             borderRadius: 18,
             border: `2px solid ${a.color}`,
             background: `radial-gradient(circle, ${a.colorDim} 0%, transparent 80%)`,
-            boxShadow: `0 0 32px ${a.color}55, inset 0 0 24px ${a.color}18`,
+            boxShadow: `0 0 48px ${a.color}70, 0 0 80px ${a.color}30, inset 0 0 28px ${a.color}20`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
