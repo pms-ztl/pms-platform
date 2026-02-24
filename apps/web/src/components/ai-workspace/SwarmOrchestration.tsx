@@ -349,8 +349,8 @@ function AgentPickerDropdown({
         onClose();
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
   }, [open, onClose]);
 
   if (!open) return null;
@@ -862,7 +862,10 @@ export function SwarmOrchestration() {
                   open={pickerOpen}
                   onClose={() => setPickerOpen(false)}
                   selectedAgents={orchestrationAgents}
-                  onSelect={(agent) => addOrchestrationAgent(agent)}
+                  onSelect={(agent) => {
+                    addOrchestrationAgent(agent);
+                    setPickerOpen(true); // keep picker open for header view transition
+                  }}
                 />
               </div>
             )}
