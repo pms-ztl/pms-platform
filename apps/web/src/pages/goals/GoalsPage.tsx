@@ -79,17 +79,17 @@ function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
         </a>
 
         {/* Owner */}
-        <div className="flex items-center gap-1.5 min-w-[120px]">
-          <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-2xs font-bold text-primary-700 dark:text-primary-300">
+        <div className="hidden sm:flex items-center gap-1.5 min-w-[120px]">
+          <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-2xs font-bold text-primary-700 dark:text-primary-300 flex-shrink-0">
             {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
           </div>
-          <span className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
+          <span className="text-xs text-secondary-500 dark:text-secondary-400 truncate">
             {goal.owner?.firstName} {goal.owner?.lastName}
           </span>
         </div>
 
         {/* Progress */}
-        <div className="flex items-center gap-2 min-w-[120px]">
+        <div className="flex items-center gap-2 min-w-[80px] sm:min-w-[120px]">
           <div className="w-16 bg-secondary-200 dark:bg-secondary-700 rounded-full h-1.5">
             <div
               className={clsx('h-1.5 rounded-full', goal.progress >= 100 ? 'bg-success-500' : 'bg-primary-600')}
@@ -101,13 +101,13 @@ function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
 
         {/* Weight */}
         {goal.weight !== undefined && goal.weight !== null && (
-          <span className="text-2xs text-secondary-400 dark:text-secondary-500 min-w-[40px] text-right">
+          <span className="hidden sm:inline text-2xs text-secondary-400 dark:text-secondary-500 min-w-[40px] text-right">
             w:{goal.weight}
           </span>
         )}
 
         {/* Status */}
-        <span className={clsx('text-xs px-2 py-0.5 rounded-full', statusColors[goal.status] || 'badge-secondary')}>
+        <span className={clsx('text-xs px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0', statusColors[goal.status] || 'badge-secondary')}>
           {goal.status}
         </span>
       </div>
@@ -151,10 +151,10 @@ const goalColumns: Column<Goal>[] = [
     header: 'Owner',
     render: (goal) => (
       <div className="flex items-center gap-1.5">
-        <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-2xs font-bold text-primary-700 dark:text-primary-300">
+        <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-2xs font-bold text-primary-700 dark:text-primary-300 flex-shrink-0">
           {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
         </div>
-        <span className="text-xs text-secondary-600 dark:text-secondary-400">
+        <span className="text-xs text-secondary-600 dark:text-secondary-400 truncate max-w-[100px]">
           {goal.owner?.firstName} {goal.owner?.lastName}
         </span>
       </div>
@@ -197,7 +197,7 @@ const goalColumns: Column<Goal>[] = [
     header: 'Due Date',
     sortable: true,
     render: (goal) => (
-      <span className="text-sm text-secondary-500 dark:text-secondary-400">
+      <span className="text-sm text-secondary-500 dark:text-secondary-400 whitespace-nowrap">
         {goal.dueDate ? new Date(goal.dueDate).toLocaleDateString() : '-'}
       </span>
     ),

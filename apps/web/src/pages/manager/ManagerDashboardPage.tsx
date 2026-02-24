@@ -691,8 +691,8 @@ export function ManagerDashboardPage() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <label className="text-xs text-secondary-500 dark:text-secondary-400">Sort by:</label>
+          <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+            <label className="text-xs text-secondary-500 dark:text-secondary-400 whitespace-nowrap flex-shrink-0">Sort by:</label>
             <div className="flex items-center rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-0.5">
               {([
                 ['name', 'Name'],
@@ -703,7 +703,7 @@ export function ManagerDashboardPage() {
                   key={key}
                   onClick={() => setSortField(key)}
                   className={clsx(
-                    'px-3 py-1 text-xs font-medium rounded-md transition-colors',
+                    'px-2 sm:px-3 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap flex-shrink-0',
                     sortField === key
                       ? 'bg-primary-600 text-white'
                       : 'text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700',
@@ -716,7 +716,7 @@ export function ManagerDashboardPage() {
           </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="min-w-[700px] w-full text-left">
             <thead>
               <tr className="border-b border-secondary-100 dark:border-secondary-700 text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 <th className="px-6 py-3">Team Member</th>

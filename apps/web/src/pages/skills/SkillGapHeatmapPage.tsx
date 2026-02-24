@@ -60,9 +60,13 @@ function heatmapColor(rating: number): string {
 }
 
 function gapColor(gap: number): string {
-  if (gap >= 2) return '#ef4444';
-  if (gap >= 1) return '#f59e0b';
-  return '#22c55e';
+  // Color by magnitude — larger absolute values are worse deficits
+  const abs = Math.abs(gap);
+  if (abs >= 2) return '#ef4444';    // Critical gap
+  if (abs >= 1) return '#f59e0b';    // Moderate gap
+  if (abs >= 0.5) return '#eab308';  // Minor gap
+  if (abs > 0.1) return '#84cc16';   // Near target
+  return '#22c55e';                  // On target
 }
 
 const SEVERITY_COLORS = ['#ef4444', '#f59e0b', '#eab308', '#22c55e'];

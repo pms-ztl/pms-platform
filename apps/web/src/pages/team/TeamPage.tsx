@@ -65,8 +65,8 @@ export function TeamPage() {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-medium text-secondary-900 dark:text-white">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="text-sm font-medium text-secondary-900 dark:text-white whitespace-nowrap">
               {member.firstName} {member.lastName}
             </h3>
             {member.id === user?.id && (
@@ -221,18 +221,18 @@ export function TeamPage() {
       )}
 
       {/* View toggle and search */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="relative flex-1">
           <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name or email..."
-            className="input pl-10"
+            className="input pl-10 w-full"
           />
         </div>
-        <div className="flex items-center gap-2 bg-secondary-100 dark:bg-secondary-800 rounded-lg p-1">
+        <div className="flex items-center gap-2 bg-secondary-100 dark:bg-secondary-800 rounded-lg p-1 self-start flex-shrink-0">
           <button
             onClick={() => setViewMode('list')}
             className={clsx(

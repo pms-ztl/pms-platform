@@ -92,7 +92,7 @@ export function PageHeader({
           )}
         </div>
         {children && (
-          <div className="flex items-center gap-2 shrink-0">{children}</div>
+          <div className="flex items-center gap-2 flex-wrap shrink-0">{children}</div>
         )}
       </div>
     </div>

@@ -197,25 +197,25 @@ export function ReviewsPage() {
                 to={`/reviews/${review.id}`}
                 className="card card-body hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
-                      <span className="text-primary-700 dark:text-primary-300 font-medium">
+                <div className="flex items-start sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center flex-shrink-0">
+                      <span className="text-primary-700 dark:text-primary-300 font-medium text-sm sm:text-base">
                         {review.reviewee.firstName[0]}{review.reviewee.lastName[0]}
                       </span>
                     </div>
-                    <div>
-                      <p className="font-medium text-secondary-900 dark:text-white">
+                    <div className="min-w-0">
+                      <p className="font-medium text-secondary-900 dark:text-white truncate">
                         {review.reviewee.firstName} {review.reviewee.lastName}
                       </p>
-                      <p className="text-sm text-secondary-500 dark:text-secondary-400">{review.reviewee.jobTitle || 'Employee'}</p>
-                      <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
+                      <p className="text-sm text-secondary-500 dark:text-secondary-400 truncate">{review.reviewee.jobTitle || 'Employee'}</p>
+                      <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1 truncate">
                         {review.type} Review • {review.cycle?.name}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <span className={clsx('px-2.5 py-1 rounded-full text-xs font-medium', reviewStatusColors[review.status])}>
+                  <div className="text-right flex-shrink-0">
+                    <span className={clsx('px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap', reviewStatusColors[review.status])}>
                       {review.status.replace('_', ' ')}
                     </span>
                     {review.status === 'NOT_STARTED' && (

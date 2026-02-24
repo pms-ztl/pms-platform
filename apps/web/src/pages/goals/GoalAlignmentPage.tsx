@@ -341,12 +341,23 @@ function StatsBar({ goals }: { goals: Goal[] }) {
   const behind = flat.filter((g) => computeTracking(g) === 'BEHIND').length;
   const avg = Math.round(flat.reduce((s, g) => s + g.progress, 0) / total);
   const pct = (n: number) => `${Math.round((n / total) * 100)}%`;
+  const onTrackPct = Math.round((onTrack / total) * 100);
+  const onTrackCls = onTrackPct >= 50
+    ? 'text-success-600 dark:text-success-400'
+    : onTrackPct >= 25
+      ? 'text-warning-600 dark:text-warning-400'
+      : 'text-danger-600 dark:text-danger-400';
+  const avgCls = avg >= 70
+    ? 'text-success-600 dark:text-success-400'
+    : avg >= 40
+      ? 'text-warning-600 dark:text-warning-400'
+      : 'text-danger-600 dark:text-danger-400';
   const stats = [
     { label: 'Total Goals', value: total, cls: 'text-secondary-900 dark:text-white' },
-    { label: 'On Track', value: pct(onTrack), cls: 'text-success-600 dark:text-success-400' },
+    { label: 'On Track', value: pct(onTrack), cls: onTrackCls },
     { label: 'At Risk', value: pct(atRisk), cls: 'text-warning-600 dark:text-warning-400' },
     { label: 'Behind', value: pct(behind), cls: 'text-danger-600 dark:text-danger-400' },
-    { label: 'Average Progress', value: `${avg}%`, cls: 'text-primary-600 dark:text-primary-400' },
+    { label: 'Average Progress', value: `${avg}%`, cls: avgCls },
   ];
   return (
     <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">

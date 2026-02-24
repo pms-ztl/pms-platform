@@ -145,7 +145,7 @@ export function FeedbackPage() {
                 ))}
               </div>
             )}
-            <div className="mt-3 flex items-center gap-4">
+            <div className="mt-3 flex items-center gap-3 sm:gap-4 flex-wrap">
               <span className="text-xs text-secondary-400">
                 To: {feedback.toUser.firstName} {feedback.toUser.lastName}
               </span>
@@ -155,15 +155,15 @@ export function FeedbackPage() {
               {showAcknowledge && !feedback.isAcknowledged && (
                 <button
                   onClick={() => acknowledgeMutation.mutate(feedback.id)}
-                  className="text-xs text-primary-600 hover:text-primary-800 flex items-center gap-1"
+                  className="text-xs text-primary-600 hover:text-primary-800 flex items-center gap-1 whitespace-nowrap"
                 >
-                  <CheckCircleIcon className="h-4 w-4" />
+                  <CheckCircleIcon className="h-4 w-4 flex-shrink-0" />
                   Acknowledge
                 </button>
               )}
               {feedback.isAcknowledged && (
-                <span className="text-xs text-success-600 flex items-center gap-1">
-                  <CheckCircleIcon className="h-4 w-4" />
+                <span className="text-xs text-success-600 flex items-center gap-1 whitespace-nowrap">
+                  <CheckCircleIcon className="h-4 w-4 flex-shrink-0" />
                   Acknowledged
                 </span>
               )}

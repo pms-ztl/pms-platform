@@ -150,8 +150,8 @@ export function AIDevPlanPage() {
       <div className="rounded-xl border border-gray-700 bg-gray-800/60 p-4">
         <label className="block text-sm font-medium text-gray-300 mb-2">Look up plans by User ID</label>
         <div className="flex gap-2">
-          <input value={userId} onChange={e => setUserId(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleLookup()} placeholder="Enter user ID…" className="flex-1 rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white placeholder-gray-400 focus:border-purple-500 focus:outline-none" />
-          <button onClick={handleLookup} className="rounded-lg bg-gray-600 px-4 py-2 text-sm text-white hover:bg-gray-500 transition-colors">Search</button>
+          <input value={userId} onChange={e => setUserId(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleLookup()} placeholder="Enter user ID…" className="flex-1 min-w-0 rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white placeholder-gray-400 focus:border-purple-500 focus:outline-none" />
+          <button onClick={handleLookup} className="rounded-lg bg-gray-600 px-4 py-2 text-sm text-white hover:bg-gray-500 transition-colors flex-shrink-0 whitespace-nowrap">Search</button>
         </div>
       </div>
 

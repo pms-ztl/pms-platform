@@ -362,8 +362,8 @@ export function ProfilePage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <div className="flex items-center gap-6">
-          <div className="relative group">
+        <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 sm:gap-6">
+          <div className="relative group flex-shrink-0">
             {user?.avatarUrl ? (
               <img src={getAvatarUrl(user.avatarUrl, 'md') || user.avatarUrl} alt={user.firstName} className="w-20 h-20 rounded-full object-cover" />
             ) : (
@@ -373,27 +373,27 @@ export function ProfilePage() {
                 </span>
               </div>
             )}
-            {/* Avatar edit button overlay */}
+            {/* Avatar edit button overlay — contained within avatar bounds */}
             <button
               onClick={() => setShowAvatarModal(true)}
-              className="absolute inset-0 w-20 h-20 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+              className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
             >
               <CameraIcon className="h-6 w-6 text-white" />
             </button>
           </div>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
+          <div className="flex-1 min-w-0 text-center sm:text-left">
+            <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white break-words">
               {user?.firstName} {user?.lastName}
             </h1>
             <p className="text-secondary-600 dark:text-secondary-400">{user?.jobTitle || 'Employee'}</p>
-            <div className="flex items-center gap-4 mt-2 text-sm text-secondary-500 dark:text-secondary-400">
-              <span className="flex items-center gap-1">
-                <EnvelopeIcon className="h-4 w-4" />
-                {user?.email}
+            <div className="flex items-center justify-center sm:justify-start gap-4 mt-2 text-sm text-secondary-500 dark:text-secondary-400 flex-wrap">
+              <span className="flex items-center gap-1 min-w-0">
+                <EnvelopeIcon className="h-4 w-4 flex-shrink-0" />
+                <span className="truncate">{user?.email}</span>
               </span>
               {user?.department && (
                 <span className="flex items-center gap-1">
-                  <BuildingOfficeIcon className="h-4 w-4" />
+                  <BuildingOfficeIcon className="h-4 w-4 flex-shrink-0" />
                   {user.department.name}
                 </span>
               )}
