@@ -59,7 +59,7 @@ services:
       - key: MFA_ISSUER
         value: PMS Platform
       - key: CORS_ORIGINS
-        value: https://pms.xzashr.com,https://pms-platform.onrender.com
+        value: https://pms.xzashr.com,https://pms-platform-dsjx.onrender.com
       - key: LOG_LEVEL
         value: info
       - key: VITE_API_URL

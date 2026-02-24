@@ -79,6 +79,7 @@ export function createApp(): Express {
               imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
               connectSrc: ["'self'", 'https:', 'wss:'],
               fontSrc: ["'self'", 'data:', 'https://fonts.gstatic.com'],
+              mediaSrc: ["'self'"],
             },
           }
         : {
