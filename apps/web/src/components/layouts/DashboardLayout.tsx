@@ -381,7 +381,7 @@ export function DashboardLayout() {
                   </div>
                 </Transition.Child>
 
-                <div className="flex grow flex-col bg-white dark:bg-surface-dark">
+                <div className="flex grow flex-col bg-white dark:bg-surface-dark" style={{ fontSize: 14 }}>
                   <SidebarContent
                     userRoles={userRoles}
                     isAdmin={isAdmin}
@@ -405,7 +405,7 @@ export function DashboardLayout() {
           aiTransitionPhase !== 'idle' && 'opacity-0 blur-sm pointer-events-none'
         )}
       >
-        <div className="flex grow flex-col overflow-hidden bg-white dark:bg-surface-dark border-r border-secondary-200/60 dark:border-white/[0.06] frosted-noise">
+        <div className="flex grow flex-col overflow-hidden bg-white dark:bg-surface-dark border-r border-secondary-200/60 dark:border-white/[0.06] frosted-noise" style={{ fontSize: 14 }}>
           <SidebarContent
             userRoles={userRoles}
             isAdmin={isAdmin}
