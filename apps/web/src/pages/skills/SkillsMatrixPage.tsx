@@ -610,9 +610,9 @@ export function SkillsMatrixPage() {
                           className="px-5 py-3 hover:bg-secondary-50 dark:hover:bg-secondary-800/50 transition-colors cursor-pointer"
                           onClick={() => toggleRow(skill.id)}
                         >
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2 md:gap-4">
                             {/* Expand toggle */}
-                            <button className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300">
+                            <button className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 flex-shrink-0">
                               {expanded ? (
                                 <ChevronUpIcon className="w-4 h-4" />
                               ) : (
@@ -628,15 +628,15 @@ export function SkillsMatrixPage() {
                             </div>
 
                             {/* Self Rating */}
-                            <div className="text-center">
+                            <div className="text-center flex-shrink-0">
                               <p className="text-2xs text-secondary-400 dark:text-secondary-500 mb-0.5">
                                 Self
                               </p>
                               <StarRating value={skill.selfRating} size="sm" readonly />
                             </div>
 
-                            {/* Manager Rating */}
-                            <div className="text-center">
+                            {/* Manager Rating — hidden on mobile */}
+                            <div className="hidden md:block text-center">
                               <p className="text-2xs text-secondary-400 dark:text-secondary-500 mb-0.5">
                                 Manager
                               </p>
@@ -653,8 +653,8 @@ export function SkillsMatrixPage() {
                               )}
                             </div>
 
-                            {/* Target Level */}
-                            <div className="text-center w-16">
+                            {/* Target Level — hidden on mobile */}
+                            <div className="hidden md:block text-center w-16">
                               <p className="text-2xs text-secondary-400 dark:text-secondary-500 mb-0.5">
                                 Target
                               </p>
@@ -663,15 +663,19 @@ export function SkillsMatrixPage() {
                               </span>
                             </div>
 
-                            {/* Gap Indicator */}
-                            <GapIndicator gap={gap} />
+                            {/* Gap Indicator — hidden on mobile */}
+                            <div className="hidden md:block">
+                              <GapIndicator gap={gap} />
+                            </div>
 
-                            {/* Sparkline */}
-                            <Sparkline data={skill.progressHistory} />
+                            {/* Sparkline — hidden on mobile & tablet */}
+                            <div className="hidden lg:block">
+                              <Sparkline data={skill.progressHistory} />
+                            </div>
 
                             {/* Actions */}
                             <div
-                              className="flex items-center gap-1"
+                              className="flex items-center gap-1 flex-shrink-0"
                               onClick={(e) => e.stopPropagation()}
                             >
                               <button

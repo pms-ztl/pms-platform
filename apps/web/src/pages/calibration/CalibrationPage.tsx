@@ -131,8 +131,8 @@ export function CalibrationPage() {
       <div className="grid gap-4">
         {sessions.map((session: CalibrationSession) => (
           <div key={session.id} className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
+            <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3">
+              <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3">
                   <h3 className="text-lg font-medium text-secondary-900 dark:text-white">{session.name}</h3>
                   <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', sessionStatusColors[session.status])}>
@@ -142,7 +142,7 @@ export function CalibrationPage() {
                 {session.description && (
                   <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">{session.description}</p>
                 )}
-                <div className="flex items-center gap-6 mt-3 text-sm text-secondary-500 dark:text-secondary-400">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 mt-3 text-sm text-secondary-500 dark:text-secondary-400">
                   <span className="flex items-center gap-1">
                     <CalendarIcon className="h-4 w-4" />
                     {format(new Date(session.scheduledStart), 'MMM d, yyyy h:mm a')}
@@ -157,10 +157,10 @@ export function CalibrationPage() {
                 {session.preAnalysis && (
                   <div className="mt-4 p-3 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg">
                     <p className="text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">Pre-Session Analysis</p>
-                    <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-sm">
                       <div>
                         <span className="text-secondary-500 dark:text-secondary-400">Total Reviews:</span>
-                        <span className="ml-2 font-medium dark:text-white">{session.preAnalysis.totalReviews}</span>
+                        <span className="ml-2 font-medium dark:text-white">{session.preAnalysis.totalReviews ?? 0}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <ExclamationTriangleIcon className="h-4 w-4 text-warning-500" />
@@ -177,7 +177,7 @@ export function CalibrationPage() {
                 )}
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-shrink-0">
                 {session.status === 'SCHEDULED' && isHRAdmin && (
                   <button
                     onClick={() => startSessionMutation.mutate(session.id)}

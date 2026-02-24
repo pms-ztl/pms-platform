@@ -15,6 +15,7 @@ import {
   ClockIcon,
   ExclamationTriangleIcon,
   ArrowPathIcon,
+  ArrowLeftIcon,
   HandThumbUpIcon,
   HandThumbDownIcon,
   StopIcon,
@@ -112,7 +113,9 @@ export function SwarmTasks() {
   return (
     <div className="flex h-full">
       {/* ── Left Sidebar: Task List ──────────────────── */}
-      <div className={`w-80 shrink-0 flex flex-col border-r ${T.border(theme)} ${T.surface(theme)}`}>
+      <div className={`flex flex-col border-r ${T.border(theme)} ${T.surface(theme)} ${
+        selectedTaskId ? 'hidden md:flex md:w-80 md:shrink-0' : 'w-full md:w-80 md:shrink-0'
+      }`}>
         {/* Header */}
         <div className={`px-4 py-3 border-b ${T.border(theme)}`}>
           <div className="flex items-center justify-between mb-3">
@@ -230,7 +233,7 @@ export function SwarmTasks() {
       </div>
 
       {/* ── Center: Task Detail ─────────────────────── */}
-      <div className={`flex-1 overflow-y-auto ${T.scrollbar(theme)}`}>
+      <div className={`flex-1 overflow-y-auto ${T.scrollbar(theme)} ${!selectedTaskId ? 'hidden md:block' : ''}`}>
         {!selectedTask ? (
           <div className="flex flex-col items-center justify-center h-full">
             <CpuChipIcon className={`h-16 w-16 mb-4 ${T.textMuted(theme)}`} />
@@ -242,7 +245,15 @@ export function SwarmTasks() {
             </p>
           </div>
         ) : (
-          <div className="p-6 max-w-3xl mx-auto">
+          <div className="p-4 md:p-6 max-w-3xl mx-auto">
+            {/* Mobile back button */}
+            <button
+              onClick={() => setSelectedTask(null as any)}
+              className={`md:hidden flex items-center gap-1.5 mb-3 text-xs font-medium ${T.textSecondary(theme)} ${T.surfaceHover(theme)} rounded-lg px-2 py-1`}
+            >
+              <ArrowLeftIcon className="h-3.5 w-3.5" />
+              Back to tasks
+            </button>
             {/* Task Header */}
             <div className="mb-6">
               <div className="flex items-start justify-between mb-2">

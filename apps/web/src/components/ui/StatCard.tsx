@@ -35,8 +35,8 @@ export function StatCard({ label, value, icon, trend, variant = 'default', class
     >
       {/* Gradient top-edge on hover */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary-500/60 to-cyan-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
           <p
             className={clsx(
               'text-sm font-medium',

@@ -354,8 +354,10 @@ export function NeuralSwarmLayout() {
         </div>
       </main>
 
-      {/* Floating theme toggle */}
-      <FloatingAIToggle />
+      {/* Floating theme toggle — hidden on mobile to avoid overlap */}
+      <div className="hidden md:block">
+        <FloatingAIToggle />
+      </div>
     </div>
   );
 }

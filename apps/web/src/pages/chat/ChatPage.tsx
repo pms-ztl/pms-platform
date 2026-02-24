@@ -2288,7 +2288,7 @@ export default function ChatPage() {
           </>
         ) : (
           /* ═══ Empty State ═══ */
-          <div className="flex flex-1 flex-col items-center justify-center text-center px-8">
+          <div className={clsx("flex flex-1 flex-col items-center justify-center text-center px-8", showSidebar && "max-md:hidden")}>
             <div className="relative mb-8">
               {/* Glow orbs */}
               <div className="absolute -top-4 -left-4 h-24 w-24 rounded-full bg-primary-500/10 blur-2xl" />

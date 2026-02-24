@@ -369,10 +369,10 @@ export function SettingsPage() {
       {/* Header */}
       <PageHeader title="Settings" subtitle="Manage your account settings and preferences" />
 
-      <div className="flex gap-8">
-        {/* Sidebar */}
-        <div className="w-64 flex-shrink-0">
-          <nav className="space-y-1">
+      <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+        {/* Sidebar — horizontal scroll on mobile, vertical on md+ */}
+        <div className="w-full md:w-64 md:flex-shrink-0">
+          <nav className="flex md:flex-col gap-1 overflow-x-auto pb-2 md:pb-0 md:space-y-1 md:gap-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {tabs.map((tab) => {
               const Icon = tab.icon;
               return (
@@ -380,7 +380,7 @@ export function SettingsPage() {
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key as SettingsTab)}
                   className={clsx(
-                    'w-full flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+                    'flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 text-sm font-medium rounded-lg transition-colors flex-shrink-0 whitespace-nowrap md:whitespace-normal md:w-full',
                     activeTab === tab.key
                       ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400'
                       : 'text-secondary-600 hover:bg-secondary-50 dark:text-secondary-400 dark:hover:bg-secondary-800 dark:hover:text-secondary-200'

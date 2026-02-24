@@ -1223,7 +1223,7 @@ export function ConfigurationPage() {
 
       {/* Tab bar */}
       <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
-        <nav className="-mb-px flex gap-6 overflow-x-auto" aria-label="Tabs">
+        <nav className="-mb-px flex gap-4 md:gap-6 overflow-x-auto" aria-label="Tabs" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {TABS.map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.key;
@@ -1232,7 +1232,7 @@ export function ConfigurationPage() {
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={clsx(
-                  'flex items-center gap-2 whitespace-nowrap border-b-2 pb-3 pt-1 text-sm font-medium transition-colors',
+                  'flex items-center gap-2 whitespace-nowrap border-b-2 pb-3 pt-1 text-sm font-medium transition-colors flex-shrink-0',
                   active
                     ? 'border-primary-600 text-primary-600 dark:border-primary-400 dark:text-primary-400'
                     : 'border-transparent text-secondary-500 hover:text-secondary-700 hover:border-secondary-300 dark:text-secondary-400 dark:hover:text-secondary-200 dark:hover:border-secondary-600',

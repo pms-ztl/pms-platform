@@ -399,22 +399,22 @@ export function SuccessionPage() {
         </div>
 
         {/* 9-Box Grid */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
-          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-6">Talent 9-Box Grid</h2>
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 md:p-6">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 md:mb-6">Talent 9-Box Grid</h2>
 
-          <div className="flex">
+          <div className="flex overflow-x-auto md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {/* Y-axis labels */}
-            <div className="flex flex-col justify-around pr-3 w-28 shrink-0">
+            <div className="flex flex-col justify-around pr-2 md:pr-3 w-16 md:w-28 shrink-0">
               {POTENTIAL_LABELS.map((label) => (
                 <div key={label} className="flex items-center justify-end h-full">
-                  <span className="text-xs font-medium text-secondary-500 dark:text-secondary-400 text-right leading-tight">{label}</span>
+                  <span className="text-2xs md:text-xs font-medium text-secondary-500 dark:text-secondary-400 text-right leading-tight">{label}</span>
                 </div>
               ))}
             </div>
 
             {/* Grid */}
             <div className="flex-1">
-              <div className="grid grid-cols-3 grid-rows-3 gap-2 min-h-[360px]">
+              <div className="grid grid-cols-3 grid-rows-3 gap-1.5 md:gap-2 min-h-[240px] md:min-h-[360px] min-w-[280px] md:min-w-0">
                 {NINE_BOX_CONFIG.map((cell) => {
                   const data = cellDataMap[cell.key];
                   const count = data?.employees.length || 0;
@@ -978,13 +978,13 @@ function StatCard({
 
   return (
     <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-      <div className="flex items-center gap-3">
-        <div className={clsx('p-2 rounded-lg', c.iconBg)}>
+      <div className="flex flex-col gap-2">
+        <div className={clsx('p-2 rounded-lg w-fit', c.iconBg)}>
           <Icon className={clsx('h-5 w-5', c.iconText)} />
         </div>
         <div className="min-w-0">
           <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{label}</p>
-          <p className="text-lg font-bold text-secondary-900 dark:text-white break-words">{value}</p>
+          <p className="text-lg font-bold text-secondary-900 dark:text-white whitespace-nowrap">{value}</p>
         </div>
       </div>
     </div>

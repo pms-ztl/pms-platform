@@ -381,7 +381,9 @@ function AgentSidebar({
 
   return (
     <div
-      className={`flex w-[280px] flex-shrink-0 flex-col border-r transition-all duration-300 ${T.surface(theme)} ${T.border(theme)}`}
+      className={`flex flex-col border-r transition-all duration-300 ${T.surface(theme)} ${T.border(theme)} ${
+        selectedAgent ? 'hidden md:flex md:w-[280px] md:flex-shrink-0' : 'w-full md:w-[280px] md:flex-shrink-0'
+      }`}
       style={{ fontSize: 14 }}
     >
       {/* Header */}
@@ -715,12 +717,20 @@ export function SwarmChat() {
       />
 
       {/* Center Chat Area */}
-      <div className="flex flex-1 flex-col min-w-0">
+      <div className={`flex flex-1 flex-col min-w-0 ${!selectedAgent ? 'hidden md:flex' : 'flex'}`}>
         {/* Agent Header */}
         <div className={`flex items-center gap-3 border-b px-4 py-3 ${T.border(theme)} ${T.surface(theme)}`}>
+          {/* Mobile back button — deselect agent to show sidebar */}
+          <button
+            onClick={() => setSelectedAgent('')}
+            className={`md:hidden flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${T.surfaceHover(theme)} ${T.textSecondary(theme)}`}
+            title="Back to agent list"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+          </button>
           <button
             onClick={() => setSwarmMode('overview')}
-            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${T.surfaceHover(theme)} ${T.textSecondary(theme)}`}
+            className={`hidden md:flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${T.surfaceHover(theme)} ${T.textSecondary(theme)}`}
             title="Back to Overview"
           >
             <ArrowLeftIcon className="h-4 w-4" />
