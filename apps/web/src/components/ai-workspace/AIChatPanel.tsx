@@ -252,7 +252,7 @@ export function AIChatPanel({
               ) : (
                 <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">{msg.content}</p>
               )}
-              <p className={`mt-1.5 text-[10px] ${msg.role === 'user' ? 'text-white/50' : T.textMuted(theme)}`}>
+              <p className={`mt-1.5 text-2xs ${msg.role === 'user' ? 'text-white/50' : T.textMuted(theme)}`}>
                 {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>
@@ -332,7 +332,7 @@ export function AIChatPanel({
             <PaperAirplaneIcon className="h-5 w-5" />
           </button>
         </form>
-        <p className={`mt-1.5 text-[10px] ${T.textMuted(theme)} text-center`}>
+        <p className={`mt-1.5 text-2xs ${T.textMuted(theme)} text-center`}>
           Press Enter to send, Shift+Enter for new line
         </p>
       </div>

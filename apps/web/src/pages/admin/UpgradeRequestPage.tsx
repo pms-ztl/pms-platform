@@ -437,7 +437,7 @@ export function UpgradeRequestPage() {
                     </div>
                     <div>
                       <h4 className="text-lg font-bold text-secondary-900 dark:text-white">{plan.label}</h4>
-                      <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide ${plan.badgeColor}`}>
+                      <span className={`inline-block rounded-full px-2 py-0.5 text-2xs font-semibold tracking-wide ${plan.badgeColor}`}>
                         L1 &ndash; L{plan.levelLimit}
                       </span>
                     </div>
@@ -566,7 +566,7 @@ export function UpgradeRequestPage() {
                             <span className="text-sm font-medium text-secondary-900 dark:text-white">
                               {planDef?.label ?? req.requestedPlan}
                             </span>
-                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${planDef?.badgeColor ?? 'bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400'}`}>
+                            <span className={`rounded-full px-2 py-0.5 text-2xs font-semibold ${planDef?.badgeColor ?? 'bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400'}`}>
                               L1&ndash;L{planDef?.levelLimit ?? '?'}
                             </span>
                           </div>

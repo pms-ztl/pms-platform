@@ -706,7 +706,7 @@ export function ModeratorDashboardPage() {
                           ) : (
                             <ExclamationTriangleIcon className="h-4 w-4 text-secondary-400" />
                           )}
-                          <span className="text-[10px] font-medium text-secondary-500 dark:text-secondary-400">
+                          <span className="text-2xs font-medium text-secondary-500 dark:text-secondary-400">
                             {emp.completionPercent}%
                           </span>
                         </div>
@@ -837,7 +837,7 @@ export function ModeratorDashboardPage() {
                           {compiledData.weightedAvg}
                         </p>
                         <RatingStars rating={compiledData.weightedAvg} size="md" />
-                        <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-1">
+                        <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-1">
                           Self 20% / Manager 50% / Peer 30%
                         </p>
                       </div>
@@ -949,7 +949,7 @@ export function ModeratorDashboardPage() {
                                   <ExclamationTriangleIcon className="h-4 w-4 text-danger-500" />
                                 )}
                               </div>
-                              <p className="text-[10px] text-secondary-500 dark:text-secondary-400 mt-0.5">
+                              <p className="text-2xs text-secondary-500 dark:text-secondary-400 mt-0.5">
                                 {Math.abs(gap.diff) >= 1.5
                                   ? 'Significant gap detected'
                                   : Math.abs(gap.diff) >= 0.75

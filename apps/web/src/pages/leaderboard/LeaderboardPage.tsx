@@ -259,7 +259,7 @@ function Podium({ entries }: { entries: AnyEntry[] }) {
           <p className="text-sm font-semibold text-secondary-900 dark:text-white text-center">{entry.user.firstName} {entry.user.lastName}</p>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 text-center">{entry.user.jobTitle}</p>
           <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">{(entry.score ?? 0).toFixed(1)}</p>
-          <p className="text-[10px] text-secondary-400 dark:text-secondary-500 tracking-wider">{entry.user.department}</p>
+          <p className="text-2xs text-secondary-400 dark:text-secondary-500 tracking-wider">{entry.user.department}</p>
           <div className={clsx('mt-2 w-24 sm:w-28 rounded-t-xl bg-gradient-to-b flex items-end justify-center', heights[idx], gradients[idx])}>
             <span className="text-xs font-bold text-secondary-500 dark:text-secondary-300 pb-2 tracking-wider">{labels[idx]}</span>
           </div>
@@ -292,7 +292,7 @@ function DepartmentChart({ departments }: { departments: DepartmentScore[] }) {
               className="h-full bg-gradient-to-r from-primary-500 to-primary-400 dark:from-primary-600 dark:to-primary-400 rounded-full transition-all duration-700 ease-out flex items-center justify-end pr-2"
               style={{ width: `${maxScore > 0 ? (dept.avgScore / maxScore) * 100 : 0}%` }}
             >
-              <span className="text-[10px] font-bold text-white">{(dept.avgScore ?? 0).toFixed(1)}</span>
+              <span className="text-2xs font-bold text-white">{(dept.avgScore ?? 0).toFixed(1)}</span>
             </div>
           </div>
           <span className="w-14 text-xs text-secondary-500 dark:text-secondary-400 text-right">{dept.memberCount} Members</span>

@@ -323,20 +323,20 @@ export function AIInsightsDashboardPage() {
                 <div key={a.id} className="flex items-start gap-3 p-3 rounded-lg bg-secondary-50 dark:bg-secondary-700/30">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className={clsx('inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium', SEVERITY_BADGES[a.severity] || SEVERITY_BADGES.LOW)}>
+                      <span className={clsx('inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-medium', SEVERITY_BADGES[a.severity] || SEVERITY_BADGES.LOW)}>
                         {a.severity}
                       </span>
-                      <span className="text-[10px] text-secondary-400">{a.entityType}</span>
+                      <span className="text-2xs text-secondary-400">{a.entityType}</span>
                     </div>
                     <p className="text-xs text-secondary-700 dark:text-secondary-300 mt-1">{a.description}</p>
-                    <p className="text-[10px] text-secondary-400 mt-1">
+                    <p className="text-2xs text-secondary-400 mt-1">
                       {new Date(a.detectedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
                   </div>
                   {a.status !== 'ACKNOWLEDGED' && (
                     <button
                       onClick={() => acknowledgeMutation.mutate(a.id)}
-                      className="text-[10px] px-2 py-1 rounded bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors whitespace-nowrap"
+                      className="text-2xs px-2 py-1 rounded bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors whitespace-nowrap"
                     >
                       <EyeIcon className="w-3 h-3 inline mr-0.5" />Ack
                     </button>
@@ -423,14 +423,14 @@ export function AIInsightsDashboardPage() {
                     <td className="py-2.5 pr-4 text-xs text-secondary-500 dark:text-secondary-400">{u.department || '—'}</td>
                     <td className="py-2.5 pr-4 text-xs font-medium text-secondary-900 dark:text-white">{u.engagementScore?.toFixed(1) ?? '—'}</td>
                     <td className="py-2.5 pr-4">
-                      <span className={clsx('inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium', RISK_BADGES[u.riskLevel] || RISK_BADGES.LOW)}>
+                      <span className={clsx('inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-medium', RISK_BADGES[u.riskLevel] || RISK_BADGES.LOW)}>
                         {u.riskLevel}
                       </span>
                     </td>
                     <td className="py-2.5 pr-4">
                       <div className="flex flex-wrap gap-1">
                         {(u.factors || []).slice(0, 3).map((f, i) => (
-                          <span key={i} className="inline-flex items-center rounded-full bg-secondary-100 dark:bg-secondary-700 px-2 py-0.5 text-[10px] text-secondary-600 dark:text-secondary-400">
+                          <span key={i} className="inline-flex items-center rounded-full bg-secondary-100 dark:bg-secondary-700 px-2 py-0.5 text-2xs text-secondary-600 dark:text-secondary-400">
                             {f}
                           </span>
                         ))}
@@ -439,7 +439,7 @@ export function AIInsightsDashboardPage() {
                     <td className="py-2.5 pr-4">
                       <div className="flex flex-wrap gap-1">
                         {(u.recommendedActions || []).slice(0, 2).map((a, i) => (
-                          <span key={i} className="inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-900/20 px-2 py-0.5 text-[10px] text-indigo-600 dark:text-indigo-400">
+                          <span key={i} className="inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-900/20 px-2 py-0.5 text-2xs text-indigo-600 dark:text-indigo-400">
                             {a}
                           </span>
                         ))}

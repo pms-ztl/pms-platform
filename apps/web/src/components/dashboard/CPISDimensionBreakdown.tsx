@@ -74,11 +74,11 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
                         <IconComp className="w-3.5 h-3.5 text-white" />
                       </div>
                       <div>
-                        <span className="text-[11px] font-semibold text-secondary-700 dark:text-secondary-300 block leading-tight">{dim.name}</span>
-                        <span className="text-[9px] text-secondary-400 dark:text-secondary-500">{Math.round(dim.weight * 100)}% weight</span>
+                        <span className="text-xs font-semibold text-secondary-700 dark:text-secondary-300 block leading-tight">{dim.name}</span>
+                        <span className="text-3xs text-secondary-400 dark:text-secondary-500">{Math.round(dim.weight * 100)}% weight</span>
                       </div>
                     </div>
-                    <span className={clsx('text-[10px] font-black px-1.5 py-0.5 rounded', gradeColor)}>
+                    <span className={clsx('text-2xs font-black px-1.5 py-0.5 rounded', gradeColor)}>
                       {dim.grade}
                     </span>
                   </div>
@@ -110,7 +110,7 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
                   <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mb-1">Top Strengths</p>
                   <div className="flex flex-wrap gap-1.5">
                     {cpisData.strengths.map((s: string) => (
-                      <span key={s} className="text-[10px] font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full">{s}</span>
+                      <span key={s} className="text-2xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full">{s}</span>
                     ))}
                   </div>
                 </div>
@@ -125,7 +125,7 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
                   <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-1">Growth Areas</p>
                   <div className="flex flex-wrap gap-1.5">
                     {cpisData.growthAreas.map((g: string) => (
-                      <span key={g} className="text-[10px] font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-full">{g}</span>
+                      <span key={g} className="text-2xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-full">{g}</span>
                     ))}
                   </div>
                 </div>

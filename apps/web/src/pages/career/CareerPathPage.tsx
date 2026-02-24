@@ -80,9 +80,9 @@ function SkillTags({ skills, max = 4 }: { skills: string[]; max?: number }) {
   return (
     <div className="flex flex-wrap gap-1">
       {skills.slice(0, max).map((s) => (
-        <span key={s} className="bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 rounded-full px-2 py-0.5 text-[11px]">{s}</span>
+        <span key={s} className="bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 rounded-full px-2 py-0.5 text-xs">{s}</span>
       ))}
-      {skills.length > max && <span className="text-[11px] text-secondary-400 py-0.5">+{skills.length - max}</span>}
+      {skills.length > max && <span className="text-xs text-secondary-400 py-0.5">+{skills.length - max}</span>}
     </div>
   );
 }
@@ -97,7 +97,7 @@ function CareerNode({ position: p, isSelected, onClick }: { position: CareerPosi
     )}>
       <div className="flex items-start justify-between gap-2 mb-2">
         <h4 className="text-sm font-semibold text-secondary-900 dark:text-white leading-tight">{p.title}</h4>
-        {p.isCurrent && <span className="shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-wider bg-primary-600 text-white">Current</span>}
+        {p.isCurrent && <span className="shrink-0 px-1.5 py-0.5 rounded text-2xs font-bold tracking-wider bg-primary-600 text-white">Current</span>}
       </div>
       <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-2">
         Level {p.level} {LEVEL_LABELS[p.level] ? `(${LEVEL_LABELS[p.level]})` : ''} &middot; {p.department}
@@ -125,7 +125,7 @@ function CompetencyBar({ name, current, required }: { name: string; current: num
         <div className="absolute inset-y-0 left-0 rounded-full bg-primary-500 dark:bg-primary-400 transition-all duration-500" style={{ width: `${Math.round((current / max) * 100)}%` }} />
         <div className="absolute top-1/2 -translate-y-1/2 w-0.5 h-4 bg-red-500 dark:bg-red-400" style={{ left: `${Math.round((required / max) * 100)}%` }} title={`Required: ${required}`} />
       </div>
-      <div className="flex justify-between text-[10px] text-secondary-400 dark:text-secondary-500">
+      <div className="flex justify-between text-2xs text-secondary-400 dark:text-secondary-500">
         <span>Current: {current}</span><span>Required: {required}</span>
       </div>
     </div>
@@ -422,8 +422,8 @@ export function CareerPathPage() {
                   <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-2">{role.department} &middot; {role.levelRange}</p>
                   <p className="text-xs text-secondary-600 dark:text-secondary-400 mb-3">{role.description}</p>
                   <div className="flex flex-wrap gap-1">
-                    {role.requiredSkills.slice(0, 5).map((s) => <span key={s} className="bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full px-2 py-0.5 text-[11px]">{s}</span>)}
-                    {role.requiredSkills.length > 5 && <span className="text-[11px] text-secondary-400 py-0.5">+{role.requiredSkills.length - 5}</span>}
+                    {role.requiredSkills.slice(0, 5).map((s) => <span key={s} className="bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full px-2 py-0.5 text-xs">{s}</span>)}
+                    {role.requiredSkills.length > 5 && <span className="text-xs text-secondary-400 py-0.5">+{role.requiredSkills.length - 5}</span>}
                   </div>
                 </button>
               ))}

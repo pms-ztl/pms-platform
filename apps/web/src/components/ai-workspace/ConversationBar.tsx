@@ -90,9 +90,9 @@ export function ConversationBar({ activeConversationId, onSelectConversation, on
           >
             <AgentIcon className="h-3.5 w-3.5 flex-shrink-0 opacity-70" />
             <span className="text-xs break-words">{truncate(conv.title, 20)}</span>
-            <span className={`text-[10px] flex-shrink-0 ${T.textMuted(theme)}`}>{shortTimeAgo(conv.updatedAt)}</span>
+            <span className={`text-2xs flex-shrink-0 ${T.textMuted(theme)}`}>{shortTimeAgo(conv.updatedAt)}</span>
             {conv.messageCount > 0 && (
-              <span className={`flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[9px] ${
+              <span className={`flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-3xs ${
                 theme === 'light' ? 'bg-gray-100 text-gray-500' : 'bg-white/10 text-gray-500'
               }`}>
                 {conv.messageCount}

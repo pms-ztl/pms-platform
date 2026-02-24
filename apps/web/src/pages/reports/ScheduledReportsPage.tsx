@@ -361,12 +361,12 @@ export function ScheduledReportsPage() {
                     </td>
                     <td className="px-6 py-3">
                       <p className="text-sm text-secondary-700 dark:text-secondary-300">{cronToHuman(sched.cronExpression)}</p>
-                      <p className="text-[10px] text-secondary-400 font-mono">{sched.cronExpression}</p>
+                      <p className="text-2xs text-secondary-400 font-mono">{sched.cronExpression}</p>
                     </td>
                     <td className="px-6 py-3 text-center">
                       <p className="text-xs text-secondary-600 dark:text-secondary-400">{formatDate(sched.nextRunAt)}</p>
                       {sched.nextRunAt && (
-                        <p className="text-[10px] text-secondary-400">{formatRelative(sched.nextRunAt)}</p>
+                        <p className="text-2xs text-secondary-400">{formatRelative(sched.nextRunAt)}</p>
                       )}
                     </td>
                     <td className="px-6 py-3 text-center">
@@ -374,7 +374,7 @@ export function ScheduledReportsPage() {
                     </td>
                     <td className="px-6 py-3 text-center">
                       <span className={clsx(
-                        'inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full',
+                        'inline-flex px-2 py-0.5 text-2xs font-semibold rounded-full',
                         sched.isActive
                           ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
                           : 'bg-secondary-100 dark:bg-secondary-700 text-secondary-500 dark:text-secondary-400'
@@ -436,10 +436,10 @@ export function ScheduledReportsPage() {
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{report.title || report.reportType}</p>
-                      <p className="text-[10px] text-secondary-400">{formatDate(report.createdAt)}</p>
+                      <p className="text-2xs text-secondary-400">{formatDate(report.createdAt)}</p>
                     </div>
                   </div>
-                  <span className={clsx('inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full flex-shrink-0', badge.bg, badge.text)}>
+                  <span className={clsx('inline-flex px-2 py-0.5 text-2xs font-semibold rounded-full flex-shrink-0', badge.bg, badge.text)}>
                     {report.generationStatus}
                   </span>
                 </div>
@@ -513,7 +513,7 @@ export function ScheduledReportsPage() {
                       placeholder="e.g., 0 9 * * 1-5"
                       className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm font-mono bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                     />
-                    <p className="text-[10px] text-secondary-400 mt-1">Format: minute hour day-of-month month day-of-week</p>
+                    <p className="text-2xs text-secondary-400 mt-1">Format: minute hour day-of-month month day-of-week</p>
                   </div>
                 )}
                 {selectedCron && (

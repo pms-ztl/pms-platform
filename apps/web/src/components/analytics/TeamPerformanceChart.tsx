@@ -117,7 +117,7 @@ function TeamPerformanceChart({ managerId, className = '' }: TeamPerformanceChar
         </ResponsiveContainer>
       </div>
 
-      <div className="flex items-center gap-4 mt-2 text-[11px] text-secondary-400 dark:text-secondary-500">
+      <div className="flex items-center gap-4 mt-2 text-xs text-secondary-400 dark:text-secondary-500">
         <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-emerald-500" /> High</div>
         <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-blue-500" /> Average</div>
         <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-red-500" /> Low</div>

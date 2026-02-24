@@ -49,7 +49,7 @@ function LearningProgress() {
         </div>
         <Link
           to="/development"
-          className="text-[11px] font-medium text-primary-600 dark:text-primary-400 hover:underline"
+          className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline"
         >
           View All
         </Link>

@@ -62,7 +62,7 @@ function RecognitionFeed() {
         </div>
         <Link
           to="/recognition"
-          className="text-[11px] font-medium text-primary-600 dark:text-primary-400 hover:underline"
+          className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline"
         >
           View All
         </Link>
@@ -76,7 +76,7 @@ function RecognitionFeed() {
             <div key={item.id} className="flex gap-3">
               {/* Avatar */}
               <div className={`w-8 h-8 rounded-full ${colorClass} flex items-center justify-center shrink-0`}>
-                <span className="text-[10px] font-bold text-white">
+                <span className="text-2xs font-bold text-white">
                   {sender ? getInitials(sender.firstName, sender.lastName) : '?'}
                 </span>
               </div>
@@ -86,7 +86,7 @@ function RecognitionFeed() {
                   <span className="text-xs font-medium text-secondary-800 dark:text-secondary-200">
                     {sender ? `${sender.firstName} ${sender.lastName}` : 'Anonymous'}
                   </span>
-                  <span className="text-[10px] text-secondary-400">{timeAgo(item.createdAt)}</span>
+                  <span className="text-2xs text-secondary-400">{timeAgo(item.createdAt)}</span>
                 </div>
                 <p className="text-xs text-secondary-600 dark:text-secondary-400 mt-0.5">
                   {item.content}

@@ -141,7 +141,7 @@ export function InsightFeed({ className = '' }: InsightFeedProps) {
               <SparklesIcon className={`h-6 w-6 ${T.textMuted(theme)}`} />
             </div>
             <p className={`text-xs ${T.textMuted(theme)}`}>No insights right now</p>
-            <p className={`text-[10px] ${T.textMuted(theme)} mt-1`}>Everything looks good!</p>
+            <p className={`text-2xs ${T.textMuted(theme)} mt-1`}>Everything looks good!</p>
           </div>
         )}
 
@@ -166,16 +166,16 @@ export function InsightFeed({ className = '' }: InsightFeedProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 mb-1">
                     <h4 className={`text-xs font-semibold break-words ${T.textPrimary(theme)}`}>{insight.title}</h4>
-                    <span className={`flex-shrink-0 rounded-full border px-1.5 py-0 text-[9px] font-medium ${priority.badge}`}>
+                    <span className={`flex-shrink-0 rounded-full border px-1.5 py-0 text-3xs font-medium ${priority.badge}`}>
                       {priority.badgeText}
                     </span>
                   </div>
-                  <p className={`text-[11px] leading-relaxed ${T.textSecondary(theme)}`}>{insight.description}</p>
+                  <p className={`text-xs leading-relaxed ${T.textSecondary(theme)}`}>{insight.description}</p>
                 </div>
               </div>
 
               <div className={`flex items-center justify-between mt-2 pt-1.5 border-t ${T.borderLight(theme)}`}>
-                <span className={`text-[10px] ${T.textMuted(theme)}`}>{timeAgo(insight.createdAt)}</span>
+                <span className={`text-2xs ${T.textMuted(theme)}`}>{timeAgo(insight.createdAt)}</span>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   {!insight.isRead && (
                     <button

@@ -30,7 +30,7 @@ function ScheduledReportsWidget({ className = '' }: ScheduledReportsWidgetProps)
         </div>
         <Link
           to="/reports"
-          className="text-[11px] font-medium text-primary-600 dark:text-primary-400 hover:underline"
+          className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline"
         >
           Manage
         </Link>
@@ -58,7 +58,7 @@ function ScheduledReportsWidget({ className = '' }: ScheduledReportsWidgetProps)
                 <p className="text-xs font-medium text-secondary-800 dark:text-secondary-200 break-words">
                   {schedule.reportType ?? schedule.name ?? 'Report'}
                 </p>
-                <p className="text-[11px] text-secondary-500 dark:text-secondary-400">
+                <p className="text-xs text-secondary-500 dark:text-secondary-400">
                   {schedule.frequency ?? schedule.schedule ?? 'Custom'}
                 </p>
               </div>
@@ -66,7 +66,7 @@ function ScheduledReportsWidget({ className = '' }: ScheduledReportsWidgetProps)
             </div>
           ))}
           {activeSchedules.length > 4 && (
-            <p className="text-[11px] text-secondary-400 dark:text-secondary-500 text-center">
+            <p className="text-xs text-secondary-400 dark:text-secondary-500 text-center">
               +{activeSchedules.length - 4} more schedules
             </p>
           )}

@@ -123,7 +123,7 @@ export function NotificationGroup({ notifications, onMarkRead, compact = false, 
         <div key={group.label}>
           {/* Group header */}
           <div className="px-4 py-2 bg-secondary-50 dark:bg-secondary-900/50 sticky top-0 z-10">
-            <p className="text-[10px] font-semibold text-secondary-400 dark:text-secondary-500 tracking-wider">
+            <p className="text-2xs font-semibold text-secondary-400 dark:text-secondary-500 tracking-wider">
               {group.label}
             </p>
           </div>
@@ -171,7 +171,7 @@ export function NotificationGroup({ notifications, onMarkRead, compact = false, 
                           {notification.body}
                         </p>
                       )}
-                      <p className={clsx('text-secondary-400 dark:text-secondary-500 mt-0.5', compact ? 'text-[9px]' : 'text-[10px]')}>
+                      <p className={clsx('text-secondary-400 dark:text-secondary-500 mt-0.5', compact ? 'text-3xs' : 'text-2xs')}>
                         {compact ? formatTime(notification.createdAt) : format(new Date(notification.createdAt), 'MMM d, yyyy h:mm a')}
                       </p>
                     </div>

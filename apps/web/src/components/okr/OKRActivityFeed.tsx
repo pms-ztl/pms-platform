@@ -64,7 +64,7 @@ function ActivityEntry({ item }: { item: ActivityItem }) {
               {item.user.firstName} {item.user.lastName}
             </span>
           )}
-          <span className="text-[10px] text-secondary-400 dark:text-secondary-500 flex items-center gap-0.5">
+          <span className="text-2xs text-secondary-400 dark:text-secondary-500 flex items-center gap-0.5">
             <ClockIcon className="h-3 w-3" />
             {relativeTime(item.createdAt)}
           </span>
@@ -132,7 +132,7 @@ export function OKRActivityFeed({ goalId, compact = false }: OKRActivityFeedProp
 
   return (
     <div>
-      <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
+      <h4 className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
         Activity
       </h4>
 
@@ -178,7 +178,7 @@ export function OKRActivityFeed({ goalId, compact = false }: OKRActivityFeedProp
       )}
 
       {compact && activity.length > 5 && (
-        <button className="mt-2 text-[10px] font-medium text-primary-600 dark:text-primary-400 hover:underline">
+        <button className="mt-2 text-2xs font-medium text-primary-600 dark:text-primary-400 hover:underline">
           View all {activity.length} activities
         </button>
       )}

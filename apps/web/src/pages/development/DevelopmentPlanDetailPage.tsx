@@ -639,7 +639,7 @@ export function DevelopmentPlanDetailPage() {
                   <div className="col-span-1">
                     <span
                       className={clsx(
-                        'inline-block px-2 py-0.5 rounded text-[10px] font-semibold',
+                        'inline-block px-2 py-0.5 rounded text-2xs font-semibold',
                         activityTypeColors[activity.activityType] || activityTypeColors.TRAINING
                       )}
                     >
@@ -658,7 +658,7 @@ export function DevelopmentPlanDetailPage() {
                   <div className="col-span-1">
                     <span
                       className={clsx(
-                        'inline-block px-2 py-0.5 rounded-full text-[10px] font-medium',
+                        'inline-block px-2 py-0.5 rounded-full text-2xs font-medium',
                         activityStatusColors[activity.status] || activityStatusColors.NOT_STARTED
                       )}
                     >
@@ -694,7 +694,7 @@ export function DevelopmentPlanDetailPage() {
                     {activity.priority && (
                       <span
                         className={clsx(
-                          'inline-block px-2 py-0.5 rounded text-[10px] font-medium',
+                          'inline-block px-2 py-0.5 rounded text-2xs font-medium',
                           priorityColors[activity.priority] || priorityColors.MEDIUM
                         )}
                       >
@@ -914,7 +914,7 @@ export function DevelopmentPlanDetailPage() {
                             </span>
                             <span
                               className={clsx(
-                                'px-2 py-0.5 rounded-full text-[10px] font-medium',
+                                'px-2 py-0.5 rounded-full text-2xs font-medium',
                                 checkpointTypeColors[checkpoint.checkpointType] || checkpointTypeColors.MILESTONE
                               )}
                             >
@@ -922,7 +922,7 @@ export function DevelopmentPlanDetailPage() {
                             </span>
                             <span
                               className={clsx(
-                                'px-2 py-0.5 rounded-full text-[10px] font-medium',
+                                'px-2 py-0.5 rounded-full text-2xs font-medium',
                                 isCompleted
                                   ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
                                   : 'bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400'

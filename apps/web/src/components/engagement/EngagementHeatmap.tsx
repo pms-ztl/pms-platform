@@ -126,7 +126,7 @@ export function EngagementHeatmap({ trends, mode = 'engagement', className }: En
           {monthLabels.map((ml, i) => (
             <div
               key={i}
-              className="text-[10px] text-secondary-400 dark:text-secondary-500"
+              className="text-2xs text-secondary-400 dark:text-secondary-500"
               style={{
                 position: 'absolute',
                 left: 32 + ml.col * (CELL_SIZE + CELL_GAP),
@@ -145,7 +145,7 @@ export function EngagementHeatmap({ trends, mode = 'engagement', className }: En
             {[1, 3, 5].map((dayIdx) => (
               <div
                 key={dayIdx}
-                className="text-[10px] text-secondary-400 dark:text-secondary-500 leading-none"
+                className="text-2xs text-secondary-400 dark:text-secondary-500 leading-none"
                 style={{ position: 'absolute', top: 20 + dayIdx * (CELL_SIZE + CELL_GAP) + 1 }}
               >
                 {DAYS_SHORT[dayIdx]}
@@ -192,7 +192,7 @@ export function EngagementHeatmap({ trends, mode = 'engagement', className }: En
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-1 mt-4 text-[10px] text-secondary-400 dark:text-secondary-500">
+      <div className="flex items-center gap-1 mt-4 text-2xs text-secondary-400 dark:text-secondary-500">
         <span className="mr-1">Less</span>
         {LEVEL_COLORS.map((color, i) => (
           <div

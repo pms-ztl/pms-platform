@@ -172,7 +172,7 @@ const HealthGauge = ({ score }: { score: number }) => {
       </div>
       <div className="text-center w-full max-w-full">
         <div className="text-xs font-medium text-secondary-900 dark:text-white break-words px-1">Project Health</div>
-        <div className={clsx('text-[10px] break-words px-1', getColor())}>
+        <div className={clsx('text-2xs break-words px-1', getColor())}>
           {score >= 80 ? 'Excellent' : score >= 60 ? 'Good' : 'Attention'}
         </div>
       </div>

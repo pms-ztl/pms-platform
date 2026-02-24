@@ -433,7 +433,7 @@ export function CalendarPlanner() {
                   {hourEvents.map((event) => (
                     <div
                       key={event.id}
-                      className={clsx('text-[10px] px-1.5 py-0.5 rounded break-words text-white mb-0.5', event.color)}
+                      className={clsx('text-2xs px-1.5 py-0.5 rounded break-words text-white mb-0.5', event.color)}
                       title={event.title}
                     >
                       {event.title}
@@ -459,7 +459,7 @@ export function CalendarPlanner() {
                 {allDayEvents.slice(0, 2).map((event) => (
                   <div
                     key={event.id}
-                    className={clsx('text-[10px] px-1.5 py-0.5 rounded break-words text-white flex items-center gap-0.5', event.color)}
+                    className={clsx('text-2xs px-1.5 py-0.5 rounded break-words text-white flex items-center gap-0.5', event.color)}
                     title={event.title}
                   >
                     <EventIcon type={event.type} />
@@ -467,7 +467,7 @@ export function CalendarPlanner() {
                   </div>
                 ))}
                 {allDayEvents.length > 2 && (
-                  <div className="text-[10px] text-secondary-400">+{allDayEvents.length - 2}</div>
+                  <div className="text-2xs text-secondary-400">+{allDayEvents.length - 2}</div>
                 )}
               </div>
             );

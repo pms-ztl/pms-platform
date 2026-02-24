@@ -509,41 +509,41 @@ function DashboardContent() {
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
                 <div className="flex items-center gap-1.5 mb-1">
                   <FlagIcon className="w-4 h-4 text-cyan-300" />
-                  <span className="text-[11px] font-medium text-white/60 tracking-wide">Goals</span>
+                  <span className="text-xs font-medium text-white/60 tracking-wide">Goals</span>
                 </div>
                 <p className="text-base font-bold text-white">{goalsData?.data?.length ?? 0}</p>
-                <p className="text-[10px] text-white/50 mt-0">{avgProgress}% Average Progress</p>
+                <p className="text-2xs text-white/50 mt-0">{avgProgress}% Average Progress</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
                 <div className="flex items-center gap-1.5 mb-1">
                   <ChatBubbleLeftRightIcon className="w-4 h-4 text-emerald-300" />
-                  <span className="text-[11px] font-medium text-white/60 tracking-wide">Feedback</span>
+                  <span className="text-xs font-medium text-white/60 tracking-wide">Feedback</span>
                 </div>
                 <p className="text-base font-bold text-white">{feedbackData?.meta?.total ?? 0}</p>
-                <p className="text-[10px] text-white/50 mt-0">{feedbackScoreVal > 0 ? `${Math.round(feedbackScoreVal)}/100 Sentiment` : 'No Data Yet'}</p>
+                <p className="text-2xs text-white/50 mt-0">{feedbackScoreVal > 0 ? `${Math.round(feedbackScoreVal)}/100 Sentiment` : 'No Data Yet'}</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
                 <div className="flex items-center gap-1.5 mb-1">
                   <ClipboardDocumentCheckIcon className="w-4 h-4 text-violet-300" />
-                  <span className="text-[11px] font-medium text-white/60 tracking-wide">Reviews</span>
+                  <span className="text-xs font-medium text-white/60 tracking-wide">Reviews</span>
                 </div>
                 <p className="text-base font-bold text-white">{reviewsData?.length ?? 0}</p>
-                <p className="text-[10px] text-white/50 mt-0">{pendingReviews.length > 0 ? `${pendingReviews.length} Pending` : 'All Complete'}</p>
+                <p className="text-2xs text-white/50 mt-0">{pendingReviews.length > 0 ? `${pendingReviews.length} Pending` : 'All Complete'}</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
                 <div className="flex items-center gap-1.5 mb-1">
                   <TrophyIcon className="w-4 h-4 text-amber-300" />
-                  <span className="text-[11px] font-medium text-white/60 tracking-wide">Score</span>
+                  <span className="text-xs font-medium text-white/60 tracking-wide">Score</span>
                 </div>
                 <p className="text-base font-bold text-white">{Math.round(overallScore)}</p>
-                <p className="text-[10px] text-white/50 mt-0">Grade {cpisGrade ?? '—'}</p>
+                <p className="text-2xs text-white/50 mt-0">Grade {cpisGrade ?? '—'}</p>
               </div>
             </div>
 
             {/* CPIS Top Dimensions — horizontal mini-bars */}
             {cpisDimensions.length > 0 && (
               <div className="mt-2 space-y-1.5">
-                <p className="text-[10px] font-semibold text-white/50 tracking-wider">Performance Dimensions</p>
+                <p className="text-2xs font-semibold text-white/50 tracking-wider">Performance Dimensions</p>
                 {cpisDimensions.slice(0, 4).map((dim: any, i: number) => {
                   const barColors = ['#22d3ee', '#a78bfa', '#34d399', '#fbbf24'];
                   return (

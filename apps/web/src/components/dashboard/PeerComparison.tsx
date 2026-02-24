@@ -60,7 +60,7 @@ function PeerComparison({ percentile, score }: PeerComparisonProps) {
           style={{ left: `${Math.min(97, Math.max(3, position))}%`, transform: 'translateX(-50%)' }}
         >
           <div className={`w-3 h-6 rounded-full ${colors.bg} ring-2 ring-white dark:ring-secondary-900 shadow-lg`} />
-          <span className="text-[10px] font-bold text-secondary-600 dark:text-secondary-400 mt-1">You</span>
+          <span className="text-2xs font-bold text-secondary-600 dark:text-secondary-400 mt-1">You</span>
         </div>
       </div>
 
@@ -76,7 +76,7 @@ function PeerComparison({ percentile, score }: PeerComparisonProps) {
         </div>
       </div>
 
-      <p className="text-[11px] text-secondary-400 dark:text-secondary-500 mt-3">
+      <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-3">
         Anonymous comparison across your organization. No individual data is shared.
       </p>
     </div>

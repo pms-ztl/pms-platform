@@ -315,7 +315,7 @@ export function AgentPanel({ selectedAgent, onSelectAgent }: AgentPanelProps) {
               >
                 <cluster.icon className={`h-4 w-4 flex-shrink-0 ${T.textMuted(theme)}`} />
                 <span className="flex-1 text-xs font-semibold break-words">{cluster.name}</span>
-                <span className={`text-[10px] ${T.textMuted(theme)}`}>{cluster.agents.length}</span>
+                <span className={`text-2xs ${T.textMuted(theme)}`}>{cluster.agents.length}</span>
                 <ChevronDownIcon
                   className={`h-3.5 w-3.5 transition-transform duration-200 ${
                     isExpanded ? 'rotate-0' : '-rotate-90'
@@ -358,7 +358,7 @@ export function AgentPanel({ selectedAgent, onSelectAgent }: AgentPanelProps) {
                             }`}>
                               {agent.name}
                             </p>
-                            <p className={`text-[10px] break-words ${T.textMuted(theme)}`}>
+                            <p className={`text-2xs break-words ${T.textMuted(theme)}`}>
                               {agent.description}
                             </p>
                           </div>

@@ -50,12 +50,12 @@ export function OKRCard({ objective, keyResults, onCheckin, className }: OKRCard
         <OKRProgressRing progress={avgProgress} size={72} strokeWidth={5} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+            <span className="px-2 py-0.5 rounded-full text-2xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
               OBJECTIVE
             </span>
             <span
               className={clsx(
-                'px-2 py-0.5 rounded-full text-[10px] font-medium',
+                'px-2 py-0.5 rounded-full text-2xs font-medium',
                 statusColors[objective.status] || statusColors.DRAFT
               )}
             >
@@ -68,7 +68,7 @@ export function OKRCard({ objective, keyResults, onCheckin, className }: OKRCard
           <div className="flex items-center gap-3 mt-2 text-xs text-secondary-500 dark:text-secondary-400">
             {initials && (
               <span className="inline-flex items-center gap-1">
-                <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-[10px] font-bold">
+                <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-2xs font-bold">
                   {initials}
                 </span>
                 {objective.owner.firstName} {objective.owner.lastName}
@@ -106,7 +106,7 @@ export function OKRCard({ objective, keyResults, onCheckin, className }: OKRCard
               {onCheckin && kr.status === 'ACTIVE' && (
                 <button
                   onClick={() => onCheckin(kr.id)}
-                  className="shrink-0 px-2 py-1 text-[10px] font-medium rounded-md border border-secondary-300 dark:border-secondary-600 text-secondary-600 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
+                  className="shrink-0 px-2 py-1 text-2xs font-medium rounded-md border border-secondary-300 dark:border-secondary-600 text-secondary-600 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
                 >
                   Check-in
                 </button>

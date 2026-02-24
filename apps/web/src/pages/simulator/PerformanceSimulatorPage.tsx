@@ -60,7 +60,7 @@ function ImpactCard({ impact }: { impact: SimulationImpact }) {
           {directionIcons[impact.direction]}
           <h4 className="text-sm font-semibold text-secondary-900 dark:text-white">{impact.area}</h4>
         </div>
-        <span className={clsx('text-[10px] font-bold px-2 py-0.5 rounded-full', severityColors[impact.severity])}>
+        <span className={clsx('text-2xs font-bold px-2 py-0.5 rounded-full', severityColors[impact.severity])}>
           {impact.severity}
         </span>
       </div>
@@ -90,7 +90,7 @@ function ConfidenceRing({ confidence }: { confidence: number }) {
       </svg>
       <div className="absolute flex flex-col items-center justify-center" style={{ marginTop: 28 }}>
         <span className="text-2xl font-bold text-secondary-900 dark:text-white">{Math.round(confidence)}%</span>
-        <span className="text-[9px] text-secondary-500 tracking-wider">Confidence</span>
+        <span className="text-3xs text-secondary-500 tracking-wider">Confidence</span>
       </div>
     </div>
   );
@@ -223,7 +223,7 @@ export function PerformanceSimulatorPage() {
             >
               <s.icon className={clsx('h-6 w-6 mb-2', isActive ? c.text : 'text-secondary-400')} />
               <h3 className={clsx('text-sm font-semibold', isActive ? c.text : 'text-secondary-900 dark:text-white')}>{s.label}</h3>
-              <p className="text-[10px] text-secondary-500 dark:text-secondary-400 mt-1">{s.desc}</p>
+              <p className="text-2xs text-secondary-500 dark:text-secondary-400 mt-1">{s.desc}</p>
             </button>
           );
         })}
@@ -329,7 +329,7 @@ export function PerformanceSimulatorPage() {
                           <p className="text-xs text-secondary-500 mt-0.5">{rec.description}</p>
                         </div>
                         <span className={clsx(
-                          'text-[9px] font-bold px-2 py-0.5 rounded-full shrink-0',
+                          'text-3xs font-bold px-2 py-0.5 rounded-full shrink-0',
                           rec.priority === 'high' ? 'bg-red-100 dark:bg-red-900/30 text-red-600' :
                           rec.priority === 'medium' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600' :
                           'bg-blue-100 dark:bg-blue-900/30 text-blue-600'

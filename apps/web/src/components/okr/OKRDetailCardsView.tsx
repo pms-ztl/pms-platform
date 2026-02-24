@@ -149,7 +149,7 @@ function DetailCard({
                   <div className="flex items-start gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="px-1 py-0.5 rounded text-[8px] font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                        <span className="px-1 py-0.5 rounded text-3xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
                           KR
                         </span>
                         <span className="text-xs text-secondary-800 dark:text-secondary-200 break-words">

@@ -77,7 +77,7 @@ function DescriptiveScale({ value, onChange, disabled, compact }: { value: numbe
             disabled={disabled}
             className={clsx(
               'relative rounded-lg font-medium transition-all',
-              compact ? 'px-2.5 py-1 text-[10px]' : 'px-3.5 py-2 text-xs',
+              compact ? 'px-2.5 py-1 text-2xs' : 'px-3.5 py-2 text-xs',
               disabled ? 'cursor-default' : 'cursor-pointer',
               value === opt.value
                 ? `${opt.bg} ${opt.border} border-2 ${opt.text} shadow-sm`
@@ -137,7 +137,7 @@ function NumericScale({ value, onChange, disabled }: { value: number; onChange: 
           <span
             key={i}
             className={clsx(
-              'text-[8px]',
+              'text-3xs',
               i === displayValue ? 'text-primary-600 font-bold' : 'text-secondary-300 dark:text-secondary-600'
             )}
           >

@@ -141,11 +141,11 @@ export function ActivityStream({
             {/* Content */}
             <div className="pb-6 flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className={clsx('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold', cfg.color)}>
+                <span className={clsx('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-semibold', cfg.color)}>
                   <Icon className="h-3 w-3" />
                   {cfg.label}
                 </span>
-                <span className="text-[10px] text-secondary-400 dark:text-secondary-500">
+                <span className="text-2xs text-secondary-400 dark:text-secondary-500">
                   {format(item.date, 'MMM d, yyyy')}
                 </span>
               </div>

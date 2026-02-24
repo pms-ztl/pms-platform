@@ -67,12 +67,12 @@ function StrategyNode({
             style={{ width: `${Math.min(goal.progress, 100)}%` }}
           />
         </div>
-        <span className="text-[10px] font-bold text-secondary-600 dark:text-secondary-400">
+        <span className="text-2xs font-bold text-secondary-600 dark:text-secondary-400">
           {Math.round(goal.progress)}%
         </span>
       </div>
       {goal.owner && (
-        <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-1.5 break-words">
+        <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-1.5 break-words">
           {goal.owner.firstName} {goal.owner.lastName}
         </p>
       )}
@@ -229,19 +229,19 @@ export function OKRStrategyMapView({ treeData, onSelect }: OKRStrategyMapViewPro
           <h3 className="text-xs font-bold text-secondary-500 dark:text-secondary-400 tracking-wider">
             Strategic Pillars
           </h3>
-          <p className="text-[10px] text-secondary-400 mt-0.5">Company-level goals</p>
+          <p className="text-2xs text-secondary-400 mt-0.5">Company-level goals</p>
         </div>
         <div className="w-56 shrink-0">
           <h3 className="text-xs font-bold text-secondary-500 dark:text-secondary-400 tracking-wider">
             Annual Goals
           </h3>
-          <p className="text-[10px] text-secondary-400 mt-0.5">Department & team goals</p>
+          <p className="text-2xs text-secondary-400 mt-0.5">Department & team goals</p>
         </div>
         <div className="w-56 shrink-0">
           <h3 className="text-xs font-bold text-secondary-500 dark:text-secondary-400 tracking-wider">
             Quarterly OKRs
           </h3>
-          <p className="text-[10px] text-secondary-400 mt-0.5">Objectives & key results</p>
+          <p className="text-2xs text-secondary-400 mt-0.5">Objectives & key results</p>
         </div>
       </div>
 
@@ -315,18 +315,18 @@ export function OKRStrategyMapView({ treeData, onSelect }: OKRStrategyMapViewPro
 
       {/* Legend */}
       <div className="mt-6 pt-4 border-t border-secondary-200 dark:border-secondary-700 flex items-center gap-4 flex-wrap">
-        <span className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">Legend:</span>
+        <span className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">Legend:</span>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
-          <span className="text-[10px] text-secondary-500 dark:text-secondary-400">On Track (&ge;70%)</span>
+          <span className="text-2xs text-secondary-500 dark:text-secondary-400">On Track (&ge;70%)</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-          <span className="text-[10px] text-secondary-500 dark:text-secondary-400">At Risk (40-70%)</span>
+          <span className="text-2xs text-secondary-500 dark:text-secondary-400">At Risk (40-70%)</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-2.5 w-2.5 rounded-full bg-red-500" />
-          <span className="text-[10px] text-secondary-500 dark:text-secondary-400">Behind (&lt;40%)</span>
+          <span className="text-2xs text-secondary-500 dark:text-secondary-400">Behind (&lt;40%)</span>
         </div>
       </div>
     </div>

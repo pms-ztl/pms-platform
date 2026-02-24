@@ -195,7 +195,7 @@ export function ReviewCyclesPage() {
           <div key={stage} className="flex items-center">
             <div
               className={clsx(
-                'flex items-center justify-center w-7 h-7 rounded-full text-[10px] font-bold transition-colors',
+                'flex items-center justify-center w-7 h-7 rounded-full text-2xs font-bold transition-colors',
                 i < idx
                   ? 'bg-emerald-500 text-white'
                   : i === idx
@@ -481,7 +481,7 @@ export function ReviewCyclesPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={clsx('px-2 py-0.5 rounded-full text-[11px] font-semibold', TYPE_COLORS[cycle.type] || TYPE_COLORS.ANNUAL)}>
+                        <span className={clsx('px-2 py-0.5 rounded-full text-xs font-semibold', TYPE_COLORS[cycle.type] || TYPE_COLORS.ANNUAL)}>
                           {cycle.type.replace('_', ' ')}
                         </span>
                       </td>
@@ -747,7 +747,7 @@ export function ReviewCyclesPage() {
                       <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-semibold', STATUS_COLORS[detailCycle.status])}>
                         {detailCycle.status}
                       </span>
-                      <span className={clsx('px-2 py-0.5 rounded-full text-[11px] font-semibold', TYPE_COLORS[detailCycle.type] || TYPE_COLORS.ANNUAL)}>
+                      <span className={clsx('px-2 py-0.5 rounded-full text-xs font-semibold', TYPE_COLORS[detailCycle.type] || TYPE_COLORS.ANNUAL)}>
                         {detailCycle.type.replace('_', ' ')}
                       </span>
                     </div>

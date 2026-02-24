@@ -597,13 +597,13 @@ export function AIAccessManagementPage() {
                             {u.roles.slice(0, 2).map((role) => (
                               <span
                                 key={role}
-                                className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400"
+                                className="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400"
                               >
                                 {role.replace(/_/g, ' ')}
                               </span>
                             ))}
                             {u.roles.length > 2 && (
-                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400">
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400">
                                 +{u.roles.length - 2}
                               </span>
                             )}

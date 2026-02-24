@@ -120,7 +120,7 @@ export function VoiceMicButton({
       {/* Interim transcript tooltip */}
       {isListening && interimTranscript && (
         <div
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 max-w-[200px] rounded-lg px-3 py-1.5 text-[11px] leading-tight whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none"
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 max-w-[200px] rounded-lg px-3 py-1.5 text-xs leading-tight whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none"
           style={{
             background: isDark
               ? 'rgba(15,15,35,0.95)'

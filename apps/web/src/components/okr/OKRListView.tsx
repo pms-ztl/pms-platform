@@ -113,7 +113,7 @@ function ListRow({
         {/* Title */}
         <td className="py-3.5 pr-4">
           <div className="flex items-center gap-2">
-            <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 shrink-0">
+            <span className="px-1.5 py-0.5 rounded text-3xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 shrink-0">
               OBJ
             </span>
             <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">
@@ -126,12 +126,12 @@ function ListRow({
         <td className="py-3.5 pr-4">
           <div className="flex items-center gap-1 flex-wrap">
             {tags.slice(0, 3).map((t) => (
-              <span key={t} className={clsx('px-1.5 py-0.5 rounded text-[8px] font-semibold', tagColor(t))}>
+              <span key={t} className={clsx('px-1.5 py-0.5 rounded text-3xs font-semibold', tagColor(t))}>
                 {t}
               </span>
             ))}
             {tags.length > 3 && (
-              <span className="text-[9px] text-secondary-400">+{tags.length - 3}</span>
+              <span className="text-3xs text-secondary-400">+{tags.length - 3}</span>
             )}
           </div>
         </td>
@@ -139,7 +139,7 @@ function ListRow({
         {/* Owner */}
         <td className="py-3.5 pr-4">
           <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-[10px] font-bold shrink-0">
+            <span className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-2xs font-bold shrink-0">
               {initials}
             </span>
             <span className="text-xs text-secondary-600 dark:text-secondary-300 break-words">
@@ -165,7 +165,7 @@ function ListRow({
 
         {/* Status */}
         <td className="py-3.5 pr-4">
-          <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium whitespace-nowrap', health.cls)}>
+          <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap', health.cls)}>
             {health.label}
           </span>
         </td>
@@ -201,7 +201,7 @@ function ListRow({
               <td className="pl-4 pr-1 py-2.5 w-8" />
               <td className="py-2.5 pr-4 pl-8">
                 <div className="flex items-center gap-2">
-                  <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 shrink-0">
+                  <span className="px-1.5 py-0.5 rounded text-3xs font-bold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 shrink-0">
                     KR
                   </span>
                   <span className="text-sm text-secondary-700 dark:text-secondary-200 break-words">
@@ -211,7 +211,7 @@ function ListRow({
               </td>
               <td className="py-2.5 pr-4">
                 {(kr.tags || []).slice(0, 2).map((t) => (
-                  <span key={t} className={clsx('px-1.5 py-0.5 rounded text-[8px] font-semibold mr-1', tagColor(t))}>
+                  <span key={t} className={clsx('px-1.5 py-0.5 rounded text-3xs font-semibold mr-1', tagColor(t))}>
                     {t}
                   </span>
                 ))}
@@ -237,7 +237,7 @@ function ListRow({
                 </div>
               </td>
               <td className="py-2.5 pr-4">
-                <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium whitespace-nowrap', krHealth.cls)}>
+                <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap', krHealth.cls)}>
                   {krHealth.label}
                 </span>
               </td>
@@ -248,7 +248,7 @@ function ListRow({
                 {kr.status === 'ACTIVE' && (
                   <button
                     onClick={() => onCheckin(kr.id)}
-                    className="text-[10px] font-medium text-primary-600 dark:text-primary-400 hover:underline whitespace-nowrap"
+                    className="text-2xs font-medium text-primary-600 dark:text-primary-400 hover:underline whitespace-nowrap"
                   >
                     Check-in
                   </button>

@@ -66,7 +66,7 @@ function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
         </button>
 
         {/* Type badge */}
-        <span className={clsx('text-[10px] font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
+        <span className={clsx('text-2xs font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
           {goal.type?.replace('_', ' ')}
         </span>
 
@@ -80,7 +80,7 @@ function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
 
         {/* Owner */}
         <div className="flex items-center gap-1.5 min-w-[120px]">
-          <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[10px] font-bold text-primary-700 dark:text-primary-300">
+          <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-2xs font-bold text-primary-700 dark:text-primary-300">
             {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
           </div>
           <span className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
@@ -101,7 +101,7 @@ function GoalTreeNode({ goal, depth = 0 }: { goal: Goal; depth?: number }) {
 
         {/* Weight */}
         {goal.weight !== undefined && goal.weight !== null && (
-          <span className="text-[10px] text-secondary-400 dark:text-secondary-500 min-w-[40px] text-right">
+          <span className="text-2xs text-secondary-400 dark:text-secondary-500 min-w-[40px] text-right">
             w:{goal.weight}
           </span>
         )}
@@ -132,7 +132,7 @@ const goalColumns: Column<Goal>[] = [
     sortable: true,
     render: (goal) => (
       <div className="flex items-center gap-2">
-        <span className={clsx('text-[10px] font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
+        <span className={clsx('text-2xs font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
           {goal.type?.replace('_', ' ')}
         </span>
         <div>
@@ -151,7 +151,7 @@ const goalColumns: Column<Goal>[] = [
     header: 'Owner',
     render: (goal) => (
       <div className="flex items-center gap-1.5">
-        <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[10px] font-bold text-primary-700 dark:text-primary-300">
+        <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-2xs font-bold text-primary-700 dark:text-primary-300">
           {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
         </div>
         <span className="text-xs text-secondary-600 dark:text-secondary-400">

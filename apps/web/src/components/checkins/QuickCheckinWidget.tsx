@@ -142,7 +142,7 @@ export function QuickCheckinWidget() {
           <div className="text-left">
             <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">Quick Check-in</h3>
             {lastCheckin && (
-              <p className="text-[10px] text-secondary-400">Last: {relativeTime(lastCheckin.date)}</p>
+              <p className="text-2xs text-secondary-400">Last: {relativeTime(lastCheckin.date)}</p>
             )}
           </div>
         </div>
@@ -154,7 +154,7 @@ export function QuickCheckinWidget() {
               <div
                 key={day.date}
                 className={clsx(
-                  'w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-bold',
+                  'w-5 h-5 rounded-full flex items-center justify-center text-3xs font-bold',
                   checkinDates.has(day.date)
                     ? 'bg-green-500 text-white'
                     : day.date === new Date().toISOString().split('T')[0]
@@ -203,7 +203,7 @@ export function QuickCheckinWidget() {
                         className="w-8 h-8 transition-transform duration-200 group-hover:scale-110"
                         selected={mood === m.value}
                       />
-                      <span className="text-[8px] font-medium text-secondary-500">{m.label}</span>
+                      <span className="text-3xs font-medium text-secondary-500">{m.label}</span>
                     </button>
                   ))}
                 </div>

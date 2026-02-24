@@ -81,7 +81,7 @@ function ManagerGoalCascade({ teamTreeData, userId }: ManagerGoalCascadeProps) {
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <span className={clsx(
-                      'text-[10px] font-semibold px-1.5 py-0.5 rounded',
+                      'text-2xs font-semibold px-1.5 py-0.5 rounded',
                       goal.type === 'COMPANY' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
                         : goal.type === 'DEPARTMENT' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
                         : goal.type === 'TEAM' ? 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300'

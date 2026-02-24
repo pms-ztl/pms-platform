@@ -167,7 +167,7 @@ export function MemberScorecard({ members, atRiskEmployees, className }: MemberS
                     </div>
                   </td>
                   <td className="px-6 py-3 text-center">
-                    <span className={clsx('inline-flex px-2 py-0.5 text-[10px] font-medium rounded-full', badge.bg, badge.text)}>
+                    <span className={clsx('inline-flex px-2 py-0.5 text-2xs font-medium rounded-full', badge.bg, badge.text)}>
                       {badge.label}
                     </span>
                   </td>
@@ -183,12 +183,12 @@ export function MemberScorecard({ members, atRiskEmployees, className }: MemberS
                   </td>
                   <td className="px-6 py-3 text-center">
                     {riskBadge ? (
-                      <span className={clsx('inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium rounded-full', riskBadge.bg, riskBadge.text)}>
+                      <span className={clsx('inline-flex items-center gap-1 px-2 py-0.5 text-2xs font-medium rounded-full', riskBadge.bg, riskBadge.text)}>
                         <ExclamationTriangleIcon className="h-3 w-3" />
                         {risk}
                       </span>
                     ) : (
-                      <span className="text-[10px] text-secondary-400">-</span>
+                      <span className="text-2xs text-secondary-400">-</span>
                     )}
                   </td>
                 </tr>

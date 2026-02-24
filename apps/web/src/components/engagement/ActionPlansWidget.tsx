@@ -212,7 +212,7 @@ export function ActionPlansWidget({ atRiskEmployees, tenantId = 'default', class
             >
               <button
                 onClick={() => handleToggleStatus(plan.id)}
-                className={clsx('flex-shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-medium transition-colors cursor-pointer', STATUS_COLORS[plan.status])}
+                className={clsx('flex-shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-2xs font-medium transition-colors cursor-pointer', STATUS_COLORS[plan.status])}
                 title={`Click to change to ${STATUS_LABELS[NEXT_STATUS[plan.status]]}`}
               >
                 {STATUS_LABELS[plan.status]}

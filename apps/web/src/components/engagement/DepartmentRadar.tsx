@@ -108,7 +108,7 @@ export function DepartmentRadar({ departments, selectedDeptIds: initialSelected,
         })}
       </div>
       {selectedIds.length >= 3 && (
-        <p className="text-[10px] text-secondary-400 dark:text-secondary-500 -mt-2 mb-3">Maximum 3 departments can be compared at once</p>
+        <p className="text-2xs text-secondary-400 dark:text-secondary-500 -mt-2 mb-3">Maximum 3 departments can be compared at once</p>
       )}
 
       {/* Radar chart */}

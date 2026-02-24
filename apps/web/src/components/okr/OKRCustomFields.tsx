@@ -195,13 +195,13 @@ function AddFieldForm({ onAdd, onCancel }: { onAdd: (f: CustomField) => void; on
         <button
           onClick={submit}
           disabled={!label.trim()}
-          className="px-2.5 py-1 text-[10px] font-medium rounded-md bg-primary-500 text-white hover:bg-primary-600 disabled:opacity-40 transition-colors"
+          className="px-2.5 py-1 text-2xs font-medium rounded-md bg-primary-500 text-white hover:bg-primary-600 disabled:opacity-40 transition-colors"
         >
           Add Field
         </button>
         <button
           onClick={onCancel}
-          className="text-[10px] text-secondary-400 hover:text-secondary-600 transition-colors"
+          className="text-2xs text-secondary-400 hover:text-secondary-600 transition-colors"
         >
           Cancel
         </button>
@@ -267,19 +267,19 @@ export function OKRCustomFields({ goal }: OKRCustomFieldsProps) {
 
   return (
     <div>
-      <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
+      <h4 className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
         Custom Fields
       </h4>
 
       {fields.length === 0 && !isAdding && (
-        <p className="text-[10px] text-secondary-400 italic mb-2">No custom fields</p>
+        <p className="text-2xs text-secondary-400 italic mb-2">No custom fields</p>
       )}
 
       {/* Field list */}
       <div className="space-y-1.5">
         {fields.map((field) => (
           <div key={field.key} className="group flex items-center gap-2 py-1">
-            <span className="text-[10px] font-medium text-secondary-500 dark:text-secondary-400 w-24 shrink-0 break-words">
+            <span className="text-2xs font-medium text-secondary-500 dark:text-secondary-400 w-24 shrink-0 break-words">
               {field.label}
             </span>
             {editingKey === field.key ? (
@@ -317,7 +317,7 @@ export function OKRCustomFields({ goal }: OKRCustomFieldsProps) {
       ) : (
         <button
           onClick={() => setIsAdding(true)}
-          className="flex items-center gap-1.5 text-[11px] font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors mt-2"
+          className="flex items-center gap-1.5 text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors mt-2"
         >
           <PlusIcon className="h-3.5 w-3.5" />
           Add custom field

@@ -311,7 +311,7 @@ export function MeetingAnalyticsPage() {
             <div key={s.label} className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
               <p className={clsx('text-2xl font-bold mt-1', s.color)}>{s.value}</p>
-              <p className="text-[10px] text-secondary-400 mt-0.5">{s.sub}</p>
+              <p className="text-2xs text-secondary-400 mt-0.5">{s.sub}</p>
             </div>
           ))}
         </div>
@@ -427,7 +427,7 @@ export function MeetingAnalyticsPage() {
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Meeting Cadence</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">When meetings are typically held (day × hour)</p>
           <div className="overflow-x-auto">
-            <table className="w-full text-[10px]">
+            <table className="w-full text-2xs">
               <thead>
                 <tr>
                   <th className="text-left text-secondary-500 dark:text-secondary-400 pb-1 pr-2" />
@@ -455,7 +455,7 @@ export function MeetingAnalyticsPage() {
               </tbody>
             </table>
             {/* Legend */}
-            <div className="flex items-center gap-2 mt-2 text-[10px] text-secondary-400">
+            <div className="flex items-center gap-2 mt-2 text-2xs text-secondary-400">
               <span>Less</span>
               {['bg-secondary-100 dark:bg-secondary-700', 'bg-indigo-100 dark:bg-indigo-900/40', 'bg-indigo-300 dark:bg-indigo-700', 'bg-indigo-500 dark:bg-indigo-500'].map((c, i) => (
                 <span key={i} className={clsx('w-3 h-3 rounded-sm', c)} />
@@ -497,7 +497,7 @@ export function MeetingAnalyticsPage() {
                       {item.title}
                     </td>
                     <td className="py-2.5 pr-4">
-                      <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-400">
+                      <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 text-2xs font-medium text-amber-700 dark:text-amber-400">
                         {item.assignee}
                       </span>
                     </td>

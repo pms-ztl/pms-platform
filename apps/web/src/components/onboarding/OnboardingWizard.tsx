@@ -98,7 +98,7 @@ export function OnboardingWizard({ user, onComplete, onSkip }: OnboardingWizardP
               <span
                 key={i}
                 className={clsx(
-                  'text-[10px] font-medium',
+                  'text-2xs font-medium',
                   i <= currentStep
                     ? 'text-primary-600 dark:text-primary-400'
                     : 'text-secondary-400 dark:text-secondary-500'

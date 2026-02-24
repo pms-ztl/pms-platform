@@ -69,7 +69,7 @@ export function TaskProgressIndicator({
 
         <button
           onClick={() => setSwarmMode('tasks')}
-          className={`flex items-center gap-1 text-[10px] font-medium ${T.accentText(theme)} hover:underline`}
+          className={`flex items-center gap-1 text-2xs font-medium ${T.accentText(theme)} hover:underline`}
           title="View in Tasks panel"
         >
           <ArrowTopRightOnSquareIcon className="h-3 w-3" />
@@ -88,7 +88,7 @@ export function TaskProgressIndicator({
       </div>
 
       {awaitingApproval && (
-        <p className="mt-2 text-[10px] text-orange-400 font-medium">
+        <p className="mt-2 text-2xs text-orange-400 font-medium">
           An action requires your approval. Click "Details" to review.
         </p>
       )}

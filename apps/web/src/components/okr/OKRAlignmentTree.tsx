@@ -64,7 +64,7 @@ function TreeNode({
           <div className="flex items-center gap-2">
             <span
               className={clsx(
-                'px-1.5 py-0.5 rounded text-[9px] font-semibold',
+                'px-1.5 py-0.5 rounded text-3xs font-semibold',
                 typeBadgeColors[goal.type] || typeBadgeColors.OKR_OBJECTIVE
               )}
             >
@@ -78,7 +78,7 @@ function TreeNode({
             {goal.title}
           </p>
           {goal.owner && (
-            <p className="text-[10px] text-secondary-400 dark:text-secondary-500">
+            <p className="text-2xs text-secondary-400 dark:text-secondary-500">
               {goal.owner.firstName} {goal.owner.lastName}
             </p>
           )}

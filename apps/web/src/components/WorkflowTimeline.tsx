@@ -96,7 +96,7 @@ export function WorkflowTimeline({ currentStage, className, compact = false }: W
                   )}
                 </div>
                 <span className={clsx(
-                  'mt-2 text-[11px] font-medium text-center whitespace-nowrap',
+                  'mt-2 text-xs font-medium text-center whitespace-nowrap',
                   isCompleted && 'text-green-600 dark:text-green-400',
                   isCurrent && 'text-primary-600 dark:text-primary-400',
                   isFuture && 'text-secondary-400 dark:text-secondary-500'
@@ -105,7 +105,7 @@ export function WorkflowTimeline({ currentStage, className, compact = false }: W
                 </span>
                 {/* Tooltip */}
                 <div className="absolute -bottom-12 hidden group-hover:block z-10">
-                  <div className="bg-secondary-900 dark:bg-secondary-700 text-white text-[10px] rounded px-2 py-1 whitespace-nowrap shadow-lg">
+                  <div className="bg-secondary-900 dark:bg-secondary-700 text-white text-2xs rounded px-2 py-1 whitespace-nowrap shadow-lg">
                     {stage.description}
                   </div>
                 </div>

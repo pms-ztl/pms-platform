@@ -80,7 +80,7 @@ function MilestoneItem({
       {milestone.dueDate && (
         <span
           className={clsx(
-            'flex items-center gap-0.5 text-[9px] shrink-0',
+            'flex items-center gap-0.5 text-3xs shrink-0',
             isOverdue
               ? 'text-red-500 font-semibold'
               : 'text-secondary-400 dark:text-secondary-500'
@@ -121,7 +121,7 @@ function AddMilestone({ onAdd }: { onAdd: (title: string, dueDate?: string) => v
     return (
       <button
         onClick={() => setIsAdding(true)}
-        className="flex items-center gap-1.5 text-[11px] font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors mt-1"
+        className="flex items-center gap-1.5 text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors mt-1"
       >
         <PlusIcon className="h-3.5 w-3.5" />
         Add milestone
@@ -144,17 +144,17 @@ function AddMilestone({ onAdd }: { onAdd: (title: string, dueDate?: string) => v
         type="date"
         value={dueDate}
         onChange={(e) => setDueDate(e.target.value)}
-        className="text-[10px] rounded-md border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white px-2 py-1 focus:ring-1 focus:ring-primary-500 focus:outline-none w-28"
+        className="text-2xs rounded-md border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white px-2 py-1 focus:ring-1 focus:ring-primary-500 focus:outline-none w-28"
       />
       <button
         onClick={submit}
-        className="px-2 py-1 text-[10px] font-medium rounded-md bg-primary-500 text-white hover:bg-primary-600 transition-colors"
+        className="px-2 py-1 text-2xs font-medium rounded-md bg-primary-500 text-white hover:bg-primary-600 transition-colors"
       >
         Add
       </button>
       <button
         onClick={() => { setIsAdding(false); setTitle(''); setDueDate(''); }}
-        className="text-[10px] text-secondary-400 hover:text-secondary-600 transition-colors"
+        className="text-2xs text-secondary-400 hover:text-secondary-600 transition-colors"
       >
         Cancel
       </button>
@@ -227,11 +227,11 @@ export function OKRMilestones({ goal }: OKRMilestonesProps) {
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
+        <h4 className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
           Milestones
         </h4>
         {total > 0 && (
-          <span className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400">
+          <span className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400">
             {completed}/{total} ({pct}%)
           </span>
         )}

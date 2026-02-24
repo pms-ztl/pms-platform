@@ -36,7 +36,7 @@ export function QuickActionsRibbon({ onAction }: QuickActionsRibbonProps) {
 
   return (
     <div className="flex items-center gap-2 overflow-x-auto px-4 py-2 scrollbar-none">
-      <span className={`flex-shrink-0 text-[10px] font-medium tracking-wider mr-1 ${T.textMuted(theme)}`}>
+      <span className={`flex-shrink-0 text-2xs font-medium tracking-wider mr-1 ${T.textMuted(theme)}`}>
         Quick
       </span>
       {QUICK_ACTIONS.map((action) => (

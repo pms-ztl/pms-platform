@@ -126,9 +126,9 @@ export function KeyboardShortcuts() {
                     {shortcut.keys.map((key, i) => (
                       <span key={i}>
                         {key === '→' ? (
-                          <span className="text-[11px] text-secondary-400 mx-0.5">then</span>
+                          <span className="text-xs text-secondary-400 mx-0.5">then</span>
                         ) : (
-                          <kbd className="inline-flex items-center justify-center min-w-[24px] px-1.5 py-0.5 text-[11px] font-mono font-medium rounded bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 border border-secondary-200 dark:border-secondary-600">
+                          <kbd className="inline-flex items-center justify-center min-w-[24px] px-1.5 py-0.5 text-xs font-mono font-medium rounded bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 border border-secondary-200 dark:border-secondary-600">
                             {key}
                           </kbd>
                         )}
@@ -144,7 +144,7 @@ export function KeyboardShortcuts() {
 
       <div className="mt-6 pt-4 border-t border-secondary-100 dark:border-secondary-700">
         <p className="text-xs text-secondary-400 dark:text-secondary-500 text-center">
-          Press <kbd className="px-1 py-0.5 text-[10px] font-mono rounded bg-secondary-100 dark:bg-secondary-700 border border-secondary-200 dark:border-secondary-600">?</kbd> anywhere to toggle this overlay
+          Press <kbd className="px-1 py-0.5 text-2xs font-mono rounded bg-secondary-100 dark:bg-secondary-700 border border-secondary-200 dark:border-secondary-600">?</kbd> anywhere to toggle this overlay
         </p>
       </div>
     </Modal>

@@ -10,7 +10,7 @@ interface UserAvatarProps {
 }
 
 const sizeMap = {
-  xs: { px: 'h-6 w-6', text: 'text-[10px]', variant: 'sm' as const },
+  xs: { px: 'h-6 w-6', text: 'text-2xs', variant: 'sm' as const },
   sm: { px: 'h-8 w-8', text: 'text-sm', variant: 'sm' as const },
   md: { px: 'h-10 w-10', text: 'text-sm', variant: 'sm' as const },
   lg: { px: 'h-20 w-20', text: 'text-2xl', variant: 'md' as const },

@@ -106,8 +106,8 @@ export function DescriptiveRating({ value, onChange, disabled = false }: Descrip
                 isSelected ? 'opacity-100' : 'opacity-0'
               )} />
 
-              <span className="text-[10px] block">{level.shortLabel}</span>
-              <span className="text-[8px] block mt-0.5 opacity-70">{level.label}</span>
+              <span className="text-2xs block">{level.shortLabel}</span>
+              <span className="text-3xs block mt-0.5 opacity-70">{level.label}</span>
             </button>
           );
         })}

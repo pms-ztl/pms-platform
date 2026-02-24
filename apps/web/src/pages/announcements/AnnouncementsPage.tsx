@@ -1059,7 +1059,7 @@ function AuthorAvatar({
   size?: 'sm' | 'md';
 }) {
   const dim = size === 'sm' ? 'h-5 w-5' : 'h-8 w-8';
-  const textSize = size === 'sm' ? 'text-[9px]' : 'text-xs';
+  const textSize = size === 'sm' ? 'text-3xs' : 'text-xs';
 
   if (author.avatarUrl) {
     return (

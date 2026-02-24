@@ -146,7 +146,7 @@ export function OKRBulkActions({ selectedIds, onClear }: OKRBulkActionsProps) {
               <button
                 onClick={() => { if (dueDate) bulkMutation.mutate({ dueDate }); }}
                 disabled={!dueDate}
-                className="mt-2 w-full px-2 py-1 text-[10px] font-medium rounded-md bg-primary-500 text-white hover:bg-primary-600 disabled:opacity-40 transition-colors"
+                className="mt-2 w-full px-2 py-1 text-2xs font-medium rounded-md bg-primary-500 text-white hover:bg-primary-600 disabled:opacity-40 transition-colors"
               >
                 Apply
               </button>

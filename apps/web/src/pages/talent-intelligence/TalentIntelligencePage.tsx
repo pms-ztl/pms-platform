@@ -282,7 +282,7 @@ export function TalentIntelligencePage() {
                           </div>
                         </td>
                         <td className="py-2.5 pr-3">
-                          <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium', badge.cls)}>{badge.label}</span>
+                          <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium', badge.cls)}>{badge.label}</span>
                         </td>
                         <td className="py-2.5 pr-3 text-xs text-secondary-600 dark:text-secondary-400">{(r.confidenceScore ?? 0).toFixed(0)}%</td>
                         <td className="py-2.5 pr-3 text-xs text-secondary-600 dark:text-secondary-400">{(r.successProbability ?? 0).toFixed(0)}%</td>
@@ -381,7 +381,7 @@ export function TalentIntelligencePage() {
                 <div key={plan.id} className="border border-secondary-200 dark:border-secondary-700 rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">{plan.positionTitle}</h4>
-                    <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium', crit.cls)}>{plan.criticality}</span>
+                    <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium', crit.cls)}>{plan.criticality}</span>
                   </div>
                   {plan.currentIncumbent && (
                     <p className="text-xs text-secondary-500 dark:text-secondary-400">Incumbent: {plan.currentIncumbent}</p>
@@ -392,12 +392,12 @@ export function TalentIntelligencePage() {
                   </div>
                   {Array.isArray(plan.successors) && plan.successors.length > 0 && (
                     <div className="space-y-1">
-                      <p className="text-[10px] font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Successors</p>
+                      <p className="text-2xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Successors</p>
                       {plan.successors.slice(0, 3).map((s: any, i: number) => (
                         <div key={i} className="flex items-center justify-between text-xs">
                           <span className="text-secondary-700 dark:text-secondary-300">{s.name || s.userId || `Candidate ${i + 1}`}</span>
                           {s.readiness && (
-                            <span className={clsx('px-1.5 py-0.5 rounded text-[9px] font-medium', READINESS_BADGE[s.readiness]?.cls || 'bg-secondary-100 text-secondary-600')}>
+                            <span className={clsx('px-1.5 py-0.5 rounded text-3xs font-medium', READINESS_BADGE[s.readiness]?.cls || 'bg-secondary-100 text-secondary-600')}>
                               {READINESS_BADGE[s.readiness]?.label || s.readiness}
                             </span>
                           )}

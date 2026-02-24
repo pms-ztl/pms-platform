@@ -313,12 +313,12 @@ export function OKRTemplatesModal({ open, onClose }: OKRTemplatesModalProps) {
                           <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">
                             {tmpl.name}
                           </h3>
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-secondary-200 dark:bg-secondary-700 text-secondary-500 dark:text-secondary-400 font-medium">
+                          <span className="text-3xs px-1.5 py-0.5 rounded bg-secondary-200 dark:bg-secondary-700 text-secondary-500 dark:text-secondary-400 font-medium">
                             {tmpl.category}
                           </span>
                         </div>
                       </div>
-                      <p className="text-[11px] text-secondary-500 dark:text-secondary-400 mt-2">
+                      <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-2">
                         {tmpl.description}
                       </p>
 
@@ -326,10 +326,10 @@ export function OKRTemplatesModal({ open, onClose }: OKRTemplatesModalProps) {
                       <div className="mt-3 space-y-1">
                         {tmpl.keyResults.map((kr, i) => (
                           <div key={i} className="flex items-center gap-1.5">
-                            <span className="px-1 py-0.5 rounded text-[7px] font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
+                            <span className="px-1 py-0.5 rounded text-3xs font-bold bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300">
                               KR
                             </span>
-                            <span className="text-[10px] text-secondary-600 dark:text-secondary-300 break-words">
+                            <span className="text-2xs text-secondary-600 dark:text-secondary-300 break-words">
                               {kr.title}
                             </span>
                           </div>
@@ -339,7 +339,7 @@ export function OKRTemplatesModal({ open, onClose }: OKRTemplatesModalProps) {
                       <button
                         onClick={() => createMutation.mutate(tmpl)}
                         disabled={createMutation.isPending}
-                        className="mt-3 w-full px-3 py-1.5 text-[11px] font-medium rounded-lg bg-primary-500 text-white hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="mt-3 w-full px-3 py-1.5 text-xs font-medium rounded-lg bg-primary-500 text-white hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
                         {createMutation.isPending ? 'Creating...' : 'Use Template'}
                       </button>

@@ -214,7 +214,7 @@ const CPISScoreDisplay = ({
 
       {/* Confidence bar */}
       <div className="w-full max-w-[250px] mx-auto">
-        <div className="flex justify-between text-[11px] mb-1">
+        <div className="flex justify-between text-xs mb-1">
           <span className="text-cyan-300/70 font-semibold">{Math.round(confidence.lowerBound)}</span>
           <span className="font-bold text-white/80">{Math.round(confidence.level * 100)}% Confidence</span>
           <span className="text-violet-300/70 font-semibold">{Math.round(confidence.upperBound)}</span>

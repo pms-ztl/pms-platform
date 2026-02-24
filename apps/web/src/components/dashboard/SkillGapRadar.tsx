@@ -88,7 +88,7 @@ function SkillGapRadar({ userId }: SkillGapRadarProps) {
 
   const gapsList = topGaps.length > 0 && (
     <div className="mt-3 space-y-1.5">
-      <p className="text-[11px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
+      <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
         Top Gaps
       </p>
       {topGaps.map((g, i) => (
@@ -175,11 +175,11 @@ function SkillGapRadar({ userId }: SkillGapRadarProps) {
           <div className="flex items-center gap-4 pt-1">
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-1.5 rounded-full bg-violet-500 dark:bg-violet-400 inline-block" />
-              <span className="text-[10px] text-secondary-500 dark:text-secondary-400">Current</span>
+              <span className="text-2xs text-secondary-500 dark:text-secondary-400">Current</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-1.5 rounded-full bg-amber-400/60 inline-block" />
-              <span className="text-[10px] text-secondary-500 dark:text-secondary-400">Target</span>
+              <span className="text-2xs text-secondary-500 dark:text-secondary-400">Target</span>
             </div>
           </div>
         </div>

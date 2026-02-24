@@ -107,8 +107,8 @@ export function ThemeToggle() {
                     t.key === 'deep-dark' && theme === t.key ? 'text-cyan-400' : ''
                   )} />
                   <div className="flex-1 text-left">
-                    <p className="font-medium text-[13px]">{t.label}</p>
-                    <p className="text-[11px] text-secondary-400 dark:text-secondary-500">{t.description}</p>
+                    <p className="font-medium text-sm">{t.label}</p>
+                    <p className="text-xs text-secondary-400 dark:text-secondary-500">{t.description}</p>
                   </div>
                   {theme === t.key && (
                     <CheckIcon className="h-4 w-4 text-primary-500 dark:text-primary-400 shrink-0" />

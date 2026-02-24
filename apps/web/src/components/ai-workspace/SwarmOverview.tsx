@@ -745,7 +745,7 @@ function LiveActivityFeed({ theme }: { theme: AITheme }) {
           Live Swarm Activity
         </h2>
         {hasLiveData && (
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">
+          <span className="text-2xs font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">
             {activeAgents.length} active
           </span>
         )}
@@ -799,7 +799,7 @@ function LiveActivityFeed({ theme }: { theme: AITheme }) {
                     </span>
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className={`text-[10px] font-medium ${
+                    <span className={`text-2xs font-medium ${
                       agent.status === 'executing' ? 'text-amber-400' :
                       agent.status === 'awaiting_approval' ? 'text-orange-400' :
                       'text-blue-400'
@@ -807,10 +807,10 @@ function LiveActivityFeed({ theme }: { theme: AITheme }) {
                       {statusText}
                     </span>
                     {agent.isProactive && (
-                      <span className="text-[10px] text-cyan-400">Proactive</span>
+                      <span className="text-2xs text-cyan-400">Proactive</span>
                     )}
                     {agent.parentTaskId && (
-                      <span className="text-[10px] text-purple-400">Sub-task</span>
+                      <span className="text-2xs text-purple-400">Sub-task</span>
                     )}
                     {agent.totalSteps > 0 && (
                       <div className={`flex-1 h-1 rounded-full max-w-[80px] ${theme === 'light' ? 'bg-gray-200' : 'bg-white/5'}`}>
@@ -927,7 +927,7 @@ export function SwarmOverview() {
           {/* Live badge */}
           <div className="mb-4 flex items-center justify-center gap-3">
             <span
-              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-wider
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold tracking-wider
                 ${theme === 'light'
                   ? 'border-emerald-300/60 bg-emerald-50 text-emerald-700'
                   : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'}`}
@@ -938,7 +938,7 @@ export function SwarmOverview() {
               </span>
               Live
             </span>
-            <span className={`text-[11px] font-medium tracking-wide ${T.textMuted(theme)}`}>
+            <span className={`text-xs font-medium tracking-wide ${T.textMuted(theme)}`}>
               Swarm Intelligence Active
             </span>
           </div>

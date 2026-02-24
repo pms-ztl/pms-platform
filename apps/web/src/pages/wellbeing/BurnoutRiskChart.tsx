@@ -99,7 +99,7 @@ export function BurnoutRiskChart({ data, className }: BurnoutRiskChartProps) {
         </ResponsiveContainer>
       </div>
       {/* Legend */}
-      <div className="flex items-center justify-center gap-4 mt-2 text-[10px]">
+      <div className="flex items-center justify-center gap-4 mt-2 text-2xs">
         <span className="inline-flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-red-500" />High Risk</span>
         <span className="inline-flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-500" />Moderate</span>
         <span className="inline-flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-green-500" />Low Risk</span>

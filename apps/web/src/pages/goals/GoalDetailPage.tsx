@@ -192,7 +192,7 @@ export function GoalDetailPage() {
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <span className={clsx('text-[10px] font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
+              <span className={clsx('text-2xs font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
                 {goal.type?.replace('_', ' ')}
               </span>
               <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">{goal.title}</h1>
@@ -273,25 +273,25 @@ export function GoalDetailPage() {
                     <p className="text-2xl font-bold text-primary-700 dark:text-primary-300">
                       {((contributionData.compositeScore ?? 0) * 100).toFixed(0)}%
                     </p>
-                    <p className="text-[10px] text-primary-600 dark:text-primary-400 font-medium mt-0.5">Composite Score</p>
+                    <p className="text-2xs text-primary-600 dark:text-primary-400 font-medium mt-0.5">Composite Score</p>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-success-50 dark:bg-success-900/20">
                     <p className="text-2xl font-bold text-success-700 dark:text-success-300">
                       {((contributionData.completionScore ?? 0) * 100).toFixed(0)}%
                     </p>
-                    <p className="text-[10px] text-success-600 dark:text-success-400 font-medium mt-0.5">Completion</p>
+                    <p className="text-2xs text-success-600 dark:text-success-400 font-medium mt-0.5">Completion</p>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20">
                     <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">
                       {((contributionData.qualityAdjustedScore ?? 0) * 100).toFixed(0)}%
                     </p>
-                    <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">Quality-Adj.</p>
+                    <p className="text-2xs text-amber-600 dark:text-amber-400 font-medium mt-0.5">Quality-Adj.</p>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
                     <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">
                       {((contributionData.efficiency ?? 0) * 100).toFixed(0)}%
                     </p>
-                    <p className="text-[10px] text-blue-600 dark:text-blue-400 font-medium mt-0.5">Efficiency</p>
+                    <p className="text-2xs text-blue-600 dark:text-blue-400 font-medium mt-0.5">Efficiency</p>
                   </div>
                 </div>
               )}
@@ -452,7 +452,7 @@ export function GoalDetailPage() {
                 <div>
                   <dt className="text-xs text-secondary-500 dark:text-secondary-400">Owner</dt>
                   <dd className="text-sm text-secondary-900 dark:text-white flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-[10px] font-bold text-primary-700 dark:text-primary-300">
+                    <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-2xs font-bold text-primary-700 dark:text-primary-300">
                       {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
                     </div>
                     {goal.owner?.firstName} {goal.owner?.lastName}

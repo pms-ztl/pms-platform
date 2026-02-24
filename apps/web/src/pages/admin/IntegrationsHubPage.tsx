@@ -244,7 +244,7 @@ export function IntegrationsHubPage() {
                       </div>
                       <div>
                         <p className="font-semibold text-secondary-900 dark:text-white text-sm">{intg.name}</p>
-                        <p className="text-[10px] text-secondary-400">{intg.type.replace(/_/g, ' ')}</p>
+                        <p className="text-2xs text-secondary-400">{intg.type.replace(/_/g, ' ')}</p>
                       </div>
                     </div>
                     <div className={clsx('flex items-center gap-1 text-xs', sc.color)}>
@@ -253,26 +253,26 @@ export function IntegrationsHubPage() {
                     </div>
                   </div>
                   {intg.lastSyncAt && (
-                    <p className="text-[10px] text-secondary-400 mt-3">
+                    <p className="text-2xs text-secondary-400 mt-3">
                       Last sync: {new Date(intg.lastSyncAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                     </p>
                   )}
                   <div className="flex items-center gap-2 mt-3 pt-3 border-t border-secondary-100 dark:border-secondary-700">
                     <button
                       onClick={(e) => { e.stopPropagation(); testMutation.mutate(intg.id); }}
-                      className="text-[10px] px-2 py-1 rounded bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-secondary-600 transition-colors"
+                      className="text-2xs px-2 py-1 rounded bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-secondary-600 transition-colors"
                     >
                       <SignalIcon className="w-3 h-3 inline mr-0.5" />Test
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); syncMutation.mutate(intg.id); }}
-                      className="text-[10px] px-2 py-1 rounded bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors"
+                      className="text-2xs px-2 py-1 rounded bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors"
                     >
                       <ArrowPathIcon className="w-3 h-3 inline mr-0.5" />Sync
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteMutation.mutate(intg.id); }}
-                      className="text-[10px] px-2 py-1 rounded bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors ml-auto"
+                      className="text-2xs px-2 py-1 rounded bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors ml-auto"
                     >
                       <TrashIcon className="w-3 h-3 inline mr-0.5" />Remove
                     </button>
@@ -302,7 +302,7 @@ export function IntegrationsHubPage() {
                   <tr key={entry.id} className="border-b border-secondary-100 dark:border-secondary-700/50 last:border-0">
                     <td className="py-2 pr-4">
                       <span className={clsx(
-                        'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium',
+                        'inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-medium',
                         entry.status === 'COMPLETED' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
                         entry.status === 'FAILED' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
                         'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
@@ -378,7 +378,7 @@ export function IntegrationsHubPage() {
                 </div>
                 <div className="flex flex-wrap gap-1 mt-3">
                   {connector.capabilities.map((cap) => (
-                    <span key={cap} className="inline-flex items-center rounded-full bg-secondary-100 dark:bg-secondary-700 px-2 py-0.5 text-[10px] text-secondary-600 dark:text-secondary-400">
+                    <span key={cap} className="inline-flex items-center rounded-full bg-secondary-100 dark:bg-secondary-700 px-2 py-0.5 text-2xs text-secondary-600 dark:text-secondary-400">
                       {cap.replace(/_/g, ' ')}
                     </span>
                   ))}

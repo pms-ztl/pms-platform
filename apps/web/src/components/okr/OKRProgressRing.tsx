@@ -64,7 +64,7 @@ export function OKRProgressRing({
           {Math.round(clamped)}%
         </span>
         {label && size >= 80 && (
-          <span className="text-[10px] text-secondary-500 dark:text-secondary-400 mt-0.5">
+          <span className="text-2xs text-secondary-500 dark:text-secondary-400 mt-0.5">
             {label}
           </span>
         )}

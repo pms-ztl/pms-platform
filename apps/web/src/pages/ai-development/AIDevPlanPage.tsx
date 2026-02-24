@@ -348,7 +348,7 @@ export function AIDevPlanPage() {
                 <div className="absolute left-2.5 top-2 bottom-2 w-px bg-gray-600" />
                 {(selectedPlan.milestones as any[]).map((ms, i) => (
                   <div key={i} className="relative">
-                    <div className={`absolute -left-3.5 top-1 h-5 w-5 rounded-full border-2 flex items-center justify-center text-[10px] font-bold ${ms.completed || ms.status === 'COMPLETED' ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-gray-700 border-gray-500 text-gray-400'}`}>
+                    <div className={`absolute -left-3.5 top-1 h-5 w-5 rounded-full border-2 flex items-center justify-center text-2xs font-bold ${ms.completed || ms.status === 'COMPLETED' ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-gray-700 border-gray-500 text-gray-400'}`}>
                       {i + 1}
                     </div>
                     <div className="ml-4 rounded-lg border border-gray-600 bg-gray-700/40 p-3">

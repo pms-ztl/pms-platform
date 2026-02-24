@@ -603,13 +603,13 @@ export function HealthDashboardPage() {
                 <div className="text-lg font-bold text-secondary-900 dark:text-white">
                   {latest.headcount}
                 </div>
-                <div className="text-[10px] text-secondary-500 dark:text-secondary-400">Headcount</div>
+                <div className="text-2xs text-secondary-500 dark:text-secondary-400">Headcount</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                   {Number(latest.retentionRate ?? 0).toFixed(1)}%
                 </div>
-                <div className="text-[10px] text-secondary-500 dark:text-secondary-400">Retention</div>
+                <div className="text-2xs text-secondary-500 dark:text-secondary-400">Retention</div>
               </div>
               <div className="text-center">
                 <div className={clsx(
@@ -618,7 +618,7 @@ export function HealthDashboardPage() {
                 )}>
                   {Number(latest.turnoverRate ?? 0).toFixed(1)}%
                 </div>
-                <div className="text-[10px] text-secondary-500 dark:text-secondary-400">Turnover</div>
+                <div className="text-2xs text-secondary-500 dark:text-secondary-400">Turnover</div>
               </div>
               <div className="text-center">
                 <div className={clsx(
@@ -627,7 +627,7 @@ export function HealthDashboardPage() {
                 )}>
                   {latest.flightRiskCount}
                 </div>
-                <div className="text-[10px] text-secondary-500 dark:text-secondary-400">Flight Risk</div>
+                <div className="text-2xs text-secondary-500 dark:text-secondary-400">Flight Risk</div>
               </div>
             </div>
           )}
@@ -979,7 +979,7 @@ export function HealthDashboardPage() {
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm font-medium text-secondary-900 dark:text-white">{rec.title}</span>
                     <span className={clsx(
-                      'text-[10px] font-semibold px-1.5 py-0.5 rounded-full uppercase',
+                      'text-2xs font-semibold px-1.5 py-0.5 rounded-full uppercase',
                       rec.priority === 'critical' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' :
                       rec.priority === 'high' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400' :
                       'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'

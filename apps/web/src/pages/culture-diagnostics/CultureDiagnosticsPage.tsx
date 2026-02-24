@@ -383,15 +383,15 @@ export function CultureDiagnosticsPage() {
             {health.recommendations.map((rec: any, i: number) => (
               <div key={i} className="flex items-start gap-3 border-b border-secondary-100 dark:border-secondary-700/50 pb-3 last:border-0 last:pb-0">
                 <div className="flex-shrink-0 w-6 h-6 rounded-full bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center mt-0.5">
-                  <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400">{i + 1}</span>
+                  <span className="text-2xs font-bold text-rose-600 dark:text-rose-400">{i + 1}</span>
                 </div>
                 <div className="flex-1">
-                  {rec.category && <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-300 mr-2">{rec.category}</span>}
+                  {rec.category && <span className="px-2 py-0.5 rounded text-2xs font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-300 mr-2">{rec.category}</span>}
                   <p className="text-xs text-secondary-700 dark:text-secondary-300 mt-1">{typeof rec === 'string' ? rec : rec.description || rec.action || rec.recommendation || JSON.stringify(rec)}</p>
-                  {rec.impact && <p className="text-[10px] text-secondary-400 mt-1">Expected impact: {rec.impact}</p>}
+                  {rec.impact && <p className="text-2xs text-secondary-400 mt-1">Expected impact: {rec.impact}</p>}
                 </div>
                 {rec.priority && (
-                  <span className={clsx('px-2 py-0.5 rounded text-[10px] font-medium shrink-0',
+                  <span className={clsx('px-2 py-0.5 rounded text-2xs font-medium shrink-0',
                     rec.priority === 'HIGH' ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300' :
                     rec.priority === 'MEDIUM' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300' :
                     'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'

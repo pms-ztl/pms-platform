@@ -37,7 +37,7 @@ function LegacyPerformanceBreakdown({ perfScore, goalAttainment, reviewScoreVal,
                 </div>
                 <span className="text-xs font-medium text-secondary-500 dark:text-secondary-400">{item.label}</span>
               </div>
-              <span className="text-[10px] font-semibold text-secondary-400 dark:text-secondary-500 bg-secondary-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
+              <span className="text-2xs font-semibold text-secondary-400 dark:text-secondary-500 bg-secondary-100 dark:bg-white/5 px-2 py-0.5 rounded-full">
                 {Math.round(item.weight * 100)}%
               </span>
             </div>

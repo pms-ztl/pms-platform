@@ -116,7 +116,7 @@ function HeatmapGrid({ data, compact = false }: { data: HeatmapDay[]; compact?: 
           {monthPositions.map((pos, i) => (
             <span
               key={i}
-              className="text-[10px] text-secondary-400 dark:text-secondary-500"
+              className="text-2xs text-secondary-400 dark:text-secondary-500"
               style={{
                 position: 'relative',
                 left: pos.col * totalCellSize,
@@ -138,7 +138,7 @@ function HeatmapGrid({ data, compact = false }: { data: HeatmapDay[]; compact?: 
               {DAY_LABELS.map((label, i) => (
                 <div
                   key={i}
-                  className="text-[10px] text-secondary-400 dark:text-secondary-500 flex items-center justify-end pr-1"
+                  className="text-2xs text-secondary-400 dark:text-secondary-500 flex items-center justify-end pr-1"
                   style={{ height: cellSize, width: 28 }}
                 >
                   {label}
@@ -182,7 +182,7 @@ function HeatmapGrid({ data, compact = false }: { data: HeatmapDay[]; compact?: 
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-end gap-1 mt-3 text-[10px] text-secondary-400 dark:text-secondary-500">
+      <div className="flex items-center justify-end gap-1 mt-3 text-2xs text-secondary-400 dark:text-secondary-500">
         <span>Less</span>
         {LEVEL_COLORS.map((color, i) => (
           <div key={i} className={`${color} rounded-sm`} style={{ width: cellSize, height: cellSize }} />

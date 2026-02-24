@@ -125,7 +125,7 @@ export function CommandPalette() {
                   >
                     {filteredSections.map((section) => (
                       <div key={section.label}>
-                        <p className="px-3 py-1.5 text-[10px] font-bold tracking-widest text-secondary-400 dark:text-secondary-500">
+                        <p className="px-3 py-1.5 text-2xs font-bold tracking-widest text-secondary-400 dark:text-secondary-500">
                           {section.label}
                         </p>
                         {section.items.map((item: NavItem) => (
@@ -153,7 +153,7 @@ export function CommandPalette() {
                                 />
                                 <span className="flex-1 break-words">{item.name}</span>
                                 {active && (
-                                  <span className="text-[11px] text-secondary-400 dark:text-secondary-500">
+                                  <span className="text-xs text-secondary-400 dark:text-secondary-500">
                                     Enter ↵
                                   </span>
                                 )}
@@ -181,21 +181,21 @@ export function CommandPalette() {
 
                 {/* Footer hints */}
                 <div className="flex items-center justify-between border-t border-secondary-100 dark:border-secondary-700 bg-secondary-50/50 dark:bg-secondary-900/50 px-4 py-2.5">
-                  <div className="flex items-center gap-3 text-[11px] text-secondary-400 dark:text-secondary-500">
+                  <div className="flex items-center gap-3 text-xs text-secondary-400 dark:text-secondary-500">
                     <span className="flex items-center gap-1">
-                      <kbd className="rounded bg-secondary-200 dark:bg-secondary-700 px-1.5 py-0.5 text-[10px] font-mono">↑↓</kbd>
+                      <kbd className="rounded bg-secondary-200 dark:bg-secondary-700 px-1.5 py-0.5 text-2xs font-mono">↑↓</kbd>
                       Navigate
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="rounded bg-secondary-200 dark:bg-secondary-700 px-1.5 py-0.5 text-[10px] font-mono">↵</kbd>
+                      <kbd className="rounded bg-secondary-200 dark:bg-secondary-700 px-1.5 py-0.5 text-2xs font-mono">↵</kbd>
                       Open
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="rounded bg-secondary-200 dark:bg-secondary-700 px-1.5 py-0.5 text-[10px] font-mono">Esc</kbd>
+                      <kbd className="rounded bg-secondary-200 dark:bg-secondary-700 px-1.5 py-0.5 text-2xs font-mono">Esc</kbd>
                       Close
                     </span>
                   </div>
-                  <span className="text-[11px] text-secondary-400 dark:text-secondary-500">
+                  <span className="text-xs text-secondary-400 dark:text-secondary-500">
                     {totalResults} result{totalResults !== 1 ? 's' : ''}
                   </span>
                 </div>

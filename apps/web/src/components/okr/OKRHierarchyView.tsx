@@ -86,11 +86,11 @@ function TreeCard({ goal, onSelect }: { goal: Goal; onSelect?: (g: Goal) => void
         <div className="p-3.5">
           {/* Badges */}
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className={clsx('px-1.5 py-0.5 rounded text-[9px] font-semibold', typeBadgeColors[goal.type] || typeBadgeColors.OKR_OBJECTIVE)}>
+            <span className={clsx('px-1.5 py-0.5 rounded text-3xs font-semibold', typeBadgeColors[goal.type] || typeBadgeColors.OKR_OBJECTIVE)}>
               {typeLabels[goal.type] || goal.type}
             </span>
             {quarter && (
-              <span className="px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 text-[9px] font-medium text-secondary-500 dark:text-secondary-400">
+              <span className="px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 text-3xs font-medium text-secondary-500 dark:text-secondary-400">
                 {quarter}
               </span>
             )}
@@ -107,17 +107,17 @@ function TreeCard({ goal, onSelect }: { goal: Goal; onSelect?: (g: Goal) => void
                 style={{ width: `${Math.min(goal.progress, 100)}%` }}
               />
             </div>
-            <span className="text-[10px] font-semibold text-secondary-600 dark:text-secondary-400">
+            <span className="text-2xs font-semibold text-secondary-600 dark:text-secondary-400">
               {Math.round(goal.progress)}%
             </span>
           </div>
           {/* Owner */}
           {goal.owner && (
             <div className="mt-2 flex items-center gap-1.5">
-              <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-[9px] font-bold">
+              <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-3xs font-bold">
                 {getInitials(goal.owner)}
               </span>
-              <span className="text-[10px] text-secondary-500 dark:text-secondary-400">
+              <span className="text-2xs text-secondary-500 dark:text-secondary-400">
                 {goal.owner.firstName} {goal.owner.lastName}
               </span>
             </div>
@@ -200,7 +200,7 @@ function IndentedRow({
         {/* Type badge + Title */}
         <td className="py-2.5 pr-4">
           <div className="flex items-center gap-2">
-            <span className={clsx('px-1.5 py-0.5 rounded text-[9px] font-semibold shrink-0', typeBadgeColors[goal.type] || typeBadgeColors.OKR_OBJECTIVE)}>
+            <span className={clsx('px-1.5 py-0.5 rounded text-3xs font-semibold shrink-0', typeBadgeColors[goal.type] || typeBadgeColors.OKR_OBJECTIVE)}>
               {typeLabels[goal.type] || goal.type}
             </span>
             <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">
@@ -213,7 +213,7 @@ function IndentedRow({
         <td className="py-2.5 pr-4">
           {goal.owner && (
             <div className="flex items-center gap-1.5">
-              <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-[9px] font-bold shrink-0">
+              <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-3xs font-bold shrink-0">
                 {getInitials(goal.owner)}
               </span>
               <span className="text-xs text-secondary-600 dark:text-secondary-300 break-words">
@@ -226,7 +226,7 @@ function IndentedRow({
         {/* Quarter */}
         <td className="py-2.5 pr-4">
           {quarter && (
-            <span className="px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 text-[9px] font-medium text-secondary-500 dark:text-secondary-400">
+            <span className="px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 text-3xs font-medium text-secondary-500 dark:text-secondary-400">
               {quarter}
             </span>
           )}
@@ -235,7 +235,7 @@ function IndentedRow({
         {/* Child count */}
         <td className="py-2.5 pr-4 text-center">
           {childCount > 0 && (
-            <span className="px-1.5 py-0.5 rounded-full bg-secondary-100 dark:bg-secondary-700 text-[10px] font-medium text-secondary-500 dark:text-secondary-400">
+            <span className="px-1.5 py-0.5 rounded-full bg-secondary-100 dark:bg-secondary-700 text-2xs font-medium text-secondary-500 dark:text-secondary-400">
               {childCount}
             </span>
           )}

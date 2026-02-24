@@ -58,7 +58,7 @@ function MoodTrend({ entries }: { entries: CheckinEntry[] }) {
 
   return (
     <div className="mb-5">
-      <h4 className="text-[10px] font-semibold text-secondary-400 tracking-wider mb-2">Mood Trend (Last 7)</h4>
+      <h4 className="text-2xs font-semibold text-secondary-400 tracking-wider mb-2">Mood Trend (Last 7)</h4>
       <div className="flex items-end gap-1.5 h-16">
         {last7.map((entry) => {
           const pct = (entry.mood / 5) * 100;
@@ -96,7 +96,7 @@ function TimelineEntry({ entry }: { entry: CheckinEntry }) {
           <span className="text-xs font-semibold text-secondary-900 dark:text-white">
             {moodLabels[entry.mood] || 'Check-in'}
           </span>
-          <span className="text-[10px] text-secondary-400 flex items-center gap-0.5">
+          <span className="text-2xs text-secondary-400 flex items-center gap-0.5">
             <ClockIcon className="h-3 w-3" />
             {formatDate(entry.date)} at {formatTime(entry.date)}
           </span>
@@ -104,14 +104,14 @@ function TimelineEntry({ entry }: { entry: CheckinEntry }) {
 
         {entry.blocker && (
           <div className="mb-1.5">
-            <span className="text-[9px] font-semibold text-red-500 tracking-wider">Blocker: </span>
+            <span className="text-3xs font-semibold text-red-500 tracking-wider">Blocker: </span>
             <span className="text-xs text-secondary-600 dark:text-secondary-400">{entry.blocker}</span>
           </div>
         )}
 
         {entry.win && (
           <div>
-            <span className="text-[9px] font-semibold text-green-500 tracking-wider">Win: </span>
+            <span className="text-3xs font-semibold text-green-500 tracking-wider">Win: </span>
             <span className="text-xs text-secondary-600 dark:text-secondary-400">{entry.win}</span>
           </div>
         )}
@@ -161,7 +161,7 @@ export function CheckinHistory({ maxItems = 10 }: CheckinHistoryProps) {
       </div>
 
       {entries.length > maxItems && (
-        <p className="text-[10px] text-secondary-400 text-center mt-2">
+        <p className="text-2xs text-secondary-400 text-center mt-2">
           Showing {maxItems} of {entries.length} check-ins
         </p>
       )}

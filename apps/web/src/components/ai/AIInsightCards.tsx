@@ -154,20 +154,20 @@ export function AIInsightCards({ maxItems = 5, className = '' }: AIInsightCardsP
                       {insight.title}
                     </h4>
                     <span
-                      className={`flex-shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
+                      className={`flex-shrink-0 rounded-full px-1.5 py-0.5 text-2xs font-medium ${
                         PRIORITY_BADGE[insight.priority] ?? PRIORITY_BADGE.medium
                       }`}
                     >
                       {insight.priority}
                     </span>
                   </div>
-                  <p className="text-[11px] text-gray-600 dark:text-gray-400">
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
                     {insight.description}
                   </p>
                   {insight.actionUrl && insight.actionLabel && (
                     <a
                       href={insight.actionUrl}
-                      className="mt-1 inline-flex items-center gap-1 text-[11px] font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400"
+                      className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400"
                     >
                       {insight.actionLabel}
                       <ArrowTopRightOnSquareIcon className="h-3 w-3" />

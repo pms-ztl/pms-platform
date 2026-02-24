@@ -76,7 +76,7 @@ export function TeamHealthGauge({ score, flightRiskCount, turnoverRate, retentio
         {stats.map((stat) => (
           <div key={stat.label} className="text-center p-2 rounded-lg bg-secondary-50 dark:bg-secondary-700/40">
             <p className={clsx('text-lg font-bold', stat.color)}>{stat.value}</p>
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">{stat.label}</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">{stat.label}</p>
           </div>
         ))}
       </div>

@@ -1066,7 +1066,7 @@ export function EngagementDashboardPage() {
                         </div>
                       </div>
                       <div className="mt-1 flex items-center gap-2">
-                        <span className="inline-block px-1.5 py-0.5 text-[10px] tracking-wider font-medium rounded bg-secondary-100 text-secondary-500 dark:bg-secondary-700 dark:text-secondary-400">
+                        <span className="inline-block px-1.5 py-0.5 text-2xs tracking-wider font-medium rounded bg-secondary-100 text-secondary-500 dark:bg-secondary-700 dark:text-secondary-400">
                           {event.eventCategory.replace('_', ' ')}
                         </span>
                       </div>

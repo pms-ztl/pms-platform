@@ -67,7 +67,7 @@ export function QuickStatsBanner({
                 <p className="text-sm font-bold text-secondary-900 dark:text-white leading-none">
                   {values[s.key]}
                 </p>
-                <p className="text-[10px] text-secondary-500 dark:text-secondary-400 mt-0.5">
+                <p className="text-2xs text-secondary-500 dark:text-secondary-400 mt-0.5">
                   {s.label}
                 </p>
               </div>

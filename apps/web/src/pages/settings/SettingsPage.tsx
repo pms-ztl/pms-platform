@@ -149,7 +149,7 @@ export function SettingsPage() {
             >
               <div className="w-12 h-8 mx-auto rounded mb-2" style={opt.previewStyle} />
               <p className="text-sm font-medium text-secondary-900 dark:text-white">{opt.label}</p>
-              <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-0.5">{opt.description}</p>
+              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-0.5">{opt.description}</p>
             </button>
           ))}
         </div>

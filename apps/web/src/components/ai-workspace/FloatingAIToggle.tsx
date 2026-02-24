@@ -77,7 +77,7 @@ export function FloatingAIToggle() {
       {menuOpen && (
         <div className="absolute bottom-full right-0 mb-2 min-w-[140px] rounded-xl bg-gray-900/95 backdrop-blur-xl ring-1 ring-white/10 shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
           {/* Theme section label */}
-          <div className="px-2 py-1 text-[10px] font-semibold tracking-wider text-gray-500">
+          <div className="px-2 py-1 text-2xs font-semibold tracking-wider text-gray-500">
             Theme
           </div>
 

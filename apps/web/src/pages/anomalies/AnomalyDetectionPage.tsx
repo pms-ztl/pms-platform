@@ -355,7 +355,7 @@ export function AnomalyDetectionPage() {
                 {filteredAnomalies.map((a) => (
                   <tr key={a.id} className="border-b border-secondary-100 dark:border-secondary-700/50 last:border-0">
                     <td className="py-2.5 pr-4">
-                      <span className={clsx('inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium', SEVERITY_BADGES[a.severity] || SEVERITY_BADGES.LOW)}>
+                      <span className={clsx('inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-medium', SEVERITY_BADGES[a.severity] || SEVERITY_BADGES.LOW)}>
                         {a.severity}
                       </span>
                     </td>
@@ -368,7 +368,7 @@ export function AnomalyDetectionPage() {
                       {new Date(a.detectedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
                     <td className="py-2.5 pr-4">
-                      <span className={clsx('inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium', STATUS_BADGES[a.status] || STATUS_BADGES.ACTIVE)}>
+                      <span className={clsx('inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-medium', STATUS_BADGES[a.status] || STATUS_BADGES.ACTIVE)}>
                         {a.status}
                       </span>
                     </td>
@@ -377,7 +377,7 @@ export function AnomalyDetectionPage() {
                         {a.status === 'ACTIVE' && (
                           <button
                             onClick={() => acknowledgeMutation.mutate(a.id)}
-                            className="text-[10px] px-2 py-1 rounded bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
+                            className="text-2xs px-2 py-1 rounded bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
                           >
                             <EyeIcon className="w-3 h-3 inline mr-0.5" />Ack
                           </button>
@@ -385,7 +385,7 @@ export function AnomalyDetectionPage() {
                         {a.status !== 'RESOLVED' && (
                           <button
                             onClick={() => setResolveTarget(a.id)}
-                            className="text-[10px] px-2 py-1 rounded bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors"
+                            className="text-2xs px-2 py-1 rounded bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors"
                           >
                             <CheckCircleIcon className="w-3 h-3 inline mr-0.5" />Resolve
                           </button>

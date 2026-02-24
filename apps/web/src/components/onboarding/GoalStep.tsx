@@ -167,7 +167,7 @@ export function GoalStep({ onNext, onSkip }: GoalStepProps) {
                   </span>
                   <div>
                     <p className="text-xs font-semibold text-secondary-800 dark:text-secondary-200">{tip.word}</p>
-                    <p className="text-[11px] text-secondary-500 dark:text-secondary-400">{tip.tip}</p>
+                    <p className="text-xs text-secondary-500 dark:text-secondary-400">{tip.tip}</p>
                   </div>
                 </div>
               ))}

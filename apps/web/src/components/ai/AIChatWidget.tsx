@@ -242,8 +242,8 @@ function renderMarkdown(content: string, isDark: boolean): string {
   html = html.replace(
     /^## (.+)$/gm,
     isDark
-      ? '<h3 class="mt-2.5 mb-1 text-[15px] font-bold text-indigo-300">$1</h3>'
-      : '<h3 class="mt-2.5 mb-1 text-[15px] font-bold text-indigo-700">$1</h3>',
+      ? '<h3 class="mt-2.5 mb-1 text-base font-bold text-indigo-300">$1</h3>'
+      : '<h3 class="mt-2.5 mb-1 text-base font-bold text-indigo-700">$1</h3>',
   );
   html = html.replace(
     /^# (.+)$/gm,

@@ -425,7 +425,7 @@ function AgentSidebar({
             >
               <cluster.icon className="h-3.5 w-3.5 flex-shrink-0 text-current" />
               <span className={`flex-1 text-xs font-medium ${T.textPrimary(theme)}`}>{cluster.name}</span>
-              <span className={`text-[10px] ${T.textMuted(theme)}`}>{cluster.agents.length}</span>
+              <span className={`text-2xs ${T.textMuted(theme)}`}>{cluster.agents.length}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className={`h-3 w-3 transition-transform ${T.textMuted(theme)} ${expandedClusters[cluster.id] ? 'rotate-90' : ''}`}
@@ -459,7 +459,7 @@ function AgentSidebar({
                         <div className={`break-wordstext-xs font-medium ${isSelected ? T.accentText(theme) : T.textPrimary(theme)}`}>
                           {agent.name}
                         </div>
-                        <div className={`break-wordstext-[10px] ${T.textMuted(theme)}`}>{agent.desc}</div>
+                        <div className={`break-wordstext-2xs ${T.textMuted(theme)}`}>{agent.desc}</div>
                       </div>
                     </button>
                   );
@@ -484,7 +484,7 @@ function MetadataRibbon({
 }) {
   return (
     <div
-      className={`mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border px-3 py-1.5 text-[10px] ${T.borderLight(theme)} ${
+      className={`mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border px-3 py-1.5 text-2xs ${T.borderLight(theme)} ${
         theme === 'light' ? 'bg-gray-50 text-gray-500' : 'bg-white/[0.03] text-gray-500'
       }`}
     >
@@ -741,7 +741,7 @@ export function SwarmChat() {
                   </h2>
                   {currentCluster && (
                     <span
-                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-2xs font-medium ${
                         theme === 'light'
                           ? 'bg-gray-100 text-gray-600'
                           : 'bg-white/[0.06] text-gray-400'
@@ -763,7 +763,7 @@ export function SwarmChat() {
 
           {/* Conversation indicator */}
           {conversationId && (
-            <div className={`ml-auto flex items-center gap-1.5 text-[10px] ${T.textMuted(theme)}`}>
+            <div className={`ml-auto flex items-center gap-1.5 text-2xs ${T.textMuted(theme)}`}>
               <div className={`h-1.5 w-1.5 rounded-full ${theme === 'light' ? 'bg-green-500' : 'bg-emerald-400'}`} />
               Active session
             </div>
@@ -867,7 +867,7 @@ export function SwarmChat() {
                     </p>
                   )}
                   <p
-                    className={`mt-1.5 text-[10px] ${
+                    className={`mt-1.5 text-2xs ${
                       msg.role === 'user' ? 'text-white/50' : T.textMuted(theme)
                     }`}
                   >
@@ -948,7 +948,7 @@ export function SwarmChat() {
                 <button
                   key={prompt}
                   onClick={() => handlePromptClick(prompt)}
-                  className={`flex-shrink-0 rounded-full border px-3 py-1 text-[11px] transition-all duration-200 ${
+                  className={`flex-shrink-0 rounded-full border px-3 py-1 text-xs transition-all duration-200 ${
                     theme === 'light'
                       ? 'border-gray-200 bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-700'
                       : `border-white/10 bg-white/[0.03] ${T.textMuted(theme)} hover:bg-white/[0.06] hover:text-white`
@@ -991,7 +991,7 @@ export function SwarmChat() {
               <PaperAirplaneIcon className="h-5 w-5" />
             </button>
           </form>
-          <p className={`mt-1.5 text-[10px] ${T.textMuted(theme)} text-center`}>
+          <p className={`mt-1.5 text-2xs ${T.textMuted(theme)} text-center`}>
             Press Enter to send, Shift+Enter for new line
           </p>
         </div>

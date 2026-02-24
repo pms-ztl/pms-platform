@@ -158,7 +158,7 @@ const SentimentMeter = ({ score }: { score: number }) => {
             <span className="text-lg sm:text-xl font-bold text-secondary-900 dark:text-white mt-1">
               {((score ?? 0) * 100).toFixed(0)}
             </span>
-            <span className="text-[10px] sm:text-xs text-secondary-500 dark:text-secondary-400 break-words px-1">Sentiment Score</span>
+            <span className="text-2xs sm:text-xs text-secondary-500 dark:text-secondary-400 break-words px-1">Sentiment Score</span>
           </div>
         </div>
       </div>
@@ -287,7 +287,7 @@ const CommunicationStats = () => (
           </div>
           <div className="min-w-0">
             <div className="text-sm font-bold text-secondary-900 dark:text-white break-words">{stat.value}</div>
-            <div className="text-[10px] text-secondary-500 dark:text-secondary-400 break-words">{stat.label}</div>
+            <div className="text-2xs text-secondary-500 dark:text-secondary-400 break-words">{stat.label}</div>
           </div>
         </div>
       ))}

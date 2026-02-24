@@ -53,7 +53,7 @@ function StatCard({ label, value, icon: Icon, color, bgColor, subtitle }: StatCa
         <div className="min-w-0">
           <p className="text-xs text-secondary-500 dark:text-secondary-400 font-medium">{label}</p>
           <p className="text-xl font-bold text-secondary-900 dark:text-white break-words">{value}</p>
-          {subtitle && <p className="text-[10px] text-secondary-400 dark:text-secondary-500">{subtitle}</p>}
+          {subtitle && <p className="text-2xs text-secondary-400 dark:text-secondary-500">{subtitle}</p>}
         </div>
       </div>
     </div>

@@ -74,7 +74,7 @@ function KanbanCard({ goal, index }: { goal: Goal; index: number }) {
           {/* Badges */}
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className={clsx(
-              'px-1.5 py-0.5 rounded text-[8px] font-bold',
+              'px-1.5 py-0.5 rounded text-3xs font-bold',
               isObj
                 ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
                 : 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300'
@@ -85,7 +85,7 @@ function KanbanCard({ goal, index }: { goal: Goal; index: number }) {
               <span className={clsx('h-2 w-2 rounded-full', priorityDot[goal.priority] || 'bg-secondary-400')} title={goal.priority} />
             )}
             {goal.dueDate && (
-              <span className="ml-auto flex items-center gap-0.5 text-[9px] text-secondary-400 dark:text-secondary-500">
+              <span className="ml-auto flex items-center gap-0.5 text-3xs text-secondary-400 dark:text-secondary-500">
                 <ClockIcon className="h-3 w-3" />
                 {fmtShortDate(goal.dueDate)}
               </span>
@@ -105,21 +105,21 @@ function KanbanCard({ goal, index }: { goal: Goal; index: number }) {
                 style={{ width: `${Math.min(goal.progress, 100)}%` }}
               />
             </div>
-            <span className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400">
+            <span className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400">
               {Math.round(goal.progress)}%
             </span>
           </div>
 
           {/* Owner + tags */}
           <div className="mt-2 flex items-center gap-2">
-            <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-[8px] font-bold shrink-0">
+            <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-3xs font-bold shrink-0">
               {initials}
             </span>
-            <span className="text-[10px] text-secondary-500 dark:text-secondary-400 break-words">
+            <span className="text-2xs text-secondary-500 dark:text-secondary-400 break-words">
               {goal.owner?.firstName} {goal.owner?.lastName}
             </span>
             {(goal.tags || []).length > 0 && (
-              <span className="ml-auto px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 text-[8px] text-secondary-500 dark:text-secondary-400">
+              <span className="ml-auto px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 text-3xs text-secondary-500 dark:text-secondary-400">
                 {(goal.tags || []).length} tags
               </span>
             )}
@@ -212,7 +212,7 @@ export function OKRKanbanView({ objectives, krByParent }: OKRKanbanViewProps) {
               <div className="p-3 flex items-center gap-2">
                 <div className={clsx('h-2.5 w-2.5 rounded-full', col.headerBg)} />
                 <h3 className={clsx('text-xs font-bold tracking-wider', col.color)}>{col.label}</h3>
-                <span className="ml-auto px-1.5 py-0.5 rounded-full bg-white/60 dark:bg-secondary-700/60 text-[10px] font-semibold text-secondary-600 dark:text-secondary-300">
+                <span className="ml-auto px-1.5 py-0.5 rounded-full bg-white/60 dark:bg-secondary-700/60 text-2xs font-semibold text-secondary-600 dark:text-secondary-300">
                   {items.length}
                 </span>
               </div>
@@ -234,7 +234,7 @@ export function OKRKanbanView({ objectives, krByParent }: OKRKanbanViewProps) {
                     {provided.placeholder}
 
                     {items.length === 0 && !snapshot.isDraggingOver && (
-                      <p className="text-[10px] text-secondary-400 text-center py-6 italic">
+                      <p className="text-2xs text-secondary-400 text-center py-6 italic">
                         Drop items here
                       </p>
                     )}

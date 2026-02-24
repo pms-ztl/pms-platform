@@ -191,7 +191,7 @@ function GapIndicator({ gap }: { gap: number }) {
       </div>
       <span
         className={clsx(
-          'text-[10px] font-semibold px-1.5 py-0.5 rounded-full whitespace-nowrap',
+          'text-2xs font-semibold px-1.5 py-0.5 rounded-full whitespace-nowrap',
           gap <= 0
             ? 'text-emerald-700 bg-emerald-100 dark:text-emerald-300 dark:bg-emerald-900/40'
             : gap === 1
@@ -629,7 +629,7 @@ export function SkillsMatrixPage() {
 
                             {/* Self Rating */}
                             <div className="text-center">
-                              <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mb-0.5">
+                              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mb-0.5">
                                 Self
                               </p>
                               <StarRating value={skill.selfRating} size="sm" readonly />
@@ -637,7 +637,7 @@ export function SkillsMatrixPage() {
 
                             {/* Manager Rating */}
                             <div className="text-center">
-                              <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mb-0.5">
+                              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mb-0.5">
                                 Manager
                               </p>
                               {skill.managerRating > 0 ? (
@@ -655,7 +655,7 @@ export function SkillsMatrixPage() {
 
                             {/* Target Level */}
                             <div className="text-center w-16">
-                              <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mb-0.5">
+                              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mb-0.5">
                                 Target
                               </p>
                               <span className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">
@@ -964,7 +964,7 @@ export function SkillsMatrixPage() {
                         <span className="text-sm font-medium text-secondary-900 dark:text-white">
                           {gap.skillName}
                         </span>
-                        <span className="text-[10px] text-secondary-400 px-1.5 py-0.5 bg-secondary-100 dark:bg-secondary-700 rounded">
+                        <span className="text-2xs text-secondary-400 px-1.5 py-0.5 bg-secondary-100 dark:bg-secondary-700 rounded">
                           {gap.category}
                         </span>
                       </div>

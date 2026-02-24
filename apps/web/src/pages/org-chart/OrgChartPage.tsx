@@ -303,7 +303,7 @@ function OrgChartNode({
               {user.firstName} {user.lastName}
             </h3>
             {isCurrentUser && (
-              <span className="px-1.5 py-0.5 text-[9px] font-semibold bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 rounded-full uppercase tracking-wider">
+              <span className="px-1.5 py-0.5 text-3xs font-semibold bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-300 rounded-full uppercase tracking-wider">
                 You
               </span>
             )}
@@ -319,7 +319,7 @@ function OrgChartNode({
             {user.department && (
               <span
                 className={clsx(
-                  'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium',
+                  'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-medium',
                   getDeptColor(user.department.name)
                 )}
               >
@@ -328,7 +328,7 @@ function OrgChartNode({
               </span>
             )}
             {totalReports > 0 && (
-              <span className="inline-flex items-center gap-1 text-[10px] text-secondary-400 dark:text-secondary-500">
+              <span className="inline-flex items-center gap-1 text-2xs text-secondary-400 dark:text-secondary-500">
                 <UsersIcon className="h-2.5 w-2.5" />
                 {totalReports}
               </span>
@@ -403,7 +403,7 @@ function OrgChartNode({
 
       {/* Truncation notice */}
       {hasChildren && depth >= maxDepth && (
-        <div className="mt-3 text-[10px] text-secondary-400 dark:text-secondary-500 italic">
+        <div className="mt-3 text-2xs text-secondary-400 dark:text-secondary-500 italic">
           +{totalReports} more (increase depth)
         </div>
       )}

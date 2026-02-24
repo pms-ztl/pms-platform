@@ -355,7 +355,7 @@ export function SkillGapHeatmapPage() {
                       return (
                         <td key={cat} className="py-2 px-2 text-center">
                           {cell ? (
-                            <span className={clsx('inline-block w-12 py-1 rounded text-[10px] font-bold', heatmapColor(cell.avgRating))}>
+                            <span className={clsx('inline-block w-12 py-1 rounded text-2xs font-bold', heatmapColor(cell.avgRating))}>
                               {(cell.avgRating ?? 0).toFixed(1)}
                             </span>
                           ) : (
@@ -370,7 +370,7 @@ export function SkillGapHeatmapPage() {
             </table>
           </div>
           {/* Legend */}
-          <div className="flex items-center gap-3 mt-4 text-[10px]">
+          <div className="flex items-center gap-3 mt-4 text-2xs">
             <span className="text-secondary-500 dark:text-secondary-400 font-medium">Legend:</span>
             {[
               { label: '4.5+', cls: 'bg-emerald-600' },
@@ -522,7 +522,7 @@ export function SkillGapHeatmapPage() {
               {/* Center label */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 <span className="text-2xl font-bold text-secondary-900 dark:text-white">{gaps.length}</span>
-                <span className="text-[10px] text-secondary-500 dark:text-secondary-400">Total Skills</span>
+                <span className="text-2xs text-secondary-500 dark:text-secondary-400">Total Skills</span>
               </div>
             </div>
           ) : (
@@ -531,7 +531,7 @@ export function SkillGapHeatmapPage() {
           {/* Legend */}
           <div className="flex flex-wrap gap-3 mt-2 justify-center">
             {severityData.map((d, i) => (
-              <span key={d.name} className="inline-flex items-center gap-1.5 text-[10px] text-secondary-600 dark:text-secondary-400">
+              <span key={d.name} className="inline-flex items-center gap-1.5 text-2xs text-secondary-600 dark:text-secondary-400">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: SEVERITY_COLORS[i] }} />
                 {d.name}: {d.value}
               </span>
