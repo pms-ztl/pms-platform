@@ -21,6 +21,7 @@ import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import type { AITheme, SwarmMode } from '@/store/ai-workspace';
 import * as T from './ai-theme';
 import { ParticleBackground } from './ParticleBackground';
+import { GlassmorphismOverlay } from './GlassmorphismOverlay';
 import { FloatingAIToggle } from './FloatingAIToggle';
 import { SwarmOverview } from './SwarmOverview';
 import { SwarmChat } from './SwarmChat';
@@ -218,6 +219,9 @@ export function NeuralSwarmLayout() {
     >
       {/* Particle background layer */}
       <ParticleBackground />
+
+      {/* Animated frosted glassmorphism overlay */}
+      <GlassmorphismOverlay />
 
       {/* ── Sticky Header ──────────────────────────────────────── */}
       <header
