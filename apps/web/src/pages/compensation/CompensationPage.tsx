@@ -64,7 +64,7 @@ const typeBadgeColors: Record<string, string> = {
   MERIT_INCREASE: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300',
   PROMOTION_RAISE: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
   BONUS: 'bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300',
-  EQUITY: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300',
+  EQUITY: 'bg-primary-100 text-primary-800 dark:bg-primary-900/40 dark:text-primary-300',
   ADJUSTMENT: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300',
 };
 

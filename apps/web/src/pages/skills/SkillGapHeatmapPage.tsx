@@ -251,12 +251,12 @@ export function SkillGapHeatmapPage() {
         title="Skill Gap Analytics"
         subtitle="Organization-wide skill gap analysis and department heatmap"
       >
-        <div className="flex items-center gap-2">
-          <FunnelIcon className="h-4 w-4 text-secondary-400" />
+        <div className="flex items-center gap-2 min-w-0">
+          <FunnelIcon className="h-4 w-4 text-secondary-400 flex-shrink-0" />
           <select
             value={selectedCategory ?? ''}
             onChange={(e) => setSelectedCategory(e.target.value || null)}
-            className="text-sm border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-1.5 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+            className="text-sm border border-secondary-300 dark:border-secondary-600 rounded-lg px-2 sm:px-3 py-1.5 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 max-w-[160px] sm:max-w-none truncate"
           >
             <option value="">All Categories</option>
             {uniqueCategories.map((cat) => (

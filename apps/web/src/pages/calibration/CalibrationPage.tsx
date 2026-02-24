@@ -134,7 +134,7 @@ export function CalibrationPage() {
             <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3">
-                  <h3 className="text-lg font-medium text-secondary-900 dark:text-white">{session.name}</h3>
+                  <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">{session.name}</h3>
                   <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', sessionStatusColors[session.status])}>
                     {session.status.replace('_', ' ')}
                   </span>

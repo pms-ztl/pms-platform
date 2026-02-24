@@ -167,30 +167,30 @@ function SectionHeader({
 function StageIndicator({ currentStage }: { currentStage: UploadStage }) {
   const currentIndex = STAGE_ORDER[currentStage] ?? 0;
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1 sm:gap-1.5">
       {STAGE_STEPS.map((step, i) => {
         const isCompleted = i < currentIndex;
         const isActive = i === currentIndex;
         const Icon = step.icon;
         return (
-          <div key={step.key} className="flex items-center gap-1.5">
+          <div key={step.key} className="flex items-center gap-1 sm:gap-1.5">
             {i > 0 && (
               <div
                 className={clsx(
-                  'w-6 h-0.5 rounded-full transition-colors duration-500',
+                  'w-4 sm:w-6 h-0.5 rounded-full transition-colors duration-500',
                   isCompleted ? 'bg-green-500' : isActive ? 'bg-primary-400' : 'bg-gray-300 dark:bg-white/10',
                 )}
               />
             )}
             <div
               className={clsx(
-                'flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all duration-300',
+                'flex items-center gap-1 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300',
                 isCompleted && 'bg-green-100/80 dark:bg-green-500/15 text-green-700 dark:text-green-400',
                 isActive && 'bg-primary-100/80 dark:bg-primary-500/15 text-primary-700 dark:text-primary-400 stage-dot-active',
                 !isCompleted && !isActive && 'text-gray-400 dark:text-white/30',
               )}
             >
-              <Icon className="h-3.5 w-3.5" />
+              <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
               <span className="hidden sm:inline">{step.label}</span>
             </div>
           </div>

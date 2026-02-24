@@ -70,18 +70,18 @@
  *     50 = surface base       → 2 2 4        (near-black)
  */
 .dark.deep-dark {
-  /* Cyan accent palette */
-  --c-primary-50:  8 51 68;
-  --c-primary-100: 14 83 128;
-  --c-primary-200: 21 128 155;
-  --c-primary-300: 103 232 249;
-  --c-primary-400: 34 211 238;
-  --c-primary-500: 6 182 212;
-  --c-primary-600: 8 145 178;
-  --c-primary-700: 14 116 144;
-  --c-primary-800: 21 94 117;
-  --c-primary-900: 22 78 99;
-  --c-primary-950: 8 51 68;
+  /* Purple accent palette — matches brand, optimised for pure-black bg */
+  --c-primary-50:  46 16 101;
+  --c-primary-100: 76 29 149;
+  --c-primary-200: 109 40 217;
+  --c-primary-300: 196 181 253;
+  --c-primary-400: 167 139 250;
+  --c-primary-500: 139 92 246;
+  --c-primary-600: 124 58 237;
+  --c-primary-700: 109 40 217;
+  --c-primary-800: 91 33 182;
+  --c-primary-900: 76 29 149;
+  --c-primary-950: 46 16 101;
 
   /* Neutral palette — pure-black base, cool gray text */
   --c-secondary-50:  2 2 4;
@@ -293,7 +293,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, rgb(var(--c-primary-500) / 0.6), rgba(6, 182, 212, 0.4));
+    background: linear-gradient(90deg, rgb(var(--c-primary-500) / 0.6), rgb(var(--c-primary-400) / 0.4));
     opacity: 0;
     transition: opacity 0.4s ease;
   }
