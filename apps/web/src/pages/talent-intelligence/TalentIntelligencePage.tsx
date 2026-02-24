@@ -231,12 +231,12 @@ export function TalentIntelligencePage() {
           { label: 'Succession Plans', value: stats.successionCount, icon: UserGroupIcon, color: 'text-indigo-600 dark:text-indigo-400' },
           { label: 'Average Confidence', value: `${stats.avgConfidence}%`, icon: ShieldCheckIcon, color: 'text-blue-600 dark:text-blue-400' },
         ].map((s) => (
-          <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
-              <s.icon className={clsx('w-4 h-4', s.color)} />
+          <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-3 sm:p-4">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs sm:text-sm text-secondary-500 dark:text-secondary-400 leading-tight min-w-0">{s.label}</p>
+              <s.icon className={clsx('w-4 h-4 flex-shrink-0 mt-0.5', s.color)} />
             </div>
-            <p className={clsx('text-2xl font-bold mt-1', s.color)}>{s.value}</p>
+            <p className={clsx('text-xl sm:text-2xl font-bold mt-1 whitespace-nowrap', s.color)}>{s.value}</p>
           </div>
         ))}
       </div>

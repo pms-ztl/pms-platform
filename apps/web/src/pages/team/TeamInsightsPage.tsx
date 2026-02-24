@@ -6,6 +6,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  Legend,
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
@@ -51,9 +52,9 @@ function StatCard({ label, value, icon: Icon, color, bgColor, subtitle }: StatCa
           <Icon className={clsx('h-5 w-5', color)} />
         </div>
         <div className="min-w-0">
-          <p className="text-xs text-secondary-500 dark:text-secondary-400 font-medium">{label}</p>
-          <p className="text-xl font-bold text-secondary-900 dark:text-white whitespace-nowrap">{value}</p>
-          {subtitle && <p className="text-2xs text-secondary-400 dark:text-secondary-500">{subtitle}</p>}
+          <p className="text-xs sm:text-sm text-secondary-500 dark:text-secondary-400 font-medium leading-tight">{label}</p>
+          <p className="text-lg sm:text-xl font-bold text-secondary-900 dark:text-white whitespace-nowrap">{value}</p>
+          {subtitle && <p className="text-xs sm:text-2xs text-secondary-400 dark:text-secondary-500">{subtitle}</p>}
         </div>
       </div>
     </div>
@@ -311,21 +312,30 @@ export function TeamInsightsPage() {
                       );
                     }}
                   />
+                  <Legend
+                    verticalAlign="top"
+                    align="right"
+                    iconType="circle"
+                    iconSize={8}
+                    wrapperStyle={{ fontSize: 11, paddingBottom: 8 }}
+                  />
                   <Area
                     type="monotone"
                     dataKey="created"
-                    name="Created"
+                    name="Goals Created"
                     stroke="#3b82f6"
                     fill="url(#goalCreatedGrad)"
                     strokeWidth={2}
+                    activeDot={{ r: 5, strokeWidth: 2, fill: '#3b82f6' }}
                   />
                   <Area
                     type="monotone"
                     dataKey="completed"
-                    name="Completed"
+                    name="Goals Completed"
                     stroke="#22c55e"
                     fill="url(#goalCompletedGrad)"
                     strokeWidth={2}
+                    activeDot={{ r: 5, strokeWidth: 2, fill: '#22c55e' }}
                   />
                 </AreaChart>
               </ResponsiveContainer>

@@ -135,21 +135,21 @@ export function SettingsPage() {
       <div>
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Theme</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Choose how the application looks.</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
           {themeOptions.map((opt) => (
             <button
               key={opt.key}
               onClick={() => setTheme(opt.key)}
               className={clsx(
-                'p-4 border rounded-xl text-center transition-all duration-200',
+                'p-3 sm:p-4 border rounded-xl text-center transition-all duration-200',
                 theme === opt.key
                   ? 'border-primary-500 ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/30'
                   : 'border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-600'
               )}
             >
-              <div className="w-12 h-8 mx-auto rounded mb-2" style={opt.previewStyle} />
-              <p className="text-sm font-medium text-secondary-900 dark:text-white">{opt.label}</p>
-              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-0.5">{opt.description}</p>
+              <div className="w-10 h-7 sm:w-12 sm:h-8 mx-auto rounded mb-2" style={opt.previewStyle} />
+              <p className="text-xs sm:text-sm font-medium text-secondary-900 dark:text-white">{opt.label}</p>
+              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-0.5 leading-tight">{opt.description}</p>
             </button>
           ))}
         </div>
@@ -275,19 +275,19 @@ export function SettingsPage() {
             { name: 'Google Calendar',   description: 'Sync 1-on-1 meetings',             connected: true,  Icon: CalendarDaysIcon },
             { name: 'Outlook Calendar',  description: 'Sync 1-on-1 meetings',             connected: false, Icon: CalendarDaysIcon },
           ].map((integration) => (
-            <div key={integration.name} className="flex items-center justify-between p-4 border border-secondary-200/60 dark:border-white/[0.06] rounded-lg">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-secondary-100 dark:bg-secondary-800 rounded-lg flex items-center justify-center">
+            <div key={integration.name} className="flex items-center justify-between gap-3 p-4 border border-secondary-200/60 dark:border-white/[0.06] rounded-lg">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                <div className="w-10 h-10 bg-secondary-100 dark:bg-secondary-800 rounded-lg flex items-center justify-center flex-shrink-0">
                   <integration.Icon className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-secondary-900 dark:text-white">{integration.name}</p>
-                  <p className="text-xs text-secondary-500 dark:text-secondary-400">{integration.description}</p>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{integration.name}</p>
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{integration.description}</p>
                 </div>
               </div>
               <button
                 className={clsx(
-                  'px-4 py-2 text-sm font-medium rounded-lg',
+                  'px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap flex-shrink-0',
                   integration.connected
                     ? 'bg-secondary-100 text-secondary-700 hover:bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-300 dark:hover:bg-secondary-700'
                     : 'bg-primary-600 text-white hover:bg-primary-700'
@@ -309,8 +309,8 @@ export function SettingsPage() {
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
           Configure organization-wide settings (Admin only).
         </p>
-        <div className="p-4 bg-warning-50 dark:bg-warning-900/30 border border-warning-200 dark:border-warning-800 rounded-lg">
-          <p className="text-sm text-warning-700 dark:text-warning-300">
+        <div className="p-3 sm:p-4 bg-warning-50 dark:bg-warning-900/30 border border-warning-200 dark:border-warning-800 rounded-lg">
+          <p className="text-xs sm:text-sm text-warning-700 dark:text-warning-300 leading-relaxed">
             These settings affect all users in your organization. Changes take effect immediately.
           </p>
         </div>
@@ -395,16 +395,16 @@ export function SettingsPage() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 card card-body">
+        <div className="flex-1 card card-body !p-4 sm:!p-6 min-w-0">
           {activeTab === 'notifications' && renderNotifications()}
           {activeTab === 'appearance' && renderAppearance()}
           {activeTab === 'privacy' && renderPrivacy()}
           {activeTab === 'integrations' && renderIntegrations()}
           {activeTab === 'organization' && renderOrganization()}
 
-          <div className="border-t border-secondary-200/60 dark:border-white/[0.06] mt-6 pt-6 flex justify-end gap-3">
-            <button className="btn-secondary">Reset to Defaults</button>
-            <button onClick={handleSave} className="btn-primary">Save Changes</button>
+          <div className="border-t border-secondary-200/60 dark:border-white/[0.06] mt-6 pt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+            <button className="btn-secondary w-full sm:w-auto">Reset to Defaults</button>
+            <button onClick={handleSave} className="btn-primary w-full sm:w-auto">Save Changes</button>
           </div>
         </div>
       </div>

@@ -194,22 +194,22 @@ export function HourlyPerformanceTracker() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center space-x-3">
-          <div className="p-2 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg">
+          <div className="p-2 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex-shrink-0">
             <ClockIcon className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-secondary-900 dark:text-white">
+            <h2 className="text-lg sm:text-xl font-bold text-secondary-900 dark:text-white">
               Hourly Performance Tracker
             </h2>
-            <p className="text-sm text-secondary-500 dark:text-secondary-400">
+            <p className="text-xs sm:text-sm text-secondary-500 dark:text-secondary-400">
               Real-time micro-performance metrics
             </p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="text-xs text-secondary-500">Auto-refresh:</span>
+        <div className="flex items-center space-x-2 self-end sm:self-auto">
+          <span className="text-xs text-secondary-500 whitespace-nowrap">Auto-refresh:</span>
           <select
             value={refreshInterval}
             onChange={(e) => setRefreshInterval(Number(e.target.value))}
