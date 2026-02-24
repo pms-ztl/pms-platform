@@ -391,6 +391,8 @@ function App() {
           <Route path="ai-development" element={<RoleGuard path="/ai-development"><AIDevPlanPage /></RoleGuard>} />
           <Route path="simulator" element={<RoleGuard path="/simulator"><PerformanceSimulatorPage /></RoleGuard>} />
           <Route path="mentoring" element={<MentoringHubPage />} />
+          {/* Catch-all inside dashboard layout — shows 404 within the app chrome */}
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
         {/* Super Admin routes - completely separate layout */}
@@ -413,6 +415,7 @@ function App() {
           <Route path="system" element={<Suspense fallback={<PageLoader />}><SASystemPage /></Suspense>} />
           <Route path="settings" element={<Suspense fallback={<PageLoader />}><SASystemPage /></Suspense>} />
           <Route path="upgrade-requests" element={<Suspense fallback={<PageLoader />}><SAUpgradeRequestsPage /></Suspense>} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
         {/* 404 - page not found */}

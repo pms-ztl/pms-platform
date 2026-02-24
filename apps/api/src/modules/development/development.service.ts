@@ -152,6 +152,18 @@ export class DevelopmentService {
     return updated;
   }
 
+  async deletePlan(tenantId: string, planId: string, userId: string) {
+    const plan = await this.getPlanById(tenantId, planId);
+
+    // Delete associated activities and checkpoints first
+    await prisma.developmentActivity.deleteMany({ where: { developmentPlanId: planId } });
+    await prisma.developmentCheckpoint.deleteMany({ where: { developmentPlanId: planId } });
+    await prisma.developmentPlan.delete({ where: { id: planId } });
+
+    auditLogger('DEVELOPMENT_PLAN_DELETED', userId, tenantId, 'development_plan', planId, { planName: plan.planName });
+    return { deleted: true };
+  }
+
   async approvePlan(tenantId: string, planId: string, approverId: string) {
     const plan = await this.getPlanById(tenantId, planId);
     if (plan.status !== 'DRAFT') throw new ValidationError('Only DRAFT plans can be approved');

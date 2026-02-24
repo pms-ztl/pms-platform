@@ -20,6 +20,7 @@ import {
   ChartBarIcon,
   UserIcon,
   XMarkIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -100,6 +101,12 @@ export function AIDevPlanPage() {
     mutationFn: (id: string) => actionableInsightsApi.completePlan(id),
     onSuccess: () => { toast.success('Plan marked complete'); qc.invalidateQueries({ queryKey: ['dev-plans'] }); },
     onError: () => toast.error('Failed to complete plan'),
+  });
+
+  const deleteMut = useMutation({
+    mutationFn: (id: string) => actionableInsightsApi.deletePlan(id),
+    onSuccess: () => { toast.success('Plan deleted'); setSelectedPlan(null); qc.invalidateQueries({ queryKey: ['dev-plans'] }); },
+    onError: (err: any) => toast.error(err?.message || 'Failed to delete plan'),
   });
 
   // ── derived stats ──
@@ -233,6 +240,9 @@ export function AIDevPlanPage() {
                   </button>
                   <button onClick={() => completeMut.mutate(plan.id)} disabled={completeMut.isPending || (plan.status ?? '').toUpperCase() === 'COMPLETED'} className="flex-1 flex items-center justify-center gap-1 rounded-lg border border-emerald-600/40 px-2 py-1.5 text-xs text-emerald-400 hover:bg-emerald-500/10 transition-colors disabled:opacity-50">
                     <CheckCircleIcon className="h-3 w-3" /> Complete
+                  </button>
+                  <button onClick={() => { if (window.confirm('Are you sure you want to delete this plan? This action cannot be undone.')) deleteMut.mutate(plan.id); }} disabled={deleteMut.isPending} className="flex items-center justify-center gap-1 rounded-lg border border-red-600/40 px-2 py-1.5 text-xs text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-50" title="Delete plan">
+                    <TrashIcon className="h-3 w-3" />
                   </button>
                 </div>
               </button>
@@ -490,9 +500,18 @@ export function AIDevPlanPage() {
               </div>
             </div>
 
+            {/* Validation hints */}
+            {genForm.careerGoal.length > 0 && genForm.careerGoal.length < 10 && (
+              <p className="text-xs text-amber-400">Career goal must be at least 10 characters ({10 - genForm.careerGoal.length} more needed)</p>
+            )}
+
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowGenModal(false)} className="rounded-lg border border-gray-600 px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Cancel</button>
-              <button onClick={() => generateMut.mutate(genForm)} disabled={generateMut.isPending || !genForm.userId || !genForm.careerGoal} className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-500 disabled:opacity-50 transition-colors">
+              <button onClick={() => {
+                if (!genForm.userId.trim()) { toast.error('User ID is required'); return; }
+                if (genForm.careerGoal.trim().length < 10) { toast.error('Career goal must be at least 10 characters'); return; }
+                generateMut.mutate(genForm);
+              }} disabled={generateMut.isPending || !genForm.userId.trim() || genForm.careerGoal.trim().length < 10} className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-500 disabled:opacity-50 transition-colors">
                 {generateMut.isPending && <ArrowPathIcon className="h-4 w-4 animate-spin" />}
                 Generate Plan
               </button>

@@ -154,6 +154,19 @@ const ACTION_TIMELINE_ICONS: Record<string, React.ElementType> = {
   SUBMIT: DocumentTextIcon,
 };
 
+/** Convert raw action names (e.g. "LOGIN_SUCCESS", "CREATE") to human-readable labels */
+function formatActionLabel(raw?: string): string {
+  if (!raw) return 'N/A';
+  // Check known ACTION_TYPES first
+  const known = ACTION_TYPES.find(a => a.value === raw);
+  if (known) return known.label;
+  // Fallback: title-case the raw string (e.g. "LOGIN_SUCCESS" → "Login Success")
+  return raw
+    .split('_')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+}
+
 const DEFAULT_FILTERS: AuditFilters = {
   dateFrom: '',
   dateTo: '',
@@ -760,7 +773,7 @@ export function AuditLogPage() {
         />
         <StatCard
           title="Most Common Action"
-          value={statsLoading ? '--' : (stats?.mostCommonAction ?? 'N/A')}
+          value={statsLoading ? '--' : formatActionLabel(stats?.mostCommonAction)}
           icon={FireIcon}
           color="danger"
         />
@@ -803,28 +816,28 @@ export function AuditLogPage() {
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
+                <table className="min-w-[800px] w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[140px]">
                         Timestamp
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[180px]">
                         User
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[90px]">
                         Action
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[110px]">
                         Entity Type
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[90px]">
                         Entity ID
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[100px]">
                         IP Address
                       </th>
-                      <th className="px-4 py-3 text-center text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider">
+                      <th className="px-4 py-3 text-center text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[60px]">
                         Details
                       </th>
                     </tr>

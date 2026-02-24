@@ -10,7 +10,7 @@ export function ConnectionStatus() {
   return (
     <div
       className={clsx(
-        'fixed bottom-4 right-4 z-50 flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium shadow-lg transition-all duration-300',
+        'fixed bottom-20 right-4 z-[60] flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium shadow-lg transition-all duration-300',
         status === 'connecting'
           ? 'bg-amber-500 text-white'
           : 'bg-red-500 text-white'

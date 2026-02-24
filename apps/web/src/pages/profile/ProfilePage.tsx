@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -45,6 +45,14 @@ export function ProfilePage() {
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [showEmployeeCardModal, setShowEmployeeCardModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Refresh user data from API on mount to ensure email & fields are up-to-date
+  useEffect(() => {
+    authApi.me().then((freshUser) => {
+      if (freshUser && freshUser.email) setUser(freshUser);
+    }).catch(() => { /* silent */ });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { data: myGoals } = useQuery({
     queryKey: ['goals', 'my'],

@@ -177,6 +177,8 @@ export const actionableInsightsApi = {
     api.put<GeneratedDevPlan>(`/actionable-insights/development/${planId}/progress`),
   completePlan: (planId: string) =>
     api.post<GeneratedDevPlan>(`/actionable-insights/development/${planId}/complete`),
+  deletePlan: (planId: string) =>
+    api.delete<void>(`/development/plans/${planId}`),
 
   // Team Optimization
   optimizeTeamComposition: (data: { optimizationType: string; teamName: string; department?: string; teamSize: number; requiredSkills: any[]; requiredCompetencies: any[]; objectives?: any[]; constraints?: any; targetTeamId?: string }) =>

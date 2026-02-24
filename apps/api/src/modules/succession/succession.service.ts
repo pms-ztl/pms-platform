@@ -11,14 +11,46 @@ class SuccessionService {
     const where: any = { tenantId };
     if (filters.criticality) where.criticality = filters.criticality;
     if (filters.status) where.status = filters.status;
-    return prisma.successionPlan.findMany({
+    const plans = await prisma.successionPlan.findMany({
       where,
       orderBy: { createdAt: 'desc' }
     });
+
+    // Resolve currentIncumbent UUIDs to user objects
+    const incumbentIds = plans
+      .map(p => p.currentIncumbent)
+      .filter((id): id is string => !!id);
+
+    if (incumbentIds.length > 0) {
+      const users = await prisma.user.findMany({
+        where: { id: { in: incumbentIds } },
+        select: { id: true, firstName: true, lastName: true },
+      });
+      const userMap = new Map(users.map(u => [u.id, u]));
+      return plans.map(plan => ({
+        ...plan,
+        currentIncumbent: plan.currentIncumbent
+          ? userMap.get(plan.currentIncumbent) ?? { id: plan.currentIncumbent, firstName: 'Unknown', lastName: '' }
+          : null,
+      }));
+    }
+
+    return plans;
   }
 
   async getById(tenantId: string, id: string) {
-    return prisma.successionPlan.findFirst({ where: { id, tenantId } });
+    const plan = await prisma.successionPlan.findFirst({ where: { id, tenantId } });
+    if (!plan) return null;
+
+    // Resolve currentIncumbent UUID to user object
+    if (plan.currentIncumbent) {
+      const user = await prisma.user.findUnique({
+        where: { id: plan.currentIncumbent },
+        select: { id: true, firstName: true, lastName: true },
+      });
+      return { ...plan, currentIncumbent: user ?? { id: plan.currentIncumbent, firstName: 'Unknown', lastName: '' } };
+    }
+    return plan;
   }
 
   async update(tenantId: string, id: string, input: any) {

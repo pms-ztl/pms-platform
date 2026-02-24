@@ -20,6 +20,7 @@ router.get('/plans/team',
 );
 router.get('/plans/:id', (req, res, next) => developmentController.getPlanById(req, res, next));
 router.put('/plans/:id', (req, res, next) => developmentController.updatePlan(req, res, next));
+router.delete('/plans/:id', (req, res, next) => developmentController.deletePlan(req, res, next));
 router.post('/plans/:id/approve',
   authorize({ resource: 'development', action: 'update', scope: 'team' }),
   (req, res, next) => developmentController.approvePlan(req, res, next)

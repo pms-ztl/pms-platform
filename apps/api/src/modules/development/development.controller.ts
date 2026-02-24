@@ -102,6 +102,13 @@ class DevelopmentController {
     } catch (error) { next(error); }
   }
 
+  async deletePlan(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      await developmentService.deletePlan(req.tenantId, req.params.id, req.user.id);
+      res.json({ success: true, message: 'Plan deleted successfully' });
+    } catch (error) { next(error); }
+  }
+
   async approvePlan(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const plan = await developmentService.approvePlan(req.tenantId, req.params.id, req.user.id);
