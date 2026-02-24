@@ -119,6 +119,7 @@ export const aiApi = {
   getConversation: (id: string) =>
     api.get<{ id: string; messages: AIMessage[]; agentType: string; title: string }>(`/ai/conversations/${id}`),
   archiveConversation: (id: string) => api.delete(`/ai/conversations/${id}`),
+  renameConversation: (id: string, title: string) => api.patch(`/ai/conversations/${id}`, { title }),
 
   // Insights
   getInsights: (params?: { page?: number; limit?: number; agentType?: string; priority?: string }) =>

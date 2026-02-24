@@ -125,6 +125,26 @@ class AIService {
   }
 
   /**
+   * Rename a conversation.
+   */
+  async renameConversation(
+    tenantId: string,
+    userId: string,
+    conversationId: string,
+    title: string,
+  ): Promise<void> {
+    const convo = await prisma.agentConversation.findFirst({
+      where: { id: conversationId, tenantId, userId },
+    });
+    if (!convo) throw new Error('Conversation not found');
+
+    await prisma.agentConversation.update({
+      where: { id: conversationId },
+      data: { title },
+    });
+  }
+
+  /**
    * Get AI insight cards for a user.
    */
   async getInsights(

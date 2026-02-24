@@ -2981,3 +2981,19 @@ html.transitioning *::after {
     border-radius: 0.75rem;     /* 16px → 12px */
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Auth Page — Rotate landscape video for portrait viewports
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (orientation: portrait) {
+  .auth-page video {
+    position: absolute;
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    width: 100vh;
+    height: 100vw;
+    transform: translate(-50%, -50%) rotate(90deg);
+    object-fit: cover;
+  }
+}

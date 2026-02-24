@@ -181,6 +181,14 @@ export class ApiClient {
     return response.data.data as T;
   }
 
+  async patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.client.patch<ApiResponse<T>>(url, data, config);
+    if (!response.data.success) {
+      throw new Error(response.data.error?.message || 'Request failed');
+    }
+    return response.data.data as T;
+  }
+
   async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.delete<ApiResponse<T>>(url, config);
     if (!response.data.success) {

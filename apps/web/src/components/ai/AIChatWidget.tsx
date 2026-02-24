@@ -71,8 +71,10 @@ import {
   ExclamationTriangleIcon,
   PlayIcon,
   StopIcon,
+  EllipsisVerticalIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
-import { aiApi } from '../../lib/api';
+import { aiApi, type AIConversation } from '../../lib/api';
 import { useAIChatStore } from '../../store/ai-chat';
 import { useAIWorkspaceStore } from '../../store/ai-workspace';
 import { useVoiceInput } from '../../hooks/useVoiceInput';
@@ -320,7 +322,7 @@ function renderMarkdown(content: string, isDark: boolean): string {
 // ── Component ──────────────────────────────────────────────
 
 export function AIChatWidget() {
-  const { isOpen, activeConversationId, agentType, setOpen, setConversation, setAgentType } =
+  const { isOpen, activeConversationId, agentType, historyOpen, setOpen, setConversation, setAgentType, setHistoryOpen } =
     useAIChatStore();
   const isDark = useIsDark();
   const [message, setMessage] = useState('');
@@ -330,6 +332,9 @@ export function AIChatWidget() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [agentSelectorOpen, setAgentSelectorOpen] = useState(false);
   const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
@@ -394,6 +399,48 @@ export function AIChatWidget() {
       ]);
     },
   });
+
+  // ── Conversation History ──────────────────────────────
+  const { data: conversationList } = useQuery({
+    queryKey: ['ai', 'conversations-list'],
+    queryFn: () => aiApi.getConversations({ limit: 50 }),
+    enabled: historyOpen && isOpen,
+  });
+
+  const renameMutation = useMutation({
+    mutationFn: ({ id, title }: { id: string; title: string }) => aiApi.renameConversation(id, title),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ai', 'conversations-list'] });
+      setRenamingId(null);
+    },
+  });
+
+  const archiveMutation = useMutation({
+    mutationFn: (id: string) => aiApi.archiveConversation(id),
+    onSuccess: (_data, archivedId) => {
+      queryClient.invalidateQueries({ queryKey: ['ai', 'conversations-list'] });
+      if (activeConversationId === archivedId) {
+        handleNewChat();
+      }
+    },
+  });
+
+  const formatRelativeTime = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    const days = Math.floor(hrs / 24);
+    if (days < 7) return `${days}d ago`;
+    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  const loadConversation = (id: string) => {
+    setConversation(id);
+    setHistoryOpen(false);
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -623,7 +670,14 @@ export function AIChatWidget() {
             <span>Workspace</span>
           </button>
           <button
-            onClick={handleNewChat}
+            onClick={() => setHistoryOpen(!historyOpen)}
+            className={`rounded-md p-1.5 transition-all ${t.headerBtnClass} ${historyOpen ? 'bg-white/20' : ''}`}
+            title="Chat history"
+          >
+            <ClockIcon className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={() => { handleNewChat(); setHistoryOpen(false); }}
             className={`rounded-md p-1.5 transition-all ${t.headerBtnClass}`}
             title="New conversation"
           >
@@ -701,8 +755,155 @@ export function AIChatWidget() {
         )}
       </div>
 
+      {/* ── History Panel ───────────────────────────────── */}
+      {historyOpen && (
+        <div className="flex-1 overflow-y-auto px-2 py-2">
+          <div className="flex items-center justify-between px-1 mb-2">
+            <h4 className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>Chat History</h4>
+            <button
+              onClick={() => setHistoryOpen(false)}
+              className={`text-2xs font-medium rounded-md px-2 py-0.5 transition-all ${isDark ? 'text-indigo-400 hover:bg-white/5' : 'text-indigo-600 hover:bg-indigo-50'}`}
+            >
+              Back to chat
+            </button>
+          </div>
+
+          {!conversationList || (Array.isArray(conversationList) ? conversationList : (conversationList as any)?.data ?? []).length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-48 text-center px-4">
+              <ClockIcon className={`h-8 w-8 mb-2 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+              <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>No conversations yet</p>
+              <p className={`text-2xs mt-0.5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Start chatting to see your history here</p>
+            </div>
+          ) : (
+            <div className="space-y-0.5">
+              {(Array.isArray(conversationList) ? conversationList : (conversationList as any)?.data ?? []).map((convo: AIConversation) => (
+                <div key={convo.id} className="relative group">
+                  {renamingId === convo.id ? (
+                    <div className="flex items-center gap-1 px-2 py-1.5">
+                      <input
+                        autoFocus
+                        type="text"
+                        value={renameValue}
+                        onChange={(e) => setRenameValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && renameValue.trim()) {
+                            renameMutation.mutate({ id: convo.id, title: renameValue.trim() });
+                          }
+                          if (e.key === 'Escape') setRenamingId(null);
+                        }}
+                        className={`flex-1 rounded-md px-2 py-1 text-2xs focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
+                          isDark ? 'bg-white/5 text-white border border-white/10' : 'bg-white text-gray-800 border border-gray-200'
+                        }`}
+                        placeholder="Enter new title..."
+                      />
+                      <button
+                        onClick={() => renameValue.trim() && renameMutation.mutate({ id: convo.id, title: renameValue.trim() })}
+                        disabled={renameMutation.isPending}
+                        className="px-1.5 py-1 text-2xs font-medium text-indigo-500 hover:text-indigo-400 disabled:opacity-50"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setRenamingId(null)}
+                        className={`px-1 py-1 text-2xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}
+                      >
+                        <XMarkIcon className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => loadConversation(convo.id)}
+                      className={`w-full text-left flex items-center gap-2 rounded-lg px-2 py-2 transition-all ${
+                        convo.id === activeConversationId
+                          ? isDark ? 'bg-indigo-500/10 border border-indigo-500/20' : 'bg-indigo-50 border border-indigo-200'
+                          : isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <div
+                        className="flex-shrink-0 flex h-7 w-7 items-center justify-center rounded-md"
+                        style={{
+                          background: isDark
+                            ? 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))'
+                            : 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))',
+                        }}
+                      >
+                        <ChatBubbleOvalLeftEllipsisIcon className={`h-3.5 w-3.5 ${isDark ? 'text-indigo-400' : 'text-indigo-500'}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-2xs font-medium truncate ${isDark ? 'text-white' : 'text-gray-800'}`}>
+                          {convo.title || 'Untitled Chat'}
+                        </p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className={`text-3xs ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                            {formatRelativeTime(convo.updatedAt)}
+                          </span>
+                          <span className={`text-3xs ${isDark ? 'text-gray-600' : 'text-gray-300'}`}>
+                            {convo.messageCount} msg{convo.messageCount !== 1 ? 's' : ''}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Three-dot menu */}
+                      <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setMenuOpenId(menuOpenId === convo.id ? null : convo.id);
+                          }}
+                          className={`p-1 rounded-md transition-all ${isDark ? 'hover:bg-white/10 text-gray-400' : 'hover:bg-gray-200 text-gray-400'}`}
+                        >
+                          <EllipsisVerticalIcon className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </button>
+                  )}
+
+                  {/* Dropdown menu */}
+                  {menuOpenId === convo.id && renamingId !== convo.id && (
+                    <div
+                      className={`absolute right-2 top-full z-30 mt-0.5 rounded-lg py-1 shadow-lg ${
+                        isDark ? 'bg-gray-800 border border-white/10' : 'bg-white border border-gray-200'
+                      }`}
+                      style={{ minWidth: 120 }}
+                    >
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setRenamingId(convo.id);
+                          setRenameValue(convo.title || '');
+                          setMenuOpenId(null);
+                        }}
+                        className={`w-full text-left flex items-center gap-2 px-3 py-1.5 text-2xs transition-all ${
+                          isDark ? 'text-gray-300 hover:bg-white/5' : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        <PencilSquareIcon className="h-3 w-3" />
+                        Rename
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          archiveMutation.mutate(convo.id);
+                          setMenuOpenId(null);
+                        }}
+                        className={`w-full text-left flex items-center gap-2 px-3 py-1.5 text-2xs transition-all ${
+                          isDark ? 'text-red-400 hover:bg-red-500/10' : 'text-red-600 hover:bg-red-50'
+                        }`}
+                      >
+                        <TrashIcon className="h-3 w-3" />
+                        Archive
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ── Messages ───────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto px-2.5 py-2.5 space-y-3">
+      {!historyOpen && <div className="flex-1 overflow-y-auto px-2.5 py-2.5 space-y-3">
         {localMessages.length === 0 && (
           <div className="flex h-full flex-col items-center justify-center text-center px-3">
             <div className="relative mb-3">
@@ -864,10 +1065,10 @@ export function AIChatWidget() {
         )}
 
         <div ref={messagesEndRef} />
-      </div>
+      </div>}
 
       {/* ── Input ──────────────────────────────────────── */}
-      <form
+      {!historyOpen && <form
         onSubmit={handleSubmit}
         className="px-2.5 py-2"
         style={{ borderTop: `1px solid ${t.inputAreaBorder}`, background: t.inputAreaBg }}
@@ -920,7 +1121,7 @@ export function AIChatWidget() {
             Neural Swarm AI
           </span>
         </div>
-      </form>
+      </form>}
     </div>
   );
 }

@@ -9,10 +9,12 @@ interface AIChatState {
   isOpen: boolean;
   activeConversationId: string | null;
   agentType: string | null;
+  historyOpen: boolean;
   setOpen: (open: boolean) => void;
   toggleOpen: () => void;
   setConversation: (id: string | null) => void;
   setAgentType: (type: string | null) => void;
+  setHistoryOpen: (open: boolean) => void;
   reset: () => void;
 }
 
@@ -22,15 +24,18 @@ export const useAIChatStore = create<AIChatState>()(
       isOpen: false,
       activeConversationId: null,
       agentType: null,
+      historyOpen: false,
       setOpen: (open) => set({ isOpen: open }),
       toggleOpen: () => set((state) => ({ isOpen: !state.isOpen })),
       setConversation: (id) => set({ activeConversationId: id }),
       setAgentType: (type) => set({ agentType: type }),
+      setHistoryOpen: (open) => set({ historyOpen: open }),
       reset: () =>
         set({
           isOpen: false,
           activeConversationId: null,
           agentType: null,
+          historyOpen: false,
         }),
     }),
     {

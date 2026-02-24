@@ -60,7 +60,7 @@ export function PageHeader({
   return (
     <div
       className={clsx(
-        'relative overflow-hidden rounded-2xl glass-banner shadow-lg',
+        'relative overflow-clip rounded-2xl glass-banner shadow-lg',
         compact ? 'p-3 sm:p-4' : 'p-4 sm:p-6',
         className,
       )}

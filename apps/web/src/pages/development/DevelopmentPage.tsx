@@ -10,6 +10,7 @@ import {
   CalendarDaysIcon,
   XMarkIcon,
   ArrowRightIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -175,7 +176,7 @@ function TagInput({
 
 // ── Plan Card ────────────────────────────────────────────────────────────────
 
-function PlanCard({ plan, showEmployee }: { plan: DevelopmentPlan; showEmployee?: boolean }) {
+function PlanCard({ plan, showEmployee, onDelete }: { plan: DevelopmentPlan; showEmployee?: boolean; onDelete?: (plan: DevelopmentPlan) => void }) {
   const planType = PLAN_TYPE_CONFIG[plan.planType] || {
     label: plan.planType,
     color: 'bg-secondary-100 text-secondary-700 dark:bg-secondary-700 dark:text-secondary-300',
@@ -200,8 +201,23 @@ function PlanCard({ plan, showEmployee }: { plan: DevelopmentPlan; showEmployee?
   return (
     <Link
       to={`/development/${plan.id}`}
-      className="block bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] hover:shadow-md hover:border-primary-300 dark:hover:border-primary-700 transition-all duration-200 group"
+      className="relative block bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] hover:shadow-md hover:border-primary-300 dark:hover:border-primary-700 transition-all duration-200 group"
     >
+      {/* Delete button */}
+      {onDelete && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onDelete(plan);
+          }}
+          className="absolute top-2 right-2 z-10 p-1.5 rounded-lg text-secondary-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 opacity-0 group-hover:opacity-100 transition-all"
+          title="Delete plan"
+        >
+          <TrashIcon className="h-4 w-4" />
+        </button>
+      )}
       <div className="p-5">
         {/* Top row: employee avatar (team view) + badges */}
         <div className="flex items-start justify-between gap-3 mb-3">
@@ -558,6 +574,27 @@ export function DevelopmentPage() {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [page, setPage] = useState(1);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [planToDelete, setPlanToDelete] = useState<DevelopmentPlan | null>(null);
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => developmentApi.deletePlan(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['development-plans'] });
+      queryClient.invalidateQueries({ queryKey: ['development-team-plans'] });
+      toast.success('Development plan deleted');
+      setShowDeleteModal(false);
+      setPlanToDelete(null);
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to delete plan');
+    },
+  });
+
+  const handleDeleteClick = (plan: DevelopmentPlan) => {
+    setPlanToDelete(plan);
+    setShowDeleteModal(true);
+  };
 
   // Reset page when filters or tab change
   const handleTabChange = (tab: 'my' | 'team') => {
@@ -717,6 +754,7 @@ export function DevelopmentPage() {
                 key={plan.id}
                 plan={plan}
                 showEmployee={isTeamView}
+                onDelete={(plan.userId === user?.id || hasManagerAccess) ? handleDeleteClick : undefined}
               />
             ))}
           </div>
@@ -780,6 +818,41 @@ export function DevelopmentPage() {
       {/* ── Create Plan Modal ── */}
       {showCreateModal && (
         <CreatePlanModal onClose={() => setShowCreateModal(false)} />
+      )}
+
+      {/* ── Delete Confirmation Modal ── */}
+      {showDeleteModal && planToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="fixed inset-0" onClick={() => { setShowDeleteModal(false); setPlanToDelete(null); }} />
+          <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+            <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">
+              Delete Development Plan
+            </h3>
+            <p className="text-sm text-secondary-600 dark:text-secondary-400 mb-1">
+              Are you sure you want to delete <span className="font-medium text-secondary-900 dark:text-white">"{planToDelete.planName}"</span>?
+            </p>
+            <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-5">
+              This will permanently remove all activities and checkpoints associated with this plan.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => { setShowDeleteModal(false); setPlanToDelete(null); }}
+                className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 bg-white dark:bg-secondary-700 border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-600 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => deleteMutation.mutate(planToDelete.id)}
+                disabled={deleteMutation.isPending}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

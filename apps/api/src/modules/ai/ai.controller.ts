@@ -138,6 +138,36 @@ class AIController {
   }
 
   /**
+   * PATCH /ai/conversations/:id — rename conversation
+   */
+  async renameConversation(
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const titleSchema = z.object({
+        title: z.string().min(1).max(200),
+      });
+      const parsed = titleSchema.safeParse(req.body);
+      if (!parsed.success) {
+        throw new ValidationError('Invalid title', { errors: parsed.error.format() });
+      }
+
+      await aiService.renameConversation(
+        req.tenantId!,
+        req.user!.id,
+        req.params.id,
+        parsed.data.title,
+      );
+
+      res.status(200).json({ success: true, message: 'Conversation renamed' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * POST /ai/excel/analyze — AI-enhanced Excel validation
    */
   async analyzeExcel(

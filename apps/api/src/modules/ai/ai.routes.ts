@@ -29,6 +29,9 @@ router.get('/conversations/:id', asyncHandler((req, res, next) =>
 router.delete('/conversations/:id', asyncHandler((req, res, next) =>
   aiController.archiveConversation(req as AuthenticatedRequest, res, next),
 ));
+router.patch('/conversations/:id', asyncHandler((req, res, next) =>
+  aiController.renameConversation(req as AuthenticatedRequest, res, next),
+));
 
 // Excel AI analysis
 router.post('/excel/analyze', asyncHandler((req, res, next) =>

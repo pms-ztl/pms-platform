@@ -125,6 +125,7 @@ export const developmentApi = {
   }) => api.put<DevelopmentCheckpoint>(`/development/checkpoints/${checkpointId}/complete`, data),
   getRecommendations: (userId?: string) =>
     api.get<any>(userId ? `/development/recommendations/${userId}` : '/development/recommendations'),
+  deletePlan: (id: string) => api.delete(`/development/plans/${id}`),
 };
 
 // ── PIP (Performance Improvement Plans) ──
