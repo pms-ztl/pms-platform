@@ -51,7 +51,7 @@ function NavLink({
       onClick={onClick}
       title={collapsed ? item.name : undefined}
       className={clsx(
-        'group relative flex items-center rounded-lg text-[12px] font-medium transition-all duration-200',
+        'group relative flex items-center rounded-lg text-xs font-medium transition-all duration-200',
         collapsed ? 'justify-center p-2.5' : 'gap-x-2.5 px-2.5 py-1.5',
         isActive
           ? 'bg-primary-500/10 text-primary-300 shadow-[inset_0_1px_0_rgba(139,92,246,0.1)] sidebar-glow-active'
@@ -123,7 +123,7 @@ function NavSectionGroup({
           section.collapsible && 'cursor-pointer group'
         )}
       >
-        <span className="text-[10px] font-bold tracking-[0.1em] text-secondary-600 dark:text-primary-400/40 flex-1 text-left">
+        <span className="text-2xs font-bold tracking-[0.1em] text-secondary-600 dark:text-primary-400/40 flex-1 text-left">
           {section.label}
         </span>
         {section.collapsible && (
@@ -178,7 +178,7 @@ function SidebarContent({
           {collapsed ? 'P' : 'PMS'}
         </span>
         {!collapsed && (
-          <span className="ml-2 text-[10px] font-semibold tracking-widest text-secondary-500">
+          <span className="ml-2 text-2xs font-semibold tracking-widest text-secondary-500">
             Platform
           </span>
         )}
@@ -205,7 +205,7 @@ function SidebarContent({
           <CpuChipIcon className={clsx('shrink-0', collapsed ? 'h-5 w-5' : 'h-4 w-4')} />
           {!collapsed && (
             <>
-              <span className="flex-1 text-left text-[12px] font-medium break-words">
+              <span className="flex-1 text-left text-xs font-medium break-words">
                 {isAiMode ? 'Exit AI Mode' : 'Neural Swarm AI'}
               </span>
               {isAiMode && (
@@ -264,7 +264,7 @@ function SidebarContent({
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <ChevronRightIcon className={clsx('h-4 w-4 transition-transform duration-200', !collapsed && 'rotate-180')} />
-            {!collapsed && <span className="text-[11px] font-medium">Collapse</span>}
+            {!collapsed && <span className="text-xs font-medium">Collapse</span>}
           </button>
         )}
       </div>
@@ -331,7 +331,7 @@ export function DashboardLayout() {
   };
 
   return (
-    <div className="min-h-screen transition-colors duration-300 dashboard-scaled">
+    <div className="min-h-screen transition-colors duration-300">
       {/* Top loading bar */}
       <TopLoadingBar />
 

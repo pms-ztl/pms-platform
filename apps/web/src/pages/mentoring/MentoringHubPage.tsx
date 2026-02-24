@@ -59,8 +59,8 @@ function MentorCard({ mentor, onRequest }: { mentor: MentorMatch; onRequest: (id
             <CompatibilityBadge score={mentor.compatibilityScore} />
           </div>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{mentor.jobTitle || 'Team Member'}</p>
-          {mentor.department && <p className="text-[10px] text-secondary-400 dark:text-secondary-500">{mentor.department}</p>}
-          <p className="text-[10px] text-secondary-400 mt-1">{mentor.yearsExperience} years experience</p>
+          {mentor.department && <p className="text-2xs text-secondary-400 dark:text-secondary-500">{mentor.department}</p>}
+          <p className="text-2xs text-secondary-400 mt-1">{mentor.yearsExperience} years experience</p>
         </div>
       </div>
 
@@ -68,20 +68,20 @@ function MentorCard({ mentor, onRequest }: { mentor: MentorMatch; onRequest: (id
       <div className="mt-4 space-y-2">
         {mentor.sharedSkills.length > 0 && (
           <div>
-            <p className="text-[9px] font-semibold text-secondary-400 tracking-wider mb-1">Shared Skills</p>
+            <p className="text-3xs font-semibold text-secondary-400 tracking-wider mb-1">Shared Skills</p>
             <div className="flex flex-wrap gap-1">
               {mentor.sharedSkills.slice(0, 4).map((s) => (
-                <span key={s} className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">{s}</span>
+                <span key={s} className="text-2xs px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">{s}</span>
               ))}
             </div>
           </div>
         )}
         {mentor.complementarySkills.length > 0 && (
           <div>
-            <p className="text-[9px] font-semibold text-secondary-400 tracking-wider mb-1">Can Teach You</p>
+            <p className="text-3xs font-semibold text-secondary-400 tracking-wider mb-1">Can Teach You</p>
             <div className="flex flex-wrap gap-1">
               {mentor.complementarySkills.slice(0, 4).map((s) => (
-                <span key={s} className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">{s}</span>
+                <span key={s} className="text-2xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">{s}</span>
               ))}
             </div>
           </div>
@@ -124,22 +124,22 @@ function MentorshipCard({ mentorship }: { mentorship: Mentorship }) {
             <p className="text-xs text-secondary-500">{mentorship.mentor.jobTitle || 'Mentor'}</p>
           </div>
         </div>
-        <div className={clsx('flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold', cfg.bg, cfg.color)}>
+        <div className={clsx('flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-bold', cfg.bg, cfg.color)}>
           <StatusIcon className="h-3 w-3" />
           {mentorship.status}
         </div>
       </div>
 
       <div className="mt-4">
-        <p className="text-[9px] font-semibold text-secondary-400 tracking-wider mb-1.5">Focus Areas</p>
+        <p className="text-3xs font-semibold text-secondary-400 tracking-wider mb-1.5">Focus Areas</p>
         <div className="flex flex-wrap gap-1.5">
           {mentorship.focusAreas.map((area) => (
-            <span key={area} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300">{area}</span>
+            <span key={area} className="text-2xs px-2 py-0.5 rounded-full bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300">{area}</span>
           ))}
         </div>
       </div>
 
-      <div className="flex items-center gap-2 mt-3 text-[10px] text-secondary-400">
+      <div className="flex items-center gap-2 mt-3 text-2xs text-secondary-400">
         <ClockIcon className="h-3 w-3" />
         Started {new Date(mentorship.startedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
       </div>
@@ -175,12 +175,12 @@ function LearningItem({ item }: { item: LearningPathItem }) {
       <div className="flex-1 min-w-0">
         <h4 className={clsx('text-sm font-medium', item.status === 'completed' ? 'text-secondary-400 line-through' : 'text-secondary-900 dark:text-white')}>{item.title}</h4>
         <div className="flex items-center gap-3 mt-1">
-          <span className="text-[10px] text-secondary-400 capitalize">{item.type}</span>
-          <span className="text-[10px] text-secondary-400">{item.estimatedHours}h</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">{item.targetSkill}</span>
+          <span className="text-2xs text-secondary-400 capitalize">{item.type}</span>
+          <span className="text-2xs text-secondary-400">{item.estimatedHours}h</span>
+          <span className="text-2xs px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">{item.targetSkill}</span>
         </div>
       </div>
-      <span className={clsx('text-[9px] font-bold px-2 py-0.5 rounded-full', statusColors[item.status])}>
+      <span className={clsx('text-3xs font-bold px-2 py-0.5 rounded-full', statusColors[item.status])}>
         {item.status.replace(/_/g, ' ')}
       </span>
     </div>

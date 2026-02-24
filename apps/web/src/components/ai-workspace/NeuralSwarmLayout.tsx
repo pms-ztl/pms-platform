@@ -7,7 +7,8 @@
  * Supports 3 themes: light, dark, deep-dark via T.* helpers.
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, type ReactNode } from 'react';
+import React from 'react';
 import {
   GlobeAltIcon,
   ChatBubbleLeftRightIcon,
@@ -26,6 +27,36 @@ import { SwarmChat } from './SwarmChat';
 import { SwarmOrchestration } from './SwarmOrchestration';
 import { SwarmTasks } from './SwarmTasks';
 import { useAITasksStore } from '@/store/ai-tasks';
+
+// ── Error Boundary (catches silent crashes in swarm mode panels) ──
+
+class SwarmErrorBoundary extends React.Component<
+  { children: ReactNode; fallbackLabel?: string },
+  { hasError: boolean; error: Error | null }
+> {
+  state = { hasError: false, error: null as Error | null };
+  static getDerivedStateFromError(error: Error) { return { hasError: true, error }; }
+  componentDidCatch(e: Error, info: React.ErrorInfo) { console.error('[SwarmErrorBoundary]', e, info); }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex h-full flex-col items-center justify-center text-center px-6 gap-3">
+          <div className="text-red-400 text-sm font-medium">
+            {this.props.fallbackLabel ?? 'This panel'} failed to load
+          </div>
+          <p className="text-xs text-gray-500 max-w-sm">{this.state.error?.message}</p>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="mt-2 rounded-lg bg-white/10 px-4 py-1.5 text-xs font-medium text-gray-300 hover:bg-white/20 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 // ── Mode configuration ──────────────────────────────────────────
 
@@ -149,10 +180,9 @@ export function NeuralSwarmLayout() {
     [swarmMode, setSwarmMode],
   );
 
-  // Reset to Overview on mount — prevents persisted Orchestrate mode flashing on first load
+  // Sync displayedMode to the store's swarmMode on mount
   useEffect(() => {
-    setSwarmMode('overview');
-    setDisplayedMode('overview');
+    setDisplayedMode(swarmMode);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -172,7 +202,11 @@ export function NeuralSwarmLayout() {
       case 'chat':
         return <SwarmChat />;
       case 'orchestrate':
-        return <SwarmOrchestration />;
+        return (
+          <SwarmErrorBoundary fallbackLabel="Multi-Agent Orchestration">
+            <SwarmOrchestration />
+          </SwarmErrorBoundary>
+        );
       case 'tasks':
         return <SwarmTasks />;
     }
@@ -208,7 +242,7 @@ export function NeuralSwarmLayout() {
               Neural Swarm
             </span>
             <span
-              className={`text-[11px] leading-tight ${T.textMuted(theme)} transition-colors duration-300`}
+              className={`text-xs leading-tight ${T.textMuted(theme)} transition-colors duration-300`}
             >
               70 Agents | 6 Clusters
             </span>
@@ -242,7 +276,7 @@ export function NeuralSwarmLayout() {
                     isActive &&
                     orchestrationAgents.length > 0 && (
                       <span
-                        className={`ml-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none ${badgeBg(theme)} transition-colors duration-300`}
+                        className={`ml-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-2xs font-bold leading-none ${badgeBg(theme)} transition-colors duration-300`}
                       >
                         {orchestrationAgents.length}
                       </span>
@@ -251,7 +285,7 @@ export function NeuralSwarmLayout() {
                   {/* Pending approvals badge for tasks mode */}
                   {mode.key === 'tasks' && pendingApprovalCount > 0 && (
                     <span
-                      className="ml-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none bg-orange-500 text-white animate-pulse"
+                      className="ml-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-2xs font-bold leading-none bg-orange-500 text-white animate-pulse"
                     >
                       {pendingApprovalCount}
                     </span>

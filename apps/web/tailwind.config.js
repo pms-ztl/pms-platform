@@ -103,6 +103,10 @@ export default {
         mono: ['JetBrains Mono', 'SF Mono', 'Consolas', 'monospace'],
         baskerville: ['Libre Baskerville', 'Georgia', 'serif'],
       },
+      fontSize: {
+        '3xs': ['0.5625rem', { lineHeight: '0.75rem' }],   // ~9px at 16px base — scalable replacement for text-[9px]
+        '2xs': ['0.625rem', { lineHeight: '0.875rem' }],    // ~10px at 16px base — scalable replacement for text-[10px]
+      },
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'float-delayed': 'float 6s ease-in-out 2s infinite',

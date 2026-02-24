@@ -248,7 +248,7 @@ function AgentResponseCard({
       <div className={`flex items-center gap-2 px-4 py-3 border-b ${T.borderLight(theme)}`}>
         <AgentIcon className={`h-5 w-5 flex-shrink-0 ${info.clusterColor}`} />
         <span className={`text-sm font-semibold break-words ${T.textPrimary(theme)}`}>{info.name}</span>
-        <span className={`ml-auto text-[10px] font-medium px-2 py-0.5 rounded-full ${
+        <span className={`ml-auto text-2xs font-medium px-2 py-0.5 rounded-full ${
           isLight ? 'bg-gray-100 text-gray-500' : 'bg-white/5 text-gray-400'
         } ${info.clusterColor}`}>
           {info.cluster}
@@ -286,7 +286,7 @@ function AgentResponseCard({
 
       {/* Card Footer — metadata */}
       {status === 'success' && metadata && (
-        <div className={`flex items-center gap-3 px-4 py-2 border-t ${T.borderLight(theme)} text-[10px] ${T.textMuted(theme)}`}>
+        <div className={`flex items-center gap-3 px-4 py-2 border-t ${T.borderLight(theme)} text-2xs ${T.textMuted(theme)}`}>
           <span>{metadata.model}</span>
           <span className="opacity-40">|</span>
           <span>{metadata.inputTokens + metadata.outputTokens} tokens</span>
@@ -311,7 +311,7 @@ function AgentReadyCard({ agentType, theme }: { agentType: string; theme: AIThem
     >
       <AgentIcon className={`h-10 w-10 mb-3 ${info.clusterColor}`} />
       <p className={`text-sm font-semibold ${T.textPrimary(theme)} mb-1`}>{info.name}</p>
-      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full mb-3 ${
+      <span className={`text-2xs font-medium px-2 py-0.5 rounded-full mb-3 ${
         isLight ? 'bg-gray-100 text-gray-500' : 'bg-white/5 text-gray-400'
       } ${info.clusterColor}`}>
         {info.cluster}
@@ -390,7 +390,7 @@ function AgentPickerDropdown({
           className={`w-full rounded-lg border px-3 py-2 text-xs outline-none ${T.inputField(theme)}`}
         />
         {atLimit && (
-          <p className="text-[10px] text-amber-400 mt-1.5 text-center">Maximum 5 agents reached</p>
+          <p className="text-2xs text-amber-400 mt-1.5 text-center">Maximum 5 agents reached</p>
         )}
       </div>
 
@@ -401,7 +401,7 @@ function AgentPickerDropdown({
           if (!agents || agents.length === 0) return null;
           return (
             <div key={cluster} className="mb-2">
-              <p className={`text-[10px] font-bold tracking-wider px-2 py-1.5 ${
+              <p className={`text-2xs font-bold tracking-wider px-2 py-1.5 ${
                 agents[0][1].clusterColor
               }`}>
                 {cluster} ({agents.length})
@@ -436,7 +436,7 @@ function AgentPickerDropdown({
                       <PickerAgentIcon className={`h-4 w-4 flex-shrink-0 ${info.clusterColor}`} />
                       <span className="break-words">{info.name}</span>
                       {isSelected && (
-                        <span className={`ml-auto text-[9px] font-semibold ${T.accentText(theme)}`}>
+                        <span className={`ml-auto text-3xs font-semibold ${T.accentText(theme)}`}>
                           Active
                         </span>
                       )}
@@ -727,7 +727,7 @@ export function SwarmOrchestration() {
             <BoltIcon className={`h-5 w-5 ${T.accentText(theme)}`} />
             <h2 className={`text-sm font-bold ${T.textPrimary(theme)}`}>Swarm Orchestration</h2>
             {agentCount > 0 && (
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${T.accentBg(theme)} ${T.accentText(theme)}`}>
+              <span className={`text-2xs font-semibold px-2 py-0.5 rounded-full ${T.accentBg(theme)} ${T.accentText(theme)}`}>
                 {agentCount}/5 agents
               </span>
             )}
@@ -735,7 +735,7 @@ export function SwarmOrchestration() {
           <div className="flex items-center gap-2">
             {/* Mode toggle: Coordinate vs Broadcast */}
             {agentCount >= 2 && (
-              <div className={`flex items-center rounded-lg p-0.5 text-[10px] font-semibold ${theme === 'light' ? 'bg-gray-100' : 'bg-white/5'}`}>
+              <div className={`flex items-center rounded-lg p-0.5 text-2xs font-semibold ${theme === 'light' ? 'bg-gray-100' : 'bg-white/5'}`}>
                 <button
                   onClick={() => setOrchestrationMode('coordinate')}
                   className={`px-2.5 py-1 rounded-md transition-all duration-200 ${
@@ -763,14 +763,14 @@ export function SwarmOrchestration() {
             {agentCount > 0 && (
               <button
                 onClick={clearOrchestrationAgents}
-                className={`text-[10px] px-2.5 py-1 rounded-lg border transition-colors duration-150 ${T.border(theme)} ${T.textSecondary(theme)} ${T.surfaceHover(theme)}`}
+                className={`text-2xs px-2.5 py-1 rounded-lg border transition-colors duration-150 ${T.border(theme)} ${T.textSecondary(theme)} ${T.surfaceHover(theme)}`}
               >
                 Clear All
               </button>
             )}
             <button
               onClick={() => setSwarmMode('overview')}
-              className={`text-[10px] px-2.5 py-1 rounded-lg border transition-colors duration-150 ${T.border(theme)} ${T.textSecondary(theme)} ${T.surfaceHover(theme)}`}
+              className={`text-2xs px-2.5 py-1 rounded-lg border transition-colors duration-150 ${T.border(theme)} ${T.textSecondary(theme)} ${T.surfaceHover(theme)}`}
             >
               Back to Overview
             </button>
@@ -895,7 +895,7 @@ export function SwarmOrchestration() {
                     <UserIcon className="h-4 w-4 text-white/70 flex-shrink-0" />
                     <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">{turn.userMessage}</p>
                   </div>
-                  <p className="text-[10px] text-white/40 mt-1">
+                  <p className="text-2xs text-white/40 mt-1">
                     {turn.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
@@ -917,7 +917,7 @@ export function SwarmOrchestration() {
                     <UserIcon className="h-4 w-4 text-white/70 flex-shrink-0" />
                     <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">{activeTurn.userMessage}</p>
                   </div>
-                  <p className="text-[10px] text-white/40 mt-1">
+                  <p className="text-2xs text-white/40 mt-1">
                     {activeTurn.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
@@ -967,7 +967,7 @@ export function SwarmOrchestration() {
                 <BoltIcon className="h-5 w-5" />
               </button>
             </form>
-            <p className={`mt-1.5 text-[10px] ${T.textMuted(theme)} text-center`}>
+            <p className={`mt-1.5 text-2xs ${T.textMuted(theme)} text-center`}>
               Broadcasting to {agentCount} agent{agentCount > 1 ? 's' : ''} &middot; Enter to send, Shift+Enter for new line
             </p>
           </>

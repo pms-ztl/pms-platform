@@ -446,14 +446,14 @@ export function CalendarPage() {
                         {dayEvents.slice(0, 3).map((evt) => (
                           <div
                             key={evt.id}
-                            className={clsx('text-[10px] leading-tight px-1 py-0.5 rounded break-words text-white font-medium', evt.color)}
+                            className={clsx('text-2xs leading-tight px-1 py-0.5 rounded break-words text-white font-medium', evt.color)}
                             title={evt.title}
                           >
                             {evt.title}
                           </div>
                         ))}
                         {dayEvents.length > 3 && (
-                          <div className="text-[10px] text-secondary-400 dark:text-secondary-500 px-1">
+                          <div className="text-2xs text-secondary-400 dark:text-secondary-500 px-1">
                             +{dayEvents.length - 3} more
                           </div>
                         )}
@@ -470,7 +470,7 @@ export function CalendarPage() {
             <div className="h-full flex flex-col">
               {/* Day headers */}
               <div className="grid grid-cols-8 border-b border-secondary-200 dark:border-secondary-700 sticky top-0 bg-white dark:bg-secondary-800 z-10">
-                <div className="py-2 px-2 text-[10px] text-secondary-400">&nbsp;</div>
+                <div className="py-2 px-2 text-2xs text-secondary-400">&nbsp;</div>
                 {weekDays.map((day) => (
                   <div
                     key={day.toISOString()}
@@ -480,7 +480,7 @@ export function CalendarPage() {
                       isSameDay(day, selectedDate) && 'bg-primary-50 dark:bg-primary-900/10'
                     )}
                   >
-                    <div className="text-[10px] font-medium text-secondary-400">{format(day, 'EEE')}</div>
+                    <div className="text-2xs font-medium text-secondary-400">{format(day, 'EEE')}</div>
                     <div className={clsx(
                       'text-sm font-bold mt-0.5 font-sans',
                       isToday(day) ? 'text-primary-600 dark:text-primary-400' : 'text-secondary-700 dark:text-secondary-300'
@@ -494,7 +494,7 @@ export function CalendarPage() {
               <div className="flex-1 overflow-y-auto">
                 {hours.map((hour) => (
                   <div key={hour.toISOString()} className="grid grid-cols-8 border-b border-secondary-100 dark:border-secondary-700/50 min-h-[48px]">
-                    <div className="py-1 px-2 text-[10px] text-secondary-400 dark:text-secondary-500 text-right pr-3">
+                    <div className="py-1 px-2 text-2xs text-secondary-400 dark:text-secondary-500 text-right pr-3">
                       {format(hour, 'ha')}
                     </div>
                     {weekDays.map((day) => {
@@ -512,7 +512,7 @@ export function CalendarPage() {
                           {hourEvents.map((evt) => (
                             <div
                               key={evt.id}
-                              className={clsx('text-[10px] px-1.5 py-0.5 rounded text-white font-medium break-words', evt.color)}
+                              className={clsx('text-2xs px-1.5 py-0.5 rounded text-white font-medium break-words', evt.color)}
                               title={evt.title}
                             >
                               {evt.title}
@@ -536,7 +536,7 @@ export function CalendarPage() {
                 if (allDayEvents.length === 0) return null;
                 return (
                   <div className="px-4 py-2 border-b border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900/30">
-                    <p className="text-[10px] font-medium text-secondary-400 mb-1">All Day</p>
+                    <p className="text-2xs font-medium text-secondary-400 mb-1">All Day</p>
                     <div className="flex flex-wrap gap-1">
                       {allDayEvents.map((evt) => (
                         <div key={evt.id} className={clsx('text-xs px-2 py-1 rounded text-white font-medium', evt.color)}>
@@ -568,7 +568,7 @@ export function CalendarPage() {
                           <div key={evt.id} className={clsx('text-xs px-3 py-1.5 rounded-lg text-white font-medium mb-1', evt.color)}>
                             {evt.title}
                             {evt.startTime && (
-                              <span className="text-white/70 ml-2 text-[10px]">
+                              <span className="text-white/70 ml-2 text-2xs">
                                 {format(new Date(evt.startTime), 'h:mm a')}
                                 {evt.endTime && ` - ${format(new Date(evt.endTime), 'h:mm a')}`}
                               </span>
@@ -614,9 +614,9 @@ export function CalendarPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-secondary-900 dark:text-white break-words">{evt.title}</p>
                     {evt.startTime && (
-                      <p className="text-[10px] text-secondary-400">{format(new Date(evt.startTime), 'h:mm a')}</p>
+                      <p className="text-2xs text-secondary-400">{format(new Date(evt.startTime), 'h:mm a')}</p>
                     )}
-                    <p className="text-[10px] text-secondary-400 capitalize">{evt.type}</p>
+                    <p className="text-2xs text-secondary-400 capitalize">{evt.type}</p>
                   </div>
                   {evt.isUserCreated && evt.sourceId && (
                     <button
@@ -685,7 +685,7 @@ export function CalendarPage() {
           {filterTypes.size > 0 && (
             <button
               onClick={() => setFilterTypes(new Set())}
-              className="mt-2 text-[10px] text-primary-600 dark:text-primary-400 hover:text-primary-700 font-medium"
+              className="mt-2 text-2xs text-primary-600 dark:text-primary-400 hover:text-primary-700 font-medium"
             >
               Clear filters
             </button>
@@ -695,7 +695,7 @@ export function CalendarPage() {
         {/* Keyboard Shortcuts */}
         <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 p-4">
           <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-2">Shortcuts</h3>
-          <div className="space-y-1 text-[10px] text-secondary-500 dark:text-secondary-400">
+          <div className="space-y-1 text-2xs text-secondary-500 dark:text-secondary-400">
             <div className="flex justify-between"><span>Navigate</span><kbd className="px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 font-mono">← →</kbd></div>
             <div className="flex justify-between"><span>Today</span><kbd className="px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 font-mono">T</kbd></div>
             <div className="flex justify-between"><span>New event</span><span>Double-click</span></div>

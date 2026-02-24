@@ -152,7 +152,7 @@ export function SwarmTasks() {
               <button
                 key={f.key}
                 onClick={() => setFilter(f.key)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
                   filter === f.key
                     ? `${T.accentBg(theme)} ${T.accentText(theme)}`
                     : `${T.textMuted(theme)} hover:${T.textSecondary(theme)}`
@@ -199,25 +199,25 @@ export function SwarmTasks() {
                       {task.title}
                     </p>
                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded ${statusCfg.bgClass} ${statusCfg.color}`}>
+                      <span className={`text-2xs px-1.5 py-0.5 rounded ${statusCfg.bgClass} ${statusCfg.color}`}>
                         {statusCfg.label}
                       </span>
                       {task.agentType === 'coordinator' && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400">
+                        <span className="text-2xs px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400">
                           Multi-Agent
                         </span>
                       )}
                       {task.parentTaskId && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400">
+                        <span className="text-2xs px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400">
                           Sub-task
                         </span>
                       )}
                       {task.isProactive && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400">
+                        <span className="text-2xs px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400">
                           Auto
                         </span>
                       )}
-                      <span className={`text-[10px] ${T.textMuted(theme)}`}>
+                      <span className={`text-2xs ${T.textMuted(theme)}`}>
                         {task.currentStep}/{task.totalSteps}
                       </span>
                     </div>
@@ -363,7 +363,7 @@ export function SwarmTasks() {
                       key={i}
                       className={`flex items-center gap-3 px-3 py-2 rounded-lg mb-1 opacity-50 ${T.surface(theme)}`}
                     >
-                      <span className={`text-[10px] font-mono ${T.textMuted(theme)}`}>
+                      <span className={`text-2xs font-mono ${T.textMuted(theme)}`}>
                         {selectedTask.actions!.length + i + 1}
                       </span>
                       <span className={`text-xs ${T.textSecondary(theme)}`}>
@@ -450,17 +450,17 @@ function ActionCard({
         {/* Step header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className={`text-[10px] font-mono w-5 text-center ${T.textMuted(theme)}`}>
+            <span className={`text-2xs font-mono w-5 text-center ${T.textMuted(theme)}`}>
               {index + 1}
             </span>
             <span className={`text-xs font-semibold font-mono ${T.accentText(theme)}`}>
               {action.toolName}
             </span>
-            <span className={`text-[10px] px-1.5 py-0.5 rounded ${statusCfg.color}`}>
+            <span className={`text-2xs px-1.5 py-0.5 rounded ${statusCfg.color}`}>
               {statusCfg.label}
             </span>
             {action.impactLevel !== 'read' && (
-              <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+              <span className={`text-2xs px-1.5 py-0.5 rounded ${
                 action.impactLevel === 'high_write' ? 'bg-red-500/10 text-red-400' : 'bg-amber-500/10 text-amber-400'
               }`}>
                 {action.impactLevel}
@@ -471,7 +471,7 @@ function ActionCard({
           {action.toolOutput && (
             <button
               onClick={() => setShowOutput(!showOutput)}
-              className={`text-[10px] ${T.textMuted(theme)} hover:${T.textSecondary(theme)} transition-colors`}
+              className={`text-2xs ${T.textMuted(theme)} hover:${T.textSecondary(theme)} transition-colors`}
             >
               {showOutput ? 'Hide' : 'Show'} output
             </button>
@@ -487,7 +487,7 @@ function ActionCard({
 
         {/* Output preview */}
         {showOutput && action.toolOutput && (
-          <pre className={`mt-2 ml-7.5 p-2 rounded text-[10px] overflow-x-auto max-h-32 ${
+          <pre className={`mt-2 ml-7.5 p-2 rounded text-2xs overflow-x-auto max-h-32 ${
             theme === 'light' ? 'bg-gray-100 text-gray-700' : 'bg-black/30 text-gray-300'
           }`}>
             {JSON.stringify(action.toolOutput, null, 2).slice(0, 2000)}
@@ -519,7 +519,7 @@ function ActionCard({
               <HandThumbDownIcon className="h-3.5 w-3.5" />
               Reject
             </button>
-            <span className={`text-[10px] italic ${T.textMuted(theme)}`}>
+            <span className={`text-2xs italic ${T.textMuted(theme)}`}>
               This action requires your approval before execution.
             </span>
           </div>
@@ -527,7 +527,7 @@ function ActionCard({
 
         {/* Metrics */}
         {action.latencyMs > 0 && (
-          <div className={`mt-1.5 ml-7.5 flex items-center gap-3 text-[10px] ${T.textMuted(theme)}`}>
+          <div className={`mt-1.5 ml-7.5 flex items-center gap-3 text-2xs ${T.textMuted(theme)}`}>
             <span>{action.latencyMs}ms</span>
             {action.costCents > 0 && <span>${action.costCents.toFixed(4)}</span>}
           </div>

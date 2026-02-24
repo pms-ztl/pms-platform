@@ -59,14 +59,14 @@ function DetailCard({
       <div className="p-5">
         {/* Header badges */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+          <span className="px-2 py-0.5 rounded-full text-2xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
             OBJECTIVE
           </span>
-          <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium', statusColors[objective.status] || statusColors.DRAFT)}>
+          <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium', statusColors[objective.status] || statusColors.DRAFT)}>
             {objective.status}
           </span>
           {objective.priority && (
-            <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium', priorityColors[objective.priority] || priorityColors.MEDIUM)}>
+            <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium', priorityColors[objective.priority] || priorityColors.MEDIUM)}>
               {objective.priority}
             </span>
           )}
@@ -117,7 +117,7 @@ function DetailCard({
         {objective.parentGoal && (
           <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-secondary-50 dark:bg-secondary-700/30 rounded-lg">
             <LinkIcon className="h-3.5 w-3.5 text-secondary-400 shrink-0" />
-            <span className="text-[10px] font-medium text-secondary-500 dark:text-secondary-400">Aligned to:</span>
+            <span className="text-2xs font-medium text-secondary-500 dark:text-secondary-400">Aligned to:</span>
             <span className="text-xs font-medium text-primary-600 dark:text-primary-400 break-words">
               {objective.parentGoal.title}
             </span>
@@ -126,21 +126,21 @@ function DetailCard({
 
         {/* Owner / Contributors */}
         <div className="mt-3 flex items-center gap-2">
-          <span className="h-7 w-7 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-[11px] font-bold shrink-0">
+          <span className="h-7 w-7 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-xs font-bold shrink-0">
             {getInitials(objective.owner)}
           </span>
           <div className="min-w-0">
             <p className="text-xs font-medium text-secondary-900 dark:text-white break-words">
               {objective.owner?.firstName} {objective.owner?.lastName}
             </p>
-            <p className="text-[10px] text-secondary-400">Owner</p>
+            <p className="text-2xs text-secondary-400">Owner</p>
           </div>
         </div>
 
         {/* Key Results */}
         {keyResults.length > 0 && (
           <div className="mt-4 border-t border-secondary-100 dark:border-secondary-700 pt-3">
-            <h4 className="text-[10px] font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2.5">
+            <h4 className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2.5">
               Key Results ({keyResults.length})
             </h4>
             <div className="space-y-2.5">
@@ -163,13 +163,13 @@ function DetailCard({
                             style={{ width: `${Math.min(kr.progress, 100)}%` }}
                           />
                         </div>
-                        <span className="text-[10px] font-semibold text-secondary-600 dark:text-secondary-400 w-8 text-right">
+                        <span className="text-2xs font-semibold text-secondary-600 dark:text-secondary-400 w-8 text-right">
                           {Math.round(kr.progress)}%
                         </span>
                       </div>
                     </div>
                     {kr.weight && kr.weight !== 1 && (
-                      <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 text-[9px] font-medium text-secondary-500 dark:text-secondary-400 shrink-0">
+                      <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 text-3xs font-medium text-secondary-500 dark:text-secondary-400 shrink-0">
                         <ScaleIcon className="h-2.5 w-2.5" />
                         {kr.weight}x
                       </span>
@@ -177,7 +177,7 @@ function DetailCard({
                     {onCheckin && kr.status === 'ACTIVE' && (
                       <button
                         onClick={() => onCheckin(kr.id)}
-                        className="shrink-0 px-2 py-0.5 text-[9px] font-medium rounded-md border border-primary-300 dark:border-primary-600 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors opacity-0 group-hover/kr:opacity-100"
+                        className="shrink-0 px-2 py-0.5 text-3xs font-medium rounded-md border border-primary-300 dark:border-primary-600 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors opacity-0 group-hover/kr:opacity-100"
                       >
                         Check-in
                       </button>
@@ -192,7 +192,7 @@ function DetailCard({
         {keyResults.length === 0 && (
           <div className="mt-4 text-center py-3 border-t border-secondary-100 dark:border-secondary-700">
             <FlagIcon className="mx-auto h-6 w-6 text-secondary-300 dark:text-secondary-600" />
-            <p className="text-[10px] text-secondary-400 mt-1">No key results yet</p>
+            <p className="text-2xs text-secondary-400 mt-1">No key results yet</p>
           </div>
         )}
 
@@ -200,7 +200,7 @@ function DetailCard({
         <div className="mt-3 pt-3 border-t border-secondary-100 dark:border-secondary-700 flex items-center gap-2">
           <a
             href={`/goals/${objective.id}`}
-            className="inline-flex items-center gap-1 px-3 py-1.5 text-[11px] font-medium rounded-lg bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-secondary-600 transition-colors"
+            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300 hover:bg-secondary-200 dark:hover:bg-secondary-600 transition-colors"
           >
             <PencilSquareIcon className="h-3 w-3" />
             Edit

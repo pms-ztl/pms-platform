@@ -110,7 +110,11 @@
   html {
     @apply antialiased scroll-smooth;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-    font-size: 143.75%; /* 23px base — scales all rem units */
+    font-size: clamp(100%, 1.435vw, 143.75%);
+    /* Responsive: 16px min → scales with viewport → 23px max
+       At 1600px viewport: ~23px (matches original design)
+       At 1366px viewport: ~19.6px (comfortable for smaller screens)
+       At 1920px viewport: capped at 23px */
   }
 
   /* Reset font-size on auth/login pages so the inflated base doesn't affect them */
@@ -118,10 +122,6 @@
     font-size: 100%;
   }
 
-  /* Legacy class */
-  .dashboard-scaled {
-    font-size: 100%;
-  }
 
   body {
     @apply bg-secondary-50 text-secondary-900 transition-colors duration-300;

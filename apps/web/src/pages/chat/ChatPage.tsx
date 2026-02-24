@@ -123,7 +123,7 @@ function renderFormattedText(text: string): React.ReactNode[] {
           nodes.push(<em key={key++} className="italic">{inline.slice(1, -1)}</em>);
         } else if (inline.startsWith('`') && inline.endsWith('`')) {
           nodes.push(
-            <code key={key++} className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/20 text-[13px] font-mono">
+            <code key={key++} className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-black/20 text-sm font-mono">
               {inline.slice(1, -1)}
             </code>
           );
@@ -280,8 +280,8 @@ function LinkPreview({ url }: { url: string }) {
         <LinkIcon className="h-4 w-4 text-secondary-400 dark:text-secondary-500" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold text-secondary-500 dark:text-secondary-400 break-words">{domain}</p>
-        <p className="text-[10px] text-secondary-400 dark:text-secondary-500 break-words">{url}</p>
+        <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 break-words">{domain}</p>
+        <p className="text-2xs text-secondary-400 dark:text-secondary-500 break-words">{url}</p>
       </div>
       <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 flex-shrink-0 text-secondary-300 dark:text-secondary-600 group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors" />
     </a>
@@ -447,7 +447,7 @@ function NewChatDialog({ onClose, onSelectUser, onCreateGroup }: {
                     <p className="text-xs text-secondary-500 dark:text-secondary-400">{team._count.members} members</p>
                   </div>
                   {team.chatChannel.length > 0 && (
-                    <span className="badge badge-success text-[10px]">Active</span>
+                    <span className="badge badge-success text-2xs">Active</span>
                   )}
                 </button>
               ))}
@@ -500,7 +500,7 @@ function ConversationItem({ convo, isActive, onClick, onlineUsers }: {
             )}
           </div>
           {convo.lastMessage && (
-            <span className="text-[10px] text-secondary-400 dark:text-secondary-500 flex-shrink-0 tabular-nums">
+            <span className="text-2xs text-secondary-400 dark:text-secondary-500 flex-shrink-0 tabular-nums">
               {formatTime(convo.lastMessage.createdAt)}
             </span>
           )}
@@ -518,7 +518,7 @@ function ConversationItem({ convo, isActive, onClick, onlineUsers }: {
         )}
       </div>
       {convo.unreadCount > 0 && (
-        <span className="flex-shrink-0 min-w-[20px] h-5 px-1.5 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 text-white text-[10px] font-bold flex items-center justify-center shadow-lg shadow-primary-500/30">
+        <span className="flex-shrink-0 min-w-[20px] h-5 px-1.5 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 text-white text-2xs font-bold flex items-center justify-center shadow-lg shadow-primary-500/30">
           {convo.unreadCount > 99 ? '99+' : convo.unreadCount}
         </span>
       )}
@@ -584,7 +584,7 @@ function ConversationMenu({ convo, onClose }: {
       {showLeaveConfirm ? (
         <div className="p-3 space-y-2">
           <p className="text-xs text-secondary-600 dark:text-secondary-300 font-medium">Leave this conversation?</p>
-          <p className="text-[10px] text-secondary-400 dark:text-secondary-500">You will no longer receive messages from this chat.</p>
+          <p className="text-2xs text-secondary-400 dark:text-secondary-500">You will no longer receive messages from this chat.</p>
           <div className="flex items-center gap-2">
             <button onClick={() => setShowLeaveConfirm(false)}
               className="flex-1 text-xs font-semibold py-1.5 rounded-lg bg-secondary-100 dark:bg-secondary-800/50 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-all">
@@ -671,7 +671,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
   if (message.type === 'SYSTEM') {
     return (
       <div className="flex justify-center py-2">
-        <span className="text-[10px] font-medium text-secondary-400 dark:text-secondary-500 bg-secondary-100/60 dark:bg-secondary-800/40 rounded-full px-3 py-1">{message.content}</span>
+        <span className="text-2xs font-medium text-secondary-400 dark:text-secondary-500 bg-secondary-100/60 dark:bg-secondary-800/40 rounded-full px-3 py-1">{message.content}</span>
       </div>
     );
   }
@@ -755,7 +755,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
       {!isOwn && !showSender && <div className="w-9" />}
       <div className={clsx('max-w-[70%] space-y-0.5 relative', isOwn ? 'items-end' : 'items-start')}>
         {showSender && !isOwn && (
-          <p className="text-[11px] font-semibold text-secondary-500 dark:text-secondary-400 ml-1 mb-0.5">
+          <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 ml-1 mb-0.5">
             {message.sender.firstName} {message.sender.lastName}
           </p>
         )}
@@ -763,7 +763,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
         {/* Pinned indicator */}
         {message.isPinned && !isDeleted && (
           <div className={clsx(
-            'flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-medium',
+            'flex items-center gap-1.5 px-2 py-0.5 text-2xs font-medium',
             isOwn ? 'justify-end text-amber-200/80' : 'text-amber-500/80'
           )}>
             <MapPinIcon className="h-3 w-3" />
@@ -774,7 +774,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
         {/* Forwarded indicator */}
         {message.forwardedFrom && !isDeleted && (
           <div className={clsx(
-            'flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-medium italic',
+            'flex items-center gap-1.5 px-2 py-0.5 text-2xs font-medium italic',
             isOwn ? 'justify-end text-primary-200/70' : 'text-secondary-400 dark:text-secondary-500'
           )}>
             <ShareIcon className="h-3 w-3" />
@@ -785,7 +785,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
         {/* Reply-to preview */}
         {message.replyTo && !isDeleted && (
           <div className={clsx(
-            'flex items-start gap-2 px-3 py-1.5 rounded-xl mb-0.5 text-[11px] border-l-2',
+            'flex items-start gap-2 px-3 py-1.5 rounded-xl mb-0.5 text-xs border-l-2',
             isOwn
               ? 'bg-primary-700/30 border-white/40 text-primary-100'
               : 'bg-secondary-100/60 dark:bg-secondary-800/30 border-primary-400/60 dark:border-primary-500/40 text-secondary-500 dark:text-secondary-400'
@@ -902,11 +902,11 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
               />
               <div className="flex items-center gap-2 justify-end">
                 <button onClick={() => setEditingMessage(null)}
-                  className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-all">
+                  className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-all">
                   Cancel
                 </button>
                 <button onClick={handleSaveEdit}
-                  className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 transition-all">
+                  className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 transition-all">
                   Save
                 </button>
               </div>
@@ -935,11 +935,11 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
           'flex items-center gap-1.5 px-1.5 opacity-0 group-hover/msg:opacity-100 transition-opacity',
           isOwn ? 'justify-end' : 'justify-start'
         )}>
-          <p className="text-[10px] tabular-nums text-secondary-400">
+          <p className="text-2xs tabular-nums text-secondary-400">
             {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </p>
           {isEdited && !isDeleted && (
-            <span className="text-[10px] text-secondary-400 dark:text-secondary-500 italic">(edited)</span>
+            <span className="text-2xs text-secondary-400 dark:text-secondary-500 italic">(edited)</span>
           )}
           <DeliveryStatus isOwn={isOwn} />
         </div>
@@ -1053,14 +1053,14 @@ function SearchPanel({ onSelectResult, onClose }: {
                 <p className="text-xs font-semibold text-secondary-900 dark:text-white break-words">
                   {result.sender.firstName} {result.sender.lastName}
                 </p>
-                <span className="text-[10px] text-secondary-400 dark:text-secondary-500 flex-shrink-0 tabular-nums">
+                <span className="text-2xs text-secondary-400 dark:text-secondary-500 flex-shrink-0 tabular-nums">
                   {formatTime(result.createdAt)}
                 </span>
               </div>
-              <p className="text-[11px] text-secondary-600 dark:text-secondary-300 mt-0.5 leading-relaxed">
+              <p className="text-xs text-secondary-600 dark:text-secondary-300 mt-0.5 leading-relaxed">
                 {highlightMatch(result.content, query)}
               </p>
-              <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-0.5 break-words">
+              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-0.5 break-words">
                 in {result.conversationName || 'Direct Message'}
               </p>
             </div>
@@ -1107,7 +1107,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
       <div className="flex items-center gap-3 px-4 py-3.5 border-b border-secondary-200/50 dark:border-secondary-700/30">
         <MapPinIcon className="h-5 w-5 text-amber-500 flex-shrink-0" />
         <h4 className="text-sm font-display font-bold text-secondary-900 dark:text-white flex-1">Pinned Messages</h4>
-        <span className="text-[10px] font-semibold text-secondary-400 bg-secondary-100 dark:bg-secondary-800/50 px-2 py-0.5 rounded-full">{pinnedMessages.length}</span>
+        <span className="text-2xs font-semibold text-secondary-400 bg-secondary-100 dark:bg-secondary-800/50 px-2 py-0.5 rounded-full">{pinnedMessages.length}</span>
         <button onClick={onClose}
           className="rounded-lg p-1.5 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition">
           <XMarkIcon className="h-4 w-4" />
@@ -1122,7 +1122,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <MapPinIcon className="h-8 w-8 text-secondary-300 dark:text-secondary-600 mb-2" />
             <p className="text-xs text-secondary-400 dark:text-secondary-500">No pinned messages</p>
-            <p className="text-[10px] text-secondary-400 dark:text-secondary-500 mt-1">Pin important messages to find them easily</p>
+            <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-1">Pin important messages to find them easily</p>
           </div>
         ) : (
           pinnedMessages.map((msg) => (
@@ -1132,7 +1132,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
                   <Avatar name={`${msg.sender.firstName} ${msg.sender.lastName}`} avatarUrl={msg.sender.avatarUrl} size="sm" />
                   <div className="min-w-0">
                     <p className="text-xs font-semibold text-secondary-900 dark:text-white break-words">{msg.sender.firstName} {msg.sender.lastName}</p>
-                    <p className="text-[10px] text-secondary-400">{formatTime(msg.createdAt)}</p>
+                    <p className="text-2xs text-secondary-400">{formatTime(msg.createdAt)}</p>
                   </div>
                 </div>
                 <button onClick={() => handleUnpin(msg.id)} title="Unpin"
@@ -1142,7 +1142,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
               </div>
               <p className="text-xs text-secondary-600 dark:text-secondary-300 leading-relaxed">{msg.content}</p>
               {msg.pinnedBy && (
-                <p className="text-[10px] text-secondary-400 dark:text-secondary-500 italic">
+                <p className="text-2xs text-secondary-400 dark:text-secondary-500 italic">
                   Pinned by {msg.pinnedBy.firstName} {msg.pinnedBy.lastName}
                 </p>
               )}
@@ -1192,17 +1192,17 @@ function ConversationInfoPanel({ convo, onlineUsers, onClose }: {
         <div className="grid grid-cols-3 gap-2 px-4 py-3 border-b border-secondary-200/50 dark:border-secondary-700/30">
           <div className="text-center">
             <p className="text-lg font-bold text-secondary-900 dark:text-white">{convo.participants.length}</p>
-            <p className="text-[10px] text-secondary-400">Members</p>
+            <p className="text-2xs text-secondary-400">Members</p>
           </div>
           <div className="text-center">
             <p className="text-lg font-bold text-secondary-900 dark:text-white">{convo.pinnedCount || 0}</p>
-            <p className="text-[10px] text-secondary-400">Pinned</p>
+            <p className="text-2xs text-secondary-400">Pinned</p>
           </div>
           <div className="text-center">
             <p className="text-lg font-bold text-success-500">
               {convo.participants.filter((p) => onlineUsers.has(p.userId)).length}
             </p>
-            <p className="text-[10px] text-secondary-400">Online</p>
+            <p className="text-2xs text-secondary-400">Online</p>
           </div>
         </div>
 
@@ -1222,12 +1222,12 @@ function ConversationInfoPanel({ convo, onlineUsers, onClose }: {
                 />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-semibold text-secondary-900 dark:text-white break-words">{p.firstName} {p.lastName}</p>
-                  <p className="text-[10px] text-secondary-400 dark:text-secondary-500">
+                  <p className="text-2xs text-secondary-400 dark:text-secondary-500">
                     {onlineUsers.has(p.userId) ? <span className="text-success-500">Online</span> : 'Offline'}
                   </p>
                 </div>
                 {p.role === 'ADMIN' && (
-                  <span className="text-[9px] font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 px-1.5 py-0.5 rounded-full tracking-wider">Admin</span>
+                  <span className="text-3xs font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 px-1.5 py-0.5 rounded-full tracking-wider">Admin</span>
                 )}
               </div>
             ))}
@@ -1236,7 +1236,7 @@ function ConversationInfoPanel({ convo, onlineUsers, onClose }: {
 
         {/* Created info */}
         <div className="px-4 py-3 border-t border-secondary-200/50 dark:border-secondary-700/30">
-          <p className="text-[10px] text-secondary-400 dark:text-secondary-500">
+          <p className="text-2xs text-secondary-400 dark:text-secondary-500">
             Created {new Date(convo.createdAt).toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </div>
@@ -1277,7 +1277,7 @@ function ForwardMessageDialog({ message, conversations, onClose, onForward }: {
         {/* Message preview */}
         <div className="px-4 pt-3">
           <div className="rounded-xl bg-secondary-50/80 dark:bg-secondary-800/40 ring-1 ring-secondary-200/50 dark:ring-secondary-700/30 p-3">
-            <p className="text-[10px] font-semibold text-secondary-400 dark:text-secondary-500 mb-1">
+            <p className="text-2xs font-semibold text-secondary-400 dark:text-secondary-500 mb-1">
               From: {message.sender.firstName} {message.sender.lastName}
             </p>
             <p className="text-xs text-secondary-600 dark:text-secondary-300">{message.content}</p>
@@ -1314,7 +1314,7 @@ function ForwardMessageDialog({ message, conversations, onClose, onForward }: {
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-secondary-900 dark:text-white break-words">{convo.name || 'Chat'}</p>
-                    <p className="text-[10px] text-secondary-400 dark:text-secondary-500 capitalize">{convo.type.replace('_', ' ').toLowerCase()}</p>
+                    <p className="text-2xs text-secondary-400 dark:text-secondary-500 capitalize">{convo.type.replace('_', ' ').toLowerCase()}</p>
                   </div>
                   <ShareIcon className="h-4 w-4 text-secondary-300 dark:text-secondary-600" />
                 </button>
@@ -1449,7 +1449,7 @@ function EmailComposeModal({ onClose }: { onClose: () => void }) {
                   {body}
                 </div>
               </div>
-              <p className="text-[11px] text-secondary-400 dark:text-secondary-500 text-center">
+              <p className="text-xs text-secondary-400 dark:text-secondary-500 text-center">
                 This email will be sent from PMS Platform with branded formatting
               </p>
             </div>
@@ -1998,7 +1998,7 @@ export default function ChatPage() {
               </div>
               <div>
                 <h2 className="text-base font-display font-bold text-secondary-900 dark:text-white">Messages</h2>
-                <p className="text-[10px] text-secondary-400 dark:text-secondary-500 font-medium">{displayConversations.length} conversations</p>
+                <p className="text-2xs text-secondary-400 dark:text-secondary-500 font-medium">{displayConversations.length} conversations</p>
               </div>
             </div>
             <div className="flex items-center gap-1.5">
@@ -2167,7 +2167,7 @@ export default function ChatPage() {
                           {showDate && (
                             <div className="flex items-center gap-3 py-3">
                               <div className="flex-1 h-px bg-secondary-200/60 dark:bg-secondary-700/30" />
-                              <span className="text-[10px] font-semibold text-secondary-400 dark:text-secondary-500 tracking-wider">
+                              <span className="text-2xs font-semibold text-secondary-400 dark:text-secondary-500 tracking-wider">
                                 {(() => {
                                   const d = new Date(msg.createdAt);
                                   const today = new Date();
@@ -2219,10 +2219,10 @@ export default function ChatPage() {
                     <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-primary-50/60 dark:bg-primary-900/15 ring-1 ring-primary-200/50 dark:ring-primary-700/30">
                       <ArrowUturnLeftIcon className="h-4 w-4 flex-shrink-0 text-primary-500" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-semibold text-primary-600 dark:text-primary-400">
+                        <p className="text-xs font-semibold text-primary-600 dark:text-primary-400">
                           Replying to {replyingTo.sender.firstName} {replyingTo.sender.lastName}
                         </p>
-                        <p className="text-[11px] text-secondary-500 dark:text-secondary-400 break-words">{replyingTo.content}</p>
+                        <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{replyingTo.content}</p>
                       </div>
                       <button onClick={() => setReplyingTo(null)}
                         className="rounded-lg p-1 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700/50 transition-all">

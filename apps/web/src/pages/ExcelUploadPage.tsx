@@ -184,7 +184,7 @@ function StageIndicator({ currentStage }: { currentStage: UploadStage }) {
             )}
             <div
               className={clsx(
-                'flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-medium transition-all duration-300',
+                'flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all duration-300',
                 isCompleted && 'bg-green-100/80 dark:bg-green-500/15 text-green-700 dark:text-green-400',
                 isActive && 'bg-primary-100/80 dark:bg-primary-500/15 text-primary-700 dark:text-primary-400 stage-dot-active',
                 !isCompleted && !isActive && 'text-gray-400 dark:text-white/30',
@@ -227,7 +227,7 @@ function QualityScoreGauge({ score }: { score: number }) {
         <span className={clsx('text-2xl font-bold', getScoreColor(score))}>
           {score < 0 ? '\u2014' : score}
         </span>
-        <span className={clsx('text-[10px] font-medium', getScoreColor(score))}>
+        <span className={clsx('text-2xs font-medium', getScoreColor(score))}>
           {getScoreLabel(score)}
         </span>
       </div>
@@ -255,7 +255,7 @@ function StatPill({
   return (
     <div className={clsx('text-center p-3 rounded-xl', colorMap[color])}>
       <p className="text-xl font-bold">{value}</p>
-      <p className="text-[11px] font-medium opacity-70 mt-0.5">{label}</p>
+      <p className="text-xs font-medium opacity-70 mt-0.5">{label}</p>
     </div>
   );
 }
@@ -492,7 +492,7 @@ export function ExcelUploadPage() {
     };
     const cfg = map[status] || map.PROCESSING;
     return (
-      <span className={clsx('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold', cfg.bg)}>
+      <span className={clsx('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold', cfg.bg)}>
         <span className={clsx('w-1.5 h-1.5 rounded-full', cfg.dot)} />
         {status}
       </span>
@@ -571,7 +571,7 @@ export function ExcelUploadPage() {
             />
 
             {/* AI badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-5 rounded-full bg-primary-100/60 dark:bg-primary-500/10 text-primary-700 dark:text-primary-400 text-[11px] font-semibold">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 mb-5 rounded-full bg-primary-100/60 dark:bg-primary-500/10 text-primary-700 dark:text-primary-400 text-xs font-semibold">
               <CpuChipIcon className="h-3.5 w-3.5" />
               AI-Powered Upload
             </div>
@@ -675,7 +675,7 @@ export function ExcelUploadPage() {
               </div>
             </div>
 
-            <p className="text-[11px] text-gray-400 dark:text-white/25">
+            <p className="text-xs text-gray-400 dark:text-white/25">
               Powered by 70-agent AI system
             </p>
           </div>
@@ -693,7 +693,7 @@ export function ExcelUploadPage() {
                 title="AI Analysis"
                 iconColor="bg-primary-100/60 dark:bg-primary-500/10"
                 badge={
-                  <span className="text-[11px] font-medium text-gray-400 dark:text-white/30 ml-2">
+                  <span className="text-xs font-medium text-gray-400 dark:text-white/30 ml-2">
                     Upload #{analyzeResult.uploadId.substring(0, 8)}
                   </span>
                 }
@@ -722,7 +722,7 @@ export function ExcelUploadPage() {
                   {/* Category distribution chart */}
                   {fixCategoryChartData.length > 0 && (
                     <div className="p-3 rounded-xl bg-gray-50/50 dark:bg-white/[0.02]">
-                      <p className="text-[11px] font-medium text-gray-500 dark:text-white/40 mb-2">Fix Categories</p>
+                      <p className="text-xs font-medium text-gray-500 dark:text-white/40 mb-2">Fix Categories</p>
                       <ResponsiveContainer width="100%" height={80}>
                         <BarChart data={fixCategoryChartData} layout="vertical" margin={{ left: 0, right: 10 }}>
                           <XAxis type="number" hide />
@@ -858,7 +858,7 @@ export function ExcelUploadPage() {
                           <span className="font-medium text-green-600 dark:text-green-400">{sug.suggestedValue}</span>
                           <span className="ml-2 text-xs text-gray-400 dark:text-white/30">{sug.reason}</span>
                         </div>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-100/80 dark:bg-green-500/15 text-green-700 dark:text-green-400 font-semibold">
+                        <span className="text-2xs px-2 py-0.5 rounded-full bg-green-100/80 dark:bg-green-500/15 text-green-700 dark:text-green-400 font-semibold">
                           Auto
                         </span>
                       </div>
@@ -903,9 +903,9 @@ export function ExcelUploadPage() {
                 <table className="min-w-full text-sm">
                   <thead className="bg-gray-50/50 dark:bg-white/[0.02] sticky top-0">
                     <tr>
-                      <th className="px-5 py-2.5 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Row</th>
-                      <th className="px-5 py-2.5 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Field</th>
-                      <th className="px-5 py-2.5 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Error</th>
+                      <th className="px-5 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Row</th>
+                      <th className="px-5 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Field</th>
+                      <th className="px-5 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Error</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -942,9 +942,9 @@ export function ExcelUploadPage() {
                 <table className="min-w-full text-sm">
                   <thead className="bg-gray-50/50 dark:bg-white/[0.02] sticky top-0">
                     <tr>
-                      <th className="px-5 py-2.5 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Row</th>
-                      <th className="px-5 py-2.5 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Field</th>
-                      <th className="px-5 py-2.5 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Warning</th>
+                      <th className="px-5 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Row</th>
+                      <th className="px-5 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Field</th>
+                      <th className="px-5 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">Warning</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -981,7 +981,7 @@ export function ExcelUploadPage() {
                 <thead className="bg-gray-50/50 dark:bg-white/[0.02] sticky top-0">
                   <tr>
                     {['Row', 'First Name', 'Last Name', 'Email', 'Department', 'Level', 'Job Title', 'Status'].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">
+                      <th key={h} className="px-4 py-2.5 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">
                         {h}
                       </th>
                     ))}
@@ -1153,9 +1153,9 @@ export function ExcelUploadPage() {
                 <table className="min-w-full text-sm">
                   <thead className="bg-gray-50/50 dark:bg-white/[0.02] sticky top-0">
                     <tr>
-                      <th className="px-4 py-2 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase">Row</th>
-                      <th className="px-4 py-2 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase">Field</th>
-                      <th className="px-4 py-2 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase">Error</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase">Row</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase">Field</th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase">Error</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1216,7 +1216,7 @@ export function ExcelUploadPage() {
               <thead className="bg-gray-50/50 dark:bg-white/[0.02]">
                 <tr>
                   {['File', 'Status', 'Rows', 'Created', 'Errors', 'Uploaded By', 'Date'].map((h) => (
-                    <th key={h} className="px-5 py-3 text-left text-[11px] font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">
+                    <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">
                       {h}
                     </th>
                   ))}
@@ -1295,7 +1295,7 @@ function FixSuggestionRow({ fix, accepted, onToggle }: { fix: AIAutoFix; accepte
       <div className="flex items-center gap-2 flex-shrink-0">
         <span
           className={clsx(
-            'text-[10px] font-semibold px-2 py-0.5 rounded-full',
+            'text-2xs font-semibold px-2 py-0.5 rounded-full',
             fix.confidence >= 0.9
               ? 'bg-green-100/80 dark:bg-green-500/15 text-green-700 dark:text-green-400'
               : fix.confidence >= 0.7
@@ -1305,7 +1305,7 @@ function FixSuggestionRow({ fix, accepted, onToggle }: { fix: AIAutoFix; accepte
         >
           {Math.round(fix.confidence * 100)}%
         </span>
-        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100/80 dark:bg-white/[0.04] text-gray-500 dark:text-white/40">
+        <span className="text-2xs font-medium px-2 py-0.5 rounded-full bg-gray-100/80 dark:bg-white/[0.04] text-gray-500 dark:text-white/40">
           {CATEGORY_LABELS[fix.category] || fix.category}
         </span>
       </div>

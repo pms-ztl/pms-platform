@@ -114,7 +114,8 @@ export const useAIWorkspaceStore = create<AIWorkspaceState>()(
       partialize: (state) => ({
         isAiMode: state.isAiMode,
         theme: state.theme,
-        swarmMode: state.swarmMode,
+        // swarmMode excluded — always starts at 'overview' on fresh page load;
+        // in-session mode switches are preserved in memory
         selectedAgent: state.selectedAgent,
         orchestrationAgents: state.orchestrationAgents,
         agentPanelOpen: state.agentPanelOpen,

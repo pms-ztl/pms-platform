@@ -312,7 +312,7 @@ function GlassTooltip({ active, payload, label }: any) {
   return (
     <div className="rounded-xl border border-white/15 px-3.5 py-2.5 shadow-2xl"
       style={{ background: 'rgba(15, 20, 35, 0.92)', backdropFilter: 'blur(20px)' }}>
-      {label && <p className="text-[11px] text-white/50 mb-1.5 font-medium">{label}</p>}
+      {label && <p className="text-xs text-white/50 mb-1.5 font-medium">{label}</p>}
       {payload.map((entry: any, i: number) => (
         <div key={i} className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color || entry.fill }} />
@@ -730,7 +730,7 @@ export function SADashboardPage() {
               </div>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{card.value}</p>
               <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-0.5">{card.label}</p>
-              <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-1">{card.subtitle}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{card.subtitle}</p>
             </div>
           );
         })}
@@ -788,11 +788,11 @@ export function SADashboardPage() {
           </div>
           <div className="mt-4 flex items-center gap-6 pt-3 border-t border-gray-100 dark:border-white/[0.06]">
             <div>
-              <p className="text-[11px] text-gray-400 dark:text-white/35 uppercase tracking-wider">Total MRR</p>
+              <p className="text-xs text-gray-400 dark:text-white/35 uppercase tracking-wider">Total MRR</p>
               <p className="text-lg font-bold text-gray-900 dark:text-white">{formatCurrency(revenue.total)}</p>
             </div>
             <div>
-              <p className="text-[11px] text-gray-400 dark:text-white/35 uppercase tracking-wider">Growth</p>
+              <p className="text-xs text-gray-400 dark:text-white/35 uppercase tracking-wider">Growth</p>
               <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                 +{revenue.trend?.length >= 2
                   ? ((revenue.trend[revenue.trend.length - 1] / revenue.trend[revenue.trend.length - 2] - 1) * 100).toFixed(1)
@@ -837,7 +837,7 @@ export function SADashboardPage() {
             {revenueByPlan.map((item) => (
               <div key={item.name} className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.fill }} />
-                <span className="text-[11px] text-gray-500 dark:text-white/50">
+                <span className="text-xs text-gray-500 dark:text-white/50">
                   {item.name}: {formatCurrency(item.value)}
                 </span>
               </div>
@@ -967,7 +967,7 @@ export function SADashboardPage() {
               color={config.features.signupsEnabled ? 'emerald' : 'rose'}
               badge={
                 <span className={clsx(
-                  'text-[10px] font-semibold px-1.5 py-0.5 rounded-full',
+                  'text-2xs font-semibold px-1.5 py-0.5 rounded-full',
                   config.features.signupsEnabled
                     ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
                     : 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400'
@@ -984,7 +984,7 @@ export function SADashboardPage() {
               color={config.security.requireMfaForAdmins ? 'emerald' : 'amber'}
               badge={
                 <span className={clsx(
-                  'text-[10px] font-semibold px-1.5 py-0.5 rounded-full',
+                  'text-2xs font-semibold px-1.5 py-0.5 rounded-full',
                   config.security.requireMfaForAdmins
                     ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
                     : 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400'
@@ -1000,7 +1000,7 @@ export function SADashboardPage() {
               description={`${config.features.trialDays} day trial for new tenants`}
               color="violet"
               badge={
-                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400">
+                <span className="text-2xs font-semibold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400">
                   {config.features.trialDays}d
                 </span>
               }
@@ -1012,7 +1012,7 @@ export function SADashboardPage() {
               description={`${config.limits.maxApiRequestsPerMinute} req/min per tenant`}
               color="blue"
               badge={
-                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400">
+                <span className="text-2xs font-semibold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400">
                   {config.limits.maxApiRequestsPerMinute}/min
                 </span>
               }
@@ -1027,7 +1027,7 @@ export function SADashboardPage() {
             title="Security & Threats"
             badge={
               threats.blocked + threats.suspicious > 0 ? (
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400">
+                <span className="text-2xs font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400">
                   {threats.blocked + threats.suspicious} threats
                 </span>
               ) : null
@@ -1066,7 +1066,7 @@ export function SADashboardPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-semibold text-red-600 dark:text-red-400">{attempt.count} tries</span>
-                    <span className="text-[11px] text-gray-400 dark:text-white/25">
+                    <span className="text-xs text-gray-400 dark:text-white/25">
                       {(() => {
                         try { return formatDistanceToNow(new Date(attempt.lastAttempt), { addSuffix: true }); }
                         catch { return 'recently'; }
@@ -1085,11 +1085,11 @@ export function SADashboardPage() {
           {/* Security quick stats */}
           <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/[0.06] grid grid-cols-2 gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] text-gray-400 dark:text-white/35">Max Login Attempts</span>
+              <span className="text-xs text-gray-400 dark:text-white/35">Max Login Attempts</span>
               <span className="text-xs font-semibold text-gray-700 dark:text-white/70">{config.security.maxLoginAttempts}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] text-gray-400 dark:text-white/35">Lockout Duration</span>
+              <span className="text-xs text-gray-400 dark:text-white/35">Lockout Duration</span>
               <span className="text-xs font-semibold text-gray-700 dark:text-white/70">{config.security.lockoutDuration}m</span>
             </div>
           </div>
@@ -1126,7 +1126,7 @@ export function SADashboardPage() {
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div className="text-center">
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">{planTotal}</p>
-                <p className="text-[10px] text-gray-400 dark:text-white/40 uppercase tracking-wider">Tenants</p>
+                <p className="text-2xs text-gray-400 dark:text-white/40 uppercase tracking-wider">Tenants</p>
               </div>
             </div>
           </div>
@@ -1136,7 +1136,7 @@ export function SADashboardPage() {
                 <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }} />
                 <span className="text-xs text-gray-500 dark:text-white/50">{item.name}</span>
                 <span className="text-xs font-medium text-gray-700 dark:text-white/70">{item.value}</span>
-                <span className="text-[10px] text-gray-400 dark:text-white/25">({((item.value / planTotal) * 100).toFixed(0)}%)</span>
+                <span className="text-2xs text-gray-400 dark:text-white/25">({((item.value / planTotal) * 100).toFixed(0)}%)</span>
               </div>
             ))}
           </div>
@@ -1172,7 +1172,7 @@ export function SADashboardPage() {
               <p className={clsx('text-sm font-semibold', m.healthStatus === 'healthy' ? 'text-emerald-700 dark:text-emerald-400' : 'text-amber-700 dark:text-amber-400')}>
                 {m.healthStatus === 'healthy' ? 'All Systems Operational' : 'Degraded Performance'}
               </p>
-              <p className="text-[11px] text-gray-400 dark:text-white/35">Last checked just now</p>
+              <p className="text-xs text-gray-400 dark:text-white/35">Last checked just now</p>
             </div>
           </div>
 
@@ -1204,15 +1204,15 @@ export function SADashboardPage() {
           {/* Footer stats */}
           <div className="mt-4 pt-4 border-t border-gray-100 dark:border-white/[0.06] grid grid-cols-3 gap-4">
             <div>
-              <p className="text-[11px] text-gray-400 dark:text-white/35 uppercase tracking-wider">Uptime</p>
+              <p className="text-xs text-gray-400 dark:text-white/35 uppercase tracking-wider">Uptime</p>
               <p className="text-sm font-semibold text-gray-800 dark:text-white/80 mt-0.5">{formatUptime(m.uptime)}</p>
             </div>
             <div>
-              <p className="text-[11px] text-gray-400 dark:text-white/35 uppercase tracking-wider">Avg Response</p>
+              <p className="text-xs text-gray-400 dark:text-white/35 uppercase tracking-wider">Avg Response</p>
               <p className="text-sm font-semibold text-gray-800 dark:text-white/80 mt-0.5">{m.avgResponseTime}ms</p>
             </div>
             <div>
-              <p className="text-[11px] text-gray-400 dark:text-white/35 uppercase tracking-wider">Error Rate</p>
+              <p className="text-xs text-gray-400 dark:text-white/35 uppercase tracking-wider">Error Rate</p>
               <p className={clsx('text-sm font-semibold mt-0.5', m.errorRate > 1 ? 'text-red-600 dark:text-red-400' : 'text-gray-800 dark:text-white/80')}>{(m.errorRate ?? 0).toFixed(2)}%</p>
             </div>
           </div>
@@ -1291,16 +1291,16 @@ export function SADashboardPage() {
                     <div>
                       <p className="text-sm font-medium text-gray-900 dark:text-white/90">{tenant.name}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className={clsx('text-[10px] font-medium px-1.5 py-0.5 rounded-full', getPlanBadge(tenant.plan))}>
+                        <span className={clsx('text-2xs font-medium px-1.5 py-0.5 rounded-full', getPlanBadge(tenant.plan))}>
                           {tenant.plan}
                         </span>
                         {tenant.userCount != null && (
-                          <span className="text-[11px] text-gray-400 dark:text-white/30">{tenant.userCount} users</span>
+                          <span className="text-xs text-gray-400 dark:text-white/30">{tenant.userCount} users</span>
                         )}
                       </div>
                     </div>
                   </div>
-                  <span className={clsx('text-[10px] font-semibold px-2 py-0.5 rounded-full', getStatusBadge(tenant.status))}>
+                  <span className={clsx('text-2xs font-semibold px-2 py-0.5 rounded-full', getStatusBadge(tenant.status))}>
                     {tenant.status}
                   </span>
                 </div>
@@ -1338,7 +1338,7 @@ export function SADashboardPage() {
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium text-gray-800 dark:text-white/80 truncate">{log.userEmail}</span>
                           <span className={clsx(
-                            'text-[10px] font-semibold px-1.5 py-0.5 rounded-full',
+                            'text-2xs font-semibold px-1.5 py-0.5 rounded-full',
                             log.action?.includes('CREATE') || log.action?.includes('ADD')
                               ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
                               : log.action?.includes('DELETE') || log.action?.includes('REMOVE')
@@ -1351,12 +1351,12 @@ export function SADashboardPage() {
                           </span>
                         </div>
                         {log.resource && (
-                          <p className="text-[11px] text-gray-400 dark:text-white/25 mt-0.5 truncate">
+                          <p className="text-xs text-gray-400 dark:text-white/25 mt-0.5 truncate">
                             {log.resource} {log.resourceId && `(${String(log.resourceId).slice(0, 8)}...)`}
                           </p>
                         )}
                       </div>
-                      <span className="text-[11px] text-gray-400 dark:text-white/20 whitespace-nowrap flex-shrink-0">
+                      <span className="text-xs text-gray-400 dark:text-white/20 whitespace-nowrap flex-shrink-0">
                         {(() => {
                           try {
                             return formatDistanceToNow(new Date(log.timestamp), { addSuffix: true });
@@ -1410,7 +1410,7 @@ export function SADashboardPage() {
             <ConfigRow label="From Address" value={config.email.fromAddress} />
             <ConfigRow label="From Name" value={config.email.fromName} />
             <div className="pt-3 border-t border-gray-100 dark:border-white/[0.06]">
-              <p className="text-[11px] text-gray-400 dark:text-white/35 uppercase tracking-wider mb-1">Registration Status</p>
+              <p className="text-xs text-gray-400 dark:text-white/35 uppercase tracking-wider mb-1">Registration Status</p>
               <div className="flex items-center gap-2">
                 <div className={clsx('w-2 h-2 rounded-full', config.features.signupsEnabled ? 'bg-emerald-500' : 'bg-red-500')} />
                 <span className="text-sm font-medium text-gray-700 dark:text-white/70">
@@ -1461,7 +1461,7 @@ export function SADashboardPage() {
                   <p className="text-xl font-bold text-gray-900 dark:text-white">
                     {userDistribution.reduce((sum: number, d: any) => sum + d.value, 0)}
                   </p>
-                  <p className="text-[9px] text-gray-400 dark:text-white/40 uppercase tracking-wider">Users</p>
+                  <p className="text-3xs text-gray-400 dark:text-white/40 uppercase tracking-wider">Users</p>
                 </div>
               </div>
             </div>
@@ -1474,7 +1474,7 @@ export function SADashboardPage() {
                     <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
                     <span className="text-xs text-gray-500 dark:text-white/50 flex-1">{item.name}</span>
                     <span className="text-xs font-semibold text-gray-700 dark:text-white/70">{item.value}</span>
-                    <span className="text-[10px] text-gray-400 dark:text-white/25 w-8 text-right">{pct}%</span>
+                    <span className="text-2xs text-gray-400 dark:text-white/25 w-8 text-right">{pct}%</span>
                   </div>
                 );
               })}
@@ -1517,15 +1517,15 @@ export function SADashboardPage() {
           {/* Quick info rows */}
           <div className="mt-4 pt-3 border-t border-gray-100 dark:border-white/[0.06] space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] text-gray-400 dark:text-white/35">Sessions</span>
+              <span className="text-xs text-gray-400 dark:text-white/35">Sessions</span>
               <span className="text-xs font-semibold text-gray-700 dark:text-white/70">{sessions.length} active</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] text-gray-400 dark:text-white/35">Blocked IPs</span>
+              <span className="text-xs text-gray-400 dark:text-white/35">Blocked IPs</span>
               <span className="text-xs font-semibold text-gray-700 dark:text-white/70">{threats.blocked}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[11px] text-gray-400 dark:text-white/35">Maintenance</span>
+              <span className="text-xs text-gray-400 dark:text-white/35">Maintenance</span>
               <span className={clsx('text-xs font-semibold', config.maintenance.enabled ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400')}>
                 {config.maintenance.enabled ? 'ON' : 'OFF'}
               </span>
@@ -1592,9 +1592,9 @@ export function SADashboardPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-mono text-gray-700 dark:text-white/70 truncate">{session.ip}</p>
-                  <p className="text-[11px] text-gray-400 dark:text-white/30 truncate">{session.userAgent}</p>
+                  <p className="text-xs text-gray-400 dark:text-white/30 truncate">{session.userAgent}</p>
                 </div>
-                <span className="text-[10px] text-gray-400 dark:text-white/20 whitespace-nowrap">
+                <span className="text-2xs text-gray-400 dark:text-white/20 whitespace-nowrap">
                   {(() => {
                     try { return formatDistanceToNow(new Date(session.createdAt), { addSuffix: true }); }
                     catch { return 'active'; }
@@ -1636,8 +1636,8 @@ export function SADashboardPage() {
                     <item.icon className={clsx('h-4 w-4', c.text)} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-gray-800 dark:text-white/80">{item.label}</p>
-                    <p className="text-[10px] text-gray-400 dark:text-white/30 truncate">{item.description}</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-white/80">{item.label}</p>
+                    <p className="text-2xs text-gray-400 dark:text-white/30 truncate">{item.description}</p>
                   </div>
                   <ChevronRightIcon className="h-3.5 w-3.5 text-gray-300 dark:text-white/15 group-hover:text-gray-500 dark:group-hover:text-white/40 transition-colors flex-shrink-0" />
                 </Link>
@@ -1698,7 +1698,7 @@ function MiniMetric({
           style={{ width: `${Math.min(progress, 100)}%` }}
         />
       </div>
-      <p className="mt-1.5 text-[11px] text-gray-400 dark:text-white/30">{detail}</p>
+      <p className="mt-1.5 text-xs text-gray-400 dark:text-white/30">{detail}</p>
     </div>
   );
 }
@@ -1734,7 +1734,7 @@ function ActionItem({
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-gray-800 dark:text-white/80">{label}</p>
-        <p className="text-[11px] text-gray-400 dark:text-white/30 truncate">{description}</p>
+        <p className="text-xs text-gray-400 dark:text-white/30 truncate">{description}</p>
       </div>
       {badge}
       {action}

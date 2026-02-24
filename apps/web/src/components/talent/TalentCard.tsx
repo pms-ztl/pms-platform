@@ -58,7 +58,7 @@ function getPotentialBadge(potential?: string) {
   };
   const c = config[potential] || config.medium;
   return (
-    <span className={clsx('text-[9px] font-bold px-1.5 py-0.5 rounded-full', c.bg, c.text)}>
+    <span className={clsx('text-3xs font-bold px-1.5 py-0.5 rounded-full', c.bg, c.text)}>
       {potential} potential
     </span>
   );
@@ -79,7 +79,7 @@ function ScoreRing({ score, size = 44 }: { score: number; size?: number }) {
         <circle cx={size / 2} cy={size / 2} r={radius} fill="none" strokeWidth="4" stroke={color} strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset} className="transition-all duration-700" />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-[10px] font-bold text-secondary-900 dark:text-white">{Math.round(score)}</span>
+        <span className="text-2xs font-bold text-secondary-900 dark:text-white">{Math.round(score)}</span>
       </div>
     </div>
   );
@@ -100,12 +100,12 @@ export function TalentCard({ data, compact = false, showActions = true }: Talent
   if (compact) {
     return (
       <div className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-800/50 transition-colors group">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white text-2xs font-bold shrink-0">
           {getInitials(data.firstName, data.lastName)}
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-secondary-900 dark:text-white break-words">{data.firstName} {data.lastName}</p>
-          <p className="text-[10px] text-secondary-400 break-words">{data.jobTitle || 'Team Member'}</p>
+          <p className="text-2xs text-secondary-400 break-words">{data.jobTitle || 'Team Member'}</p>
         </div>
         {data.performanceScore !== undefined && <ScoreRing score={data.performanceScore} size={32} />}
       </div>
@@ -123,8 +123,8 @@ export function TalentCard({ data, compact = false, showActions = true }: Talent
           <h4 className="text-sm font-semibold text-secondary-900 dark:text-white break-words">
             {data.firstName} {data.lastName}
           </h4>
-          <p className="text-[11px] text-secondary-500 break-words">{data.jobTitle || 'Team Member'}</p>
-          {data.department && <p className="text-[10px] text-secondary-400">{data.department}</p>}
+          <p className="text-xs text-secondary-500 break-words">{data.jobTitle || 'Team Member'}</p>
+          {data.department && <p className="text-2xs text-secondary-400">{data.department}</p>}
         </div>
         {data.performanceScore !== undefined && <ScoreRing score={data.performanceScore} />}
       </div>
@@ -134,14 +134,14 @@ export function TalentCard({ data, compact = false, showActions = true }: Talent
         <div className="flex items-center gap-1.5">
           <span className={clsx('text-xs font-semibold', ratingColor)}>{ratingText}</span>
           {data.rating && (
-            <span className="text-[10px] text-secondary-400">({(data.rating ?? 0).toFixed(1)})</span>
+            <span className="text-2xs text-secondary-400">({(data.rating ?? 0).toFixed(1)})</span>
           )}
         </div>
         {getPotentialBadge(data.potential)}
       </div>
 
       {/* Stats row */}
-      <div className="flex items-center gap-4 text-[10px] text-secondary-500 dark:text-secondary-400 mb-3">
+      <div className="flex items-center gap-4 text-2xs text-secondary-500 dark:text-secondary-400 mb-3">
         {data.goalsTotal !== undefined && (
           <span>{data.goalsCompleted || 0}/{data.goalsTotal} goals</span>
         )}
@@ -158,19 +158,19 @@ export function TalentCard({ data, compact = false, showActions = true }: Talent
         <div className="flex gap-2 pt-2 border-t border-secondary-100 dark:border-secondary-700">
           <Link
             to={`/employees/${data.id}`}
-            className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[10px] font-medium rounded-lg bg-secondary-50 dark:bg-secondary-900 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1 py-1.5 text-2xs font-medium rounded-lg bg-secondary-50 dark:bg-secondary-900 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
           >
             <UserIcon className="h-3 w-3" /> Profile
           </Link>
           <Link
             to="/one-on-ones"
-            className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[10px] font-medium rounded-lg bg-secondary-50 dark:bg-secondary-900 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1 py-1.5 text-2xs font-medium rounded-lg bg-secondary-50 dark:bg-secondary-900 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
           >
             <CalendarDaysIcon className="h-3 w-3" /> 1-on-1
           </Link>
           <Link
             to="/feedback"
-            className="flex-1 flex items-center justify-center gap-1 py-1.5 text-[10px] font-medium rounded-lg bg-secondary-50 dark:bg-secondary-900 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
+            className="flex-1 flex items-center justify-center gap-1 py-1.5 text-2xs font-medium rounded-lg bg-secondary-50 dark:bg-secondary-900 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition-colors"
           >
             <ChatBubbleLeftRightIcon className="h-3 w-3" /> Feedback
           </Link>

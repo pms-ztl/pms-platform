@@ -748,7 +748,7 @@ export function EmployeeProfilePage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">{goal.title}</p>
-                        <span className={clsx('px-1.5 py-0.5 rounded text-[10px] font-medium flex-shrink-0', goalStatusColors[goal.status] || goalStatusColors.ACTIVE)}>
+                        <span className={clsx('px-1.5 py-0.5 rounded text-2xs font-medium flex-shrink-0', goalStatusColors[goal.status] || goalStatusColors.ACTIVE)}>
                           {goal.status.replace(/_/g, ' ')}
                         </span>
                       </div>
@@ -781,7 +781,7 @@ export function EmployeeProfilePage() {
                 {feedbackItems.slice(0, 5).map((fb) => (
                   <div key={fb.id} className="p-3 rounded-lg bg-secondary-50 dark:bg-secondary-900/50">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className={clsx('px-1.5 py-0.5 rounded text-[10px] font-medium', feedbackTypeColors[fb.type] || feedbackTypeColors.PRAISE)}>
+                      <span className={clsx('px-1.5 py-0.5 rounded text-2xs font-medium', feedbackTypeColors[fb.type] || feedbackTypeColors.PRAISE)}>
                         {fb.type}
                       </span>
                       <span className="text-xs text-secondary-400 dark:text-secondary-500">
@@ -866,7 +866,7 @@ export function EmployeeProfilePage() {
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">{plan.planName}</span>
-                      <span className={clsx('px-1.5 py-0.5 rounded-full text-[10px] font-medium flex-shrink-0 ml-2', planStatusColors[plan.status] || planStatusColors.DRAFT)}>
+                      <span className={clsx('px-1.5 py-0.5 rounded-full text-2xs font-medium flex-shrink-0 ml-2', planStatusColors[plan.status] || planStatusColors.DRAFT)}>
                         {plan.status.replace(/_/g, ' ')}
                       </span>
                     </div>
@@ -929,13 +929,13 @@ export function EmployeeProfilePage() {
                     {goal.type && <p className="text-xs text-secondary-400 dark:text-secondary-500">{goal.type}</p>}
                   </div>
                   <div className="col-span-2">
-                    <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium', goalStatusColors[goal.status] || goalStatusColors.ACTIVE)}>
+                    <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium', goalStatusColors[goal.status] || goalStatusColors.ACTIVE)}>
                       {goal.status.replace(/_/g, ' ')}
                     </span>
                   </div>
                   <div className="col-span-2">
                     <span className={clsx(
-                      'px-2 py-0.5 rounded text-[10px] font-medium',
+                      'px-2 py-0.5 rounded text-2xs font-medium',
                       goal.priority === 'HIGH' || goal.priority === 'CRITICAL'
                         ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300'
                         : goal.priority === 'MEDIUM'
@@ -982,7 +982,7 @@ export function EmployeeProfilePage() {
                         <h4 className="text-sm font-medium text-secondary-900 dark:text-white">
                           {review.type} Review
                         </h4>
-                        <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium', reviewStatusColors[review.status] || reviewStatusColors.NOT_STARTED)}>
+                        <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium', reviewStatusColors[review.status] || reviewStatusColors.NOT_STARTED)}>
                           {review.status.replace(/_/g, ' ')}
                         </span>
                       </div>
@@ -1019,12 +1019,12 @@ export function EmployeeProfilePage() {
                   {review.strengths && review.strengths.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
                       {review.strengths.slice(0, 4).map((s, i) => (
-                        <span key={i} className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
+                        <span key={i} className="px-1.5 py-0.5 rounded text-2xs font-medium bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
                           {s}
                         </span>
                       ))}
                       {review.strengths.length > 4 && (
-                        <span className="text-[10px] text-secondary-400 self-center">+{review.strengths.length - 4} more</span>
+                        <span className="text-2xs text-secondary-400 self-center">+{review.strengths.length - 4} more</span>
                       )}
                     </div>
                   )}
@@ -1069,7 +1069,7 @@ export function EmployeeProfilePage() {
                         {fb.type}
                       </span>
                       {fb.visibility && (
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400">
+                        <span className="px-1.5 py-0.5 rounded text-2xs font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-400">
                           {fb.visibility}
                         </span>
                       )}
@@ -1085,7 +1085,7 @@ export function EmployeeProfilePage() {
                       {fb.tags && fb.tags.length > 0 && (
                         <div className="flex gap-1">
                           {fb.tags.map((tag, i) => (
-                            <span key={i} className="px-1.5 py-0.5 rounded text-[10px] bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300">
+                            <span key={i} className="px-1.5 py-0.5 rounded text-2xs bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300">
                               {tag}
                             </span>
                           ))}
@@ -1094,11 +1094,11 @@ export function EmployeeProfilePage() {
                     </div>
                     <div className="flex items-center gap-2 mt-1.5">
                       {fb.isAcknowledged ? (
-                        <span className="flex items-center gap-1 text-[10px] text-green-600 dark:text-green-400">
+                        <span className="flex items-center gap-1 text-2xs text-green-600 dark:text-green-400">
                           <CheckCircleIcon className="h-3 w-3" /> Acknowledged
                         </span>
                       ) : (
-                        <span className="flex items-center gap-1 text-[10px] text-secondary-400 dark:text-secondary-500">
+                        <span className="flex items-center gap-1 text-2xs text-secondary-400 dark:text-secondary-500">
                           <ClockIcon className="h-3 w-3" /> Pending acknowledgment
                         </span>
                       )}
@@ -1135,7 +1135,7 @@ export function EmployeeProfilePage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <h4 className="text-sm font-semibold text-secondary-900 dark:text-white">{plan.planName}</h4>
-                        <span className={clsx('px-2 py-0.5 rounded-full text-[10px] font-medium', planStatusColors[plan.status] || planStatusColors.DRAFT)}>
+                        <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium', planStatusColors[plan.status] || planStatusColors.DRAFT)}>
                           {plan.status.replace(/_/g, ' ')}
                         </span>
                       </div>
@@ -1164,7 +1164,7 @@ export function EmployeeProfilePage() {
                   {plan.developmentAreas && plan.developmentAreas.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
                       {plan.developmentAreas.slice(0, 5).map((area, i) => (
-                        <span key={i} className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300">
+                        <span key={i} className="px-1.5 py-0.5 rounded-full text-2xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300">
                           {area}
                         </span>
                       ))}
@@ -1228,7 +1228,7 @@ export function EmployeeProfilePage() {
                     className="grid grid-cols-1 md:grid-cols-12 gap-3 px-3 py-3 rounded-lg items-center hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors"
                   >
                     <div className="col-span-1">
-                      <span className={clsx('inline-block px-2 py-0.5 rounded text-[10px] font-semibold', evidenceTypeColors[evidence.type] || 'bg-secondary-100 text-secondary-700 dark:bg-secondary-700 dark:text-secondary-300')}>
+                      <span className={clsx('inline-block px-2 py-0.5 rounded text-2xs font-semibold', evidenceTypeColors[evidence.type] || 'bg-secondary-100 text-secondary-700 dark:bg-secondary-700 dark:text-secondary-300')}>
                         {evidence.type}
                       </span>
                     </div>
@@ -1243,7 +1243,7 @@ export function EmployeeProfilePage() {
                     </div>
                     <div className="col-span-2">
                       <span className={clsx(
-                        'px-2 py-0.5 rounded-full text-[10px] font-medium',
+                        'px-2 py-0.5 rounded-full text-2xs font-medium',
                         evidence.status === 'VERIFIED'
                           ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
                           : evidence.status === 'ARCHIVED'

@@ -222,22 +222,22 @@ function renderMarkdown(content: string, isDark: boolean): string {
   html = html.replace(
     /```(\w*)\n?([\s\S]*?)```/g,
     isDark
-      ? '<pre class="my-2 rounded-lg bg-gray-900/90 p-3 text-[13px] font-mono text-emerald-300 overflow-x-auto border border-gray-700/50 leading-relaxed"><code>$2</code></pre>'
-      : '<pre class="my-2 rounded-lg bg-gray-100 p-3 text-[13px] font-mono text-indigo-700 overflow-x-auto border border-gray-200 leading-relaxed"><code>$2</code></pre>',
+      ? '<pre class="my-2 rounded-lg bg-gray-900/90 p-3 text-sm font-mono text-emerald-300 overflow-x-auto border border-gray-700/50 leading-relaxed"><code>$2</code></pre>'
+      : '<pre class="my-2 rounded-lg bg-gray-100 p-3 text-sm font-mono text-indigo-700 overflow-x-auto border border-gray-200 leading-relaxed"><code>$2</code></pre>',
   );
 
   // Headers — slightly bigger than body text
   html = html.replace(
     /^#### (.+)$/gm,
     isDark
-      ? '<h5 class="mt-2 mb-1 text-[13px] font-bold text-indigo-400">$1</h5>'
-      : '<h5 class="mt-2 mb-1 text-[13px] font-bold text-indigo-600">$1</h5>',
+      ? '<h5 class="mt-2 mb-1 text-sm font-bold text-indigo-400">$1</h5>'
+      : '<h5 class="mt-2 mb-1 text-sm font-bold text-indigo-600">$1</h5>',
   );
   html = html.replace(
     /^### (.+)$/gm,
     isDark
-      ? '<h4 class="mt-2.5 mb-1 text-[13px] font-bold tracking-wide text-indigo-400">$1</h4>'
-      : '<h4 class="mt-2.5 mb-1 text-[13px] font-bold tracking-wide text-indigo-600">$1</h4>',
+      ? '<h4 class="mt-2.5 mb-1 text-sm font-bold tracking-wide text-indigo-400">$1</h4>'
+      : '<h4 class="mt-2.5 mb-1 text-sm font-bold tracking-wide text-indigo-600">$1</h4>',
   );
   html = html.replace(
     /^## (.+)$/gm,
@@ -272,8 +272,8 @@ function renderMarkdown(content: string, isDark: boolean): string {
   html = html.replace(
     /`([^`]+)`/g,
     isDark
-      ? '<code class="rounded bg-white/10 px-1.5 py-0.5 text-[13px] font-mono text-cyan-300 border border-white/5">$1</code>'
-      : '<code class="rounded bg-indigo-50 px-1.5 py-0.5 text-[13px] font-mono text-indigo-600 border border-indigo-100">$1</code>',
+      ? '<code class="rounded bg-white/10 px-1.5 py-0.5 text-sm font-mono text-cyan-300 border border-white/5">$1</code>'
+      : '<code class="rounded bg-indigo-50 px-1.5 py-0.5 text-sm font-mono text-indigo-600 border border-indigo-100">$1</code>',
   );
 
   // Links
@@ -288,8 +288,8 @@ function renderMarkdown(content: string, isDark: boolean): string {
   html = html.replace(
     /^(\d+)\.\s+(.+)$/gm,
     isDark
-      ? '<div class="flex gap-2 my-1 items-start"><span class="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500/20 text-[10px] font-bold text-indigo-300">$1</span><span class="flex-1">$2</span></div>'
-      : '<div class="flex gap-2 my-1 items-start"><span class="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-[10px] font-bold text-indigo-600">$1</span><span class="flex-1">$2</span></div>',
+      ? '<div class="flex gap-2 my-1 items-start"><span class="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500/20 text-2xs font-bold text-indigo-300">$1</span><span class="flex-1">$2</span></div>'
+      : '<div class="flex gap-2 my-1 items-start"><span class="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-2xs font-bold text-indigo-600">$1</span><span class="flex-1">$2</span></div>',
   );
 
   // Bullet lists — same size as body
@@ -594,7 +594,7 @@ export function AIChatWidget() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
               </span>
-              <span className={`text-[10px] font-medium ${t.statusDotText}`}>70 Agents Active</span>
+              <span className={`text-2xs font-medium ${t.statusDotText}`}>70 Agents Active</span>
             </div>
           </div>
         </div>
@@ -609,7 +609,7 @@ export function AIChatWidget() {
                 if (window.location.pathname !== '/dashboard') window.location.href = '/dashboard';
               }
             }}
-            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition-all hover:scale-105 active:scale-95"
+            className="flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all hover:scale-105 active:scale-95"
             style={{
               background: 'linear-gradient(135deg, rgba(99,102,241,0.6), rgba(139,92,246,0.6))',
               border: '1px solid rgba(255,255,255,0.2)',
@@ -675,7 +675,7 @@ export function AIChatWidget() {
             {AGENT_GROUPS.map((group) => (
               <div key={group.label || 'default'}>
                 {group.label && (
-                  <div className={`px-3 pt-2 pb-1 text-[10px] font-bold tracking-wider ${t.groupLabel}`}>
+                  <div className={`px-3 pt-2 pb-1 text-2xs font-bold tracking-wider ${t.groupLabel}`}>
                     {group.label}
                   </div>
                 )}
@@ -831,7 +831,7 @@ export function AIChatWidget() {
 
               {/* Timestamp */}
               {msg.timestamp && (
-                <div className={`mt-1 text-[10px] ${t.timestampText} ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                <div className={`mt-1 text-2xs ${t.timestampText} ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                   {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
               )}
@@ -853,7 +853,7 @@ export function AIChatWidget() {
               style={{ background: t.typingBg, border: `1px solid ${t.typingBorder}` }}
             >
               <div className="flex items-center gap-1.5">
-                <span className={`text-[10px] mr-1 ${t.typingLabel}`}>Thinking</span>
+                <span className={`text-2xs mr-1 ${t.typingLabel}`}>Thinking</span>
                 <div className="h-1.5 w-1.5 rounded-full animate-bounce" style={{ background: '#6366f1', animationDelay: '0ms' }} />
                 <div className="h-1.5 w-1.5 rounded-full animate-bounce" style={{ background: '#8b5cf6', animationDelay: '150ms' }} />
                 <div className="h-1.5 w-1.5 rounded-full animate-bounce" style={{ background: '#06b6d4', animationDelay: '300ms' }} />
@@ -907,9 +907,9 @@ export function AIChatWidget() {
           </button>
         </div>
         <div className="mt-1.5 flex items-center justify-center gap-1">
-          <span className={`text-[9px] ${t.footerSub}`}>Powered by</span>
+          <span className={`text-3xs ${t.footerSub}`}>Powered by</span>
           <span
-            className="text-[9px] font-semibold"
+            className="text-3xs font-semibold"
             style={{
               background: 'linear-gradient(90deg, #6366f1, #06b6d4)',
               WebkitBackgroundClip: 'text',

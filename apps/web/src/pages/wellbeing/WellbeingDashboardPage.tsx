@@ -232,14 +232,14 @@ export function WellbeingDashboardPage() {
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <HeartIcon className="h-4 w-4 text-pink-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Wellbeing</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Wellbeing</p>
           </div>
           <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">{healthData?.wellbeingScore != null ? Number(healthData.wellbeingScore).toFixed(0) : '-'}</p>
         </div>
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <FaceSmileIcon className="h-4 w-4 text-amber-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Average Mood</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Average Mood</p>
           </div>
           <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1 flex items-center gap-2">
             {overview?.averageMood != null ? Number(overview.averageMood).toFixed(1) : '-'}
@@ -254,7 +254,7 @@ export function WellbeingDashboardPage() {
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <FireIcon className="h-4 w-4 text-red-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Average Stress</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Average Stress</p>
           </div>
           <p className={clsx('text-xl font-bold mt-1', stressColor(overview?.averageStress ?? 0))}>
             {overview?.averageStress != null ? Number(overview.averageStress).toFixed(1) : '-'}
@@ -263,14 +263,14 @@ export function WellbeingDashboardPage() {
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <ExclamationTriangleIcon className="h-4 w-4 text-red-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Burnout Risk</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Burnout Risk</p>
           </div>
           <p className="text-xl font-bold text-red-600 dark:text-red-400 mt-1">{healthData?.flightRiskCount ?? 0}</p>
         </div>
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <UserGroupIcon className="h-4 w-4 text-blue-500" />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Participation</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Participation</p>
           </div>
           <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">
             {overview?.participationRate != null ? `${Number(overview.participationRate).toFixed(0)}%` : '-'}
@@ -279,7 +279,7 @@ export function WellbeingDashboardPage() {
         <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4">
           <div className="flex items-center gap-2">
             <TrendIcon className={clsx('h-4 w-4', trendColor)} />
-            <p className="text-[10px] text-secondary-500 dark:text-secondary-400 font-medium">Trend</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400 font-medium">Trend</p>
           </div>
           <p className={clsx('text-lg font-bold mt-1', trendColor)}>
             {overview?.trendDirection?.replace('_', ' ') || 'Stable'}
@@ -402,7 +402,7 @@ export function WellbeingDashboardPage() {
                       <td className="px-6 py-3">
                         <div>
                           <p className="text-sm font-medium text-secondary-900 dark:text-white">{emp.firstName} {emp.lastName}</p>
-                          <p className="text-[10px] text-secondary-400">{emp.jobTitle || 'No title'}</p>
+                          <p className="text-2xs text-secondary-400">{emp.jobTitle || 'No title'}</p>
                         </div>
                       </td>
                       <td className="px-6 py-3 text-sm text-secondary-600 dark:text-secondary-400">{emp.department || '-'}</td>
@@ -410,7 +410,7 @@ export function WellbeingDashboardPage() {
                         <span className="text-sm font-semibold text-secondary-900 dark:text-white">{Number(emp.overallScore ?? 0).toFixed(1)}</span>
                       </td>
                       <td className="px-6 py-3 text-center">
-                        <span className={clsx('inline-flex px-2 py-0.5 text-[10px] font-semibold rounded-full', badge.bg, badge.text)}>
+                        <span className={clsx('inline-flex px-2 py-0.5 text-2xs font-semibold rounded-full', badge.bg, badge.text)}>
                           {emp.riskLevel || 'Unknown'}
                         </span>
                       </td>
@@ -422,7 +422,7 @@ export function WellbeingDashboardPage() {
                       <td className="px-6 py-3">
                         <div className="flex flex-wrap gap-1">
                           {(emp.riskFactors as any[] || []).slice(0, 3).map((f: any, i: number) => (
-                            <span key={i} className="inline-flex px-1.5 py-0.5 text-[9px] bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-400 rounded">
+                            <span key={i} className="inline-flex px-1.5 py-0.5 text-3xs bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-400 rounded">
                               {typeof f === 'string' ? f : f?.factor || f?.name || 'factor'}
                             </span>
                           ))}
@@ -471,7 +471,7 @@ export function WellbeingDashboardPage() {
                 <span className="text-2xl font-bold text-secondary-900 dark:text-white">
                   {overview?.totalResponses ?? 0}
                 </span>
-                <span className="text-[10px] text-secondary-500 dark:text-secondary-400">Responses</span>
+                <span className="text-2xs text-secondary-500 dark:text-secondary-400">Responses</span>
               </div>
             </div>
           ) : (
@@ -479,7 +479,7 @@ export function WellbeingDashboardPage() {
           )}
           <div className="flex justify-center gap-3 mt-2">
             {MOOD_COLORS.map((c, i) => (
-              <span key={i} className="inline-flex items-center gap-1 text-[10px] text-secondary-500">
+              <span key={i} className="inline-flex items-center gap-1 text-2xs text-secondary-500">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c }} />
                 {MOOD_EMOJI[i + 1]}
               </span>
