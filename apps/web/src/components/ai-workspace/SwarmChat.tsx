@@ -382,6 +382,7 @@ function AgentSidebar({
   return (
     <div
       className={`flex w-[280px] flex-shrink-0 flex-col border-r transition-all duration-300 ${T.surface(theme)} ${T.border(theme)}`}
+      style={{ fontSize: 14 }}
     >
       {/* Header */}
       <div className={`flex items-center justify-between border-b px-3 py-2 ${T.borderLight(theme)}`}>
