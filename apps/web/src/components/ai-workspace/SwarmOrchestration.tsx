@@ -340,19 +340,6 @@ function AgentPickerDropdown({
   onSelect: (agent: string) => void;
 }) {
   const [search, setSearch] = useState('');
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close on outside click
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    document.addEventListener('click', handler);
-    return () => document.removeEventListener('click', handler);
-  }, [open, onClose]);
 
   if (!open) return null;
 
@@ -372,12 +359,14 @@ function AgentPickerDropdown({
   const atLimit = selectedAgents.length >= 5;
 
   return (
-    <div
-      ref={dropdownRef}
-      className={`absolute top-full left-0 mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border shadow-2xl z-50 ${T.border(theme)} ${
-        isLight ? 'bg-white' : theme === 'dark' ? 'bg-gray-900/95 backdrop-blur-xl' : 'bg-black/95 backdrop-blur-xl'
-      } ${T.scrollbar(theme)}`}
-    >
+    <>
+      {/* Invisible backdrop — clicking anywhere outside closes the dropdown */}
+      <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); onClose(); }} />
+      <div
+        className={`absolute top-full left-0 mt-2 w-80 max-h-96 overflow-y-auto rounded-xl border shadow-2xl z-50 ${T.border(theme)} ${
+          isLight ? 'bg-white' : theme === 'dark' ? 'bg-gray-900/95 backdrop-blur-xl' : 'bg-black/95 backdrop-blur-xl'
+        } ${T.scrollbar(theme)}`}
+      >
       {/* Search */}
       <div className={`sticky top-0 z-10 p-3 border-b ${T.borderLight(theme)} ${
         isLight ? 'bg-white' : theme === 'dark' ? 'bg-gray-900/95' : 'bg-black/95'
@@ -452,7 +441,8 @@ function AgentPickerDropdown({
           <p className={`text-xs text-center py-6 ${T.textMuted(theme)}`}>No agents match your search</p>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 
