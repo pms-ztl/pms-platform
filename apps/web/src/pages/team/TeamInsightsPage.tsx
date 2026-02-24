@@ -221,7 +221,7 @@ export function TeamInsightsPage() {
         />
         <StatCard
           label="Average Score"
-          value={teamAnalytics?.avgScore != null ? Number(teamAnalytics.avgScore).toFixed(1) : '-'}
+          value={teamAnalytics?.avgScore != null ? Number(teamAnalytics.avgScore).toFixed(1) : '\u2013'}
           icon={ChartBarIcon}
           color="text-emerald-600 dark:text-emerald-400"
           bgColor="bg-emerald-50 dark:bg-emerald-900/30"
@@ -229,11 +229,11 @@ export function TeamInsightsPage() {
         />
         <StatCard
           label="Score Spread"
-          value={teamAnalytics?.scoreSpread != null ? Number(teamAnalytics.scoreSpread).toFixed(2) : '-'}
+          value={teamAnalytics?.scoreSpread != null ? Number(teamAnalytics.scoreSpread).toFixed(2) : '\u2013'}
           icon={ArrowsPointingOutIcon}
           color="text-purple-600 dark:text-purple-400"
           bgColor="bg-purple-50 dark:bg-purple-900/30"
-          subtitle="Std deviation"
+          subtitle={teamAnalytics?.scoreSpread != null ? 'Std deviation' : 'Requires completed reviews'}
         />
         <StatCard
           label="Velocity"
@@ -253,11 +253,11 @@ export function TeamInsightsPage() {
         />
         <StatCard
           label="Predicted Average"
-          value={teamAnalytics?.predictedNextAvg != null ? Number(teamAnalytics.predictedNextAvg).toFixed(1) : '-'}
+          value={teamAnalytics?.predictedNextAvg != null ? Number(teamAnalytics.predictedNextAvg).toFixed(1) : '\u2013'}
           icon={SparklesIcon}
           color="text-amber-600 dark:text-amber-400"
           bgColor="bg-amber-50 dark:bg-amber-900/30"
-          subtitle="Next period forecast"
+          subtitle={teamAnalytics?.predictedNextAvg != null ? 'Next period forecast' : 'Needs more review history'}
         />
       </div>
 

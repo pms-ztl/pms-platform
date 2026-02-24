@@ -728,7 +728,8 @@ export function OrgChartPage() {
           )}
         </div>
       ) : (
-        <div className="card card-body overflow-x-auto">
+        <div className="card card-body overflow-hidden">
+          <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6" style={{ scrollbarWidth: 'thin' }}>
           <div className="flex justify-center py-8 px-4 min-w-max">
             {filteredTree.length === 1 ? (
               <OrgChartNode
@@ -756,6 +757,7 @@ export function OrgChartPage() {
                 ))}
               </div>
             )}
+          </div>
           </div>
 
           {/* Search result count */}

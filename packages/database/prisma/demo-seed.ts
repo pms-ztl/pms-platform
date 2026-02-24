@@ -210,16 +210,16 @@ async function main() {
   }
 
   const goalSpecs: GoalSpec[] = [
-    { title: 'Grow ARR to ₹5 Cr by Q2 2026', type: 'COMPANY', ownerId: danish.id, progress: 42, status: 'ACTIVE', dueDate: d('2026-06-30'), startDate: d('2026-01-01') },
-    { title: 'Achieve 95% Customer Satisfaction', type: 'COMPANY', ownerId: danish.id, progress: 68, status: 'ACTIVE', dueDate: d('2026-03-31'), startDate: d('2026-01-01') },
-    { title: 'Improve Feature Delivery Velocity +40%', type: 'TEAM', ownerId: preethi.id, progress: 55, status: 'ACTIVE', dueDate: d('2026-03-31'), startDate: d('2026-01-01'), teamId: team.id },
-    { title: 'Onboard 3 Enterprise Clients in Q1', type: 'INDIVIDUAL', ownerId: danish.id, progress: 67, status: 'ACTIVE', dueDate: d('2026-03-31'), startDate: d('2026-01-01') },
-    { title: 'Complete Q1 2026 Performance Review Cycle', type: 'INDIVIDUAL', ownerId: prasina.id, progress: 30, status: 'ACTIVE', dueDate: d('2026-03-31'), startDate: d('2026-01-15') },
-    { title: 'Skill Gap Analysis — 100% Employees', type: 'INDIVIDUAL', ownerId: prasina.id, progress: 45, status: 'ACTIVE', dueDate: d('2026-04-30'), startDate: d('2026-01-01') },
-    { title: 'Reduce Bug Count by 50%', type: 'INDIVIDUAL', ownerId: preethi.id, progress: 72, status: 'ACTIVE', dueDate: d('2026-02-28'), startDate: d('2026-01-01') },
+    { title: 'Grow ARR to ₹5 Cr by Q2 2026', type: 'COMPANY', ownerId: danish.id, progress: 42, status: 'ACTIVE', dueDate: d('2026-06-30'), startDate: d('2025-09-01') },
+    { title: 'Achieve 95% Customer Satisfaction', type: 'COMPANY', ownerId: danish.id, progress: 68, status: 'ACTIVE', dueDate: d('2026-03-31'), startDate: d('2025-10-01') },
+    { title: 'Improve Feature Delivery Velocity +40%', type: 'TEAM', ownerId: preethi.id, progress: 55, status: 'ACTIVE', dueDate: d('2026-03-31'), startDate: d('2025-10-15'), teamId: team.id },
+    { title: 'Onboard 3 Enterprise Clients in Q1', type: 'INDIVIDUAL', ownerId: danish.id, progress: 67, status: 'ACTIVE', dueDate: d('2026-03-31'), startDate: d('2025-11-01') },
+    { title: 'Complete Q1 2026 Performance Review Cycle', type: 'INDIVIDUAL', ownerId: prasina.id, progress: 30, status: 'ACTIVE', dueDate: d('2026-03-31'), startDate: d('2025-11-15') },
+    { title: 'Skill Gap Analysis — 100% Employees', type: 'INDIVIDUAL', ownerId: prasina.id, progress: 45, status: 'ACTIVE', dueDate: d('2026-04-30'), startDate: d('2025-12-01') },
+    { title: 'Reduce Bug Count by 50%', type: 'INDIVIDUAL', ownerId: preethi.id, progress: 72, status: 'ACTIVE', dueDate: d('2026-02-28'), startDate: d('2025-12-15') },
     { title: 'Mentor 2 Junior Developers', type: 'INDIVIDUAL', ownerId: preethi.id, progress: 50, status: 'ACTIVE', dueDate: d('2026-04-30'), startDate: d('2026-01-01') },
-    { title: 'Complete React Advanced Certification', type: 'INDIVIDUAL', ownerId: sanjay.id, progress: 60, status: 'ACTIVE', dueDate: d('2026-03-15'), startDate: d('2026-01-01') },
-    { title: 'Deliver User Dashboard Feature', type: 'INDIVIDUAL', ownerId: sanjay.id, progress: 100, status: 'COMPLETED', dueDate: d('2026-02-15'), startDate: d('2026-01-10'), completedAt: d('2026-02-15') },
+    { title: 'Complete React Advanced Certification', type: 'INDIVIDUAL', ownerId: sanjay.id, progress: 60, status: 'ACTIVE', dueDate: d('2026-03-15'), startDate: d('2026-01-15') },
+    { title: 'Deliver User Dashboard Feature', type: 'INDIVIDUAL', ownerId: sanjay.id, progress: 100, status: 'COMPLETED', dueDate: d('2026-02-15'), startDate: d('2026-02-01'), completedAt: d('2026-02-15') },
   ];
 
   const goals: any[] = [];
@@ -238,6 +238,7 @@ async function main() {
         dueDate: gs.dueDate,
         completedAt: gs.completedAt ?? null,
         teamId: gs.teamId ?? null,
+        createdAt: gs.startDate,
       },
     });
     goals.push(goal);

@@ -254,9 +254,9 @@ export function NeuralSwarmLayout() {
         </div>
 
         {/* Center: Mode switcher */}
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center min-w-0 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           <div
-            className={`flex items-center rounded-xl p-1 ${modeSwitcherContainer(theme)} transition-colors duration-300`}
+            className={`flex items-center rounded-xl p-1 ${modeSwitcherContainer(theme)} transition-colors duration-300 flex-shrink-0`}
           >
             {MODES.map((mode) => {
               const isActive = swarmMode === mode.key;
@@ -265,7 +265,7 @@ export function NeuralSwarmLayout() {
                 <button
                   key={mode.key}
                   onClick={() => handleModeSwitch(mode.key)}
-                  className={`relative flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-300 ${
+                  className={`relative flex items-center gap-1.5 rounded-lg px-2 sm:px-3 py-1.5 text-xs font-semibold transition-all duration-300 flex-shrink-0 ${
                     isActive
                       ? activeModeButton(theme)
                       : inactiveModeButton(theme)

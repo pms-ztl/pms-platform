@@ -308,7 +308,7 @@ export function SkillGapHeatmapPage() {
             </div>
             <div className="min-w-0">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Most Common Gap</p>
-              <p className="text-sm font-bold text-secondary-900 dark:text-white truncate" title={stats.mostCommon}>{stats.mostCommon}</p>
+              <p className="text-sm font-bold text-secondary-900 dark:text-white break-words line-clamp-2" title={stats.mostCommon}>{stats.mostCommon}</p>
             </div>
           </div>
         </div>

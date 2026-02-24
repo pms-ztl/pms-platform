@@ -250,18 +250,28 @@ export function MentoringHubPage() {
           <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
             <UserGroupIcon className="h-6 w-6 text-green-500" />
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="text-2xl font-bold text-secondary-900 dark:text-white">{mentorshipList.filter(m => m.status === 'active').length}</p>
             <p className="text-xs text-secondary-500">Active Mentorships</p>
+            {mentorshipList.filter(m => m.status === 'active').length === 0 && (
+              <button onClick={() => setActiveTab('find')} className="mt-1.5 text-2xs font-semibold text-primary-600 dark:text-primary-400 hover:underline">
+                Browse available mentors →
+              </button>
+            )}
           </div>
         </div>
         <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
             <BookOpenIcon className="h-6 w-6 text-blue-500" />
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="text-2xl font-bold text-secondary-900 dark:text-white">{learningPct}%</p>
             <p className="text-xs text-secondary-500">Learning Progress</p>
+            {learningPct === 0 && (
+              <button onClick={() => setActiveTab('learning')} className="mt-1.5 text-2xs font-semibold text-primary-600 dark:text-primary-400 hover:underline">
+                Start a learning path →
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -350,7 +350,7 @@ export function DashboardLayout() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
+            <div className="fixed inset-0 bg-black/75 backdrop-blur-sm" />
           </Transition.Child>
 
           <div className="fixed inset-0 flex">
@@ -520,7 +520,7 @@ export function DashboardLayout() {
         </div>
 
         {/* Main content area */}
-        <main className={clsx('py-8 pb-20 sm:pb-8 transition-all duration-300', aiTransitionPhase !== 'idle' && 'opacity-0 blur-md')}>
+        <main className={clsx('py-8 pb-24 sm:pb-8 transition-all duration-300', aiTransitionPhase !== 'idle' && 'opacity-0 blur-md')}>
           <div className="px-4 sm:px-6 lg:px-8 page-content">
             <Breadcrumbs />
             <Outlet />

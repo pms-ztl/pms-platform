@@ -223,7 +223,7 @@ function PlanCard({ plan, showEmployee }: { plan: DevelopmentPlan; showEmployee?
               </div>
             )}
             <div className="min-w-0">
-              <h3 className="text-sm font-semibold text-secondary-900 dark:text-white break-words group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+              <h3 className="text-sm font-semibold text-secondary-900 dark:text-white break-words group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors first-letter:uppercase">
                 {plan.planName}
               </h3>
               {showEmployee && plan.user && (
