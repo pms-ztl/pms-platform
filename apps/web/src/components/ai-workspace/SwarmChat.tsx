@@ -381,32 +381,32 @@ function AgentSidebar({
 
   return (
     <div
-      className={`flex w-48 flex-shrink-0 flex-col border-r transition-all duration-300 ${T.surface(theme)} ${T.border(theme)}`}
+      className={`flex w-[280px] flex-shrink-0 flex-col border-r transition-all duration-300 ${T.surface(theme)} ${T.border(theme)}`}
     >
       {/* Header */}
-      <div className={`flex items-center justify-between border-b px-3 py-3 ${T.borderLight(theme)}`}>
-        <h3 className={`text-sm font-semibold ${T.textPrimary(theme)}`}>Agents</h3>
+      <div className={`flex items-center justify-between border-b px-3 py-2 ${T.borderLight(theme)}`}>
+        <h3 className={`text-xs font-semibold ${T.textPrimary(theme)}`}>Agents</h3>
         <button
           onClick={onToggleCollapse}
-          className={`flex h-7 w-7 items-center justify-center rounded-lg transition-colors ${T.surfaceHover(theme)} ${T.textSecondary(theme)}`}
+          className={`flex h-6 w-6 items-center justify-center rounded-lg transition-colors ${T.surfaceHover(theme)} ${T.textSecondary(theme)}`}
           title="Collapse sidebar"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
       </div>
 
       {/* Search */}
-      <div className="px-3 py-2">
+      <div className="px-3 py-1.5">
         <div className="relative">
-          <MagnifyingGlassIcon className={`absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 ${T.textMuted(theme)}`} />
+          <MagnifyingGlassIcon className={`absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 ${T.textMuted(theme)}`} />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search agents..."
-            className={`w-full rounded-lg border py-1.5 pl-8 pr-3 text-xs outline-none transition-all ${T.inputField(theme)}`}
+            className={`w-full rounded-lg border py-1 pl-8 pr-3 text-2xs outline-none transition-all ${T.inputField(theme)}`}
           />
         </div>
       </div>
@@ -424,7 +424,7 @@ function AgentSidebar({
               className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors ${T.surfaceHover(theme)}`}
             >
               <cluster.icon className="h-3.5 w-3.5 flex-shrink-0 text-current" />
-              <span className={`flex-1 text-xs font-medium ${T.textPrimary(theme)}`}>{cluster.name}</span>
+              <span className={`flex-1 text-2xs font-medium ${T.textPrimary(theme)}`}>{cluster.name}</span>
               <span className={`text-2xs ${T.textMuted(theme)}`}>{cluster.agents.length}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -446,20 +446,20 @@ function AgentSidebar({
                     <button
                       key={agent.type}
                       onClick={() => onSelectAgent(agent.type)}
-                      className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-all duration-200 ${
+                      className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-all duration-200 ${
                         isSelected
                           ? `${T.accentBg(theme)} ${T.selectedRing(theme)}`
                           : T.surfaceHover(theme)
                       }`}
                     >
-                      <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md">
-                        <agent.icon className="h-4 w-4 text-current" />
+                      <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md">
+                        <agent.icon className="h-3 w-3 text-current" />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <div className={`break-wordstext-xs font-medium ${isSelected ? T.accentText(theme) : T.textPrimary(theme)}`}>
+                        <div className={`break-words text-2xs font-medium ${isSelected ? T.accentText(theme) : T.textPrimary(theme)}`}>
                           {agent.name}
                         </div>
-                        <div className={`break-wordstext-2xs ${T.textMuted(theme)}`}>{agent.desc}</div>
+                        <div className={`break-words text-3xs ${T.textMuted(theme)}`}>{agent.desc}</div>
                       </div>
                     </button>
                   );
