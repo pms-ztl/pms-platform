@@ -665,7 +665,11 @@ export function ModeratorDashboardPage() {
                 <div className="text-center py-12 px-4">
                   <UserIcon className="h-10 w-10 mx-auto text-secondary-300 dark:text-secondary-600 mb-2" />
                   <p className="text-sm text-secondary-500 dark:text-secondary-400">
-                    No employees found
+                    {!activeCycleId
+                      ? 'No active review cycle selected'
+                      : employeeSummaries.length === 0
+                        ? 'No reviews submitted in this cycle yet'
+                        : 'No employees match your search'}
                   </p>
                 </div>
               ) : (

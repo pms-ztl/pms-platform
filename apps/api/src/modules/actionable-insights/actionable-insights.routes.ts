@@ -249,6 +249,11 @@ router.post('/development/generate', async (request, res) => {
     const tenantId = req.user!.tenantId;
     const { userId, planType = 'CAREER_GROWTH', careerGoal, targetRole, duration = 6 } = req.body;
 
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (userId && !uuidRegex.test(userId)) {
+      return res.status(400).json({ success: false, error: 'Invalid user ID format. Please provide a valid UUID.' });
+    }
+
     const targetUserId = userId || req.user!.id;
 
     const user = await prisma.user.findFirst({

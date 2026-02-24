@@ -87,7 +87,7 @@ export function AIDevPlanPage() {
       duration: d.duration,
     }),
     onSuccess: () => { toast.success('Development plan generated'); setShowGenModal(false); qc.invalidateQueries({ queryKey: ['dev-plans'] }); },
-    onError: () => toast.error('Failed to generate plan'),
+    onError: (err: any) => toast.error(err?.message || 'Failed to generate plan'),
   });
 
   const progressMut = useMutation({

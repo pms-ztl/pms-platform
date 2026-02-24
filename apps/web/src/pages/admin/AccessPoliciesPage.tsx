@@ -294,8 +294,8 @@ export function AccessPoliciesPage() {
       priority: formPriority,
       targetRoles: parseList(formTargetRoles),
       targetDepartments: parseList(formTargetDepartments),
-      effectiveFrom: formEffectiveFrom || undefined,
-      effectiveTo: formEffectiveTo || undefined,
+      effectiveFrom: formEffectiveFrom ? new Date(formEffectiveFrom).toISOString() : undefined,
+      effectiveTo: formEffectiveTo ? new Date(formEffectiveTo).toISOString() : undefined,
     };
 
     setSaving(true);

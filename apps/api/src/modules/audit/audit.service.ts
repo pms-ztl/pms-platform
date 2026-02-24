@@ -73,6 +73,8 @@ class AuditService {
         { action: { contains: params.search, mode: 'insensitive' } },
         { entityType: { contains: params.search, mode: 'insensitive' } },
         { entityId: { contains: params.search, mode: 'insensitive' } },
+        { user: { firstName: { contains: params.search, mode: 'insensitive' } } },
+        { user: { lastName: { contains: params.search, mode: 'insensitive' } } },
       ];
     }
 

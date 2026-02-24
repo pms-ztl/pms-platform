@@ -204,9 +204,9 @@ function formatTime(iso: string): string {
   }).format(new Date(iso));
 }
 
-function truncateId(id: string, _max = 8): string {
+function truncateId(id: string, max = 8): string {
   if (!id) return '--';
-  return id;
+  return id.length > max ? id.slice(0, max) + '…' : id;
 }
 
 function getInitials(firstName: string, lastName: string): string {
