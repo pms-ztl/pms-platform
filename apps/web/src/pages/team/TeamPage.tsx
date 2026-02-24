@@ -271,6 +271,18 @@ export function TeamPage() {
             <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
               {searchQuery ? 'Try adjusting your search query.' : 'No team data available.'}
             </p>
+            {searchQuery ? (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary-50 text-primary-700 hover:bg-primary-100 dark:bg-primary-900/30 dark:text-primary-300 dark:hover:bg-primary-900/50 transition-colors"
+              >
+                Clear Search
+              </button>
+            ) : (
+              <p className="mt-3 text-xs text-secondary-400 dark:text-secondary-500">
+                Team members will appear here once assigned by your organization.
+              </p>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">

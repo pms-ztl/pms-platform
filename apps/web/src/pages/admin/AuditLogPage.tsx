@@ -977,10 +977,10 @@ function EventTableRow({
               </div>
             )}
             <div className="min-w-0">
-              <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
+              <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
                 {event.user.firstName} {event.user.lastName}
               </p>
-              <p className="text-xs text-secondary-400 dark:text-secondary-500 break-words">
+              <p className="text-xs text-secondary-400 dark:text-secondary-500 truncate">
                 {event.user.email}
               </p>
             </div>
@@ -1000,8 +1000,8 @@ function EventTableRow({
         </td>
 
         {/* Entity Type */}
-        <td className="px-4 py-3 whitespace-nowrap">
-          <span className="text-sm text-secondary-700 dark:text-secondary-300">
+        <td className="px-4 py-3">
+          <span className="text-sm text-secondary-700 dark:text-secondary-300 line-clamp-2">
             {event.entityType.replace(/_/g, ' ')}
           </span>
         </td>

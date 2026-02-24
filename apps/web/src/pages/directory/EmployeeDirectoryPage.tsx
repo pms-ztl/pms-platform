@@ -383,13 +383,13 @@ export function EmployeeDirectoryPage() {
           </div>
 
           {/* Department filter */}
-          <div className="flex items-center gap-3">
-            <div className="relative">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="relative flex-1 min-w-0 sm:flex-none">
               <FunnelIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-secondary-400 pointer-events-none" />
               <select
                 value={departmentFilter}
                 onChange={(e) => setDepartmentFilter(e.target.value)}
-                className="input pl-9 pr-8 min-w-[180px]"
+                className="input pl-9 pr-8 w-full sm:min-w-[180px]"
               >
                 <option value="">All Departments</option>
                 {departments?.map((dept: Department) => (
@@ -404,7 +404,7 @@ export function EmployeeDirectoryPage() {
             <select
               value={activeFilter}
               onChange={(e) => setActiveFilter(e.target.value as ActiveFilter)}
-              className="input min-w-[130px]"
+              className="input flex-1 min-w-0 sm:flex-none sm:min-w-[130px]"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>

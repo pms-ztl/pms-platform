@@ -211,11 +211,11 @@ export function SelfAppraisalPage() {
               {competencies.map((competency) => (
                 <div
                   key={competency.id}
-                  className="flex items-center justify-between p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg"
                 >
-                  <div>
+                  <div className="min-w-0">
                     <p className="font-medium text-secondary-900 dark:text-white">{competency.name}</p>
-                    <p className="text-sm text-secondary-500 dark:text-secondary-400">{competency.description}</p>
+                    <p className="text-xs sm:text-sm text-secondary-500 dark:text-secondary-400">{competency.description}</p>
                   </div>
                   <RatingStars
                     rating={competency.rating}

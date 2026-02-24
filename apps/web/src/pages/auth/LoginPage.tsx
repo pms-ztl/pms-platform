@@ -126,7 +126,7 @@ function SuperAdminButton({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-full group relative flex items-center gap-5 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-7 text-left hover:bg-white/[0.08] hover:border-white/[0.15] overflow-hidden"
+      className="w-full group relative flex items-center gap-3 sm:gap-5 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 sm:p-7 text-left hover:bg-white/[0.08] hover:border-white/[0.15] overflow-hidden"
       style={{ transition: 'transform 0.2s ease-out, background 0.4s, border-color 0.4s, box-shadow 0.3s ease-out', willChange: 'transform' }}
     >
       {/* Cursor-following glow */}
@@ -134,12 +134,12 @@ function SuperAdminButton({ onClick }: { onClick: () => void }) {
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(255,255,255,0.07) 0%, transparent 60%)' }} />
       </div>
       {/* #27: Icon container with glow pulse on hover */}
-      <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/[0.06] border border-white/[0.1] group-hover:bg-white/[0.12] group-hover:border-white/[0.2] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.12)]">
-        <ShieldCheckIcon className="h-7 w-7 text-white/60 group-hover:text-white/90 transition-colors duration-300" />
+      <div className="relative flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl bg-white/[0.06] border border-white/[0.1] group-hover:bg-white/[0.12] group-hover:border-white/[0.2] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.12)]">
+        <ShieldCheckIcon className="h-6 w-6 sm:h-7 sm:w-7 text-white/60 group-hover:text-white/90 transition-colors duration-300" />
       </div>
       <div className="relative flex-1 min-w-0">
-        <h3 className="font-display text-2xl font-semibold text-white/90">Command Center</h3>
-        <p className="text-lg text-white/50 group-hover:text-white/70 transition-colors duration-300">Full platform control & tenant orchestration</p>
+        <h3 className="font-display text-xl sm:text-2xl font-semibold text-white/90">Command Center</h3>
+        <p className="text-sm sm:text-lg text-white/50 group-hover:text-white/70 transition-colors duration-300">Full platform control & tenant orchestration</p>
       </div>
       <ArrowRightIcon className="relative h-5 w-5 text-white/30 group-hover:text-white/70 group-hover:translate-x-1 transition-all duration-300" />
     </button>
@@ -154,19 +154,19 @@ function CompanyButton({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-full group relative flex items-center gap-5 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-7 text-left hover:bg-white/[0.08] hover:border-white/[0.15] overflow-hidden"
+      className="w-full group relative flex items-center gap-3 sm:gap-5 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 sm:p-7 text-left hover:bg-white/[0.08] hover:border-white/[0.15] overflow-hidden"
       style={{ transition: 'transform 0.2s ease-out, background 0.4s, border-color 0.4s, box-shadow 0.3s ease-out', willChange: 'transform' }}
     >
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 overflow-hidden rounded-2xl pointer-events-none">
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(255,255,255,0.07) 0%, transparent 60%)' }} />
       </div>
       {/* #28: Company icon with glow pulse on hover */}
-      <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/[0.06] border border-white/[0.1] group-hover:bg-white/[0.12] group-hover:border-white/[0.2] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.12)]">
-        <BuildingOffice2Icon className="h-7 w-7 text-white/60 group-hover:text-white/90 transition-colors duration-300" />
+      <div className="relative flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl bg-white/[0.06] border border-white/[0.1] group-hover:bg-white/[0.12] group-hover:border-white/[0.2] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.12)]">
+        <BuildingOffice2Icon className="h-6 w-6 sm:h-7 sm:w-7 text-white/60 group-hover:text-white/90 transition-colors duration-300" />
       </div>
       <div className="relative flex-1 min-w-0">
-        <h3 className="font-display text-2xl font-semibold text-white/90">Your Workspace</h3>
-        <p className="text-lg text-white/50 group-hover:text-white/70 transition-colors duration-300">Lead, collaborate, or grow — your call</p>
+        <h3 className="font-display text-xl sm:text-2xl font-semibold text-white/90">Your Workspace</h3>
+        <p className="text-sm sm:text-lg text-white/50 group-hover:text-white/70 transition-colors duration-300">Lead, collaborate, or grow — your call</p>
       </div>
       <ArrowRightIcon className="relative h-5 w-5 text-white/30 group-hover:text-white/70 group-hover:translate-x-1 transition-all duration-300" />
     </button>
@@ -333,8 +333,8 @@ export function LoginPage() {
     return (
       <div>
         <div className="mb-10 animate-slide-up-fade" style={{ animationDelay: '0.15s' }}>
-          <h2 className="font-display text-5xl font-bold text-white mb-3">Step Into Your Arena</h2>
-          <p className="text-white/55 text-2xl">Choose how you want to make an impact today</p>
+          <h2 className="font-display text-3xl sm:text-5xl font-bold text-white mb-3">Step Into Your Arena</h2>
+          <p className="text-white/55 text-lg sm:text-2xl">Choose how you want to make an impact today</p>
         </div>
 
         {/* #23: Elastic bounce entrance for login buttons */}
@@ -348,7 +348,7 @@ export function LoginPage() {
         </div>
 
         {/* #24: Lock icon heartbeat pulse */}
-        <div className="mt-10 flex items-center justify-center gap-3 text-base text-white/35 animate-slide-up-fade" style={{ animationDelay: '0.7s' }}>
+        <div className="mt-8 sm:mt-10 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base text-white/35 animate-slide-up-fade" style={{ animationDelay: '0.7s' }}>
           <LockClosedIcon className="w-5 h-5 animate-heartbeat" />
           <span>Bank-grade security. Zero compromises.</span>
         </div>

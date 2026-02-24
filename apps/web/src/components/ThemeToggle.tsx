@@ -70,7 +70,7 @@ export function ThemeToggle() {
         <span className="sr-only">Change theme</span>
         <CurrentIcon className={clsx(
           'h-5 w-5',
-          theme === 'deep-dark' && 'text-cyan-400'
+          theme === 'deep-dark' && 'text-primary-400'
         )} />
       </Menu.Button>
 
@@ -104,7 +104,7 @@ export function ThemeToggle() {
                 >
                   <t.icon className={clsx(
                     'h-[18px] w-[18px] shrink-0',
-                    t.key === 'deep-dark' && theme === t.key ? 'text-cyan-400' : ''
+                    t.key === 'deep-dark' && theme === t.key ? 'text-primary-400' : ''
                   )} />
                   <div className="flex-1 text-left">
                     <p className="font-medium text-sm">{t.label}</p>

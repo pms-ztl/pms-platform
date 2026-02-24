@@ -507,7 +507,7 @@ function ConversationItem({ convo, isActive, onClick, onlineUsers }: {
         </div>
         {convo.lastMessage && (
           <p className={clsx(
-            'text-xs break-words mt-0.5 leading-relaxed',
+            'text-xs break-words mt-0.5 leading-relaxed line-clamp-1',
             convo.hasUnread ? 'text-secondary-600 dark:text-secondary-300' : 'text-secondary-400 dark:text-secondary-500'
           )}>
             {convo.type !== 'DIRECT' && convo.lastMessage.senderName && (

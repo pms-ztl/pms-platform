@@ -70,12 +70,12 @@ export function SettingsPage() {
             { key: 'emailGoalUpdates', label: 'Goal updates', description: 'When your goals are updated or completed' },
             { key: 'emailWeeklySummary', label: 'Weekly summary', description: 'A weekly digest of your performance' },
           ].map((item) => (
-            <div key={item.key} className="flex items-center justify-between">
-              <div>
+            <div key={item.key} className="flex items-center justify-between gap-4">
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-secondary-900 dark:text-white">{item.label}</p>
                 <p className="text-xs text-secondary-500 dark:text-secondary-400">{item.description}</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
                 <input
                   type="checkbox"
                   checked={notificationSettings[item.key as keyof typeof notificationSettings]}
@@ -100,12 +100,12 @@ export function SettingsPage() {
             { key: 'pushFeedbackReceived', label: 'Feedback received', description: 'When someone gives you feedback' },
             { key: 'pushMentions', label: 'Mentions', description: 'When someone mentions you in a comment' },
           ].map((item) => (
-            <div key={item.key} className="flex items-center justify-between">
-              <div>
+            <div key={item.key} className="flex items-center justify-between gap-4">
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-secondary-900 dark:text-white">{item.label}</p>
                 <p className="text-xs text-secondary-500 dark:text-secondary-400">{item.description}</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
+              <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
                 <input
                   type="checkbox"
                   checked={notificationSettings[item.key as keyof typeof notificationSettings]}

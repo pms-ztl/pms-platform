@@ -134,7 +134,7 @@ export function RecognitionPage() {
           </div>
           <button
             onClick={() => setShowGiveModal(true)}
-            className="group relative flex items-center gap-2 rounded-xl px-5 py-2.5 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-[0.98]"
+            className="group relative flex items-center gap-2 rounded-xl px-4 sm:px-5 py-2 sm:py-2.5 text-sm sm:text-base font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-[0.98] whitespace-nowrap flex-shrink-0"
             style={{
               background: 'linear-gradient(135deg, #f59e0b, #f97316, #ef4444)',
               boxShadow: '0 4px 20px rgba(249, 115, 22, 0.35), 0 2px 8px rgba(0,0,0,0.1)',
@@ -225,7 +225,7 @@ export function RecognitionPage() {
                           {item.toUser.firstName} {item.toUser.lastName}
                         </span>
                       </div>
-                      <p className="mt-2 text-sm text-secondary-700 dark:text-secondary-300 leading-relaxed whitespace-pre-wrap">{item.content}</p>
+                      <p className="mt-2 text-xs sm:text-sm text-secondary-700 dark:text-secondary-300 leading-relaxed whitespace-pre-wrap line-clamp-3 sm:line-clamp-none">{item.content}</p>
                       {item.tags && item.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 mt-3">
                           {item.tags.map((tag: string) => (

@@ -755,7 +755,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
 
       {/* #20: Bottom bar with text glow */}
       <div className="absolute bottom-2.5 inset-x-0 z-10 flex items-center justify-center pointer-events-none animate-slide-up-fade" style={{ animationDelay: '2s' }}>
-        <span className="text-sm text-white/35 font-medium tracking-[0.2em] animate-text-glow" style={{ animationDuration: '5s' }}>PMS Suite · Next-Gen Performance Intelligence</span>
+        <span className="text-xs sm:text-sm text-white/35 font-medium tracking-[0.1em] sm:tracking-[0.2em] animate-text-glow whitespace-nowrap" style={{ animationDuration: '5s' }}>PMS Suite · Next-Gen Performance Intelligence</span>
       </div>
     </div>
   );
