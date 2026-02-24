@@ -263,48 +263,48 @@ export function SkillGapHeatmapPage() {
       </PageHeader>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-3 md:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 w-fit">
               <ChartBarIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Total Skills</p>
-              <p className="text-2xl font-bold text-secondary-900 dark:text-white">{stats.totalSkills}</p>
+              <p className="text-xl md:text-2xl font-bold text-secondary-900 dark:text-white">{stats.totalSkills}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-50 dark:bg-red-900/30">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-3 md:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <div className="p-2 rounded-lg bg-red-50 dark:bg-red-900/30 w-fit">
               <ExclamationTriangleIcon className="h-5 w-5 text-red-600 dark:text-red-400" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Critical Gaps</p>
-              <p className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.criticalGaps}</p>
+              <p className="text-xl md:text-2xl font-bold text-red-600 dark:text-red-400">{stats.criticalGaps}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/30">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-3 md:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <div className="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 w-fit">
               <PuzzlePieceIcon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
-            <div>
-              <p className="text-xs text-secondary-500 dark:text-secondary-400">Average Skill Level</p>
-              <p className="text-2xl font-bold text-secondary-900 dark:text-white">{(stats.avgLevel ?? 0).toFixed(1)}</p>
+            <div className="min-w-0">
+              <p className="text-xs text-secondary-500 dark:text-secondary-400">Avg Skill Level</p>
+              <p className="text-xl md:text-2xl font-bold text-secondary-900 dark:text-white">{(stats.avgLevel ?? 0).toFixed(1)}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-50 dark:bg-amber-900/30">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-3 md:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <div className="p-2 rounded-lg bg-amber-50 dark:bg-amber-900/30 w-fit">
               <UserGroupIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Most Common Gap</p>
-              <p className="text-sm font-bold text-secondary-900 dark:text-white break-words" title={stats.mostCommon}>{stats.mostCommon}</p>
+              <p className="text-sm font-bold text-secondary-900 dark:text-white truncate" title={stats.mostCommon}>{stats.mostCommon}</p>
             </div>
           </div>
         </div>
@@ -327,8 +327,8 @@ export function SkillGapHeatmapPage() {
               </button>
             )}
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-xs">
+          <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0" style={{ scrollbarWidth: 'thin' }}>
+            <table className="min-w-[600px] w-full text-xs">
               <thead>
                 <tr>
                   <th className="text-left py-2 px-3 font-medium text-secondary-500 dark:text-secondary-400 sticky left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-10">Department</th>
@@ -395,9 +395,9 @@ export function SkillGapHeatmapPage() {
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">
             {selectedCategory ? `Filtered by: ${selectedCategory}` : 'All categories'} — top {barData.length} gaps by severity
           </p>
-          <div className="h-[400px]">
+          <div className="h-[320px] md:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barData} layout="vertical" margin={{ top: 0, right: 20, bottom: 0, left: 10 }}>
+              <BarChart data={barData} layout="vertical" margin={{ top: 0, right: 10, bottom: 0, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
                 <XAxis
                   type="number"
@@ -410,23 +410,25 @@ export function SkillGapHeatmapPage() {
                 <YAxis
                   type="category"
                   dataKey="displayName"
-                  tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }}
+                  tick={{ fontSize: 9, fill: 'var(--color-secondary-500, #6b7280)' }}
                   axisLine={false}
                   tickLine={false}
-                  width={140}
+                  width={100}
                 />
                 <Tooltip
                   cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                  allowEscapeViewBox={{ x: false, y: false }}
+                  wrapperStyle={{ zIndex: 50, maxWidth: '90vw' }}
                   content={({ active, payload }) => {
                     if (!active || !payload?.length) return null;
                     const d = payload[0].payload as SkillGap;
                     return (
-                      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-                        <p className="font-semibold text-white">{d.skillName}</p>
+                      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1 max-w-[260px]">
+                        <p className="font-semibold text-white break-words">{d.skillName}</p>
                         <p className="text-slate-300">Category: {d.category}</p>
-                        <p className="text-slate-300">Average Level: {(d.avgRating ?? 0).toFixed(2)} / Target: {(d.targetLevel ?? 0).toFixed(1)}</p>
+                        <p className="text-slate-300">Avg: {(d.avgRating ?? 0).toFixed(2)} / Target: {(d.targetLevel ?? 0).toFixed(1)}</p>
                         <p style={{ color: gapColor(d.gap) }}>Gap: {(d.gap ?? 0).toFixed(2)}</p>
-                        <p className="text-slate-300">Employees Affected: {d.employeesAffected}</p>
+                        <p className="text-slate-300">Affected: {d.employeesAffected}</p>
                       </div>
                     );
                   }}

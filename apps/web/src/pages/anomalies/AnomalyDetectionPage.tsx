@@ -306,12 +306,12 @@ export function AnomalyDetectionPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <FunnelIcon className="w-4 h-4 text-secondary-400" />
+      <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <FunnelIcon className="w-4 h-4 text-secondary-400 flex-shrink-0" />
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-1.5 text-xs text-secondary-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-2 sm:px-3 py-2 text-sm sm:text-xs text-secondary-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
         >
           <option value="all">All Statuses</option>
           <option value="ACTIVE">Active</option>
@@ -321,7 +321,7 @@ export function AnomalyDetectionPage() {
         <select
           value={severityFilter}
           onChange={(e) => setSeverityFilter(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-1.5 text-xs text-secondary-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-2 sm:px-3 py-2 text-sm sm:text-xs text-secondary-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
         >
           <option value="all">All Severities</option>
           <option value="CRITICAL">Critical</option>
@@ -343,7 +343,7 @@ export function AnomalyDetectionPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="min-w-[700px] w-full text-sm">
               <thead>
                 <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
                   {['Severity', 'Entity', 'Type', 'Description', 'Detected', 'Status', 'Actions'].map((h) => (

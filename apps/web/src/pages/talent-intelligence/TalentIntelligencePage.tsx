@@ -199,26 +199,26 @@ export function TalentIntelligencePage() {
             AI-powered promotion recommendations and succession planning
           </p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => setShowGenerateModal(true)} className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg transition-colors">
-            <PlusIcon className="w-4 h-4" /> Generate Recommendation
+        <div className="flex flex-wrap gap-2">
+          <button onClick={() => setShowGenerateModal(true)} className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg transition-colors">
+            <PlusIcon className="w-4 h-4 flex-shrink-0" /> <span className="hidden sm:inline">Generate</span> Recommendation
           </button>
-          <button onClick={() => setShowSuccessionModal(true)} className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
-            <UserGroupIcon className="w-4 h-4" /> Succession Plan
+          <button onClick={() => setShowSuccessionModal(true)} className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
+            <UserGroupIcon className="w-4 h-4 flex-shrink-0" /> Succession Plan
           </button>
         </div>
       </div>
 
       {/* User lookup */}
       <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-        <div className="flex items-center gap-3">
-          <label className="text-sm font-medium text-secondary-700 dark:text-secondary-300 whitespace-nowrap">Lookup recommendations for:</label>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+          <label className="text-sm font-medium text-secondary-700 dark:text-secondary-300">Lookup recommendations for:</label>
           <input
             type="text"
             value={recUserId}
             onChange={(e) => setRecUserId(e.target.value)}
             placeholder="Enter User ID"
-            className="flex-1 max-w-xs rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+            className="flex-1 sm:max-w-xs rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           />
         </div>
       </div>

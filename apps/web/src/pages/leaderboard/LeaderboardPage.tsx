@@ -239,29 +239,29 @@ function Podium({ entries }: { entries: AnyEntry[] }) {
   const labels = ['Silver', 'Gold', 'Bronze'];
 
   return (
-    <div className="flex items-end justify-center gap-4 sm:gap-6 py-6">
+    <div className="flex items-end justify-center gap-2 sm:gap-6 py-4 sm:py-6 px-1 sm:px-0">
       {podiumOrder.map((entry, idx) => (
-        <div key={entry.user.id} className={clsx('flex flex-col items-center transition-all duration-500 animate-slide-up', idx === 1 && 'order-2', idx === 0 && 'order-1', idx === 2 && 'order-3')} style={{ animationDelay: `${idx * 150}ms` }}>
-          <div className="relative mb-3">
+        <div key={entry.user.id} className={clsx('flex flex-col items-center transition-all duration-500 animate-slide-up min-w-0 flex-1 sm:flex-none', idx === 1 && 'order-2', idx === 0 && 'order-1', idx === 2 && 'order-3')} style={{ animationDelay: `${idx * 150}ms` }}>
+          <div className="relative mb-2 sm:mb-3">
             {idx === 1 && (
-              <TrophyIcon className="absolute -top-5 left-1/2 -translate-x-1/2 h-8 w-8 text-amber-400 drop-shadow-lg animate-bounce-soft" />
+              <TrophyIcon className="absolute -top-5 left-1/2 -translate-x-1/2 h-6 w-6 sm:h-8 sm:w-8 text-amber-400 drop-shadow-lg animate-bounce-soft" />
             )}
-            <div className={clsx('rounded-full p-1 ring-4', ringColors[idx])}>
+            <div className={clsx('rounded-full p-0.5 sm:p-1 ring-2 sm:ring-4', ringColors[idx])}>
               <Avatar user={entry.user} size={idx === 1 ? 'xl' : 'lg'} />
             </div>
             <span className={clsx(
-              'absolute -bottom-1 -right-1 inline-flex items-center justify-center h-6 w-6 rounded-full text-xs font-bold text-white shadow-lg',
+              'absolute -bottom-1 -right-1 inline-flex items-center justify-center h-5 w-5 sm:h-6 sm:w-6 rounded-full text-2xs sm:text-xs font-bold text-white shadow-lg',
               idx === 0 && 'bg-gradient-to-br from-slate-400 to-slate-500',
               idx === 1 && 'bg-gradient-to-br from-amber-400 to-amber-600',
               idx === 2 && 'bg-gradient-to-br from-orange-400 to-orange-600',
             )}>{entry.rank}</span>
           </div>
-          <p className="text-sm font-semibold text-secondary-900 dark:text-white text-center">{entry.user.firstName} {entry.user.lastName}</p>
-          <p className="text-xs text-secondary-500 dark:text-secondary-400 text-center">{entry.user.jobTitle}</p>
-          <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">{(entry.score ?? 0).toFixed(1)}</p>
-          <p className="text-2xs text-secondary-400 dark:text-secondary-500 tracking-wider">{entry.user.department}</p>
-          <div className={clsx('mt-2 w-24 sm:w-28 rounded-t-xl bg-gradient-to-b flex items-end justify-center', heights[idx], gradients[idx])}>
-            <span className="text-xs font-bold text-secondary-500 dark:text-secondary-300 pb-2 tracking-wider">{labels[idx]}</span>
+          <p className="text-xs sm:text-sm font-semibold text-secondary-900 dark:text-white text-center truncate max-w-full">{entry.user.firstName} {entry.user.lastName}</p>
+          <p className="text-2xs sm:text-xs text-secondary-500 dark:text-secondary-400 text-center truncate max-w-full">{entry.user.jobTitle}</p>
+          <p className="text-base sm:text-lg font-bold text-primary-600 dark:text-primary-400 mt-1">{(entry.score ?? 0).toFixed(1)}</p>
+          <p className="text-2xs text-secondary-400 dark:text-secondary-500 tracking-wider truncate max-w-full">{entry.user.department}</p>
+          <div className={clsx('mt-2 w-20 sm:w-28 rounded-t-xl bg-gradient-to-b flex items-end justify-center', heights[idx], gradients[idx])}>
+            <span className="text-2xs sm:text-xs font-bold text-secondary-500 dark:text-secondary-300 pb-2 tracking-wider">{labels[idx]}</span>
           </div>
         </div>
       ))}
@@ -586,13 +586,13 @@ export function LeaderboardPage() {
             title="Leaderboards"
             subtitle="Celebrate top performers and track achievements"
           >
-            <div className="flex rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-1">
+            <div className="flex overflow-x-auto rounded-lg bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
               {periods.map(p => (
                 <button
                   key={p.key}
                   onClick={() => setPeriod(p.key)}
                   className={clsx(
-                    'px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200',
+                    'px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap flex-shrink-0',
                     period === p.key
                       ? 'bg-primary-500 text-white shadow-sm'
                       : 'text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700',
@@ -616,7 +616,7 @@ export function LeaderboardPage() {
           <div className={clsx('transition-all duration-300', sidebarOpen ? 'flex-1 min-w-0' : 'w-full')}>
 
             {/* Tab navigation */}
-            <div className="flex items-center gap-1 mb-4 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-1.5">
+            <div className="flex items-center gap-1 mb-4 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-1.5 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
@@ -624,13 +624,13 @@ export function LeaderboardPage() {
                     key={tab.key}
                     onClick={() => setActiveTab(tab.key)}
                     className={clsx(
-                      'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1 justify-center',
+                      'flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex-1 justify-center whitespace-nowrap flex-shrink-0',
                       activeTab === tab.key
                         ? 'bg-primary-500 text-white shadow-sm'
                         : 'text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-800',
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-4 w-4 flex-shrink-0" />
                     <span className="hidden sm:inline">{tab.label}</span>
                   </button>
                 );

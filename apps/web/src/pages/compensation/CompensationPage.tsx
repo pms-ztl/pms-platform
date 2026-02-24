@@ -359,9 +359,10 @@ export function CompensationPage() {
               {(budgetUtilized ?? 0).toFixed(0)}%
             </span>
           </div>
-          <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
-            <PlusIcon className="h-5 w-5" />
-            New Compensation Decision
+          <button onClick={openCreateModal} className="btn-primary flex items-center gap-2 whitespace-nowrap text-sm">
+            <PlusIcon className="h-5 w-5 flex-shrink-0" />
+            <span className="hidden sm:inline">New Compensation Decision</span>
+            <span className="sm:hidden">New Decision</span>
           </button>
         </div>
       </PageHeader>
@@ -867,11 +868,11 @@ export function CompensationPage() {
 
 function SummaryCard({ icon, label, value, bgClass }: { icon: React.ReactNode; label: string; value: number; bgClass: string }) {
   return (
-    <div className={clsx('card card-body dark:bg-secondary-800 dark:border-secondary-700 flex items-center gap-4', bgClass)}>
+    <div className={clsx('card card-body dark:bg-secondary-800 dark:border-secondary-700 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4', bgClass)}>
       <div className="flex-shrink-0">{icon}</div>
-      <div>
-        <p className="text-sm font-medium text-secondary-500 dark:text-secondary-400">{label}</p>
-        <p className="text-2xl font-bold text-secondary-900 dark:text-white">{value}</p>
+      <div className="min-w-0">
+        <p className="text-xs sm:text-sm font-medium text-secondary-500 dark:text-secondary-400 leading-tight">{label}</p>
+        <p className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">{value}</p>
       </div>
     </div>
   );

@@ -328,14 +328,14 @@ export function PromotionsPage() {
           const Icon = cardIcons[idx];
           const c = cardColorMap[card.color];
           return (
-            <div key={card.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-              <div className="flex items-center gap-3">
-                <div className={clsx('p-2 rounded-lg', c.iconBg)}>
+            <div key={card.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                <div className={clsx('p-2 rounded-lg w-fit', c.iconBg)}>
                   <Icon className={clsx('h-5 w-5', c.iconText)} />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{card.label}</p>
-                  <p className="text-lg font-bold text-secondary-900 dark:text-white">{card.value}</p>
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 leading-tight">{card.label}</p>
+                  <p className="text-lg font-bold text-secondary-900 dark:text-white whitespace-nowrap">{card.value}</p>
                 </div>
               </div>
             </div>
@@ -401,7 +401,7 @@ export function PromotionsPage() {
       ) : (
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
+            <table className="min-w-[700px] w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">Employee</th>

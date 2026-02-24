@@ -462,7 +462,7 @@ export function ManagerDashboardPage() {
     <div className="space-y-8 pb-10">
       {/* ══════════════════════════ Header ══════════════════════════ */}
       <PageHeader title="Manager Dashboard" subtitle="Your team at a glance">
-        <div className="flex items-center rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-1">
+        <div className="flex items-center overflow-x-auto rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
           {([
             ['week', 'This Week'],
             ['month', 'This Month'],
@@ -472,7 +472,7 @@ export function ManagerDashboardPage() {
               key={key}
               onClick={() => setDateRange(key)}
               className={clsx(
-                'px-4 py-1.5 text-sm font-medium rounded-md transition-colors',
+                'px-3 sm:px-4 py-1.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap flex-shrink-0',
                 dateRange === key
                   ? 'bg-primary-600 text-white shadow-sm'
                   : 'text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700',
@@ -485,19 +485,19 @@ export function ManagerDashboardPage() {
       </PageHeader>
 
       {/* ══════════════════════════ Summary Cards ══════════════════════════ */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         {/* Team Size */}
         <SectionCard>
-          <div className="p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-primary-500 to-cyan-500 shadow">
+          <div className="p-3 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-primary-500 to-cyan-500 shadow w-fit">
                 <UserGroupIcon className="h-5 w-5 text-white" />
               </div>
-              <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">
+              <span className="text-xs sm:text-sm font-medium text-secondary-500 dark:text-secondary-400">
                 Team Size
               </span>
             </div>
-            <p className="text-3xl font-bold text-secondary-900 dark:text-white">
+            <p className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white">
               {reportsLoading ? '...' : teamSize}
             </p>
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
@@ -508,16 +508,16 @@ export function ManagerDashboardPage() {
 
         {/* Average Goal Progress */}
         <SectionCard>
-          <div className="p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow">
+          <div className="p-3 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow w-fit">
                 <FlagIcon className="h-5 w-5 text-white" />
               </div>
-              <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">
-                Average Goal Progress
+              <span className="text-xs sm:text-sm font-medium text-secondary-500 dark:text-secondary-400 leading-tight">
+                Avg Goal Progress
               </span>
             </div>
-            <p className={clsx('text-3xl font-bold', progressColor(avgGoalProgress))}>
+            <p className={clsx('text-2xl sm:text-3xl font-bold', progressColor(avgGoalProgress))}>
               {avgGoalProgress}%
             </p>
             <div className="mt-2 h-1.5 bg-secondary-100 dark:bg-secondary-700 rounded-full overflow-hidden">
@@ -531,16 +531,16 @@ export function ManagerDashboardPage() {
 
         {/* Pending Reviews */}
         <SectionCard>
-          <div className="p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 shadow">
+          <div className="p-3 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 shadow w-fit">
                 <ClipboardDocumentCheckIcon className="h-5 w-5 text-white" />
               </div>
-              <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">
+              <span className="text-xs sm:text-sm font-medium text-secondary-500 dark:text-secondary-400">
                 Pending Reviews
               </span>
             </div>
-            <p className="text-3xl font-bold text-secondary-900 dark:text-white">
+            <p className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white">
               {pendingReviews.length}
             </p>
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
@@ -551,16 +551,16 @@ export function ManagerDashboardPage() {
 
         {/* Upcoming 1:1s */}
         <SectionCard>
-          <div className="p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 shadow">
+          <div className="p-3 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 shadow w-fit">
                 <CalendarDaysIcon className="h-5 w-5 text-white" />
               </div>
-              <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">
+              <span className="text-xs sm:text-sm font-medium text-secondary-500 dark:text-secondary-400">
                 Upcoming 1:1s
               </span>
             </div>
-            <p className="text-3xl font-bold text-secondary-900 dark:text-white">
+            <p className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white">
               {upcomingThisWeek.length}
             </p>
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
@@ -571,16 +571,16 @@ export function ManagerDashboardPage() {
 
         {/* Active PIPs */}
         <SectionCard>
-          <div className="p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 shadow">
+          <div className="p-3 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 shadow w-fit">
                 <ExclamationTriangleIcon className="h-5 w-5 text-white" />
               </div>
-              <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">
+              <span className="text-xs sm:text-sm font-medium text-secondary-500 dark:text-secondary-400">
                 Active PIPs
               </span>
             </div>
-            <p className="text-3xl font-bold text-secondary-900 dark:text-white">
+            <p className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white">
               {activePips.length}
             </p>
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
