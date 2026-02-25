@@ -68,8 +68,15 @@ const CPISScoreDisplay = ({
   useEffect(() => {
     if (!showInfo || !infoBtnRef.current) return;
     const rect = infoBtnRef.current.getBoundingClientRect();
+    const popH = 340; // approximate popover height
+    const PAD = 12;
+    const vh = window.innerHeight;
+    // Prefer above if not enough room below
+    const belowTop = rect.bottom + 10;
+    const aboveTop = rect.top - 10 - popH;
+    const top = (belowTop + popH > vh - PAD && aboveTop >= PAD) ? aboveTop : belowTop;
     setInfoPos({
-      top: rect.bottom + 10,
+      top,
       left: Math.max(12, Math.min(rect.left + rect.width / 2 - 150, window.innerWidth - 312)),
     });
     const handleClick = (e: MouseEvent) => {
@@ -343,11 +350,9 @@ const CPISScoreDisplay = ({
               </div>
 
               {/* Body — grade rows */}
-              <div className="relative z-10 p-3 space-y-1">
-                <p className={`text-2xs ${T.bodyMuted} mb-2 leading-relaxed`}>
-                  Your score of <strong className={T.titleColor}>{Math.round(score)}</strong> maps
-                  to grade <strong style={{ color: gradeColor }}>{grade}</strong> across
-                  all 8 weighted dimensions.
+              <div className="relative z-10 px-3 pt-2 pb-2.5 space-y-0.5">
+                <p className={`text-2xs ${T.bodyMuted} mb-1.5 leading-snug`}>
+                  Score <strong className={T.titleColor}>{Math.round(score)}</strong> = grade <strong style={{ color: gradeColor }}>{grade}</strong> (8 dimensions)
                 </p>
                 {GRADE_SCALE.map((g, idx) => {
                   const isActive = g.grade === grade;
@@ -355,7 +360,7 @@ const CPISScoreDisplay = ({
                   return (
                     <div
                       key={g.grade}
-                      className="relative rounded-lg px-2.5 py-1.5 transition-all duration-300 cursor-default"
+                      className="relative rounded-md px-2 py-1 transition-all duration-300 cursor-default"
                       style={{
                         background: isActive
                           ? `${g.color}18`
