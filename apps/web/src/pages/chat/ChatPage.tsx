@@ -1797,6 +1797,11 @@ export default function ChatPage() {
   // Load messages when conversation changes
   useEffect(() => {
     if (!activeConversationId) return;
+    // Guard: never call API with mock/invalid conversation IDs
+    if (activeConversationId.startsWith('mock-')) {
+      setActiveConversation(null as any);
+      return;
+    }
     setLoading(true);
     chatApi.getMessages(activeConversationId)
       .then((data) => setMessages(data))
@@ -1974,8 +1979,8 @@ export default function ChatPage() {
     return participant ? participant.firstName : null;
   })() : null;
 
-  // Filtered conversations
-  const displayConversations = conversations.length > 0 ? conversations : MOCK_CONVERSATIONS;
+  // Filtered conversations — never use mock data (it triggers 500s when clicked)
+  const displayConversations = conversations;
   const filteredConvos = sidebarSearch.trim()
     ? displayConversations.filter((c) => c.name?.toLowerCase().includes(sidebarSearch.toLowerCase()))
     : displayConversations;

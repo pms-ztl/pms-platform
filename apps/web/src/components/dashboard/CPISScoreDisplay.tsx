@@ -421,7 +421,7 @@ const CPISScoreDisplay = ({
             <StarIcon key={i} className={clsx('w-5 h-5', i <= starRating ? 'text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]' : 'text-white/15')} />
           ))}
         </div>
-        <span className="text-sm font-bold flex items-center gap-1" style={{ color: trajColor, fontFamily: "'Libre Baskerville', Georgia, serif" }}>
+        <span className="text-sm font-bold italic flex items-center gap-1" style={{ color: trajColor, fontFamily: "'Libre Baskerville', Georgia, serif" }}>
           {trajIcon} {trajectory.direction.charAt(0).toUpperCase() + trajectory.direction.slice(1)}
         </span>
       </div>
