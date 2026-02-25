@@ -363,28 +363,28 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
           }}
         >
           <div
-            className={`relative overflow-hidden px-3.5 py-2 rounded-xl shadow-2xl border ${T.tipBorder}`}
+            className={`relative overflow-hidden px-2.5 py-1.5 rounded-lg shadow-lg border ${T.tipBorder}`}
             style={{
               ...T.tipBg,
-              boxShadow: `0 8px 32px -4px rgba(0,0,0,0.25), 0 0 0 1px ${accent.from}15, 0 0 20px ${accent.glow}`,
+              boxShadow: `0 4px 16px -2px rgba(0,0,0,0.18), 0 0 0 1px ${accent.from}12, 0 0 10px ${accent.glow}`,
             }}
           >
             {/* Shimmer sweep */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: `linear-gradient(90deg, transparent, ${accent.from}15, transparent)`,
+                background: `linear-gradient(90deg, transparent, ${accent.from}10, transparent)`,
                 animation: 'mt-shimmer 2.5s ease-in-out infinite',
               }}
             />
             {/* Accent top bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: gradient }} />
-            <div className="relative flex items-center gap-2 whitespace-nowrap">
-              <span className={`text-xs font-bold ${T.tipText}`}>{entry.fullName}</span>
+            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: gradient }} />
+            <div className="relative flex items-center gap-1.5 whitespace-nowrap">
+              <span className={`text-2xs font-semibold ${T.tipText}`}>{entry.fullName}</span>
               {entry.weight && (
                 <span
-                  className="text-2xs font-bold px-1.5 py-0.5 rounded-md"
-                  style={{ background: `${accent.from}20`, color: accent.from }}
+                  className="text-2xs font-bold px-1 py-px rounded"
+                  style={{ background: `${accent.from}15`, color: accent.from, fontSize: '9px' }}
                 >
                   {entry.weight}
                 </span>
