@@ -111,6 +111,34 @@ const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini';
 const DEFAULT_GEMINI_MODEL = 'gemini-2.0-flash';
 const DEFAULT_DEEPSEEK_MODEL = 'deepseek-chat';
 const DEFAULT_GROQ_MODEL = 'llama-3.3-70b-versatile';
+
+/** Model prefixes that identify which provider a model belongs to.
+ *  Used during fallback: if options.model was meant for a different provider,
+ *  the fallback provider uses its own default instead of sending an unknown model name. */
+const PROVIDER_MODEL_PREFIXES: Record<LLMProvider, string[]> = {
+  anthropic: ['claude-'],
+  openai: ['gpt-', 'o1-', 'o3-'],
+  gemini: ['gemini-'],
+  deepseek: ['deepseek-'],
+  groq: ['llama-', 'mixtral-', 'gemma-'],
+};
+
+const PROVIDER_DEFAULT_MODELS: Record<LLMProvider, string> = {
+  anthropic: DEFAULT_ANTHROPIC_MODEL,
+  openai: DEFAULT_OPENAI_MODEL,
+  gemini: DEFAULT_GEMINI_MODEL,
+  deepseek: DEFAULT_DEEPSEEK_MODEL,
+  groq: DEFAULT_GROQ_MODEL,
+};
+
+/** Returns the appropriate model for a provider — if the requested model
+ *  doesn't belong to this provider, returns the provider's default model. */
+function resolveModelForProvider(provider: LLMProvider, requestedModel?: string): string {
+  if (!requestedModel) return PROVIDER_DEFAULT_MODELS[provider];
+  const prefixes = PROVIDER_MODEL_PREFIXES[provider];
+  const belongsToProvider = prefixes.some((pfx) => requestedModel.startsWith(pfx));
+  return belongsToProvider ? requestedModel : PROVIDER_DEFAULT_MODELS[provider];
+}
 const CACHE_PREFIX = 'llm:cache:';
 const CACHE_TTL = 3600; // 1 hour
 
@@ -405,7 +433,7 @@ class LLMClient {
   ): Promise<LLMToolResponse> {
     if (!this.anthropic) throw new Error('Anthropic client not configured');
 
-    const model = options.model ?? DEFAULT_ANTHROPIC_MODEL;
+    const model = resolveModelForProvider('anthropic', options.model);
     const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
 
     // Separate system message
@@ -474,7 +502,7 @@ class LLMClient {
   ): Promise<LLMToolResponse> {
     if (!this.openai) throw new Error('OpenAI client not configured');
 
-    const model = options.model ?? DEFAULT_OPENAI_MODEL;
+    const model = resolveModelForProvider('openai', options.model);
     const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
 
     // Convert tools to OpenAI function format
@@ -670,7 +698,7 @@ class LLMClient {
   ): Promise<LLMResponse> {
     if (!this.anthropic) throw new Error('Anthropic client not configured');
 
-    const model = options.model ?? DEFAULT_ANTHROPIC_MODEL;
+    const model = resolveModelForProvider('anthropic', options.model);
     const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
 
     // Separate system message from conversation
@@ -717,7 +745,7 @@ class LLMClient {
   ): Promise<LLMResponse> {
     if (!this.openai) throw new Error('OpenAI client not configured');
 
-    const model = options.model ?? DEFAULT_OPENAI_MODEL;
+    const model = resolveModelForProvider('openai', options.model);
     const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
 
     const start = Date.now();
@@ -752,7 +780,7 @@ class LLMClient {
   ): Promise<LLMResponse> {
     if (!this.deepseek) throw new Error('DeepSeek client not configured');
 
-    const model = options.model ?? DEFAULT_DEEPSEEK_MODEL;
+    const model = resolveModelForProvider('deepseek', options.model);
     const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
 
     const start = Date.now();
@@ -787,7 +815,7 @@ class LLMClient {
   ): Promise<LLMResponse> {
     if (!this.groq) throw new Error('Groq client not configured');
 
-    const model = options.model ?? DEFAULT_GROQ_MODEL;
+    const model = resolveModelForProvider('groq', options.model);
     const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
 
     const start = Date.now();
@@ -822,7 +850,7 @@ class LLMClient {
   ): Promise<LLMResponse> {
     if (!this.gemini) throw new Error('Gemini client not configured');
 
-    const model = options.model ?? DEFAULT_GEMINI_MODEL;
+    const model = resolveModelForProvider('gemini', options.model);
     const maxTokens = options.maxTokens ?? config.AI_MAX_TOKENS ?? 4096;
 
     // Convert messages to Gemini format

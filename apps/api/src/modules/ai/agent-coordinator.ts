@@ -392,8 +392,6 @@ class AgentCoordinator {
     const response = await llmClient.chat(messages, {
       temperature: 0.2,
       maxTokens: 2000,
-      model: 'gemini-2.0-flash',
-      provider: 'gemini',
       jsonMode: true, // R10: Structured output for decomposition
     });
 
@@ -614,8 +612,6 @@ class AgentCoordinator {
       const response = await llmClient.chat(messages, {
         temperature: 0.3,
         maxTokens: 2000,
-        model: 'gemini-2.0-flash',
-        provider: 'gemini',
       });
       return response.content;
     } catch (err) {
