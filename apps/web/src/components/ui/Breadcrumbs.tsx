@@ -54,6 +54,12 @@ const ROUTE_LABELS: Record<string, string> = {
   moderate: 'Moderator',
 };
 
+// Parent segments that don't have their own route — redirect to first child
+const PARENT_REDIRECTS: Record<string, string> = {
+  '/admin': '/admin/users',
+  '/manager-dashboard': '/manager-dashboard',
+};
+
 // Check if a segment looks like a UUID or ID
 const isIdSegment = (segment: string) => /^[0-9a-f-]{8,}$/i.test(segment);
 
@@ -125,7 +131,9 @@ function generateCrumbs(pathname: string): Array<{ label: string; href: string }
       crumbs.push({ label: 'Details', href: currentPath });
     } else {
       const label = ROUTE_LABELS[segment] ?? segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-      crumbs.push({ label, href: currentPath });
+      // Use redirect if this parent path has no own route
+      const href = PARENT_REDIRECTS[currentPath] ?? currentPath;
+      crumbs.push({ label, href });
     }
   }
 
