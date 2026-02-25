@@ -299,7 +299,14 @@ function GlassFeatureCard({ icon: Icon, title, description, delay }: {
   icon: React.ForwardRefExoticComponent<any>; title: string; description: string; delay: number;
 }) {
   const { ref: viewRef, visible } = useInView(0.2);
-  const tilt = useTilt(8);
+  const tilt = useTilt(10);
+  const particles = Array.from({ length: 6 }, (_, i) => ({
+    left: `${15 + Math.random() * 70}%`,
+    bottom: `${8 + Math.random() * 25}%`,
+    size: 2 + Math.random() * 2,
+    dur: 1.5 + Math.random() * 1.5,
+    del: i * 0.25,
+  }));
   return (
     <div ref={viewRef} className="h-full">
       <div
@@ -315,12 +322,22 @@ function GlassFeatureCard({ icon: Icon, title, description, delay }: {
           transitionDelay: `${delay}ms`, boxShadow: '0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)',
         }}
       >
-        <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110 animate-icon-glow-pulse"
-          style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)' }}>
-          <Icon className="w-7 h-7 text-cyan-300 group-hover:text-cyan-200 transition-colors" />
+        <div className="landing-card-particles">
+          {particles.map((p, i) => (
+            <span key={i} className="absolute rounded-full" style={{
+              left: p.left, bottom: p.bottom, width: p.size, height: p.size,
+              background: 'rgba(148,210,255,0.6)',
+              animation: `card-particle-float ${p.dur}s ease-out infinite`,
+              animationDelay: `${p.del}s`,
+            }} />
+          ))}
         </div>
-        <h3 className="text-white text-2xl font-semibold mb-3 font-display">{title}</h3>
-        <p className="text-white/50 text-lg leading-relaxed">{description}</p>
+        <div className="card-icon-wrap w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 animate-icon-glow-pulse relative z-10"
+          style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)' }}>
+          <Icon className="w-7 h-7 text-cyan-300 group-hover:text-cyan-200 transition-all duration-500" />
+        </div>
+        <h3 className="card-title text-white text-2xl font-semibold mb-3 font-display relative z-10 transition-all duration-500">{title}</h3>
+        <p className="text-white/50 text-lg leading-relaxed relative z-10 group-hover:text-white/70 transition-colors duration-500">{description}</p>
       </div>
     </div>
   );
@@ -330,7 +347,14 @@ function GlassCategoryCard({ icon: Icon, title, features, delay }: {
   icon: React.ForwardRefExoticComponent<any>; title: string; features: string[]; delay: number;
 }) {
   const { ref: viewRef, visible } = useInView(0.2);
-  const tilt = useTilt(8);
+  const tilt = useTilt(10);
+  const particles = Array.from({ length: 8 }, (_, i) => ({
+    left: `${12 + Math.random() * 76}%`,
+    bottom: `${5 + Math.random() * 30}%`,
+    size: 2 + Math.random() * 3,
+    dur: 1.5 + Math.random() * 1.5,
+    del: i * 0.2,
+  }));
   return (
     <div ref={viewRef} className="h-full">
       <div
@@ -346,15 +370,26 @@ function GlassCategoryCard({ icon: Icon, title, features, delay }: {
           transitionDelay: `${delay}ms`, boxShadow: '0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)',
         }}
       >
-        <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110 animate-icon-glow-pulse"
-          style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)' }}>
-          <Icon className="w-8 h-8 text-cyan-300 group-hover:text-cyan-200 transition-colors" />
+        {/* Floating particles visible on hover */}
+        <div className="landing-card-particles">
+          {particles.map((p, i) => (
+            <span key={i} className="absolute rounded-full" style={{
+              left: p.left, bottom: p.bottom, width: p.size, height: p.size,
+              background: 'rgba(148,210,255,0.6)',
+              animation: `card-particle-float ${p.dur}s ease-out infinite`,
+              animationDelay: `${p.del}s`,
+            }} />
+          ))}
         </div>
-        <h3 className="text-white text-2xl font-semibold mb-5 font-display">{title}</h3>
-        <ul className="space-y-3">
+        <div className="card-icon-wrap w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 animate-icon-glow-pulse relative z-10"
+          style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)' }}>
+          <Icon className="w-8 h-8 text-cyan-300 group-hover:text-cyan-200 transition-all duration-500" />
+        </div>
+        <h3 className="card-title text-white text-2xl font-semibold mb-5 font-display relative z-10 transition-all duration-500">{title}</h3>
+        <ul className="space-y-3 relative z-10">
           {features.map((f, i) => (
-            <li key={i} className="flex items-start gap-2.5 text-white/50 text-lg leading-relaxed">
-              <span className="mt-2 w-1.5 h-1.5 rounded-full bg-cyan-400/40 flex-shrink-0" />{f}
+            <li key={i} className="card-bullet flex items-start gap-2.5 text-white/50 text-lg leading-relaxed group-hover:text-white/70 transition-all duration-500">
+              <span className="card-bullet-dot mt-2 w-1.5 h-1.5 rounded-full bg-cyan-400/40 flex-shrink-0 transition-all duration-500" />{f}
             </li>
           ))}
         </ul>

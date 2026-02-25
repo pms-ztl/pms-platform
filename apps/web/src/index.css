@@ -3114,12 +3114,114 @@ html.transitioning *::after {
 /* ── Landing Page: 3D Tilt Cards ───────────────────────────────────────── */
 .landing-tilt-card {
   transform-style: preserve-3d;
-  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+  transition: transform 0.15s ease-out, box-shadow 0.4s ease, border-color 0.4s ease;
   will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Shimmer sweep overlay ── */
+.landing-tilt-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(105deg, transparent 30%, rgba(148,210,255,0.06) 45%, rgba(255,255,255,0.10) 50%, rgba(148,210,255,0.06) 55%, transparent 70%);
+  transition: none;
+  z-index: 1;
+  pointer-events: none;
+}
+.landing-tilt-card:hover::before {
+  animation: card-shimmer-sweep 0.8s ease-out forwards;
+}
+
+/* ── Glow border ring overlay ── */
+.landing-tilt-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.landing-tilt-card:hover::after {
+  border-color: rgba(148,210,255,0.25);
+  box-shadow: inset 0 0 30px rgba(148,210,255,0.06), 0 0 40px rgba(148,210,255,0.08);
 }
 
 .landing-tilt-card:hover {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 60px rgba(148,210,255,0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ── Hover: icon glow burst ── */
+.landing-tilt-card:hover .card-icon-wrap {
+  background: rgba(148, 210, 255, 0.15) !important;
+  border-color: rgba(148, 210, 255, 0.3) !important;
+  box-shadow: 0 0 30px rgba(148,210,255,0.2), 0 0 60px rgba(148,210,255,0.08);
+  transform: scale(1.15) rotate(-3deg);
+}
+.landing-tilt-card:hover .card-icon-wrap svg {
+  filter: drop-shadow(0 0 8px rgba(148,210,255,0.6));
+}
+
+/* ── Hover: title shimmer ── */
+.landing-tilt-card:hover .card-title {
+  background: linear-gradient(135deg, #fff, #94d2ff, #e0f0ff, #fff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: card-title-shimmer 1.5s linear infinite;
+}
+
+/* ── Hover: bullets stagger slide ── */
+.landing-tilt-card .card-bullet {
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+.landing-tilt-card:hover .card-bullet {
+  transform: translateX(6px);
+}
+.landing-tilt-card:hover .card-bullet:nth-child(1) { transition-delay: 0ms; }
+.landing-tilt-card:hover .card-bullet:nth-child(2) { transition-delay: 50ms; }
+.landing-tilt-card:hover .card-bullet:nth-child(3) { transition-delay: 100ms; }
+.landing-tilt-card:hover .card-bullet:nth-child(4) { transition-delay: 150ms; }
+.landing-tilt-card:hover .card-bullet:nth-child(5) { transition-delay: 200ms; }
+.landing-tilt-card:hover .card-bullet:nth-child(6) { transition-delay: 250ms; }
+.landing-tilt-card:hover .card-bullet:nth-child(7) { transition-delay: 300ms; }
+
+/* ── Hover: bullet dots glow ── */
+.landing-tilt-card:hover .card-bullet-dot {
+  background: rgba(148,210,255,0.7) !important;
+  box-shadow: 0 0 8px rgba(148,210,255,0.5);
+}
+
+/* ── Hover: floating particles inside card ── */
+.landing-card-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.landing-tilt-card:hover .landing-card-particles {
+  opacity: 1;
+}
+
+@keyframes card-shimmer-sweep {
+  0% { left: -100%; }
+  100% { left: 150%; }
+}
+
+@keyframes card-title-shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes card-particle-float {
+  0% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-40px) scale(0.5); opacity: 0; }
 }
 
 /* ── Landing Page: Section Divider ─────────────────────────────────────── */
