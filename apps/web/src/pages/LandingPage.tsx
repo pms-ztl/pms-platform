@@ -536,36 +536,42 @@ const FEATURE_CATEGORIES = [
     '360-degree reviews: peer, manager, self-appraisal, calibration',
     'Continuous feedback, recognition wall, kudos & badges',
     'One-on-one meetings with notes and action items',
+    'Review cycle automation with configurable workflows',
   ]},
   { icon: AcademicCapIcon, title: 'Growth & Development', features: [
     'Skills matrix & gap analysis with competency heatmaps',
     'AI-driven career pathing & individual development plans',
     'Mentorship program matching and progress tracking',
     'Performance improvement plans with milestone tracking',
+    'Learning recommendations based on role & skill gaps',
   ]},
   { icon: Cog6ToothIcon, title: 'Management & Operations', features: [
     'Calibration sessions with AI-assisted group alignment',
     'Compensation & rewards proposals, approvals, and equity',
     'AI-explainable promotions engine with nominations',
     'Succession planning with readiness assessment',
+    'Org chart visualization with reporting hierarchy',
   ]},
   { icon: CpuChipIcon, title: 'Analytics & AI', features: [
     '70 specialized AI agents for workforce intelligence',
     'Real-time dashboards with anomaly detection & sentiment',
     'Performance simulator for scenario planning & what-if',
     'Bias detection & fairness firewall with transparent AI',
+    'Predictive attrition modeling with 90-day early warning',
   ]},
   { icon: ShieldCheckIcon, title: 'Enterprise & Security', features: [
     'Multi-tenant SaaS with row-level data isolation',
     'RBAC + ABAC access control with time-bound policies',
     'Audit logging & real-time threat detection',
     'Excel bulk upload with AI data quality scoring',
+    'Cross-tenant access blocking with security alerts',
   ]},
   { icon: ChatBubbleLeftRightIcon, title: 'Communication & Engagement', features: [
     'Real-time chat & push notifications via WebSocket',
     'Pulse surveys for engagement, culture & sentiment',
     'Company-wide announcements & news feed',
     'Calendar scheduling & meeting coordination',
+    'Email notifications with customizable templates',
   ]},
 ];
 
