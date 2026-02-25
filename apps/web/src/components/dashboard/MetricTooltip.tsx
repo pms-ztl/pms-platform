@@ -108,7 +108,7 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
 
   // Fixed-position coordinates for portal-rendered elements
   const [tipCoords, setTipCoords] = useState({ top: 0, left: 0 });
-  const [popCoords, setPopCoords] = useState({ top: 0, left: 0, openBelow: false });
+  const [popCoords, setPopCoords] = useState({ top: 0, left: 0 });
 
   // If code not in glossary, just render children as-is
   if (!entry) return <>{children}</>;
@@ -120,24 +120,38 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
     setTipCoords({ top: r.top - 8, left: r.left + r.width / 2 });
   }, []);
 
-  // Compute detail-popover position (viewport-aware)
+  // Compute detail-popover position (viewport-aware, no transforms)
   const computePopPos = useCallback(() => {
     if (!wrapperRef.current) return;
     const r = wrapperRef.current.getBoundingClientRect();
     const vw = window.innerWidth;
+    const vh = window.innerHeight;
     const popW = 280;
     const popH = 300;
+    const PAD = 12;
 
-    // Horizontal: left-align by default; if it overflows right, shift left
+    // Horizontal: left-align; shift if overflows right; clamp left edge
     let left = r.left;
-    if (left + popW > vw - 16) left = r.right - popW;
-    if (left < 16) left = 16;
+    if (left + popW > vw - PAD) left = r.right - popW;
+    if (left < PAD) left = PAD;
 
-    // Vertical: prefer above; if not enough space, open below
-    const openBelow = r.top - popH < 16;
-    const top = openBelow ? r.bottom + 8 : r.top - 8;
+    // Vertical: compute actual top edge of popover
+    const aboveTop = r.top - PAD - popH; // top edge if placed above trigger
+    const belowTop = r.bottom + PAD;     // top edge if placed below trigger
 
-    setPopCoords({ top, left, openBelow });
+    let top: number;
+    if (aboveTop >= PAD) {
+      // Plenty of room above — place above
+      top = aboveTop;
+    } else if (belowTop + popH <= vh - PAD) {
+      // Room below — place below
+      top = belowTop;
+    } else {
+      // Neither side has full room — clamp within viewport
+      top = Math.max(PAD, Math.min(vh - popH - PAD, aboveTop));
+    }
+
+    setPopCoords({ top, left });
   }, []);
 
   // Close detail on outside click or Esc
@@ -236,7 +250,6 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
           style={{
             top: popCoords.top,
             left: popCoords.left,
-            transform: popCoords.openBelow ? 'translateY(0)' : 'translateY(-100%)',
           }}
           onClick={(e) => e.stopPropagation()}
         >
