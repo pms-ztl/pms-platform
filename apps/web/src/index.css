@@ -3128,6 +3128,55 @@ html.transitioning *::after {
   100% { background-position: 0% center; }
 }
 
+/* ── Landing Page: Hero "Impact!" mega animated word ─────────────────── */
+.hero-impact-word {
+  display: inline-block;
+  position: relative;
+  background: linear-gradient(135deg, #94d2ff 0%, #e0f0ff 25%, #fff 50%, #e0f0ff 75%, #94d2ff 100%);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation:
+    hero-text-gradient 3s ease infinite,
+    hero-impact-glow 2.5s ease-in-out infinite,
+    hero-impact-entrance 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  filter: drop-shadow(0 0 20px rgba(148, 210, 255, 0.3));
+}
+
+/* Glowing text-shadow pulse */
+@keyframes hero-impact-glow {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(148, 210, 255, 0.3)); }
+  50% { filter: drop-shadow(0 0 40px rgba(148, 210, 255, 0.6)) drop-shadow(0 0 80px rgba(148, 210, 255, 0.2)); }
+}
+
+/* Entrance: scale up + blur reveal */
+@keyframes hero-impact-entrance {
+  0% { opacity: 0; transform: scale(0.7) translateY(20px); filter: blur(12px); }
+  60% { opacity: 1; transform: scale(1.05) translateY(-2px); filter: blur(0); }
+  80% { transform: scale(0.98) translateY(1px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: drop-shadow(0 0 20px rgba(148, 210, 255, 0.3)); }
+}
+
+/* Animated underline that draws in */
+.hero-impact-word::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(148, 210, 255, 0.8), rgba(255, 255, 255, 0.6), rgba(148, 210, 255, 0.8), transparent);
+  animation: hero-impact-underline 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s;
+  box-shadow: 0 0 12px rgba(148, 210, 255, 0.4), 0 0 30px rgba(148, 210, 255, 0.15);
+}
+
+@keyframes hero-impact-underline {
+  0% { width: 0; left: 50%; }
+  100% { width: 100%; left: 0; }
+}
+
 @keyframes landing-word-reveal-single {
   0% { opacity: 0; transform: translateY(14px); filter: blur(6px); }
   100% { opacity: 1; transform: translateY(0); filter: blur(0); }
