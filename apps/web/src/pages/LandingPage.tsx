@@ -392,7 +392,46 @@ function ScrollDownIndicator() {
 }
 
 function SectionDivider() {
-  return <div className="landing-divider max-w-xs mx-auto my-4" />;
+  return <div className="landing-divider max-w-xs mx-auto my-3" />;
+}
+
+// ── Animated horizontal metric bar ──────────────────────────────────────────
+function MetricBar({ label, value, width, delay }: { label: string; value: string; width: string; delay: number }) {
+  const { ref, visible } = useInView(0.3);
+  return (
+    <div ref={ref} className={`transition-all duration-700 ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`} style={{ transitionDelay: `${delay}ms` }}>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-white/50 text-sm font-mono tracking-wide">{label}</span>
+        <span className="text-white/70 text-sm font-semibold">{value}</span>
+      </div>
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+        <div className={`h-full rounded-full transition-all duration-[2000ms] ease-out ${visible ? '' : '!w-0'}`}
+          style={{ width: visible ? width : '0%', background: 'linear-gradient(90deg, rgba(148,210,255,0.3), rgba(148,210,255,0.6))', transitionDelay: `${delay + 200}ms` }} />
+      </div>
+    </div>
+  );
+}
+
+// ── Scrolling feature badges ────────────────────────────────────────────────
+function ScrollingBadges() {
+  const badges = [
+    'Goal Cascading', 'OKR Tracking', 'Peer Reviews', 'Self-Appraisal', 'Calibration Sessions',
+    'AI Recommendations', 'Bias Detection', 'Career Pathing', 'Skills Matrix', 'Mentorship',
+    'Pulse Surveys', 'Recognition', 'Succession Plans', 'PIP Tracking', 'Compensation',
+    'Audit Logs', 'RBAC + ABAC', 'Real-time Chat', 'Analytics', 'Data Export',
+  ];
+  return (
+    <div className="py-6 overflow-hidden">
+      <div className="landing-marquee flex gap-3">
+        {[...badges, ...badges].map((b, i) => (
+          <span key={i} className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium text-white/40 whitespace-nowrap border border-white/[0.06]"
+            style={{ background: 'rgba(255,255,255,0.03)' }}>
+            {b}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 
@@ -505,10 +544,10 @@ function MarqueeStrip() {
 function BentoGrid() {
   const { ref, visible } = useInView(0.15);
   return (
-    <section ref={ref} className="py-24 sm:py-36 px-6 sm:px-12 lg:px-16">
+    <section ref={ref} className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
       <div className="max-w-[90rem] mx-auto">
         {/* Header */}
-        <div className={`text-center mb-20 transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`text-center mb-14 transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-6 animate-badge-float"
             style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)', color: 'rgba(148, 210, 255, 0.9)' }}>
             Platform at a Glance
@@ -519,7 +558,7 @@ function BentoGrid() {
           </h2>
         </div>
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 auto-rows-[200px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 lg:gap-6 auto-rows-[180px]">
           {BENTO_ITEMS.map((item, i) => {
             const tilt = useTilt(6);
             const span = item.size === 'large' ? 'xl:col-span-2 xl:row-span-2 md:col-span-2' : item.size === 'medium' ? 'xl:col-span-2' : '';
@@ -529,7 +568,7 @@ function BentoGrid() {
                 ref={tilt.ref}
                 onMouseMove={tilt.onMouseMove}
                 onMouseLeave={tilt.onMouseLeave}
-                className={`landing-glass-card landing-tilt-card rounded-3xl p-8 sm:p-10 flex flex-col justify-end relative overflow-hidden
+                className={`landing-glass-card landing-tilt-card rounded-3xl p-7 sm:p-8 flex flex-col justify-between relative overflow-hidden
                   transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} ${span}`}
                 style={{
                   background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(28px) saturate(1.2)',
@@ -538,14 +577,40 @@ function BentoGrid() {
                 }}
               >
                 {item.size === 'large' && (
-                  <div className="absolute inset-0 animate-neural-pulse" style={{ background: 'radial-gradient(circle at 30% 40%, rgba(148,210,255,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
+                  <>
+                    <div className="absolute inset-0 animate-neural-pulse" style={{ background: 'radial-gradient(circle at 30% 40%, rgba(148,210,255,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
+                    {/* Animated agent nodes visualization */}
+                    <div className="relative z-10 flex flex-wrap gap-2 mb-auto">
+                      {Array.from({ length: 18 }).map((_, j) => (
+                        <div key={j} className="w-8 h-8 rounded-lg animate-float flex items-center justify-center"
+                          style={{
+                            background: `rgba(148,210,255,${0.04 + (j % 5) * 0.015})`,
+                            border: '1px solid rgba(148,210,255,0.08)',
+                            animationDelay: `${j * 0.3}s`, animationDuration: `${4 + (j % 4)}s`,
+                          }}>
+                          <CpuChipIcon className="w-4 h-4 text-cyan-300/40" />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {item.size === 'medium' && (
+                  <div className="flex items-center gap-3 mb-auto">
+                    {[0,1,2].map(j => (
+                      <div key={j} className="h-2 rounded-full animate-shimmer"
+                        style={{ width: `${50 + j * 20}px`, background: `linear-gradient(90deg, rgba(148,210,255,${0.06 + j * 0.03}), rgba(148,210,255,${0.12 + j * 0.03}), rgba(148,210,255,${0.06 + j * 0.03}))`, backgroundSize: '200% 100%', animationDelay: `${j * 0.5}s` }} />
+                    ))}
+                  </div>
+                )}
+                {item.size === 'small' && (
+                  <div className="h-1 w-10 rounded-full mb-auto animate-pulse" style={{ background: 'rgba(148,210,255,0.15)' }} />
                 )}
                 <div className="relative z-10">
                   <div className={`font-display font-bold text-white mb-1 ${item.size === 'large' ? 'text-5xl sm:text-6xl' : item.size === 'small' ? 'text-4xl' : 'text-3xl sm:text-4xl'}`}>
                     {item.title}
                   </div>
                   <div className="text-white/40 text-lg">{item.subtitle}</div>
-                  {item.desc && <p className="text-white/30 text-base mt-3 leading-relaxed">{item.desc}</p>}
+                  {item.desc && <p className="text-white/30 text-base mt-2 leading-relaxed">{item.desc}</p>}
                 </div>
               </div>
             );
@@ -559,7 +624,7 @@ function BentoGrid() {
 function TechLogosStrip() {
   const { ref, visible } = useInView(0.3);
   return (
-    <section ref={ref} className="py-16 sm:py-20 px-6 sm:px-12 lg:px-16">
+    <section ref={ref} className="py-12 sm:py-16 px-6 sm:px-12 lg:px-16">
       <div className="max-w-[80rem] mx-auto">
         <p className={`text-center text-white/25 text-sm tracking-wider uppercase mb-10 transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}>
           Powered by modern technology
@@ -591,7 +656,7 @@ function TechLogosStrip() {
 
 function TestimonialSection() {
   return (
-    <section className="py-24 sm:py-36 px-6 sm:px-12 lg:px-16">
+    <section className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
       <div className="max-w-[90rem] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
           {TESTIMONIALS.map((t, i) => {
@@ -735,10 +800,20 @@ export default function LandingPage() {
 
         {/* ── SECTION 2: MARQUEE STRIP ─────────────────────────────────── */}
         <MarqueeStrip />
+
+        {/* ── SECTION 2.5: QUICK METRICS BAR ───────────────────────────── */}
+        <section className="py-10 sm:py-14 px-6 sm:px-12 lg:px-16">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-5">
+            <MetricBar label="EMPLOYEE ENGAGEMENT" value="94%" width="94%" delay={0} />
+            <MetricBar label="REVIEW COMPLETION" value="97%" width="97%" delay={100} />
+            <MetricBar label="GOAL ALIGNMENT" value="91%" width="91%" delay={200} />
+            <MetricBar label="AI ACCURACY" value="98%" width="98%" delay={300} />
+          </div>
+        </section>
         <SectionDivider />
 
         {/* ── SECTION 3: CODE TYPING + DESCRIPTION ─────────────────────── */}
-        <section ref={codeRef.ref} className="min-h-screen flex items-center py-20 sm:py-32 px-6 sm:px-12 lg:px-16">
+        <section ref={codeRef.ref} className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
           <div className="max-w-[90rem] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className={`transition-all duration-1000 ${codeRef.visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
               <NeonCodeTyper />
@@ -773,12 +848,12 @@ export default function LandingPage() {
         <SectionDivider />
 
         {/* ── SECTION 5: FEATURE CATEGORIES (3×2) ──────────────────────── */}
-        <section className="py-24 sm:py-36 px-6 sm:px-12 lg:px-16">
+        <section className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
           <div className="max-w-[90rem] mx-auto">
             {(() => {
               const headerRef = useInView(0.2);
               return (
-                <div ref={headerRef.ref} className={`text-center mb-20 transition-all duration-1000 ${headerRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                <div ref={headerRef.ref} className={`text-center mb-14 transition-all duration-1000 ${headerRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                   <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-6 animate-badge-float"
                     style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)', color: 'rgba(148, 210, 255, 0.9)' }}>
                     Platform Capabilities
@@ -795,15 +870,18 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* ── Scrolling feature badges ─────────────────────────────────── */}
+        <ScrollingBadges />
         <SectionDivider />
 
         {/* ── SECTION 6: USPs ──────────────────────────────────────────── */}
-        <section className="py-24 sm:py-36 px-6 sm:px-12 lg:px-16">
+        <section className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
           <div className="max-w-[90rem] mx-auto">
             {(() => {
               const uspHeaderRef = useInView(0.2);
               return (
-                <div ref={uspHeaderRef.ref} className={`text-center mb-20 transition-all duration-1000 ${uspHeaderRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                <div ref={uspHeaderRef.ref} className={`text-center mb-14 transition-all duration-1000 ${uspHeaderRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                   <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-6 animate-badge-float"
                     style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)', color: 'rgba(148, 210, 255, 0.9)' }}>
                     Why PMS Suite
@@ -826,7 +904,7 @@ export default function LandingPage() {
         <TechLogosStrip />
 
         {/* ── SECTION 8: STATS BAR ─────────────────────────────────────── */}
-        <section className="py-20 sm:py-28 px-6 sm:px-12 lg:px-16">
+        <section className="py-14 sm:py-20 px-6 sm:px-12 lg:px-16">
           <div className="max-w-[80rem] mx-auto">
             <div className="rounded-3xl p-10 sm:p-14 grid grid-cols-2 sm:grid-cols-4 gap-10 text-center"
               style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(24px) saturate(1.2)', WebkitBackdropFilter: 'blur(24px) saturate(1.2)',
@@ -855,7 +933,7 @@ export default function LandingPage() {
         <TestimonialSection />
 
         {/* ── SECTION 10: FOOTER CTA ───────────────────────────────────── */}
-        <section className="py-24 sm:py-36 px-6 sm:px-12 lg:px-16">
+        <section className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
           {(() => {
             const footerRef = useInView(0.2);
             return (
