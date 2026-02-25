@@ -68,12 +68,12 @@ const CPISScoreDisplay = ({
   useEffect(() => {
     if (!showInfo || !infoBtnRef.current) return;
     const rect = infoBtnRef.current.getBoundingClientRect();
-    const popH = 340; // approximate popover height
+    const popH = 310; // approximate popover height
     const PAD = 12;
     const vh = window.innerHeight;
-    // Prefer above if not enough room below
-    const belowTop = rect.bottom + 10;
-    const aboveTop = rect.top - 10 - popH;
+    // Prefer above if not enough room below — float tight to button
+    const belowTop = rect.bottom + 4;
+    const aboveTop = rect.top - 4 - popH;
     const top = (belowTop + popH > vh - PAD && aboveTop >= PAD) ? aboveTop : belowTop;
     setInfoPos({
       top,
