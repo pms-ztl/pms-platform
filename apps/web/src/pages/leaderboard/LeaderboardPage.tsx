@@ -592,7 +592,7 @@ export function LeaderboardPage() {
                   key={p.key}
                   onClick={() => setPeriod(p.key)}
                   className={clsx(
-                    'px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap flex-shrink-0',
+                    'px-2 py-1 text-xs sm:px-3 sm:py-1.5 sm:text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap flex-shrink-0',
                     period === p.key
                       ? 'bg-primary-500 text-white shadow-sm'
                       : 'text-secondary-600 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700',
