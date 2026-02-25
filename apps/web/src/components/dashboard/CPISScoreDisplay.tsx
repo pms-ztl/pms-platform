@@ -1,5 +1,6 @@
 import { StarIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
+import { METRIC_GLOSSARY } from './MetricTooltip';
 
 export interface CPISScoreDisplayProps {
   score: number;
@@ -138,6 +139,7 @@ const CPISScoreDisplay = ({
           <text x={cx} y={cy + 18} textAnchor="middle" dominantBaseline="central"
             fill="rgba(147,197,253,0.9)" fontSize="12" fontWeight="700" letterSpacing="3"
           >
+            <title>Comprehensive Performance Intelligence Score</title>
             CPIS
           </text>
 
@@ -172,8 +174,9 @@ const CPISScoreDisplay = ({
                 </text>
                 <text x={x} y={y + 9} textAnchor="middle" dominantBaseline="central"
                   fill={hasScore ? neonColors[i] : 'rgba(255,255,255,0.4)'} fontSize="11" fontWeight="800"
-                  style={hasScore ? { textShadow: `0 0 6px ${neonColors[i]}70` } : undefined}
+                  style={hasScore ? { textShadow: `0 0 6px ${neonColors[i]}70`, cursor: 'help' } : undefined}
                 >
+                  <title>{METRIC_GLOSSARY[d.code]?.fullName ?? d.code}{METRIC_GLOSSARY[d.code]?.weight ? ` (${METRIC_GLOSSARY[d.code].weight})` : ''}</title>
                   {d.code}
                 </text>
               </g>

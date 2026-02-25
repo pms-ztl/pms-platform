@@ -15,6 +15,7 @@ export { default as PeerComparison } from './PeerComparison';
 export { default as LearningProgress } from './LearningProgress';
 export { default as RecognitionFeed } from './RecognitionFeed';
 export { default as GoalVelocity } from './GoalVelocity';
+export { default as MetricTooltip, METRIC_GLOSSARY } from './MetricTooltip';
 export { riskBadge, ratingStars, MANAGER_ROLES } from './dashboardUtils';
 
 export type { CPISScoreDisplayProps } from './CPISScoreDisplay';

@@ -11,6 +11,7 @@ import {
   TrophyIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import MetricTooltip from './MetricTooltip';
 
 interface CPISDimensionBreakdownProps {
   dimensions: Array<{ code: string; rawScore: number; weight: number; name: string; grade?: string }>;
@@ -29,7 +30,7 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
               <BeakerIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">CPIS Dimensions</h2>
+              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white"><MetricTooltip code="CPIS">CPIS</MetricTooltip> Dimensions</h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">8-dimensional performance intelligence breakdown</p>
             </div>
           </div>
@@ -74,8 +75,8 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
                         <IconComp className="w-3.5 h-3.5 text-white" />
                       </div>
                       <div>
-                        <span className="text-xs font-semibold text-secondary-700 dark:text-secondary-300 block leading-tight">{dim.name}</span>
-                        <span className="text-3xs text-secondary-400 dark:text-secondary-500">{Math.round(dim.weight * 100)}% weight</span>
+                        <MetricTooltip code={dim.code} className="text-xs font-semibold text-secondary-700 dark:text-secondary-300 leading-tight">{dim.name}</MetricTooltip>
+                        <span className="text-3xs text-secondary-400 dark:text-secondary-500 block">{Math.round(dim.weight * 100)}% weight</span>
                       </div>
                     </div>
                     <span className={clsx('text-2xs font-black px-1.5 py-0.5 rounded', gradeColor)}>

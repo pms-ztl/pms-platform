@@ -42,6 +42,7 @@ import {
   GoalVelocity,
   MANAGER_ROLES,
 } from '@/components/dashboard';
+import MetricTooltip from '@/components/dashboard/MetricTooltip';
 import type { StatItem, ActivityItem } from '@/components/dashboard';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
@@ -533,7 +534,7 @@ function DashboardContent() {
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
                 <div className="flex items-center gap-1.5 mb-1">
                   <TrophyIcon className="w-4 h-4 text-amber-300" />
-                  <span className="text-xs font-medium text-white/60 tracking-wide">Score</span>
+                  <MetricTooltip code="CPIS" className="text-xs font-medium text-white/60 tracking-wide">CPIS</MetricTooltip>
                 </div>
                 <p className="text-base font-bold text-white">{Math.round(overallScore)}</p>
                 <p className="text-2xs text-white/50 mt-0">Grade {cpisGrade ?? '—'}</p>
@@ -548,7 +549,7 @@ function DashboardContent() {
                   const barColors = ['#22d3ee', '#a78bfa', '#34d399', '#fbbf24'];
                   return (
                     <div key={dim.code} className="flex items-center gap-3">
-                      <span className="text-xs font-bold text-white/70 w-8 text-right">{dim.code}</span>
+                      <MetricTooltip code={dim.code} className="text-xs font-bold text-white/70 w-8 text-right justify-end">{dim.code}</MetricTooltip>
                       <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-1000"
