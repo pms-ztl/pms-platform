@@ -241,7 +241,7 @@ function HeroRotatingWords({ visible }: { visible: boolean }) {
     return () => clearInterval(interval);
   }, [visible]);
   return (
-    <div className={`flex items-center gap-3 mb-10 transition-all duration-1000 delay-[1100ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+    <div className={`flex items-center gap-3 mb-4 sm:mb-10 transition-all duration-1000 delay-[1100ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
       <span className="text-white/40 text-base sm:text-lg tracking-wide">Performance reviews that are</span>
       <span className="relative inline-block w-36 sm:w-44 h-8 overflow-hidden">
         {words.map((w, i) => (
@@ -1016,9 +1016,12 @@ export default function LandingPage() {
         </div>
 
         {/* ── SECTION 1: HERO ──────────────────────────────────────────── */}
-        <section ref={heroRef.ref} className="min-h-screen flex flex-col items-center justify-center px-6 sm:px-10 text-center relative">
+        <section ref={heroRef.ref} className="min-h-screen flex flex-col items-center px-6 sm:px-10 text-center">
+          {/* Top spacer — pushes content toward center */}
+          <div className="flex-1 min-h-[40px] sm:min-h-[60px]" />
+
           {/* Logo with pulse ring */}
-          <div className={`flex items-center gap-4 mb-10 transition-all duration-1000 ${heroRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'}`}>
+          <div className={`flex items-center gap-4 mb-6 sm:mb-10 transition-all duration-1000 ${heroRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'}`}>
             <div className="relative">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center"
                 style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.25)' }}>
@@ -1034,7 +1037,7 @@ export default function LandingPage() {
           </div>
 
           {/* Animated badge */}
-          <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full mb-8 transition-all duration-1000 delay-200 ${heroRef.visible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
+          <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full mb-4 sm:mb-8 transition-all duration-1000 delay-200 ${heroRef.visible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
             style={{ background: 'rgba(148,210,255,0.08)', border: '1px solid rgba(148,210,255,0.15)' }}>
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             <span className="text-white/70 text-sm font-medium tracking-wide">Next-Gen Performance Intelligence</span>
@@ -1042,8 +1045,8 @@ export default function LandingPage() {
 
           {/* Headline with word-by-word reveal + gradient "impact" */}
           <h1
-            className={`font-display font-black text-white leading-[1.08] max-w-5xl mb-8 transition-opacity duration-500 ${heroRef.visible ? 'opacity-100' : 'opacity-0'}`}
-            style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(3.2rem, 9vw, 7.5rem)', letterSpacing: '-0.02em', textShadow: '0 4px 30px rgba(0,0,0,0.6), 0 0 80px rgba(148,210,255,0.1)' }}
+            className={`font-display font-black text-white leading-[1.08] max-w-5xl mb-4 sm:mb-8 transition-opacity duration-500 ${heroRef.visible ? 'opacity-100' : 'opacity-0'}`}
+            style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(2.4rem, 8vw, 7.5rem)', letterSpacing: '-0.02em', textShadow: '0 4px 30px rgba(0,0,0,0.6), 0 0 80px rgba(148,210,255,0.1)' }}
           >
             {heroRef.visible && (
               <span className="landing-word-reveal">
@@ -1060,7 +1063,7 @@ export default function LandingPage() {
           </h1>
 
           {/* Shimmer underline */}
-          <div className={`relative h-1 w-48 sm:w-72 rounded-full mb-8 transition-all duration-1000 delay-700 ${heroRef.visible ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'}`}>
+          <div className={`relative h-1 w-48 sm:w-72 rounded-full mb-4 sm:mb-8 transition-all duration-1000 delay-700 ${heroRef.visible ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'}`}>
             <div className="absolute inset-0 rounded-full"
               style={{ background: 'linear-gradient(90deg, rgba(148,210,255,0.5), rgba(120,200,255,0.3), rgba(148,210,255,0.5))', backgroundSize: '200% 100%', animation: 'gradientFlow 4s ease infinite' }} />
             <div className="absolute inset-0 rounded-full overflow-hidden">
@@ -1069,7 +1072,7 @@ export default function LandingPage() {
           </div>
 
           {/* Typewriter subtitle */}
-          <p className={`text-white/80 text-xl sm:text-2xl lg:text-3xl leading-relaxed max-w-2xl mb-10 min-h-[3em] transition-all duration-1000 delay-1000 ${heroRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+          <p className={`text-white/80 text-base sm:text-2xl lg:text-3xl leading-relaxed max-w-2xl mb-4 sm:mb-10 min-h-[2.5em] sm:min-h-[3em] transition-all duration-1000 delay-1000 ${heroRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
             style={{ textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>
             <TypewriterText text="Next-generation performance intelligence. Where ambition meets data-driven growth." delay={1800} />
           </p>
@@ -1080,23 +1083,29 @@ export default function LandingPage() {
           {/* CTA with spotlight sweep */}
           <div className={`transition-all duration-1000 delay-[1200ms] ${heroRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <Link to="/login"
-              className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-white font-semibold text-lg transition-all duration-500 hover:scale-105 hover:shadow-[0_8px_40px_rgba(148,210,255,0.25)] overflow-hidden"
+              className="group relative inline-flex items-center gap-3 px-8 py-4 sm:px-10 sm:py-5 rounded-2xl text-white font-semibold text-base sm:text-lg transition-all duration-500 hover:scale-105 hover:shadow-[0_8px_40px_rgba(148,210,255,0.25)] overflow-hidden"
               style={{ background: 'linear-gradient(135deg, rgba(148,210,255,0.45), rgba(120,200,255,0.3))', border: '1px solid rgba(255,255,255,0.18)',
                 boxShadow: '0 4px 20px rgba(148,210,255,0.15), inset 0 1px 0 rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>
               <span className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
                 <span className="absolute inset-0 animate-spotlight-sweep" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%)' }} />
               </span>
-              <span className="relative font-display text-xl">Enter Platform</span>
+              <span className="relative font-display text-lg sm:text-xl">Enter Platform</span>
               <ArrowRightIcon className="w-5 h-5 relative transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
 
           {/* Trust line */}
-          <p className={`text-white/40 text-sm mt-8 tracking-wide transition-all duration-1000 delay-[1500ms] ${heroRef.visible ? 'opacity-100' : 'opacity-0'}`}>
+          <p className={`text-white/40 text-sm mt-4 sm:mt-8 tracking-wide transition-all duration-1000 delay-[1500ms] ${heroRef.visible ? 'opacity-100' : 'opacity-0'}`}>
             Trusted by forward-thinking organizations worldwide
           </p>
 
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2"><ScrollDownIndicator /></div>
+          {/* Bottom spacer — pushes scroll indicator to bottom, prevents overlap */}
+          <div className="flex-1 min-h-[24px] sm:min-h-[40px]" />
+
+          {/* Scroll indicator — in normal flex flow, never overlaps */}
+          <div className="pb-6 sm:pb-8 flex-shrink-0">
+            <ScrollDownIndicator />
+          </div>
         </section>
 
         {/* ── SECTION 2: MARQUEE STRIP ─────────────────────────────────── */}
