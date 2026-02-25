@@ -53,7 +53,7 @@ function CursorGlow({ containerRef }: { containerRef: React.RefObject<HTMLDivEle
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top + container.scrollTop;
         glow.style.opacity = '1';
-        glow.style.transform = `translate(${x - 350}px, ${y - 350}px)`;
+        glow.style.transform = `translate(${x - 300}px, ${y - 300}px)`;
       });
     };
     const handleLeave = () => { glow.style.opacity = '0'; };
@@ -68,10 +68,10 @@ function CursorGlow({ containerRef }: { containerRef: React.RefObject<HTMLDivEle
   return (
     <div
       ref={glowRef}
-      className="absolute w-[700px] h-[700px] rounded-full pointer-events-none opacity-0 transition-opacity duration-300 z-[3]"
+      className="absolute w-[600px] h-[600px] rounded-full pointer-events-none opacity-0 transition-opacity duration-300 z-[3]"
       style={{
-        background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(148,210,255,0.04) 30%, transparent 55%)',
-        filter: 'blur(40px)',
+        background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 30%, transparent 55%)',
+        filter: 'blur(30px)',
       }}
     />
   );
