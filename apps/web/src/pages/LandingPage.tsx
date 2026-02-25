@@ -538,6 +538,8 @@ const FEATURE_CATEGORIES = [
     'Continuous feedback, recognition wall, kudos & badges',
     'One-on-one meetings with notes and action items',
     'Review cycle automation with configurable workflows',
+    'KPI dashboards with real-time progress tracking',
+    'Weighted scoring models for multi-dimensional evaluations',
   ]},
   { icon: AcademicCapIcon, title: 'Growth & Development', features: [
     'Skills matrix & gap analysis with competency heatmaps',
@@ -545,6 +547,8 @@ const FEATURE_CATEGORIES = [
     'Mentorship program matching and progress tracking',
     'Performance improvement plans with milestone tracking',
     'Learning recommendations based on role & skill gaps',
+    'Certification tracking with expiry alerts & renewal workflows',
+    'Training ROI analytics with skill adoption metrics',
   ]},
   { icon: Cog6ToothIcon, title: 'Management & Operations', features: [
     'Calibration sessions with AI-assisted group alignment',
@@ -552,6 +556,8 @@ const FEATURE_CATEGORIES = [
     'AI-explainable promotions engine with nominations',
     'Succession planning with readiness assessment',
     'Org chart visualization with reporting hierarchy',
+    'Headcount planning with budget forecasting tools',
+    'Workflow automation with custom approval chains',
   ]},
   { icon: CpuChipIcon, title: 'Analytics & AI', features: [
     '70 specialized AI agents for workforce intelligence',
@@ -559,6 +565,8 @@ const FEATURE_CATEGORIES = [
     'Performance simulator for scenario planning & what-if',
     'Bias detection & fairness firewall with transparent AI',
     'Predictive attrition modeling with 90-day early warning',
+    'Natural language query engine for instant HR insights',
+    'Cohort analysis with trend comparison across periods',
   ]},
   { icon: ShieldCheckIcon, title: 'Enterprise & Security', features: [
     'Multi-tenant SaaS with row-level data isolation',
@@ -566,6 +574,8 @@ const FEATURE_CATEGORIES = [
     'Audit logging & real-time threat detection',
     'Excel bulk upload with AI data quality scoring',
     'Cross-tenant access blocking with security alerts',
+    'SSO & SAML 2.0 integration with identity providers',
+    'Data encryption at rest and in transit with key rotation',
   ]},
   { icon: ChatBubbleLeftRightIcon, title: 'Communication & Engagement', features: [
     'Real-time chat & push notifications via WebSocket',
@@ -573,6 +583,8 @@ const FEATURE_CATEGORIES = [
     'Company-wide announcements & news feed',
     'Calendar scheduling & meeting coordination',
     'Email notifications with customizable templates',
+    'Anonymous feedback channels with sentiment analysis',
+    'Team celebration wall with milestone auto-recognition',
   ]},
 ];
 
