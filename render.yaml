@@ -28,7 +28,7 @@ services:
       mkdir -p packages/database/prisma/dist &&
       npx esbuild packages/database/prisma/seed.ts --bundle --platform=node --outfile=packages/database/prisma/dist/seed.js --external:@prisma/client --external:bcryptjs --format=cjs &&
       echo "=== Build complete ==="
-    startCommand: cd packages/database && npx prisma migrate deploy && cd ../.. && node scripts/seed-if-empty.js && cd apps/api && node dist/index.js
+    startCommand: node scripts/fix-failed-migrations.js && cd packages/database && npx prisma migrate deploy && cd ../.. && node scripts/seed-if-empty.js && cd apps/api && node dist/index.js
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
