@@ -1585,16 +1585,45 @@ export function calculateCPIS(input: CPISInput): CPISResult {
 
   const dimensions = [d1, d2, d3, d4, d5, d6, d7, d8];
 
-  // Weighted sum of all dimensions
+  // ── Dynamic Re-weighting ──────────────────────────────────────────
+  // When a dimension has NO meaningful data (rawScore === 0 and its data source
+  // was empty), redistribute its weight proportionally to dimensions that DO
+  // have data.  This prevents penalizing users for data that simply doesn't
+  // exist yet (e.g. no reviews conducted, no evidence submitted).
+  const noDataCodes = new Set<string>();
+  if (input.goals.length === 0) noDataCodes.add('GAI');
+  if (input.reviews.length === 0) noDataCodes.add('RQS');
+  // FSI defaults to 50 when empty — no re-weight needed
+  if (input.evidence.totalEvidence === 0) noDataCodes.add('EQS');
+  if (input.growth.historicalScores.length === 0 && input.growth.trainingsCompleted === 0 &&
+      input.growth.skillProgressions === 0 && input.growth.developmentPlanProgress === 0) noDataCodes.add('GTS');
+
+  const deadWeight = dimensions
+    .filter(d => noDataCodes.has(d.code))
+    .reduce((s, d) => s + d.weight, 0);
+  const liveWeight = 1 - deadWeight;
+
+  if (deadWeight > 0 && liveWeight > 0) {
+    for (const d of dimensions) {
+      if (noDataCodes.has(d.code)) {
+        d.weightedScore = 0;           // stays 0
+      } else {
+        const adjustedWeight = d.weight / liveWeight; // scale up proportionally
+        d.weightedScore = Math.round(d.rawScore * adjustedWeight * 100) / 100;
+      }
+    }
+  }
+
+  // Weighted sum of all dimensions (with re-balanced weights)
   const rawComposite = dimensions.reduce((sum, d) => sum + d.weightedScore, 0);
 
   // Tenure factor: slight bonus for experience (max +10%)
   const tenureFactor = Math.min(1.10, 1 + input.tenureYears * 0.02);
 
-  // Data volume confidence
+  // Data volume confidence — softer curve so sparse data isn't over-punished
   const totalDataPoints = input.goals.length + input.reviews.length +
     input.feedbacks.length + input.evidence.totalEvidence;
-  const dataConfidence = 0.5 + 0.5 * sigmoid(totalDataPoints, 0.2, 10);
+  const dataConfidence = 0.6 + 0.4 * sigmoid(totalDataPoints, 0.25, 8);
 
   // Raw score before fairness
   const rawScore = Math.min(100, rawComposite * tenureFactor);
@@ -1640,7 +1669,9 @@ export function calculateCPIS(input: CPISInput): CPISResult {
   };
 
   // Identify strengths (top 3) and growth areas (bottom 3)
-  const sorted = [...dimensions].sort((a, b) => b.rawScore - a.rawScore);
+  // Exclude no-data dimensions — they aren't meaningful strengths or growth areas
+  const activeDims = dimensions.filter(d => !noDataCodes.has(d.code));
+  const sorted = [...activeDims].sort((a, b) => b.rawScore - a.rawScore);
   const strengths = sorted.slice(0, 3).filter(d => d.rawScore >= 50).map(d => d.name);
   const growthAreas = sorted.slice(-3).filter(d => d.rawScore < 80).map(d => d.name).reverse();
 

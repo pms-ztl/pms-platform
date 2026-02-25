@@ -645,7 +645,7 @@ export function SwarmChat() {
       setMessages([{
         id: `welcome-${selectedAgent}-${Date.now()}`,
         role: 'assistant',
-        content: `Hi there! I'm the **${agent.name}** Agent. I specialize in **${agent.desc.toLowerCase()}**. Ask me anything and I'll pull from your organization's real data to help.`,
+        content: `Hi there! I'm the **${agent.name}** Agent. I specialize in **${agent.desc}**. Ask me anything and I'll pull from your organization's real data to help.`,
         timestamp: new Date(),
       }]);
     } else {
@@ -669,7 +669,7 @@ export function SwarmChat() {
         setMessages([{
           id: `welcome-${selectedAgent}`,
           role: 'assistant',
-          content: `Hi there! I'm the **${agent.name}** Agent. I specialize in **${agent.desc.toLowerCase()}**. Ask me anything and I'll pull from your organization's real data to help.`,
+          content: `Hi there! I'm the **${agent.name}** Agent. I specialize in **${agent.desc}**. Ask me anything and I'll pull from your organization's real data to help.`,
           timestamp: new Date(),
         }]);
       } else {

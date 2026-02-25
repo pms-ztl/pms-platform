@@ -372,23 +372,26 @@ export function RecognitionPage() {
             </div>
           </div>
 
-          {/* Recognition Impact — Premium Gradient Card */}
-          <div className="relative overflow-hidden rounded-2xl p-5">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_20%_20%,rgba(255,255,255,0.15),transparent)]" />
-            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
-            <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
+          {/* Recognition Impact — Frosted Glassmorphism Card */}
+          <div className="relative overflow-hidden rounded-2xl border border-amber-200/40 dark:border-amber-500/15 bg-white/80 dark:bg-secondary-800/60 backdrop-blur-sm p-5">
+            {/* Gradient tint — translucent, not opaque */}
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-100/60 via-orange-100/40 to-rose-100/30 dark:from-amber-500/[0.08] dark:via-orange-500/[0.05] dark:to-rose-500/[0.03]" />
+            {/* Decorative orbs */}
+            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-amber-400/15 dark:bg-amber-500/10 blur-2xl" />
+            <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-rose-400/10 dark:bg-rose-500/10 blur-2xl" />
 
             <div className="relative z-10">
               <div className="flex items-center gap-2 mb-3">
-                <SparklesIcon className="h-5 w-5 text-white/80" />
-                <h3 className="text-base font-bold text-white">Recognition Impact</h3>
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 shadow-md shadow-amber-500/20">
+                  <SparklesIcon className="h-4 w-4 text-white" />
+                </div>
+                <h3 className="text-base font-bold text-secondary-900 dark:text-white">Recognition Impact</h3>
               </div>
               <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-3xl font-extrabold text-white tracking-tight">{wall?.meta?.total ?? 0}</span>
-                <span className="text-sm text-white/70 font-medium">total recognitions</span>
+                <span className="text-3xl font-extrabold text-amber-600 dark:text-amber-400 tracking-tight">{wall?.meta?.total ?? 0}</span>
+                <span className="text-sm text-secondary-500 dark:text-secondary-400 font-medium">total recognitions</span>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed">
+              <p className="text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed">
                 shared across the organization. Keep the appreciation flowing!
               </p>
             </div>
