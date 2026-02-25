@@ -71,8 +71,13 @@ const CPISScoreDisplay = ({
         setShowInfo(false);
       }
     };
+    const handleScroll = () => setShowInfo(false);
     document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    window.addEventListener('scroll', handleScroll, true);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      window.removeEventListener('scroll', handleScroll, true);
+    };
   }, [showInfo]);
 
   return (
