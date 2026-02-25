@@ -989,7 +989,7 @@ export default function LandingPage() {
   const handleVideoLoaded = useCallback(() => { if (videoRef.current) videoRef.current.playbackRate = 0.6; }, []);
 
   return (
-    <div ref={pageRef} className="landing-page relative min-h-screen bg-[rgb(10,13,26)] text-white overflow-x-hidden">
+    <div ref={pageRef} className="landing-page relative min-h-screen bg-[rgb(10,13,26)] text-white overflow-x-hidden font-display">
 
       {/* ═══ FIXED BACKGROUND LAYERS ═════════════════════════════════════ */}
       <div className="fixed inset-0 z-0">
