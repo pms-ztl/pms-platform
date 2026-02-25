@@ -1597,6 +1597,21 @@ export function calculateCPIS(input: CPISInput): CPISResult {
   if (input.evidence.totalEvidence === 0) noDataCodes.add('EQS');
   if (input.growth.historicalScores.length === 0 && input.growth.trainingsCompleted === 0 &&
       input.growth.skillProgressions === 0 && input.growth.developmentPlanProgress === 0) noDataCodes.add('GTS');
+  // III: no initiative data tracked at all
+  if (input.initiative.innovationContributions === 0 && input.initiative.mentoringSessions === 0 &&
+      input.initiative.knowledgeSharing === 0 && input.initiative.processImprovements === 0 &&
+      input.initiative.voluntaryGoals === 0) noDataCodes.add('III');
+  // CRI: no real consistency tracking (no completed deadlines, no streaks)
+  if (input.consistency.totalDeadlines === 0 && input.consistency.streakDays === 0) noDataCodes.add('CRI');
+  // CIS: sparse collaboration data.  The sigmoid curves for CIS channels are
+  // calibrated for mature usage (5+ feedbacks, 3+ one-on-ones, etc.).  When
+  // individual channel counts average < 2, the scores cluster near 25-30 and
+  // only add noise — exclude the dimension until data is richer.
+  const totalCollabActivity = input.collaboration.crossFunctionalGoals +
+    input.collaboration.feedbackGivenCount + input.collaboration.feedbackReceivedCount +
+    input.collaboration.oneOnOneCount + input.collaboration.recognitionsGiven +
+    input.collaboration.teamGoalContributions;
+  if (totalCollabActivity < 12) noDataCodes.add('CIS');
 
   const deadWeight = dimensions
     .filter(d => noDataCodes.has(d.code))
@@ -1617,10 +1632,10 @@ export function calculateCPIS(input: CPISInput): CPISResult {
   // Weighted sum of all dimensions (with re-balanced weights)
   const rawComposite = dimensions.reduce((sum, d) => sum + d.weightedScore, 0);
 
-  // Tenure factor: slight bonus for experience (max +10%)
-  const tenureFactor = Math.min(1.10, 1 + input.tenureYears * 0.02);
+  // Tenure factor: bonus for experience (2.5% per year, max +12%)
+  const tenureFactor = Math.min(1.12, 1 + input.tenureYears * 0.025);
 
-  // Data volume confidence — softer curve so sparse data isn't over-punished
+  // Data volume confidence (for display only — not used to dampen score)
   const totalDataPoints = input.goals.length + input.reviews.length +
     input.feedbacks.length + input.evidence.totalEvidence;
   const dataConfidence = 0.6 + 0.4 * sigmoid(totalDataPoints, 0.25, 8);
@@ -1632,12 +1647,12 @@ export function calculateCPIS(input: CPISInput): CPISResult {
   const fairness = computeFairness(rawScore, input, dimensions);
   const fairAdjustedScore = Math.max(0, Math.min(100, rawScore + fairness.adjustmentApplied));
 
-  // Final score with confidence damping (scores with low data gravitate toward center)
-  const finalScore = Math.round(
-    (fairAdjustedScore * dataConfidence + 50 * (1 - dataConfidence)) * 100
-  ) / 100;
+  // Final score — no center-pull damping.  Dynamic re-weighting already
+  // handles missing dimensions, so damping would only compress the spread
+  // and cluster everyone around C/C+.
+  const finalScore = Math.round(fairAdjustedScore * 100) / 100;
 
-  // Confidence interval
+  // Confidence interval (wider margin when data is sparse)
   const confidenceLevel = Math.round(dataConfidence * 100) / 100;
   const margin = Math.max(2, 15 * (1 - confidenceLevel));
   const confidence = {
