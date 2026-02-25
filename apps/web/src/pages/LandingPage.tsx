@@ -633,6 +633,7 @@ const FEATURE_CATEGORIES = [
     'Audit logging & real-time threat detection',
     'Excel bulk upload with AI data quality scoring',
     'Cross-tenant access blocking with security alerts',
+    'SSO & SAML 2.0 integration with identity providers',
   ]},
   { icon: ChatBubbleLeftRightIcon, title: 'Communication & Engagement', features: [
     'Real-time chat & push notifications via WebSocket',
