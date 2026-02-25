@@ -1053,9 +1053,9 @@ export default function LandingPage() {
                 <br />
                 <span className="hero-impact-word" style={{ animationDelay: '0.42s' }}>Impact!</span>
                 <br />
-                <span className="italic font-light text-white/50" style={{ animationDelay: '0.66s' }}>Not{'\u00A0'}</span>
-                <span className="italic font-light text-white/50" style={{ animationDelay: '0.78s' }}>Just{'\u00A0'}</span>
-                <span className="italic font-light text-white/50" style={{ animationDelay: '0.9s' }}>Activity.</span>
+                <span className="font-normal text-white/50" style={{ animationDelay: '0.66s' }}>Not{'\u00A0'}</span>
+                <span className="font-normal text-white/50" style={{ animationDelay: '0.78s' }}>Just{'\u00A0'}</span>
+                <span className="font-normal text-white/50" style={{ animationDelay: '0.9s' }}>Activity.</span>
               </span>
             )}
             {!heroRef.visible && <span style={{ opacity: 0 }}>Track<br />Impact!<br />Not Just Activity.</span>}
