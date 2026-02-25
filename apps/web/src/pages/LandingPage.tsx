@@ -305,7 +305,7 @@ function GlassFeatureCard({ icon: Icon, title, description, delay }: {
         ref={tilt.ref}
         onMouseMove={tilt.onMouseMove}
         onMouseLeave={tilt.onMouseLeave}
-        className={`landing-glass-card landing-tilt-card rounded-3xl p-8 sm:p-10 transition-all duration-700 cursor-default group ${
+        className={`landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 transition-all duration-700 cursor-default group ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
         style={{
@@ -336,7 +336,7 @@ function GlassCategoryCard({ icon: Icon, title, features, delay }: {
         ref={tilt.ref}
         onMouseMove={tilt.onMouseMove}
         onMouseLeave={tilt.onMouseLeave}
-        className={`landing-glass-card landing-tilt-card rounded-3xl p-8 sm:p-10 transition-all duration-700 cursor-default group ${
+        className={`landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 transition-all duration-700 cursor-default group ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
         style={{
@@ -392,7 +392,91 @@ function ScrollDownIndicator() {
 }
 
 function SectionDivider() {
-  return <div className="landing-divider max-w-xs mx-auto my-3" />;
+  return <div className="landing-divider max-w-xs mx-auto my-1" />;
+}
+
+// ── How It Works — 3-step process strip ─────────────────────────────────────
+function HowItWorksStrip() {
+  const { ref, visible } = useInView(0.2);
+  const steps = [
+    { num: '01', title: 'Set Goals & OKRs', desc: 'Cascade objectives from company to individual. AI suggests alignment.' },
+    { num: '02', title: 'Continuous Feedback', desc: '360° reviews, peer recognition, 1-on-1s — all in real-time.' },
+    { num: '03', title: 'AI-Driven Insights', desc: '70 agents analyze performance, detect bias, predict attrition.' },
+  ];
+  return (
+    <section ref={ref} className="py-10 sm:py-14 px-6 sm:px-12 lg:px-16">
+      <div className="max-w-[90rem] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {steps.map((s, i) => (
+            <div key={s.num} className={`flex gap-4 items-start transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              style={{ transitionDelay: `${i * 150}ms` }}>
+              <span className="text-3xl sm:text-4xl font-display font-bold text-white/10 flex-shrink-0 leading-none">{s.num}</span>
+              <div>
+                <h3 className="text-white font-semibold text-lg mb-1">{s.title}</h3>
+                <p className="text-white/35 text-sm leading-relaxed">{s.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── AI Capabilities Highlight Row ───────────────────────────────────────────
+function AICapabilitiesRow() {
+  const { ref, visible } = useInView(0.2);
+  const capabilities = [
+    { label: 'Bias Firewall', desc: 'Detect & prevent rating bias in real-time' },
+    { label: 'Attrition Predictor', desc: 'Identify flight risk 90 days early' },
+    { label: 'Calibration AI', desc: 'Auto-align ratings across teams & managers' },
+    { label: 'Skill Gap Mapper', desc: 'Map competencies to career path requirements' },
+    { label: 'Sentiment Engine', desc: 'Analyze feedback tone & engagement signals' },
+    { label: 'Proof Engine', desc: 'Explain every AI decision with evidence trails' },
+  ];
+  return (
+    <section ref={ref} className="py-10 sm:py-14 px-6 sm:px-12 lg:px-16">
+      <div className="max-w-[90rem] mx-auto">
+        <p className={`text-center text-white/25 text-xs tracking-[0.2em] uppercase mb-8 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+          AI Agent Capabilities
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+          {capabilities.map((c, i) => (
+            <div key={c.label}
+              className={`rounded-xl p-4 text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', transitionDelay: `${i * 80}ms` }}>
+              <div className="text-white/70 text-sm font-semibold mb-1">{c.label}</div>
+              <div className="text-white/25 text-xs leading-relaxed">{c.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Integration / Workflow Row ──────────────────────────────────────────────
+function WorkflowRow() {
+  const { ref, visible } = useInView(0.2);
+  const items = [
+    'Goal Setting → OKR Cascade → Alignment Check',
+    'Review Cycle → Peer Feedback → Calibration → Final Rating',
+    'Skill Assessment → Gap Analysis → Development Plan → Mentorship',
+    'Pulse Survey → Sentiment AI → Culture Score → Action Items',
+  ];
+  return (
+    <section ref={ref} className="py-8 sm:py-10 px-6 sm:px-12 lg:px-16">
+      <div className="max-w-[90rem] mx-auto grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {items.map((item, i) => (
+          <div key={i} className={`flex items-center gap-3 rounded-lg px-5 py-3 transition-all duration-700 ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'}`}
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', transitionDelay: `${i * 100}ms` }}>
+            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400/40 flex-shrink-0" />
+            <span className="text-white/35 text-xs sm:text-sm font-mono tracking-wide">{item}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 // ── Animated horizontal metric bar ──────────────────────────────────────────
@@ -551,11 +635,11 @@ function BentoGrid() {
     boxShadow: '0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)',
   };
   return (
-    <section ref={ref} className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
+    <section ref={ref} className="py-10 sm:py-16 px-6 sm:px-12 lg:px-16">
       <div className="max-w-[90rem] mx-auto">
         {/* Header */}
-        <div className={`text-center mb-14 transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-6 animate-badge-float"
+        <div className={`text-center mb-10 transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-5 animate-badge-float"
             style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)', color: 'rgba(148, 210, 255, 0.9)' }}>
             Platform at a Glance
           </div>
@@ -610,7 +694,7 @@ function BentoGrid() {
 function TechLogosStrip() {
   const { ref, visible } = useInView(0.3);
   return (
-    <section ref={ref} className="py-12 sm:py-16 px-6 sm:px-12 lg:px-16">
+    <section ref={ref} className="py-8 sm:py-10 px-6 sm:px-12 lg:px-16">
       <div className="max-w-[80rem] mx-auto">
         <p className={`text-center text-white/25 text-sm tracking-wider uppercase mb-10 transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}>
           Powered by modern technology
@@ -642,7 +726,7 @@ function TechLogosStrip() {
 
 function TestimonialSection() {
   return (
-    <section className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
+    <section className="py-10 sm:py-14 px-6 sm:px-12 lg:px-16">
       <div className="max-w-[90rem] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
           {TESTIMONIALS.map((t, i) => {
@@ -654,7 +738,7 @@ function TestimonialSection() {
                   ref={tilt.ref}
                   onMouseMove={tilt.onMouseMove}
                   onMouseLeave={tilt.onMouseLeave}
-                  className={`landing-glass-card landing-tilt-card rounded-3xl p-8 sm:p-10 h-full flex flex-col transition-all duration-700
+                  className={`landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 h-full flex flex-col transition-all duration-700
                     ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                   style={{
                     background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(28px) saturate(1.2)',
@@ -787,9 +871,9 @@ export default function LandingPage() {
         {/* ── SECTION 2: MARQUEE STRIP ─────────────────────────────────── */}
         <MarqueeStrip />
 
-        {/* ── SECTION 2.5: QUICK METRICS BAR ───────────────────────────── */}
-        <section className="py-10 sm:py-14 px-6 sm:px-12 lg:px-16">
-          <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-5">
+        {/* ── QUICK METRICS BAR ────────────────────────────────────────── */}
+        <section className="py-8 sm:py-10 px-6 sm:px-12 lg:px-16">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-4">
             <MetricBar label="EMPLOYEE ENGAGEMENT" value="94%" width="94%" delay={0} />
             <MetricBar label="REVIEW COMPLETION" value="97%" width="97%" delay={100} />
             <MetricBar label="GOAL ALIGNMENT" value="91%" width="91%" delay={200} />
@@ -799,7 +883,7 @@ export default function LandingPage() {
         <SectionDivider />
 
         {/* ── SECTION 3: CODE TYPING + DESCRIPTION ─────────────────────── */}
-        <section ref={codeRef.ref} className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
+        <section ref={codeRef.ref} className="py-10 sm:py-16 px-6 sm:px-12 lg:px-16">
           <div className="max-w-[90rem] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className={`transition-all duration-1000 ${codeRef.visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
               <NeonCodeTyper />
@@ -827,20 +911,27 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* ── HOW IT WORKS — 3-step process ────────────────────────────── */}
+        <HowItWorksStrip />
         <SectionDivider />
 
         {/* ── SECTION 4: BENTO GRID ────────────────────────────────────── */}
         <BentoGrid />
         <SectionDivider />
 
+        {/* ── AI CAPABILITIES ROW ──────────────────────────────────────── */}
+        <AICapabilitiesRow />
+        <SectionDivider />
+
         {/* ── SECTION 5: FEATURE CATEGORIES (3×2) ──────────────────────── */}
-        <section className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
+        <section className="py-10 sm:py-16 px-6 sm:px-12 lg:px-16">
           <div className="max-w-[90rem] mx-auto">
             {(() => {
               const headerRef = useInView(0.2);
               return (
-                <div ref={headerRef.ref} className={`text-center mb-14 transition-all duration-1000 ${headerRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                  <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-6 animate-badge-float"
+                <div ref={headerRef.ref} className={`text-center mb-10 transition-all duration-1000 ${headerRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                  <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-5 animate-badge-float"
                     style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)', color: 'rgba(148, 210, 255, 0.9)' }}>
                     Platform Capabilities
                   </div>
@@ -851,24 +942,27 @@ export default function LandingPage() {
                 </div>
               );
             })()}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
               {FEATURE_CATEGORIES.map((cat, i) => (<GlassCategoryCard key={cat.title} {...cat} delay={i * 100} />))}
             </div>
           </div>
         </section>
+
+        {/* ── WORKFLOW PIPELINES ────────────────────────────────────────── */}
+        <WorkflowRow />
 
         {/* ── Scrolling feature badges ─────────────────────────────────── */}
         <ScrollingBadges />
         <SectionDivider />
 
         {/* ── SECTION 6: USPs ──────────────────────────────────────────── */}
-        <section className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
+        <section className="py-10 sm:py-16 px-6 sm:px-12 lg:px-16">
           <div className="max-w-[90rem] mx-auto">
             {(() => {
               const uspHeaderRef = useInView(0.2);
               return (
-                <div ref={uspHeaderRef.ref} className={`text-center mb-14 transition-all duration-1000 ${uspHeaderRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                  <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-6 animate-badge-float"
+                <div ref={uspHeaderRef.ref} className={`text-center mb-10 transition-all duration-1000 ${uspHeaderRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                  <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-5 animate-badge-float"
                     style={{ background: 'rgba(148, 210, 255, 0.08)', border: '1px solid rgba(148, 210, 255, 0.12)', color: 'rgba(148, 210, 255, 0.9)' }}>
                     Why PMS Suite
                   </div>
@@ -879,7 +973,7 @@ export default function LandingPage() {
                 </div>
               );
             })()}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
               {USPS.map((usp, i) => (<GlassFeatureCard key={usp.title} icon={usp.icon} title={usp.title} description={usp.description} delay={i * 80} />))}
             </div>
           </div>
@@ -890,7 +984,7 @@ export default function LandingPage() {
         <TechLogosStrip />
 
         {/* ── SECTION 8: STATS BAR ─────────────────────────────────────── */}
-        <section className="py-14 sm:py-20 px-6 sm:px-12 lg:px-16">
+        <section className="py-10 sm:py-14 px-6 sm:px-12 lg:px-16">
           <div className="max-w-[80rem] mx-auto">
             <div className="rounded-3xl p-10 sm:p-14 grid grid-cols-2 sm:grid-cols-4 gap-10 text-center"
               style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(24px) saturate(1.2)', WebkitBackdropFilter: 'blur(24px) saturate(1.2)',
@@ -919,7 +1013,7 @@ export default function LandingPage() {
         <TestimonialSection />
 
         {/* ── SECTION 10: FOOTER CTA ───────────────────────────────────── */}
-        <section className="py-16 sm:py-24 px-6 sm:px-12 lg:px-16">
+        <section className="py-10 sm:py-16 px-6 sm:px-12 lg:px-16">
           {(() => {
             const footerRef = useInView(0.2);
             return (
