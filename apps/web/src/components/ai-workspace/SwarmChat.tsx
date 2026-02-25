@@ -73,6 +73,7 @@ import { useAuthStore } from '@/store/auth';
 import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import type { AITheme } from '@/store/ai-workspace';
 import * as T from './ai-theme';
+import { getFriendlyError, formatRelativeTime } from './ai-theme';
 
 // ── Types ──────────────────────────────────────────────────────
 
@@ -512,7 +513,7 @@ function MetadataRibbon({
 
 // ── TypingIndicator ────────────────────────────────────────────
 
-function TypingIndicator({ theme }: { theme: AITheme }) {
+function TypingIndicator({ theme, agentName }: { theme: AITheme; agentName?: string }) {
   const dots = T.typingDotColors(theme);
   return (
     <div className="flex gap-3 justify-start">
@@ -524,6 +525,11 @@ function TypingIndicator({ theme }: { theme: AITheme }) {
         <SparklesIcon className={`h-4 w-4 ${theme === 'deep-dark' ? 'text-cyan-300' : 'text-purple-300'}`} />
       </div>
       <div className={`rounded-2xl px-4 py-3 ${T.assistantBubble(theme)}`}>
+        {agentName && (
+          <p className={`text-2xs font-medium mb-1.5 ${T.textSecondary(theme)}`}>
+            {agentName} is thinking\u2026
+          </p>
+        )}
         <div className="flex items-center gap-1.5">
           <div className={`h-2 w-2 rounded-full ${dots[0]} animate-bounce`} style={{ animationDelay: '0ms', animationDuration: '0.6s' }} />
           <div className={`h-2 w-2 rounded-full ${dots[1]} animate-bounce`} style={{ animationDelay: '150ms', animationDuration: '0.6s' }} />
@@ -585,9 +591,23 @@ export function SwarmChat() {
     }
   }, [conversationData]);
 
-  // Reset conversation when agent changes
+  // Reset conversation when agent changes — inject a friendly welcome message
   useEffect(() => {
-    setMessages([]);
+    if (selectedAgent) {
+      const agent = findAgent(selectedAgent);
+      if (agent) {
+        setMessages([{
+          id: `welcome-${selectedAgent}`,
+          role: 'assistant',
+          content: `Hi there! I'm the **${agent.name}** Agent. I specialize in **${agent.desc.toLowerCase()}**. Ask me anything \u2014 I'll pull from your organization's real data to help.`,
+          timestamp: new Date(),
+        }]);
+      } else {
+        setMessages([]);
+      }
+    } else {
+      setMessages([]);
+    }
     setConversationId(null);
     inputRef.current?.focus();
   }, [selectedAgent]);
@@ -614,23 +634,12 @@ export function SwarmChat() {
       queryClient.invalidateQueries({ queryKey: ['ai'] });
     },
     onError: (error: Error) => {
-      const errMsg = error.message ?? '';
-      const friendlyMessage = errMsg.includes('rate limit') || errMsg.includes('429')
-        ? 'The AI service is currently busy due to high demand. Please wait a moment and try again.'
-        : errMsg.includes('unavailable') || errMsg.includes('503') || errMsg.includes('busy')
-        ? 'The AI service is temporarily unavailable. This usually resolves in a few seconds — please try again shortly.'
-        : errMsg.includes('timeout') || errMsg.includes('ETIMEDOUT')
-        ? 'The request took too long to process. Please try a shorter or simpler message.'
-        : errMsg.includes('not configured')
-        ? 'The AI service is not configured for your organization. Please contact your administrator.'
-        : 'I encountered an issue processing your request. Please try again in a moment.';
-
       setMessages((prev) => [
         ...prev,
         {
           id: `error-${Date.now()}`,
           role: 'assistant',
-          content: friendlyMessage,
+          content: getFriendlyError(error.message ?? ''),
           timestamp: new Date(),
         },
       ]);
@@ -893,7 +902,7 @@ export function SwarmChat() {
                       msg.role === 'user' ? 'text-white/50' : T.textMuted(theme)
                     }`}
                   >
-                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {formatRelativeTime(msg.timestamp)}
                   </p>
                 </div>
 
@@ -954,7 +963,7 @@ export function SwarmChat() {
           ))}
 
           {/* Typing Indicator */}
-          {chatMutation.isPending && <TypingIndicator theme={theme} />}
+          {chatMutation.isPending && <TypingIndicator theme={theme} agentName={currentAgent?.name} />}
 
           {/* Error State */}
           {chatMutation.isError && messages.length === 0 && (
@@ -964,9 +973,9 @@ export function SwarmChat() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                 </svg>
               </div>
-              <h3 className={`text-sm font-semibold ${T.textPrimary(theme)} mb-1`}>Connection Error</h3>
+              <h3 className={`text-sm font-semibold ${T.textPrimary(theme)} mb-1`}>Oops, Something Went Wrong</h3>
               <p className={`text-xs ${T.textMuted(theme)}`}>
-                Unable to reach the AI service. Please try again.
+                We couldn't reach the AI service right now. Give it a moment and try again!
               </p>
             </div>
           )}

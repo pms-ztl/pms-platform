@@ -137,6 +137,8 @@ export const AGENT_ICON_MAP: Record<string, AgentIconComponent> = {
   review_drafter:          PencilSquareIcon,
   compensation_promotion:  BanknotesIcon,
   one_on_one_advisor:      ChatBubbleLeftRightIcon,
+  // Orchestration
+  coordinator:             BoltIcon,
   // Extra types used by ConversationBar/InsightFeed
   analytics:               ChartBarIcon,
   feedback:                ChatBubbleLeftRightIcon,

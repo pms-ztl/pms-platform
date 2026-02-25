@@ -277,3 +277,114 @@ export function selectedBar(theme: AITheme) {
       return 'bg-gradient-to-r from-cyan-500 via-emerald-500 to-teal-500';
   }
 }
+
+// ── Shared UI Utilities ─────────────────────────────────────
+
+/** Well-known display names for special agent types. */
+const AGENT_DISPLAY_NAMES: Record<string, string> = {
+  coordinator: 'Swarm Coordinator',
+  excel_validation: 'Excel AI',
+  nlp_query: 'Data Query',
+  performance_signal: 'Performance Signal',
+  goal_intelligence: 'Goal Intelligence',
+  one_on_one_advisor: '1:1 Advisor',
+  compensation_promotion: 'Comp & Promo',
+  review_drafter: 'Review Drafter',
+  burnout_interceptor: 'Burnout Guard',
+  skill_gap_forecaster: 'Skill Forecast',
+  knowledge_broker: 'Knowledge Broker',
+  credential_ledger: 'Credentials',
+  linguistic_refiner: 'Linguistic Refiner',
+  curiosity_scout: 'Curiosity Scout',
+  logic_validator: 'Logic Check',
+  cross_training: 'Cross-Train',
+  career_sim: 'Career Sim',
+  shadow_learning: 'Shadow Learn',
+  micro_learning: 'Micro Learn',
+  ar_mentor: 'AR Mentor',
+  sparring_partner: 'Sparring Partner',
+  task_bidder: 'Task Bidder',
+  gig_sourcer: 'Gig Sourcer',
+  nano_payment: 'Nano Pay',
+  market_value: 'Market Value',
+  tax_optimizer: 'Tax Optimizer',
+  equity_realizer: 'Equity',
+  pension_guard: 'Pension Guard',
+  relocation_bot: 'Relocation',
+  vendor_negotiator: 'Vendor',
+  succession_sentry: 'Succession',
+  culture_weaver: 'Culture Weaver',
+  bias_neutralizer: 'Bias Neutralizer',
+  gratitude_sentinel: 'Gratitude',
+  conflict_mediator: 'Mediator',
+  inclusion_monitor: 'Inclusion',
+  empathy_coach: 'Empathy Coach',
+  social_bonding: 'Social Bonding',
+  legacy_archivist: 'Legacy',
+  mood_radiator: 'Mood Radiator',
+  posh_sentinel: 'POSH',
+  labor_compliance: 'Labor Law',
+  policy_translator: 'Policy',
+  data_privacy: 'Privacy',
+  audit_trail: 'Audit',
+  conflict_of_interest: 'COI',
+  leave_optimizer: 'Leave',
+  onboarding_orchestrator: 'Onboarding',
+  environment_ctrl: 'Environment',
+  hydration_nutrition: 'Hydration & Nutrition',
+  vocal_tone: 'Vocal Tone',
+  cortisol_monitor: 'Cortisol Monitor',
+  micro_break: 'Micro Break',
+  circadian_sync: 'Circadian Sync',
+  neuro_focus: 'Neuro Focus',
+  conflict_resolution: 'Conflict Resolution',
+  talent_marketplace: 'Talent Market',
+  strategic_alignment: 'Strategy',
+};
+
+/**
+ * Convert a raw agentType key into a human-friendly display name.
+ * Checks the well-known map first, then falls back to title-casing.
+ */
+export function formatAgentDisplayName(agentType: string): string {
+  if (AGENT_DISPLAY_NAMES[agentType]) return AGENT_DISPLAY_NAMES[agentType];
+  return agentType
+    .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+/**
+ * Convert a terse technical error string into a warm, conversational message.
+ */
+export function getFriendlyError(raw: string): string {
+  const lower = raw.toLowerCase();
+  if (lower.includes('rate limit') || lower.includes('429'))
+    return 'Hmm, our AI agents are a bit busy right now. Give it a moment and try again \u2014 they\u2019ll be ready shortly!';
+  if (lower.includes('unavailable') || lower.includes('503') || lower.includes('busy'))
+    return 'The AI service is taking a quick breather. It usually comes back within a few seconds.';
+  if (lower.includes('timeout') || lower.includes('etimedout'))
+    return 'That request was a big one! Try breaking it into a shorter question.';
+  if (lower.includes('not configured'))
+    return 'The AI service isn\u2019t set up for your organization yet. Please contact your administrator.';
+  if (lower.includes('exhausted') || lower.includes('quota'))
+    return 'We\u2019ve hit today\u2019s usage limit. The quota resets soon \u2014 try again in a little while!';
+  if (raw) return raw;
+  return 'Something didn\u2019t go as planned. Let\u2019s try that again!';
+}
+
+/**
+ * Format a Date as a relative time string: "just now", "2m ago", "1h ago", etc.
+ */
+export function formatRelativeTime(date: Date): string {
+  const now = Date.now();
+  const diffMs = now - date.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+
+  if (diffSec < 60) return 'just now';
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `${diffHr}h ago`;
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}

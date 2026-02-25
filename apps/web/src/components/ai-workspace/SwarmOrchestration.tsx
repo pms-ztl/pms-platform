@@ -22,6 +22,7 @@ import { useAuthStore } from '@/store/auth';
 import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import type { AITheme } from '@/store/ai-workspace';
 import * as T from './ai-theme';
+import { getFriendlyError, formatRelativeTime } from './ai-theme';
 import { getAgentIcon } from './agentIconMap';
 
 // ============================================================================
@@ -47,83 +48,85 @@ interface ConversationTurn {
 // Agent Lookup Map (70 agents across 6 clusters)
 // ============================================================================
 
-const AGENT_INFO: Record<string, { name: string; cluster: string; clusterColor: string }> = {
+const AGENT_INFO: Record<string, { name: string; cluster: string; clusterColor: string; tagline?: string }> = {
+  // Orchestration
+  coordinator:        { name: 'Swarm Coordinator', cluster: 'Core', clusterColor: 'text-blue-400', tagline: 'Multi-agent task orchestration' },
   // Core (20)
-  performance:        { name: 'Performance',   cluster: 'Core',       clusterColor: 'text-blue-400' },
-  nlp_query:          { name: 'Data Query',    cluster: 'Core',       clusterColor: 'text-blue-400' },
-  coaching:           { name: 'Coaching',       cluster: 'Core',       clusterColor: 'text-blue-400' },
-  career:             { name: 'Career',         cluster: 'Core',       clusterColor: 'text-blue-400' },
-  report:             { name: 'Reports',        cluster: 'Core',       clusterColor: 'text-blue-400' },
-  workforce_intel:    { name: 'Workforce',      cluster: 'Core',       clusterColor: 'text-blue-400' },
-  governance:         { name: 'Governance',     cluster: 'Core',       clusterColor: 'text-blue-400' },
-  strategic_alignment:{ name: 'Strategy',       cluster: 'Core',       clusterColor: 'text-blue-400' },
-  talent_marketplace: { name: 'Talent Market',  cluster: 'Core',       clusterColor: 'text-blue-400' },
-  conflict_resolution:{ name: 'Conflict',       cluster: 'Core',       clusterColor: 'text-blue-400' },
-  security:           { name: 'Security',       cluster: 'Core',       clusterColor: 'text-blue-400' },
-  notification:       { name: 'Notification',   cluster: 'Core',       clusterColor: 'text-blue-400' },
-  onboarding:         { name: 'Onboarding',     cluster: 'Core',       clusterColor: 'text-blue-400' },
-  license:            { name: 'License',        cluster: 'Core',       clusterColor: 'text-blue-400' },
-  excel_validation:   { name: 'Excel AI',       cluster: 'Core',       clusterColor: 'text-blue-400' },
-  goal_intelligence:  { name: 'Goal Intel',     cluster: 'Core',       clusterColor: 'text-blue-400' },
-  performance_signal: { name: 'Perf Signal',    cluster: 'Core',       clusterColor: 'text-blue-400' },
-  review_drafter:     { name: 'Review Drafter', cluster: 'Core',       clusterColor: 'text-blue-400' },
-  compensation_promotion:{ name: 'Comp & Promo', cluster: 'Core',      clusterColor: 'text-blue-400' },
-  one_on_one_advisor: { name: '1:1 Advisor',    cluster: 'Core',       clusterColor: 'text-blue-400' },
+  performance:        { name: 'Performance',   cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Reviews & ratings' },
+  nlp_query:          { name: 'Data Query',    cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Natural language queries' },
+  coaching:           { name: 'Coaching',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Micro-coaching tips' },
+  career:             { name: 'Career',         cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Growth paths' },
+  report:             { name: 'Reports',        cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Generate reports' },
+  workforce_intel:    { name: 'Workforce',      cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Burnout & retention' },
+  governance:         { name: 'Governance',     cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Bias & fairness' },
+  strategic_alignment:{ name: 'Strategy',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'OKR alignment' },
+  talent_marketplace: { name: 'Talent Market',  cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Skill matching' },
+  conflict_resolution:{ name: 'Conflict',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Team mediation' },
+  security:           { name: 'Security',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Audits & threats' },
+  notification:       { name: 'Notification',   cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Smart alerts' },
+  onboarding:         { name: 'Onboarding',     cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'New hire setup' },
+  license:            { name: 'License',        cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Seats & billing' },
+  excel_validation:   { name: 'Excel AI',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Data validation' },
+  goal_intelligence:  { name: 'Goal Intel',     cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'SMART goals & OKRs' },
+  performance_signal: { name: 'Perf Signal',    cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Evidence & signals' },
+  review_drafter:     { name: 'Review Drafter', cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Draft reviews' },
+  compensation_promotion:{ name: 'Comp & Promo', cluster: 'Core',      clusterColor: 'text-blue-400', tagline: 'Promotion readiness' },
+  one_on_one_advisor: { name: '1:1 Advisor',    cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Meeting intelligence' },
   // Bio-Performance (10)
-  neuro_focus:        { name: 'Neuro Focus',    cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  circadian_sync:     { name: 'Circadian',      cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  micro_break:        { name: 'Micro Break',    cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  cortisol_monitor:   { name: 'Cortisol',       cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  ergonomics:         { name: 'Ergonomics',     cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  sleep_optimizer:    { name: 'Sleep',           cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  hydration_nutrition:{ name: 'Hydration',      cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  vocal_tone:         { name: 'Vocal Tone',     cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  environment_ctrl:   { name: 'Environment',    cluster: 'Bio',        clusterColor: 'text-emerald-400' },
-  burnout_interceptor:{ name: 'Burnout Guard',  cluster: 'Bio',        clusterColor: 'text-emerald-400' },
+  neuro_focus:        { name: 'Neuro Focus',    cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Deep work patterns' },
+  circadian_sync:     { name: 'Circadian',      cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Body clock sync' },
+  micro_break:        { name: 'Micro Break',    cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Rest intervals' },
+  cortisol_monitor:   { name: 'Cortisol',       cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Stress patterns' },
+  ergonomics:         { name: 'Ergonomics',     cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Workspace setup' },
+  sleep_optimizer:    { name: 'Sleep',           cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Sleep quality' },
+  hydration_nutrition:{ name: 'Hydration',      cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Nutrition guidance' },
+  vocal_tone:         { name: 'Vocal Tone',     cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Communication style' },
+  environment_ctrl:   { name: 'Environment',    cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Workspace optimization' },
+  burnout_interceptor:{ name: 'Burnout Guard',  cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Early detection' },
   // Hyper-Learning (12)
-  shadow_learning:    { name: 'Shadow Learn',   cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  micro_learning:     { name: 'Micro Learn',    cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  ar_mentor:          { name: 'AR Mentor',      cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  sparring_partner:   { name: 'Sparring',       cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  skill_gap_forecaster:{ name: 'Skill Forecast', cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  knowledge_broker:   { name: 'Knowledge',      cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  credential_ledger:  { name: 'Credentials',    cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  linguistic_refiner: { name: 'Linguistic',     cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  curiosity_scout:    { name: 'Curiosity',      cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  logic_validator:    { name: 'Logic Check',    cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  cross_training:     { name: 'Cross-Train',    cluster: 'Learning',   clusterColor: 'text-purple-400' },
-  career_sim:         { name: 'Career Sim',     cluster: 'Learning',   clusterColor: 'text-purple-400' },
+  shadow_learning:    { name: 'Shadow Learn',   cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Peer observation' },
+  micro_learning:     { name: 'Micro Learn',    cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Daily lessons' },
+  ar_mentor:          { name: 'AR Mentor',      cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Simulation training' },
+  sparring_partner:   { name: 'Sparring',       cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Debate practice' },
+  skill_gap_forecaster:{ name: 'Skill Forecast', cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Skill predictions' },
+  knowledge_broker:   { name: 'Knowledge',      cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Expert transfer' },
+  credential_ledger:  { name: 'Credentials',    cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Certificate tracking' },
+  linguistic_refiner: { name: 'Linguistic',     cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Writing polish' },
+  curiosity_scout:    { name: 'Curiosity',      cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Innovation scouting' },
+  logic_validator:    { name: 'Logic Check',    cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Reasoning checks' },
+  cross_training:     { name: 'Cross-Train',    cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'Multi-dept skills' },
+  career_sim:         { name: 'Career Sim',     cluster: 'Learning',   clusterColor: 'text-purple-400', tagline: 'What-if scenarios' },
   // Liquid Workforce (10)
-  task_bidder:        { name: 'Task Bidder',    cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  gig_sourcer:        { name: 'Gig Sourcer',    cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  nano_payment:       { name: 'Nano Pay',       cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  market_value:       { name: 'Market Value',   cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  tax_optimizer:      { name: 'Tax Optimize',   cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  equity_realizer:    { name: 'Equity',          cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  pension_guard:      { name: 'Pension',         cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  relocation_bot:     { name: 'Relocation',     cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  vendor_negotiator:  { name: 'Vendor',          cluster: 'Workforce',  clusterColor: 'text-amber-400' },
-  succession_sentry:  { name: 'Succession',     cluster: 'Workforce',  clusterColor: 'text-amber-400' },
+  task_bidder:        { name: 'Task Bidder',    cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'Task allocation' },
+  gig_sourcer:        { name: 'Gig Sourcer',    cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'Internal gigs' },
+  nano_payment:       { name: 'Nano Pay',       cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'Micro-rewards' },
+  market_value:       { name: 'Market Value',   cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'Benchmarking' },
+  tax_optimizer:      { name: 'Tax Optimize',   cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'Tax strategy' },
+  equity_realizer:    { name: 'Equity',          cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'Stock options' },
+  pension_guard:      { name: 'Pension',         cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'Retirement planning' },
+  relocation_bot:     { name: 'Relocation',     cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'City comparison' },
+  vendor_negotiator:  { name: 'Vendor',          cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'Contract negotiation' },
+  succession_sentry:  { name: 'Succession',     cluster: 'Workforce',  clusterColor: 'text-amber-400', tagline: 'Leadership pipeline' },
   // Culture & Empathy (10)
-  culture_weaver:     { name: 'Culture',         cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  bias_neutralizer:   { name: 'Bias',            cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  gratitude_sentinel: { name: 'Gratitude',      cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  conflict_mediator:  { name: 'Mediator',       cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  inclusion_monitor:  { name: 'Inclusion',      cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  empathy_coach:      { name: 'Empathy',         cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  social_bonding:     { name: 'Social',          cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  legacy_archivist:   { name: 'Legacy',          cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  whistleblower:      { name: 'Whistleblower',  cluster: 'Culture',    clusterColor: 'text-pink-400' },
-  mood_radiator:      { name: 'Mood',            cluster: 'Culture',    clusterColor: 'text-pink-400' },
+  culture_weaver:     { name: 'Culture',         cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'Values & diagnostics' },
+  bias_neutralizer:   { name: 'Bias',            cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'Fair language' },
+  gratitude_sentinel: { name: 'Gratitude',      cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'Appreciation tracking' },
+  conflict_mediator:  { name: 'Mediator',       cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'Conflict resolution' },
+  inclusion_monitor:  { name: 'Inclusion',      cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'Diversity metrics' },
+  empathy_coach:      { name: 'Empathy',         cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'EI training' },
+  social_bonding:     { name: 'Social',          cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'Team building' },
+  legacy_archivist:   { name: 'Legacy',          cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'Knowledge archival' },
+  whistleblower:      { name: 'Whistleblower',  cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'Ethics reporting' },
+  mood_radiator:      { name: 'Mood',            cluster: 'Culture',    clusterColor: 'text-pink-400', tagline: 'Sentiment analysis' },
   // Governance (8)
-  posh_sentinel:      { name: 'POSH',            cluster: 'Governance', clusterColor: 'text-red-400' },
-  labor_compliance:   { name: 'Labor Law',      cluster: 'Governance', clusterColor: 'text-red-400' },
-  policy_translator:  { name: 'Policy',          cluster: 'Governance', clusterColor: 'text-red-400' },
-  data_privacy:       { name: 'Privacy',         cluster: 'Governance', clusterColor: 'text-red-400' },
-  audit_trail:        { name: 'Audit',           cluster: 'Governance', clusterColor: 'text-red-400' },
-  conflict_of_interest:{ name: 'COI',            cluster: 'Governance', clusterColor: 'text-red-400' },
-  leave_optimizer:    { name: 'Leave',           cluster: 'Governance', clusterColor: 'text-red-400' },
-  onboarding_orchestrator:{ name: 'Onboard',     cluster: 'Governance', clusterColor: 'text-red-400' },
+  posh_sentinel:      { name: 'POSH',            cluster: 'Governance', clusterColor: 'text-red-400', tagline: 'Harassment prevention' },
+  labor_compliance:   { name: 'Labor Law',      cluster: 'Governance', clusterColor: 'text-red-400', tagline: 'Regulations' },
+  policy_translator:  { name: 'Policy',          cluster: 'Governance', clusterColor: 'text-red-400', tagline: 'Plain language' },
+  data_privacy:       { name: 'Privacy',         cluster: 'Governance', clusterColor: 'text-red-400', tagline: 'GDPR compliance' },
+  audit_trail:        { name: 'Audit',           cluster: 'Governance', clusterColor: 'text-red-400', tagline: 'Activity logs' },
+  conflict_of_interest:{ name: 'COI',            cluster: 'Governance', clusterColor: 'text-red-400', tagline: 'Interest checks' },
+  leave_optimizer:    { name: 'Leave',           cluster: 'Governance', clusterColor: 'text-red-400', tagline: 'PTO planning' },
+  onboarding_orchestrator:{ name: 'Onboard',     cluster: 'Governance', clusterColor: 'text-red-400', tagline: 'Coordination' },
 };
 
 /** Cluster display order */
@@ -227,6 +230,46 @@ function TypingDots({ theme }: { theme: AITheme }) {
   );
 }
 
+/** Cycling contextual messages for the coordinator thinking state */
+const COORDINATOR_PHASES = [
+  'Analyzing your request\u2026',
+  'Decomposing into sub-tasks\u2026',
+  'Dispatching to specialist agents\u2026',
+  'Synthesizing insights\u2026',
+];
+
+function CoordinatorThinking({ theme }: { theme: AITheme }) {
+  const [phaseIdx, setPhaseIdx] = useState(0);
+  const dots = T.typingDotColors(theme);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPhaseIdx((prev) => (prev + 1) % COORDINATOR_PHASES.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="py-2 space-y-2">
+      <div className="flex items-center gap-2">
+        {/* Spinning indicator */}
+        <svg className={`h-4 w-4 animate-spin ${T.accentText(theme)}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+        <span className={`text-xs font-medium ${T.textSecondary(theme)} transition-all duration-500`}>
+          {COORDINATOR_PHASES[phaseIdx]}
+        </span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <div className={`h-1.5 w-1.5 rounded-full ${dots[0]} animate-bounce`} style={{ animationDelay: '0ms', animationDuration: '0.6s' }} />
+        <div className={`h-1.5 w-1.5 rounded-full ${dots[1]} animate-bounce`} style={{ animationDelay: '150ms', animationDuration: '0.6s' }} />
+        <div className={`h-1.5 w-1.5 rounded-full ${dots[2]} animate-bounce`} style={{ animationDelay: '300ms', animationDuration: '0.6s' }} />
+      </div>
+    </div>
+  );
+}
+
 /** Single agent response card */
 function AgentResponseCard({
   agentType,
@@ -248,34 +291,60 @@ function AgentResponseCard({
       {/* Card Header */}
       <div className={`flex items-center gap-2 px-4 py-3 border-b ${T.borderLight(theme)}`}>
         <AgentIcon className={`h-5 w-5 flex-shrink-0 ${info.clusterColor}`} />
-        <span className={`text-sm font-semibold break-words ${T.textPrimary(theme)}`}>{info.name}</span>
-        <span className={`ml-auto text-2xs font-medium px-2 py-0.5 rounded-full ${
+        <div className="min-w-0 flex-1">
+          <span className={`text-sm font-semibold break-words ${T.textPrimary(theme)}`}>{info.name}</span>
+          {info.tagline && (
+            <p className={`text-2xs ${T.textMuted(theme)} truncate`}>{info.tagline}</p>
+          )}
+        </div>
+        <span className={`flex-shrink-0 text-2xs font-medium px-2 py-0.5 rounded-full ${
           isLight ? 'bg-gray-100 text-gray-500' : 'bg-white/5 text-gray-400'
         } ${info.clusterColor}`}>
           {info.cluster}
         </span>
-        {/* Status indicator */}
-        <span className="flex-shrink-0">
+        {/* Status indicator with label */}
+        <span className="flex-shrink-0 flex items-center gap-1.5">
           {status === 'loading' && (
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400" />
-            </span>
+            <>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
+              </span>
+              <span className="text-2xs text-amber-400 font-medium">Thinking\u2026</span>
+            </>
           )}
           {status === 'success' && (
-            <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+            <>
+              <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              <span className="text-2xs text-emerald-400 font-medium">Completed</span>
+            </>
           )}
           {status === 'error' && (
-            <span className="inline-flex h-2.5 w-2.5 rounded-full bg-red-400" />
+            <>
+              <span className="inline-flex h-2 w-2 rounded-full bg-red-400" />
+              <span className="text-2xs text-red-400 font-medium">Issue</span>
+            </>
           )}
         </span>
       </div>
 
       {/* Card Body */}
       <div className={`flex-1 px-4 py-3 text-sm leading-relaxed overflow-y-auto max-h-80 ${T.scrollbar(theme)}`}>
-        {status === 'loading' && <TypingDots theme={theme} />}
+        {status === 'loading' && agentType === 'coordinator' ? (
+          <CoordinatorThinking theme={theme} />
+        ) : status === 'loading' ? (
+          <TypingDots theme={theme} />
+        ) : null}
         {status === 'error' && (
-          <p className="text-red-400 text-xs">{error || 'An unexpected error occurred.'}</p>
+          <div className="flex items-start gap-2 py-1">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0 text-red-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <div>
+              <p className={`text-xs ${isLight ? 'text-gray-600' : 'text-gray-300'}`}>{error || 'Something didn\u2019t go as planned. Let\u2019s try that again!'}</p>
+              <p className={`text-2xs mt-1 ${T.textMuted(theme)}`}>Try sending your message again</p>
+            </div>
+          </div>
         )}
         {status === 'success' && (
           <div
@@ -288,11 +357,11 @@ function AgentResponseCard({
       {/* Card Footer — metadata */}
       {status === 'success' && metadata && (
         <div className={`flex items-center gap-3 px-4 py-2 border-t ${T.borderLight(theme)} text-2xs ${T.textMuted(theme)}`}>
+          <span className="text-emerald-400 font-medium">Completed in {(metadata.latencyMs / 1000).toFixed(1)}s</span>
+          <span className="opacity-40">|</span>
           <span>{metadata.model}</span>
           <span className="opacity-40">|</span>
           <span>{metadata.inputTokens + metadata.outputTokens} tokens</span>
-          <span className="opacity-40">|</span>
-          <span>{metadata.latencyMs}ms</span>
         </div>
       )}
     </div>
@@ -312,12 +381,18 @@ function AgentReadyCard({ agentType, theme }: { agentType: string; theme: AIThem
     >
       <AgentIcon className={`h-10 w-10 mb-3 ${info.clusterColor}`} />
       <p className={`text-sm font-semibold ${T.textPrimary(theme)} mb-1`}>{info.name}</p>
-      <span className={`text-2xs font-medium px-2 py-0.5 rounded-full mb-3 ${
+      <span className={`text-2xs font-medium px-2 py-0.5 rounded-full mb-2 ${
         isLight ? 'bg-gray-100 text-gray-500' : 'bg-white/5 text-gray-400'
       } ${info.clusterColor}`}>
         {info.cluster}
       </span>
-      <p className={`text-xs ${T.textMuted(theme)}`}>Ready to respond</p>
+      {info.tagline && (
+        <p className={`text-2xs ${T.textMuted(theme)} mb-2`}>{info.tagline}</p>
+      )}
+      <p className={`text-xs ${T.textSecondary(theme)}`}>
+        <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse" />
+        Standing by\u2026
+      </p>
     </div>
   );
 }
@@ -569,12 +644,7 @@ export function SwarmOrchestration() {
           agentType: 'coordinator',
           status: 'error',
           content: '',
-          error: (() => {
-            const raw = err instanceof Error ? err.message : '';
-            if (raw.includes('rate limit') || raw.includes('429')) return 'AI service is busy. Please wait a moment and retry.';
-            if (raw.includes('unavailable') || raw.includes('503') || raw.includes('busy')) return 'AI service is temporarily unavailable. Try again shortly.';
-            return raw || 'Coordination failed — please try again.';
-          })(),
+          error: getFriendlyError(err instanceof Error ? err.message : ''),
         }],
       };
 
@@ -619,19 +689,11 @@ export function SwarmOrchestration() {
           metadata: data.metadata,
         };
       } catch (err) {
-        const raw = err instanceof Error ? err.message : '';
-        const friendly = raw.includes('rate limit') || raw.includes('429')
-          ? 'AI service is busy due to high demand. Please wait a moment and retry.'
-          : raw.includes('unavailable') || raw.includes('503') || raw.includes('busy')
-          ? 'AI service is temporarily unavailable. Try again shortly.'
-          : raw.includes('not configured')
-          ? 'AI is not configured. Contact your administrator.'
-          : raw || 'Request failed — please try again.';
         return {
           agentType,
           status: 'error' as const,
           content: '',
-          error: friendly,
+          error: getFriendlyError(err instanceof Error ? err.message : ''),
         };
       }
     });
@@ -704,19 +766,11 @@ export function SwarmOrchestration() {
           metadata: data.metadata,
         };
       } catch (err) {
-        const raw = err instanceof Error ? err.message : '';
-        const friendly = raw.includes('rate limit') || raw.includes('429')
-          ? 'AI service is busy due to high demand. Please wait a moment and retry.'
-          : raw.includes('unavailable') || raw.includes('503') || raw.includes('busy')
-          ? 'AI service is temporarily unavailable. Try again shortly.'
-          : raw.includes('not configured')
-          ? 'AI is not configured. Contact your administrator.'
-          : raw || 'Request failed — please try again.';
         turnRef.responses[idx] = {
           agentType,
           status: 'error',
           content: '',
-          error: friendly,
+          error: getFriendlyError(err instanceof Error ? err.message : ''),
         };
       }
 
@@ -957,7 +1011,7 @@ export function SwarmOrchestration() {
                     <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">{turn.userMessage}</p>
                   </div>
                   <p className="text-2xs text-white/40 mt-1">
-                    {turn.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {formatRelativeTime(turn.timestamp)}
                   </p>
                 </div>
                 {/* Agent response grid */}
@@ -979,9 +1033,25 @@ export function SwarmOrchestration() {
                     <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">{activeTurn.userMessage}</p>
                   </div>
                   <p className="text-2xs text-white/40 mt-1">
-                    {activeTurn.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {formatRelativeTime(activeTurn.timestamp)}
                   </p>
                 </div>
+                {/* Broadcast progress indicator */}
+                {orchestrationMode === 'broadcast' && activeTurn.responses.length > 1 && (() => {
+                  const done = activeTurn.responses.filter((r) => r.status !== 'loading').length;
+                  const total = activeTurn.responses.length;
+                  return done < total ? (
+                    <div className={`flex items-center justify-center gap-2 mb-3`}>
+                      <svg className={`h-3.5 w-3.5 animate-spin ${T.accentText(theme)}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      <span className={`text-xs font-medium ${T.textSecondary(theme)}`}>
+                        Agent {done + 1} of {total} responding\u2026
+                      </span>
+                    </div>
+                  ) : null;
+                })()}
                 {/* Agent response grid — each card updates independently */}
                 <div className={`grid gap-4 ${gridCols(activeTurn.responses.length)}`}>
                   {activeTurn.responses.map((resp) => (
