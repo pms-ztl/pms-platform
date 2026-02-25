@@ -2851,7 +2851,7 @@ html.transitioning *::after {
   }
 }
 
-/* ── AUTH HEADLINE — clean Playfair Display, no glow, neat ─────────────── */
+/* ── AUTH HEADLINE — Playfair Display + Libre Baskerville, solid white ── */
 
 /* Shared entrance animation */
 @keyframes auth-word-entrance {
@@ -2861,9 +2861,10 @@ html.transitioning *::after {
   100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Line 1: "Outgrow" — bold white */
+/* "Outgrow" — Playfair Display 900, solid white */
 .auth-word-line1 {
   display: inline;
+  font-family: 'Playfair Display', Georgia, serif;
   font-weight: 900;
   color: #fff;
   -webkit-text-fill-color: #fff;
@@ -2871,20 +2872,22 @@ html.transitioning *::after {
   animation: auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Line 1: "Yesterday." — lighter weight, muted */
+/* "Yesterday." — Libre Baskerville italic, same solid white */
 .auth-word-line1-dim {
   display: inline;
+  font-family: 'Libre Baskerville', Georgia, serif;
   font-weight: 400;
   font-style: italic;
-  color: rgba(255,255,255,0.50);
-  -webkit-text-fill-color: rgba(255,255,255,0.50);
+  color: #fff;
+  -webkit-text-fill-color: #fff;
   opacity: 0;
   animation: auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.12s;
 }
 
-/* Line 2: "Own" — bold white */
+/* "Own" — Playfair Display 900, solid white */
 .auth-word-line2 {
   display: inline;
+  font-family: 'Playfair Display', Georgia, serif;
   font-weight: 900;
   color: #fff;
   -webkit-text-fill-color: #fff;
@@ -2892,15 +2895,14 @@ html.transitioning *::after {
   animation: auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.25s;
 }
 
-/* Line 2: "Tomorrow!" — clean sans-serif contrast against Playfair serif */
+/* "Tomorrow!" — Libre Baskerville italic, solid white */
 .auth-word-tomorrow {
   display: inline;
-  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-family: 'Libre Baskerville', Georgia, serif;
   font-weight: 700;
   font-style: italic;
   color: #fff;
   -webkit-text-fill-color: #fff;
-  letter-spacing: -0.02em;
   opacity: 0;
   animation: auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.38s;
 }
