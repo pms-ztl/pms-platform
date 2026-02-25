@@ -1,5 +1,18 @@
+import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { StarIcon } from '@heroicons/react/24/solid';
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+
+const GRADE_SCALE = [
+  { grade: 'A+', range: '90–100', color: '#10b981', desc: 'Exceptional performer' },
+  { grade: 'A',  range: '80–89',  color: '#10b981', desc: 'Strong performer' },
+  { grade: 'B+', range: '70–79',  color: '#3b82f6', desc: 'Above average' },
+  { grade: 'B',  range: '60–69',  color: '#3b82f6', desc: 'Solid contributor' },
+  { grade: 'C+', range: '50–59',  color: '#f59e0b', desc: 'Meeting expectations' },
+  { grade: 'C',  range: '40–49',  color: '#f59e0b', desc: 'Needs improvement' },
+  { grade: 'D',  range: '< 40',   color: '#ef4444', desc: 'Underperforming' },
+];
 
 export interface CPISScoreDisplayProps {
   score: number;
@@ -39,6 +52,28 @@ const CPISScoreDisplay = ({
 
   const trajIcon = trajectory.direction === 'improving' ? '▲' : trajectory.direction === 'declining' ? '▼' : '●';
   const trajColor = trajectory.direction === 'improving' ? '#34d399' : trajectory.direction === 'declining' ? '#fb7185' : '#d4d4d8';
+
+  const [showInfo, setShowInfo] = useState(false);
+  const infoBtnRef = useRef<HTMLButtonElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
+  const [infoPos, setInfoPos] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (!showInfo || !infoBtnRef.current) return;
+    const rect = infoBtnRef.current.getBoundingClientRect();
+    setInfoPos({
+      top: rect.bottom + 8,
+      left: Math.max(12, Math.min(rect.left + rect.width / 2 - 140, window.innerWidth - 292)),
+    });
+    const handleClick = (e: MouseEvent) => {
+      if (infoRef.current && !infoRef.current.contains(e.target as Node) &&
+          infoBtnRef.current && !infoBtnRef.current.contains(e.target as Node)) {
+        setShowInfo(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showInfo]);
 
   return (
     <div className="flex flex-col items-center gap-2.5 w-full">
@@ -184,17 +219,63 @@ const CPISScoreDisplay = ({
 
       {/* Grade + Stars + Trajectory */}
       <div className="flex items-center justify-center gap-4 flex-wrap">
-        <span
-          className="text-lg font-black px-3 py-1 rounded-lg border-2"
-          style={{
-            color: gradeColor,
-            borderColor: gradeColor,
-            backgroundColor: gradeColor + '20',
-            textShadow: `0 0 10px ${gradeColor}60`,
-          }}
-        >
-          {grade}
+        <span className="relative flex items-center gap-1.5">
+          <span
+            className="text-lg font-black px-3 py-1 rounded-lg border-2"
+            style={{
+              color: gradeColor,
+              borderColor: gradeColor,
+              backgroundColor: gradeColor + '20',
+              textShadow: `0 0 10px ${gradeColor}60`,
+            }}
+          >
+            {grade}
+          </span>
+          <button
+            ref={infoBtnRef}
+            onClick={() => setShowInfo(!showInfo)}
+            className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 hover:bg-white/25 transition-all hover:scale-110"
+            aria-label="Grade info"
+          >
+            <InformationCircleIcon className="w-3.5 h-3.5 text-white/60" />
+          </button>
         </span>
+
+        {/* Grade info popover */}
+        {showInfo && createPortal(
+          <div
+            ref={infoRef}
+            className="fixed z-[9999]"
+            style={{ top: infoPos.top, left: infoPos.left }}
+          >
+            <div className="w-[280px] bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-xl shadow-2xl p-3.5 text-white">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-bold text-cyan-300 tracking-wider">CPIS GRADE SCALE</p>
+                <button onClick={() => setShowInfo(false)} className="text-white/40 hover:text-white/80 text-xs">&times;</button>
+              </div>
+              <p className="text-2xs text-white/50 mb-2.5 leading-relaxed">
+                Your CPIS score of <strong className="text-white/90">{Math.round(score)}</strong> maps to grade <strong style={{ color: gradeColor }}>{grade}</strong>.
+                Grades reflect overall performance across all 8 weighted dimensions.
+              </p>
+              <div className="space-y-1">
+                {GRADE_SCALE.map(g => (
+                  <div
+                    key={g.grade}
+                    className={clsx(
+                      'flex items-center gap-2 px-2 py-1 rounded-md text-2xs transition-colors',
+                      g.grade === grade ? 'bg-white/10 ring-1 ring-white/20' : 'opacity-60',
+                    )}
+                  >
+                    <span className="font-black w-6" style={{ color: g.color }}>{g.grade}</span>
+                    <span className="text-white/50 w-12 font-mono">{g.range}</span>
+                    <span className="text-white/70">{g.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
         <div className="flex items-center gap-0.5">
           {[1, 2, 3, 4, 5].map(i => (
             <StarIcon key={i} className={clsx('w-5 h-5', i <= starRating ? 'text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]' : 'text-white/15')} />
