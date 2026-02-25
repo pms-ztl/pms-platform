@@ -1,17 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { StarIcon } from '@heroicons/react/24/solid';
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import { useThemeStore } from '@/store/theme';
+import { getThemeStyles, ensureAnimations } from './MetricTooltip';
 
 const GRADE_SCALE = [
-  { grade: 'A+', range: '90–100', color: '#10b981', desc: 'Exceptional performer' },
-  { grade: 'A',  range: '80–89',  color: '#10b981', desc: 'Strong performer' },
-  { grade: 'B+', range: '70–79',  color: '#3b82f6', desc: 'Above average' },
-  { grade: 'B',  range: '60–69',  color: '#3b82f6', desc: 'Solid contributor' },
-  { grade: 'C+', range: '50–59',  color: '#f59e0b', desc: 'Meeting expectations' },
-  { grade: 'C',  range: '40–49',  color: '#f59e0b', desc: 'Needs improvement' },
-  { grade: 'D',  range: '< 40',   color: '#ef4444', desc: 'Underperforming' },
+  { grade: 'A+', range: '90–100', color: '#10b981', glow: 'rgba(16,185,129,0.4)', desc: 'Exceptional performer' },
+  { grade: 'A',  range: '80–89',  color: '#10b981', glow: 'rgba(16,185,129,0.3)', desc: 'Strong performer' },
+  { grade: 'B+', range: '70–79',  color: '#3b82f6', glow: 'rgba(59,130,246,0.3)', desc: 'Above average' },
+  { grade: 'B',  range: '60–69',  color: '#3b82f6', glow: 'rgba(59,130,246,0.25)', desc: 'Solid contributor' },
+  { grade: 'C+', range: '50–59',  color: '#f59e0b', glow: 'rgba(245,158,11,0.3)', desc: 'Meeting expectations' },
+  { grade: 'C',  range: '40–49',  color: '#f59e0b', glow: 'rgba(245,158,11,0.25)', desc: 'Needs improvement' },
+  { grade: 'D',  range: '< 40',   color: '#ef4444', glow: 'rgba(239,68,68,0.35)', desc: 'Underperforming' },
 ];
 
 export interface CPISScoreDisplayProps {
@@ -53,17 +55,22 @@ const CPISScoreDisplay = ({
   const trajIcon = trajectory.direction === 'improving' ? '▲' : trajectory.direction === 'declining' ? '▼' : '●';
   const trajColor = trajectory.direction === 'improving' ? '#34d399' : trajectory.direction === 'declining' ? '#fb7185' : '#d4d4d8';
 
+  const theme = useThemeStore((s) => s.theme);
+  const T = getThemeStyles(theme);
   const [showInfo, setShowInfo] = useState(false);
+  const [hoveredGrade, setHoveredGrade] = useState<string | null>(null);
   const infoBtnRef = useRef<HTMLButtonElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
   const [infoPos, setInfoPos] = useState({ top: 0, left: 0 });
+
+  useEffect(() => { ensureAnimations(); }, []);
 
   useEffect(() => {
     if (!showInfo || !infoBtnRef.current) return;
     const rect = infoBtnRef.current.getBoundingClientRect();
     setInfoPos({
-      top: rect.bottom + 8,
-      left: Math.max(12, Math.min(rect.left + rect.width / 2 - 140, window.innerWidth - 292)),
+      top: rect.bottom + 10,
+      left: Math.max(12, Math.min(rect.left + rect.width / 2 - 150, window.innerWidth - 312)),
     });
     const handleClick = (e: MouseEvent) => {
       if (infoRef.current && !infoRef.current.contains(e.target as Node) &&
@@ -239,44 +246,167 @@ const CPISScoreDisplay = ({
           <button
             ref={infoBtnRef}
             onClick={() => setShowInfo(!showInfo)}
-            className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 hover:bg-white/25 transition-all hover:scale-110"
+            className="flex items-center justify-center w-5 h-5 rounded-full transition-all duration-300 hover:scale-125"
+            style={{
+              background: `linear-gradient(135deg, ${gradeColor}40, ${gradeColor}20)`,
+              boxShadow: showInfo ? `0 0 12px ${gradeColor}50` : `0 0 6px ${gradeColor}30`,
+              border: `1px solid ${gradeColor}40`,
+            }}
             aria-label="Grade info"
           >
-            <InformationCircleIcon className="w-3.5 h-3.5 text-white/60" />
+            <InformationCircleIcon className="w-3.5 h-3.5 text-white/80" />
           </button>
         </span>
 
-        {/* Grade info popover */}
+        {/* Grade info popover — frosted glassmorphism */}
         {showInfo && createPortal(
           <div
             ref={infoRef}
             className="fixed z-[9999]"
-            style={{ top: infoPos.top, left: infoPos.left }}
+            style={{
+              top: infoPos.top,
+              left: infoPos.left,
+              animation: 'mt-pop-in 0.35s cubic-bezier(0.34,1.56,0.64,1) both',
+            }}
           >
-            <div className="w-[280px] bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-xl shadow-2xl p-3.5 text-white">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-bold text-cyan-300 tracking-wider">CPIS GRADE SCALE</p>
-                <button onClick={() => setShowInfo(false)} className="text-white/40 hover:text-white/80 text-xs">&times;</button>
+            <div
+              className={`relative w-[300px] max-w-[calc(100vw-2rem)] rounded-2xl border ${T.popBorder} overflow-hidden`}
+              style={{
+                ...T.popBg,
+                boxShadow: [
+                  '0 24px 60px -12px rgba(0,0,0,0.4)',
+                  `0 0 0 1px ${gradeColor}10`,
+                  `0 0 40px -8px ${gradeColor}30`,
+                  'inset 0 1px 0 rgba(255,255,255,0.08)',
+                ].join(', '),
+              }}
+            >
+              {/* Animated glow border */}
+              <div
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{
+                  background: `linear-gradient(135deg, ${gradeColor}20, transparent 40%, transparent 60%, ${gradeColor}15)`,
+                  animation: 'mt-border-glow 3s ease-in-out infinite',
+                }}
+              />
+
+              {/* Shimmer sweep */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `linear-gradient(105deg, transparent 40%, ${gradeColor}08, transparent 60%)`,
+                  animation: 'mt-shimmer 4s ease-in-out infinite 0.5s',
+                }}
+              />
+
+              {/* Accent top bar */}
+              <div className="absolute top-0 left-0 right-0 h-[3px] z-10"
+                style={{ background: `linear-gradient(90deg, ${gradeColor}, ${gradeColor}80)` }}>
+                <div className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)',
+                    animation: 'mt-shimmer 3s ease-in-out infinite',
+                  }}
+                />
               </div>
-              <p className="text-2xs text-white/50 mb-2.5 leading-relaxed">
-                Your CPIS score of <strong className="text-white/90">{Math.round(score)}</strong> maps to grade <strong style={{ color: gradeColor }}>{grade}</strong>.
-                Grades reflect overall performance across all 8 weighted dimensions.
-              </p>
-              <div className="space-y-1">
-                {GRADE_SCALE.map(g => (
-                  <div
-                    key={g.grade}
-                    className={clsx(
-                      'flex items-center gap-2 px-2 py-1 rounded-md text-2xs transition-colors',
-                      g.grade === grade ? 'bg-white/10 ring-1 ring-white/20' : 'opacity-60',
-                    )}
-                  >
-                    <span className="font-black w-6" style={{ color: g.color }}>{g.grade}</span>
-                    <span className="text-white/50 w-12 font-mono">{g.range}</span>
-                    <span className="text-white/70">{g.desc}</span>
+
+              {/* Header */}
+              <div className={`relative z-10 flex items-start justify-between p-3.5 pb-2.5 border-b ${T.headerBorder}`}>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span
+                      className="text-xs font-extrabold tracking-widest px-2 py-0.5 rounded-md"
+                      style={{
+                        background: `${gradeColor}18`,
+                        color: gradeColor,
+                        boxShadow: `0 0 8px ${gradeColor}30`,
+                      }}
+                    >
+                      {grade}
+                    </span>
+                    <span
+                      className="text-2xs font-bold px-1.5 py-0.5 rounded-md"
+                      style={{ background: `${gradeColor}12`, color: gradeColor }}
+                    >
+                      Score: {Math.round(score)}
+                    </span>
                   </div>
-                ))}
+                  <h4 className={`text-xs font-semibold ${T.titleColor} leading-snug`}>CPIS Grade Scale</h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowInfo(false)}
+                  className={`p-1 rounded-lg ${T.closeBtnHover} transition-all duration-200 flex-shrink-0 ml-2 hover:rotate-90`}
+                >
+                  <XMarkIcon className="w-4 h-4" />
+                </button>
               </div>
+
+              {/* Body — grade rows */}
+              <div className="relative z-10 p-3 space-y-1">
+                <p className={`text-2xs ${T.bodyMuted} mb-2 leading-relaxed`}>
+                  Your score of <strong className={T.titleColor}>{Math.round(score)}</strong> maps
+                  to grade <strong style={{ color: gradeColor }}>{grade}</strong> across
+                  all 8 weighted dimensions.
+                </p>
+                {GRADE_SCALE.map((g, idx) => {
+                  const isActive = g.grade === grade;
+                  const isHovered = hoveredGrade === g.grade;
+                  return (
+                    <div
+                      key={g.grade}
+                      className="relative rounded-lg px-2.5 py-1.5 transition-all duration-300 cursor-default"
+                      style={{
+                        background: isActive
+                          ? `${g.color}18`
+                          : isHovered ? `${g.color}10` : 'transparent',
+                        boxShadow: isActive
+                          ? `0 0 16px ${g.glow}, inset 0 0 0 1px ${g.color}30`
+                          : isHovered ? `0 0 8px ${g.glow}` : 'none',
+                        transform: isHovered ? 'scale(1.02)' : 'scale(1)',
+                        animation: isActive ? 'mt-glow-pulse 2.5s ease-in-out infinite' : undefined,
+                        animationDelay: `${idx * 0.05}s`,
+                      }}
+                      onMouseEnter={() => setHoveredGrade(g.grade)}
+                      onMouseLeave={() => setHoveredGrade(null)}
+                    >
+                      <div className="flex items-center gap-2.5 text-2xs">
+                        <span
+                          className="font-black w-7 text-center"
+                          style={{
+                            color: g.color,
+                            textShadow: isActive || isHovered ? `0 0 8px ${g.glow}` : 'none',
+                            fontSize: isActive ? '13px' : '11px',
+                            transition: 'all 0.3s',
+                          }}
+                        >
+                          {g.grade}
+                        </span>
+                        <span className={`${T.bodyMuted} w-14 font-mono text-2xs`}>{g.range}</span>
+                        <span className={`${isActive ? T.titleColor : T.bodyText} text-2xs flex-1`}>{g.desc}</span>
+                        {isActive && (
+                          <span
+                            className="text-2xs font-bold px-1.5 py-px rounded-full"
+                            style={{ background: `${g.color}25`, color: g.color, fontSize: '8px' }}
+                          >
+                            YOU
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Bottom glow accent */}
+              <div
+                className="absolute bottom-0 left-[10%] right-[10%] h-[1px] z-10"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${gradeColor}, transparent)`,
+                  opacity: 0.4,
+                  filter: `blur(1px) drop-shadow(0 0 4px ${gradeColor}40)`,
+                }}
+              />
             </div>
           </div>,
           document.body,

@@ -527,6 +527,6 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
   );
 }
 
-// Export glossary
-export { METRIC_GLOSSARY };
+// Export glossary + shared helpers for other popovers
+export { METRIC_GLOSSARY, getThemeStyles, ensureAnimations, METRIC_ACCENTS, DEFAULT_ACCENT };
 export type { MetricEntry };
