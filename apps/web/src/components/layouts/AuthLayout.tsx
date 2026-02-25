@@ -643,10 +643,11 @@ export function AuthLayout({ children }: AuthLayoutProps) {
                     textShadow: '0 2px 16px rgba(0,0,0,0.7), 0 4px 40px rgba(0,0,0,0.5)',
                   }}
                 >
-                  {/* #12: Each line has its own delayed text-reveal */}
-                  <span className="inline-block animate-text-reveal" style={{ animationDelay: '0.5s' }}>Outgrow</span><br />
-                  <span className="inline-block animate-text-reveal" style={{ animationDelay: '0.7s' }}>Yesterday.</span><br />
-                  <span className="inline-block animate-text-reveal" style={{ animationDelay: '0.9s' }}>Own Tomorrow.</span>
+                  {/* #12: Each word — unique font, unique style, unique animation */}
+                  <span className="auth-word-outgrow">Outgrow</span><br />
+                  <span className="auth-word-yesterday">Yesterday.</span><br />
+                  <span className="auth-word-own">Own{'\u00A0'}</span>
+                  <span className="auth-word-tomorrow relative">Tomorrow.</span>
                 </h1>
               </div>
               {/* Clean white underline with shimmer */}
