@@ -3,11 +3,7 @@ import {
   BellIcon,
   PaintBrushIcon,
   ShieldCheckIcon,
-  LinkIcon,
   BuildingOfficeIcon,
-  ChatBubbleLeftRightIcon,
-  ComputerDesktopIcon,
-  CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -17,7 +13,7 @@ import { useThemeStore } from '@/store/theme';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { PageHeader } from '@/components/ui';
 
-type SettingsTab = 'notifications' | 'appearance' | 'integrations' | 'privacy' | 'organization';
+type SettingsTab = 'notifications' | 'appearance' | 'privacy' | 'organization';
 
 export function SettingsPage() {
   usePageTitle('Settings');
@@ -50,7 +46,6 @@ export function SettingsPage() {
     { key: 'notifications', label: 'Notifications', icon: BellIcon },
     { key: 'appearance', label: 'Appearance', icon: PaintBrushIcon },
     { key: 'privacy', label: 'Privacy', icon: ShieldCheckIcon },
-    { key: 'integrations', label: 'Integrations', icon: LinkIcon },
     ...(isAdmin ? [{ key: 'organization', label: 'Organization', icon: BuildingOfficeIcon }] : []),
   ];
 
@@ -263,45 +258,6 @@ export function SettingsPage() {
     </div>
   );
 
-  const renderIntegrations = () => (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Connected Apps</h3>
-        <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Manage your connected applications and services.</p>
-        <div className="space-y-4">
-          {[
-            { name: 'Slack',             description: 'Receive notifications in Slack',   connected: false, Icon: ChatBubbleLeftRightIcon },
-            { name: 'Microsoft Teams',   description: 'Receive notifications in Teams',   connected: false, Icon: ComputerDesktopIcon },
-            { name: 'Google Calendar',   description: 'Sync 1-on-1 meetings',             connected: true,  Icon: CalendarDaysIcon },
-            { name: 'Outlook Calendar',  description: 'Sync 1-on-1 meetings',             connected: false, Icon: CalendarDaysIcon },
-          ].map((integration) => (
-            <div key={integration.name} className="flex items-center justify-between gap-3 p-4 border border-secondary-200/60 dark:border-white/[0.06] rounded-lg">
-              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-                <div className="w-10 h-10 bg-secondary-100 dark:bg-secondary-800 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <integration.Icon className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{integration.name}</p>
-                  <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{integration.description}</p>
-                </div>
-              </div>
-              <button
-                className={clsx(
-                  'px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg whitespace-nowrap flex-shrink-0',
-                  integration.connected
-                    ? 'bg-secondary-100 text-secondary-700 hover:bg-secondary-200 dark:bg-secondary-800 dark:text-secondary-300 dark:hover:bg-secondary-700'
-                    : 'bg-primary-600 text-white hover:bg-primary-700'
-                )}
-              >
-                {integration.connected ? 'Disconnect' : 'Connect'}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
   const renderOrganization = () => (
     <div className="space-y-6">
       <div>
@@ -399,7 +355,6 @@ export function SettingsPage() {
           {activeTab === 'notifications' && renderNotifications()}
           {activeTab === 'appearance' && renderAppearance()}
           {activeTab === 'privacy' && renderPrivacy()}
-          {activeTab === 'integrations' && renderIntegrations()}
           {activeTab === 'organization' && renderOrganization()}
 
           <div className="border-t border-secondary-200/60 dark:border-white/[0.06] mt-6 pt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">

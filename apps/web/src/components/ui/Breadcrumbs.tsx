@@ -61,7 +61,6 @@ const ROUTE_LABELS: Record<string, string> = {
   policies: 'Access Policies',
   'rbac-dashboard': 'RBAC Dashboard',
   upgrade: 'Upgrade Plan',
-  integrations: 'Integrations',
   'org-chart': 'Org Chart',
   directory: 'Directory',
   engagement: 'Engagement',

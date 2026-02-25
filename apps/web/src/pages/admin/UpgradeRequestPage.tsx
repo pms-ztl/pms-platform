@@ -134,7 +134,7 @@ const PLANS: PlanDefinition[] = [
     features: [
       'Up to 16 job levels (L1\u2013L16)',
       'Multi-entity support',
-      'Custom integrations & SSO',
+      'SSO & SAML 2.0 authentication',
       'Audit log & compliance',
       'SLA guarantee (99.9%)',
       'On-premise deployment option',

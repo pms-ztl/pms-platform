@@ -11,7 +11,6 @@ import {
   CogIcon,
   DocumentTextIcon,
   CreditCardIcon,
-  PuzzlePieceIcon,
   ShieldCheckIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
@@ -32,7 +31,6 @@ const navigation = [
   { name: 'System Config', href: '/system', icon: CogIcon },
   { name: 'Audit Logs', href: '/audit', icon: DocumentTextIcon },
   { name: 'Billing', href: '/billing', icon: CreditCardIcon },
-  { name: 'Integrations', href: '/integrations', icon: PuzzlePieceIcon },
   { name: 'Security', href: '/security', icon: ShieldCheckIcon },
 ];
 

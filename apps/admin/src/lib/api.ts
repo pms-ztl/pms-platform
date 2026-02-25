@@ -63,12 +63,10 @@ export interface TenantSettings {
     feedback: boolean;
     calibration: boolean;
     analytics: boolean;
-    integrations: boolean;
   };
   limits: {
     maxUsers: number;
     maxStorageGb: number;
-    maxIntegrations: number;
   };
   branding: {
     logo?: string;
@@ -298,16 +296,6 @@ export const securityApi = {
     ),
   terminateSession: (sessionId: string) => api.delete(`/security/sessions/${sessionId}`),
   terminateAllSessions: (userId: string) => api.delete(`/security/sessions/user/${userId}`),
-};
-
-// Integrations API
-export const integrationsApi = {
-  list: () =>
-    api.get<Array<{ id: string; name: string; type: string; status: string; connectedTenants: number }>>('/integrations'),
-  getConfig: (id: string) => api.get<Record<string, unknown>>(`/integrations/${id}/config`),
-  updateConfig: (id: string, config: Record<string, unknown>) => api.put(`/integrations/${id}/config`, config),
-  enable: (id: string) => api.post(`/integrations/${id}/enable`),
-  disable: (id: string) => api.post(`/integrations/${id}/disable`),
 };
 
 export default api;

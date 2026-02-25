@@ -42,7 +42,6 @@ import {
   ArrowDownTrayIcon,
   ChartBarSquareIcon,
   ClockIcon,
-  LinkIcon,
   LightBulbIcon,
   BeakerIcon,
 } from '@heroicons/react/24/outline';
@@ -163,7 +162,6 @@ export const adminSection: NavSection = {
     { name: 'Access Policies', href: '/admin/policies', icon: DocumentTextIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'TENANT_ADMIN'] },
     { name: 'RBAC Dashboard', href: '/admin/rbac-dashboard', icon: ViewfinderCircleIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'TENANT_ADMIN'] },
     { name: 'Upgrade Plan', href: '/admin/upgrade', icon: ArrowTrendingUpIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'TENANT_ADMIN'] },
-    { name: 'Integrations', href: '/admin/integrations', icon: LinkIcon, roles: ['SUPER_ADMIN', 'ADMIN', 'HR_ADMIN', 'TENANT_ADMIN'] },
   ],
 };
 

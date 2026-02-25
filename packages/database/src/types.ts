@@ -20,8 +20,6 @@ import type {
   OneOnOne,
   CompetencyFramework,
   Competency,
-  Integration,
-  IntegrationSyncJob,
   NotificationTemplate,
   Notification,
   AuditEvent,
@@ -38,8 +36,6 @@ import type {
   FeedbackVisibility,
   CalibrationStatus,
   OneOnOneStatus,
-  IntegrationStatus,
-  SyncJobStatus,
   NotificationStatus,
 } from '@prisma/client';
 
@@ -66,8 +62,6 @@ export type {
   OneOnOne,
   CompetencyFramework,
   Competency,
-  Integration,
-  IntegrationSyncJob,
   NotificationTemplate,
   Notification,
   AuditEvent,
@@ -87,8 +81,6 @@ export {
   FeedbackVisibility,
   CalibrationStatus,
   OneOnOneStatus,
-  IntegrationStatus,
-  SyncJobStatus,
   NotificationStatus,
   CalendarEventType,
 } from '@prisma/client';

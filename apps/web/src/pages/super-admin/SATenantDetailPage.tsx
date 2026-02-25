@@ -224,7 +224,6 @@ function FeaturesTab({
     feedback: '360 Feedback',
     calibration: 'Rating Calibration',
     analytics: 'Advanced Analytics',
-    integrations: 'Third-party Integrations',
     agenticAI: 'Agentic AI',
   };
 

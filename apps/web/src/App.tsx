@@ -87,7 +87,6 @@ import { SkillGapHeatmapPage } from '@/pages/skills/SkillGapHeatmapPage';
 import { ScheduledReportsPage } from '@/pages/reports/ScheduledReportsPage';
 import { WellbeingDashboardPage } from '@/pages/wellbeing/WellbeingDashboardPage';
 import { MeetingAnalyticsPage } from '@/pages/meeting-analytics/MeetingAnalyticsPage';
-import { IntegrationsHubPage } from '@/pages/admin/IntegrationsHubPage';
 import { AIInsightsDashboardPage } from '@/pages/ai-insights/AIInsightsDashboardPage';
 import { AnomalyDetectionPage } from '@/pages/anomalies/AnomalyDetectionPage';
 import { PerformanceBenchmarkPage } from '@/pages/benchmarks/PerformanceBenchmarkPage';
@@ -396,7 +395,6 @@ function App() {
           <Route path="report-schedules" element={<RoleGuard path="/report-schedules"><ScheduledReportsPage /></RoleGuard>} />
           <Route path="wellbeing" element={<RoleGuard path="/wellbeing"><WellbeingDashboardPage /></RoleGuard>} />
           <Route path="meeting-analytics" element={<RoleGuard path="/meeting-analytics"><MeetingAnalyticsPage /></RoleGuard>} />
-          <Route path="admin/integrations" element={<RoleGuard path="/admin/integrations"><IntegrationsHubPage /></RoleGuard>} />
           <Route path="ai-insights" element={<RoleGuard path="/ai-insights"><AIInsightsDashboardPage /></RoleGuard>} />
           <Route path="anomalies" element={<RoleGuard path="/anomalies"><AnomalyDetectionPage /></RoleGuard>} />
           <Route path="benchmarks" element={<RoleGuard path="/benchmarks"><PerformanceBenchmarkPage /></RoleGuard>} />

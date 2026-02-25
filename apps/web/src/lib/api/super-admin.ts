@@ -153,7 +153,6 @@ export interface SATenantSettings {
     feedback: boolean;
     calibration: boolean;
     analytics: boolean;
-    integrations: boolean;
     agenticAI: boolean;
   };
   ai?: {
@@ -163,7 +162,6 @@ export interface SATenantSettings {
   limits: {
     maxUsers: number;
     maxStorageGb: number;
-    maxIntegrations: number;
   };
   branding: {
     logo?: string;

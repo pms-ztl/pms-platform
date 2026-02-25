@@ -23,7 +23,6 @@ import { calibrationRoutes } from './modules/calibration';
 import { usersRoutes } from './modules/users';
 import { analyticsRoutes } from './modules/analytics';
 import { notificationsRoutes } from './modules/notifications';
-import { integrationsRoutes } from './modules/integrations';
 import { compensationRoutes } from './modules/compensation';
 import { evidenceRoutes } from './modules/evidence';
 import { promotionRoutes } from './modules/promotion';
@@ -200,7 +199,6 @@ export function createApp(): Express {
   apiRouter.use('/users', standardRateLimiter, usersRoutes);
   apiRouter.use('/analytics', standardRateLimiter, analyticsRoutes);
   apiRouter.use('/notifications', standardRateLimiter, notificationsRoutes);
-  apiRouter.use('/integrations', standardRateLimiter, integrationsRoutes);
   apiRouter.use('/compensation', standardRateLimiter, compensationRoutes);
   apiRouter.use('/evidence', standardRateLimiter, evidenceRoutes);
   apiRouter.use('/promotions', standardRateLimiter, promotionRoutes);

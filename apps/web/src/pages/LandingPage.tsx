@@ -17,7 +17,6 @@ import {
   ScaleIcon,
   BeakerIcon,
   HeartIcon,
-  GlobeAltIcon,
   RocketLaunchIcon,
 } from '@heroicons/react/24/outline';
 
@@ -787,7 +786,6 @@ const USPS = [
   { icon: ScaleIcon, title: 'Comprehensive Compliance', description: 'Union contract enforcement, immutable audit trails, and regulatory-ready reporting built in.' },
   { icon: BeakerIcon, title: 'Performance Simulator', description: 'Scenario planning and what-if analysis to model organizational changes before they happen.' },
   { icon: HeartIcon, title: 'Cultural Intelligence', description: 'Friction index analysis, burnout detection, and team health scoring for proactive intervention.' },
-  { icon: GlobeAltIcon, title: 'Seamless Integrations', description: 'Connect with HRIS, payroll, Slack, Teams, and 50+ third-party tools via REST APIs and webhooks.' },
   { icon: RocketLaunchIcon, title: 'Rapid Deployment', description: 'Go live in days, not months — cloud-native SaaS with zero-downtime updates and automated migrations.' },
 ];
 

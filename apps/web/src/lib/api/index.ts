@@ -164,10 +164,6 @@ export type { AccessPolicy, PolicyType, PolicyStatus, PolicyEffect, CreatePolicy
 export { rbacApi } from './rbac';
 export type { RBACStats, RoleDistribution, RecentRoleChange } from './rbac';
 
-// ── Integrations ──
-export { integrationsApi } from './integrations';
-export type { IntegrationConnector, Integration, SyncHistoryEntry } from './integrations';
-
 // ── AI Insights ──
 export { aiInsightsApi } from './ai-insights';
 export type {

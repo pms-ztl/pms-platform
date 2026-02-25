@@ -17,7 +17,6 @@ const RESOURCE_QUERY_MAP: Record<string, string[][]> = {
   feedback: [['feedback']],
   notifications: [['notifications']],
   billing: [['billing']],
-  integrations: [['integrations']],
   security: [['security']],
 };
 

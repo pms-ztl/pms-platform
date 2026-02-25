@@ -10,7 +10,6 @@ import UserDetailPage from './pages/users/UserDetailPage';
 import SystemConfigPage from './pages/system/SystemConfigPage';
 import AuditLogsPage from './pages/audit/AuditLogsPage';
 import BillingPage from './pages/billing/BillingPage';
-import IntegrationsPage from './pages/integrations/IntegrationsPage';
 import SecurityPage from './pages/security/SecurityPage';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -46,7 +45,6 @@ export default function App() {
                 <Route path="/system" element={<SystemConfigPage />} />
                 <Route path="/audit" element={<AuditLogsPage />} />
                 <Route path="/billing" element={<BillingPage />} />
-                <Route path="/integrations" element={<IntegrationsPage />} />
                 <Route path="/security" element={<SecurityPage />} />
               </Routes>
             </AdminLayout>

@@ -57,7 +57,6 @@ model Tenant {
   feedbackItems               Feedback[]
   calibrationSessions         CalibrationSession[]
   auditEvents                 AuditEvent[]
-  integrations                Integration[]
   notificationTemplates       NotificationTemplate[]
   competencyFrameworks        CompetencyFramework[]
   reportingLines              ReportingLine[]
@@ -1407,72 +1406,6 @@ model Competency {
   @@index([frameworkId])
   @@index([parentId])
   @@map("competencies")
-}
-
-// ============================================================================
-// INTEGRATIONS
-// ============================================================================
-
-enum IntegrationStatus {
-  ACTIVE
-  INACTIVE
-  ERROR
-  PENDING_AUTH
-}
-
-model Integration {
-  id            String            @id @default(uuid()) @db.Uuid
-  tenantId      String            @map("tenant_id") @db.Uuid
-  type          String
-  name          String
-  status        IntegrationStatus @default(PENDING_AUTH)
-  config        Json              @default("{}")
-  credentials   Json              @default("{}")
-  lastSyncAt    DateTime?         @map("last_sync_at")
-  lastError     String?           @map("last_error")
-  syncFrequency String            @default("daily") @map("sync_frequency")
-  fieldMappings Json              @default("{}") @map("field_mappings")
-  createdById   String            @map("created_by_id") @db.Uuid
-  createdAt     DateTime          @default(now()) @map("created_at")
-  updatedAt     DateTime          @updatedAt @map("updated_at")
-  deletedAt     DateTime?         @map("deleted_at")
-
-  // Relations
-  tenant   Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  syncJobs IntegrationSyncJob[]
-
-  @@index([tenantId])
-  @@index([type])
-  @@index([status])
-  @@map("integrations")
-}
-
-enum SyncJobStatus {
-  PENDING
-  RUNNING
-  COMPLETED
-  FAILED
-}
-
-model IntegrationSyncJob {
-  id               String        @id @default(uuid()) @db.Uuid
-  integrationId    String        @map("integration_id") @db.Uuid
-  status           SyncJobStatus @default(PENDING)
-  direction        String        @default("inbound")
-  recordsProcessed Int           @default(0) @map("records_processed")
-  recordsFailed    Int           @default(0) @map("records_failed")
-  errorLog         Json          @default("[]") @map("error_log")
-  startedAt        DateTime?     @map("started_at")
-  completedAt      DateTime?     @map("completed_at")
-  createdAt        DateTime      @default(now()) @map("created_at")
-
-  // Relations
-  integration Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
-
-  @@index([integrationId])
-  @@index([status])
-  @@index([createdAt])
-  @@map("integration_sync_jobs")
 }
 
 // ============================================================================

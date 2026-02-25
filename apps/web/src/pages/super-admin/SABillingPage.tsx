@@ -53,7 +53,6 @@ const PLAN_FEATURES: { feature: string; plans: Record<PlanKey, boolean> }[] = [
   { feature: 'Calibration', plans: { FREE: false, STARTER: false, PROFESSIONAL: true, ENTERPRISE: true } },
   { feature: 'Succession Planning', plans: { FREE: false, STARTER: false, PROFESSIONAL: true, ENTERPRISE: true } },
   { feature: 'Agentic AI', plans: { FREE: false, STARTER: false, PROFESSIONAL: true, ENTERPRISE: true } },
-  { feature: 'Custom Integrations', plans: { FREE: false, STARTER: false, PROFESSIONAL: false, ENTERPRISE: true } },
   { feature: 'Dedicated Support', plans: { FREE: false, STARTER: false, PROFESSIONAL: false, ENTERPRISE: true } },
 ];
 
