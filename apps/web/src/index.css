@@ -2892,50 +2892,14 @@ html.transitioning *::after {
   animation: auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.25s;
 }
 
-/* Line 2: "Tomorrow!" — THE emphasis word: white-silver shimmer, no gold */
+/* Line 2: "Tomorrow!" — solid white, same as "Own", clean */
 .auth-word-tomorrow {
-  display: inline-block;
-  position: relative;
+  display: inline;
   font-weight: 900;
-  background: linear-gradient(
-    100deg,
-    rgba(255,255,255,0.85) 0%,
-    #fff 25%,
-    rgba(200,215,235,0.9) 50%,
-    #fff 75%,
-    rgba(255,255,255,0.85) 100%
-  );
-  background-size: 300% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
   opacity: 0;
-  animation:
-    auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.38s,
-    auth-tomorrow-shimmer 5s ease infinite 1.3s;
-}
-
-/* Clean white underline for Tomorrow */
-.auth-word-tomorrow::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  border-radius: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), rgba(255,255,255,0.8), rgba(255,255,255,0.6), transparent);
-  animation: auth-tomorrow-underline 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.1s;
-}
-
-/* Subtle white shimmer — no gold */
-@keyframes auth-tomorrow-shimmer {
-  0%   { background-position: 100% 50%; }
-  100% { background-position: -100% 50%; }
-}
-
-@keyframes auth-tomorrow-underline {
-  0%   { width: 0; left: 50%; }
-  100% { width: 100%; left: 0; }
+  animation: auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.38s;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
