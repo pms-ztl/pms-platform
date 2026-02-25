@@ -54,11 +54,8 @@ const ROUTE_LABELS: Record<string, string> = {
   moderate: 'Moderator',
 };
 
-// Parent segments that don't have their own route — redirect to first child
-const PARENT_REDIRECTS: Record<string, string> = {
-  '/admin': '/admin/users',
-  '/manager-dashboard': '/manager-dashboard',
-};
+// Segments that are section headers (not real pages) — shown as plain text, not links
+const SECTION_ONLY_SEGMENTS = new Set(['admin']);
 
 // Check if a segment looks like a UUID or ID
 const isIdSegment = (segment: string) => /^[0-9a-f-]{8,}$/i.test(segment);
@@ -91,7 +88,12 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
                 <ChevronRightIcon className="h-3.5 w-3.5 text-secondary-400 dark:text-secondary-600 shrink-0" />
               )}
               {isLast || !crumb.href ? (
-                <span className="font-medium text-secondary-900 dark:text-white break-words">
+                <span className={clsx(
+                  'break-words',
+                  isLast
+                    ? 'font-medium text-secondary-900 dark:text-white'
+                    : 'text-secondary-400 dark:text-secondary-500'
+                )}>
                   {crumb.label}
                 </span>
               ) : (
@@ -117,9 +119,9 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   );
 }
 
-function generateCrumbs(pathname: string): Array<{ label: string; href: string }> {
+function generateCrumbs(pathname: string): Array<{ label: string; href?: string }> {
   const segments = pathname.split('/').filter(Boolean);
-  const crumbs: Array<{ label: string; href: string }> = [
+  const crumbs: Array<{ label: string; href?: string }> = [
     { label: 'Home', href: '/dashboard' },
   ];
 
@@ -131,9 +133,12 @@ function generateCrumbs(pathname: string): Array<{ label: string; href: string }
       crumbs.push({ label: 'Details', href: currentPath });
     } else {
       const label = ROUTE_LABELS[segment] ?? segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-      // Use redirect if this parent path has no own route
-      const href = PARENT_REDIRECTS[currentPath] ?? currentPath;
-      crumbs.push({ label, href });
+      // Section headers are non-clickable labels (e.g. "Administration")
+      if (SECTION_ONLY_SEGMENTS.has(segment)) {
+        crumbs.push({ label });
+      } else {
+        crumbs.push({ label, href: currentPath });
+      }
     }
   }
 
