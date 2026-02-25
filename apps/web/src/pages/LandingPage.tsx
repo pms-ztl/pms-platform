@@ -817,7 +817,7 @@ function TechLogosStrip() {
   return (
     <section ref={ref} className="py-8 sm:py-10 px-6 sm:px-12 lg:px-16">
       <div className="max-w-[80rem] mx-auto">
-        <p className={`text-center text-white/25 text-sm tracking-wider uppercase mb-10 transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+        <p className={`text-center text-white/60 text-sm font-semibold tracking-wider uppercase mb-10 transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}>
           Powered by modern technology
         </p>
         <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
@@ -830,13 +830,13 @@ function TechLogosStrip() {
               <div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl animate-float"
                 style={{
-                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+                  background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)',
                   animationDelay: `${i * 0.4}s`, animationDuration: `${5 + i * 0.5}s`,
                 }}
               >
-                <span className="text-white/50 font-mono">{t.icon}</span>
+                <span className="text-white/80 font-mono">{t.icon}</span>
               </div>
-              <span className="text-white/30 text-xs">{t.name}</span>
+              <span className="text-white/70 text-xs font-medium">{t.name}</span>
             </div>
           ))}
         </div>
