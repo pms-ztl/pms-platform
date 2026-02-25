@@ -2071,8 +2071,8 @@ export default function ChatPage() {
                 isOnline={activeConvo.type === 'DIRECT' ? onlineUsers.has(activeConvo.participants.find((p) => p.userId !== user?.id)?.userId || '') : undefined}
               />
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-display font-bold text-secondary-900 dark:text-white break-words">{activeConvo.name || 'Chat'}</h3>
-                <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">
+                <h3 className="text-sm font-display font-bold text-secondary-900 dark:text-white truncate">{activeConvo.name || 'Chat'}</h3>
+                <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 truncate">
                   {activeConvo.type === 'DIRECT'
                     ? (onlineUsers.has(activeConvo.participants.find((p) => p.userId !== user?.id)?.userId || '')
                         ? <span className="text-success-500 font-medium">Online</span>
@@ -2081,9 +2081,9 @@ export default function ChatPage() {
                   }
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                 {activeConvo.type !== 'DIRECT' && (
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary-100/60 dark:bg-secondary-800/40">
+                  <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary-100/60 dark:bg-secondary-800/40">
                     <UserGroupIcon className="h-4 w-4 text-secondary-400" />
                     <span className="text-xs font-semibold text-secondary-500 dark:text-secondary-400">{activeConvo.participants.length}</span>
                   </div>
@@ -2091,17 +2091,17 @@ export default function ChatPage() {
                 {/* Search button */}
                 <button onClick={() => setShowSearch(!showSearch)} title="Search messages"
                   className={clsx(
-                    'flex h-9 w-9 items-center justify-center rounded-xl transition-all hover:scale-105 active:scale-95',
+                    'hidden sm:flex h-9 w-9 items-center justify-center rounded-xl transition-all hover:scale-105 active:scale-95',
                     showSearch
                       ? 'bg-primary-500/15 text-primary-600 dark:text-primary-400'
                       : 'text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50'
                   )}>
                   <MagnifyingGlassIcon className="h-4.5 w-4.5" />
                 </button>
-                {/* Pin button */}
+                {/* Pin button — hidden on small mobile */}
                 <button onClick={() => setShowPinned(!showPinned)} title="Pinned messages"
                   className={clsx(
-                    'flex h-9 w-9 items-center justify-center rounded-xl transition-all hover:scale-105 active:scale-95',
+                    'hidden sm:flex h-9 w-9 items-center justify-center rounded-xl transition-all hover:scale-105 active:scale-95',
                     showPinned
                       ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
                       : 'text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50'
@@ -2111,7 +2111,7 @@ export default function ChatPage() {
                 {/* Info button */}
                 <button onClick={() => setShowInfo(!showInfo)} title="Conversation details"
                   className={clsx(
-                    'flex h-9 w-9 items-center justify-center rounded-xl transition-all hover:scale-105 active:scale-95',
+                    'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl transition-all hover:scale-105 active:scale-95',
                     showInfo
                       ? 'bg-primary-500/15 text-primary-600 dark:text-primary-400'
                       : 'text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50'
@@ -2121,7 +2121,7 @@ export default function ChatPage() {
                 {/* Conversation menu */}
                 <div className="relative">
                   <button onClick={() => setShowConvoMenu(!showConvoMenu)}
-                    className="flex h-9 w-9 items-center justify-center rounded-xl text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50 transition-all hover:scale-105 active:scale-95">
+                    className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50 transition-all hover:scale-105 active:scale-95">
                     <EllipsisHorizontalIcon className="h-5 w-5" />
                   </button>
                   {showConvoMenu && (
