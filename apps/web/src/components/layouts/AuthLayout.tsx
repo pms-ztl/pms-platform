@@ -564,7 +564,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       {/* ── BG Video — 3D reactive wrapper ── */}
       <div
         ref={videoWrapRef}
-        className="absolute -inset-[5%] z-0"
+        className="video-wrap-bg absolute -inset-[5%] z-0"
         style={{ willChange: 'transform, filter', transition: 'filter 0.3s ease-out' }}
       >
         <video
