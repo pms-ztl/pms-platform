@@ -3129,52 +3129,139 @@ html.transitioning *::after {
 }
 
 /* ── Landing Page: Hero "Impact!" mega animated word ─────────────────── */
+/* ── IMPACT! — mega animated decorative word ──────────────── */
 .hero-impact-word {
   display: inline-block;
   position: relative;
-  background: linear-gradient(135deg, #94d2ff 0%, #e0f0ff 25%, #fff 50%, #e0f0ff 75%, #94d2ff 100%);
-  background-size: 300% auto;
+  background: linear-gradient(
+    100deg,
+    #94d2ff 0%, #e0f0ff 15%, #fff 30%,
+    #ffd700 45%, #fff 55%,
+    #e0f0ff 70%, #94d2ff 85%, #e0f0ff 100%
+  );
+  background-size: 400% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation:
-    hero-text-gradient 3s ease infinite,
-    hero-impact-glow 2.5s ease-in-out infinite,
-    hero-impact-entrance 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    hero-impact-entrance 1s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    hero-impact-shimmer 3s ease infinite 1s,
+    hero-impact-float 4s ease-in-out infinite 1s,
+    hero-impact-glow 3s ease-in-out infinite 1s,
+    hero-impact-breathe 5s ease-in-out infinite 1s;
   opacity: 0;
-  filter: drop-shadow(0 0 20px rgba(148, 210, 255, 0.3));
+  filter: drop-shadow(0 0 24px rgba(148, 210, 255, 0.4));
+  padding: 0 0.05em;
+  z-index: 1;
 }
 
-/* Glowing text-shadow pulse */
+/* Continuous gold-white shimmer sweep */
+@keyframes hero-impact-shimmer {
+  0%   { background-position: 100% 50%; }
+  100% { background-position: -100% 50%; }
+}
+
+/* Continuous gentle floating up/down */
+@keyframes hero-impact-float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  25%      { transform: translateY(-6px) scale(1.02); }
+  50%      { transform: translateY(2px) scale(0.99); }
+  75%      { transform: translateY(-4px) scale(1.01); }
+}
+
+/* Pulsing glow halo */
 @keyframes hero-impact-glow {
-  0%, 100% { filter: drop-shadow(0 0 20px rgba(148, 210, 255, 0.3)); }
-  50% { filter: drop-shadow(0 0 40px rgba(148, 210, 255, 0.6)) drop-shadow(0 0 80px rgba(148, 210, 255, 0.2)); }
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(148,210,255,0.3)) drop-shadow(0 0 4px rgba(255,215,0,0.1)); }
+  33%      { filter: drop-shadow(0 0 50px rgba(148,210,255,0.7)) drop-shadow(0 0 90px rgba(148,210,255,0.25)) drop-shadow(0 0 8px rgba(255,215,0,0.2)); }
+  66%      { filter: drop-shadow(0 0 35px rgba(148,210,255,0.5)) drop-shadow(0 0 60px rgba(255,255,255,0.15)); }
+}
+
+/* Letter-spacing breathing */
+@keyframes hero-impact-breathe {
+  0%, 100% { letter-spacing: 0.04em; }
+  50%      { letter-spacing: 0.10em; }
 }
 
 /* Entrance: scale up + blur reveal */
 @keyframes hero-impact-entrance {
-  0% { opacity: 0; transform: scale(0.7) translateY(20px); filter: blur(12px); }
-  60% { opacity: 1; transform: scale(1.05) translateY(-2px); filter: blur(0); }
-  80% { transform: scale(0.98) translateY(1px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); filter: drop-shadow(0 0 20px rgba(148, 210, 255, 0.3)); }
+  0%   { opacity: 0; transform: scale(0.5) translateY(30px) rotate(-8deg); filter: blur(16px); }
+  50%  { opacity: 1; transform: scale(1.12) translateY(-4px) rotate(2deg); filter: blur(0); }
+  75%  { transform: scale(0.97) translateY(2px) rotate(-1deg); }
+  100% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
 }
 
-/* Animated underline that draws in */
+/* Glowing animated underline */
 .hero-impact-word::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -6px;
   left: 50%;
   width: 0;
   height: 3px;
   border-radius: 2px;
-  background: linear-gradient(90deg, transparent, rgba(148, 210, 255, 0.8), rgba(255, 255, 255, 0.6), rgba(148, 210, 255, 0.8), transparent);
-  animation: hero-impact-underline 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s;
-  box-shadow: 0 0 12px rgba(148, 210, 255, 0.4), 0 0 30px rgba(148, 210, 255, 0.15);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(148,210,255,0.6) 15%,
+    rgba(255,255,255,0.9) 40%,
+    rgba(255,215,0,0.7) 50%,
+    rgba(255,255,255,0.9) 60%,
+    rgba(148,210,255,0.6) 85%,
+    transparent 100%
+  );
+  animation: hero-impact-underline 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.8s,
+             hero-impact-underline-pulse 2s ease-in-out infinite 2s;
+  box-shadow: 0 0 16px rgba(148,210,255,0.5), 0 0 40px rgba(148,210,255,0.2), 0 0 6px rgba(255,215,0,0.15);
+}
+
+/* Spinning sparkle halo behind the word */
+.hero-impact-word::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140%;
+  height: 140%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(148,210,255,0.15) 30deg,
+    transparent 60deg,
+    rgba(255,215,0,0.08) 120deg,
+    transparent 150deg,
+    rgba(148,210,255,0.12) 210deg,
+    transparent 240deg,
+    rgba(255,255,255,0.08) 300deg,
+    transparent 330deg
+  );
+  border-radius: 50%;
+  animation: hero-impact-halo-spin 8s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+/* Reveal halo after entrance */
+.hero-impact-word:not([style*="opacity: 0"])::before {
+  opacity: 1;
+}
+
+@keyframes hero-impact-halo-spin {
+  0%   { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  50%  { transform: translate(-50%, -50%) rotate(180deg) scale(1.1); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
 }
 
 @keyframes hero-impact-underline {
-  0% { width: 0; left: 50%; }
+  0%   { width: 0; left: 50%; }
   100% { width: 100%; left: 0; }
+}
+
+/* Underline glow pulse after it's drawn */
+@keyframes hero-impact-underline-pulse {
+  0%, 100% { box-shadow: 0 0 16px rgba(148,210,255,0.5), 0 0 40px rgba(148,210,255,0.2); opacity: 1; }
+  50%      { box-shadow: 0 0 30px rgba(148,210,255,0.8), 0 0 70px rgba(148,210,255,0.35), 0 0 10px rgba(255,215,0,0.2); opacity: 0.85; }
 }
 
 @keyframes landing-word-reveal-single {

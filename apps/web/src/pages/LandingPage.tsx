@@ -1051,7 +1051,7 @@ export default function LandingPage() {
               <span className="landing-word-reveal">
                 <span style={{ animationDelay: '0.3s' }}>Track</span>
                 <br />
-                <span className="hero-impact-word" style={{ animationDelay: '0.42s' }}>Impact!</span>
+                <span className="hero-impact-word" style={{ fontFamily: "'Cinzel Decorative', serif", animationDelay: '0.42s', fontSize: '120%', fontWeight: 900 }}>Impact!</span>
                 <br />
                 <span className="font-normal text-white/50" style={{ animationDelay: '0.66s' }}>Not{'\u00A0'}</span>
                 <span className="font-normal text-white/50" style={{ animationDelay: '0.78s' }}>Just{'\u00A0'}</span>
