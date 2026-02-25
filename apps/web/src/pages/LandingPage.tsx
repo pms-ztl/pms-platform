@@ -180,12 +180,12 @@ function NeonCodeTyper() {
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden border border-white/[0.06]"
+      className="relative rounded-2xl overflow-hidden border border-white/[0.08]"
       style={{
-        background: 'rgba(10, 14, 24, 0.88)',
-        boxShadow: '0 0 60px rgba(148, 210, 255, 0.05), inset 0 1px 0 rgba(255,255,255,0.06)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
+        background: 'rgba(255, 255, 255, 0.04)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(28px) saturate(1.2)',
+        WebkitBackdropFilter: 'blur(28px) saturate(1.2)',
       }}
     >
       {/* Terminal header */}
