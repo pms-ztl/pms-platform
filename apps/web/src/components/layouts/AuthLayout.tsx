@@ -643,11 +643,11 @@ export function AuthLayout({ children }: AuthLayoutProps) {
                     textShadow: '0 2px 16px rgba(0,0,0,0.7), 0 4px 40px rgba(0,0,0,0.5)',
                   }}
                 >
-                  {/* #12: Each word — unique font, unique style, unique animation */}
+                  {/* #12: Cohesive Playfair headline — "Tomorrow." is the star word */}
                   <span className="auth-word-outgrow">Outgrow</span><br />
                   <span className="auth-word-yesterday">Yesterday.</span><br />
-                  <span className="auth-word-own">Own{'\u00A0'}</span>
-                  <span className="auth-word-tomorrow relative">Tomorrow.</span>
+                  <span className="auth-word-own">Own </span>
+                  <span className="auth-word-tomorrow">Tomorrow.</span>
                 </h1>
               </div>
               {/* Clean white underline with shimmer */}

@@ -2851,161 +2851,115 @@ html.transitioning *::after {
   }
 }
 
-/* ── AUTH HEADLINE — multi-style multi-font animated words ──────────────── */
+/* ── AUTH HEADLINE — cohesive Playfair family, "Tomorrow." = star word ── */
 
-/* "Outgrow" — Cinzel Decorative, gold-white shimmer, floating */
+/* Shared staggered entrance for all words */
+.auth-word-base {
+  display: inline-block;
+  opacity: 0;
+  animation: auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes auth-word-entrance {
+  0%   { opacity: 0; transform: translateY(22px); filter: blur(10px); }
+  60%  { opacity: 1; transform: translateY(-2px); filter: blur(0); }
+  80%  { transform: translateY(1px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* "Outgrow" — Playfair 900, pure bright white, subtle glow */
 .auth-word-outgrow {
   display: inline-block;
-  font-family: 'Cinzel Decorative', serif;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
   font-weight: 900;
-  background: linear-gradient(
-    100deg,
-    #fff 0%, #ffd700 20%, #fff 40%, #e0f0ff 60%, #ffd700 80%, #fff 100%
-  );
-  background-size: 400% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation:
-    auth-word-entrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards,
-    auth-outgrow-shimmer 4s ease infinite 0.8s,
-    auth-outgrow-float 5s ease-in-out infinite 0.8s;
   opacity: 0;
-  filter: drop-shadow(0 0 25px rgba(255,215,0,0.25));
-  letter-spacing: 0.03em;
+  animation:
+    auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  filter: drop-shadow(0 2px 20px rgba(255,255,255,0.12));
 }
 
-@keyframes auth-outgrow-shimmer {
-  0%   { background-position: 100% 50%; }
-  100% { background-position: -100% 50%; }
-}
-
-@keyframes auth-outgrow-float {
-  0%, 100% { transform: translateY(0px); }
-  30%      { transform: translateY(-5px); }
-  60%      { transform: translateY(3px); }
-}
-
-/* "Yesterday." — Libre Baskerville italic, silver mist, gentle pulse */
+/* "Yesterday." — Playfair 400 italic, muted white for contrast */
 .auth-word-yesterday {
   display: inline-block;
-  font-family: 'Libre Baskerville', Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,0.50) 0%,
-    rgba(200,210,230,0.65) 30%,
-    rgba(255,255,255,0.55) 60%,
-    rgba(180,195,220,0.50) 100%
-  );
-  background-size: 300% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation:
-    auth-word-entrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s,
-    auth-yesterday-drift 6s ease-in-out infinite 1s,
-    auth-yesterday-fade 4s ease-in-out infinite 1s;
+  color: rgba(255,255,255,0.45);
+  -webkit-text-fill-color: rgba(255,255,255,0.45);
   opacity: 0;
-  filter: drop-shadow(0 0 15px rgba(200,210,230,0.15));
-  letter-spacing: 0.01em;
+  animation:
+    auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.15s;
+  filter: drop-shadow(0 2px 15px rgba(255,255,255,0.06));
 }
 
-@keyframes auth-yesterday-drift {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
-
-@keyframes auth-yesterday-fade {
-  0%, 100% { filter: drop-shadow(0 0 15px rgba(200,210,230,0.15)); opacity: 1; }
-  50%      { filter: drop-shadow(0 0 30px rgba(200,210,230,0.30)); opacity: 0.8; }
-}
-
-/* "Own" — DM Sans uppercase, ice-blue glow, scale-breathe */
+/* "Own" — Playfair 700, clean white, matches Outgrow energy */
 .auth-word-own {
   display: inline-block;
-  font-family: 'DM Sans', 'Inter', sans-serif;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  opacity: 0;
+  animation:
+    auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
+  filter: drop-shadow(0 2px 20px rgba(255,255,255,0.12));
+}
+
+/* "Tomorrow." — THE STAR WORD: Cinzel Decorative, gradient shimmer + glow */
+.auth-word-tomorrow {
+  display: inline-block;
+  position: relative;
+  font-family: 'Cinzel Decorative', 'Playfair Display', serif;
+  font-weight: 700;
   background: linear-gradient(
-    90deg,
-    #94d2ff 0%, #e0f0ff 30%, #fff 50%, #e0f0ff 70%, #94d2ff 100%
+    100deg,
+    #e0f0ff 0%, #fff 25%, #ffd700 50%, #fff 75%, #e0f0ff 100%
   );
   background-size: 300% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation:
-    auth-word-entrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.4s,
-    auth-own-glow 3s ease-in-out infinite 1.2s,
-    auth-own-breathe 4s ease-in-out infinite 1.2s,
-    auth-own-shimmer 3.5s ease infinite 1.2s;
   opacity: 0;
-  filter: drop-shadow(0 0 20px rgba(148,210,255,0.3));
-  font-size: 85%;
-}
-
-@keyframes auth-own-glow {
-  0%, 100% { filter: drop-shadow(0 0 20px rgba(148,210,255,0.3)); }
-  50%      { filter: drop-shadow(0 0 45px rgba(148,210,255,0.6)) drop-shadow(0 0 80px rgba(148,210,255,0.2)); }
-}
-
-@keyframes auth-own-breathe {
-  0%, 100% { transform: scale(1); letter-spacing: 0.18em; }
-  50%      { transform: scale(1.06); letter-spacing: 0.24em; }
-}
-
-@keyframes auth-own-shimmer {
-  0%   { background-position: 100% 50%; }
-  100% { background-position: -100% 50%; }
-}
-
-/* "Tomorrow." — Playfair Display, bright white-gold, energetic bounce + shimmer */
-.auth-word-tomorrow {
-  display: inline-block;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 900;
-  background: linear-gradient(
-    100deg,
-    #fff 0%, #ffd700 18%, #e0f0ff 35%, #fff 50%,
-    #ffd700 65%, #e0f0ff 82%, #fff 100%
-  );
-  background-size: 400% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   animation:
-    auth-word-entrance-bounce 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.6s,
-    auth-tomorrow-shimmer 3s ease infinite 1.6s,
-    auth-tomorrow-float 4.5s ease-in-out infinite 1.6s;
-  opacity: 0;
-  filter: drop-shadow(0 0 25px rgba(255,255,255,0.2)) drop-shadow(0 0 50px rgba(255,215,0,0.1));
-  letter-spacing: -0.01em;
+    auth-tomorrow-entrance 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.45s,
+    auth-tomorrow-shimmer 4s ease infinite 1.4s,
+    auth-tomorrow-glow 3s ease-in-out infinite 1.4s;
+  filter: drop-shadow(0 0 20px rgba(255,215,0,0.2));
+  letter-spacing: 0.02em;
+  font-size: 105%;
 }
 
 /* Animated underline for Tomorrow */
 .auth-word-tomorrow::after {
   content: '';
   position: absolute;
-  bottom: -5px;
+  bottom: -4px;
   left: 50%;
   width: 0;
-  height: 3px;
+  height: 2.5px;
   border-radius: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,215,0,0.6), rgba(255,255,255,0.8), rgba(148,210,255,0.6), transparent);
-  animation: auth-tomorrow-underline 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.4s,
-             auth-tomorrow-underline-pulse 2.5s ease-in-out infinite 2.4s;
-  box-shadow: 0 0 12px rgba(255,215,0,0.3), 0 0 30px rgba(148,210,255,0.15);
+  background: linear-gradient(90deg, transparent, rgba(255,215,0,0.5), rgba(255,255,255,0.7), rgba(255,215,0,0.5), transparent);
+  animation: auth-tomorrow-underline 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s,
+             auth-tomorrow-underline-glow 2.5s ease-in-out infinite 2.2s;
+  box-shadow: 0 0 10px rgba(255,215,0,0.25);
 }
 
+/* Tomorrow entrance — slightly bouncy */
+@keyframes auth-tomorrow-entrance {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.85); filter: blur(12px); }
+  55%  { opacity: 1; transform: translateY(-3px) scale(1.04); filter: blur(0); }
+  75%  { transform: translateY(1px) scale(0.99); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Gold-white shimmer sweep */
 @keyframes auth-tomorrow-shimmer {
   0%   { background-position: 100% 50%; }
   100% { background-position: -100% 50%; }
 }
 
-@keyframes auth-tomorrow-float {
-  0%, 100% { transform: translateY(0px) scale(1); }
-  25%      { transform: translateY(-4px) scale(1.01); }
-  50%      { transform: translateY(2px) scale(0.99); }
-  75%      { transform: translateY(-3px) scale(1.005); }
+/* Gentle glow pulse */
+@keyframes auth-tomorrow-glow {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(255,215,0,0.2)); }
+  50%      { filter: drop-shadow(0 0 40px rgba(255,215,0,0.35)) drop-shadow(0 0 70px rgba(255,255,255,0.12)); }
 }
 
 @keyframes auth-tomorrow-underline {
@@ -3013,26 +2967,9 @@ html.transitioning *::after {
   100% { width: 100%; left: 0; }
 }
 
-@keyframes auth-tomorrow-underline-pulse {
-  0%, 100% { box-shadow: 0 0 12px rgba(255,215,0,0.3), 0 0 30px rgba(148,210,255,0.15); opacity: 1; }
-  50%      { box-shadow: 0 0 25px rgba(255,215,0,0.5), 0 0 50px rgba(148,210,255,0.3); opacity: 0.8; }
-}
-
-/* Shared entrance — blur + scale reveal */
-@keyframes auth-word-entrance {
-  0%   { opacity: 0; transform: translateY(25px) scale(0.8); filter: blur(12px); }
-  60%  { opacity: 1; transform: translateY(-3px) scale(1.03); filter: blur(0); }
-  80%  { transform: translateY(1px) scale(0.99); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* Bounce entrance for Tomorrow */
-@keyframes auth-word-entrance-bounce {
-  0%   { opacity: 0; transform: translateY(30px) scale(0.7) rotate(-4deg); filter: blur(14px); }
-  45%  { opacity: 1; transform: translateY(-6px) scale(1.08) rotate(1deg); filter: blur(0); }
-  70%  { transform: translateY(3px) scale(0.97) rotate(-0.5deg); }
-  85%  { transform: translateY(-1px) scale(1.01); }
-  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+@keyframes auth-tomorrow-underline-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(255,215,0,0.25); opacity: 1; }
+  50%      { box-shadow: 0 0 20px rgba(255,215,0,0.45), 0 0 40px rgba(255,255,255,0.1); opacity: 0.85; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
