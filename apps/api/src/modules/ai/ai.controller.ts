@@ -491,7 +491,7 @@ class AIController {
         conversationId,
       });
 
-      res.status(200).json(result);
+      res.status(200).json({ success: true, data: result });
     } catch (error) {
       next(error);
     }
@@ -507,7 +507,7 @@ class AIController {
   ): Promise<void> {
     try {
       const agents = await aiService.getActiveAgents(req.tenantId!);
-      res.status(200).json(agents);
+      res.status(200).json({ success: true, data: agents });
     } catch (error) {
       next(error);
     }
