@@ -204,7 +204,7 @@ export function LoginPage() {
         setTokens(response.token, '');
         const user = await authApi.me();
         setUser(user);
-        toast.success('Command Center activated. Let\u2019s build.');
+        toast.success("Command Center activated. Let's build.");
         navigate('/sa/dashboard');
       } else {
         const response = await authApi.login(data.email, data.password, data.tenantSlug || undefined);
@@ -228,7 +228,7 @@ export function LoginPage() {
         }
         setTokens(response.accessToken, response.refreshToken);
         setUser(user);
-        toast.success('You\u2019re in. Time to make it count.');
+        toast.success("You're in. Time to make it count.");
         navigate('/dashboard');
       }
     } catch (error) {
@@ -264,7 +264,7 @@ export function LoginPage() {
         setTokens(response.accessToken, response.refreshToken);
         const user = await authApi.me();
         setUser(user);
-        toast.success('Verified. Let\u2019s make today count.');
+        toast.success("Verified. Let's make today count.");
         navigate('/dashboard');
       }
     } catch (error) {
@@ -374,7 +374,7 @@ export function LoginPage() {
             {isSuperAdmin ? 'Command Center' : 'Enter Your Workspace'}
           </h2>
           <p className="text-sm sm:text-lg text-white/50">
-            {isSuperAdmin ? 'Full platform orchestration awaits' : 'Your team is counting on you. Let\u2019s go.'}
+            {isSuperAdmin ? 'Full platform orchestration awaits' : "Your team is counting on you. Let's go."}
           </p>
         </div>
       </div>
@@ -480,7 +480,7 @@ export function LoginPage() {
             ) : (
               <>
                 {isSuperAdmin && <ShieldCheckIcon className="h-5 w-5" />}
-                {isSuperAdmin ? 'Launch Command Center' : 'Let\u2019s Go'}
+                {isSuperAdmin ? 'Launch Command Center' : "Let's Go"}
                 <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
               </>
             )}

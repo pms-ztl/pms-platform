@@ -667,13 +667,13 @@ export function AuthLayout({ children }: AuthLayoutProps) {
               </div>
             </div>
 
-            {/* #14: Typewriter description text */}
+            {/* #14: Typewriter description text — Ranade font, Title Case */}
             <p
               className="text-white/90 text-2xl xl:text-3xl leading-[1.5] mt-8 mb-7 max-w-[700px] min-h-[3.2em]"
-              style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6), 0 4px 30px rgba(0,0,0,0.4)' }}
+              style={{ fontFamily: "'Ranade', sans-serif", textShadow: '0 2px 12px rgba(0,0,0,0.6), 0 4px 30px rgba(0,0,0,0.4)' }}
             >
               <TypewriterText
-                text="Where ambition meets intelligence. One unified suite powering growth at every level of your organization."
+                text="Where Ambition Meets Intelligence. One Unified Suite Powering Growth at Every Level of Your Organization."
                 delay={1200}
               />
             </p>
