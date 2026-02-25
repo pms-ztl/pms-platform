@@ -446,10 +446,10 @@ function HowItWorksStrip() {
           {steps.map((s, i) => (
             <div key={s.num} className={`flex gap-4 items-start transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
               style={{ transitionDelay: `${i * 150}ms` }}>
-              <span className="text-3xl sm:text-4xl font-display font-bold text-white/10 flex-shrink-0 leading-none">{s.num}</span>
+              <span className="text-3xl sm:text-4xl font-display font-bold text-cyan-400/30 flex-shrink-0 leading-none">{s.num}</span>
               <div>
                 <h3 className="text-white font-semibold text-lg mb-1">{s.title}</h3>
-                <p className="text-white/35 text-sm leading-relaxed">{s.desc}</p>
+                <p className="text-white/60 text-sm leading-relaxed">{s.desc}</p>
               </div>
             </div>
           ))}
@@ -473,16 +473,16 @@ function AICapabilitiesRow() {
   return (
     <section ref={ref} className="py-10 sm:py-14 px-6 sm:px-12 lg:px-16">
       <div className="max-w-[90rem] mx-auto">
-        <p className={`text-center text-white/25 text-xs tracking-[0.2em] uppercase mb-8 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+        <p className={`text-center text-white/60 text-sm font-semibold tracking-[0.2em] uppercase mb-8 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
           AI Agent Capabilities
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
           {capabilities.map((c, i) => (
             <div key={c.label}
-              className={`rounded-xl p-4 text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', transitionDelay: `${i * 80}ms` }}>
-              <div className="text-white/70 text-sm font-semibold mb-1">{c.label}</div>
-              <div className="text-white/25 text-xs leading-relaxed">{c.desc}</div>
+              className={`rounded-xl p-5 text-center transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', transitionDelay: `${i * 80}ms` }}>
+              <div className="text-white font-semibold text-sm mb-1.5">{c.label}</div>
+              <div className="text-white/50 text-xs leading-relaxed">{c.desc}</div>
             </div>
           ))}
         </div>
@@ -495,21 +495,29 @@ function AICapabilitiesRow() {
 function WorkflowRow() {
   const { ref, visible } = useInView(0.2);
   const items = [
-    'Goal Setting → OKR Cascade → Alignment Check',
-    'Review Cycle → Peer Feedback → Calibration → Final Rating',
-    'Skill Assessment → Gap Analysis → Development Plan → Mentorship',
-    'Pulse Survey → Sentiment AI → Culture Score → Action Items',
+    { title: 'Goal Pipeline', flow: 'Goal Setting → OKR Cascade → Alignment Check' },
+    { title: 'Review Pipeline', flow: 'Review Cycle → Peer Feedback → Calibration → Final Rating' },
+    { title: 'Growth Pipeline', flow: 'Skill Assessment → Gap Analysis → Development Plan → Mentorship' },
+    { title: 'Culture Pipeline', flow: 'Pulse Survey → Sentiment AI → Culture Score → Action Items' },
   ];
   return (
-    <section ref={ref} className="py-8 sm:py-10 px-6 sm:px-12 lg:px-16">
-      <div className="max-w-[90rem] mx-auto grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {items.map((item, i) => (
-          <div key={i} className={`flex items-center gap-3 rounded-lg px-5 py-3 transition-all duration-700 ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'}`}
-            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', transitionDelay: `${i * 100}ms` }}>
-            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400/40 flex-shrink-0" />
-            <span className="text-white/35 text-xs sm:text-sm font-mono tracking-wide">{item}</span>
-          </div>
-        ))}
+    <section ref={ref} className="py-8 sm:py-12 px-6 sm:px-12 lg:px-16">
+      <div className="max-w-[90rem] mx-auto">
+        <p className={`text-center text-white/60 text-sm font-semibold tracking-[0.2em] uppercase mb-6 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+          Automated Workflows
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {items.map((item, i) => (
+            <div key={i} className={`rounded-xl px-6 py-4 transition-all duration-700 ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-6'}`}
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', transitionDelay: `${i * 100}ms` }}>
+              <div className="text-white font-semibold text-sm mb-1.5">{item.title}</div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-cyan-400/70 flex-shrink-0" />
+                <span className="text-white/60 text-sm font-mono tracking-wide">{item.flow}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -521,12 +529,12 @@ function MetricBar({ label, value, width, delay }: { label: string; value: strin
   return (
     <div ref={ref} className={`transition-all duration-700 ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`} style={{ transitionDelay: `${delay}ms` }}>
       <div className="flex items-center justify-between mb-2">
-        <span className="text-white/50 text-sm font-mono tracking-wide">{label}</span>
-        <span className="text-white/70 text-sm font-semibold">{value}</span>
+        <span className="text-white/70 text-sm font-mono tracking-wide">{label}</span>
+        <span className="text-white/90 text-sm font-semibold">{value}</span>
       </div>
       <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
         <div className={`h-full rounded-full transition-all duration-[2000ms] ease-out ${visible ? '' : '!w-0'}`}
-          style={{ width: visible ? width : '0%', background: 'linear-gradient(90deg, rgba(148,210,255,0.3), rgba(148,210,255,0.6))', transitionDelay: `${delay + 200}ms` }} />
+          style={{ width: visible ? width : '0%', background: 'linear-gradient(90deg, rgba(148,210,255,0.5), rgba(148,210,255,0.8))', transitionDelay: `${delay + 200}ms` }} />
       </div>
     </div>
   );
@@ -542,19 +550,19 @@ function ComparisonStrip() {
   return (
     <section ref={ref} className="py-8 sm:py-12 px-6 sm:px-12 lg:px-16">
       <div className="max-w-4xl mx-auto">
-        <p className={`text-center text-white/25 text-xs tracking-[0.2em] uppercase mb-6 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+        <p className={`text-center text-white/60 text-sm font-semibold tracking-[0.2em] uppercase mb-6 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
           The Difference
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {comparisons.map((col, ci) => (
-            <div key={ci} className={`rounded-2xl p-6 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ background: col.bad ? 'rgba(255,100,100,0.04)' : 'rgba(148,210,255,0.06)', border: `1px solid ${col.bad ? 'rgba(255,100,100,0.1)' : 'rgba(148,210,255,0.12)'}`, transitionDelay: `${ci * 150}ms` }}>
-              <div className={`text-sm font-semibold mb-4 tracking-wide ${col.bad ? 'text-red-400/60' : 'text-cyan-400/80'}`}>{col.label}</div>
-              <ul className="space-y-2.5">
+            <div key={ci} className={`rounded-2xl p-7 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ background: col.bad ? 'rgba(255,100,100,0.08)' : 'rgba(148,210,255,0.10)', border: `1px solid ${col.bad ? 'rgba(255,100,100,0.20)' : 'rgba(148,210,255,0.25)'}`, transitionDelay: `${ci * 150}ms` }}>
+              <div className={`text-base font-bold mb-5 tracking-wide ${col.bad ? 'text-red-400' : 'text-cyan-400'}`}>{col.label}</div>
+              <ul className="space-y-3">
                 {col.items.map((item, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-sm">
-                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${col.bad ? 'bg-red-400/30' : 'bg-cyan-400/50'}`} />
-                    <span className={col.bad ? 'text-white/30 line-through decoration-white/10' : 'text-white/60'}>{item}</span>
+                  <li key={i} className="flex items-center gap-3 text-sm">
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${col.bad ? 'bg-red-400/60' : 'bg-cyan-400/80'}`} />
+                    <span className={col.bad ? 'text-white/50 line-through decoration-white/20' : 'text-white/80 font-medium'}>{item}</span>
                   </li>
                 ))}
               </ul>
@@ -580,17 +588,17 @@ function ROIStrip() {
   return (
     <section ref={ref} className="py-8 sm:py-12 px-6 sm:px-12 lg:px-16">
       <div className="max-w-[90rem] mx-auto">
-        <p className={`text-center text-white/25 text-xs tracking-[0.2em] uppercase mb-6 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+        <p className={`text-center text-white/60 text-sm font-semibold tracking-[0.2em] uppercase mb-6 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
           Measurable Impact
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
           {metrics.map((m, i) => (
             <div key={i} className={`rounded-xl p-5 text-center transition-all duration-700 ${visible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', transitionDelay: `${i * 80}ms` }}>
+              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', transitionDelay: `${i * 80}ms` }}>
               <div className="text-2xl sm:text-3xl font-bold mb-1" style={{ background: 'linear-gradient(135deg, #94d2ff, #e0f0ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 {m.value}
               </div>
-              <div className="text-white/35 text-xs tracking-wide">{m.label}</div>
+              <div className="text-white/60 text-xs font-medium tracking-wide">{m.label}</div>
             </div>
           ))}
         </div>
@@ -611,8 +619,8 @@ function ScrollingBadges() {
     <div className="py-6 overflow-hidden">
       <div className="landing-marquee flex gap-3">
         {[...badges, ...badges].map((b, i) => (
-          <span key={i} className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium text-white/40 whitespace-nowrap border border-white/[0.06]"
-            style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <span key={i} className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium text-white/70 whitespace-nowrap border border-white/[0.12]"
+            style={{ background: 'rgba(255,255,255,0.06)' }}>
             {b}
           </span>
         ))}
