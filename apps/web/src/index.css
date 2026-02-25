@@ -203,9 +203,8 @@
   .deep-dark ::-webkit-scrollbar-thumb { background: #1a1a1a; }
   .deep-dark ::-webkit-scrollbar-thumb:hover { background: #2a2a2a; }
 
-  /* Display fonts for headings */
+  /* Display fonts for headings — uses Tailwind font-display (Playfair Display) */
   h1, h2, h3 {
-    font-family: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
     letter-spacing: -0.025em;
   }
 
