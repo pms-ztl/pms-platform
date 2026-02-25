@@ -6,7 +6,7 @@
  * Exports to high-resolution PDF and JPG.
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -149,6 +149,9 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [exportFormat, setExportFormat] = useState<'pdf' | 'jpg'>('pdf');
+  const scaleWrapperRef = useRef<HTMLDivElement>(null);
+  const [cardScale, setCardScale] = useState(1);
+  const [cardNaturalH, setCardNaturalH] = useState(0);
 
   const user = currentUser; // For header display
 
@@ -162,6 +165,24 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
   });
 
   const cpis = cpisData?.data || cpisData;
+
+  // Auto-scale the 960px card to fit the viewport on smaller screens
+  useEffect(() => {
+    const wrapper = scaleWrapperRef.current;
+    const card = cardRef.current;
+    if (!wrapper || !card) return;
+    const measure = () => {
+      const w = wrapper.clientWidth;
+      const scale = w >= 960 ? 1 : w / 960;
+      setCardScale(scale);
+      setCardNaturalH(card.scrollHeight);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(wrapper);
+    ro.observe(card);
+    return () => ro.disconnect();
+  }, [cpis, isLoading]);
 
   const handleExport = async (format: 'pdf' | 'jpg') => {
     if (!cardRef.current) return;
@@ -211,21 +232,23 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Export buttons */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h2 className="text-xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
-          <IdentificationIcon className="h-6 w-6 text-primary-500" />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h2 className="text-lg sm:text-xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
+          <IdentificationIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary-500 flex-shrink-0" />
           Employee Performance Card
         </h2>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="flex gap-2 flex-shrink-0">
           <button onClick={() => handleExport('jpg')} disabled={isExporting}
-            className="btn-secondary text-sm flex items-center gap-2">
+            className="btn-secondary text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2">
             <PhotoIcon className="h-4 w-4" />
-            {isExporting && exportFormat === 'jpg' ? 'Exporting...' : 'Download JPG'}
+            <span className="hidden sm:inline">{isExporting && exportFormat === 'jpg' ? 'Exporting...' : 'Download JPG'}</span>
+            <span className="sm:hidden">{isExporting && exportFormat === 'jpg' ? '...' : 'JPG'}</span>
           </button>
           <button onClick={() => handleExport('pdf')} disabled={isExporting}
-            className="btn-primary text-sm flex items-center gap-2">
+            className="btn-primary text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2">
             <DocumentArrowDownIcon className="h-4 w-4" />
-            {isExporting && exportFormat === 'pdf' ? 'Exporting...' : 'Download PDF'}
+            <span className="hidden sm:inline">{isExporting && exportFormat === 'pdf' ? 'Exporting...' : 'Download PDF'}</span>
+            <span className="sm:hidden">{isExporting && exportFormat === 'pdf' ? '...' : 'PDF'}</span>
           </button>
         </div>
       </div>
@@ -240,7 +263,13 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
         </div>
       )}
 
-      {/* ─── THE CARD ─── */}
+      {/* ─── THE CARD (scale-to-fit wrapper) ─── */}
+      <div ref={scaleWrapperRef} style={{ width: '100%', overflow: 'hidden' }}>
+        <div style={{
+          transformOrigin: 'top left',
+          transform: cardScale < 1 ? `scale(${cardScale})` : undefined,
+          height: cardScale < 1 && cardNaturalH > 0 ? `${cardNaturalH * cardScale}px` : undefined,
+        }}>
       <div
         ref={cardRef}
         style={{
@@ -597,7 +626,9 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
             </p>
           </div>
         </div>
-      </div>
+      </div>{/* end cardRef */}
+      </div>{/* end scale transform */}
+      </div>{/* end scaleWrapperRef */}
 
       {/* Formula explanation (outside card, in dark mode context) */}
       <div className="bg-secondary-50 dark:bg-secondary-800 rounded-lg p-4">
@@ -607,7 +638,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
         <p className="text-sm text-secondary-600 dark:text-secondary-400 mb-2">
           CPIS uses an 8-dimension weighted scoring model with ML fairness corrections:
         </p>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
           <p className="text-sm text-secondary-600 dark:text-secondary-400">
             <strong className="text-blue-500">GAI (25%)</strong> Goal Attainment Index
           </p>
