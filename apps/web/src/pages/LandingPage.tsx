@@ -232,6 +232,33 @@ function WordRevealHeading({ text, visible, baseDelay = 0 }: { text: string; vis
   );
 }
 
+// ── Rotating keywords in hero ──────────────────────────────────────────────
+function HeroRotatingWords({ visible }: { visible: boolean }) {
+  const words = ['AI-Powered', 'Real-Time', 'Transparent', 'Predictive', 'Unbiased'];
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    if (!visible) return;
+    const interval = setInterval(() => setIdx(p => (p + 1) % words.length), 2500);
+    return () => clearInterval(interval);
+  }, [visible]);
+  return (
+    <div className={`flex items-center gap-3 mb-10 transition-all duration-1000 delay-[1100ms] ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+      <span className="text-white/40 text-base sm:text-lg tracking-wide">Performance reviews that are</span>
+      <span className="relative inline-block w-36 sm:w-44 h-8 overflow-hidden">
+        {words.map((w, i) => (
+          <span key={w} className="absolute inset-0 flex items-center justify-start font-display font-bold text-lg sm:text-xl transition-all duration-500"
+            style={{
+              background: 'linear-gradient(135deg, #94d2ff, #e0f0ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              transform: i === idx ? 'translateY(0)' : i === (idx - 1 + words.length) % words.length ? 'translateY(-100%)' : 'translateY(100%)',
+              opacity: i === idx ? 1 : 0,
+            }}>
+            {w}
+          </span>
+        ))}
+      </span>
+    </div>
+  );
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ── NEON CODE TYPER ──────────────────────────────────────────────────────────
@@ -938,22 +965,39 @@ export default function LandingPage() {
               <div className="absolute inset-0 rounded-2xl animate-pulse-ring border border-white/10" />
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl sm:text-5xl font-display font-bold text-white tracking-wide animate-text-glow"
-                style={{ textShadow: '0 2px 20px rgba(148,210,255,0.15)' }}>PMS</span>
-              <span className="text-2xl sm:text-3xl font-display font-light text-white/60">Suite</span>
+              <span className="text-4xl sm:text-5xl font-display font-bold tracking-wide animate-text-glow"
+                style={{ background: 'linear-gradient(135deg, #fff, #94d2ff, #e0f0ff, #fff)', backgroundSize: '300% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'hero-text-gradient 4s ease infinite', textShadow: 'none' }}>PMS</span>
+              <span className="text-2xl sm:text-3xl font-display font-light text-white/60 italic">Suite</span>
             </div>
           </div>
 
-          {/* Headline with word-by-word reveal */}
+          {/* Animated badge */}
+          <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full mb-8 transition-all duration-1000 delay-200 ${heroRef.visible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
+            style={{ background: 'rgba(148,210,255,0.08)', border: '1px solid rgba(148,210,255,0.15)' }}>
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-white/70 text-sm font-medium tracking-wide">Next-Gen Performance Intelligence</span>
+          </div>
+
+          {/* Headline with word-by-word reveal + gradient "impact" */}
           <h1
-            className={`font-display font-black text-white leading-[1.05] tracking-tighter max-w-4xl mb-8 transition-opacity duration-500 ${heroRef.visible ? 'opacity-100' : 'opacity-0'}`}
-            style={{ fontSize: 'clamp(3.2rem, 9vw, 7.5rem)', textShadow: '0 4px 30px rgba(0,0,0,0.6), 0 0 80px rgba(148,210,255,0.1)' }}
+            className={`font-display font-black text-white leading-[1.08] max-w-5xl mb-8 transition-opacity duration-500 ${heroRef.visible ? 'opacity-100' : 'opacity-0'}`}
+            style={{ fontSize: 'clamp(3.2rem, 9vw, 7.5rem)', letterSpacing: '-0.02em', textShadow: '0 4px 30px rgba(0,0,0,0.6), 0 0 80px rgba(148,210,255,0.1)' }}
           >
-            <WordRevealHeading text="Track impact, not just activity." visible={heroRef.visible} baseDelay={0.3} />
+            {heroRef.visible && (
+              <span className="landing-word-reveal">
+                <span style={{ animationDelay: '0.3s' }}>Track{'\u00A0'}</span>
+                <span className="hero-gradient-word" style={{ background: 'linear-gradient(135deg, #94d2ff, #e0f0ff, #94d2ff)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'hero-text-gradient 3s ease infinite 0.42s, landing-word-reveal-single 0.8s ease forwards 0.42s' }}>impact</span>
+                <span style={{ animationDelay: '0.54s' }}>,{'\u00A0'}</span>
+                <span style={{ animationDelay: '0.66s' }}>not{'\u00A0'}</span>
+                <span style={{ animationDelay: '0.78s' }}>just{'\u00A0'}</span>
+                <span className="italic font-light text-white/50" style={{ animationDelay: '0.9s' }}>activity.</span>
+              </span>
+            )}
+            {!heroRef.visible && <span style={{ opacity: 0 }}>Track impact, not just activity.</span>}
           </h1>
 
           {/* Shimmer underline */}
-          <div className={`relative h-1 w-48 sm:w-64 rounded-full mb-8 transition-all duration-1000 delay-700 ${heroRef.visible ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'}`}>
+          <div className={`relative h-1 w-48 sm:w-72 rounded-full mb-8 transition-all duration-1000 delay-700 ${heroRef.visible ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'}`}>
             <div className="absolute inset-0 rounded-full"
               style={{ background: 'linear-gradient(90deg, rgba(148,210,255,0.5), rgba(120,200,255,0.3), rgba(148,210,255,0.5))', backgroundSize: '200% 100%', animation: 'gradientFlow 4s ease infinite' }} />
             <div className="absolute inset-0 rounded-full overflow-hidden">
@@ -967,22 +1011,25 @@ export default function LandingPage() {
             <TypewriterText text="Next-generation performance intelligence. Where ambition meets data-driven growth." delay={1800} />
           </p>
 
+          {/* Rotating keywords */}
+          <HeroRotatingWords visible={heroRef.visible} />
+
           {/* CTA with spotlight sweep */}
           <div className={`transition-all duration-1000 delay-[1200ms] ${heroRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <Link to="/login"
-              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-lg transition-all duration-500 hover:scale-105 hover:shadow-[0_8px_40px_rgba(148,210,255,0.25)] overflow-hidden"
+              className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-white font-semibold text-lg transition-all duration-500 hover:scale-105 hover:shadow-[0_8px_40px_rgba(148,210,255,0.25)] overflow-hidden"
               style={{ background: 'linear-gradient(135deg, rgba(148,210,255,0.45), rgba(120,200,255,0.3))', border: '1px solid rgba(255,255,255,0.18)',
                 boxShadow: '0 4px 20px rgba(148,210,255,0.15), inset 0 1px 0 rgba(255,255,255,0.12)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>
               <span className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
                 <span className="absolute inset-0 animate-spotlight-sweep" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%)' }} />
               </span>
-              <span className="relative">Enter Platform</span>
+              <span className="relative font-display text-xl">Enter Platform</span>
               <ArrowRightIcon className="w-5 h-5 relative transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
 
           {/* Trust line */}
-          <p className={`text-white/25 text-sm mt-8 tracking-wide transition-all duration-1000 delay-[1500ms] ${heroRef.visible ? 'opacity-100' : 'opacity-0'}`}>
+          <p className={`text-white/40 text-sm mt-8 tracking-wide transition-all duration-1000 delay-[1500ms] ${heroRef.visible ? 'opacity-100' : 'opacity-0'}`}>
             Trusted by forward-thinking organizations worldwide
           </p>
 
