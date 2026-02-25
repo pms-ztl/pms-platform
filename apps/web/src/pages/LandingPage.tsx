@@ -497,6 +497,73 @@ function MetricBar({ label, value, width, delay }: { label: string; value: strin
   );
 }
 
+// ── Platform comparison strip ───────────────────────────────────────────────
+function ComparisonStrip() {
+  const { ref, visible } = useInView(0.2);
+  const comparisons = [
+    { label: 'Traditional PMS', items: ['Annual reviews only', 'Manual spreadsheets', 'No AI insights', 'Siloed departments'], bad: true },
+    { label: 'PMS Suite', items: ['Continuous feedback loop', 'AI-automated workflows', '70 intelligent agents', 'Unified platform'], bad: false },
+  ];
+  return (
+    <section ref={ref} className="py-8 sm:py-12 px-6 sm:px-12 lg:px-16">
+      <div className="max-w-4xl mx-auto">
+        <p className={`text-center text-white/25 text-xs tracking-[0.2em] uppercase mb-6 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+          The Difference
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {comparisons.map((col, ci) => (
+            <div key={ci} className={`rounded-2xl p-6 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ background: col.bad ? 'rgba(255,100,100,0.04)' : 'rgba(148,210,255,0.06)', border: `1px solid ${col.bad ? 'rgba(255,100,100,0.1)' : 'rgba(148,210,255,0.12)'}`, transitionDelay: `${ci * 150}ms` }}>
+              <div className={`text-sm font-semibold mb-4 tracking-wide ${col.bad ? 'text-red-400/60' : 'text-cyan-400/80'}`}>{col.label}</div>
+              <ul className="space-y-2.5">
+                {col.items.map((item, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-sm">
+                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${col.bad ? 'bg-red-400/30' : 'bg-cyan-400/50'}`} />
+                    <span className={col.bad ? 'text-white/30 line-through decoration-white/10' : 'text-white/60'}>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── ROI Numbers strip ───────────────────────────────────────────────────────
+function ROIStrip() {
+  const { ref, visible } = useInView(0.2);
+  const metrics = [
+    { value: '40%', label: 'Faster Review Cycles' },
+    { value: '3×', label: 'More Feedback Touchpoints' },
+    { value: '60%', label: 'Reduction in Manual Work' },
+    { value: '85%', label: 'Employee Adoption Rate' },
+    { value: '2.5×', label: 'ROI in First Year' },
+    { value: '90%', label: 'Manager Satisfaction' },
+  ];
+  return (
+    <section ref={ref} className="py-8 sm:py-12 px-6 sm:px-12 lg:px-16">
+      <div className="max-w-[90rem] mx-auto">
+        <p className={`text-center text-white/25 text-xs tracking-[0.2em] uppercase mb-6 transition-all duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+          Measurable Impact
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
+          {metrics.map((m, i) => (
+            <div key={i} className={`rounded-xl p-5 text-center transition-all duration-700 ${visible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', transitionDelay: `${i * 80}ms` }}>
+              <div className="text-2xl sm:text-3xl font-bold mb-1" style={{ background: 'linear-gradient(135deg, #94d2ff, #e0f0ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                {m.value}
+              </div>
+              <div className="text-white/35 text-xs tracking-wide">{m.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Scrolling feature badges ────────────────────────────────────────────────
 function ScrollingBadges() {
   const badges = [
@@ -538,8 +605,6 @@ const FEATURE_CATEGORIES = [
     'Continuous feedback, recognition wall, kudos & badges',
     'One-on-one meetings with notes and action items',
     'Review cycle automation with configurable workflows',
-    'KPI dashboards with real-time progress tracking',
-    'Weighted scoring models for multi-dimensional evaluations',
   ]},
   { icon: AcademicCapIcon, title: 'Growth & Development', features: [
     'Skills matrix & gap analysis with competency heatmaps',
@@ -547,8 +612,6 @@ const FEATURE_CATEGORIES = [
     'Mentorship program matching and progress tracking',
     'Performance improvement plans with milestone tracking',
     'Learning recommendations based on role & skill gaps',
-    'Certification tracking with expiry alerts & renewal workflows',
-    'Training ROI analytics with skill adoption metrics',
   ]},
   { icon: Cog6ToothIcon, title: 'Management & Operations', features: [
     'Calibration sessions with AI-assisted group alignment',
@@ -556,8 +619,6 @@ const FEATURE_CATEGORIES = [
     'AI-explainable promotions engine with nominations',
     'Succession planning with readiness assessment',
     'Org chart visualization with reporting hierarchy',
-    'Headcount planning with budget forecasting tools',
-    'Workflow automation with custom approval chains',
   ]},
   { icon: CpuChipIcon, title: 'Analytics & AI', features: [
     '70 specialized AI agents for workforce intelligence',
@@ -565,8 +626,6 @@ const FEATURE_CATEGORIES = [
     'Performance simulator for scenario planning & what-if',
     'Bias detection & fairness firewall with transparent AI',
     'Predictive attrition modeling with 90-day early warning',
-    'Natural language query engine for instant HR insights',
-    'Cohort analysis with trend comparison across periods',
   ]},
   { icon: ShieldCheckIcon, title: 'Enterprise & Security', features: [
     'Multi-tenant SaaS with row-level data isolation',
@@ -574,8 +633,6 @@ const FEATURE_CATEGORIES = [
     'Audit logging & real-time threat detection',
     'Excel bulk upload with AI data quality scoring',
     'Cross-tenant access blocking with security alerts',
-    'SSO & SAML 2.0 integration with identity providers',
-    'Data encryption at rest and in transit with key rotation',
   ]},
   { icon: ChatBubbleLeftRightIcon, title: 'Communication & Engagement', features: [
     'Real-time chat & push notifications via WebSocket',
@@ -583,8 +640,6 @@ const FEATURE_CATEGORIES = [
     'Company-wide announcements & news feed',
     'Calendar scheduling & meeting coordination',
     'Email notifications with customizable templates',
-    'Anonymous feedback channels with sentiment analysis',
-    'Team celebration wall with milestone auto-recognition',
   ]},
 ];
 
@@ -970,6 +1025,12 @@ export default function LandingPage() {
 
         {/* ── WORKFLOW PIPELINES ────────────────────────────────────────── */}
         <WorkflowRow />
+
+        {/* ── COMPARISON STRIP ───────────────────────────────────────────── */}
+        <ComparisonStrip />
+
+        {/* ── ROI NUMBERS ────────────────────────────────────────────────── */}
+        <ROIStrip />
 
         {/* ── Scrolling feature badges ─────────────────────────────────── */}
         <ScrollingBadges />
