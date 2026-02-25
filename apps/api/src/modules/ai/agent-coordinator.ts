@@ -50,8 +50,13 @@ export interface CoordinationResult {
 
 // ── Constants ─────────────────────────────────────────────
 
-/** Maximum number of sub-tasks that can execute concurrently within a coordination level */
-const MAX_CONCURRENT_SUBTASKS = 3;
+/** Maximum number of sub-tasks that can execute concurrently within a coordination level.
+ *  Set to 1 to force sequential execution — essential for rate-limited LLM providers
+ *  like Groq (30 req/min). Each sub-task triggers 1+ LLM calls; running 3 in parallel
+ *  instantly exhausts the rate limit window. */
+const MAX_CONCURRENT_SUBTASKS = 1;
+/** Delay between sequential sub-task executions to let rate-limit windows clear */
+const SUBTASK_DELAY_MS = 2000;
 /** Maximum sub-tasks a coordinator can decompose a goal into */
 const MAX_SUBTASKS = 6;
 
@@ -64,6 +69,7 @@ const MAX_SUBTASKS = 6;
 function limitConcurrency<T>(
   tasks: Array<() => Promise<T>>,
   limit: number,
+  delayMs = 0,
 ): Promise<PromiseSettledResult<T>[]> {
   return new Promise((resolve) => {
     const results: PromiseSettledResult<T>[] = new Array(tasks.length);
@@ -87,6 +93,10 @@ function limitConcurrency<T>(
             settled++;
             if (settled === tasks.length) {
               resolve(results);
+            } else if (delayMs > 0) {
+              // Rate-limit-aware: wait between sequential task executions
+              // to let the LLM provider's rate-limit window clear.
+              setTimeout(run, delayMs);
             } else {
               run();
             }
@@ -427,7 +437,7 @@ class AgentCoordinator {
     const levels = this.buildExecutionLevels(plan);
 
     for (const level of levels) {
-      // Execute tasks at this level with concurrency limiter (max 3 parallel)
+      // Execute tasks at this level sequentially with rate-limit delay
       const levelTasks = level.map((index) => async () => {
         const subTask = plan[index];
 
@@ -521,8 +531,8 @@ class AgentCoordinator {
         completed.add(index);
       });
 
-      // Wait for all tasks at this level with concurrency limit
-      await limitConcurrency(levelTasks, MAX_CONCURRENT_SUBTASKS);
+      // Wait for all tasks at this level with concurrency limit + delay
+      await limitConcurrency(levelTasks, MAX_CONCURRENT_SUBTASKS, SUBTASK_DELAY_MS);
 
       // Update parent progress
       await prisma.agentTask.update({
