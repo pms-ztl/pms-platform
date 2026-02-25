@@ -182,26 +182,26 @@ export function GoalDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-start gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div className="flex items-start gap-3 min-w-0">
           <Link
             to="/goals"
-            className="p-2 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-500 dark:text-secondary-400"
+            className="p-2 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-500 dark:text-secondary-400 flex-shrink-0"
           >
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
-          <div>
-            <div className="flex items-center gap-3">
-              <span className={clsx('text-2xs font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={clsx('text-2xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
                 {goal.type?.replace('_', ' ')}
               </span>
-              <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">{goal.title}</h1>
-              <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', statusColors[goal.status])}>
+              <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0', statusColors[goal.status])}>
                 {goal.status}
               </span>
             </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white mt-1 break-words">{goal.title}</h1>
             {goal.description && (
-              <p className="mt-2 text-secondary-600 dark:text-secondary-400 max-w-2xl">{goal.description}</p>
+              <p className="mt-2 text-secondary-600 dark:text-secondary-400 max-w-2xl break-words">{goal.description}</p>
             )}
             {/* Show who created the goal if different from owner */}
             {goal.createdBy && goal.createdBy.id !== goal.owner?.id && (
@@ -211,20 +211,20 @@ export function GoalDetailPage() {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
           {isManager && (
             <button onClick={() => setShowSubGoalModal(true)} className="btn-primary">
-              <PlusIcon className="h-5 w-5 mr-2" />
-              Assign Sub-Goal
+              <PlusIcon className="h-5 w-5 sm:mr-2" />
+              <span className="hidden sm:inline">Assign Sub-Goal</span>
             </button>
           )}
           <button onClick={() => setShowProgressModal(true)} className="btn-secondary">
-            <ChartBarIcon className="h-5 w-5 mr-2" />
-            Update Progress
+            <ChartBarIcon className="h-5 w-5 sm:mr-2" />
+            <span className="hidden sm:inline">Update Progress</span>
           </button>
           <button onClick={() => setShowEditModal(true)} className="btn-secondary">
-            <PencilIcon className="h-5 w-5 mr-2" />
-            Edit
+            <PencilIcon className="h-5 w-5 sm:mr-2" />
+            <span className="hidden sm:inline">Edit</span>
           </button>
           <button onClick={() => setShowDeleteModal(true)} className="btn-danger">
             <TrashIcon className="h-5 w-5" />
