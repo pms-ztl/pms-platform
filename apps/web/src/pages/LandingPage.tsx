@@ -300,12 +300,12 @@ function GlassFeatureCard({ icon: Icon, title, description, delay }: {
   const { ref: viewRef, visible } = useInView(0.2);
   const tilt = useTilt(8);
   return (
-    <div ref={viewRef}>
+    <div ref={viewRef} className="h-full">
       <div
         ref={tilt.ref}
         onMouseMove={tilt.onMouseMove}
         onMouseLeave={tilt.onMouseLeave}
-        className={`landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 transition-all duration-700 cursor-default group ${
+        className={`landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 h-full transition-all duration-700 cursor-default group ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
         style={{
@@ -331,12 +331,12 @@ function GlassCategoryCard({ icon: Icon, title, features, delay }: {
   const { ref: viewRef, visible } = useInView(0.2);
   const tilt = useTilt(8);
   return (
-    <div ref={viewRef}>
+    <div ref={viewRef} className="h-full">
       <div
         ref={tilt.ref}
         onMouseMove={tilt.onMouseMove}
         onMouseLeave={tilt.onMouseLeave}
-        className={`landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 transition-all duration-700 cursor-default group ${
+        className={`landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 h-full transition-all duration-700 cursor-default group ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
         style={{
