@@ -1,27 +1,36 @@
 import { Link, useLocation } from 'react-router-dom';
 import { HomeIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import { navigationSections, adminSection } from '@/config/navigation';
 
 // Maps URL path segments to human-readable labels
 const ROUTE_LABELS: Record<string, string> = {
   dashboard: 'Dashboard',
   goals: 'Goals',
   'goal-alignment': 'Goal Alignment',
+  okrs: 'OKRs',
   reviews: 'Reviews',
   feedback: 'Feedback',
   'one-on-ones': '1-on-1s',
+  'self-appraisal': 'Self-Appraisal',
   development: 'Development',
+  'ai-development': 'AI Dev Plans',
   pip: 'PIP',
   recognition: 'Recognition',
   calibration: 'Calibration',
   analytics: 'Analytics',
   realtime: 'Real-time',
   team: 'Team',
+  'team-insights': 'Team Insights',
+  'talent-intelligence': 'Talent Intelligence',
+  'team-optimizer': 'Team Optimizer',
+  simulator: 'Simulator',
   profile: 'Profile',
   settings: 'Settings',
-  'self-appraisal': 'Self-Appraisal',
   reports: 'Reports',
+  'report-schedules': 'Schedules',
   'hr-analytics': 'HR Analytics',
+  'health-dashboard': 'Org Health',
   succession: 'Succession',
   help: 'Help',
   admin: 'Administration',
@@ -29,6 +38,7 @@ const ROUTE_LABELS: Record<string, string> = {
   config: 'Configuration',
   audit: 'Audit Log',
   skills: 'Skills',
+  'skill-gaps': 'Skill Gaps',
   compensation: 'Compensation',
   promotions: 'Promotions',
   evidence: 'Evidence',
@@ -39,23 +49,56 @@ const ROUTE_LABELS: Record<string, string> = {
   career: 'Career Path',
   'manager-dashboard': 'Manager Hub',
   leaderboard: 'Leaderboard',
+  mentoring: 'Mentoring',
   chat: 'Chat',
   notifications: 'Notifications',
   licenses: 'License & Seats',
   'excel-upload': 'Excel Upload',
   'ai-access': 'AI Access',
+  'ai-insights': 'AI Insights',
   roles: 'Roles',
+  delegations: 'Delegations',
+  policies: 'Access Policies',
+  'rbac-dashboard': 'RBAC Dashboard',
   upgrade: 'Upgrade Plan',
+  integrations: 'Integrations',
   'org-chart': 'Org Chart',
   directory: 'Directory',
-  'health-dashboard': 'Org Health',
   engagement: 'Engagement',
+  wellbeing: 'Wellbeing',
+  'meeting-analytics': 'Meetings',
+  anomalies: 'Anomalies',
+  benchmarks: 'Benchmarks',
+  'culture-diagnostics': 'Culture Diagnostics',
+  exports: 'Exports',
   pulse: 'Pulse',
+  calendar: 'Calendar',
   moderate: 'Moderator',
 };
 
 // Segments that are section headers (not real pages) — shown as plain text, not links
 const SECTION_ONLY_SEGMENTS = new Set(['admin']);
+
+// ── Build reverse map: nav item href → sidebar section label ─────────────────
+const HREF_TO_SECTION: Record<string, string> = {};
+[...navigationSections, adminSection].forEach((section) => {
+  section.items.forEach((item) => {
+    HREF_TO_SECTION[item.href] = section.label;
+  });
+});
+
+/** Find which sidebar section a given path belongs to */
+function findSectionForPath(pathname: string): string | null {
+  // Exact match
+  if (HREF_TO_SECTION[pathname]) return HREF_TO_SECTION[pathname];
+  // Try progressively shorter prefixes (for sub-pages like /goals/abc-123)
+  const segments = pathname.split('/').filter(Boolean);
+  for (let i = segments.length - 1; i >= 1; i--) {
+    const prefix = '/' + segments.slice(0, i).join('/');
+    if (HREF_TO_SECTION[prefix]) return HREF_TO_SECTION[prefix];
+  }
+  return null;
+}
 
 // Check if a segment looks like a UUID or ID
 const isIdSegment = (segment: string) => /^[0-9a-f-]{8,}$/i.test(segment);
@@ -83,7 +126,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
           const isLast = index === crumbs.length - 1;
 
           return (
-            <li key={crumb.href ?? index} className="flex items-center gap-1.5">
+            <li key={crumb.href ?? `crumb-${index}`} className="flex items-center gap-1.5">
               {index > 0 && (
                 <ChevronRightIcon className="h-3.5 w-3.5 text-secondary-400 dark:text-secondary-600 shrink-0" />
               )}
@@ -125,6 +168,17 @@ function generateCrumbs(pathname: string): Array<{ label: string; href?: string 
     { label: 'Home', href: '/dashboard' },
   ];
 
+  // Determine which sidebar section this path belongs to
+  const sectionLabel = findSectionForPath(pathname);
+  const isAdminPath = segments[0] === 'admin';
+
+  // Insert the section label as a non-clickable crumb right after Home.
+  // For /admin/* paths, the 'admin' segment already generates "Administration" below,
+  // so we skip the auto-insert to avoid duplication.
+  if (sectionLabel && !isAdminPath) {
+    crumbs.push({ label: sectionLabel });
+  }
+
   let currentPath = '';
   for (const segment of segments) {
     currentPath += `/${segment}`;
@@ -133,7 +187,7 @@ function generateCrumbs(pathname: string): Array<{ label: string; href?: string 
       crumbs.push({ label: 'Details', href: currentPath });
     } else {
       const label = ROUTE_LABELS[segment] ?? segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-      // Section headers are non-clickable labels (e.g. "Administration")
+      // Section-only segments (e.g. "admin") are non-clickable labels
       if (SECTION_ONLY_SEGMENTS.has(segment)) {
         crumbs.push({ label });
       } else {
