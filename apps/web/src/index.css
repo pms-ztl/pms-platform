@@ -2892,12 +2892,15 @@ html.transitioning *::after {
   animation: auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.25s;
 }
 
-/* Line 2: "Tomorrow!" — solid white, same as "Own", clean */
+/* Line 2: "Tomorrow!" — clean sans-serif contrast against Playfair serif */
 .auth-word-tomorrow {
   display: inline;
-  font-weight: 900;
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  font-style: italic;
   color: #fff;
   -webkit-text-fill-color: #fff;
+  letter-spacing: -0.02em;
   opacity: 0;
   animation: auth-word-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.38s;
 }
