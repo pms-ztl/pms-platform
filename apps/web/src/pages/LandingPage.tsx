@@ -565,106 +565,42 @@ function BentoGrid() {
           </h2>
         </div>
 
-        {/* Bento — explicit 3-row layout, no auto-rows gaps */}
+        {/* Bento — clean 4-col layout, uniform cards */}
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
-
-          {/* Row 1-2, Col 1-2: 70 AI Agents (large) */}
-          {(() => {
-            const tilt = useTilt(6);
-            return (
-              <div ref={tilt.ref} onMouseMove={tilt.onMouseMove} onMouseLeave={tilt.onMouseLeave}
-                className={`col-span-2 landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 relative overflow-hidden
-                  transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                style={{ ...glassStyle, transitionDelay: '0ms' }}>
-                <div className="absolute inset-0 animate-neural-pulse" style={{ background: 'radial-gradient(circle at 30% 40%, rgba(148,210,255,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
-                <div className="relative z-10 flex flex-col sm:flex-row sm:items-center gap-5">
-                  {/* Agent nodes grid — compact */}
-                  <div className="flex flex-wrap gap-1.5 max-w-[220px] flex-shrink-0">
-                    {Array.from({ length: 20 }).map((_, j) => (
-                      <div key={j} className="w-6 h-6 rounded animate-float flex items-center justify-center"
-                        style={{
-                          background: `rgba(148,210,255,${0.04 + (j % 5) * 0.015})`,
-                          border: '1px solid rgba(148,210,255,0.08)',
-                          animationDelay: `${j * 0.25}s`, animationDuration: `${3 + (j % 4)}s`,
-                        }}>
-                        <CpuChipIcon className="w-3 h-3 text-cyan-300/40" />
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <div className="font-display font-bold text-white text-4xl sm:text-5xl mb-1">70 AI Agents</div>
-                    <div className="text-white/40 text-base">Workforce Intelligence</div>
-                    <p className="text-white/30 text-sm mt-2 leading-relaxed">Bio-performance · Culture-empathy · Governance · Hyper-learning · Talent marketplace</p>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* Col 3-4: Real-time Analytics (medium) */}
-          {(() => {
-            const tilt = useTilt(6);
-            return (
-              <div ref={tilt.ref} onMouseMove={tilt.onMouseMove} onMouseLeave={tilt.onMouseLeave}
-                className={`col-span-1 landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden
-                  transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                style={{ ...glassStyle, transitionDelay: '120ms' }}>
-                <div className="flex items-center gap-2 mb-3">
-                  {[0,1,2].map(j => (
-                    <div key={j} className="h-1.5 rounded-full animate-shimmer"
-                      style={{ width: `${30 + j * 14}px`, background: `linear-gradient(90deg, rgba(148,210,255,${0.08 + j * 0.03}), rgba(148,210,255,${0.15 + j * 0.03}), rgba(148,210,255,${0.08 + j * 0.03}))`, backgroundSize: '200% 100%', animationDelay: `${j * 0.5}s` }} />
-                  ))}
-                </div>
-                <div>
-                  <div className="font-display font-bold text-white text-2xl sm:text-3xl mb-0.5">Real-time Analytics</div>
-                  <div className="text-white/40 text-sm">Live Dashboards</div>
-                  <p className="text-white/30 text-xs mt-1.5 leading-relaxed">Anomaly detection, sentiment analysis, predictive modeling.</p>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* Col 3-4: Enterprise Security (medium) */}
-          {(() => {
-            const tilt = useTilt(6);
-            return (
-              <div ref={tilt.ref} onMouseMove={tilt.onMouseMove} onMouseLeave={tilt.onMouseLeave}
-                className={`col-span-1 landing-glass-card landing-tilt-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden
-                  transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                style={{ ...glassStyle, transitionDelay: '240ms' }}>
-                <div className="flex items-center gap-2 mb-3">
-                  <ShieldCheckIcon className="w-5 h-5 text-cyan-300/30 animate-pulse" />
-                  <div className="h-1.5 w-16 rounded-full animate-shimmer" style={{ background: 'linear-gradient(90deg, rgba(148,210,255,0.08), rgba(148,210,255,0.18), rgba(148,210,255,0.08))', backgroundSize: '200% 100%' }} />
-                </div>
-                <div>
-                  <div className="font-display font-bold text-white text-2xl sm:text-3xl mb-0.5">Enterprise Security</div>
-                  <div className="text-white/40 text-sm">Zero Trust Architecture</div>
-                  <p className="text-white/30 text-xs mt-1.5 leading-relaxed">RBAC + ABAC, row-level isolation, encryption.</p>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* Bottom row: 4 small metric cards filling full width */}
           {[
-            { title: '99.9%', subtitle: 'Uptime SLA' },
-            { title: 'SOC 2', subtitle: 'Compliance Ready' },
-            { title: '360°', subtitle: 'Review Coverage' },
-            { title: '129+', subtitle: 'Data Models' },
+            { title: '70', subtitle: 'AI Agents', desc: 'Workforce intelligence across 6 domains', icon: CpuChipIcon, accent: true },
+            { title: 'Real-time', subtitle: 'Analytics', desc: 'Anomaly detection & sentiment analysis', icon: SignalIcon, accent: false },
+            { title: 'Enterprise', subtitle: 'Security', desc: 'RBAC + ABAC, row-level isolation', icon: ShieldCheckIcon, accent: false },
+            { title: 'Simulator', subtitle: 'What-If', desc: 'Scenario planning & org modeling', icon: BeakerIcon, accent: false },
+            { title: '99.9%', subtitle: 'Uptime SLA', desc: '', icon: null, accent: false },
+            { title: 'SOC 2', subtitle: 'Compliance Ready', desc: '', icon: null, accent: false },
+            { title: '360°', subtitle: 'Review Coverage', desc: '', icon: null, accent: false },
+            { title: '129+', subtitle: 'Data Models', desc: '', icon: null, accent: false },
           ].map((item, i) => {
             const tilt = useTilt(6);
             return (
               <div key={item.title} ref={tilt.ref} onMouseMove={tilt.onMouseMove} onMouseLeave={tilt.onMouseLeave}
-                className={`col-span-1 landing-glass-card landing-tilt-card rounded-2xl p-5 sm:p-6 flex flex-col justify-center items-center text-center relative overflow-hidden
+                className={`col-span-1 landing-glass-card landing-tilt-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between relative overflow-hidden
                   transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                style={{ ...glassStyle, transitionDelay: `${360 + i * 80}ms` }}>
-                <div className="h-0.5 w-8 rounded-full mb-3 animate-pulse" style={{ background: 'rgba(148,210,255,0.2)' }} />
-                <div className="font-display font-bold text-white text-3xl sm:text-4xl mb-0.5">{item.title}</div>
-                <div className="text-white/40 text-sm">{item.subtitle}</div>
+                style={{ ...glassStyle, transitionDelay: `${i * 80}ms` }}>
+                {item.accent && (
+                  <div className="absolute inset-0 animate-neural-pulse" style={{ background: 'radial-gradient(circle at 30% 40%, rgba(148,210,255,0.05) 0%, transparent 60%)', pointerEvents: 'none' }} />
+                )}
+                <div className="relative z-10">
+                  {item.icon && (
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-4 animate-icon-glow-pulse"
+                      style={{ background: 'rgba(148,210,255,0.08)', border: '1px solid rgba(148,210,255,0.1)' }}>
+                      <item.icon className="w-5 h-5 text-cyan-300/60" />
+                    </div>
+                  )}
+                  {!item.icon && <div className="h-0.5 w-8 rounded-full mb-4 animate-pulse" style={{ background: 'rgba(148,210,255,0.2)' }} />}
+                  <div className="font-display font-bold text-white text-3xl sm:text-4xl mb-0.5">{item.title}</div>
+                  <div className="text-white/40 text-sm">{item.subtitle}</div>
+                  {item.desc && <p className="text-white/25 text-xs mt-2 leading-relaxed">{item.desc}</p>}
+                </div>
               </div>
             );
           })}
-
         </div>
       </div>
     </section>
