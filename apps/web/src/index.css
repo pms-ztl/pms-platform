@@ -2983,17 +2983,17 @@ html.transitioning *::after {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Auth Page — Rotate landscape video for portrait viewports
+   Auth Page — Rotate landscape video for portrait viewports (phones only)
    ═══════════════════════════════════════════════════════════════════════════ */
-@media (orientation: portrait) {
+@media (orientation: portrait) and (max-width: 1024px) {
   .auth-page video {
-    position: absolute;
-    inset: auto;
-    top: 50%;
-    left: 50%;
-    width: 100vh;
-    height: 100vw;
-    transform: translate(-50%, -50%) rotate(90deg);
-    object-fit: cover;
+    top: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 50% !important;
+    width: 100vh !important;
+    height: 100vw !important;
+    transform: translate(-50%, -50%) rotate(90deg) !important;
+    object-fit: cover !important;
   }
 }

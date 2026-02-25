@@ -704,9 +704,9 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           }} />
 
           <ButterflyCard className="w-full max-w-[640px] relative z-10 animate-scale-up-fade" style={{ animationDelay: '0.3s' }}>
-            <div className="relative rounded-[28px] overflow-hidden">
+            <div className="relative rounded-2xl sm:rounded-[28px] overflow-hidden">
               {/* Animated gradient border */}
-              <div className="absolute -inset-[1px] rounded-[28px] pointer-events-none overflow-hidden">
+              <div className="absolute -inset-[1px] rounded-2xl sm:rounded-[28px] pointer-events-none overflow-hidden">
                 <div className="absolute inset-0" style={{
                   background: 'linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.06) 30%, rgba(255,255,255,0.04) 70%, rgba(255,255,255,0.15) 100%)',
                 }} />
@@ -719,7 +719,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
 
               {/* Glass card */}
               <div
-                className="relative rounded-[28px] border border-white/[0.1]"
+                className="relative rounded-2xl sm:rounded-[28px] border border-white/[0.1]"
                 style={{
                   background: 'rgba(20, 20, 20, 0.55)',
                   backdropFilter: 'blur(60px) saturate(1.4) brightness(0.95)',
@@ -730,11 +730,11 @@ export function AuthLayout({ children }: AuthLayoutProps) {
                 {/* Top highlight */}
                 <div className="absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/[0.35] to-transparent" />
                 {/* Depth gradient */}
-                <div className="absolute inset-0 rounded-[28px] pointer-events-none" style={{
+                <div className="absolute inset-0 rounded-2xl sm:rounded-[28px] pointer-events-none" style={{
                   background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 40%)',
                 }} />
 
-                <div className="relative px-12 py-12 sm:px-16 sm:py-14">
+                <div className="relative px-5 py-6 sm:px-12 sm:py-12 lg:px-16 lg:py-14">
                   {/* Mobile logo */}
                   <div className="lg:hidden mb-6">
                     <div className="flex items-center gap-3">

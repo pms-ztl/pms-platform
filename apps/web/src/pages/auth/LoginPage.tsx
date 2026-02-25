@@ -67,7 +67,7 @@ function useButterflyHover(intensity = 18) {
 }
 
 // ── #21: Glass input with focus glow ring animation ─────────────────────────
-const glassInput = 'w-full rounded-2xl border border-white/[0.1] bg-white/[0.06] text-xl text-white placeholder-white/30 focus:outline-none focus:border-white/[0.25] focus:bg-white/[0.1] focus:shadow-[0_0_0_3px_rgba(255,255,255,0.1),0_0_20px_rgba(255,255,255,0.05)] transition-all duration-300';
+const glassInput = 'w-full rounded-xl sm:rounded-2xl border border-white/[0.1] bg-white/[0.06] text-sm sm:text-xl text-white placeholder-white/30 focus:outline-none focus:border-white/[0.25] focus:bg-white/[0.1] focus:shadow-[0_0_0_3px_rgba(255,255,255,0.1),0_0_20px_rgba(255,255,255,0.05)] transition-all duration-300';
 
 function GlassField({
   icon: Icon,
@@ -83,13 +83,13 @@ function GlassField({
   return (
     <div className="group">
       {/* #25: Label slides down on focus-within */}
-      <label className="block text-lg font-medium text-white/55 mb-3 tracking-wider group-focus-within:text-white/80 group-focus-within:tracking-[0.2em] transition-all duration-300">
+      <label className="block text-sm sm:text-lg font-medium text-white/55 mb-1.5 sm:mb-3 tracking-wider group-focus-within:text-white/80 group-focus-within:tracking-[0.2em] transition-all duration-300">
         {label}
       </label>
       <div className="relative">
         {/* #26: Icon glow pulse on focus */}
-        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none z-10">
-          <Icon className="h-6 w-6 text-white/35 group-focus-within:text-white/70 group-focus-within:drop-shadow-[0_0_6px_rgba(255,255,255,0.25)] transition-all duration-300" />
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none z-10">
+          <Icon className="h-4 w-4 sm:h-6 sm:w-6 text-white/35 group-focus-within:text-white/70 group-focus-within:drop-shadow-[0_0_6px_rgba(255,255,255,0.25)] transition-all duration-300" />
         </div>
         {children}
       </div>
@@ -138,8 +138,8 @@ function SuperAdminButton({ onClick }: { onClick: () => void }) {
         <ShieldCheckIcon className="h-6 w-6 sm:h-7 sm:w-7 text-white/60 group-hover:text-white/90 transition-colors duration-300" />
       </div>
       <div className="relative flex-1 min-w-0">
-        <h3 className="font-display text-xl sm:text-2xl font-semibold text-white/90">Command Center</h3>
-        <p className="text-sm sm:text-lg text-white/50 group-hover:text-white/70 transition-colors duration-300">Full platform control & tenant orchestration</p>
+        <h3 className="font-display text-base sm:text-2xl font-semibold text-white/90">Command Center</h3>
+        <p className="text-xs sm:text-lg text-white/50 group-hover:text-white/70 transition-colors duration-300">Full platform control & tenant orchestration</p>
       </div>
       <ArrowRightIcon className="relative h-5 w-5 text-white/30 group-hover:text-white/70 group-hover:translate-x-1 transition-all duration-300" />
     </button>
@@ -165,8 +165,8 @@ function CompanyButton({ onClick }: { onClick: () => void }) {
         <BuildingOffice2Icon className="h-6 w-6 sm:h-7 sm:w-7 text-white/60 group-hover:text-white/90 transition-colors duration-300" />
       </div>
       <div className="relative flex-1 min-w-0">
-        <h3 className="font-display text-xl sm:text-2xl font-semibold text-white/90">Your Workspace</h3>
-        <p className="text-sm sm:text-lg text-white/50 group-hover:text-white/70 transition-colors duration-300">Lead, collaborate, or grow — your call</p>
+        <h3 className="font-display text-base sm:text-2xl font-semibold text-white/90">Your Workspace</h3>
+        <p className="text-xs sm:text-lg text-white/50 group-hover:text-white/70 transition-colors duration-300">Lead, collaborate, or grow — your call</p>
       </div>
       <ArrowRightIcon className="relative h-5 w-5 text-white/30 group-hover:text-white/70 group-hover:translate-x-1 transition-all duration-300" />
     </button>
@@ -283,7 +283,7 @@ export function LoginPage() {
             <FingerPrintIcon className="w-6 h-6 text-white/80" />
           </div>
           <div>
-            <h2 className="font-display text-2xl font-bold text-white">Prove It's You</h2>
+            <h2 className="font-display text-lg sm:text-2xl font-bold text-white">Prove It's You</h2>
             <p className="text-sm text-white/55">Enter your 6-digit authenticator code to continue</p>
           </div>
         </div>
@@ -297,7 +297,7 @@ export function LoginPage() {
                 required: 'Code is required',
                 pattern: { value: /^\d{6}$/, message: 'Code must be 6 digits' },
               })}
-              className={`${glassInput} px-5 py-4 text-center text-2xl tracking-[0.5em] font-mono`}
+              className={`${glassInput} px-4 sm:px-5 py-3 sm:py-4 text-center !text-lg sm:!text-2xl tracking-[0.5em] font-mono`}
               placeholder="000000"
               maxLength={6}
               autoFocus
@@ -310,7 +310,7 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-2xl bg-white/[0.12] border border-white/[0.15] px-5 py-4 text-base font-semibold text-white shadow-[0_8px_24px_-6px_rgba(255,255,255,0.1)] hover:bg-white/[0.18] hover:shadow-[0_12px_32px_-6px_rgba(255,255,255,0.15)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="w-full rounded-xl sm:rounded-2xl bg-white/[0.12] border border-white/[0.15] px-5 py-3 sm:py-4 text-sm sm:text-base font-semibold text-white shadow-[0_8px_24px_-6px_rgba(255,255,255,0.1)] hover:bg-white/[0.18] hover:shadow-[0_12px_32px_-6px_rgba(255,255,255,0.15)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {isLoading ? <PulseSpinner /> : 'Verify Code'}
           </button>
@@ -318,7 +318,7 @@ export function LoginPage() {
           <button
             type="button"
             onClick={() => { setMfaRequired(false); setTempToken(null); }}
-            className="w-full flex items-center justify-center gap-2 rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-3.5 text-base font-medium text-white/55 hover:bg-white/[0.08] hover:text-white/75 transition-all duration-200"
+            className="w-full flex items-center justify-center gap-2 rounded-xl sm:rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-2.5 sm:py-3.5 text-sm sm:text-base font-medium text-white/55 hover:bg-white/[0.08] hover:text-white/75 transition-all duration-200"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             Back to Login
@@ -332,9 +332,9 @@ export function LoginPage() {
   if (loginMode === 'select') {
     return (
       <div>
-        <div className="mb-10 animate-slide-up-fade" style={{ animationDelay: '0.15s' }}>
-          <h2 className="font-display text-3xl sm:text-5xl font-bold text-white mb-3">Step Into Your Arena</h2>
-          <p className="text-white/55 text-lg sm:text-2xl">Choose how you want to make an impact today</p>
+        <div className="mb-5 sm:mb-10 animate-slide-up-fade" style={{ animationDelay: '0.15s' }}>
+          <h2 className="font-display text-xl sm:text-3xl lg:text-5xl font-bold text-white mb-2 sm:mb-3">Step Into Your Arena</h2>
+          <p className="text-white/55 text-sm sm:text-lg lg:text-2xl">Choose how you want to make an impact today</p>
         </div>
 
         {/* #23: Elastic bounce entrance for login buttons */}
@@ -362,25 +362,25 @@ export function LoginPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center gap-4 mb-7 animate-slide-right-fade" style={{ animationDelay: '0.1s' }}>
+      <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-7 animate-slide-right-fade" style={{ animationDelay: '0.1s' }}>
         <button
           onClick={() => { setLoginMode('select'); loginForm.reset(); }}
-          className="flex items-center justify-center h-10 w-10 rounded-xl bg-white/[0.05] text-white/35 hover:bg-white/[0.1] hover:text-white/60 active:scale-95 transition-all duration-200 border border-white/[0.06]"
+          className="flex items-center justify-center h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-white/[0.05] text-white/35 hover:bg-white/[0.1] hover:text-white/60 active:scale-95 transition-all duration-200 border border-white/[0.06]"
         >
           <ArrowLeftIcon className="h-4 w-4" />
         </button>
         <div>
-          <h2 className="font-display text-4xl font-bold text-white">
+          <h2 className="font-display text-xl sm:text-4xl font-bold text-white">
             {isSuperAdmin ? 'Command Center' : 'Enter Your Workspace'}
           </h2>
-          <p className="text-lg text-white/50">
+          <p className="text-sm sm:text-lg text-white/50">
             {isSuperAdmin ? 'Full platform orchestration awaits' : 'Your team is counting on you. Let\u2019s go.'}
           </p>
         </div>
       </div>
 
       {/* Badge */}
-      <div className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium mb-7 border animate-scale-up-fade ${
+      <div className={`inline-flex items-center gap-2 rounded-full px-3 sm:px-4 py-1 sm:py-1.5 text-2xs sm:text-xs font-medium mb-4 sm:mb-7 border animate-scale-up-fade ${
         isSuperAdmin
           ? 'bg-white/[0.06] text-white/60 border-white/[0.1]'
           : 'bg-white/[0.06] text-white/60 border-white/[0.1]'
@@ -397,7 +397,7 @@ export function LoginPage() {
               required: 'Email is required',
               pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: 'Invalid email' },
             })}
-            className={`${glassInput} pl-14 pr-6 py-5`}
+            className={`${glassInput} pl-10 sm:pl-14 pr-4 sm:pr-6 py-3 sm:py-5`}
             placeholder={isSuperAdmin ? 'admin@pms-platform.com' : 'you@company.com'}
             autoComplete="email"
             autoFocus
@@ -409,7 +409,7 @@ export function LoginPage() {
             <input
               type={showPassword ? 'text' : 'password'}
               {...loginForm.register('password', { required: 'Password is required' })}
-              className={`${glassInput} pl-14 pr-14 py-5`}
+              className={`${glassInput} pl-10 sm:pl-14 pr-10 sm:pr-14 py-3 sm:py-5`}
               placeholder="Enter your password"
               autoComplete="current-password"
             />
@@ -428,7 +428,7 @@ export function LoginPage() {
             <input
               type="text"
               {...loginForm.register('tenantSlug')}
-              className={`${glassInput} pl-14 pr-6 py-5`}
+              className={`${glassInput} pl-10 sm:pl-14 pr-4 sm:pr-6 py-3 sm:py-5`}
               placeholder="e.g. acme-corp"
             />
             <p className="mt-1.5 text-xs text-white/35">Your org's unique ID — check with your admin if unsure</p>
@@ -444,10 +444,10 @@ export function LoginPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
-            <span className="ml-2.5 text-base text-white/50 group-hover/check:text-white/70 transition-colors">Remember me</span>
+            <span className="ml-2.5 text-xs sm:text-base text-white/50 group-hover/check:text-white/70 transition-colors">Remember me</span>
           </label>
           {!isSuperAdmin && (
-            <Link to="/forgot-password" className="text-base font-medium text-white/50 hover:text-white/70 transition-colors">
+            <Link to="/forgot-password" className="text-xs sm:text-base font-medium text-white/50 hover:text-white/70 transition-colors">
               Forgot password?
             </Link>
           )}
@@ -457,7 +457,7 @@ export function LoginPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full group relative overflow-hidden rounded-2xl px-8 py-6 text-xl font-bold text-white transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100`}
+          className={`w-full group relative overflow-hidden rounded-xl sm:rounded-2xl px-6 py-3.5 sm:px-8 sm:py-6 text-sm sm:text-xl font-bold text-white transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100`}
           style={{
             background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(200,210,230,0.18) 25%, rgba(255,255,255,0.14) 50%, rgba(200,210,230,0.18) 75%, rgba(255,255,255,0.12) 100%)',
             backgroundSize: '200% 200%',
@@ -502,7 +502,7 @@ export function LoginPage() {
           {/* #29: SSO button with shimmer sweep on hover */}
           <button
             type="button"
-            className="w-full group/sso relative flex items-center justify-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-3.5 text-sm font-medium text-white/55 hover:bg-white/[0.08] hover:border-white/[0.15] hover:text-white/70 transition-all duration-300 overflow-hidden"
+            className="w-full group/sso relative flex items-center justify-center gap-3 rounded-xl sm:rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-2.5 sm:py-3.5 text-xs sm:text-sm font-medium text-white/55 hover:bg-white/[0.08] hover:border-white/[0.15] hover:text-white/70 transition-all duration-300 overflow-hidden"
             onClick={() => toast('SSO is available for Enterprise plan tenants.')}
           >
             {/* Shine sweep on hover */}
