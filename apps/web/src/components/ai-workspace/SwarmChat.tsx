@@ -614,12 +614,23 @@ export function SwarmChat() {
       queryClient.invalidateQueries({ queryKey: ['ai'] });
     },
     onError: (error: Error) => {
+      const errMsg = error.message ?? '';
+      const friendlyMessage = errMsg.includes('rate limit') || errMsg.includes('429')
+        ? 'The AI service is currently busy due to high demand. Please wait a moment and try again.'
+        : errMsg.includes('unavailable') || errMsg.includes('503') || errMsg.includes('busy')
+        ? 'The AI service is temporarily unavailable. This usually resolves in a few seconds — please try again shortly.'
+        : errMsg.includes('timeout') || errMsg.includes('ETIMEDOUT')
+        ? 'The request took too long to process. Please try a shorter or simpler message.'
+        : errMsg.includes('not configured')
+        ? 'The AI service is not configured for your organization. Please contact your administrator.'
+        : 'I encountered an issue processing your request. Please try again in a moment.';
+
       setMessages((prev) => [
         ...prev,
         {
           id: `error-${Date.now()}`,
           role: 'assistant',
-          content: `I encountered an error: ${error.message}. Please try again.`,
+          content: friendlyMessage,
           timestamp: new Date(),
         },
       ]);
@@ -912,7 +923,19 @@ export function SwarmChat() {
                     <button
                       key={idx}
                       onClick={() => {
-                        if (action.action) {
+                        if (action.action === 'export_pdf') {
+                          // Client-side PDF via print: open report in new window for print-to-PDF
+                          const printWindow = window.open('', '_blank');
+                          if (printWindow) {
+                            printWindow.document.write(`<!DOCTYPE html><html><head><title>Report</title><style>body{font-family:system-ui,-apple-system,sans-serif;max-width:800px;margin:2rem auto;padding:0 1rem;line-height:1.6;color:#1a1a1a}h1,h2,h3{margin-top:1.5em}table{border-collapse:collapse;width:100%;margin:1em 0}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f5f5f5}@media print{body{margin:0;padding:1cm}}</style></head><body>${msg.content.replace(/\n/g, '<br/>').replace(/#{3}\s(.+)/g, '<h3>$1</h3>').replace(/#{2}\s(.+)/g, '<h2>$1</h2>').replace(/#{1}\s(.+)/g, '<h1>$1</h1>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</body></html>`);
+                            printWindow.document.close();
+                            printWindow.print();
+                          }
+                        } else if (action.action === 'copy_markdown') {
+                          navigator.clipboard.writeText(msg.content).then(() => {
+                            // Brief visual feedback could be added here
+                          });
+                        } else if (action.action) {
                           handlePromptClick(action.action);
                         }
                       }}

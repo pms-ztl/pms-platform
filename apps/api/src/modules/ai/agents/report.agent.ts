@@ -10,6 +10,7 @@
  */
 
 import { AgenticBaseAgent, type AgentContext } from '../agentic-base-agent';
+import type { LLMResponse } from '../llm-client';
 import * as tools from '../agent-tools';
 import { isAdmin, isManager, isEmployeeOnly } from '../../../utils/roles';
 import { DAYS } from '../../../utils/constants';
@@ -96,5 +97,23 @@ export class ReportAgent extends AgenticBaseAgent {
     }
 
     return data;
+  }
+
+  /**
+   * Override parseResponse to add export suggested actions to every report.
+   * Users see "Download as PDF" and "Copy as Markdown" buttons alongside the report.
+   */
+  protected override parseResponse(llmResponse: LLMResponse): {
+    message: string;
+    data?: Record<string, unknown>;
+    suggestedActions?: Array<{ label: string; url?: string; action?: string }>;
+  } {
+    return {
+      message: llmResponse.content,
+      suggestedActions: [
+        { label: '📄 Download as PDF', action: 'export_pdf' },
+        { label: '📋 Copy as Markdown', action: 'copy_markdown' },
+      ],
+    };
   }
 }

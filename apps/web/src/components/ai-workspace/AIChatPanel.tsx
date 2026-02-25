@@ -128,9 +128,18 @@ export function AIChatPanel({
       queryClient.invalidateQueries({ queryKey: ['ai'] });
     },
     onError: (error: Error) => {
+      const errMsg = error.message ?? '';
+      const friendlyMessage = errMsg.includes('rate limit') || errMsg.includes('429')
+        ? 'The AI service is currently busy. Please wait a moment and try again.'
+        : errMsg.includes('unavailable') || errMsg.includes('503') || errMsg.includes('busy')
+        ? 'The AI service is temporarily unavailable. Please try again shortly.'
+        : errMsg.includes('not configured')
+        ? 'AI is not configured for your organization. Please contact your administrator.'
+        : 'I encountered an issue processing your request. Please try again in a moment.';
+
       setMessages((prev) => [
         ...prev,
-        { id: `error-${Date.now()}`, role: 'assistant', content: `I encountered an error: ${error.message}. Please try again.`, timestamp: new Date() },
+        { id: `error-${Date.now()}`, role: 'assistant', content: friendlyMessage, timestamp: new Date() },
       ]);
     },
   });

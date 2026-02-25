@@ -11,6 +11,7 @@
 import { prisma } from '@pms/database';
 
 import { logger, auditLogger } from '../../utils/logger';
+import { AppError } from '../../utils/errors';
 import { isSuperAdmin, isAdmin, isManager, isEmployeeOnly } from '../../utils/roles';
 import { llmClient, type LLMMessage, type LLMResponse, type LLMProvider } from './llm-client';
 import { agentMemory } from './agent-memory';
@@ -209,7 +210,26 @@ export abstract class BaseAgent {
         userId,
         error: (err as Error).message,
       });
-      throw err;
+
+      // Wrap in AppError so the production error handler returns a meaningful message
+      if (err instanceof AppError) throw err;
+
+      const errMsg = (err as Error).message ?? '';
+      if (errMsg.includes('rate limit')) {
+        throw new AppError(
+          'The AI service is currently busy. Please wait a moment and try again.',
+          429,
+          'AI_RATE_LIMITED',
+        );
+      }
+
+      throw new AppError(
+        'The AI service is temporarily unavailable. Please try again in a moment.',
+        503,
+        'AI_SERVICE_ERROR',
+        true,
+        { originalError: errMsg },
+      );
     }
   }
 

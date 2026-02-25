@@ -136,8 +136,25 @@ export abstract class AgenticBaseAgent extends BaseAgent {
 
   /**
    * Classify whether the user message is a chat question or an agentic task.
+   * Uses a fast keyword heuristic first to avoid an LLM round-trip for obvious cases.
    */
   private async classifyIntent(userMessage: string): Promise<UserIntent> {
+    // ── Fast heuristic: skip LLM for obvious chat messages ──
+    const lower = userMessage.toLowerCase().trim();
+
+    // Short messages and questions are almost always chat
+    if (lower.length < 30 || lower.endsWith('?')) return 'chat';
+
+    // Explicit agentic action keywords at the start of the message
+    const agenticStarters = /^(create|generate|set up|setup|build|draft|schedule|send|update|prepare|analyze and|flag|fix|notify|run)\b/;
+    if (agenticStarters.test(lower)) {
+      // Looks agentic — confirm with LLM
+    } else {
+      // No strong agentic signal — default to chat without LLM call
+      return 'chat';
+    }
+
+    // ── LLM classification for ambiguous messages ──
     try {
       const messages: LLMMessage[] = [
         { role: 'system', content: INTENT_CLASSIFY_PROMPT },

@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@pms/database';
 import { AgenticBaseAgent, MODEL_TIERS, type AgentContext } from '../agentic-base-agent';
-import type { LLMProvider } from '../llm-client';
+import type { LLMProvider, LLMResponse } from '../llm-client';
 import { logger } from '../../../utils/logger';
 
 // ── Types ──────────────────────────────────────────────────
@@ -96,11 +96,30 @@ CRITICAL RULES:
 - Use the provided organizational context (departments, roles, email patterns) to make informed suggestions
 - Never invent data — only suggest corrections based on existing patterns`;
 
+// Chat-mode system prompt — used when this agent is invoked via the chat interface
+// (as opposed to the dedicated analyzeExcelData endpoint)
+const CHAT_SYSTEM_PROMPT = `You are the Excel Data Validation specialist for a Performance Management System.
+
+When users chat with you, respond in clear, friendly natural language. You can help with:
+- Explaining your data validation capabilities (duplicate detection, format checks, etc.)
+- Answering questions about Excel upload requirements and column formats
+- Giving tips on data quality, common mistakes, and how to prepare clean data
+- Describing what auto-fixes you can perform (email domains, name casing, date formats)
+- Explaining quality scores and what they mean
+
+If a user asks about specific data, explain what you can check and suggest they use
+the Excel Upload feature to get a full AI-enhanced validation report.
+
+Always respond in natural language — do NOT respond with raw JSON.`;
+
 // ── Agent Class ────────────────────────────────────────────
 
 export class ExcelValidationAgent extends AgenticBaseAgent {
+  /** Track whether the current call is a chat request (vs dedicated analysis) */
+  private _isChatMode = true;
+
   constructor() {
-    super('excel_validation', SYSTEM_PROMPT);
+    super('excel_validation', CHAT_SYSTEM_PROMPT);
   }
 
   /** Use standard tier for better reasoning on data analysis */
@@ -108,8 +127,101 @@ export class ExcelValidationAgent extends AgenticBaseAgent {
     return {
       ...MODEL_TIERS.standard,
       maxTokens: 4096,
-      temperature: 0.1, // Low temperature for deterministic, structured output
+      temperature: this._isChatMode ? 0.3 : 0.1,
     };
+  }
+
+  /**
+   * Override parseResponse to catch accidental JSON responses in chat mode
+   * and convert them to a natural-language summary.
+   */
+  protected override parseResponse(llmResponse: LLMResponse): {
+    message: string;
+    data?: Record<string, unknown>;
+    suggestedActions?: Array<{ label: string; url?: string; action?: string }>;
+  } {
+    let content = llmResponse.content;
+
+    // If the response looks like raw JSON, convert to natural language
+    try {
+      const trimmed = content.trim();
+      if (trimmed.startsWith('{') || trimmed.startsWith('```json')) {
+        let cleaned = trimmed;
+        if (cleaned.startsWith('```json')) cleaned = cleaned.slice(7);
+        if (cleaned.startsWith('```')) cleaned = cleaned.slice(3);
+        if (cleaned.endsWith('```')) cleaned = cleaned.slice(0, -3);
+        cleaned = cleaned.trim();
+
+        const parsed = JSON.parse(cleaned);
+        content = this.formatAsNaturalLanguage(parsed);
+      }
+    } catch {
+      // Not valid JSON — use as-is (this is fine for chat)
+    }
+
+    return { message: content };
+  }
+
+  /**
+   * Convert a JSON analysis result into a friendly natural language summary.
+   */
+  private formatAsNaturalLanguage(data: Record<string, unknown>): string {
+    const lines: string[] = [];
+
+    // Quality score
+    if (typeof data.qualityScore === 'number') {
+      const score = data.qualityScore;
+      const label = score >= 90 ? 'Excellent' : score >= 70 ? 'Good' : score >= 50 ? 'Fair' : 'Needs Attention';
+      lines.push(`## Data Quality: ${score}/100 (${label})\n`);
+    }
+
+    // Auto-fixable issues
+    const fixes = data.autoFixable as any[];
+    if (Array.isArray(fixes) && fixes.length > 0) {
+      lines.push(`### 🔧 Auto-Fixable Issues (${fixes.length})`);
+      for (const fix of fixes.slice(0, 5)) {
+        lines.push(`- **Row ${fix.row}, ${fix.field}**: ${fix.issue} — suggested: "${fix.suggestedValue}" (confidence: ${Math.round((fix.confidence ?? 0) * 100)}%)`);
+      }
+      if (fixes.length > 5) lines.push(`- ...and ${fixes.length - 5} more`);
+      lines.push('');
+    }
+
+    // Review needed
+    const reviews = data.reviewNeeded as any[];
+    if (Array.isArray(reviews) && reviews.length > 0) {
+      lines.push(`### ⚠️ Needs Manual Review (${reviews.length})`);
+      for (const item of reviews.slice(0, 5)) {
+        lines.push(`- **Row ${item.row}, ${item.field}**: ${item.issue}`);
+      }
+      if (reviews.length > 5) lines.push(`- ...and ${reviews.length - 5} more`);
+      lines.push('');
+    }
+
+    // Duplicates
+    const dupes = data.duplicateClusters as any[];
+    if (Array.isArray(dupes) && dupes.length > 0) {
+      lines.push(`### 🔄 Potential Duplicates (${dupes.length} clusters)`);
+      for (const cluster of dupes.slice(0, 3)) {
+        lines.push(`- Rows ${(cluster.rows ?? []).join(', ')}: ${cluster.reason}`);
+      }
+      lines.push('');
+    }
+
+    // Overall notes
+    const analysis = data.analysis as any;
+    if (analysis?.overallNotes) {
+      lines.push(`### 📝 Summary\n${analysis.overallNotes}`);
+    }
+    if (Array.isArray(analysis?.riskFlags) && analysis.riskFlags.length > 0) {
+      lines.push(`\n### 🚩 Risk Flags`);
+      for (const flag of analysis.riskFlags) {
+        lines.push(`- ${flag}`);
+      }
+    }
+
+    return lines.length > 0
+      ? lines.join('\n')
+      : 'Analysis complete. Your data looks good — no significant issues found.';
   }
 
   protected override async gatherAgentData(
@@ -183,6 +295,7 @@ export class ExcelValidationAgent extends AgenticBaseAgent {
   /**
    * Analyze Excel data for issues.
    * Called by the upload service during the Analyze phase.
+   * Uses the JSON system prompt (not the chat prompt).
    */
   async analyzeExcelData(
     tenantId: string,
@@ -259,12 +372,23 @@ Important:
 - If no issues found, return empty arrays with a high quality score`;
 
     try {
+      // Switch to JSON analysis mode (uses the original JSON system prompt)
+      this._isChatMode = false;
+      this.systemPrompt = SYSTEM_PROMPT;
+
       const response = await this.process(tenantId, userId, prompt);
+
+      // Restore chat mode for future chat calls
+      this._isChatMode = true;
+      this.systemPrompt = CHAT_SYSTEM_PROMPT;
 
       // Parse the LLM response as JSON
       const parsed = this.parseAIResponse(response.message);
       return parsed;
     } catch (err) {
+      // Restore chat mode even on failure
+      this._isChatMode = true;
+      this.systemPrompt = CHAT_SYSTEM_PROMPT;
       logger.error('ExcelValidationAgent.analyzeExcelData failed', {
         tenantId,
         error: (err as Error).message,

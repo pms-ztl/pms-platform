@@ -23,6 +23,7 @@ import crypto from 'crypto';
 
 import { config } from '../../config';
 import { logger } from '../../utils/logger';
+import { AppError } from '../../utils/errors';
 import { cacheGet, cacheSet } from '../../utils/redis';
 
 // ── Types ──────────────────────────────────────────────────
@@ -272,8 +273,10 @@ class LLMClient {
     options: LLMOptions = {},
   ): Promise<LLMResponse> {
     if (!this.isAvailable) {
-      throw new Error(
-        'No LLM provider configured. Set ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY, or GROQ_API_KEY.',
+      throw new AppError(
+        'AI service is not configured. Please contact your administrator.',
+        503,
+        'AI_NOT_CONFIGURED',
       );
     }
 
@@ -309,7 +312,13 @@ class LLMClient {
 
     // All providers failed
     logger.error('All LLM providers failed', { errors });
-    throw new Error(`LLM call failed — all providers exhausted: ${errors[0]?.error}`);
+    throw new AppError(
+      'AI service is temporarily busy. Please try again shortly.',
+      503,
+      'AI_PROVIDERS_EXHAUSTED',
+      true,
+      { providers: errors.map(e => e.provider), lastError: errors[0]?.error },
+    );
   }
 
   /**
@@ -337,7 +346,11 @@ class LLMClient {
     options: LLMOptions = {},
   ): Promise<LLMToolResponse> {
     if (!this.isAvailable) {
-      throw new Error('No LLM provider configured.');
+      throw new AppError(
+        'AI service is not configured. Please contact your administrator.',
+        503,
+        'AI_NOT_CONFIGURED',
+      );
     }
 
     if (options.tenantId) {
@@ -369,7 +382,13 @@ class LLMClient {
     }
 
     logger.error('All LLM providers failed for tool calling', { errors });
-    throw new Error(`LLM tool-call failed — all providers exhausted: ${errors[0]?.error}`);
+    throw new AppError(
+      'AI service is temporarily busy. Please try again shortly.',
+      503,
+      'AI_PROVIDERS_EXHAUSTED',
+      true,
+      { providers: errors.map(e => e.provider), lastError: errors[0]?.error },
+    );
   }
 
   // ── Tool-calling provider implementations ─────────────
