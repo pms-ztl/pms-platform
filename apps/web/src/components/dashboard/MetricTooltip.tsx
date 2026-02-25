@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 // ── Glossary of all PMS metric abbreviations ─────────────────────────────
@@ -94,6 +95,10 @@ interface MetricTooltipProps {
   className?: string;
 }
 
+/**
+ * MetricTooltip — renders hover/detail tooltips via React portal so they
+ * are never clipped by parent overflow:hidden containers (e.g. the hero section).
+ */
 export default function MetricTooltip({ code, children, className }: MetricTooltipProps) {
   const entry = METRIC_GLOSSARY[code];
   const [hovered, setHovered] = useState(false);
@@ -101,35 +106,48 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
 
-  // Viewport-aware positioning state
-  const [popoverPos, setPopoverPos] = useState<{ horizontal: 'left' | 'right'; vertical: 'above' | 'below' }>({ horizontal: 'left', vertical: 'above' });
+  // Fixed-position coordinates for portal-rendered elements
+  const [tipCoords, setTipCoords] = useState({ top: 0, left: 0 });
+  const [popCoords, setPopCoords] = useState({ top: 0, left: 0, openBelow: false });
 
   // If code not in glossary, just render children as-is
   if (!entry) return <>{children}</>;
 
-  // Compute best position for the popover based on available space
-  const computePosition = useCallback(() => {
+  // Compute hover-tooltip position (centered above trigger)
+  const computeTipPos = useCallback(() => {
     if (!wrapperRef.current) return;
-    const rect = wrapperRef.current.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+    const r = wrapperRef.current.getBoundingClientRect();
+    setTipCoords({ top: r.top - 8, left: r.left + r.width / 2 });
+  }, []);
 
-    // Popover is ~280px wide, ~300px tall
+  // Compute detail-popover position (viewport-aware)
+  const computePopPos = useCallback(() => {
+    if (!wrapperRef.current) return;
+    const r = wrapperRef.current.getBoundingClientRect();
+    const vw = window.innerWidth;
     const popW = 280;
     const popH = 300;
 
-    const horizontal = (rect.left + popW > vw - 16) ? 'right' as const : 'left' as const;
-    const vertical = (rect.top - popH < 16) ? 'below' as const : 'above' as const;
+    // Horizontal: left-align by default; if it overflows right, shift left
+    let left = r.left;
+    if (left + popW > vw - 16) left = r.right - popW;
+    if (left < 16) left = 16;
 
-    setPopoverPos({ horizontal, vertical });
+    // Vertical: prefer above; if not enough space, open below
+    const openBelow = r.top - popH < 16;
+    const top = openBelow ? r.bottom + 8 : r.top - 8;
+
+    setPopCoords({ top, left, openBelow });
   }, []);
 
   // Close detail on outside click or Esc
   useEffect(() => {
     if (!showDetail) return;
     const handleClick = (e: MouseEvent) => {
-      if (detailRef.current && !detailRef.current.contains(e.target as Node) &&
-          wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+      if (
+        detailRef.current && !detailRef.current.contains(e.target as Node) &&
+        wrapperRef.current && !wrapperRef.current.contains(e.target as Node)
+      ) {
         setShowDetail(false);
       }
     };
@@ -144,23 +162,37 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
     };
   }, [showDetail]);
 
+  // Recompute positions on scroll/resize while visible
+  useEffect(() => {
+    if (!hovered && !showDetail) return;
+    const update = () => {
+      if (hovered && !showDetail) computeTipPos();
+      if (showDetail) computePopPos();
+    };
+    window.addEventListener('scroll', update, true);
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update, true);
+      window.removeEventListener('resize', update);
+    };
+  }, [hovered, showDetail, computeTipPos, computePopPos]);
+
+  const handleMouseEnter = useCallback(() => {
+    setHovered(true);
+    computeTipPos();
+  }, [computeTipPos]);
+
   const handleToggleDetail = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!showDetail) computePosition();
-    setShowDetail(prev => !prev);
-  }, [showDetail, computePosition]);
-
-  // Position classes for detail popover
-  const posClasses = [
-    popoverPos.vertical === 'above' ? 'bottom-full mb-3' : 'top-full mt-3',
-    popoverPos.horizontal === 'left' ? 'left-0' : 'right-0',
-  ].join(' ');
+    if (!showDetail) computePopPos();
+    setShowDetail((prev) => !prev);
+  }, [showDetail, computePopPos]);
 
   return (
     <span
       ref={wrapperRef}
       className={`relative inline-flex items-center gap-1 cursor-default ${className ?? ''}`}
-      onMouseEnter={() => setHovered(true)}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setHovered(false)}
     >
       {/* Original content */}
@@ -178,24 +210,38 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
         </button>
       )}
 
-      {/* Hover tooltip — full name only */}
-      {hovered && !showDetail && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none">
+      {/* ── Hover tooltip (portal → body) ── */}
+      {hovered && !showDetail && createPortal(
+        <div
+          className="fixed z-[9999] pointer-events-none"
+          style={{
+            top: tipCoords.top,
+            left: tipCoords.left,
+            transform: 'translate(-50%, -100%)',
+          }}
+        >
           <div className="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg shadow-xl whitespace-nowrap border border-white/10">
             {entry.fullName}
             {entry.weight && <span className="text-white/50 ml-1.5">({entry.weight})</span>}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
 
-      {/* Detail popover — full info panel, viewport-aware positioning */}
-      {showDetail && (
+      {/* ── Detail popover (portal → body) ── */}
+      {showDetail && createPortal(
         <div
           ref={detailRef}
-          className={`absolute ${posClasses} z-[100] w-[280px] max-w-[calc(100vw-2rem)] animate-in fade-in duration-200`}
+          className="fixed z-[9999] w-[280px] max-w-[calc(100vw-2rem)]"
+          style={{
+            top: popCoords.top,
+            left: popCoords.left,
+            transform: popCoords.openBelow ? 'translateY(0)' : 'translateY(-100%)',
+          }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="rounded-xl border border-white/15 shadow-2xl overflow-hidden"
+          <div
+            className="rounded-xl border border-white/15 shadow-2xl overflow-hidden"
             style={{
               background: 'rgba(15, 20, 35, 0.95)',
               backdropFilter: 'blur(20px) saturate(1.3)',
@@ -241,7 +287,8 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </span>
   );
