@@ -347,6 +347,26 @@ export class FeedbackController {
     } catch (error) { next(error); }
   }
 
+  async update(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const feedbackId = req.params.id;
+      if (!feedbackId) throw new ValidationError('Feedback ID is required');
+
+      const { content, type, tags } = req.body;
+      if (!content && !type && !tags) {
+        throw new ValidationError('At least one field (content, type, tags) is required');
+      }
+
+      const updated = await feedbackService.update(req.tenantId!, req.user!.id, feedbackId, {
+        content, type, tags,
+      });
+
+      res.status(200).json({ success: true, data: updated });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async delete(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const feedbackId = req.params.id;

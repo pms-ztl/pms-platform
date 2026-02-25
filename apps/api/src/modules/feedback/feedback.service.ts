@@ -625,6 +625,59 @@ export class FeedbackService {
     }));
   }
 
+  /** Grace period in milliseconds — users can edit/delete within this window */
+  private static readonly GRACE_PERIOD_MS = 30_000; // 30 seconds
+
+  private assertWithinGracePeriod(createdAt: Date, action: string): void {
+    const elapsed = Date.now() - createdAt.getTime();
+    if (elapsed > FeedbackService.GRACE_PERIOD_MS) {
+      throw new ValidationError(
+        `Cannot ${action} feedback after 30 seconds. The grace period has expired.`
+      );
+    }
+  }
+
+  async update(
+    tenantId: string,
+    userId: string,
+    feedbackId: string,
+    data: { content?: string; type?: string; tags?: string[] }
+  ): Promise<any> {
+    const feedback = await prisma.feedback.findFirst({
+      where: {
+        id: feedbackId,
+        tenantId,
+        fromUserId: userId,
+        deletedAt: null,
+      },
+    });
+
+    if (feedback === null) {
+      throw new NotFoundError('Feedback', feedbackId);
+    }
+
+    this.assertWithinGracePeriod(feedback.createdAt, 'edit');
+
+    const updated = await prisma.feedback.update({
+      where: { id: feedbackId },
+      data: {
+        ...(data.content !== undefined && { content: data.content }),
+        ...(data.type !== undefined && { type: data.type as any }),
+        ...(data.tags !== undefined && { tags: data.tags }),
+      },
+      include: {
+        fromUser: { select: { id: true, firstName: true, lastName: true } },
+        toUser: { select: { id: true, firstName: true, lastName: true } },
+      },
+    });
+
+    auditLogger('FEEDBACK_UPDATED', userId, tenantId, 'feedback', feedbackId, {
+      content: data.content ? 'updated' : undefined,
+    });
+
+    return updated;
+  }
+
   async delete(tenantId: string, userId: string, feedbackId: string): Promise<void> {
     const feedback = await prisma.feedback.findFirst({
       where: {
@@ -638,6 +691,8 @@ export class FeedbackService {
     if (feedback === null) {
       throw new NotFoundError('Feedback', feedbackId);
     }
+
+    this.assertWithinGracePeriod(feedback.createdAt, 'delete');
 
     await prisma.feedback.update({
       where: { id: feedbackId },

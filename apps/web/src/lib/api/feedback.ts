@@ -48,4 +48,7 @@ export const feedbackApi = {
     api.getPaginated<Feedback>('/feedback/recognition-wall', params),
   getTopRecognized: (period?: string) =>
     api.get<Array<{ user: { id: string; firstName: string; lastName: string; avatarUrl?: string; jobTitle?: string }; count: number }>>('/feedback/top-recognized', { params: { period } }),
+  update: (id: string, data: { content?: string; type?: string; tags?: string[] }) =>
+    api.put<Feedback>(`/feedback/${id}`, data),
+  delete: (id: string) => api.delete<void>(`/feedback/${id}`),
 };

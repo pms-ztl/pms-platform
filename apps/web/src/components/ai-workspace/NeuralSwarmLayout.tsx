@@ -156,7 +156,7 @@ function pulsingDotColor(theme: AITheme): string {
 // ── Component ───────────────────────────────────────────────────
 
 export function NeuralSwarmLayout() {
-  const { theme, swarmMode, setSwarmMode, orchestrationAgents, aiTransitionPhase, setAiTransitionPhase } =
+  const { theme, setTheme, swarmMode, setSwarmMode, orchestrationAgents, aiTransitionPhase, setAiTransitionPhase } =
     useAIWorkspaceStore();
   const pendingApprovalCount = useAITasksStore((s) => s.pendingApprovals.length);
 
@@ -319,6 +319,28 @@ export function NeuralSwarmLayout() {
             </span>
           </div>
 
+          {/* Theme switcher — inline in header */}
+          <div className={`hidden sm:flex items-center rounded-lg p-0.5 ${modeSwitcherContainer(theme)}`}>
+            {(['light', 'dark', 'deep-dark'] as AITheme[]).map((t) => {
+              const isActive = theme === t;
+              const label = t === 'light' ? 'Light' : t === 'dark' ? 'Dark' : 'Abyss';
+              return (
+                <button
+                  key={t}
+                  onClick={() => setTheme(t)}
+                  className={`px-2 py-1 rounded-md text-2xs font-medium transition-all duration-200 ${
+                    isActive
+                      ? `${activeModeButton(theme)}`
+                      : inactiveModeButton(theme)
+                  }`}
+                  title={`${label} theme`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Divider */}
           <div className={`hidden sm:block h-5 w-px ${theme === 'light' ? 'bg-gray-200' : 'bg-white/10'}`} />
 
@@ -354,10 +376,7 @@ export function NeuralSwarmLayout() {
         </div>
       </main>
 
-      {/* Floating theme toggle — hidden on mobile to avoid overlap */}
-      <div className="hidden md:block">
-        <FloatingAIToggle />
-      </div>
+      {/* Theme toggle now lives in the header — FloatingAIToggle removed */}
     </div>
   );
 }

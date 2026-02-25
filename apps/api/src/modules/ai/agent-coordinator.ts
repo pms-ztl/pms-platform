@@ -20,6 +20,89 @@ import type { AgentResponse } from './base-agent';
 import { agentOrchestrator } from './orchestrator';
 import { agentMemory } from './agent-memory';
 
+// ── Agent Display Names ──────────────────────────────────
+
+const AGENT_LABELS: Record<string, string> = {
+  performance: 'Performance Analytics',
+  nlp_query: 'Data Query',
+  coaching: 'Coaching',
+  career: 'Career Development',
+  report: 'Reports',
+  workforce_intel: 'Workforce Intelligence',
+  governance: 'Governance & Compliance',
+  strategic_alignment: 'Strategic Alignment',
+  talent_marketplace: 'Talent Marketplace',
+  conflict_resolution: 'Conflict Resolution',
+  security: 'Security',
+  notification: 'Notification',
+  onboarding: 'Onboarding',
+  license: 'License Management',
+  excel_validation: 'Excel Validation',
+  goal_intelligence: 'Goal Intelligence',
+  performance_signal: 'Performance Signal',
+  review_drafter: 'Review Drafter',
+  compensation_promotion: 'Compensation & Promotion',
+  one_on_one_advisor: '1:1 Advisor',
+  neuro_focus: 'Neuro Focus',
+  circadian_sync: 'Circadian Sync',
+  micro_break: 'Micro Break',
+  cortisol_monitor: 'Cortisol Monitor',
+  burnout_interceptor: 'Burnout Guard',
+  sleep_optimizer: 'Sleep Optimizer',
+  ergonomics: 'Ergonomics',
+  hydration_nutrition: 'Hydration & Nutrition',
+  vocal_tone: 'Vocal Tone',
+  environment_ctrl: 'Environment Control',
+  shadow_learning: 'Shadow Learning',
+  micro_learning: 'Micro Learning',
+  ar_mentor: 'AR Mentor',
+  sparring_partner: 'Sparring Partner',
+  skill_gap_forecaster: 'Skill Forecast',
+  knowledge_broker: 'Knowledge Broker',
+  credential_ledger: 'Credentials',
+  linguistic_refiner: 'Linguistic Refiner',
+  curiosity_scout: 'Curiosity Scout',
+  logic_validator: 'Logic Validator',
+  cross_training: 'Cross-Training',
+  career_sim: 'Career Simulation',
+  task_bidder: 'Task Bidder',
+  gig_sourcer: 'Gig Sourcer',
+  nano_payment: 'Nano Payment',
+  market_value: 'Market Value',
+  tax_optimizer: 'Tax Optimizer',
+  equity_realizer: 'Equity Realizer',
+  pension_guard: 'Pension Guard',
+  relocation_bot: 'Relocation',
+  vendor_negotiator: 'Vendor Negotiator',
+  succession_sentry: 'Succession Planning',
+  culture_weaver: 'Culture Weaver',
+  bias_neutralizer: 'Bias Neutralizer',
+  gratitude_sentinel: 'Gratitude Sentinel',
+  conflict_mediator: 'Conflict Mediator',
+  inclusion_monitor: 'Inclusion Monitor',
+  empathy_coach: 'Empathy Coach',
+  social_bonding: 'Social Bonding',
+  legacy_archivist: 'Legacy Archivist',
+  whistleblower: 'Whistleblower',
+  mood_radiator: 'Mood Radiator',
+  posh_sentinel: 'POSH Compliance',
+  labor_compliance: 'Labor Compliance',
+  policy_translator: 'Policy Translator',
+  data_privacy: 'Data Privacy',
+  audit_trail: 'Audit Trail',
+  conflict_of_interest: 'Conflict of Interest',
+  leave_optimizer: 'Leave Optimizer',
+  onboarding_orchestrator: 'Onboarding Orchestrator',
+};
+
+function formatAgentName(agentType: string): string {
+  if (AGENT_LABELS[agentType]) return AGENT_LABELS[agentType];
+  return agentType
+    .split('_')
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
 // ── Types ─────────────────────────────────────────────────
 
 interface SubTaskPlan {
@@ -594,7 +677,7 @@ class AgentCoordinator {
     const resultsSummary = results
       .map(
         (r) =>
-          `### Agent: ${r.agentType} (${r.status})\n` +
+          `### Agent: ${formatAgentName(r.agentType)} (${r.status})\n` +
           `**Sub-task:** ${r.subGoal}\n` +
           `**Result:** ${r.response.slice(0, 1500)}`,
       )
@@ -619,7 +702,7 @@ class AgentCoordinator {
       return (
         `## Coordinated Task Results\n\n` +
         results
-          .map((r) => `### ${r.agentType}\n${r.response.slice(0, 500)}`)
+          .map((r) => `### ${formatAgentName(r.agentType)}\n${r.response.slice(0, 500)}`)
           .join('\n\n')
       );
     }

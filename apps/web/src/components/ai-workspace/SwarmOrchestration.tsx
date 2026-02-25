@@ -232,10 +232,10 @@ function TypingDots({ theme }: { theme: AITheme }) {
 
 /** Cycling contextual messages for the coordinator thinking state */
 const COORDINATOR_PHASES = [
-  'Analyzing your request\u2026',
-  'Decomposing into sub-tasks\u2026',
-  'Dispatching to specialist agents\u2026',
-  'Synthesizing insights\u2026',
+  'Analyzing your request...',
+  'Decomposing into sub-tasks...',
+  'Dispatching to specialist agents...',
+  'Synthesizing insights...',
 ];
 
 function CoordinatorThinking({ theme }: { theme: AITheme }) {
@@ -294,7 +294,7 @@ function AgentResponseCard({
         <div className="min-w-0 flex-1">
           <span className={`text-sm font-semibold break-words ${T.textPrimary(theme)}`}>{info.name}</span>
           {info.tagline && (
-            <p className={`text-2xs ${T.textMuted(theme)} truncate`}>{info.tagline}</p>
+            <p className={`text-xs ${T.textSecondary(theme)} truncate`}>{info.tagline}</p>
           )}
         </div>
         <span className={`flex-shrink-0 text-2xs font-medium px-2 py-0.5 rounded-full ${
@@ -310,19 +310,19 @@ function AgentResponseCard({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
               </span>
-              <span className="text-2xs text-amber-400 font-medium">Thinking\u2026</span>
+              <span className="text-xs text-amber-400 font-medium">Thinking...</span>
             </>
           )}
           {status === 'success' && (
             <>
               <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              <span className="text-2xs text-emerald-400 font-medium">Completed</span>
+              <span className="text-xs text-emerald-400 font-medium">Completed</span>
             </>
           )}
           {status === 'error' && (
             <>
               <span className="inline-flex h-2 w-2 rounded-full bg-red-400" />
-              <span className="text-2xs text-red-400 font-medium">Issue</span>
+              <span className="text-xs text-red-400 font-medium">Issue</span>
             </>
           )}
         </span>
@@ -341,8 +341,8 @@ function AgentResponseCard({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
             <div>
-              <p className={`text-xs ${isLight ? 'text-gray-600' : 'text-gray-300'}`}>{error || 'Something didn\u2019t go as planned. Let\u2019s try that again!'}</p>
-              <p className={`text-2xs mt-1 ${T.textMuted(theme)}`}>Try sending your message again</p>
+              <p className={`text-xs ${isLight ? 'text-gray-600' : 'text-gray-300'}`}>{error || 'Something didn\'t go as planned. Let\'s try that again!'}</p>
+              <p className={`text-xs mt-1 ${T.textSecondary(theme)}`}>Try sending your message again</p>
             </div>
           </div>
         )}
@@ -387,11 +387,11 @@ function AgentReadyCard({ agentType, theme }: { agentType: string; theme: AIThem
         {info.cluster}
       </span>
       {info.tagline && (
-        <p className={`text-2xs ${T.textMuted(theme)} mb-2`}>{info.tagline}</p>
+        <p className={`text-xs ${T.textSecondary(theme)} mb-2`}>{info.tagline}</p>
       )}
       <p className={`text-xs ${T.textSecondary(theme)}`}>
         <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse" />
-        Standing by\u2026
+        Standing by...
       </p>
     </div>
   );
@@ -1047,7 +1047,7 @@ export function SwarmOrchestration() {
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
                       <span className={`text-xs font-medium ${T.textSecondary(theme)}`}>
-                        Agent {done + 1} of {total} responding\u2026
+                        Agent {done + 1} of {total} responding...
                       </span>
                     </div>
                   ) : null;

@@ -527,7 +527,7 @@ function TypingIndicator({ theme, agentName }: { theme: AITheme; agentName?: str
       <div className={`rounded-2xl px-4 py-3 ${T.assistantBubble(theme)}`}>
         {agentName && (
           <p className={`text-2xs font-medium mb-1.5 ${T.textSecondary(theme)}`}>
-            {agentName} is thinking\u2026
+            {agentName} is thinking...
           </p>
         )}
         <div className="flex items-center gap-1.5">
@@ -599,7 +599,7 @@ export function SwarmChat() {
         setMessages([{
           id: `welcome-${selectedAgent}`,
           role: 'assistant',
-          content: `Hi there! I'm the **${agent.name}** Agent. I specialize in **${agent.desc.toLowerCase()}**. Ask me anything \u2014 I'll pull from your organization's real data to help.`,
+          content: `Hi there! I'm the **${agent.name}** Agent. I specialize in **${agent.desc.toLowerCase()}**. Ask me anything and I'll pull from your organization's real data to help.`,
           timestamp: new Date(),
         }]);
       } else {

@@ -27,9 +27,9 @@ function ExportToolbar({ className = '' }: ExportToolbarProps) {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      toast.success(`${dataType} data exported successfully`);
+      toast.success(`${dataType.charAt(0).toUpperCase() + dataType.slice(1)} Data Exported Successfully`);
     } catch (err) {
-      toast.error(`Failed to export ${dataType} data`);
+      toast.error(`Failed to Export ${dataType.charAt(0).toUpperCase() + dataType.slice(1)} Data`);
     } finally {
       setIsExporting(false);
     }

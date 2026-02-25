@@ -61,17 +61,21 @@ function formatTimeAgo(dateStr: string): string {
   return `${months}mo ago`;
 }
 
+function toTitleCase(str: string): string {
+  return str.replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 function describeChange(change: RecentRoleChange): string {
   const meta = change.metadata as Record<string, string | undefined>;
-  if (meta?.description) return meta.description;
+  if (meta?.description) return toTitleCase(meta.description);
   if (meta?.roleName && meta?.userName) {
     const verb = change.action.includes('REMOVED') ? 'Removed' : 'Assigned';
     return `${verb} ${meta.roleName} role ${change.action.includes('REMOVED') ? 'from' : 'to'} ${meta.userName}`;
   }
   if (meta?.roleName) {
-    return `${change.action.replace(/_/g, ' ').toLowerCase()} - ${meta.roleName}`;
+    return `${toTitleCase(change.action.replace(/_/g, ' ').toLowerCase())} - ${meta.roleName}`;
   }
-  return change.action.replace(/_/g, ' ').toLowerCase();
+  return toTitleCase(change.action.replace(/_/g, ' ').toLowerCase());
 }
 
 // ── Component ────────────────────────────────────────────────────────────────

@@ -360,17 +360,17 @@ export function formatAgentDisplayName(agentType: string): string {
 export function getFriendlyError(raw: string): string {
   const lower = raw.toLowerCase();
   if (lower.includes('rate limit') || lower.includes('429'))
-    return 'Hmm, our AI agents are a bit busy right now. Give it a moment and try again \u2014 they\u2019ll be ready shortly!';
+    return 'Hmm, our AI agents are a bit busy right now. Give it a moment and try again — they\'ll be ready shortly!';
   if (lower.includes('unavailable') || lower.includes('503') || lower.includes('busy'))
     return 'The AI service is taking a quick breather. It usually comes back within a few seconds.';
   if (lower.includes('timeout') || lower.includes('etimedout'))
     return 'That request was a big one! Try breaking it into a shorter question.';
   if (lower.includes('not configured'))
-    return 'The AI service isn\u2019t set up for your organization yet. Please contact your administrator.';
+    return 'The AI service isn\'t set up for your organization yet. Please contact your administrator.';
   if (lower.includes('exhausted') || lower.includes('quota'))
-    return 'We\u2019ve hit today\u2019s usage limit. The quota resets soon \u2014 try again in a little while!';
+    return 'We\'ve hit today\'s usage limit. The quota resets soon — try again in a little while!';
   if (raw) return raw;
-  return 'Something didn\u2019t go as planned. Let\u2019s try that again!';
+  return 'Something didn\'t go as planned. Let\'s try that again!';
 }
 
 /**
@@ -381,7 +381,7 @@ export function formatRelativeTime(date: Date): string {
   const diffMs = now - date.getTime();
   const diffSec = Math.floor(diffMs / 1000);
 
-  if (diffSec < 60) return 'just now';
+  if (diffSec < 60) return 'Just now';
   const diffMin = Math.floor(diffSec / 60);
   if (diffMin < 60) return `${diffMin}m ago`;
   const diffHr = Math.floor(diffMin / 60);

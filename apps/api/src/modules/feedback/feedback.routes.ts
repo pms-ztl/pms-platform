@@ -77,7 +77,13 @@ router.post(
   (req, res, next) => feedbackController.acknowledge(req, res, next)
 );
 
-// Delete feedback
+// Update feedback (within 30-second grace period)
+router.put(
+  '/:id',
+  (req, res, next) => feedbackController.update(req, res, next)
+);
+
+// Delete feedback (within 30-second grace period)
 router.delete(
   '/:id',
   (req, res, next) => feedbackController.delete(req, res, next)

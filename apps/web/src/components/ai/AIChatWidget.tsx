@@ -335,6 +335,7 @@ export function AIChatWidget() {
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const [dimensions, setDimensions] = useState({ width: 400, height: 560 });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
@@ -617,8 +618,10 @@ export function AIChatWidget() {
   // ── Chat Panel ─────────────────────────────────────────
   return (
     <div
-      className="fixed bottom-5 right-5 z-50 flex h-[480px] w-[360px] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-2xl shadow-2xl"
+      className="fixed bottom-5 right-5 z-50 flex max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-2xl shadow-2xl"
       style={{
+        width: dimensions.width,
+        height: dimensions.height,
         fontSize: 14,  // Reset root clamp scaling — compact fixed-size container
         background: t.panel,
         border: `1px solid ${t.panelBorder}`,
@@ -626,6 +629,32 @@ export function AIChatWidget() {
         animation: 'swarm-mode-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
+      {/* ── Resize Handle (top-left corner) ────────────── */}
+      <div
+        className="absolute top-0 left-0 z-10 w-5 h-5 cursor-nwse-resize group"
+        onMouseDown={(e) => {
+          e.preventDefault();
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const startW = dimensions.width;
+          const startH = dimensions.height;
+          const onMove = (ev: MouseEvent) => {
+            setDimensions({
+              width: Math.max(340, Math.min(640, startW + (startX - ev.clientX))),
+              height: Math.max(420, Math.min(820, startH + (startY - ev.clientY))),
+            });
+          };
+          const onUp = () => {
+            window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('mouseup', onUp);
+          };
+          window.addEventListener('mousemove', onMove);
+          window.addEventListener('mouseup', onUp);
+        }}
+      >
+        <div className="w-2.5 h-2.5 border-t-2 border-l-2 border-gray-400/40 group-hover:border-indigo-400/70 rounded-tl m-1 transition-colors" />
+      </div>
+
       {/* ── Header ─────────────────────────────────────── */}
       <div
         className="relative flex items-center justify-between px-3 py-2"

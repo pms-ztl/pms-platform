@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Response, NextFunction } from 'express';
+import type { AuthenticatedRequest } from '../../types';
 import { notificationsService } from './notifications.service';
 import { logger } from '../../utils/logger';
 
@@ -7,7 +8,7 @@ export class NotificationsController {
    * GET /api/v1/notifications
    * Get user's notifications
    */
-  async getNotifications(req: Request, res: Response, next: NextFunction) {
+  async getNotifications(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { tenantId, id: userId } = req.user!;
       const { unreadOnly, channel, limit, offset } = req.query;
@@ -33,7 +34,7 @@ export class NotificationsController {
    * POST /api/v1/notifications/:id/read
    * Mark a notification as read
    */
-  async markAsRead(req: Request, res: Response, next: NextFunction) {
+  async markAsRead(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { tenantId, id: userId } = req.user!;
       const { id } = req.params;
@@ -53,7 +54,7 @@ export class NotificationsController {
    * POST /api/v1/notifications/read-all
    * Mark all notifications as read
    */
-  async markAllAsRead(req: Request, res: Response, next: NextFunction) {
+  async markAllAsRead(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { tenantId, id: userId } = req.user!;
 
@@ -72,7 +73,7 @@ export class NotificationsController {
    * GET /api/v1/notifications/preferences
    * Get user's notification preferences
    */
-  async getPreferences(req: Request, res: Response, next: NextFunction) {
+  async getPreferences(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { tenantId, id: userId } = req.user!;
 
@@ -91,7 +92,7 @@ export class NotificationsController {
    * PUT /api/v1/notifications/preferences
    * Update user's notification preferences
    */
-  async updatePreferences(req: Request, res: Response, next: NextFunction) {
+  async updatePreferences(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { tenantId, id: userId } = req.user!;
       const preferences = req.body;
@@ -111,7 +112,7 @@ export class NotificationsController {
    * GET /api/v1/notifications/unread-count
    * Get unread notification count
    */
-  async getUnreadCount(req: Request, res: Response, next: NextFunction) {
+  async getUnreadCount(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { tenantId, id: userId } = req.user!;
 

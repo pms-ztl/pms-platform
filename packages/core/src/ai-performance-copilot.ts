@@ -585,7 +585,7 @@ export class AIPerformanceCopilot {
       factor: 'Goal Completion',
       impact: goalCompletionRate >= 0.8 ? 'very_positive' : goalCompletionRate >= 0.5 ? 'positive' : 'neutral',
       impactScore: Math.round((goalCompletionRate - 0.5) * 10),
-      description: `${Math.round(goalCompletionRate * 100)}% of goals completed`,
+      description: `${Math.min(100, Math.round(goalCompletionRate * 100))}% of goals completed`,
       evidence: data.goals.filter(g => g.status === 'COMPLETED').map(g => g.title),
     });
 
@@ -597,7 +597,7 @@ export class AIPerformanceCopilot {
       factor: 'Peer & Manager Feedback',
       impact: positiveFeedbackRatio >= 0.7 ? 'very_positive' : positiveFeedbackRatio >= 0.5 ? 'positive' : 'neutral',
       impactScore: Math.round((positiveFeedbackRatio - 0.5) * 8),
-      description: `${Math.round(positiveFeedbackRatio * 100)}% positive feedback received`,
+      description: `${Math.min(100, Math.round(positiveFeedbackRatio * 100))}% positive feedback received`,
       evidence: data.feedback.filter(f => f.type === 'PRAISE').slice(0, 3).map(f => f.content.substring(0, 50)),
     });
 
@@ -656,7 +656,7 @@ export class AIPerformanceCopilot {
     const avgPeerRating = peerRatings.reduce((a, b) => a + b, 0) / peerRatings.length;
 
     const belowCount = peerRatings.filter(r => r < rating).length;
-    const percentile = Math.round((belowCount / peerRatings.length) * 100);
+    const percentile = Math.min(100, Math.round((belowCount / peerRatings.length) * 100));
 
     const differentiators: string[] = [];
     if (rating > avgPeerRating + 0.3) {
@@ -1272,9 +1272,9 @@ export class AIPerformanceCopilot {
       : 0;
 
     const byDimension: Record<string, number> = {
-      skills: Math.round(data.skills.filter(s => s.level >= 3).length / Math.max(data.skills.length, 1) * 100),
-      performance: data.reviews.length > 0 ? data.reviews[data.reviews.length - 1].rating * 20 : 60,
-      goals: data.goals.filter(g => g.status === 'COMPLETED').length / Math.max(data.goals.length, 1) * 100,
+      skills: Math.min(100, Math.round(data.skills.filter(s => s.level >= 3).length / Math.max(data.skills.length, 1) * 100)),
+      performance: Math.min(100, data.reviews.length > 0 ? data.reviews[data.reviews.length - 1].rating * 20 : 60),
+      goals: Math.min(100, data.goals.filter(g => g.status === 'COMPLETED').length / Math.max(data.goals.length, 1) * 100),
     };
 
     const blockers: string[] = [];

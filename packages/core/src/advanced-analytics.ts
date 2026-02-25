@@ -549,7 +549,7 @@ export class AdvancedAnalyticsEngine {
     const ratingDistribution: RatingDistribution[] = [1, 2, 3, 4, 5].map(rating => ({
       rating,
       count: ratingCounts.get(rating) || 0,
-      percentage: reviews.length > 0 ? ((ratingCounts.get(rating) || 0) / reviews.length) * 100 : 0,
+      percentage: reviews.length > 0 ? Math.min(100, ((ratingCounts.get(rating) || 0) / reviews.length) * 100) : 0,
       change: 0, // Would compare to previous period
     }));
 
@@ -569,7 +569,7 @@ export class AdvancedAnalyticsEngine {
         averageRating: data.ratings.reduce((a, b) => a + b, 0) / data.ratings.length,
         ratingChange: 0,
         headcount: new Set(reviews.filter(r => r.reviewee.departmentId === deptId).map(r => r.revieweeId)).size,
-        topPerformerPercentage: (data.ratings.filter(r => r >= 4).length / data.ratings.length) * 100,
+        topPerformerPercentage: Math.min(100, (data.ratings.filter(r => r >= 4).length / data.ratings.length) * 100),
         attritionRisk: 0.15, // Would be calculated
       }));
 
@@ -790,7 +790,7 @@ export class AdvancedAnalyticsEngine {
     }
     const genderPercentages: Record<string, number> = {};
     for (const [gender, count] of Object.entries(genderCounts)) {
-      genderPercentages[gender] = (count / employees.length) * 100;
+      genderPercentages[gender] = Math.min(100, (count / employees.length) * 100);
     }
 
     dimensionBreakdown.push({

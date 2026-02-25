@@ -281,7 +281,7 @@ export class PerformanceMathService {
       // Review component: average rating normalized to 0-100
       let reviewComp = 0;
       if (uReviews.length > 0) {
-        reviewComp = (mean(uReviews) / 5) * 100;
+        reviewComp = Math.min(100, (mean(uReviews) / 5) * 100);
       }
 
       // Simplified composite using same weight structure
@@ -563,7 +563,7 @@ export class PerformanceMathService {
       let reviewScore = 0;
       if (userReviews.length > 0) {
         const avgRating = mean(userReviews.map(r => r.overallRating!));
-        reviewScore = (avgRating / 5) * 100;
+        reviewScore = Math.min(100, (avgRating / 5) * 100);
       }
 
       // Combine: 60% goals, 40% reviews (if both available)

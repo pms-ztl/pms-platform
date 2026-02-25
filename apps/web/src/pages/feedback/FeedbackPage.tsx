@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   PlusIcon,
@@ -11,6 +11,8 @@ import {
   UserIcon,
   ClockIcon,
   CheckCircleIcon,
+  PencilIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -20,6 +22,30 @@ import { feedbackApi, usersApi, type Feedback, type CreateFeedbackInput, type Us
 import { useAuthStore } from '@/store/auth';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { PageHeader } from '@/components/ui';
+
+const GRACE_PERIOD_SECONDS = 30;
+
+/** Returns seconds remaining in the 30-second grace window, or 0 if expired. */
+function useGraceCountdown(createdAt: string): number {
+  const calcRemaining = useCallback(() => {
+    const elapsed = (Date.now() - new Date(createdAt).getTime()) / 1000;
+    return Math.max(0, Math.ceil(GRACE_PERIOD_SECONDS - elapsed));
+  }, [createdAt]);
+
+  const [remaining, setRemaining] = useState(calcRemaining);
+
+  useEffect(() => {
+    if (remaining <= 0) return;
+    const timer = setInterval(() => {
+      const r = calcRemaining();
+      setRemaining(r);
+      if (r <= 0) clearInterval(timer);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [remaining, calcRemaining]);
+
+  return remaining;
+}
 
 const feedbackTypeConfig: Record<string, { label: string; color: string; icon: React.ElementType }> = {
   PRAISE: { label: 'Praise', color: 'bg-success-100 text-success-800', icon: SparklesIcon },
@@ -43,6 +69,9 @@ export function FeedbackPage() {
   const [showGiveFeedbackModal, setShowGiveFeedbackModal] = useState(false);
   const [showRequestFeedbackModal, setShowRequestFeedbackModal] = useState(false);
   const [typeFilter, setTypeFilter] = useState<string>('');
+  const [editingFeedback, setEditingFeedback] = useState<Feedback | null>(null);
+  const [editContent, setEditContent] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const { data: receivedFeedback, isLoading: loadingReceived } = useQuery({
     queryKey: ['feedback', 'received', { type: typeFilter }],
@@ -104,7 +133,59 @@ export function FeedbackPage() {
     },
   });
 
-  const renderFeedbackCard = (feedback: Feedback, showAcknowledge = false) => {
+  const updateFeedbackMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: { content?: string; type?: string; tags?: string[] } }) =>
+      feedbackApi.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feedback'] });
+      setEditingFeedback(null);
+      toast.success('Feedback Updated');
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to Update Feedback');
+    },
+  });
+
+  const deleteFeedbackMutation = useMutation({
+    mutationFn: (id: string) => feedbackApi.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['feedback'] });
+      setDeletingId(null);
+      toast.success('Feedback Deleted');
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to Delete Feedback');
+    },
+  });
+
+  const GraceActions = ({ feedback }: { feedback: Feedback }) => {
+    const remaining = useGraceCountdown(feedback.createdAt);
+    if (remaining <= 0) return null;
+
+    return (
+      <div className="flex items-center gap-2 ml-auto">
+        <span className="text-2xs tabular-nums text-warning-600 dark:text-warning-400 font-medium">
+          {remaining}s
+        </span>
+        <button
+          onClick={() => { setEditingFeedback(feedback); setEditContent(feedback.content); }}
+          className="p-1 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-500 hover:text-primary-600 transition-colors"
+          title="Edit feedback"
+        >
+          <PencilIcon className="h-3.5 w-3.5" />
+        </button>
+        <button
+          onClick={() => setDeletingId(feedback.id)}
+          className="p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-secondary-500 hover:text-red-600 transition-colors"
+          title="Delete feedback"
+        >
+          <TrashIcon className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    );
+  };
+
+  const renderFeedbackCard = (feedback: Feedback, showAcknowledge = false, isGiven = false) => {
     const TypeIcon = feedbackTypeConfig[feedback.type]?.icon || ChatBubbleLeftRightIcon;
 
     return (
@@ -134,6 +215,7 @@ export function FeedbackPage() {
               <span className="text-xs text-secondary-400">
                 {formatDistanceToNow(new Date(feedback.createdAt), { addSuffix: true })}
               </span>
+              {isGiven && <GraceActions feedback={feedback} />}
             </div>
             <p className="mt-2 text-secondary-700 dark:text-secondary-300 whitespace-pre-wrap">{feedback.content}</p>
             {feedback.tags && feedback.tags.length > 0 && (
@@ -228,7 +310,7 @@ export function FeedbackPage() {
       }
       return (
         <div className="space-y-4">
-          {givenFeedback.data.map((feedback) => renderFeedbackCard(feedback))}
+          {givenFeedback.data.map((feedback) => renderFeedbackCard(feedback, false, true))}
         </div>
       );
     }
@@ -479,6 +561,63 @@ export function FeedbackPage() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Feedback Modal */}
+      {editingFeedback && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setEditingFeedback(null)} />
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Edit Feedback</h2>
+              <p className="text-xs text-warning-600 dark:text-warning-400 mb-4">
+                You can edit this feedback within the 30-second grace period after sending.
+              </p>
+              <textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                rows={4}
+                className="input w-full"
+                placeholder="Update your feedback..."
+              />
+              <div className="flex justify-end gap-3 mt-4">
+                <button onClick={() => setEditingFeedback(null)} className="btn-secondary">Cancel</button>
+                <button
+                  onClick={() => updateFeedbackMutation.mutate({ id: editingFeedback.id, data: { content: editContent } })}
+                  disabled={updateFeedbackMutation.isPending || !editContent.trim()}
+                  className="btn-primary"
+                >
+                  {updateFeedbackMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Feedback Confirmation */}
+      {deletingId && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeletingId(null)} />
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">Delete Feedback?</h2>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
+                This action cannot be undone. The feedback will be permanently removed.
+              </p>
+              <div className="flex justify-end gap-3">
+                <button onClick={() => setDeletingId(null)} className="btn-secondary">Cancel</button>
+                <button
+                  onClick={() => deleteFeedbackMutation.mutate(deletingId)}
+                  disabled={deleteFeedbackMutation.isPending}
+                  className="btn-primary bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"
+                >
+                  {deleteFeedbackMutation.isPending ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

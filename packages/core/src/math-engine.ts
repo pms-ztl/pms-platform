@@ -22,6 +22,15 @@
 // ============================================================================
 
 /**
+ * Clamp a percentage value to [0, 100].
+ * Use for all ratio-based percentages (completed/total * 100, rating/5 * 100, etc.)
+ * Do NOT use for growth/change percentages which can legitimately exceed 100%.
+ */
+export function clampPct(value: number): number {
+  return Math.max(0, Math.min(100, value));
+}
+
+/**
  * Arithmetic mean
  */
 export function mean(values: number[]): number {
@@ -1118,11 +1127,11 @@ function computeGAI(goals: CPISInput['goals']): CPISDimension {
   const rawScore = totalWeight > 0 ? Math.min(100, weightedSum / totalWeight) : 0;
 
   subMetrics.completionRate = goals.length > 0
-    ? Math.round((completedGoals.length / goals.length) * 100)
+    ? Math.round(clampPct((completedGoals.length / goals.length) * 100))
     : 0;
-  subMetrics.avgProgress = Math.round(mean(activeGoals.map(g => g.progress)));
+  subMetrics.avgProgress = Math.round(clampPct(mean(activeGoals.map(g => g.progress))));
   subMetrics.onTimeRate = completedGoals.length > 0
-    ? Math.round((completedGoals.filter(g => g.daysLate <= 0).length / completedGoals.length) * 100)
+    ? Math.round(clampPct((completedGoals.filter(g => g.daysLate <= 0).length / completedGoals.length) * 100))
     : 0;
   subMetrics.complexityAdjusted = Math.round(rawScore);
   subMetrics.alignedGoals = goals.filter(g => g.alignmentDepth > 0).length;
@@ -1236,7 +1245,7 @@ function computeFSI(feedbacks: CPISInput['feedbacks']): CPISDimension {
   const praiseCount = feedbacks.filter(f => f.type === 'PRAISE' || f.type === 'RECOGNITION').length;
 
   subMetrics.avgSentiment = Math.round(mean(feedbacks.map(f => f.sentimentScore)) * 100) / 100;
-  subMetrics.praiseRatio = feedbacks.length > 0 ? Math.round((praiseCount / feedbacks.length) * 100) : 0;
+  subMetrics.praiseRatio = feedbacks.length > 0 ? Math.round(clampPct((praiseCount / feedbacks.length) * 100)) : 0;
   subMetrics.feedbackCount = feedbacks.length;
   subMetrics.qualityMultiplier = Math.round(mean(qualityValues) * 100) / 100;
 

@@ -138,7 +138,7 @@ function NavSectionGroup({
       <div
         className={clsx(
           'space-y-0.5 overflow-hidden transition-all duration-200',
-          isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+          isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
         )}
       >
         {filtered.map((item) => (
@@ -331,7 +331,7 @@ export function DashboardLayout() {
   };
 
   return (
-    <div className="min-h-screen transition-colors duration-300">
+    <div className="min-h-screen flex flex-col transition-colors duration-300">
       {/* Top loading bar */}
       <TopLoadingBar />
 
@@ -419,7 +419,7 @@ export function DashboardLayout() {
       </div>
 
       {/* Main content */}
-      <div className={clsx('transition-all duration-300', contentPadding)}>
+      <div className={clsx('flex-1 flex flex-col min-h-0 transition-all duration-300', contentPadding)}>
         {/* Top bar */}
         <div className={clsx(
           'sticky top-0 z-40 flex h-14 shrink-0 items-center gap-x-4 glass-nav px-4 sm:gap-x-6 sm:px-6 lg:px-8 transition-all duration-300',
@@ -520,7 +520,7 @@ export function DashboardLayout() {
         </div>
 
         {/* Main content area */}
-        <main className={clsx('py-4 sm:py-8 pb-24 sm:pb-8 transition-all duration-300', aiTransitionPhase !== 'idle' && 'opacity-0 blur-md')}>
+        <main className={clsx('flex-1 overflow-y-auto min-h-0 py-4 sm:py-8 pb-8 transition-all duration-300', aiTransitionPhase !== 'idle' && 'opacity-0 blur-md')}>
           <div className="px-3 sm:px-6 lg:px-8 page-content">
             <Breadcrumbs />
             <Outlet />
