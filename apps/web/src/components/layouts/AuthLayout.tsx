@@ -65,9 +65,16 @@ function TypewriterText({ text, delay = 1000 }: { text: string; delay?: number }
     return () => clearInterval(interval);
   }, [started, text]);
 
+  // Split on \n to render line breaks with spacing
+  const parts = displayed.split('\n');
   return (
     <>
-      {displayed}
+      {parts.map((part, i) => (
+        <span key={i}>
+          {i > 0 && <span className="block mt-3" />}
+          {part}
+        </span>
+      ))}
       {started && displayed.length < text.length && (
         <span className="inline-block w-[2px] h-[1em] bg-white/60 ml-0.5 animate-pulse" />
       )}
@@ -669,11 +676,11 @@ export function AuthLayout({ children }: AuthLayoutProps) {
 
             {/* #14: Typewriter description text — Ranade font, Title Case */}
             <p
-              className="text-white/90 text-2xl xl:text-3xl leading-[1.5] mt-8 mb-7 max-w-[700px] min-h-[3.2em]"
+              className="text-white/90 text-2xl xl:text-3xl leading-[1.7] mt-8 mb-7 max-w-[700px] min-h-[4em]"
               style={{ fontFamily: "'Ranade', sans-serif", textShadow: '0 2px 12px rgba(0,0,0,0.6), 0 4px 30px rgba(0,0,0,0.4)' }}
             >
               <TypewriterText
-                text="Where Ambition Meets Intelligence. One Unified Suite Powering Growth at Every Level of Your Organization."
+                text={"Where Ambition Meets Intelligence.\nOne Unified Suite Powering Growth at Every Level of Your Organization."}
                 delay={1200}
               />
             </p>
