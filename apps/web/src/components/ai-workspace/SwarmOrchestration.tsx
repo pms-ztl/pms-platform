@@ -659,8 +659,12 @@ export function SwarmOrchestration() {
     queryClient.invalidateQueries({ queryKey: ['ai'] });
   }, [orchestrationAgents, isBroadcasting, queryClient]);
 
-  // We want to show per-agent streaming effect, so instead of waiting for all,
-  // update the active turn as each promise resolves.
+  // Sequential broadcast: processes agents ONE AT A TIME with a delay between
+  // each to avoid exhausting the LLM provider rate limit (Groq = 30 req/min).
+  // Each card updates immediately as its request completes — better UX than
+  // all cards loading → all cards failing simultaneously.
+  const BROADCAST_DELAY_MS = 2000; // 2 seconds between sequential agent calls
+
   const broadcastMessageStreaming = useCallback(async (msg: string) => {
     if (orchestrationAgents.length === 0 || isBroadcasting) return;
 
@@ -682,10 +686,15 @@ export function SwarmOrchestration() {
 
     setActiveTurn({ ...turnRef });
 
-    // Track completed count
-    let completedCount = 0;
+    // Process agents sequentially with delay to avoid rate limiting
+    for (let idx = 0; idx < orchestrationAgents.length; idx++) {
+      const agentType = orchestrationAgents[idx];
 
-    const promises = orchestrationAgents.map(async (agentType, idx) => {
+      // Add delay between requests (skip delay for the first agent)
+      if (idx > 0) {
+        await new Promise((resolve) => setTimeout(resolve, BROADCAST_DELAY_MS));
+      }
+
       try {
         const data = await aiApi.chat(msg, agentType);
         turnRef.responses[idx] = {
@@ -710,12 +719,10 @@ export function SwarmOrchestration() {
           error: friendly,
         };
       }
-      completedCount++;
-      // Update active turn to trigger re-render with partial results
-      setActiveTurn({ ...turnRef, responses: [...turnRef.responses] });
-    });
 
-    await Promise.all(promises);
+      // Update active turn to trigger re-render — card appears as soon as it finishes
+      setActiveTurn({ ...turnRef, responses: [...turnRef.responses] });
+    }
 
     // All done — move to history
     setHistory((prev) => [...prev, { ...turnRef, responses: [...turnRef.responses] }]);

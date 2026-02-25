@@ -94,13 +94,24 @@ export class ApiClient {
     this.client.interceptors.response.use(
       (response) => response,
       async (error: AxiosError<ApiResponse<unknown>>) => {
-        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean; _rateLimitRetryCount?: number };
 
         // ── Connectivity failures (ECONNREFUSED, proxy HTML 5xx) ───────────
         // Thrown as ServerUnavailableError so callers can distinguish these
         // from real API errors and suppress toasts / skip retries accordingly.
         if (isConnectivityFailure(error)) {
           return Promise.reject(new ServerUnavailableError());
+        }
+
+        // ── Auto-retry for rate limit (429) and service unavailable (503) ──
+        // When the AI service returns 429 or 503, silently retry up to 2 times
+        // with exponential backoff before surfacing the error to the user.
+        const status = error.response?.status;
+        if ((status === 429 || status === 503) && (originalRequest._rateLimitRetryCount ?? 0) < 2) {
+          originalRequest._rateLimitRetryCount = (originalRequest._rateLimitRetryCount ?? 0) + 1;
+          const delay = 2000 * originalRequest._rateLimitRetryCount; // 2s, 4s
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          return this.client(originalRequest);
         }
 
         // ── 401 — try to refresh token ──────────────────────────────────────

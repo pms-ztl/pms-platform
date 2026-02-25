@@ -125,6 +125,11 @@ const RATE_LIMIT_SYSTEM_PREFIX = 'llm:rate:sys:'; // separate bucket for proacti
 const CIRCUIT_BREAKER_THRESHOLD = 3; // consecutive failures to trip
 const CIRCUIT_BREAKER_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes cooldown
 
+// ── Retry Config ──────────────────────────────────────
+const RATE_LIMIT_MAX_RETRIES = 2; // retry up to 2 times on rate-limit errors
+const RATE_LIMIT_BASE_DELAY_MS = 2000; // 2s base delay (exponential: 2s, 4s)
+const RATE_LIMIT_MAX_DELAY_MS = 10000; // max 10s delay
+
 // ── LLM Client ─────────────────────────────────────────
 
 class LLMClient {
@@ -296,7 +301,7 @@ class LLMClient {
 
     for (const provider of chain) {
       try {
-        const response = await this.callProvider(provider, messages, options);
+        const response = await this.callProviderWithRetry(provider, messages, options);
         if (!options.noCache) {
           await this.setCached(messages, options, response);
         }
@@ -306,7 +311,7 @@ class LLMClient {
         const msg = (err as Error).message;
         errors.push({ provider, error: msg });
         this.recordProviderFailure(provider);
-        logger.warn(`LLM provider (${provider}) failed`, { error: msg });
+        logger.warn(`LLM provider (${provider}) failed after retries`, { error: msg });
       }
     }
 
@@ -559,7 +564,7 @@ class LLMClient {
       augmentedMessages.unshift({ role: 'system', content: toolPrompt });
     }
 
-    const response = await this.callProvider(provider, augmentedMessages, options);
+    const response = await this.callProviderWithRetry(provider, augmentedMessages, options);
 
     // Try to parse tool calls from the response
     const toolCalls: ToolCall[] = [];
@@ -595,6 +600,57 @@ class LLMClient {
   }
 
   // ── Private helpers ───────────────────────────────────
+
+  /** Simple sleep utility */
+  private sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Call a provider with automatic retry + exponential backoff on rate-limit errors.
+   * Instead of immediately failing and jumping to the next provider, this gives the
+   * rolling rate-limit window time to clear — critical for Groq's 30 req/min limit.
+   */
+  private async callProviderWithRetry(
+    provider: LLMProvider,
+    messages: LLMMessage[],
+    options: LLMOptions,
+  ): Promise<LLMResponse> {
+    let lastError: Error | null = null;
+
+    for (let attempt = 0; attempt <= RATE_LIMIT_MAX_RETRIES; attempt++) {
+      try {
+        return await this.callProvider(provider, messages, options);
+      } catch (err) {
+        lastError = err as Error;
+        const msg = lastError.message.toLowerCase();
+
+        // Only retry on rate-limit errors (429 / "rate limit" / "too many requests")
+        const isRateLimited =
+          msg.includes('rate limit') ||
+          msg.includes('429') ||
+          msg.includes('too many requests') ||
+          msg.includes('rate_limit');
+
+        if (isRateLimited && attempt < RATE_LIMIT_MAX_RETRIES) {
+          const delayMs = Math.min(
+            RATE_LIMIT_BASE_DELAY_MS * Math.pow(2, attempt),
+            RATE_LIMIT_MAX_DELAY_MS,
+          );
+          logger.info(
+            `Rate limited by ${provider}, retrying in ${delayMs}ms (attempt ${attempt + 1}/${RATE_LIMIT_MAX_RETRIES})`,
+          );
+          await this.sleep(delayMs);
+          continue;
+        }
+
+        // Non-rate-limit error or max retries exceeded → bubble up
+        throw lastError;
+      }
+    }
+
+    throw lastError!;
+  }
 
   private async callProvider(
     provider: LLMProvider,
