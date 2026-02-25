@@ -1051,13 +1051,15 @@ export default function LandingPage() {
               <span className="landing-word-reveal">
                 <span style={{ animationDelay: '0.3s' }}>Track{'\u00A0'}</span>
                 <span className="hero-gradient-word" style={{ background: 'linear-gradient(135deg, #94d2ff, #e0f0ff, #94d2ff)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', animation: 'hero-text-gradient 3s ease infinite 0.42s, landing-word-reveal-single 0.8s ease forwards 0.42s' }}>Impact</span>
-                <span style={{ animationDelay: '0.54s' }}>,{'\u00A0'}</span>
+                <span style={{ animationDelay: '0.54s' }}>,</span>
+                <br />
                 <span style={{ animationDelay: '0.66s' }}>Not{'\u00A0'}</span>
-                <span style={{ animationDelay: '0.78s' }}>Just{'\u00A0'}</span>
+                <span style={{ animationDelay: '0.78s' }}>Just</span>
+                <br />
                 <span className="italic font-light text-white/50" style={{ animationDelay: '0.9s' }}>Activity!</span>
               </span>
             )}
-            {!heroRef.visible && <span style={{ opacity: 0 }}>Track Impact, Not Just Activity!</span>}
+            {!heroRef.visible && <span style={{ opacity: 0 }}>Track Impact,<br />Not Just<br />Activity!</span>}
           </h1>
 
           {/* Shimmer underline */}
