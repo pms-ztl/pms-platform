@@ -265,12 +265,76 @@ function HeroRotatingWords({ visible }: { visible: boolean }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const CODE_LINES = [
-  `{`, `  "employee": "Sarah Chen",`, `  "quarter": "Q1 2026",`, `  "overallScore": 4.7,`,
-  `  "goals": {`, `    "completed": 12,`, `    "onTrack": 3,`, `    "alignment": "96%"`, `  },`,
-  `  "review": {`, `    "status": "calibrated",`, `    "managerRating": 4.8,`,
-  `    "peerAvg": 4.5,`, `    "selfScore": 4.6`, `  },`,
-  `  "skills": [`, `    "Leadership",`, `    "Data Analysis",`, `    "Team Building"`, `  ],`,
-  `  "aiInsight": "Top 5% performer",`, `  "devPlan": "Senior → Lead",`, `  "nextStep": "Promotion ready"`, `}`,
+  `{`,
+  `  "performanceReview": {`,
+  `    "employee": "Sarah Chen",`,
+  `    "employeeId": "EMP-2026-0847",`,
+  `    "department": "Engineering",`,
+  `    "level": "Senior Software Engineer",`,
+  `    "quarter": "Q1 2026",`,
+  `    "overallScore": 4.7,`,
+  `    "reviewCycle": "Annual 360°"`,
+  `  },`,
+  `  "goals": {`,
+  `    "completed": 12,`,
+  `    "onTrack": 3,`,
+  `    "atRisk": 0,`,
+  `    "alignment": "96%",`,
+  `    "okrCascade": "Company → Team → Individual",`,
+  `    "velocityIndex": 1.34`,
+  `  },`,
+  `  "review360": {`,
+  `    "status": "calibrated",`,
+  `    "managerRating": 4.8,`,
+  `    "peerAvg": 4.5,`,
+  `    "selfScore": 4.6,`,
+  `    "directReports": 4.9,`,
+  `    "calibrationDelta": "+0.1",`,
+  `    "biasCheckPassed": true`,
+  `  },`,
+  `  "skills": {`,
+  `    "core": ["Leadership", "System Design", "Team Building"],`,
+  `    "emerging": ["AI/ML", "Cloud Architecture"],`,
+  `    "gapAnalysis": {`,
+  `      "targetRole": "Staff Engineer",`,
+  `      "readiness": "87%",`,
+  `      "gaps": ["Executive Presence", "P&L Ownership"]`,
+  `    }`,
+  `  },`,
+  `  "developmentPlan": {`,
+  `    "careerPath": "Senior → Staff → Principal",`,
+  `    "mentorAssigned": "VP Engineering",`,
+  `    "certifications": 3,`,
+  `    "learningHours": 48,`,
+  `    "pipStatus": null`,
+  `  },`,
+  `  "aiInsights": {`,
+  `    "performanceTrend": "↑ 12% QoQ",`,
+  `    "attritionRisk": "Low (8%)",`,
+  `    "promotionReadiness": "Ready",`,
+  `    "sentimentScore": 0.92,`,
+  `    "burnoutIndex": "Green",`,
+  `    "peerInfluence": "Top 5% connector",`,
+  `    "recommendedActions": [`,
+  `      "Schedule promotion review",`,
+  `      "Assign cross-functional project",`,
+  `      "Nominate for leadership program"`,
+  `    ]`,
+  `  },`,
+  `  "compensation": {`,
+  `    "currentBand": "L5-Senior",`,
+  `    "equityVesting": "Year 3 of 4",`,
+  `    "meritIncrease": "Eligible",`,
+  `    "bonusMultiplier": 1.25`,
+  `  },`,
+  `  "engagement": {`,
+  `    "pulseScore": 4.6,`,
+  `    "recognitionsGiven": 18,`,
+  `    "recognitionsReceived": 24,`,
+  `    "oneOnOnes": 12,`,
+  `    "feedbackFrequency": "Weekly"`,
+  `  }`,
+  `}`,
 ];
 
 function NeonCodeTyper() {
@@ -284,7 +348,7 @@ function NeonCodeTyper() {
       if (charIdx === 0) buffer.push('');
       charIdx++;
       buffer[buffer.length - 1] = currentLine.slice(0, charIdx);
-      if (buffer.length > 14) buffer = buffer.slice(-14);
+      if (buffer.length > 26) buffer = buffer.slice(-26);
       setLines([...buffer]);
       if (charIdx >= currentLine.length) { charIdx = 0; lineIdx++; setTimeout(tick, 80); }
       else setTimeout(tick, 12);
@@ -305,9 +369,9 @@ function NeonCodeTyper() {
         <div className="w-3 h-3 rounded-full bg-red-500/60" />
         <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
         <div className="w-3 h-3 rounded-full bg-green-500/60" />
-        <span className="ml-3 text-xs text-white/30 font-mono">performance-review.json</span>
+        <span className="ml-3 text-xs text-white/40 font-mono">api/v1/performance-review/EMP-2026-0847.json</span>
       </div>
-      <div className="px-6 py-5 min-h-[360px] sm:min-h-[420px]">
+      <div className="px-6 py-5 min-h-[480px] sm:min-h-[580px]">
         <pre ref={preRef} className="landing-neon-text font-mono text-sm sm:text-base leading-relaxed whitespace-pre overflow-hidden">
           {lines.map((line, i) => (
             <span key={i}>{line}{i === lines.length - 1 && <span className="landing-code-cursor" />}{'\n'}</span>
@@ -932,7 +996,7 @@ export default function LandingPage() {
         <video ref={videoRef} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" onLoadedData={handleVideoLoaded}>
           <source src="/bg-vid.webm" type="video/webm" />
         </video>
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/70" />
       </div>
 
       <FilmGrainOverlay />
