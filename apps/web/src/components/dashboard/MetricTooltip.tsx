@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useRef, useEffect, useCallback, type ReactNode, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { SparklesIcon } from '@heroicons/react/24/solid';
+import { useThemeStore, type Theme } from '@/store/theme';
 
 // ── Glossary of all PMS metric abbreviations ─────────────────────────────
 interface MetricEntry {
@@ -15,13 +17,13 @@ const METRIC_GLOSSARY: Record<string, MetricEntry> = {
   CPIS: {
     fullName: 'Comprehensive Performance Intelligence Score',
     description: 'The master score that combines all 8 performance dimensions into a single, fair, and mathematically rigorous rating. It uses weighted harmonic mean with Bayesian smoothing for accuracy.',
-    formula: 'Weighted Harmonic Mean of 8 dimensions × Confidence Factor, with fairness adjustment and Bayesian smoothing for low-data scenarios.',
+    formula: 'Weighted Harmonic Mean of 8 dimensions x Confidence Factor, with fairness adjustment and Bayesian smoothing for low-data scenarios.',
     impact: 'This is your overall performance score. All 8 dimensions contribute to it based on their individual weights.',
   },
   GAI: {
     fullName: 'Goal Attainment Index',
     description: 'Measures how effectively you achieve your goals, considering their priority levels and completion quality — not just whether they were finished.',
-    formula: 'Weighted average of goal progress, with priority multipliers (Critical ×2.0, High ×1.5, Medium ×1.0, Low ×0.75) and a completion bonus for 100% goals.',
+    formula: 'Weighted average of goal progress, with priority multipliers (Critical x2.0, High x1.5, Medium x1.0, Low x0.75) and a completion bonus for 100% goals.',
     impact: 'The single largest contributor to your CPIS score. Strong goal completion significantly boosts your overall rating.',
     weight: '25%',
   },
@@ -88,6 +90,130 @@ const METRIC_GLOSSARY: Record<string, MetricEntry> = {
   },
 };
 
+// ── Per-metric accent colors ──
+const METRIC_ACCENTS: Record<string, { from: string; to: string; glow: string }> = {
+  CPIS: { from: '#06b6d4', to: '#8b5cf6', glow: 'rgba(6,182,212,0.35)' },
+  GAI:  { from: '#3b82f6', to: '#22d3ee', glow: 'rgba(59,130,246,0.35)' },
+  RQS:  { from: '#a78bfa', to: '#c084fc', glow: 'rgba(167,139,250,0.35)' },
+  FSI:  { from: '#34d399', to: '#6ee7b7', glow: 'rgba(52,211,153,0.35)' },
+  CIS:  { from: '#fbbf24', to: '#f59e0b', glow: 'rgba(251,191,36,0.35)' },
+  CRI:  { from: '#fb7185', to: '#f43f5e', glow: 'rgba(251,113,133,0.35)' },
+  GTS:  { from: '#818cf8', to: '#6366f1', glow: 'rgba(129,140,248,0.35)' },
+  EQS:  { from: '#2dd4bf', to: '#14b8a6', glow: 'rgba(45,212,191,0.35)' },
+  III:  { from: '#e879f9', to: '#d946ef', glow: 'rgba(232,121,249,0.35)' },
+};
+const DEFAULT_ACCENT = { from: '#60a5fa', to: '#a78bfa', glow: 'rgba(96,165,250,0.35)' };
+
+// ── Theme-aware style helpers ──
+function getThemeStyles(theme: Theme): {
+  tipBg: CSSProperties;
+  tipText: string;
+  tipBorder: string;
+  popBg: CSSProperties;
+  popBorder: string;
+  headerBorder: string;
+  codeColor: string;
+  titleColor: string;
+  bodyText: string;
+  bodyMuted: string;
+  labelColor: string;
+  closeBtnHover: string;
+  weightBg: string;
+  weightText: string;
+} {
+  const effectiveTheme = theme === 'system'
+    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    : theme;
+
+  if (effectiveTheme === 'light') {
+    return {
+      tipBg: { background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(24px) saturate(1.8)' },
+      tipText: 'text-gray-800',
+      tipBorder: 'border-gray-200/60',
+      popBg: { background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(32px) saturate(2.0) brightness(1.05)' },
+      popBorder: 'border-gray-200/50',
+      headerBorder: 'border-gray-200/40',
+      codeColor: 'text-indigo-600',
+      titleColor: 'text-gray-900',
+      bodyText: 'text-gray-700',
+      bodyMuted: 'text-gray-500',
+      labelColor: 'text-gray-400',
+      closeBtnHover: 'hover:bg-gray-200/60 text-gray-400 hover:text-gray-700',
+      weightBg: 'bg-indigo-50',
+      weightText: 'text-indigo-500',
+    };
+  }
+
+  if (effectiveTheme === 'deep-dark') {
+    return {
+      tipBg: { background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(24px) saturate(1.6)' },
+      tipText: 'text-white',
+      tipBorder: 'border-white/10',
+      popBg: { background: 'rgba(2,6,23,0.78)', backdropFilter: 'blur(40px) saturate(1.8) brightness(0.95)' },
+      popBorder: 'border-white/[0.08]',
+      headerBorder: 'border-white/[0.06]',
+      codeColor: 'text-cyan-300',
+      titleColor: 'text-white',
+      bodyText: 'text-white/75',
+      bodyMuted: 'text-white/55',
+      labelColor: 'text-white/35',
+      closeBtnHover: 'hover:bg-white/10 text-white/30 hover:text-white',
+      weightBg: 'bg-white/5',
+      weightText: 'text-white/40',
+    };
+  }
+
+  // dark (default)
+  return {
+    tipBg: { background: 'rgba(15,23,42,0.82)', backdropFilter: 'blur(24px) saturate(1.6)' },
+    tipText: 'text-white',
+    tipBorder: 'border-white/10',
+    popBg: { background: 'rgba(15,23,42,0.75)', backdropFilter: 'blur(40px) saturate(1.8) brightness(1.05)' },
+    popBorder: 'border-white/10',
+    headerBorder: 'border-white/[0.08]',
+    codeColor: 'text-cyan-400',
+    titleColor: 'text-white',
+    bodyText: 'text-white/75',
+    bodyMuted: 'text-white/60',
+    labelColor: 'text-white/35',
+    closeBtnHover: 'hover:bg-white/10 text-white/30 hover:text-white',
+    weightBg: 'bg-white/5',
+    weightText: 'text-white/40',
+  };
+}
+
+// ── Inline keyframes (injected once) ──
+const ANIM_ID = 'metric-tooltip-anims';
+function ensureAnimations() {
+  if (document.getElementById(ANIM_ID)) return;
+  const style = document.createElement('style');
+  style.id = ANIM_ID;
+  style.textContent = `
+    @keyframes mt-pop-in {
+      0%   { opacity: 0; transform: scale(0.92) translateY(6px); filter: blur(4px); }
+      60%  { opacity: 1; transform: scale(1.02) translateY(-1px); filter: blur(0); }
+      100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+    }
+    @keyframes mt-tip-in {
+      0%   { opacity: 0; transform: translate(-50%, -100%) scale(0.9); }
+      100% { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+    }
+    @keyframes mt-shimmer {
+      0%   { transform: translateX(-100%) skewX(-15deg); }
+      100% { transform: translateX(200%) skewX(-15deg); }
+    }
+    @keyframes mt-glow-pulse {
+      0%, 100% { opacity: 0.5; }
+      50%      { opacity: 1; }
+    }
+    @keyframes mt-border-glow {
+      0%, 100% { opacity: 0.3; }
+      50%      { opacity: 0.7; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 // ── MetricTooltip Component ──────────────────────────────────────────────
 interface MetricTooltipProps {
   code: string;
@@ -95,66 +221,62 @@ interface MetricTooltipProps {
   className?: string;
 }
 
-/**
- * MetricTooltip — renders hover/detail tooltips via React portal so they
- * are never clipped by parent overflow:hidden containers (e.g. the hero section).
- */
 export default function MetricTooltip({ code, children, className }: MetricTooltipProps) {
   const entry = METRIC_GLOSSARY[code];
+  const theme = useThemeStore((s) => s.theme);
   const [hovered, setHovered] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const wrapperRef = useRef<HTMLSpanElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
 
-  // Fixed-position coordinates for portal-rendered elements
   const [tipCoords, setTipCoords] = useState({ top: 0, left: 0 });
   const [popCoords, setPopCoords] = useState({ top: 0, left: 0 });
 
-  // If code not in glossary, just render children as-is
   if (!entry) return <>{children}</>;
 
-  // Compute hover-tooltip position (centered above trigger)
+  const accent = METRIC_ACCENTS[code] ?? DEFAULT_ACCENT;
+  const T = getThemeStyles(theme);
+
+  // Inject animation keyframes once
+  useEffect(() => { ensureAnimations(); }, []);
+
+  // Compute hover-tooltip position
   const computeTipPos = useCallback(() => {
     if (!wrapperRef.current) return;
     const r = wrapperRef.current.getBoundingClientRect();
-    setTipCoords({ top: r.top - 8, left: r.left + r.width / 2 });
+    setTipCoords({ top: r.top - 10, left: r.left + r.width / 2 });
   }, []);
 
-  // Compute detail-popover position (viewport-aware, no transforms)
+  // Compute detail-popover position (viewport-aware)
   const computePopPos = useCallback(() => {
     if (!wrapperRef.current) return;
     const r = wrapperRef.current.getBoundingClientRect();
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const popW = 280;
-    const popH = 300;
+    const popW = 300;
+    const popH = 320;
     const PAD = 12;
 
-    // Horizontal: left-align; shift if overflows right; clamp left edge
     let left = r.left;
     if (left + popW > vw - PAD) left = r.right - popW;
     if (left < PAD) left = PAD;
 
-    // Vertical: compute actual top edge of popover
-    const aboveTop = r.top - PAD - popH; // top edge if placed above trigger
-    const belowTop = r.bottom + PAD;     // top edge if placed below trigger
+    const aboveTop = r.top - PAD - popH;
+    const belowTop = r.bottom + PAD;
 
     let top: number;
     if (aboveTop >= PAD) {
-      // Plenty of room above — place above
       top = aboveTop;
     } else if (belowTop + popH <= vh - PAD) {
-      // Room below — place below
       top = belowTop;
     } else {
-      // Neither side has full room — clamp within viewport
       top = Math.max(PAD, Math.min(vh - popH - PAD, aboveTop));
     }
 
     setPopCoords({ top, left });
   }, []);
 
-  // Close detail on outside click or Esc
+  // Close on outside click / Esc
   useEffect(() => {
     if (!showDetail) return;
     const handleClick = (e: MouseEvent) => {
@@ -176,7 +298,7 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
     };
   }, [showDetail]);
 
-  // Recompute positions on scroll/resize while visible
+  // Recompute on scroll/resize
   useEffect(() => {
     if (!hovered && !showDetail) return;
     const update = () => {
@@ -202,6 +324,9 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
     setShowDetail((prev) => !prev);
   }, [showDetail, computePopPos]);
 
+  // ── Gradient string for this metric ──
+  const gradient = `linear-gradient(135deg, ${accent.from}, ${accent.to})`;
+
   return (
     <span
       ref={wrapperRef}
@@ -209,96 +334,191 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Original content */}
       <span className="border-b border-dotted border-current/30">{children}</span>
 
-      {/* ⓘ button — appears on hover */}
+      {/* ⓘ button */}
       {(hovered || showDetail) && (
         <button
           type="button"
           onClick={handleToggleDetail}
-          className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-all duration-200 flex-shrink-0"
+          className="inline-flex items-center justify-center w-4 h-4 rounded-full transition-all duration-300 flex-shrink-0 hover:scale-125"
+          style={{
+            background: gradient,
+            boxShadow: showDetail ? `0 0 12px ${accent.glow}` : `0 0 6px ${accent.glow}`,
+          }}
           aria-label={entry.fullName}
         >
-          <InformationCircleIcon className="w-3 h-3" />
+          <InformationCircleIcon className="w-3 h-3 text-white" />
         </button>
       )}
 
-      {/* ── Hover tooltip (portal → body) ── */}
+      {/* ── Hover tooltip (portal) ── */}
       {hovered && !showDetail && createPortal(
         <div
           className="fixed z-[9999] pointer-events-none"
           style={{
             top: tipCoords.top,
             left: tipCoords.left,
-            transform: 'translate(-50%, -100%)',
+            animation: 'mt-tip-in 0.25s cubic-bezier(0.34,1.56,0.64,1) both',
           }}
         >
-          <div className="px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg shadow-xl whitespace-nowrap border border-white/10">
-            {entry.fullName}
-            {entry.weight && <span className="text-white/50 ml-1.5">({entry.weight})</span>}
+          <div
+            className={`relative overflow-hidden px-3.5 py-2 rounded-xl shadow-2xl border ${T.tipBorder}`}
+            style={{
+              ...T.tipBg,
+              boxShadow: `0 8px 32px -4px rgba(0,0,0,0.25), 0 0 0 1px ${accent.from}15, 0 0 20px ${accent.glow}`,
+            }}
+          >
+            {/* Shimmer sweep */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `linear-gradient(90deg, transparent, ${accent.from}15, transparent)`,
+                animation: 'mt-shimmer 2.5s ease-in-out infinite',
+              }}
+            />
+            {/* Accent top bar */}
+            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: gradient }} />
+            <div className="relative flex items-center gap-2 whitespace-nowrap">
+              <span className={`text-xs font-bold ${T.tipText}`}>{entry.fullName}</span>
+              {entry.weight && (
+                <span
+                  className="text-2xs font-bold px-1.5 py-0.5 rounded-md"
+                  style={{ background: `${accent.from}20`, color: accent.from }}
+                >
+                  {entry.weight}
+                </span>
+              )}
+            </div>
           </div>
         </div>,
         document.body,
       )}
 
-      {/* ── Detail popover (portal → body) ── */}
+      {/* ── Detail popover (portal) ── */}
       {showDetail && createPortal(
         <div
           ref={detailRef}
-          className="fixed z-[9999] w-[280px] max-w-[calc(100vw-2rem)]"
+          className="fixed z-[9999] w-[300px] max-w-[calc(100vw-2rem)]"
           style={{
             top: popCoords.top,
             left: popCoords.left,
+            animation: 'mt-pop-in 0.35s cubic-bezier(0.34,1.56,0.64,1) both',
           }}
           onClick={(e) => e.stopPropagation()}
         >
           <div
-            className="rounded-xl border border-white/15 shadow-2xl overflow-hidden"
+            className={`relative rounded-2xl border ${T.popBorder} overflow-hidden`}
             style={{
-              background: 'rgba(15, 20, 35, 0.95)',
-              backdropFilter: 'blur(20px) saturate(1.3)',
+              ...T.popBg,
+              boxShadow: [
+                `0 24px 60px -12px rgba(0,0,0,0.4)`,
+                `0 0 0 1px ${accent.from}10`,
+                `0 0 40px -8px ${accent.glow}`,
+                `inset 0 1px 0 rgba(255,255,255,0.08)`,
+              ].join(', '),
             }}
           >
-            {/* Header */}
-            <div className="flex items-start justify-between p-3 pb-2 border-b border-white/10">
-              <div>
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-xs font-bold text-cyan-400 tracking-wider">{code}</span>
+            {/* ── Animated glow border ── */}
+            <div
+              className="absolute inset-0 rounded-2xl pointer-events-none"
+              style={{
+                background: `linear-gradient(135deg, ${accent.from}20, transparent 40%, transparent 60%, ${accent.to}20)`,
+                animation: 'mt-border-glow 3s ease-in-out infinite',
+              }}
+            />
+
+            {/* ── Shimmer sweep overlay ── */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `linear-gradient(105deg, transparent 40%, ${accent.from}08, transparent 60%)`,
+                animation: 'mt-shimmer 4s ease-in-out infinite 0.5s',
+              }}
+            />
+
+            {/* ── Top gradient accent bar ── */}
+            <div className="absolute top-0 left-0 right-0 h-[3px] z-10" style={{ background: gradient }}>
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)`,
+                  animation: 'mt-shimmer 3s ease-in-out infinite',
+                }}
+              />
+            </div>
+
+            {/* ── Header ── */}
+            <div className={`relative z-10 flex items-start justify-between p-3.5 pb-2.5 border-b ${T.headerBorder}`}>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  {/* Glowing code badge */}
+                  <span
+                    className="text-xs font-extrabold tracking-widest px-2 py-0.5 rounded-md"
+                    style={{
+                      background: `${accent.from}18`,
+                      color: accent.from,
+                      boxShadow: `0 0 8px ${accent.glow}`,
+                    }}
+                  >
+                    {code}
+                  </span>
                   {entry.weight && (
-                    <span className="text-2xs font-medium text-white/40 bg-white/5 px-1.5 py-0.5 rounded">
-                      {entry.weight}
+                    <span className={`text-2xs font-semibold ${T.weightBg} ${T.weightText} px-1.5 py-0.5 rounded-md`}>
+                      {entry.weight} weight
                     </span>
                   )}
                 </div>
-                <h4 className="text-xs font-semibold text-white leading-snug">{entry.fullName}</h4>
+                <h4 className={`text-sm font-semibold ${T.titleColor} leading-snug`}>{entry.fullName}</h4>
               </div>
               <button
                 type="button"
                 onClick={() => setShowDetail(false)}
-                className="p-0.5 rounded-lg hover:bg-white/10 text-white/40 hover:text-white transition-colors flex-shrink-0 ml-2"
+                className={`p-1 rounded-lg ${T.closeBtnHover} transition-all duration-200 flex-shrink-0 ml-2 hover:rotate-90`}
               >
-                <XMarkIcon className="w-3.5 h-3.5" />
+                <XMarkIcon className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Body */}
-            <div className="p-3 space-y-2 max-h-[260px] overflow-y-auto">
+            {/* ── Body ── */}
+            <div className="relative z-10 p-3.5 pt-3 space-y-3 max-h-[280px] overflow-y-auto">
               {/* Description */}
-              <p className="text-2xs leading-relaxed text-white/70">{entry.description}</p>
+              <p className={`text-xs leading-relaxed ${T.bodyText}`}>{entry.description}</p>
 
               {/* Formula */}
-              <div>
-                <h5 className="text-3xs font-semibold text-white/40 tracking-wider mb-0.5">HOW IT&apos;S CALCULATED</h5>
-                <p className="text-2xs leading-relaxed text-white/60">{entry.formula}</p>
+              <div
+                className="rounded-lg p-2.5 transition-all duration-300 hover:scale-[1.01]"
+                style={{ background: `${accent.from}08` }}
+              >
+                <div className="flex items-center gap-1.5 mb-1">
+                  <SparklesIcon className="w-3 h-3" style={{ color: accent.from }} />
+                  <h5 className={`text-2xs font-bold tracking-wider ${T.labelColor}`}>HOW IT&apos;S CALCULATED</h5>
+                </div>
+                <p className={`text-2xs leading-relaxed ${T.bodyMuted}`}>{entry.formula}</p>
               </div>
 
               {/* Impact */}
-              <div>
-                <h5 className="text-3xs font-semibold text-white/40 tracking-wider mb-0.5">IMPACT ON SCORE</h5>
-                <p className="text-2xs leading-relaxed text-white/60">{entry.impact}</p>
+              <div
+                className="rounded-lg p-2.5 transition-all duration-300 hover:scale-[1.01]"
+                style={{ background: `${accent.to}08` }}
+              >
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-3 h-3 rounded-full" style={{ background: gradient, boxShadow: `0 0 6px ${accent.glow}` }} />
+                  <h5 className={`text-2xs font-bold tracking-wider ${T.labelColor}`}>IMPACT ON SCORE</h5>
+                </div>
+                <p className={`text-2xs leading-relaxed ${T.bodyMuted}`}>{entry.impact}</p>
               </div>
             </div>
+
+            {/* ── Bottom glow accent ── */}
+            <div
+              className="absolute bottom-0 left-[10%] right-[10%] h-[1px] z-10"
+              style={{
+                background: gradient,
+                opacity: 0.4,
+                filter: `blur(1px) drop-shadow(0 0 4px ${accent.glow})`,
+              }}
+            />
           </div>
         </div>,
         document.body,
@@ -307,6 +527,6 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
   );
 }
 
-// Export glossary for SVG native tooltips
+// Export glossary
 export { METRIC_GLOSSARY };
 export type { MetricEntry };
