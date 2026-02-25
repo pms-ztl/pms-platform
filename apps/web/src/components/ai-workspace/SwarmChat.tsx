@@ -18,6 +18,13 @@ import {
   UserIcon,
   ArrowLeftIcon,
   MagnifyingGlassIcon,
+  ClockIcon as ClockIconSolid,
+  PlusIcon,
+  PencilIcon,
+  TrashIcon,
+  EllipsisVerticalIcon,
+  XMarkIcon,
+  CheckIcon,
   // Agent & cluster icons
   AcademicCapIcon,
   ArchiveBoxIcon,
@@ -552,6 +559,12 @@ export function SwarmChat() {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  // History panel state
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -590,6 +603,63 @@ export function SwarmChat() {
       setMessages(loaded);
     }
   }, [conversationData]);
+
+  // All conversations for the history panel
+  const { data: allConversations, refetch: refetchHistory } = useQuery({
+    queryKey: ['ai', 'conversations', 'history', selectedAgent],
+    queryFn: () => aiApi.getConversations({ agentType: selectedAgent ?? undefined, limit: 50 }),
+    enabled: !!selectedAgent && historyOpen,
+  });
+
+  // Rename mutation
+  const renameMutation = useMutation({
+    mutationFn: ({ id, title }: { id: string; title: string }) => aiApi.renameConversation(id, title),
+    onSuccess: () => {
+      setRenamingId(null);
+      setRenameValue('');
+      refetchHistory();
+      queryClient.invalidateQueries({ queryKey: ['ai', 'conversations'] });
+    },
+  });
+
+  // Archive mutation
+  const archiveMutation = useMutation({
+    mutationFn: (id: string) => aiApi.archiveConversation(id),
+    onSuccess: (_, deletedId) => {
+      setMenuOpenId(null);
+      refetchHistory();
+      queryClient.invalidateQueries({ queryKey: ['ai', 'conversations'] });
+      // If we archived the active conversation, start a new one
+      if (deletedId === conversationId) {
+        handleNewChat();
+      }
+    },
+  });
+
+  // Start a new chat (clears current conversation, re-injects welcome message)
+  const handleNewChat = useCallback(() => {
+    setConversationId(null);
+    setHistoryOpen(false);
+    const agent = selectedAgent ? findAgent(selectedAgent) : null;
+    if (agent) {
+      setMessages([{
+        id: `welcome-${selectedAgent}-${Date.now()}`,
+        role: 'assistant',
+        content: `Hi there! I'm the **${agent.name}** Agent. I specialize in **${agent.desc.toLowerCase()}**. Ask me anything and I'll pull from your organization's real data to help.`,
+        timestamp: new Date(),
+      }]);
+    } else {
+      setMessages([]);
+    }
+    inputRef.current?.focus();
+  }, [selectedAgent]);
+
+  // Load a conversation from history
+  const handleLoadConversation = useCallback((id: string) => {
+    setConversationId(id);
+    setHistoryOpen(false);
+    inputRef.current?.focus();
+  }, []);
 
   // Reset conversation when agent changes — inject a friendly welcome message
   useEffect(() => {
@@ -792,14 +862,178 @@ export function SwarmChat() {
             </div>
           )}
 
-          {/* Conversation indicator */}
-          {conversationId && (
-            <div className={`ml-auto flex items-center gap-1.5 text-2xs ${T.textMuted(theme)}`}>
-              <div className={`h-1.5 w-1.5 rounded-full ${theme === 'light' ? 'bg-green-500' : 'bg-emerald-400'}`} />
-              Active session
-            </div>
-          )}
+          {/* History + New Chat + Conversation indicator */}
+          <div className="ml-auto flex items-center gap-2">
+            {selectedAgent && (
+              <>
+                <button
+                  onClick={handleNewChat}
+                  className={`flex items-center gap-1 rounded-lg px-2 py-1 text-2xs font-medium transition-colors ${T.surfaceHover(theme)} ${T.textSecondary(theme)}`}
+                  title="New conversation"
+                >
+                  <PlusIcon className="h-3.5 w-3.5" /> New
+                </button>
+                <button
+                  onClick={() => setHistoryOpen(!historyOpen)}
+                  className={`flex items-center gap-1 rounded-lg px-2 py-1 text-2xs font-medium transition-colors ${
+                    historyOpen
+                      ? `${T.accentBg(theme)} ${T.accentText(theme)}`
+                      : `${T.surfaceHover(theme)} ${T.textSecondary(theme)}`
+                  }`}
+                  title="Chat history"
+                >
+                  <ClockIconSolid className="h-3.5 w-3.5" /> History
+                </button>
+              </>
+            )}
+            {conversationId && !historyOpen && (
+              <div className={`flex items-center gap-1.5 text-2xs ${T.textMuted(theme)}`}>
+                <div className={`h-1.5 w-1.5 rounded-full ${theme === 'light' ? 'bg-green-500' : 'bg-emerald-400'}`} />
+                Active
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* History Panel Overlay */}
+        {historyOpen && (
+          <div className={`border-b ${T.borderLight(theme)} ${T.surface(theme)}`}>
+            <div className={`flex items-center justify-between px-4 py-2 border-b ${T.borderLight(theme)}`}>
+              <h3 className={`text-xs font-semibold ${T.textPrimary(theme)}`}>
+                Conversation History
+                {allConversations && (
+                  <span className={`ml-1.5 text-2xs font-normal ${T.textMuted(theme)}`}>
+                    ({allConversations.length})
+                  </span>
+                )}
+              </h3>
+              <button
+                onClick={() => { setHistoryOpen(false); setMenuOpenId(null); setRenamingId(null); }}
+                className={`flex h-6 w-6 items-center justify-center rounded-lg transition-colors ${T.surfaceHover(theme)} ${T.textSecondary(theme)}`}
+              >
+                <XMarkIcon className="h-4 w-4" />
+              </button>
+            </div>
+            <div className={`max-h-64 overflow-y-auto ${T.scrollbar(theme)}`}>
+              {!allConversations || allConversations.length === 0 ? (
+                <div className={`py-8 text-center text-xs ${T.textMuted(theme)}`}>
+                  No conversations yet. Start chatting to create one!
+                </div>
+              ) : (
+                <div className="divide-y divide-current/5">
+                  {allConversations.map((conv) => {
+                    const isActive = conv.id === conversationId;
+                    const isRenaming = renamingId === conv.id;
+                    const isMenuOpen = menuOpenId === conv.id;
+
+                    return (
+                      <div
+                        key={conv.id}
+                        className={`group flex items-center gap-3 px-4 py-2.5 transition-colors cursor-pointer ${
+                          isActive
+                            ? theme === 'light' ? 'bg-blue-50' : 'bg-white/[0.06]'
+                            : theme === 'light' ? 'hover:bg-gray-50' : 'hover:bg-white/[0.03]'
+                        }`}
+                        onClick={() => !isRenaming && handleLoadConversation(conv.id)}
+                      >
+                        {/* Conversation info */}
+                        <div className="flex-1 min-w-0">
+                          {isRenaming ? (
+                            <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                              <input
+                                autoFocus
+                                value={renameValue}
+                                onChange={(e) => setRenameValue(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' && renameValue.trim()) {
+                                    renameMutation.mutate({ id: conv.id, title: renameValue.trim() });
+                                  } else if (e.key === 'Escape') {
+                                    setRenamingId(null);
+                                  }
+                                }}
+                                className={`flex-1 rounded border px-2 py-0.5 text-xs outline-none ${T.inputField(theme)}`}
+                                placeholder="Conversation name..."
+                              />
+                              <button
+                                onClick={() => renameValue.trim() && renameMutation.mutate({ id: conv.id, title: renameValue.trim() })}
+                                className={`flex h-5 w-5 items-center justify-center rounded transition-colors ${T.surfaceHover(theme)}`}
+                              >
+                                <CheckIcon className="h-3 w-3 text-green-500" />
+                              </button>
+                              <button
+                                onClick={() => setRenamingId(null)}
+                                className={`flex h-5 w-5 items-center justify-center rounded transition-colors ${T.surfaceHover(theme)}`}
+                              >
+                                <XMarkIcon className="h-3 w-3 text-red-400" />
+                              </button>
+                            </div>
+                          ) : (
+                            <>
+                              <div className={`text-xs font-medium truncate ${isActive ? T.accentText(theme) : T.textPrimary(theme)}`}>
+                                {conv.title || `Chat ${formatRelativeTime(new Date(conv.createdAt))}`}
+                              </div>
+                              <div className={`text-2xs ${T.textMuted(theme)} flex items-center gap-2 mt-0.5`}>
+                                <span>{conv.messageCount} messages</span>
+                                <span>·</span>
+                                <span>{formatRelativeTime(new Date(conv.updatedAt))}</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
+
+                        {/* Active indicator */}
+                        {isActive && !isRenaming && (
+                          <div className={`h-1.5 w-1.5 rounded-full flex-shrink-0 ${theme === 'light' ? 'bg-green-500' : 'bg-emerald-400'}`} />
+                        )}
+
+                        {/* Three-dot menu */}
+                        {!isRenaming && (
+                          <div className="relative" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              onClick={() => setMenuOpenId(isMenuOpen ? null : conv.id)}
+                              className={`flex h-6 w-6 items-center justify-center rounded-lg transition-all ${
+                                isMenuOpen
+                                  ? `${T.surfaceHover(theme)} ${T.textPrimary(theme)}`
+                                  : `opacity-0 group-hover:opacity-100 ${T.surfaceHover(theme)} ${T.textMuted(theme)}`
+                              }`}
+                            >
+                              <EllipsisVerticalIcon className="h-3.5 w-3.5" />
+                            </button>
+
+                            {isMenuOpen && (
+                              <div
+                                className={`absolute right-0 top-7 z-20 w-32 rounded-lg border shadow-xl ${T.surface(theme)} ${T.border(theme)}`}
+                              >
+                                <button
+                                  onClick={() => {
+                                    setRenamingId(conv.id);
+                                    setRenameValue(conv.title || '');
+                                    setMenuOpenId(null);
+                                  }}
+                                  className={`flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors ${T.surfaceHover(theme)} ${T.textPrimary(theme)} rounded-t-lg`}
+                                >
+                                  <PencilIcon className="h-3 w-3" /> Rename
+                                </button>
+                                <button
+                                  onClick={() => archiveMutation.mutate(conv.id)}
+                                  className={`flex w-full items-center gap-2 px-3 py-2 text-xs transition-colors rounded-b-lg ${
+                                    theme === 'light' ? 'hover:bg-red-50 text-red-600' : 'hover:bg-red-900/20 text-red-400'
+                                  }`}
+                                >
+                                  <TrashIcon className="h-3 w-3" /> Archive
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Messages Area */}
         <div className={`flex-1 overflow-y-auto px-4 py-4 space-y-4 ${T.scrollbar(theme)}`}>
