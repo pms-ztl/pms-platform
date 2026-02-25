@@ -569,7 +569,12 @@ export function SwarmOrchestration() {
           agentType: 'coordinator',
           status: 'error',
           content: '',
-          error: err instanceof Error ? err.message : 'Coordination failed',
+          error: (() => {
+            const raw = err instanceof Error ? err.message : '';
+            if (raw.includes('rate limit') || raw.includes('429')) return 'AI service is busy. Please wait a moment and retry.';
+            if (raw.includes('unavailable') || raw.includes('503') || raw.includes('busy')) return 'AI service is temporarily unavailable. Try again shortly.';
+            return raw || 'Coordination failed — please try again.';
+          })(),
         }],
       };
 
@@ -614,11 +619,19 @@ export function SwarmOrchestration() {
           metadata: data.metadata,
         };
       } catch (err) {
+        const raw = err instanceof Error ? err.message : '';
+        const friendly = raw.includes('rate limit') || raw.includes('429')
+          ? 'AI service is busy due to high demand. Please wait a moment and retry.'
+          : raw.includes('unavailable') || raw.includes('503') || raw.includes('busy')
+          ? 'AI service is temporarily unavailable. Try again shortly.'
+          : raw.includes('not configured')
+          ? 'AI is not configured. Contact your administrator.'
+          : raw || 'Request failed — please try again.';
         return {
           agentType,
           status: 'error' as const,
           content: '',
-          error: err instanceof Error ? err.message : 'Request failed',
+          error: friendly,
         };
       }
     });
@@ -631,7 +644,7 @@ export function SwarmOrchestration() {
         agentType: 'unknown',
         status: 'error' as const,
         content: '',
-        error: 'Unexpected failure',
+        error: 'Unexpected failure — please try again.',
       };
     });
 
@@ -682,11 +695,19 @@ export function SwarmOrchestration() {
           metadata: data.metadata,
         };
       } catch (err) {
+        const raw = err instanceof Error ? err.message : '';
+        const friendly = raw.includes('rate limit') || raw.includes('429')
+          ? 'AI service is busy due to high demand. Please wait a moment and retry.'
+          : raw.includes('unavailable') || raw.includes('503') || raw.includes('busy')
+          ? 'AI service is temporarily unavailable. Try again shortly.'
+          : raw.includes('not configured')
+          ? 'AI is not configured. Contact your administrator.'
+          : raw || 'Request failed — please try again.';
         turnRef.responses[idx] = {
           agentType,
           status: 'error',
           content: '',
-          error: err instanceof Error ? err.message : 'Request failed',
+          error: friendly,
         };
       }
       completedCount++;
