@@ -47,7 +47,7 @@ const CPISScoreDisplay = ({
         {/* Soft ambient glow behind chart */}
         <div className="absolute inset-[-16px] bg-gradient-to-br from-cyan-500/20 via-violet-500/15 to-blue-500/20 rounded-full blur-3xl" />
 
-        <svg viewBox={`0 0 ${vb} ${vb}`} className="relative z-10 w-full h-full" style={{ filter: 'drop-shadow(0 0 16px rgba(56,189,248,0.25))' }}>
+        <svg viewBox={`0 0 ${vb} ${vb}`} className="relative z-10 w-full h-full select-none" style={{ filter: 'drop-shadow(0 0 16px rgba(56,189,248,0.25))', cursor: 'default' }}>
           <defs>
             <radialGradient id="cpis-fill-v2" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.55" />
