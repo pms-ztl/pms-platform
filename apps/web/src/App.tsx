@@ -98,6 +98,9 @@ import { AIDevPlanPage } from '@/pages/ai-development/AIDevPlanPage';
 import { PerformanceSimulatorPage } from '@/pages/simulator/PerformanceSimulatorPage';
 import { MentoringHubPage } from '@/pages/mentoring/MentoringHubPage';
 
+// Landing page (lazy loaded — separate from auth flow)
+const LandingPage = lazy(() => import('@/pages/LandingPage'));
+
 // Super Admin Pages (lazy loaded for code splitting)
 const SADashboardPage = lazy(() => import('@/pages/super-admin/SADashboardPage').then(m => ({ default: m.SADashboardPage })));
 const SATenantsPage = lazy(() => import('@/pages/super-admin/SATenantsPage').then(m => ({ default: m.SATenantsPage })));
@@ -131,7 +134,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/welcome" replace />;
   }
 
   return <>{children}</>;
@@ -276,6 +279,18 @@ function App() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
+        {/* Landing page — front door for unauthenticated users */}
+        <Route
+          path="/welcome"
+          element={
+            <PublicRoute>
+              <Suspense fallback={<PageLoader />}>
+                <LandingPage />
+              </Suspense>
+            </PublicRoute>
+          }
+        />
+
         {/* Public routes */}
         <Route
           path="/login"

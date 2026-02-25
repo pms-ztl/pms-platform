@@ -576,7 +576,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           style={{ opacity: 1, transition: 'none' }}
           onLoadedData={() => { if (videoARef.current) videoARef.current.playbackRate = 0.5; }}
         >
-          <source src="/bg-vid.webm" type="video/webm" />
+          <source src="/black-hole-30s.mp4" type="video/mp4" />
         </video>
         <video
           ref={videoBRef}
@@ -587,15 +587,18 @@ export function AuthLayout({ children }: AuthLayoutProps) {
           style={{ opacity: 0, transition: 'none' }}
           onLoadedData={() => { if (videoBRef.current) videoBRef.current.playbackRate = 0.5; }}
         >
-          <source src="/bg-vid.webm" type="video/webm" />
+          <source src="/black-hole-30s.mp4" type="video/mp4" />
         </video>
       </div>
 
-      {/* 35% darken overlay */}
-      <div className="absolute inset-0 bg-black/[0.35] pointer-events-none" />
+      {/* Heavy darken overlay for text readability over black hole video */}
+      <div className="absolute inset-0 bg-black/[0.55] pointer-events-none" />
 
-      {/* Subtle vignette for text readability */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%)' }} />
+      {/* Strong vignette — darkens edges heavily, keeps center slightly brighter */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.7) 100%)' }} />
+
+      {/* Additional top/bottom gradient for text areas */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.4) 100%)' }} />
 
       <CursorGlow containerRef={screenRef} />
 

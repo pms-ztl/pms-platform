@@ -117,8 +117,9 @@
        At 1920px viewport: capped at 23px */
   }
 
-  /* Reset font-size on auth/login pages so the inflated base doesn't affect them */
-  html:has(.auth-page) {
+  /* Reset font-size on auth/login/landing pages so the inflated base doesn't affect them */
+  html:has(.auth-page),
+  html:has(.landing-page) {
     font-size: 100%;
   }
 
@@ -2996,4 +2997,73 @@ html.transitioning *::after {
     transform: translate(-50%, -50%) rotate(90deg) !important;
     object-fit: cover !important;
   }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Landing Page — curated.media-inspired neon effects
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Blinking cursor for code typing effect */
+@keyframes landing-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.landing-code-cursor {
+  display: inline-block;
+  width: 0.6ch;
+  height: 1em;
+  margin-left: 0.1ch;
+  background: currentColor;
+  box-shadow: 0 0 6px rgba(102, 108, 255, 0.8);
+  vertical-align: -0.1em;
+  animation: landing-blink 0.6s steps(1) infinite;
+}
+
+/* Neon text glow for code lines */
+.landing-neon-text {
+  color: #b8baff;
+  text-shadow:
+    0 0 6px rgba(102, 108, 255, 0.9),
+    0 0 12px rgba(102, 108, 255, 0.6),
+    0 0 20px rgba(102, 108, 255, 0.4);
+  mix-blend-mode: screen;
+}
+
+/* Scroll-down bounce indicator */
+@keyframes landing-scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(10px); opacity: 1; }
+}
+
+.landing-scroll-indicator {
+  animation: landing-scroll-bounce 2s ease-in-out infinite;
+}
+
+/* Glass feature card top glow line */
+.landing-glass-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(102, 108, 255, 0.5), transparent);
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+.landing-glass-card:hover::before {
+  opacity: 1;
+}
+
+/* Landing page smooth scrolling */
+.landing-page {
+  scroll-behavior: smooth;
 }
