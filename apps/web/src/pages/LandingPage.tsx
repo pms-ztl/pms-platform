@@ -989,7 +989,7 @@ export default function LandingPage() {
   const handleVideoLoaded = useCallback(() => { if (videoRef.current) videoRef.current.playbackRate = 0.6; }, []);
 
   return (
-    <div ref={pageRef} className="landing-page relative min-h-screen bg-[rgb(10,13,26)] text-white overflow-x-hidden font-display">
+    <div ref={pageRef} className="landing-page relative min-h-screen bg-[rgb(10,13,26)] text-white overflow-x-hidden" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
 
       {/* ═══ FIXED BACKGROUND LAYERS ═════════════════════════════════════ */}
       <div className="fixed inset-0 z-0">
@@ -1045,7 +1045,7 @@ export default function LandingPage() {
           {/* Headline with word-by-word reveal + gradient "impact" */}
           <h1
             className={`font-display font-black text-white leading-[1.08] max-w-5xl mb-8 transition-opacity duration-500 ${heroRef.visible ? 'opacity-100' : 'opacity-0'}`}
-            style={{ fontSize: 'clamp(3.2rem, 9vw, 7.5rem)', letterSpacing: '-0.02em', textShadow: '0 4px 30px rgba(0,0,0,0.6), 0 0 80px rgba(148,210,255,0.1)' }}
+            style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(3.2rem, 9vw, 7.5rem)', letterSpacing: '-0.02em', textShadow: '0 4px 30px rgba(0,0,0,0.6), 0 0 80px rgba(148,210,255,0.1)' }}
           >
             {heroRef.visible && (
               <span className="landing-word-reveal">
