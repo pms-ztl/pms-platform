@@ -54,8 +54,8 @@ function NavLink({
         'group relative flex items-center rounded-lg text-xs font-medium transition-all duration-200',
         collapsed ? 'justify-center p-2.5' : 'gap-x-2.5 px-2.5 py-1.5',
         isActive
-          ? 'bg-primary-500/10 text-primary-300 shadow-[inset_0_1px_0_rgba(139,92,246,0.1)] sidebar-glow-active'
-          : 'text-secondary-400 hover:bg-white/[0.04] hover:text-secondary-200'
+          ? 'bg-primary-500/10 text-primary-700 dark:text-primary-300 shadow-[inset_0_1px_0_rgba(139,92,246,0.1)] sidebar-glow-active'
+          : 'text-secondary-500 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-white/[0.04] hover:text-secondary-900 dark:hover:text-secondary-200'
       )}
     >
       {isActive && !collapsed && (
@@ -69,8 +69,8 @@ function NavLink({
           'shrink-0 transition-all duration-200',
           collapsed ? 'h-5 w-5' : 'h-4 w-4',
           isActive
-            ? 'text-primary-400 drop-shadow-[0_0_4px_rgba(139,92,246,0.4)]'
-            : 'text-secondary-500 group-hover:text-secondary-300'
+            ? 'text-primary-600 dark:text-primary-400 drop-shadow-[0_0_4px_rgba(139,92,246,0.4)]'
+            : 'text-secondary-400 dark:text-secondary-500 group-hover:text-secondary-700 dark:group-hover:text-secondary-300'
         )}
         aria-hidden="true"
       />
@@ -106,7 +106,7 @@ function NavSectionGroup({
   if (collapsed) {
     return (
       <div className="space-y-0.5">
-        <div className="mx-auto my-2 h-px w-6 bg-white/[0.06]" />
+        <div className="mx-auto my-2 h-px w-6 bg-secondary-200 dark:bg-white/[0.06]" />
         {filtered.map((item) => (
           <NavLink key={item.href} item={item} isActive={pathname === item.href || pathname.startsWith(item.href + '/')} collapsed onClick={onNavigate} />
         ))}
@@ -129,7 +129,7 @@ function NavSectionGroup({
         {section.collapsible && (
           <ChevronRightIcon
             className={clsx(
-              'h-3 w-3 text-secondary-600 transition-transform duration-200',
+              'h-3 w-3 text-secondary-400 dark:text-secondary-600 transition-transform duration-200',
               isOpen && 'rotate-90'
             )}
           />
@@ -173,12 +173,12 @@ function SidebarContent({
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Logo */}
-      <div className={clsx('flex shrink-0 items-center h-14 border-b border-white/[0.06]', collapsed ? 'justify-center px-2' : 'px-4')}>
+      <div className={clsx('flex shrink-0 items-center h-14 border-b border-secondary-200 dark:border-white/[0.06]', collapsed ? 'justify-center px-2' : 'px-4')}>
         <span className="text-xl font-display font-bold bg-gradient-to-r from-primary-400 via-accent-400 to-primary-300 bg-clip-text text-transparent">
           {collapsed ? 'P' : 'PMS'}
         </span>
         {!collapsed && (
-          <span className="ml-2 text-2xs font-semibold tracking-widest text-secondary-500">
+          <span className="ml-2 text-2xs font-semibold tracking-widest text-secondary-400 dark:text-secondary-500">
             Platform
           </span>
         )}
@@ -190,7 +190,7 @@ function SidebarContent({
       </div>
 
       {/* Neural Swarm AI entry button */}
-      <div className="shrink-0 px-2 py-2 border-b border-white/[0.06]">
+      <div className="shrink-0 px-2 py-2 border-b border-secondary-200 dark:border-white/[0.06]">
         <button
           onClick={onAIWorkspaceClick}
           title={collapsed ? (isAiMode ? 'Exit AI Workspace' : 'Neural Swarm AI') : undefined}
@@ -199,7 +199,7 @@ function SidebarContent({
             collapsed ? 'justify-center p-2.5' : 'gap-x-2.5 px-3 py-2',
             isAiMode
               ? 'bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.15)]'
-              : 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 hover:from-indigo-500/20 hover:to-purple-500/20 border border-indigo-500/20 hover:border-indigo-500/35 text-indigo-300 hover:text-indigo-200'
+              : 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 hover:from-indigo-500/20 hover:to-purple-500/20 border border-indigo-500/20 hover:border-indigo-500/35 text-indigo-600 dark:text-indigo-300 hover:text-indigo-700 dark:hover:text-indigo-200'
           )}
         >
           <CpuChipIcon className={clsx('shrink-0', collapsed ? 'h-5 w-5' : 'h-4 w-4')} />
@@ -234,7 +234,7 @@ function SidebarContent({
 
         {isAdmin && (
           <>
-            <div className={clsx('my-2 border-t border-white/[0.06]', collapsed ? 'mx-2' : 'mx-3')} />
+            <div className={clsx('my-2 border-t border-secondary-200 dark:border-white/[0.06]', collapsed ? 'mx-2' : 'mx-3')} />
             <NavSectionGroup
               section={adminSection}
               userRoles={userRoles}
@@ -247,7 +247,7 @@ function SidebarContent({
       </nav>
 
       {/* Bottom: Settings + Collapse toggle */}
-      <div className="shrink-0 border-t border-white/[0.06] px-2 py-2 space-y-1">
+      <div className="shrink-0 border-t border-secondary-200 dark:border-white/[0.06] px-2 py-2 space-y-1">
         <NavLink
           item={{ name: 'Settings', href: '/settings', icon: Cog6ToothIcon }}
           isActive={pathname === '/settings'}
@@ -258,7 +258,7 @@ function SidebarContent({
           <button
             onClick={onToggleCollapse}
             className={clsx(
-              'flex w-full items-center rounded-lg p-2 text-secondary-500 hover:bg-white/[0.04] hover:text-secondary-300 transition-colors',
+              'flex w-full items-center rounded-lg p-2 text-secondary-500 dark:text-secondary-500 hover:bg-secondary-100 dark:hover:bg-white/[0.04] hover:text-secondary-800 dark:hover:text-secondary-300 transition-colors',
               collapsed ? 'justify-center' : 'gap-2 px-3'
             )}
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
