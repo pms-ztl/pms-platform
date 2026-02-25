@@ -353,13 +353,13 @@ export function CalendarPlanner() {
                   <div
                     key={event.id}
                     className={clsx(
-                      'text-xs px-1.5 py-0.5 rounded break-words text-white flex items-center gap-1',
+                      'text-xs px-1.5 py-0.5 rounded text-white flex items-center gap-1 min-w-0',
                       event.color
                     )}
                     title={event.title}
                   >
                     <EventIcon type={event.type} />
-                    <span className="break-words">{event.title}</span>
+                    <span className="truncate">{event.title}</span>
                   </div>
                 ))}
                 {dayEvents.length > 3 && (
@@ -433,7 +433,7 @@ export function CalendarPlanner() {
                   {hourEvents.map((event) => (
                     <div
                       key={event.id}
-                      className={clsx('text-2xs px-1.5 py-0.5 rounded break-words text-white mb-0.5', event.color)}
+                      className={clsx('text-2xs px-1.5 py-0.5 rounded truncate text-white mb-0.5', event.color)}
                       title={event.title}
                     >
                       {event.title}
@@ -459,11 +459,11 @@ export function CalendarPlanner() {
                 {allDayEvents.slice(0, 2).map((event) => (
                   <div
                     key={event.id}
-                    className={clsx('text-2xs px-1.5 py-0.5 rounded break-words text-white flex items-center gap-0.5', event.color)}
+                    className={clsx('text-2xs px-1.5 py-0.5 rounded text-white flex items-center gap-0.5 min-w-0', event.color)}
                     title={event.title}
                   >
                     <EventIcon type={event.type} />
-                    <span className="break-words">{event.title}</span>
+                    <span className="truncate">{event.title}</span>
                   </div>
                 ))}
                 {allDayEvents.length > 2 && (

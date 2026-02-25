@@ -429,7 +429,7 @@ export function CalendarPage() {
                     <div
                       key={day.toISOString()}
                       className={clsx(
-                        'border-b border-r border-secondary-100 dark:border-secondary-700 p-1 cursor-pointer transition-colors min-h-[90px]',
+                        'border-b border-r border-secondary-100 dark:border-secondary-700 p-1 cursor-pointer transition-colors min-h-[100px] overflow-hidden',
                         !isCurrentMonth && 'bg-secondary-50/50 dark:bg-secondary-900/30',
                         isSelected && 'bg-primary-50 dark:bg-primary-900/10',
                         isToday(day) && 'bg-blue-50/50 dark:bg-blue-900/10'
@@ -447,7 +447,7 @@ export function CalendarPage() {
                         {dayEvents.slice(0, 3).map((evt) => (
                           <div
                             key={evt.id}
-                            className={clsx('text-2xs leading-tight px-1 py-0.5 rounded break-words text-white font-medium', evt.color)}
+                            className={clsx('text-2xs leading-tight px-1 py-0.5 rounded truncate text-white font-medium', evt.color)}
                             title={evt.title}
                           >
                             {evt.title}
@@ -515,7 +515,7 @@ export function CalendarPage() {
                           {hourEvents.map((evt) => (
                             <div
                               key={evt.id}
-                              className={clsx('text-2xs px-1.5 py-0.5 rounded text-white font-medium break-words', evt.color)}
+                              className={clsx('text-2xs px-1.5 py-0.5 rounded text-white font-medium truncate', evt.color)}
                               title={evt.title}
                             >
                               {evt.title}
