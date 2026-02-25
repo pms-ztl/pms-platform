@@ -376,7 +376,7 @@ const FEATURE_CATEGORIES = [
     icon: CpuChipIcon,
     title: 'Analytics & AI',
     features: [
-      '11 specialized AI agents for workforce intelligence',
+      '70 specialized AI agents for workforce intelligence',
       'Real-time dashboards with anomaly detection & sentiment',
       'Performance simulator for scenario planning & what-if',
       'Bias detection & fairness firewall with transparent AI',
@@ -409,7 +409,7 @@ const USPS = [
   {
     icon: BoltIcon,
     title: 'AI-Powered Everything',
-    description: '11 specialized agents covering workforce intelligence, NLP queries, talent marketplace, and predictive analytics.',
+    description: '70 specialized agents spanning workforce intelligence, bio-performance, culture-empathy, governance, hyper-learning, and talent marketplace.',
   },
   {
     icon: EyeIcon,
@@ -794,7 +794,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <div className="text-4xl sm:text-5xl font-display font-bold text-white mb-2">
-                  <AnimatedCounter target={11} />
+                  <AnimatedCounter target={70} />
                 </div>
                 <div className="text-white/40 text-base">AI Agents</div>
               </div>
