@@ -84,14 +84,27 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
                     </span>
                   </div>
                   <div className="flex items-end gap-1 mb-2">
-                    <span className="text-2xl font-bold text-secondary-900 dark:text-white">{Math.round(dim.rawScore)}</span>
-                    <span className="text-xs text-secondary-400 mb-0.5">/100</span>
+                    {dim.rawScore > 0 ? (
+                      <>
+                        <span className="text-2xl font-bold text-secondary-900 dark:text-white">{Math.round(dim.rawScore)}</span>
+                        <span className="text-xs text-secondary-400 mb-0.5">/100</span>
+                      </>
+                    ) : (
+                      <span className="text-sm font-medium text-secondary-400 dark:text-secondary-500 italic">No data yet</span>
+                    )}
                   </div>
                   <div className="h-1.5 bg-secondary-200 dark:bg-secondary-700/60 rounded-full overflow-hidden">
-                    <div
-                      className={clsx('h-full rounded-full bg-gradient-to-r transition-all duration-1000', dimColors[index])}
-                      style={{ width: `${Math.min(100, dim.rawScore)}%` }}
-                    />
+                    {dim.rawScore > 0 ? (
+                      <div
+                        className={clsx('h-full rounded-full bg-gradient-to-r transition-all duration-1000', dimColors[index])}
+                        style={{ width: `${Math.min(100, dim.rawScore)}%` }}
+                      />
+                    ) : (
+                      <div
+                        className="h-full rounded-full bg-secondary-300/40 dark:bg-secondary-600/30 transition-all duration-1000"
+                        style={{ width: '3%' }}
+                      />
+                    )}
                   </div>
                 </div>
               );

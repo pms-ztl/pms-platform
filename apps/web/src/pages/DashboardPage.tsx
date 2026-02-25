@@ -541,26 +541,33 @@ function DashboardContent() {
               </div>
             </div>
 
-            {/* CPIS Top Dimensions — horizontal mini-bars */}
+            {/* CPIS Top Dimensions — horizontal mini-bars (sorted by score desc) */}
             {cpisDimensions.length > 0 && (
               <div className="mt-2 space-y-1.5">
                 <p className="text-2xs font-semibold text-white/50 tracking-wider">Performance Dimensions</p>
-                {cpisDimensions.slice(0, 4).map((dim: any, i: number) => {
+                {[...cpisDimensions].sort((a: any, b: any) => b.rawScore - a.rawScore).slice(0, 4).map((dim: any, i: number) => {
                   const barColors = ['#22d3ee', '#a78bfa', '#34d399', '#fbbf24'];
+                  const hasData = dim.rawScore > 0;
                   return (
                     <div key={dim.code} className="flex items-center gap-3">
                       <MetricTooltip code={dim.code} className="text-xs font-bold text-white/70 w-8 text-right justify-end">{dim.code}</MetricTooltip>
-                      <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full transition-all duration-1000"
-                          style={{
-                            width: `${Math.min(100, dim.rawScore)}%`,
-                            backgroundColor: barColors[i],
-                            boxShadow: `0 0 6px ${barColors[i]}60`,
-                          }}
-                        />
+                      <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden relative">
+                        {hasData ? (
+                          <div
+                            className="h-full rounded-full transition-all duration-1000"
+                            style={{
+                              width: `${Math.min(100, dim.rawScore)}%`,
+                              backgroundColor: barColors[i],
+                              boxShadow: `0 0 6px ${barColors[i]}60`,
+                            }}
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-3xs text-white/30 font-medium tracking-wider">No data</span>
+                          </div>
+                        )}
                       </div>
-                      <span className="text-xs font-bold text-white/80 w-8">{Math.round(dim.rawScore)}</span>
+                      <span className={`text-xs font-bold w-8 ${hasData ? 'text-white/80' : 'text-white/30'}`}>{hasData ? Math.round(dim.rawScore) : '—'}</span>
                     </div>
                   );
                 })}
