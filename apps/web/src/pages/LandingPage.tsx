@@ -196,10 +196,10 @@ function NeonCodeTyper() {
         <span className="ml-3 text-xs text-white/30 font-mono">performance-review.json</span>
       </div>
       {/* Code area */}
-      <div className="px-5 py-4 min-h-[320px] sm:min-h-[380px]">
+      <div className="px-6 py-5 min-h-[360px] sm:min-h-[420px]">
         <pre
           ref={preRef}
-          className="landing-neon-text font-mono text-xs sm:text-sm leading-relaxed whitespace-pre overflow-hidden"
+          className="landing-neon-text font-mono text-sm sm:text-base leading-relaxed whitespace-pre overflow-hidden"
         >
           {lines.map((line, i) => (
             <span key={i}>
@@ -230,7 +230,7 @@ function GlassFeatureCard({
   return (
     <div
       ref={ref}
-      className={`landing-glass-card rounded-2xl p-6 sm:p-8 transition-all duration-700 cursor-default group ${
+      className={`landing-glass-card rounded-3xl p-8 sm:p-10 transition-all duration-700 cursor-default group ${
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}
       style={{
@@ -243,16 +243,16 @@ function GlassFeatureCard({
       }}
     >
       <div
-        className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110"
+        className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110"
         style={{
           background: 'rgba(148, 210, 255, 0.08)',
           border: '1px solid rgba(148, 210, 255, 0.12)',
         }}
       >
-        <Icon className="w-6 h-6 text-cyan-300 group-hover:text-cyan-200 transition-colors" />
+        <Icon className="w-7 h-7 text-cyan-300 group-hover:text-cyan-200 transition-colors" />
       </div>
-      <h3 className="text-white text-xl font-semibold mb-3 font-display">{title}</h3>
-      <p className="text-white/50 text-base leading-relaxed">{description}</p>
+      <h3 className="text-white text-2xl font-semibold mb-3 font-display">{title}</h3>
+      <p className="text-white/50 text-lg leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -273,7 +273,7 @@ function GlassCategoryCard({
   return (
     <div
       ref={ref}
-      className={`landing-glass-card rounded-2xl p-7 sm:p-9 transition-all duration-700 cursor-default group ${
+      className={`landing-glass-card rounded-3xl p-8 sm:p-10 transition-all duration-700 cursor-default group ${
         visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}
       style={{
@@ -286,19 +286,19 @@ function GlassCategoryCard({
       }}
     >
       <div
-        className="w-13 h-13 rounded-xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110"
+        className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 group-hover:scale-110"
         style={{
           background: 'rgba(148, 210, 255, 0.08)',
           border: '1px solid rgba(148, 210, 255, 0.12)',
         }}
       >
-        <Icon className="w-7 h-7 text-cyan-300 group-hover:text-cyan-200 transition-colors" />
+        <Icon className="w-8 h-8 text-cyan-300 group-hover:text-cyan-200 transition-colors" />
       </div>
-      <h3 className="text-white text-xl font-semibold mb-4 font-display">{title}</h3>
-      <ul className="space-y-2">
+      <h3 className="text-white text-2xl font-semibold mb-5 font-display">{title}</h3>
+      <ul className="space-y-3">
         {features.map((f, i) => (
-          <li key={i} className="flex items-start gap-2 text-white/50 text-base leading-relaxed">
-            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400/40 flex-shrink-0" />
+          <li key={i} className="flex items-start gap-2.5 text-white/50 text-lg leading-relaxed">
+            <span className="mt-2 w-1.5 h-1.5 rounded-full bg-cyan-400/40 flex-shrink-0" />
             {f}
           </li>
         ))}
@@ -609,9 +609,9 @@ export default function LandingPage() {
         {/* ── SECTION 2: CODE TYPING + DESCRIPTION ───────────────────────── */}
         <section
           ref={codeRef.ref}
-          className="min-h-screen flex items-center py-20 sm:py-32 px-6 sm:px-10"
+          className="min-h-screen flex items-center py-20 sm:py-32 px-6 sm:px-12 lg:px-16"
         >
-          <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="max-w-[90rem] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left — Code typer */}
             <div
               className={`transition-all duration-1000 ${
@@ -666,20 +666,20 @@ export default function LandingPage() {
         </section>
 
         {/* ── SECTION 3: FEATURE CATEGORIES (3x2 grid) ────────────────────── */}
-        <section className="py-24 sm:py-36 px-6 sm:px-10">
-          <div className="max-w-7xl mx-auto">
+        <section className="py-24 sm:py-36 px-6 sm:px-12 lg:px-16">
+          <div className="max-w-[90rem] mx-auto">
             {/* Section header */}
             {(() => {
               const headerRef = useInView(0.2);
               return (
                 <div
                   ref={headerRef.ref}
-                  className={`text-center mb-16 transition-all duration-1000 ${
+                  className={`text-center mb-20 transition-all duration-1000 ${
                     headerRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                 >
                   <div
-                    className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase mb-6"
+                    className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-6"
                     style={{
                       background: 'rgba(148, 210, 255, 0.08)',
                       border: '1px solid rgba(148, 210, 255, 0.12)',
@@ -708,7 +708,7 @@ export default function LandingPage() {
             })()}
 
             {/* Feature category cards grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10">
               {FEATURE_CATEGORIES.map((cat, i) => (
                 <GlassCategoryCard key={cat.title} {...cat} delay={i * 100} />
               ))}
@@ -717,20 +717,20 @@ export default function LandingPage() {
         </section>
 
         {/* ── SECTION 4: USPs — What Sets Us Apart ────────────────────────── */}
-        <section className="py-24 sm:py-36 px-6 sm:px-10">
-          <div className="max-w-7xl mx-auto">
+        <section className="py-24 sm:py-36 px-6 sm:px-12 lg:px-16">
+          <div className="max-w-[90rem] mx-auto">
             {/* Section header */}
             {(() => {
               const uspHeaderRef = useInView(0.2);
               return (
                 <div
                   ref={uspHeaderRef.ref}
-                  className={`text-center mb-16 transition-all duration-1000 ${
+                  className={`text-center mb-20 transition-all duration-1000 ${
                     uspHeaderRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                 >
                   <div
-                    className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase mb-6"
+                    className="inline-block px-5 py-2 rounded-full text-sm font-semibold tracking-wider uppercase mb-6"
                     style={{
                       background: 'rgba(148, 210, 255, 0.08)',
                       border: '1px solid rgba(148, 210, 255, 0.12)',
@@ -759,7 +759,7 @@ export default function LandingPage() {
             })()}
 
             {/* USP cards grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10">
               {USPS.map((usp, i) => (
                 <GlassFeatureCard key={usp.title} icon={usp.icon} title={usp.title} description={usp.description} delay={i * 80} />
               ))}
@@ -768,10 +768,10 @@ export default function LandingPage() {
         </section>
 
         {/* ── SECTION 5: STATS BAR — Animated counters ────────────────────── */}
-        <section className="py-16 sm:py-20 px-6 sm:px-10">
-          <div className="max-w-5xl mx-auto">
+        <section className="py-20 sm:py-28 px-6 sm:px-12 lg:px-16">
+          <div className="max-w-[80rem] mx-auto">
             <div
-              className="rounded-2xl p-8 sm:p-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center"
+              className="rounded-3xl p-10 sm:p-14 grid grid-cols-2 sm:grid-cols-4 gap-10 text-center"
               style={{
                 background: 'rgba(255,255,255,0.03)',
                 backdropFilter: 'blur(24px) saturate(1.2)',
@@ -781,41 +781,41 @@ export default function LandingPage() {
               }}
             >
               <div>
-                <div className="text-4xl sm:text-5xl font-display font-bold text-white mb-2">
+                <div className="text-5xl sm:text-6xl font-display font-bold text-white mb-3">
                   <AnimatedCounter target={129} suffix="+" />
                 </div>
-                <div className="text-white/40 text-base">Data Models</div>
+                <div className="text-white/40 text-lg">Data Models</div>
               </div>
               <div>
-                <div className="text-4xl sm:text-5xl font-display font-bold text-white mb-2">
+                <div className="text-5xl sm:text-6xl font-display font-bold text-white mb-3">
                   <AnimatedCounter target={44} suffix="+" />
                 </div>
-                <div className="text-white/40 text-base">API Modules</div>
+                <div className="text-white/40 text-lg">API Modules</div>
               </div>
               <div>
-                <div className="text-4xl sm:text-5xl font-display font-bold text-white mb-2">
+                <div className="text-5xl sm:text-6xl font-display font-bold text-white mb-3">
                   <AnimatedCounter target={70} />
                 </div>
-                <div className="text-white/40 text-base">AI Agents</div>
+                <div className="text-white/40 text-lg">AI Agents</div>
               </div>
               <div>
-                <div className="text-4xl sm:text-5xl font-display font-bold text-white mb-2">
+                <div className="text-5xl sm:text-6xl font-display font-bold text-white mb-3">
                   <AnimatedCounter target={360} suffix="&#176;" />
                 </div>
-                <div className="text-white/40 text-base">Review Coverage</div>
+                <div className="text-white/40 text-lg">Review Coverage</div>
               </div>
             </div>
           </div>
         </section>
 
         {/* ── SECTION 6: FOOTER CTA ──────────────────────────────────────── */}
-        <section className="py-20 sm:py-32 px-6 sm:px-10">
+        <section className="py-24 sm:py-36 px-6 sm:px-12 lg:px-16">
           {(() => {
             const footerRef = useInView(0.2);
             return (
               <div
                 ref={footerRef.ref}
-                className={`max-w-3xl mx-auto text-center transition-all duration-1000 ${
+                className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${
                   footerRef.visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
