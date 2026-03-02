@@ -14,6 +14,7 @@ import {
   ChevronUpIcon,
   XMarkIcon,
   StarIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 
@@ -281,6 +282,18 @@ export function DevelopmentPlanDetailPage() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => developmentApi.deletePlan(id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['development-plans'] });
+      toast.success('Plan deleted');
+      navigate('/development');
+    },
+    onError: (err) => {
+      toast.error(err instanceof Error ? err.message : 'Failed to delete plan');
+    },
+  });
+
   const completeCheckpointMutation = useMutation({
     mutationFn: ({ checkpointId, data }: { checkpointId: string; data: Parameters<typeof developmentApi.completeCheckpoint>[1] }) =>
       developmentApi.completeCheckpoint(checkpointId, data),
@@ -461,6 +474,20 @@ export function DevelopmentPlanDetailPage() {
             >
               <CheckCircleIcon className="h-5 w-5 mr-2" />
               {approveMutation.isPending ? 'Approving...' : 'Approve Plan'}
+            </button>
+          )}
+          {(isManager || plan.userId === user?.id) && (
+            <button
+              onClick={() => {
+                if (window.confirm('Are you sure you want to delete this plan? This action cannot be undone.')) {
+                  deleteMutation.mutate();
+                }
+              }}
+              disabled={deleteMutation.isPending}
+              className="btn-danger"
+            >
+              <TrashIcon className="h-5 w-5 mr-2" />
+              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
             </button>
           )}
         </div>

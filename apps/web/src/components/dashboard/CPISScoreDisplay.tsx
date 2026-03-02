@@ -27,10 +27,22 @@ export interface CPISScoreDisplayProps {
 }
 
 /** CPIS Score Display — clean radar + central score orb */
+/* Dimension descriptions keyed by code — explains role in CPIS */
+const DIM_INFO: Record<string, { full: string; role: string }> = {
+  GAI: { full: 'Goal Attainment Index', role: 'Measures goal completion rate, progress, and on-time delivery' },
+  RQS: { full: 'Review Quality Score', role: 'Calibrated peer & manager review ratings adjusted for bias' },
+  FSI: { full: 'Feedback Sentiment Index', role: 'NLP-based sentiment analysis of written feedback' },
+  CIS: { full: 'Collaboration Impact Score', role: 'Peer endorsements and cross-team collaboration impact' },
+  CRI: { full: 'Consistency & Reliability Index', role: 'Quarter-over-quarter consistency and deadline reliability' },
+  GTS: { full: 'Growth Trajectory Score', role: 'Skill development velocity and learning momentum' },
+  EQS: { full: 'Evidence Quality Score', role: 'Quality, verification rate, and diversity of submitted evidence' },
+  III: { full: 'Initiative & Innovation Index', role: 'Self-started projects, creative problem-solving, and ownership' },
+};
+
 const CPISScoreDisplay = ({
   score, grade, starRating, rankLabel, dimensions, confidence, trajectory,
 }: CPISScoreDisplayProps) => {
-  const vb = 380;
+  const vb = 400;
   const cx = vb / 2;
   const cy = vb / 2;
   const maxR = 120;
@@ -63,7 +75,28 @@ const CPISScoreDisplay = ({
   const infoRef = useRef<HTMLDivElement>(null);
   const [infoPos, setInfoPos] = useState({ top: 0, left: 0 });
 
+  /* Dimension "i" button tooltip */
+  const [activeDim, setActiveDim] = useState<string | null>(null);
+  const [dimTipPos, setDimTipPos] = useState({ top: 0, left: 0 });
+  const dimTipRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+
   useEffect(() => { ensureAnimations(); }, []);
+
+  /* Close dimension tooltip on outside click / scroll */
+  useEffect(() => {
+    if (!activeDim) return;
+    const close = (e: MouseEvent) => {
+      if (dimTipRef.current && !dimTipRef.current.contains(e.target as Node)) setActiveDim(null);
+    };
+    const scrollClose = () => setActiveDim(null);
+    document.addEventListener('mousedown', close);
+    window.addEventListener('scroll', scrollClose, true);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      window.removeEventListener('scroll', scrollClose, true);
+    };
+  }, [activeDim]);
 
   useEffect(() => {
     if (!showInfo || !infoBtnRef.current) return;
@@ -101,7 +134,7 @@ const CPISScoreDisplay = ({
         {/* Soft ambient glow behind chart */}
         <div className="absolute inset-[-16px] bg-gradient-to-br from-cyan-500/20 via-violet-500/15 to-blue-500/20 rounded-full blur-3xl" />
 
-        <svg viewBox={`0 0 ${vb} ${vb}`} className="relative z-10 w-full h-full select-none" style={{ filter: 'drop-shadow(0 0 16px rgba(56,189,248,0.25))', cursor: 'default' }}>
+        <svg ref={svgRef} viewBox={`0 0 ${vb} ${vb}`} className="relative z-10 w-full h-full select-none" style={{ filter: 'drop-shadow(0 0 16px rgba(56,189,248,0.25))', cursor: 'default' }}>
           <defs>
             <radialGradient id="cpis-fill-v2" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.55" />
@@ -217,6 +250,8 @@ const CPISScoreDisplay = ({
             const x = cx + labelR * Math.cos(angle);
             const y = cy + labelR * Math.sin(angle);
             const hasScore = d.rawScore && d.rawScore > 0;
+            const isActive = activeDim === d.code;
+            const col = hasScore ? neonColors[i] : 'rgba(255,255,255,0.4)';
             return (
               <g key={`lbl-${d.code}`} opacity={hasScore ? 1 : 0.35}>
                 <text x={x} y={y - 8} textAnchor="middle" dominantBaseline="central"
@@ -225,15 +260,100 @@ const CPISScoreDisplay = ({
                   {hasScore ? Math.round(d.rawScore) : '—'}
                 </text>
                 <text x={x} y={y + 9} textAnchor="middle" dominantBaseline="central"
-                  fill={hasScore ? neonColors[i] : 'rgba(255,255,255,0.4)'} fontSize="11" fontWeight="800"
+                  fill={col} fontSize="11" fontWeight="800"
                   style={hasScore ? { textShadow: `0 0 6px ${neonColors[i]}70` } : undefined}
                 >
                   {d.code}
                 </text>
+                {/* "i" info button */}
+                <g
+                  className="cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (isActive) { setActiveDim(null); return; }
+                    /* Convert SVG coords → screen coords for the portal tooltip */
+                    if (svgRef.current) {
+                      const pt = svgRef.current.createSVGPoint();
+                      pt.x = x; pt.y = y + 9;
+                      const ctm = svgRef.current.getScreenCTM();
+                      if (ctm) {
+                        const screenPt = pt.matrixTransform(ctm);
+                        setDimTipPos({ top: screenPt.y + 14, left: screenPt.x });
+                      }
+                    }
+                    setActiveDim(d.code);
+                  }}
+                >
+                  <circle cx={x + 18} cy={y + 9} r="7" fill={isActive ? `${col}` : 'rgba(255,255,255,0.08)'} stroke={col} strokeWidth="1" opacity={isActive ? 1 : 0.6} />
+                  <text x={x + 18} y={y + 9} textAnchor="middle" dominantBaseline="central"
+                    fill={isActive ? '#000' : col} fontSize="9" fontWeight="800" style={{ pointerEvents: 'none' }}
+                  >
+                    i
+                  </text>
+                </g>
               </g>
             );
           })}
         </svg>
+
+        {/* Dimension info tooltip — portalled */}
+        {activeDim && DIM_INFO[activeDim] && createPortal(
+          <div
+            ref={dimTipRef}
+            className="fixed z-[9999]"
+            style={{
+              top: dimTipPos.top,
+              left: Math.max(12, Math.min(dimTipPos.left - 120, window.innerWidth - 252)),
+              animation: 'mt-pop-in 0.25s cubic-bezier(0.34,1.56,0.64,1) both',
+            }}
+          >
+            <div
+              className={`relative w-[240px] rounded-xl border ${T.popBorder} overflow-hidden p-3`}
+              style={{
+                ...T.popBg,
+                boxShadow: '0 16px 48px -8px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)',
+              }}
+            >
+              {(() => {
+                const info = DIM_INFO[activeDim];
+                const dim = dimensions.find(dd => dd.code === activeDim);
+                const idx = dimensions.findIndex(dd => dd.code === activeDim);
+                const col = idx >= 0 ? neonColors[idx] : '#60a5fa';
+                return (
+                  <>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-xs font-extrabold tracking-wide px-1.5 py-0.5 rounded-md"
+                        style={{ background: `${col}20`, color: col }}
+                      >
+                        {activeDim}
+                      </span>
+                      <span className={`text-2xs font-bold ${T.bodyMuted}`}>
+                        Weight: {dim ? `${Math.round(dim.weight * 100)}%` : '—'}
+                      </span>
+                    </div>
+                    <p className={`text-xs font-semibold ${T.titleColor} mb-1`}>{info.full}</p>
+                    <p className={`text-2xs ${T.bodyMuted} leading-relaxed`}>{info.role}</p>
+                    {dim && dim.rawScore > 0 && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full rounded-full" style={{ width: `${dim.rawScore}%`, background: col, boxShadow: `0 0 6px ${col}60` }} />
+                        </div>
+                        <span className="text-xs font-bold" style={{ color: col }}>{Math.round(dim.rawScore)}</span>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
+              <button
+                onClick={() => setActiveDim(null)}
+                className={`absolute top-2 right-2 p-0.5 rounded-md ${T.closeBtnHover} transition-all hover:rotate-90`}
+              >
+                <XMarkIcon className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
       </div>
 
       {/* Grade + Stars + Trajectory */}

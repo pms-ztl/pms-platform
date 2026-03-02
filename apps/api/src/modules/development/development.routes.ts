@@ -22,14 +22,20 @@ router.get('/plans/:id', (req, res, next) => developmentController.getPlanById(r
 router.put('/plans/:id', (req, res, next) => developmentController.updatePlan(req, res, next));
 router.delete('/plans/:id', (req, res, next) => developmentController.deletePlan(req, res, next));
 router.post('/plans/:id/approve',
-  authorize({ resource: 'development', action: 'update', scope: 'team' }),
+  authorize(
+    { resource: 'development', action: 'update', scope: 'team' },
+    { roles: ['HR Admin', 'HR_ADMIN', 'Tenant Admin', 'TENANT_ADMIN', 'Manager', 'MANAGER'] }
+  ),
   (req, res, next) => developmentController.approvePlan(req, res, next)
 );
 
 // Recommendations
 router.get('/recommendations', (req, res, next) => developmentController.getRecommendations(req, res, next));
 router.get('/recommendations/:userId',
-  authorize({ resource: 'development', action: 'read', scope: 'team' }),
+  authorize(
+    { resource: 'development', action: 'read', scope: 'team' },
+    { roles: ['HR Admin', 'HR_ADMIN', 'Tenant Admin', 'TENANT_ADMIN', 'Manager', 'MANAGER'] }
+  ),
   (req, res, next) => developmentController.getRecommendations(req, res, next)
 );
 
@@ -39,11 +45,17 @@ router.put('/activities/:id', (req, res, next) => developmentController.updateAc
 
 // Checkpoints
 router.post('/plans/:id/checkpoints',
-  authorize({ resource: 'development', action: 'update', scope: 'team' }),
+  authorize(
+    { resource: 'development', action: 'update', scope: 'team' },
+    { roles: ['HR Admin', 'HR_ADMIN', 'Tenant Admin', 'TENANT_ADMIN', 'Manager', 'MANAGER'] }
+  ),
   (req, res, next) => developmentController.addCheckpoint(req, res, next)
 );
 router.put('/checkpoints/:id/complete',
-  authorize({ resource: 'development', action: 'update', scope: 'team' }),
+  authorize(
+    { resource: 'development', action: 'update', scope: 'team' },
+    { roles: ['HR Admin', 'HR_ADMIN', 'Tenant Admin', 'TENANT_ADMIN', 'Manager', 'MANAGER'] }
+  ),
   (req, res, next) => developmentController.completeCheckpoint(req, res, next)
 );
 

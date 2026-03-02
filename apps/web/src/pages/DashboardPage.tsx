@@ -337,15 +337,13 @@ function DashboardContent() {
           background: 'linear-gradient(135deg, rgba(124,58,237,0.78) 0%, rgba(139,92,246,0.62) 38%, rgba(109,40,217,0.72) 72%, rgba(91,33,182,0.82) 100%)',
           backdropFilter: 'blur(56px) saturate(210%) brightness(1.1)',
           WebkitBackdropFilter: 'blur(56px) saturate(210%) brightness(1.1)',
-          borderColor: 'rgba(255,255,255,0.30)',
+          borderColor: 'rgba(255,255,255,0.12)',
           boxShadow: [
-            '0 32px 80px -8px rgba(109,40,217,0.72)',
-            '0 8px 32px -4px rgba(91,33,182,0.5)',
-            '0 0 0 1px rgba(255,255,255,0.20)',
-            'inset 0 2px 0 rgba(255,255,255,0.45)',
-            'inset 0 -2px 0 rgba(0,0,0,0.22)',
-            'inset 2px 0 0 rgba(255,255,255,0.12)',
-            '0 0 120px -20px rgba(139,92,246,0.5)',
+            '0 16px 48px -12px rgba(109,40,217,0.35)',
+            '0 4px 16px -4px rgba(91,33,182,0.25)',
+            '0 0 0 1px rgba(255,255,255,0.12)',
+            'inset 0 1px 0 rgba(255,255,255,0.25)',
+            'inset 0 -1px 0 rgba(0,0,0,0.15)',
           ].join(', '),
         }}>
         <AnimatedWaves />

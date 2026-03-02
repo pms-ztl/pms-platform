@@ -338,6 +338,7 @@ export function AIChatWidget() {
   const [dimensions, setDimensions] = useState({ width: 400, height: 560 });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
   const queryClient = useQueryClient();
 
   // ── Voice Input (Speech-to-Text) ────────────────────────────
@@ -594,23 +595,15 @@ export function AIChatWidget() {
     statusDotText: isDark ? 'text-emerald-300/80' : 'text-white/80',
   };
 
-  // ── Floating Button ────────────────────────────────────
+  // ── Floating Button (always frosted glass — solidifies on hover) ────
   if (!isOpen) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="group fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full shadow-2xl transition-all duration-500 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
-        style={{
-          background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4)',
-          boxShadow: '0 0 20px rgba(99, 102, 241, 0.4), 0 6px 24px rgba(0,0,0,0.3)',
-        }}
+        className="fixed bottom-5 right-5 z-50 flex items-center justify-center rounded-full focus:outline-none fab-glass-btn"
         title="Open AI Assistant"
       >
-        <ChatBubbleOvalLeftEllipsisIcon className="h-5 w-5 text-white transition-transform duration-500 group-hover:scale-110" />
-        <span
-          className="absolute inset-0 rounded-full animate-ping opacity-20"
-          style={{ background: 'linear-gradient(135deg, #6366f1, #06b6d4)' }}
-        />
+        <ChatBubbleOvalLeftEllipsisIcon className="text-white/50 drop-shadow-sm" />
       </button>
     );
   }

@@ -121,8 +121,8 @@ async function main() {
   // 6. Demo tenant roles
   const roleDefinitions = [
     { name: 'Tenant Admin', desc: 'Full tenant administration', cat: 'ADMIN', perms: ['users:manage:all', 'roles:manage:all', 'settings:manage:all', 'integrations:manage:all'] },
-    { name: 'HR Admin', desc: 'HR administration', cat: 'HR', perms: ['users:read:all', 'goals:read:all', 'reviews:manage:all', 'feedback:read:all', 'calibration:manage:all', 'analytics:read:all'] },
-    { name: 'Manager', desc: 'People manager', cat: 'MANAGER', perms: ['users:read:team', 'goals:read:team', 'goals:update:team', 'reviews:create:team', 'reviews:read:team', 'feedback:create:all', 'feedback:read:team'] },
+    { name: 'HR Admin', desc: 'HR administration', cat: 'HR', perms: ['users:read:all', 'goals:read:all', 'reviews:manage:all', 'feedback:read:all', 'calibration:manage:all', 'analytics:read:all', 'development:read:all', 'development:update:all'] },
+    { name: 'Manager', desc: 'People manager', cat: 'MANAGER', perms: ['users:read:team', 'goals:read:team', 'goals:update:team', 'reviews:create:team', 'reviews:read:team', 'feedback:create:all', 'feedback:read:team', 'development:read:team', 'development:update:team'] },
     { name: 'Employee', desc: 'Standard employee', cat: 'EMPLOYEE', perms: ['goals:create:own', 'goals:read:own', 'goals:update:own', 'reviews:read:own', 'feedback:create:all', 'feedback:read:own'] },
   ];
 
