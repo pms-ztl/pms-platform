@@ -113,7 +113,7 @@ export function SASecurityPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Security</h1>

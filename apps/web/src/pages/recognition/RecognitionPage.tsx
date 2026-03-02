@@ -109,9 +109,9 @@ export function RecognitionPage() {
   const valueSuggestions = ['Teamwork', 'Innovation', 'Leadership', 'Customer Focus', 'Integrity', 'Excellence', 'Collaboration', 'Ownership'];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ── Premium Header ──────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-2xl border border-amber-200/30 dark:border-amber-500/10 p-6 sm:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-amber-200/30 dark:border-amber-500/10 p-4 sm:p-6">
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50/80 to-rose-50/60 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-rose-950/20" />
         {/* Decorative orbs */}
@@ -149,7 +149,7 @@ export function RecognitionPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* ── Main Recognition Feed ──────────────────────────── */}
         <div className="lg:col-span-2 space-y-4">
           {wallLoading ? (
@@ -294,7 +294,7 @@ export function RecognitionPage() {
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 shadow-md shadow-amber-500/20">
                     <TrophyIcon className="h-4 w-4 text-white" />
                   </div>
-                  <h3 className="text-base font-bold text-secondary-900 dark:text-white">Top Recognized</h3>
+                  <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Top Recognized</h3>
                 </div>
                 <select
                   value={period}
@@ -385,10 +385,10 @@ export function RecognitionPage() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 shadow-md shadow-amber-500/20">
                   <SparklesIcon className="h-4 w-4 text-white" />
                 </div>
-                <h3 className="text-base font-bold text-secondary-900 dark:text-white">Recognition Impact</h3>
+                <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Recognition Impact</h3>
               </div>
               <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-3xl font-extrabold text-amber-600 dark:text-amber-400 tracking-tight">{wall?.meta?.total ?? 0}</span>
+                <span className="text-xl font-bold text-amber-600 dark:text-amber-400 tracking-tight">{wall?.meta?.total ?? 0}</span>
                 <span className="text-sm text-secondary-500 dark:text-secondary-400 font-medium">total recognitions</span>
               </div>
               <p className="text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed">

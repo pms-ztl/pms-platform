@@ -133,7 +133,7 @@ export function TeamOptimizerPage() {
   // ── main ──────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 p-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -185,12 +185,12 @@ export function TeamOptimizerPage() {
       {optimization && (
         <>
           {/* Overall + Radar */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">{optimization.teamName}</h3>
               <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">{optimization.optimizationType} &middot; {optimization.teamSize} members</p>
               <div className="text-center mb-4">
-                <p className="text-4xl font-bold text-indigo-600 dark:text-indigo-400">{(optimization.overallScore ?? 0).toFixed(0)}</p>
+                <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{(optimization.overallScore ?? 0).toFixed(0)}</p>
                 <p className="text-xs text-secondary-500">Overall Score</p>
               </div>
               <div className="h-52">
@@ -208,7 +208,7 @@ export function TeamOptimizerPage() {
             </div>
 
             {/* Recommended members */}
-            <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Recommended Members</h3>
               {Array.isArray(optimization.recommendedMembers) && optimization.recommendedMembers.length > 0 ? (
                 <div className="space-y-2">
@@ -251,8 +251,8 @@ export function TeamOptimizerPage() {
           </div>
 
           {/* Strengths & Risks */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-base font-semibold text-green-700 dark:text-green-400 mb-3">Strengths</h3>
               {optimization.strengthsAnalysis?.length ? (
                 <ul className="space-y-2">
@@ -265,7 +265,7 @@ export function TeamOptimizerPage() {
                 </ul>
               ) : <p className="text-xs text-secondary-400">No strengths data.</p>}
             </div>
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-base font-semibold text-red-700 dark:text-red-400 mb-3">Risks</h3>
               {optimization.risks?.length ? (
                 <ul className="space-y-2">
@@ -281,8 +281,8 @@ export function TeamOptimizerPage() {
           </div>
 
           {/* Skill Gaps & Redundancies */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-3">Skill Gaps</h3>
               {optimization.skillGaps && Object.keys(optimization.skillGaps).length > 0 ? (
                 <div className="space-y-2">
@@ -298,7 +298,7 @@ export function TeamOptimizerPage() {
                 </div>
               ) : <p className="text-xs text-secondary-400">No skill gaps identified.</p>}
             </div>
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-3">Redundancies</h3>
               {optimization.redundancies?.length ? (
                 <div className="flex flex-wrap gap-2">
@@ -312,7 +312,7 @@ export function TeamOptimizerPage() {
 
           {/* Implementation Steps */}
           {Array.isArray(optimization.implementationSteps) && optimization.implementationSteps.length > 0 && (
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Implementation Steps</h3>
               <div className="space-y-3">
                 {optimization.implementationSteps.map((step: any, i: number) => (
@@ -335,8 +335,8 @@ export function TeamOptimizerPage() {
 
       {/* Team Analysis */}
       {analysis && (
-        <div className="space-y-6">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="space-y-4">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Team Composition Analysis</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="text-center"><p className="text-xl font-bold text-indigo-600 dark:text-indigo-400">{analysis.teamSize}</p><p className="text-xs text-secondary-500">Team Size</p></div>
@@ -359,7 +359,7 @@ export function TeamOptimizerPage() {
             </div>
 
             {/* Charts */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {seniorityData.length > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-2">Seniority Mix</h4>
@@ -395,8 +395,8 @@ export function TeamOptimizerPage() {
           </div>
 
           {/* Strengths & Vulnerabilities */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-2">Key Strengths</h3>
               <ul className="space-y-1">
                 {(analysis.keyStrengths || []).map((s, i) => (
@@ -406,7 +406,7 @@ export function TeamOptimizerPage() {
                 ))}
               </ul>
             </div>
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-sm font-semibold text-red-700 dark:text-red-400 mb-2">Vulnerabilities</h3>
               <ul className="space-y-1">
                 {(analysis.vulnerabilities || []).map((v, i) => (
@@ -420,7 +420,7 @@ export function TeamOptimizerPage() {
 
           {/* Priority Actions */}
           {analysis.priorityActions?.length > 0 && (
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-3">Priority Actions</h3>
               <div className="space-y-2">
                 {analysis.priorityActions.map((a, i) => (
@@ -438,7 +438,7 @@ export function TeamOptimizerPage() {
       {showOptimizeModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-between p-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Optimize Team Composition</h3>
               <button onClick={() => setShowOptimizeModal(false)} className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-200"><XMarkIcon className="w-5 h-5" /></button>
             </div>
@@ -481,7 +481,7 @@ export function TeamOptimizerPage() {
                   rows={3} placeholder="What should this team achieve?" />
               </div>
             </div>
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-end gap-3 p-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button onClick={() => setShowOptimizeModal(false)} className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors">Cancel</button>
               <button
                 onClick={() => {
@@ -511,7 +511,7 @@ export function TeamOptimizerPage() {
       {showAnalyzeModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-sm">
-            <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-between p-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Analyze Team</h3>
               <button onClick={() => setShowAnalyzeModal(false)} className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-200"><XMarkIcon className="w-5 h-5" /></button>
             </div>
@@ -521,7 +521,7 @@ export function TeamOptimizerPage() {
                 className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 placeholder="Enter team ID" />
             </div>
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-end gap-3 p-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button onClick={() => setShowAnalyzeModal(false)} className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors">Cancel</button>
               <button
                 onClick={() => {

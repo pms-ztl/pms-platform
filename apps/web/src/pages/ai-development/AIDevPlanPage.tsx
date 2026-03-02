@@ -132,7 +132,7 @@ export function AIDevPlanPage() {
 
   /* ════════════════════════════════════════════════════════════════════ */
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -253,7 +253,7 @@ export function AIDevPlanPage() {
 
       {/* ── Selected Plan Detail ────────────────────────────────────── */}
       {selectedPlan && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* heading */}
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-white">{selectedPlan.planName}</h2>
@@ -455,7 +455,7 @@ export function AIDevPlanPage() {
       {/* ── Generate Plan Modal ─────────────────────────────────────── */}
       {showGenModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowGenModal(false)}>
-          <div className="w-full max-w-lg rounded-2xl border border-gray-700 bg-gray-800 p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="w-full max-w-lg rounded-2xl border border-gray-700 bg-gray-800 p-4 shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-lg font-bold text-white">Generate AI Development Plan</h2>
               <button onClick={() => setShowGenModal(false)} className="text-gray-400 hover:text-white"><XMarkIcon className="h-5 w-5" /></button>

@@ -433,7 +433,7 @@ export function DevelopmentPlanDetailPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ================================================================ */}
       {/* Header                                                          */}
       {/* ================================================================ */}
@@ -496,10 +496,10 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {/* Plan Overview Card                                               */}
       {/* ================================================================ */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Plan Overview</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Career Goal */}
           <div>
             <dt className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
@@ -620,7 +620,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {/* Activities Section                                               */}
       {/* ================================================================ */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Activities</h2>
           <button
@@ -772,7 +772,7 @@ export function DevelopmentPlanDetailPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Status */}
                       <div>
-                        <label className="text-xs font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
+                        <label className="text-sm font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
                           Status
                         </label>
                         <select
@@ -788,7 +788,7 @@ export function DevelopmentPlanDetailPage() {
 
                       {/* Progress Slider */}
                       <div>
-                        <label className="text-xs font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
+                        <label className="text-sm font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
                           Progress: {editActivityProgress}%
                         </label>
                         <input
@@ -804,7 +804,7 @@ export function DevelopmentPlanDetailPage() {
 
                     {/* Rating */}
                     <div>
-                      <label className="text-xs font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
+                      <label className="text-sm font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
                         Rating
                       </label>
                       <StarRating
@@ -815,7 +815,7 @@ export function DevelopmentPlanDetailPage() {
 
                     {/* Feedback */}
                     <div>
-                      <label className="text-xs font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
+                      <label className="text-sm font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
                         Feedback
                       </label>
                       <textarea
@@ -829,7 +829,7 @@ export function DevelopmentPlanDetailPage() {
 
                     {/* Completion Evidence */}
                     <div>
-                      <label className="text-xs font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
+                      <label className="text-sm font-medium text-secondary-600 dark:text-secondary-400 block mb-1">
                         Completion Evidence
                       </label>
                       <textarea
@@ -874,7 +874,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {/* Checkpoints Timeline                                             */}
       {/* ================================================================ */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Checkpoints</h2>
           {isManager && (
@@ -897,7 +897,7 @@ export function DevelopmentPlanDetailPage() {
             {/* Vertical Timeline Line */}
             <div className="absolute top-0 bottom-0 border-l-2 border-secondary-300 dark:border-secondary-600 ml-4" />
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {checkpoints.map((checkpoint) => {
                 const isCompleted = checkpoint.status === 'COMPLETED';
                 const isPending = checkpoint.status === 'PENDING' || checkpoint.status === 'SCHEDULED';
@@ -1026,10 +1026,10 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {((plan.strengthsAssessed && plan.strengthsAssessed.length > 0) ||
         (plan.developmentAreas && plan.developmentAreas.length > 0)) && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Skill Gap Analysis</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Strengths column */}
             <div>
               <h3 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-3 tracking-wider">
@@ -1104,7 +1104,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {showAddActivity && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Add Activity</h2>
               <button
@@ -1245,7 +1245,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {showAddCheckpoint && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Add Checkpoint</h2>
               <button
@@ -1322,7 +1322,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {completeCheckpointId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Complete Checkpoint</h2>
               <button

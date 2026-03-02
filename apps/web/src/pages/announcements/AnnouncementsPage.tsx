@@ -358,7 +358,7 @@ export function AnnouncementsPage() {
   // ========================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ---- Header ---- */}
       <PageHeader title="Announcements" subtitle="Stay informed with company-wide announcements, policy updates, and recognitions">
         {isManager && (
@@ -1025,7 +1025,7 @@ function SummaryCard({
       <div className="flex-shrink-0">{icon}</div>
       <div>
         <p className="text-sm font-medium text-secondary-500 dark:text-secondary-400">{label}</p>
-        <p className="text-2xl font-bold text-secondary-900 dark:text-white">{value}</p>
+        <p className="text-xl font-bold text-secondary-900 dark:text-white">{value}</p>
       </div>
     </div>
   );

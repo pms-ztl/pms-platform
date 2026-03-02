@@ -1162,9 +1162,10 @@ function computeRQS(reviews: CPISInput['reviews']): CPISDimension {
   const subMetrics: Record<string, number> = {};
 
   if (reviews.length === 0) {
+    // Default to neutral 50 (like FSI) — absence of reviews ≠ poor performance
     return {
-      name: 'Review Quality', code: 'RQS', rawScore: 0, weight: 0.20,
-      weightedScore: 0, grade: 'F', subMetrics: { avgRating: 0, calibratedAvg: 0, trustWeightedAvg: 0, biasAdjustment: 0 },
+      name: 'Review Quality', code: 'RQS', rawScore: 50, weight: 0.20,
+      weightedScore: 50 * 0.20, grade: 'C', subMetrics: { avgRating: 0, calibratedAvg: 0, trustWeightedAvg: 0, biasAdjustment: 0 },
     };
   }
 
@@ -1410,9 +1411,10 @@ function computeEQS(evidence: CPISInput['evidence']): CPISDimension {
   const subMetrics: Record<string, number> = {};
 
   if (evidence.totalEvidence === 0) {
+    // Default to neutral 50 (like FSI) — absence of evidence ≠ poor quality
     return {
-      name: 'Evidence Quality', code: 'EQS', rawScore: 0, weight: 0.08,
-      weightedScore: 0, grade: 'F', subMetrics: { verificationRate: 0, avgImpact: 0, avgQuality: 0, diversity: 0 },
+      name: 'Evidence Quality', code: 'EQS', rawScore: 50, weight: 0.08,
+      weightedScore: 50 * 0.08, grade: 'C', subMetrics: { verificationRate: 0, avgImpact: 0, avgQuality: 0, diversity: 0 },
     };
   }
 
@@ -1592,9 +1594,8 @@ export function calculateCPIS(input: CPISInput): CPISResult {
   // exist yet (e.g. no reviews conducted, no evidence submitted).
   const noDataCodes = new Set<string>();
   if (input.goals.length === 0) noDataCodes.add('GAI');
-  if (input.reviews.length === 0) noDataCodes.add('RQS');
-  // FSI defaults to 50 when empty — no re-weight needed
-  if (input.evidence.totalEvidence === 0) noDataCodes.add('EQS');
+  // RQS defaults to 50 when empty — no re-weight needed (like FSI)
+  // EQS defaults to 50 when empty — no re-weight needed (like FSI)
   if (input.growth.historicalScores.length === 0 && input.growth.trainingsCompleted === 0 &&
       input.growth.skillProgressions === 0 && input.growth.developmentPlanProgress === 0) noDataCodes.add('GTS');
   // III: no initiative data tracked at all

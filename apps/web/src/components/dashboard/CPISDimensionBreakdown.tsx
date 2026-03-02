@@ -86,7 +86,7 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
                   <div className="flex items-end gap-1 mb-2">
                     {dim.rawScore > 0 ? (
                       <>
-                        <span className="text-2xl font-bold text-secondary-900 dark:text-white">{Math.round(dim.rawScore)}</span>
+                        <span className="text-xl font-bold text-secondary-900 dark:text-white">{Math.round(dim.rawScore)}</span>
                         <span className="text-xs text-secondary-400 mb-0.5">/100</span>
                       </>
                     ) : (

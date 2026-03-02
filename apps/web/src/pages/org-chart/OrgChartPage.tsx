@@ -254,7 +254,7 @@ function OrgChartNode({
         <button
           onClick={() => onNavigate(user.id)}
           className={clsx(
-            'group relative flex flex-col items-center px-5 py-4 rounded-xl border transition-all text-center',
+            'group relative flex flex-col items-center px-4 py-3 rounded-xl border transition-all text-center',
             'min-w-[190px] max-w-[230px]',
             'bg-white dark:bg-white/[0.05] backdrop-blur-sm',
             'border-secondary-200/80 dark:border-white/[0.08]',
@@ -573,7 +573,7 @@ export function OrgChartPage() {
 
   // ── Render ──
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ── Page header ── */}
       <PageHeader title="Organization Chart" subtitle="Explore the team hierarchy and organizational structure">
         {stats && (

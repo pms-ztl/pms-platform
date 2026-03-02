@@ -161,7 +161,7 @@ function StatCard({
           <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
             {label}
           </p>
-          <p className="text-2xl font-bold text-secondary-900 dark:text-white mt-1">{value}</p>
+          <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">{value}</p>
           {subtitle && (
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">{subtitle}</p>
           )}
@@ -379,7 +379,7 @@ export function EmployeeProfilePage() {
   // ── Render ───────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6 min-h-[70vh]">
+    <div className="space-y-4 min-h-[70vh]">
       {/* ================================================================ */}
       {/* Back Navigation                                                  */}
       {/* ================================================================ */}
@@ -398,8 +398,8 @@ export function EmployeeProfilePage() {
       {/* ================================================================ */}
       {/* Header Card: Avatar, Name, Info                                  */}
       {/* ================================================================ */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
-        <div className="flex flex-col sm:flex-row items-start gap-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+        <div className="flex flex-col sm:flex-row items-start gap-4">
           {/* Avatar */}
           <div className="flex-shrink-0">
             {employee.avatarUrl ? (
@@ -420,7 +420,7 @@ export function EmployeeProfilePage() {
           {/* Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
-              <h2 className="text-xl font-bold text-secondary-900 dark:text-white">
+              <h2 className="text-lg font-bold text-secondary-900 dark:text-white">
                 {employee.firstName} {employee.lastName}
               </h2>
               {isSelf && (
@@ -489,7 +489,7 @@ export function EmployeeProfilePage() {
       {/* ================================================================ */}
       {/* Performance Score Card                                           */}
       {/* ================================================================ */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           Performance Score
         </h3>
@@ -505,7 +505,7 @@ export function EmployeeProfilePage() {
               <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Overall
               </p>
-              <p className={clsx('text-3xl font-bold mt-1', ratingColor(performanceScore.overallScore))}>
+              <p className={clsx('text-2xl font-bold mt-1', ratingColor(performanceScore.overallScore))}>
                 {(performanceScore.overallScore ?? 0).toFixed(1)}
               </p>
               <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">
@@ -531,7 +531,7 @@ export function EmployeeProfilePage() {
               <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Percentile
               </p>
-              <p className="text-3xl font-bold text-secondary-900 dark:text-white mt-1">
+              <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">
                 {performanceScore.percentile != null ? `${Math.round(performanceScore.percentile)}th` : 'N/A'}
               </p>
               <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">
@@ -569,7 +569,7 @@ export function EmployeeProfilePage() {
               <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 tracking-wider">
                 Confidence
               </p>
-              <p className="text-3xl font-bold text-secondary-900 dark:text-white mt-1">
+              <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">
                 {Math.round(performanceScore.confidence * 100)}%
               </p>
               <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">
@@ -732,9 +732,9 @@ export function EmployeeProfilePage() {
 
       {/* ─── Overview Tab ─── */}
       {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Goals Summary */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Goals Overview</h3>
               <Link to="/goals" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">View all</Link>
@@ -769,7 +769,7 @@ export function EmployeeProfilePage() {
           </div>
 
           {/* Recent Feedback */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Recent Feedback</h3>
               <Link to="/feedback" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">View all</Link>
@@ -799,7 +799,7 @@ export function EmployeeProfilePage() {
           </div>
 
           {/* Evidence Summary */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Evidence Summary</h3>
             {evidenceSummary ? (
               <div>
@@ -808,7 +808,7 @@ export function EmployeeProfilePage() {
                     <DocumentTextIcon className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-secondary-900 dark:text-white">{evidenceSummary.total}</p>
+                    <p className="text-xl font-bold text-secondary-900 dark:text-white">{evidenceSummary.total}</p>
                     <p className="text-xs text-secondary-500 dark:text-secondary-400">Total evidence items</p>
                   </div>
                 </div>
@@ -849,7 +849,7 @@ export function EmployeeProfilePage() {
           </div>
 
           {/* Development Plans Summary */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Development Plans</h3>
               <Link to="/development" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">View all</Link>
@@ -893,7 +893,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Goals Tab ─── */}
       {activeTab === 'goals' && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">All Goals</h3>
             <div className="flex items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">
@@ -963,7 +963,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Reviews Tab ─── */}
       {activeTab === 'reviews' && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Review History</h3>
 
           {!Array.isArray(reviews) || reviews.length === 0 ? (
@@ -1037,7 +1037,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Feedback Tab ─── */}
       {activeTab === 'feedback' && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Feedback Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard label="Total Received" value={feedbackStats.total} icon={ChatBubbleLeftRightIcon} color="info" />
@@ -1052,7 +1052,7 @@ export function EmployeeProfilePage() {
           </div>
 
           {/* Feedback List */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">All Feedback</h3>
 
             {feedbackItems.length === 0 ? (
@@ -1113,7 +1113,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Development Tab ─── */}
       {activeTab === 'development' && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Development Plans</h3>
             <Link to="/development" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">
@@ -1179,7 +1179,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Evidence Tab ─── */}
       {activeTab === 'evidence' && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Evidence Summary Cards */}
           {evidenceSummary && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1206,7 +1206,7 @@ export function EmployeeProfilePage() {
           )}
 
           {/* Evidence List */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Evidence Items</h3>
 
             {evidenceItems.length === 0 ? (
@@ -1279,7 +1279,7 @@ export function EmployeeProfilePage() {
 
       {/* ─── Activity Tab ─── */}
       {activeTab === 'activity' && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-6">Activity Stream</h3>
           <ActivityStream
             userId={id!}

@@ -499,7 +499,7 @@ export function CalendarPlanner() {
           </div>
           <div
             className={clsx(
-              'text-3xl font-bold mt-1',
+              'text-2xl font-bold mt-1',
               isToday(currentDate) ? 'text-primary-600 dark:text-primary-400' : 'text-secondary-900 dark:text-white'
             )}
           >
@@ -740,7 +740,7 @@ export function CalendarPlanner() {
               className="fixed inset-0 bg-black/50 dark:bg-black/70"
               onClick={() => setShowCreateModal(false)}
             />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4 border border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Create Calendar Event
               </h2>

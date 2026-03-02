@@ -362,7 +362,7 @@ function StatsBar({ goals }: { goals: Goal[] }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
       {stats.map((s) => (
-        <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg border border-secondary-200/60 dark:border-white/[0.06] px-4 py-3">
+        <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg border border-secondary-200/60 dark:border-white/[0.06] px-3 py-2">
           <p className="text-2xs tracking-wide text-secondary-500 dark:text-secondary-400">{s.label}</p>
           <p className={clsx('text-xl font-bold mt-0.5', s.cls)}>{s.value}</p>
         </div>
@@ -423,7 +423,7 @@ export function GoalAlignmentPage() {
   const showPanel = selectedGoal !== null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Goal Alignment" subtitle="Visualize how goals cascade across the organization">
         {!isMobile && (

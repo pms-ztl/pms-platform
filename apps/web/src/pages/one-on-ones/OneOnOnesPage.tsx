@@ -383,7 +383,7 @@ export function OneOnOnesPage() {
       <Link
         key={meeting.id}
         to={`/one-on-ones/${meeting.id}`}
-        className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-600 transition-colors p-5 flex flex-col"
+        className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-600 transition-colors p-4 flex flex-col"
       >
         {/* Top: Participant + Status */}
         <div className="flex items-start justify-between gap-3">
@@ -565,7 +565,7 @@ export function OneOnOnesPage() {
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="1-on-1 Meetings" subtitle="Schedule and track your 1-on-1 conversations">
         <button
@@ -634,7 +634,7 @@ export function OneOnOnesPage() {
             />
 
             {/* Modal */}
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full mx-4 p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full mx-4 p-4 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               {/* Modal header */}
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">

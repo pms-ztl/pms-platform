@@ -81,13 +81,13 @@ function PageSkeleton() {
           </div>
         ))}
       </div>
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-80">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-80">
         <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-40 mb-4" />
         <div className="h-60 bg-secondary-100 dark:bg-secondary-700/50 rounded-lg" />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-72" />
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-72" />
         ))}
       </div>
     </div>
@@ -289,7 +289,7 @@ export function WellbeingDashboardPage() {
 
       {/* Mood/Energy/Stress Trend */}
       {trendChartData.length > 0 && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Mood, Energy & Stress Trends</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Last {daysRange} days — scale 1 to 5</p>
           <div className="h-80">
@@ -334,10 +334,10 @@ export function WellbeingDashboardPage() {
       )}
 
       {/* Burnout Risk + Department Wellness */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <BurnoutRiskChart data={burnoutData} />
 
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Department Wellness</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Average mood score by department</p>
           {deptBarData.length > 0 ? (
@@ -438,9 +438,9 @@ export function WellbeingDashboardPage() {
       )}
 
       {/* Mood Distribution + Wellbeing Insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Mood Distribution Donut */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Mood Distribution</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">How team members are feeling overall</p>
           {moodDistData.length > 0 ? (
@@ -488,9 +488,9 @@ export function WellbeingDashboardPage() {
         </div>
 
         {/* Wellbeing Insights */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Wellbeing Insights</h3>
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Strengths */}
             <div>
               <div className="flex items-center gap-2 mb-2">

@@ -215,7 +215,7 @@ export function AIInsightsDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 p-6">
+      <div className="space-y-4 p-4">
         <div className="h-8 w-64 rounded bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -223,7 +223,7 @@ export function AIInsightsDashboardPage() {
           ))}
         </div>
         <div className="h-72 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="h-72 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
           <div className="h-72 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
         </div>
@@ -232,7 +232,7 @@ export function AIInsightsDashboardPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 p-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -276,7 +276,7 @@ export function AIInsightsDashboardPage() {
                 <Icon className="w-3.5 h-3.5 text-secondary-400" />
                 <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
               </div>
-              <p className={clsx('text-2xl font-bold mt-1', s.color)}>{s.value}</p>
+              <p className={clsx('text-xl font-bold mt-1', s.color)}>{s.value}</p>
             </div>
           );
         })}
@@ -284,7 +284,7 @@ export function AIInsightsDashboardPage() {
 
       {/* Sentiment trend */}
       {sentimentTrend.length > 0 && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Sentiment Trend</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Average sentiment score over the past {daysRange} days</p>
           <div className="h-72">
@@ -308,9 +308,9 @@ export function AIInsightsDashboardPage() {
       )}
 
       {/* 2-col: anomalies + productivity */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Active anomalies */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Active Anomalies</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">
             {activeAnomalies.length} anomalies requiring attention
@@ -326,17 +326,17 @@ export function AIInsightsDashboardPage() {
                       <span className={clsx('inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-medium', SEVERITY_BADGES[a.severity] || SEVERITY_BADGES.LOW)}>
                         {a.severity}
                       </span>
-                      <span className="text-2xs text-secondary-400">{a.entityType}</span>
+                      <span className="text-xs text-secondary-400">{a.entityType}</span>
                     </div>
                     <p className="text-xs text-secondary-700 dark:text-secondary-300 mt-1">{a.description}</p>
-                    <p className="text-2xs text-secondary-400 mt-1">
+                    <p className="text-xs text-secondary-400 mt-1">
                       {new Date(a.detectedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
                   </div>
                   {a.status !== 'ACKNOWLEDGED' && (
                     <button
                       onClick={() => acknowledgeMutation.mutate(a.id)}
-                      className="text-2xs px-2 py-1 rounded bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors whitespace-nowrap"
+                      className="text-xs px-2 py-1 rounded bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-colors whitespace-nowrap"
                     >
                       <EyeIcon className="w-3 h-3 inline mr-0.5" />Ack
                     </button>
@@ -348,7 +348,7 @@ export function AIInsightsDashboardPage() {
         </div>
 
         {/* Anomaly severity donut + productivity bar */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Anomaly Severity Breakdown</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Distribution by severity level</p>
           {severityDonutData.length === 0 ? (
@@ -383,7 +383,7 @@ export function AIInsightsDashboardPage() {
 
       {/* Productivity predictions */}
       {predictions.length > 0 && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Productivity Predictions</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Predicted vs actual productivity scores</p>
           <div className="h-64">
@@ -404,7 +404,7 @@ export function AIInsightsDashboardPage() {
 
       {/* At-risk users */}
       {atRiskUsers.length > 0 && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">At-Risk Users</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Users identified by AI engagement scoring as at-risk ({atRiskUsers.length})</p>
           <div className="overflow-x-auto">

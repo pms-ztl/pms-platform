@@ -213,7 +213,7 @@ function StatCard({
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-secondary-500 dark:text-secondary-400">{label}</p>
-          <p className="text-2xl font-bold text-secondary-900 dark:text-white mt-1">{value}</p>
+          <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">{value}</p>
           {subtitle && <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">{subtitle}</p>}
         </div>
         <div className={clsx('p-3 rounded-lg', iconBg[color])}>
@@ -353,7 +353,7 @@ export function HRAnalyticsPage() {
     const departments = Array.from(new Set(employees.map((e) => e.department)));
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
@@ -374,7 +374,7 @@ export function HRAnalyticsPage() {
         </div>
 
         {/* Scatter Plot */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
             Performance vs Compensation
           </h3>
@@ -496,7 +496,7 @@ export function HRAnalyticsPage() {
 
         {/* Compensation Ratio by Department */}
         {deptRatios.length > 0 && (
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
               Compensation Ratio by Department
             </h3>
@@ -570,7 +570,7 @@ export function HRAnalyticsPage() {
     }));
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Info banner */}
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 p-5">
           <div className="flex items-start gap-3">
@@ -588,7 +588,7 @@ export function HRAnalyticsPage() {
 
         {/* Rating Distribution by Department */}
         {deptDistribution.length > 0 && (
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
               Rating Distribution by Department
             </h3>
@@ -616,7 +616,7 @@ export function HRAnalyticsPage() {
 
         {/* Statistical Indicators */}
         {deptDistribution.length > 0 && (
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
               Statistical Indicators by Department
             </h3>
@@ -668,7 +668,7 @@ export function HRAnalyticsPage() {
 
         {/* Manager Comparison Chart */}
         {managerRatings.length > 0 && (
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
               Manager Rating Comparison
             </h3>
@@ -710,7 +710,7 @@ export function HRAnalyticsPage() {
               </ResponsiveContainer>
             </div>
             {/* Legend */}
-            <div className="flex items-center gap-6 mt-4 justify-center">
+            <div className="flex items-center gap-4 mt-4 justify-center">
               <div className="flex items-center gap-1.5">
                 <span className="w-3 h-3 rounded-full bg-amber-500" />
                 <span className="text-xs text-secondary-500 dark:text-secondary-400">Lenient</span>
@@ -812,7 +812,7 @@ export function HRAnalyticsPage() {
     const adjustedCount = sortedEmployees.filter((e) => Math.abs(e.adjustment) >= 0.03).length;
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Bell Curve Fit Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatCard
@@ -840,7 +840,7 @@ export function HRAnalyticsPage() {
 
         {/* Before/After Visualization */}
         {distribution.length > 0 && (
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
               Before / After Distribution
             </h3>
@@ -969,7 +969,7 @@ export function HRAnalyticsPage() {
           <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowNormConfirm(false)} />
-              <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
+              <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4 border border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="text-center">
                   <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-amber-100 dark:bg-amber-900/30 mb-4">
                     <ExclamationTriangleIcon className="h-6 w-6 text-amber-600 dark:text-amber-400" />
@@ -1011,7 +1011,7 @@ export function HRAnalyticsPage() {
   // =========================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">HR Analytics & Bias Analysis</h1>

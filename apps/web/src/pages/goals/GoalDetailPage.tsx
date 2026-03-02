@@ -180,7 +180,7 @@ export function GoalDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex items-start gap-3 min-w-0">
@@ -233,7 +233,7 @@ export function GoalDetailPage() {
       </div>
 
       {/* Main content grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left column - Details */}
         <div className="lg:col-span-2 space-y-6">
           {/* Progress card */}
@@ -424,7 +424,7 @@ export function GoalDetailPage() {
         </div>
 
         {/* Right column - Metadata */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Goal details */}
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Details</h3>
@@ -569,7 +569,7 @@ export function GoalDetailPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/30 dark:bg-black/50" onClick={() => setShowEditModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-transparent dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4 border border-transparent dark:border-secondary-700">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Edit Goal</h2>
               <form
                 onSubmit={(e) => {
@@ -643,7 +643,7 @@ export function GoalDetailPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/30 dark:bg-black/50" onClick={() => setShowProgressModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-transparent dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4 border border-transparent dark:border-secondary-700">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Update Progress</h2>
               <form
                 onSubmit={(e) => {
@@ -696,7 +696,7 @@ export function GoalDetailPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/30 dark:bg-black/50" onClick={() => setShowCommentModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-transparent dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4 border border-transparent dark:border-secondary-700">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Add Comment</h2>
               <form
                 onSubmit={(e) => {
@@ -735,7 +735,7 @@ export function GoalDetailPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/30 dark:bg-black/50" onClick={() => setShowDeleteModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-transparent dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4 border border-transparent dark:border-secondary-700">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">Delete Goal</h2>
               <p className="text-secondary-600 dark:text-secondary-400 mb-6">
                 Are you sure you want to delete "{goal.title}"? This action cannot be undone.
@@ -762,7 +762,7 @@ export function GoalDetailPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/30 dark:bg-black/50" onClick={() => setShowSubGoalModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-transparent dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4 border border-transparent dark:border-secondary-700">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-1">Assign Sub-Goal</h2>
               <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
                 Create a cascading sub-goal under "{goal.title}"

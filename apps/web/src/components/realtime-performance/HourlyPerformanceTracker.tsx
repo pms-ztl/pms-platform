@@ -261,7 +261,7 @@ export function HourlyPerformanceTracker() {
       </div>
 
       {/* Score Gauges */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-4">
         <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Performance Scores</h3>
         <div className="flex justify-around">
           <ScoreGauge
@@ -283,7 +283,7 @@ export function HourlyPerformanceTracker() {
       </div>
 
       {/* Hourly Trend Chart */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-100 dark:border-secondary-700 p-4">
         <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Hourly Trend</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
@@ -340,7 +340,7 @@ export function HourlyPerformanceTracker() {
 
       {/* Current Hour Details */}
       {currentHour && (
-        <div className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-secondary-800 dark:to-secondary-800 rounded-xl p-6 border border-cyan-100 dark:border-secondary-700">
+        <div className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-secondary-800 dark:to-secondary-800 rounded-xl p-4 border border-cyan-100 dark:border-secondary-700">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-3">
             Current Hour Summary
           </h3>

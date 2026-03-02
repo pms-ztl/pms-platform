@@ -366,7 +366,7 @@ export function FeedbackPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Feedback" subtitle="Give and receive continuous feedback">
         <button onClick={() => setShowRequestFeedbackModal(true)} className="btn-secondary">
@@ -382,7 +382,7 @@ export function FeedbackPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="card card-body">
           <div className="flex items-center">
-            <div className="p-3 rounded-lg bg-success-100">
+            <div className="p-2 rounded-lg bg-success-100">
               <HandThumbUpIcon className="h-6 w-6 text-success-600" />
             </div>
             <div className="ml-4">
@@ -395,7 +395,7 @@ export function FeedbackPage() {
         </div>
         <div className="card card-body">
           <div className="flex items-center">
-            <div className="p-3 rounded-lg bg-primary-100">
+            <div className="p-2 rounded-lg bg-primary-100">
               <PaperAirplaneIcon className="h-6 w-6 text-primary-600" />
             </div>
             <div className="ml-4">
@@ -408,7 +408,7 @@ export function FeedbackPage() {
         </div>
         <div className="card card-body">
           <div className="flex items-center">
-            <div className="p-3 rounded-lg bg-warning-100">
+            <div className="p-2 rounded-lg bg-warning-100">
               <ChatBubbleLeftRightIcon className="h-6 w-6 text-warning-600" />
             </div>
             <div className="ml-4">
@@ -474,7 +474,7 @@ export function FeedbackPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowGiveFeedbackModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Give Feedback</h2>
               <form
                 onSubmit={(e) => {
@@ -571,7 +571,7 @@ export function FeedbackPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setEditingFeedback(null)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Edit Feedback</h2>
               <p className="text-xs text-warning-600 dark:text-warning-400 mb-4">
                 You can edit this feedback within the 30-second grace period after sending.
@@ -603,7 +603,7 @@ export function FeedbackPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeletingId(null)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-sm w-full p-4 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">Delete Feedback?</h2>
               <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
                 This action cannot be undone. The feedback will be permanently removed.
@@ -628,7 +628,7 @@ export function FeedbackPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowRequestFeedbackModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full p-4 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Request Feedback</h2>
               <form
                 onSubmit={(e) => {

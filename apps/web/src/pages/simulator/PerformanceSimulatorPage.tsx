@@ -90,7 +90,7 @@ function ConfidenceRing({ confidence }: { confidence: number }) {
       </svg>
       <div className="absolute flex flex-col items-center justify-center" style={{ marginTop: 28 }}>
         <span className="text-2xl font-bold text-secondary-900 dark:text-white">{Math.round(confidence)}%</span>
-        <span className="text-3xs text-secondary-500 tracking-wider">Confidence</span>
+        <span className="text-2xs text-secondary-500 tracking-wider">Confidence</span>
       </div>
     </div>
   );
@@ -230,7 +230,7 @@ export function PerformanceSimulatorPage() {
       </div>
 
       {/* Two-column: inputs + results */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Input panel */}
         <div className="lg:col-span-1 space-y-5">
           <div className={clsx('rounded-2xl border p-5', colors.bg, colors.border)}>

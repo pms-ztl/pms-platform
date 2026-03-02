@@ -194,7 +194,7 @@ export function CareerPathPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader
         title="Career Pathways"
@@ -203,8 +203,8 @@ export function CareerPathPage() {
 
       {/* Current Position Card */}
       {pathLoading ? <Spinner /> : cp ? (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
-          <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+          <div className="flex flex-col lg:flex-row lg:items-start gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-1">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">{cp.currentPosition.title}</h2>
@@ -243,7 +243,7 @@ export function CareerPathPage() {
 
       {/* Section Tabs */}
       <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
-        <nav className="flex gap-6" aria-label="Career sections">
+        <nav className="flex gap-4" aria-label="Career sections">
           {sectionTabs.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => { setActiveSection(id); setSelectedNextRole(null); setSelectedCatalogRole(null); }}
               className={clsx('flex items-center gap-2 pb-3 border-b-2 text-sm font-medium transition-colors',
@@ -257,8 +257,8 @@ export function CareerPathPage() {
 
       {/* Career Path Visualization */}
       {activeSection === 'path' && cp && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Previous Roles */}
             <div className="space-y-3">
               <h3 className="text-sm font-semibold tracking-wider text-secondary-400 dark:text-secondary-500 flex items-center gap-2">
@@ -312,7 +312,7 @@ export function CareerPathPage() {
                 </button>
               </div>
               {growthLoading ? <Spinner /> : growthData ? (
-                <div className="p-6 space-y-6">
+                <div className="p-6 space-y-4">
                   <div>
                     <h4 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-3 flex items-center gap-2"><ChevronRightIcon className="h-4 w-4" /> Competency Comparison</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -341,7 +341,7 @@ export function CareerPathPage() {
                       ))}
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-4 rounded-lg bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800">
                       <div className="flex items-center gap-2 mb-2">
                         <ClockIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />

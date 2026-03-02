@@ -219,9 +219,11 @@ interface MetricTooltipProps {
   code: string;
   children: ReactNode;
   className?: string;
+  /** When true, clicking the children opens the detail popover directly (no ⓘ button shown). */
+  clickToReveal?: boolean;
 }
 
-export default function MetricTooltip({ code, children, className }: MetricTooltipProps) {
+export default function MetricTooltip({ code, children, className, clickToReveal }: MetricTooltipProps) {
   const entry = METRIC_GLOSSARY[code];
   const theme = useThemeStore((s) => s.theme);
   const [hovered, setHovered] = useState(false);
@@ -257,24 +259,37 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
     const popH = 320;
     const PAD = 12;
 
-    let left = r.left;
-    if (left + popW > vw - PAD) left = r.right - popW;
+    // Horizontal: center on element, clamp to viewport
+    let left = r.left + r.width / 2 - popW / 2;
+    if (left + popW > vw - PAD) left = vw - PAD - popW;
     if (left < PAD) left = PAD;
 
-    const aboveTop = r.top - PAD - popH;
     const belowTop = r.bottom + PAD;
+    const aboveTop = r.top - PAD - popH;
 
     let top: number;
-    if (aboveTop >= PAD) {
-      top = aboveTop;
-    } else if (belowTop + popH <= vh - PAD) {
-      top = belowTop;
+    if (clickToReveal) {
+      // For bars: prefer below, fall back to above
+      if (belowTop + popH <= vh - PAD) {
+        top = belowTop;
+      } else if (aboveTop >= PAD) {
+        top = aboveTop;
+      } else {
+        top = Math.max(PAD, vh - popH - PAD);
+      }
     } else {
-      top = Math.max(PAD, Math.min(vh - popH - PAD, aboveTop));
+      // Default: prefer above, fall back to below
+      if (aboveTop >= PAD) {
+        top = aboveTop;
+      } else if (belowTop + popH <= vh - PAD) {
+        top = belowTop;
+      } else {
+        top = Math.max(PAD, Math.min(vh - popH - PAD, aboveTop));
+      }
     }
 
     setPopCoords({ top, left });
-  }, []);
+  }, [clickToReveal]);
 
   // Close on outside click / Esc
   useEffect(() => {
@@ -327,21 +342,29 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
   // ── Gradient string for this metric ──
   const gradient = `linear-gradient(135deg, ${accent.from}, ${accent.to})`;
 
+  const handleWrapperClick = useCallback((e: React.MouseEvent) => {
+    if (!clickToReveal) return;
+    e.stopPropagation();
+    if (!showDetail) computePopPos();
+    setShowDetail((prev) => !prev);
+  }, [clickToReveal, showDetail, computePopPos]);
+
   return (
     <span
       ref={wrapperRef}
-      className={`relative inline-flex items-center gap-1 cursor-default ${className ?? ''}`}
+      className={`relative inline-flex items-center gap-1 w-full ${clickToReveal ? 'cursor-pointer' : 'cursor-default'} ${className ?? ''}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setHovered(false)}
+      onClick={handleWrapperClick}
     >
-      <span className="border-b border-dotted border-current/30">{children}</span>
+      <span className={clickToReveal ? '' : 'border-b border-dotted border-current/30'}>{children}</span>
 
-      {/* ⓘ button */}
-      {(hovered || showDetail) && (
+      {/* ⓘ button — hidden when clickToReveal is active */}
+      {!clickToReveal && (hovered || showDetail) && (
         <button
           type="button"
           onClick={handleToggleDetail}
-          className="inline-flex items-center justify-center w-4 h-4 rounded-full transition-all duration-300 flex-shrink-0 hover:scale-125"
+          className="absolute top-0 right-0 z-20 inline-flex items-center justify-center w-4 h-4 rounded-full transition-all duration-300 hover:scale-125"
           style={{
             background: gradient,
             boxShadow: showDetail ? `0 0 12px ${accent.glow}` : `0 0 6px ${accent.glow}`,
@@ -352,8 +375,8 @@ export default function MetricTooltip({ code, children, className }: MetricToolt
         </button>
       )}
 
-      {/* ── Hover tooltip (portal) ── */}
-      {hovered && !showDetail && createPortal(
+      {/* ── Hover tooltip (portal) — hidden in clickToReveal mode ── */}
+      {!clickToReveal && hovered && !showDetail && createPortal(
         <div
           className="fixed z-[9999] pointer-events-none"
           style={{

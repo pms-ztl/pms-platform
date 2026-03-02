@@ -52,7 +52,7 @@ function currentQuarterLabel(): string {
 
 function SkeletonCard() {
   return (
-    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 animate-pulse">
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 animate-pulse">
       <div className="flex items-start gap-4">
         <div className="h-[72px] w-[72px] rounded-full bg-secondary-200 dark:bg-secondary-700" />
         <div className="flex-1 space-y-3">
@@ -404,16 +404,16 @@ export function OKRDashboardPage() {
   // -------------------------------------------------------------------------
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl glass-banner-okr p-6 text-secondary-900 dark:text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl glass-banner-okr p-5 text-secondary-900 dark:text-white shadow-xl">
         {/* Decorative gradient orbs — visible through the glass */}
         <div className="absolute -top-20 -right-20 w-72 h-72 bg-gradient-to-br from-amber-500/30 to-orange-500/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-gradient-to-tr from-red-500/20 to-amber-500/15 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-40 bg-orange-500/10 rounded-full blur-3xl" />
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold">OKR Dashboard</h1>
+            <h1 className="text-xl font-bold">OKR Dashboard</h1>
             <p className="text-secondary-500 dark:text-white/80 text-sm mt-1">
               Objectives & Key Results — {currentQuarterLabel()}
             </p>
@@ -423,7 +423,7 @@ export function OKRDashboardPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowTemplates(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-amber-500/15 dark:bg-white/20 backdrop-blur-sm text-amber-700 dark:text-white hover:bg-amber-500/25 dark:hover:bg-white/30 transition-colors border border-amber-500/25 dark:border-white/20"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-amber-500/15 dark:bg-white/20 backdrop-blur-sm text-amber-700 dark:text-white hover:bg-amber-500/25 dark:hover:bg-white/30 transition-colors border border-amber-500/25 dark:border-white/20"
             >
               <SparklesIcon className="h-3.5 w-3.5" />
               New from Template
@@ -439,7 +439,7 @@ export function OKRDashboardPage() {
               key={id}
               onClick={() => setViewMode(id)}
               className={clsx(
-                'px-2.5 py-1.5 text-xs font-medium rounded-lg inline-flex items-center gap-1.5 transition-all',
+                'px-2.5 py-1.5 text-sm font-medium rounded-lg inline-flex items-center gap-1.5 transition-all',
                 viewMode === id
                   ? 'bg-white dark:bg-white text-orange-700 shadow-sm'
                   : 'text-secondary-500 dark:text-white/80 hover:text-secondary-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/10'
@@ -494,7 +494,7 @@ export function OKRDashboardPage() {
             <FlagIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-secondary-900 dark:text-white">{stats.totalObj}</p>
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">{stats.totalObj}</p>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">Objectives</p>
           </div>
         </div>
@@ -503,14 +503,14 @@ export function OKRDashboardPage() {
             <FlagIcon className="h-5 w-5 text-orange-600 dark:text-orange-400" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-secondary-900 dark:text-white">{stats.totalKR}</p>
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">{stats.totalKR}</p>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">Key Results</p>
           </div>
         </div>
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex items-center gap-3">
           <OKRProgressRing progress={stats.avgProgress} size={44} strokeWidth={4} />
           <div>
-            <p className="text-2xl font-bold text-secondary-900 dark:text-white">{stats.avgProgress}%</p>
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">{stats.avgProgress}%</p>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">Average Progress</p>
           </div>
         </div>
@@ -519,7 +519,7 @@ export function OKRDashboardPage() {
             <FlagIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-secondary-900 dark:text-white">{stats.onTrackPct}%</p>
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">{stats.onTrackPct}%</p>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">On Track</p>
           </div>
         </div>
@@ -527,7 +527,7 @@ export function OKRDashboardPage() {
 
       {/* Content */}
       {isLoading ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <SkeletonCard />
           <SkeletonCard />
           <SkeletonCard />

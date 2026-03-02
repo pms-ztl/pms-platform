@@ -22,7 +22,7 @@ function ScheduledReportsWidget({ className = '' }: ScheduledReportsWidgetProps)
   const activeSchedules = schedules.filter((s: any) => s.status === 'ACTIVE' || s.isActive);
 
   return (
-    <div className={`glass-deep rounded-2xl p-6 ${className}`}>
+    <div className={`glass-deep rounded-2xl p-4 ${className}`}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <ClockIcon className="w-5 h-5 text-amber-500" />

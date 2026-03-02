@@ -104,14 +104,14 @@ function TimelineEntry({ entry }: { entry: CheckinEntry }) {
 
         {entry.blocker && (
           <div className="mb-1.5">
-            <span className="text-3xs font-semibold text-red-500 tracking-wider">Blocker: </span>
+            <span className="text-2xs font-semibold text-red-500 tracking-wider">Blocker: </span>
             <span className="text-xs text-secondary-600 dark:text-secondary-400">{entry.blocker}</span>
           </div>
         )}
 
         {entry.win && (
           <div>
-            <span className="text-3xs font-semibold text-green-500 tracking-wider">Win: </span>
+            <span className="text-2xs font-semibold text-green-500 tracking-wider">Win: </span>
             <span className="text-xs text-secondary-600 dark:text-secondary-400">{entry.win}</span>
           </div>
         )}

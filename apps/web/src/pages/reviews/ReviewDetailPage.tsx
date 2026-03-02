@@ -230,7 +230,7 @@ export function ReviewDetailPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-4">
@@ -294,11 +294,11 @@ export function ReviewDetailPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main form */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4">
           {/* Reviewee info */}
           <div className="card card-body">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
                 <span className="text-xl font-medium text-primary-700 dark:text-primary-300 dark:text-primary-300">
                   {review.reviewee.firstName[0]}{review.reviewee.lastName[0]}
                 </span>
@@ -316,7 +316,7 @@ export function ReviewDetailPage() {
           </div>
 
           {/* Review questions */}
-          <div className="card card-body space-y-6">
+          <div className="card card-body space-y-4">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white dark:text-white">Performance Assessment</h3>
 
             {reviewQuestions.map((question) => (
@@ -374,7 +374,7 @@ export function ReviewDetailPage() {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Strengths */}
           <div className="card card-body">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white dark:text-white mb-4">Key Strengths</h3>

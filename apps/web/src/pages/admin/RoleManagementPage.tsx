@@ -381,13 +381,13 @@ export function RoleManagementPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <PageHeader title="Role Management" subtitle="Loading roles..." />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 animate-pulse h-40"
+              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 animate-pulse h-40"
             />
           ))}
         </div>
@@ -400,7 +400,7 @@ export function RoleManagementPage() {
   // -----------------------------------------------------------------------
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ---- Page header ---- */}
       <PageHeader title="Role Management" subtitle="Create and manage roles and their permissions for your organization.">
         <div className="flex items-center gap-2">

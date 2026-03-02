@@ -239,7 +239,7 @@ function Podium({ entries }: { entries: AnyEntry[] }) {
   const labels = ['Silver', 'Gold', 'Bronze'];
 
   return (
-    <div className="flex items-end justify-center gap-2 sm:gap-6 py-4 sm:py-6 px-1 sm:px-0">
+    <div className="flex items-end justify-center gap-2 sm:gap-4 py-4 sm:py-6 px-1 sm:px-0">
       {podiumOrder.map((entry, idx) => (
         <div key={entry.user.id} className={clsx('flex flex-col items-center transition-all duration-500 animate-slide-up min-w-0 flex-1 sm:flex-none', idx === 1 && 'order-2', idx === 0 && 'order-1', idx === 2 && 'order-3')} style={{ animationDelay: `${idx * 150}ms` }}>
           <div className="relative mb-2 sm:mb-3">
@@ -611,7 +611,7 @@ export function LeaderboardPage() {
           <Podium entries={entries} />
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-4">
           {/* Main content */}
           <div className={clsx('transition-all duration-300', sidebarOpen ? 'flex-1 min-w-0' : 'w-full')}>
 
@@ -677,7 +677,7 @@ export function LeaderboardPage() {
             </div>
 
             {/* Department Comparison */}
-            <div className="mt-8 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div className="mt-8 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="flex items-center gap-2 mb-5">
                 <UserGroupIcon className="h-5 w-5 text-primary-500" />
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Department Comparison</h2>

@@ -185,7 +185,7 @@ function ModalShell({
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
         <div
           className={clsx(
-            'relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl w-full p-6 border border-secondary-200/50 dark:border-secondary-700',
+            'relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl w-full p-4 border border-secondary-200/50 dark:border-secondary-700',
             wide ? 'max-w-2xl' : 'max-w-lg',
           )}
         >
@@ -228,7 +228,7 @@ function RatingScalesTab() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {(scales as RatingScale[]).map((scale) => (
         <div
           key={scale.id}
@@ -1217,7 +1217,7 @@ export function ConfigurationPage() {
   const [activeTab, setActiveTab] = useState<ConfigTab>('rating-scales');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Configuration" subtitle="Manage rating scales, review templates, competency frameworks, and questionnaires" />
 

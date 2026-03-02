@@ -386,7 +386,7 @@ function CreatePlanModal({ onClose }: { onClose: () => void }) {
         className="fixed inset-0"
         onClick={onClose}
       />
-      <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+      <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
             Create Development Plan
@@ -649,7 +649,7 @@ export function DevelopmentPage() {
   const totalItems = isTeamView ? filteredTeamPlans.length : (myPlansData?.meta?.total ?? 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ── Header ── */}
       <PageHeader
         title="Development Plans"
@@ -824,7 +824,7 @@ export function DevelopmentPage() {
       {showDeleteModal && planToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="fixed inset-0" onClick={() => { setShowDeleteModal(false); setPlanToDelete(null); }} />
-          <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+          <div className="relative bg-white dark:bg-secondary-800 rounded-xl shadow-xl max-w-md w-full mx-4 p-4">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">
               Delete Development Plan
             </h3>

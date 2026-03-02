@@ -50,20 +50,20 @@ function ManagerGoalCascade({ teamTreeData, userId }: ManagerGoalCascadeProps) {
       <div className="card-body">
         {/* Summary stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <div className="text-center p-4 rounded-xl border transition-all duration-300 elastic-scale bg-purple-50 dark:bg-purple-500/[0.08] border-purple-100 dark:border-purple-500/10">
-            <p className="text-2xl font-bold text-purple-700 dark:text-purple-300">{cascadeStats.total}</p>
+          <div className="text-center p-3 rounded-xl border transition-all duration-300 elastic-scale bg-purple-50 dark:bg-purple-500/[0.08] border-purple-100 dark:border-purple-500/10">
+            <p className="text-xl font-bold text-purple-700 dark:text-purple-300">{cascadeStats.total}</p>
             <p className="text-xs text-purple-600 dark:text-purple-400">Total Goals</p>
           </div>
-          <div className="text-center p-4 rounded-xl border transition-all duration-300 elastic-scale bg-emerald-50 dark:bg-emerald-500/[0.08] border-emerald-100 dark:border-emerald-500/10">
-            <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{cascadeStats.completed}</p>
+          <div className="text-center p-3 rounded-xl border transition-all duration-300 elastic-scale bg-emerald-50 dark:bg-emerald-500/[0.08] border-emerald-100 dark:border-emerald-500/10">
+            <p className="text-xl font-bold text-emerald-700 dark:text-emerald-300">{cascadeStats.completed}</p>
             <p className="text-xs text-emerald-600 dark:text-emerald-400">Completed</p>
           </div>
-          <div className="text-center p-4 rounded-xl border transition-all duration-300 elastic-scale bg-blue-50 dark:bg-blue-500/[0.08] border-blue-100 dark:border-blue-500/10">
-            <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{avgTeamProgress}%</p>
+          <div className="text-center p-3 rounded-xl border transition-all duration-300 elastic-scale bg-blue-50 dark:bg-blue-500/[0.08] border-blue-100 dark:border-blue-500/10">
+            <p className="text-xl font-bold text-blue-700 dark:text-blue-300">{avgTeamProgress}%</p>
             <p className="text-xs text-blue-600 dark:text-blue-400">Average Progress</p>
           </div>
-          <div className="text-center p-4 rounded-xl border transition-all duration-300 elastic-scale bg-amber-50 dark:bg-amber-500/[0.08] border-amber-100 dark:border-amber-500/10">
-            <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">{cascadeStats.owners.size}</p>
+          <div className="text-center p-3 rounded-xl border transition-all duration-300 elastic-scale bg-amber-50 dark:bg-amber-500/[0.08] border-amber-100 dark:border-amber-500/10">
+            <p className="text-xl font-bold text-amber-700 dark:text-amber-300">{cascadeStats.owners.size}</p>
             <p className="text-xs text-amber-600 dark:text-amber-400">Team Members</p>
           </div>
         </div>

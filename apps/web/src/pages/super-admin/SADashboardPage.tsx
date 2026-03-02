@@ -334,7 +334,7 @@ function GlassTooltip({ active, payload, label }: any) {
 
 function DashboardSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="h-28 rounded-2xl bg-white/50 dark:bg-white/5 animate-pulse sa-glass-card" />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map((i) => (
@@ -381,7 +381,7 @@ function SectionCard({ children, className, delay }: { children: React.ReactNode
   return (
     <div
       className={clsx(
-        'sa-glass-card bg-white/70 dark:bg-white/[0.03] rounded-2xl border border-gray-200/60 dark:border-white/[0.06] p-6 animate-fade-in-up',
+        'sa-glass-card bg-white/70 dark:bg-white/[0.03] rounded-2xl border border-gray-200/60 dark:border-white/[0.06] p-4 animate-fade-in-up',
         className
       )}
       style={delay ? { animationDelay: `${delay}s` } : undefined}
@@ -739,7 +739,7 @@ export function SADashboardPage() {
       {/* ════════════════════════════════════════════════════════════════════
           Row: Revenue Trend (Area) + Revenue by Plan (Bar)
          ════════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-start">
         {/* Revenue Trend Area Chart — 3 cols */}
         <SectionCard className="lg:col-span-3" delay={0.25}>
           <SectionTitle
@@ -786,7 +786,7 @@ export function SADashboardPage() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="mt-4 flex items-center gap-6 pt-3 border-t border-gray-100 dark:border-white/[0.06]">
+          <div className="mt-4 flex items-center gap-4 pt-3 border-t border-gray-100 dark:border-white/[0.06]">
             <div>
               <p className="text-xs text-gray-400 dark:text-white/35 uppercase tracking-wider">Total MRR</p>
               <p className="text-lg font-bold text-gray-900 dark:text-white">{formatCurrency(revenue.total)}</p>
@@ -850,7 +850,7 @@ export function SADashboardPage() {
           Combined: Platform Overview + Quick Actions + Security + Tenant Plans
           Quick Actions spans 2 rows on the right to eliminate dead space.
          ════════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
         {/* Platform Overview — 2 cols, row 1 */}
         <SectionCard className="lg:col-span-2" delay={0.35}>
           <SectionTitle icon={ChartBarIcon} title="Platform Overview" />
@@ -1146,7 +1146,7 @@ export function SADashboardPage() {
       {/* ════════════════════════════════════════════════════════════════════
           Row: System Health + Audit Breakdown Chart
          ════════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
         {/* System Health */}
         <SectionCard delay={0.55}>
           <SectionTitle icon={ShieldCheckIcon} title="System Health" />
@@ -1270,7 +1270,7 @@ export function SADashboardPage() {
       {/* ════════════════════════════════════════════════════════════════════
           Row: Recent Tenants + Recent Activity
          ════════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
         {/* Recent Tenants */}
         <SectionCard delay={0.65}>
           <SectionTitle icon={BuildingOffice2Icon} title="Recent Tenants" />
@@ -1377,7 +1377,7 @@ export function SADashboardPage() {
       {/* ════════════════════════════════════════════════════════════════════
           Row: Security Config Summary + System Limits
          ════════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
         {/* Security Config */}
         <SectionCard delay={0.75}>
           <SectionTitle icon={LockClosedIcon} title="Security Config" />
@@ -1425,7 +1425,7 @@ export function SADashboardPage() {
       {/* ════════════════════════════════════════════════════════════════════
           Row: User Status Distribution + Tenant Usage Comparison + Upgrade Requests
          ════════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-start">
         {/* User Status Distribution Donut — 2 cols */}
         <SectionCard className="lg:col-span-2" delay={0.9}>
           <SectionTitle
@@ -1498,7 +1498,7 @@ export function SADashboardPage() {
                 <CheckCircleIcon className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
               )}
             </div>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">{pendingUpgradeCount}</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-white">{pendingUpgradeCount}</p>
             <p className="text-xs text-gray-500 dark:text-white/50 mb-3">
               {pendingUpgradeCount > 0 ? 'pending requests' : 'all clear'}
             </p>
@@ -1569,7 +1569,7 @@ export function SADashboardPage() {
       {/* ════════════════════════════════════════════════════════════════════
           Row: Active Sessions + Quick Navigation
          ════════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
         {/* Active Sessions Monitor */}
         <SectionCard delay={1.05}>
           <SectionTitle

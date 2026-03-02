@@ -49,7 +49,7 @@ export function StatCard({ label, value, icon, trend, variant = 'default', class
           </p>
           <p
             className={clsx(
-              'mt-1.5 text-2xl font-bold tracking-tight',
+              'mt-1.5 text-xl font-bold tracking-tight',
               variant === 'gradient' ? 'text-white' : 'text-secondary-900 dark:text-white'
             )}
           >

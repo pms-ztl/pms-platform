@@ -172,7 +172,7 @@ export function TeamPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader
         title="Team"
@@ -182,7 +182,7 @@ export function TeamPage() {
       {/* Direct reports section (for managers) */}
       {isManager && directReports && directReports.length > 0 && (
         <div className="card card-body">
-          <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4 flex items-center">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 flex items-center">
             <UserGroupIcon className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
             Your Direct Reports ({directReports.length})
           </h2>

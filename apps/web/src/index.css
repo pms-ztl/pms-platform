@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Default 105% scale for all devices ────────────────────────────────── */
+html {
+  zoom: 1.05;
+}
+
 /* ── CSS Custom Properties for Theming ─────────────────────────────────── *
  * Values are space-separated RGB channels (e.g. 139 92 246) so Tailwind's
  * opacity modifier syntax (bg-primary-500/80) works via
@@ -3429,25 +3434,23 @@ html.transitioning *::after {
   }
 }
 
-/* ── FAB: tiny ghost idle → small pill on hover ──────────────────────── */
+/* ── FAB: solid idle (44px to match ScrollToTop) → glow on hover ──── */
 .fab-glass-btn {
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(99, 102, 241, 0.7);
   border: none;
-  box-shadow: none;
-  opacity: 0.35;
-  width: 28px !important;
-  height: 28px !important;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  width: 44px !important;
+  height: 44px !important;
 }
 .fab-glass-btn svg {
-  width: 13px;
-  height: 13px;
+  width: 20px;
+  height: 20px;
+  color: white;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .fab-glass-btn:hover {
-  opacity: 1;
-  width: 36px !important;
-  height: 36px !important;
+  width: 44px !important;
+  height: 44px !important;
   background: rgba(99, 102, 241, 0.85);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -3455,8 +3458,8 @@ html.transitioning *::after {
   box-shadow: 0 0 20px rgba(99, 102, 241, 0.4), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 .fab-glass-btn:hover svg {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   opacity: 1;
   color: white;
 }

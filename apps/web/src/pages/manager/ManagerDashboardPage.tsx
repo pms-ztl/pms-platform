@@ -497,7 +497,7 @@ export function ManagerDashboardPage() {
                 Team Size
               </span>
             </div>
-            <p className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white">
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">
               {reportsLoading ? '...' : teamSize}
             </p>
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
@@ -517,7 +517,7 @@ export function ManagerDashboardPage() {
                 Avg Goal Progress
               </span>
             </div>
-            <p className={clsx('text-2xl sm:text-3xl font-bold', progressColor(avgGoalProgress))}>
+            <p className={clsx('text-xl font-bold', progressColor(avgGoalProgress))}>
               {avgGoalProgress}%
             </p>
             <div className="mt-2 h-1.5 bg-secondary-100 dark:bg-secondary-700 rounded-full overflow-hidden">
@@ -540,7 +540,7 @@ export function ManagerDashboardPage() {
                 Pending Reviews
               </span>
             </div>
-            <p className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white">
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">
               {pendingReviews.length}
             </p>
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
@@ -560,7 +560,7 @@ export function ManagerDashboardPage() {
                 Upcoming 1:1s
               </span>
             </div>
-            <p className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white">
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">
               {upcomingThisWeek.length}
             </p>
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
@@ -580,7 +580,7 @@ export function ManagerDashboardPage() {
                 Active PIPs
               </span>
             </div>
-            <p className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white">
+            <p className="text-xl font-bold text-secondary-900 dark:text-white">
               {activePips.length}
             </p>
             <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
@@ -683,7 +683,7 @@ export function ManagerDashboardPage() {
               <UserGroupIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
+              <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
                 Team Performance Overview
               </h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">
@@ -814,7 +814,7 @@ export function ManagerDashboardPage() {
               <ClockIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
+              <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
                 Action Items
               </h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">
@@ -874,7 +874,7 @@ export function ManagerDashboardPage() {
             <FlagIcon className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
+            <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
               Goal Tracker
             </h2>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">
@@ -998,7 +998,7 @@ export function ManagerDashboardPage() {
 
       {/* ══════════════════════════ Quick Actions Grid ══════════════════════════ */}
       <div>
-        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1089,7 +1089,7 @@ export function ManagerDashboardPage() {
               <ArrowPathIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
+              <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
                 Recent Activity
               </h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">

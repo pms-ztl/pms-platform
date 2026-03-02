@@ -194,14 +194,14 @@ export function AnomalyDetectionPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
+      <div className="space-y-4 sm:space-y-4 p-3 sm:p-6">
         <div className="h-8 w-64 rounded bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="h-24 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
           ))}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="h-64 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
           <div className="h-64 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
         </div>
@@ -210,7 +210,7 @@ export function AnomalyDetectionPage() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
+    <div className="space-y-4 sm:space-y-4 p-3 sm:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -242,13 +242,13 @@ export function AnomalyDetectionPage() {
         ].map((s) => (
           <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
-            <p className={clsx('text-2xl font-bold mt-1', s.color)}>{s.value}</p>
+            <p className={clsx('text-xl font-bold mt-1', s.color)}>{s.value}</p>
           </div>
         ))}
       </div>
 
       {/* 2-col: severity donut + timeline */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Severity donut */}
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 sm:p-6">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Severity Distribution</h3>
@@ -284,7 +284,7 @@ export function AnomalyDetectionPage() {
 
         {/* Timeline */}
         {timelineData.length > 0 && (
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Detection Timeline</h3>
             <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Anomalies detected over time</p>
             <div className="h-56">
@@ -335,7 +335,7 @@ export function AnomalyDetectionPage() {
       </div>
 
       {/* Anomalies table */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Anomalies</h3>
         {filteredAnomalies.length === 0 ? (
           <div className="text-center py-16 text-secondary-400 text-sm">
@@ -404,7 +404,7 @@ export function AnomalyDetectionPage() {
       {resolveTarget && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md">
-            <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-between p-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Resolve Anomaly</h3>
               <button onClick={() => { setResolveTarget(null); setResolution(''); }} className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-200">
                 <XMarkIcon className="w-5 h-5" />
@@ -420,7 +420,7 @@ export function AnomalyDetectionPage() {
                 placeholder="Describe the resolution or actions taken..."
               />
             </div>
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-end gap-3 p-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => { setResolveTarget(null); setResolution(''); }}
                 className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors"

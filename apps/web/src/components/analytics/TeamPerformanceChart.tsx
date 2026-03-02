@@ -40,7 +40,7 @@ function TeamPerformanceChart({ managerId, className = '' }: TeamPerformanceChar
 
   if (!members.length) {
     return (
-      <div className={`glass-deep rounded-2xl p-6 ${className}`}>
+      <div className={`glass-deep rounded-2xl p-4 ${className}`}>
         <div className="flex items-center gap-2 mb-4">
           <UserGroupIcon className="w-5 h-5 text-blue-500" />
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Team Performance</h3>
@@ -62,7 +62,7 @@ function TeamPerformanceChart({ managerId, className = '' }: TeamPerformanceChar
   });
 
   return (
-    <div className={`glass-deep rounded-2xl p-6 ${className}`}>
+    <div className={`glass-deep rounded-2xl p-4 ${className}`}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <UserGroupIcon className="w-5 h-5 text-blue-500" />

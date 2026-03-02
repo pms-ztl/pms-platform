@@ -417,7 +417,7 @@ export function PIPDetailPage() {
   const totalDuration = differenceInDays(parseISO(pip.endDate), parseISO(pip.startDate));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-4">
@@ -490,11 +490,11 @@ export function PIPDetailPage() {
       </div>
 
       {/* PIP Overview Card */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           PIP Overview
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Employee info */}
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center flex-shrink-0">
@@ -640,7 +640,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Performance Issues */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
           <ExclamationTriangleIcon className="h-5 w-5 text-amber-500" />
           Performance Issues
@@ -673,7 +673,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Goals & Expectations */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
           <FlagIcon className="h-5 w-5 text-primary-500" />
           Goals & Expectations
@@ -761,7 +761,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Support & Training */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
           <AcademicCapIcon className="h-5 w-5 text-teal-500" />
           Support & Training
@@ -803,7 +803,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Milestones Timeline */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
             <FlagIcon className="h-5 w-5 text-blue-500" />
@@ -832,7 +832,7 @@ export function PIPDetailPage() {
             {/* Vertical timeline line */}
             <div className="absolute left-[15px] top-2 bottom-2 w-0.5 bg-secondary-200 dark:bg-secondary-600" />
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {pip.milestoneProgress.map((milestone: PIPMilestone) => (
                 <div key={milestone.id} className="relative flex gap-4">
                   {/* Timeline dot */}
@@ -934,7 +934,7 @@ export function PIPDetailPage() {
       </div>
 
       {/* Check-ins Log */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
             <DocumentTextIcon className="h-5 w-5 text-green-500" />
@@ -1150,7 +1150,7 @@ export function PIPDetailPage() {
 
       {/* Consequences Section */}
       {pip.consequencesOfNonCompliance && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-red-200 dark:border-red-800/40 p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-red-200 dark:border-red-800/40 p-4">
           <h2 className="text-lg font-semibold text-red-800 dark:text-red-300 mb-2 flex items-center gap-2">
             <ExclamationTriangleIcon className="h-5 w-5" />
             Consequences of Non-Compliance
@@ -1166,7 +1166,7 @@ export function PIPDetailPage() {
       {/* Add Milestone Modal */}
       {showAddMilestoneModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Add Milestone
@@ -1299,7 +1299,7 @@ export function PIPDetailPage() {
       {/* Update Milestone Modal */}
       {showUpdateMilestoneModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Update Milestone
@@ -1395,7 +1395,7 @@ export function PIPDetailPage() {
       {/* Add Check-In Modal */}
       {showAddCheckInModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Add Check-In
@@ -1797,7 +1797,7 @@ export function PIPDetailPage() {
       {/* Close PIP Modal */}
       {showCloseModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Close Performance Improvement Plan
@@ -1870,7 +1870,7 @@ export function PIPDetailPage() {
       {/* Acknowledge PIP Modal */}
       {showAcknowledgeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-6 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Acknowledge PIP

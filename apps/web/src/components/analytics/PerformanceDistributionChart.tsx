@@ -35,7 +35,7 @@ function PerformanceDistributionChart({ cycleId, className = '' }: PerformanceDi
 
   if (!distribution.length) {
     return (
-      <div className={`glass-deep rounded-2xl p-6 ${className}`}>
+      <div className={`glass-deep rounded-2xl p-4 ${className}`}>
         <div className="flex items-center gap-2 mb-4">
           <ChartBarIcon className="w-5 h-5 text-violet-500" />
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Performance Distribution</h3>
@@ -54,7 +54,7 @@ function PerformanceDistributionChart({ cycleId, className = '' }: PerformanceDi
   }));
 
   return (
-    <div className={`glass-deep rounded-2xl p-6 ${className}`}>
+    <div className={`glass-deep rounded-2xl p-4 ${className}`}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <ChartBarIcon className="w-5 h-5 text-violet-500" />

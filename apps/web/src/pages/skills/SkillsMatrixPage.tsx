@@ -507,7 +507,7 @@ export function SkillsMatrixPage() {
   return (
     <div className="space-y-6 pb-8">
       {/* Page Header — frosted glassmorphism */}
-      <div className="relative overflow-hidden rounded-2xl glass-banner p-6 shadow-lg frosted-noise">
+      <div className="relative overflow-hidden rounded-2xl glass-banner p-4 shadow-lg frosted-noise">
         {/* Decorative gradient orbs */}
         <div className="absolute -top-16 -right-16 w-56 h-56 bg-gradient-to-br from-cyan-500/20 to-blue-500/15 rounded-full blur-3xl" />
         <div className="absolute -bottom-12 -left-12 w-44 h-44 bg-gradient-to-tr from-indigo-500/15 to-cyan-500/10 rounded-full blur-3xl" />
@@ -761,7 +761,7 @@ export function SkillsMatrixPage() {
 
       {/* ═══════════════════ TAB 2: Team Skills ═══════════════════ */}
       {activeTab === 'team-skills' && isManager && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Team Skill Gap Summary */}
           {teamSkills && teamSkills.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -916,7 +916,7 @@ export function SkillsMatrixPage() {
 
       {/* ═══════════════════ TAB 3: Skill Gaps (HR Only) ═══════════════════ */}
       {activeTab === 'skill-gaps' && isHR && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Summary Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
@@ -929,7 +929,7 @@ export function SkillsMatrixPage() {
                 key={card.label}
                 className="p-5 rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] text-center"
               >
-                <p className={clsx('text-3xl font-bold', card.color)}>
+                <p className={clsx('text-xl font-bold', card.color)}>
                   {card.value}
                 </p>
                 <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
@@ -940,7 +940,7 @@ export function SkillsMatrixPage() {
           </div>
 
           {/* Top 10 Skill Gaps Bar Chart */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">
                 Top 10 Skill Gaps
@@ -1004,7 +1004,7 @@ export function SkillsMatrixPage() {
 
           {/* Department vs Skill Category Heatmap */}
           {heatmapDepts.length > 0 && heatmapCats.length > 0 && (
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] p-6 overflow-x-auto">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] p-4 overflow-x-auto">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-5">
                 Department Skill Heatmap
               </h3>
@@ -1100,7 +1100,7 @@ export function SkillsMatrixPage() {
                 <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-4 space-y-4">
               {/* Skill Category */}
               <div>
                 <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
@@ -1256,7 +1256,7 @@ export function SkillsMatrixPage() {
                 <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-4 space-y-4">
               {/* Create form */}
               <div className="space-y-3">
                 <input

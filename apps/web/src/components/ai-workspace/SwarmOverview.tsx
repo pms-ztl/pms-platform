@@ -305,7 +305,7 @@ function HeroStatCard({
           <Icon className="h-6 w-6 text-white" />
         </div>
         <div>
-          <p className={`text-3xl font-bold tabular-nums leading-none ${T.textPrimary(theme)}`}>
+          <p className={`text-xl font-bold tabular-nums leading-none ${T.textPrimary(theme)}`}>
             {display}
           </p>
           <p className={`mt-1 text-xs font-semibold tracking-wide ${T.textMuted(theme)}`}>

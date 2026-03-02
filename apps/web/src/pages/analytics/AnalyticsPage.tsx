@@ -148,7 +148,7 @@ export function AnalyticsPage() {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-secondary-500 dark:text-secondary-400">{title}</p>
-          <p className="text-2xl font-bold text-secondary-900 dark:text-white mt-1">{value}</p>
+          <p className="text-xl font-bold text-secondary-900 dark:text-white mt-1">{value}</p>
           {subtitle && <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">{subtitle}</p>}
         </div>
         <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg">{icon}</div>
@@ -191,7 +191,7 @@ export function AnalyticsPage() {
     }
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Key metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {renderMetricCard(
@@ -225,7 +225,7 @@ export function AnalyticsPage() {
         </div>
 
         {/* Goal status breakdown */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Goal Status</h3>
             <div className="space-y-4">
@@ -309,18 +309,18 @@ export function AnalyticsPage() {
         {/* Team metrics (for managers) */}
         {isManager && dashboard.team.totalEmployees > 0 && (
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Team Overview</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Team Overview</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-secondary-900 dark:text-white">{dashboard.team.totalEmployees}</div>
+                <div className="text-xl font-bold text-secondary-900 dark:text-white">{dashboard.team.totalEmployees}</div>
                 <div className="text-sm text-secondary-500 dark:text-secondary-400">Total Employees</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-success-600 dark:text-success-400">{dashboard.team.activeEmployees}</div>
+                <div className="text-xl font-bold text-success-600 dark:text-success-400">{dashboard.team.activeEmployees}</div>
                 <div className="text-sm text-secondary-500 dark:text-secondary-400">Active</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary-600 dark:text-primary-400">{dashboard.team.avgGoalsPerEmployee}</div>
+                <div className="text-xl font-bold text-primary-600 dark:text-primary-400">{dashboard.team.avgGoalsPerEmployee}</div>
                 <div className="text-sm text-secondary-500 dark:text-secondary-400">Average Goals/Employee</div>
               </div>
             </div>
@@ -331,7 +331,7 @@ export function AnalyticsPage() {
   };
 
   const renderPerformance = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Cycle selector */}
       <div className="flex items-center gap-4">
         <label className="text-sm text-secondary-600 dark:text-secondary-400">Review Cycle:</label>
@@ -417,7 +417,7 @@ export function AnalyticsPage() {
   );
 
   const renderGoalsTrends = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Goal Completion Trends (Last 6 Months)</h3>
         {goalTrends && goalTrends.length > 0 ? (
@@ -475,7 +475,7 @@ export function AnalyticsPage() {
   );
 
   const renderFeedbackTrends = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Feedback Trends (Last 6 Months)</h3>
         {feedbackTrends && feedbackTrends.length > 0 ? (
@@ -544,7 +544,7 @@ export function AnalyticsPage() {
     }
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="card card-body bg-primary-50 border-primary-200 dark:bg-primary-900/20 dark:border-primary-800">
           <h3 className="font-medium text-primary-900 dark:text-primary-100">About Fairness Analytics</h3>
           <p className="text-sm text-primary-700 dark:text-primary-300 mt-1">
@@ -601,7 +601,7 @@ export function AnalyticsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Analytics" subtitle="Insights into performance, goals, and feedback">
         {isHRAdmin && <ExportToolbar />}
@@ -647,9 +647,9 @@ export function AnalyticsPage() {
       {activeTab === 'goals' && renderGoalsTrends()}
       {activeTab === 'feedback' && renderFeedbackTrends()}
       {activeTab === 'team' && isManager && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           <TeamPerformanceChart managerId={user?.id} />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <GoalCompletionTrends months={filters.months} />
             <PerformanceDistributionChart cycleId={filters.cycleId || undefined} />
           </div>

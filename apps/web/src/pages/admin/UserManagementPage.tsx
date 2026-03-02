@@ -250,7 +250,7 @@ export function UserManagementPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="User Management" subtitle="Manage users, roles, and permissions">
         <button onClick={() => setShowCreateModal(true)} className="btn-primary">
@@ -268,7 +268,7 @@ export function UserManagementPage() {
             </div>
             <div>
               <p className="text-sm text-secondary-500 dark:text-secondary-400">Total Users</p>
-              <p className="text-2xl font-bold text-secondary-900 dark:text-white">
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">
                 {usersData?.meta?.total || 0}
               </p>
             </div>
@@ -281,7 +281,7 @@ export function UserManagementPage() {
             </div>
             <div>
               <p className="text-sm text-secondary-500 dark:text-secondary-400">Active</p>
-              <p className="text-2xl font-bold text-secondary-900 dark:text-white">
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">
                 {usersData?.data?.filter((u: User) => u.isActive).length || 0}
               </p>
             </div>
@@ -294,7 +294,7 @@ export function UserManagementPage() {
             </div>
             <div>
               <p className="text-sm text-secondary-500 dark:text-secondary-400">Inactive</p>
-              <p className="text-2xl font-bold text-secondary-900 dark:text-white">
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">
                 {usersData?.data?.filter((u: User) => !u.isActive).length || 0}
               </p>
             </div>
@@ -307,7 +307,7 @@ export function UserManagementPage() {
             </div>
             <div>
               <p className="text-sm text-secondary-500 dark:text-secondary-400">Admins</p>
-              <p className="text-2xl font-bold text-secondary-900 dark:text-white">
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">
                 {usersData?.data?.filter((u: User) => u.roles?.includes('ADMIN') || u.roles?.includes('HR_ADMIN')).length || 0}
               </p>
             </div>
@@ -357,7 +357,7 @@ export function UserManagementPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-secondary-200/50 dark:border-secondary-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Add New User</h2>
                 <button
@@ -455,7 +455,7 @@ export function UserManagementPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setEditingUser(null)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-secondary-200/50 dark:border-secondary-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Edit User</h2>
                 <button
@@ -555,7 +555,7 @@ export function UserManagementPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowRoleModal(null)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full p-6 border border-secondary-200/50 dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-md w-full p-4 border border-secondary-200/50 dark:border-secondary-700">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   Manage Roles for {showRoleModal.firstName} {showRoleModal.lastName}

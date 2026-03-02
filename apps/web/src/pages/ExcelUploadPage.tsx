@@ -504,9 +504,9 @@ export function ExcelUploadPage() {
   // ============================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ─── Hero Banner ─────────────────────────────────────── */}
-      <div className="sa-hero-banner rounded-2xl p-6 animate-fade-in-up">
+      <div className="sa-hero-banner rounded-2xl p-4 animate-fade-in-up">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/10">
@@ -702,7 +702,7 @@ export function ExcelUploadPage() {
 
             <div className="p-6">
               {/* Score + Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4 mb-6">
                 {/* Quality Gauge */}
                 <div className="flex flex-col items-center justify-center">
                   <QualityScoreGauge score={analyzeResult.aiAnalysis.qualityScore} />

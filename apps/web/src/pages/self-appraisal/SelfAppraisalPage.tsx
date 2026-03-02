@@ -139,7 +139,7 @@ export function SelfAppraisalPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
               <FlagIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
@@ -153,7 +153,7 @@ export function SelfAppraisalPage() {
 
         <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-xl">
+            <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-xl">
               <ArrowTrendingUpIcon className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
             <div>
@@ -165,7 +165,7 @@ export function SelfAppraisalPage() {
 
         <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
+            <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
               <ChartBarIcon className="h-6 w-6 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
@@ -179,7 +179,7 @@ export function SelfAppraisalPage() {
 
         <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
+            <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
               <ClockIcon className="h-6 w-6 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
@@ -192,7 +192,7 @@ export function SelfAppraisalPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Competency Self-Assessment */}
         <div className="card dark:bg-secondary-800 dark:border-secondary-700">
           <div className="card-header dark:border-secondary-700">

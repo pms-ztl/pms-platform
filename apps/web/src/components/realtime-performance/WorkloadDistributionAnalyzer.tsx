@@ -253,7 +253,7 @@ export function WorkloadDistributionAnalyzer() {
   ].filter((d) => d.value > 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center space-x-3">
@@ -298,9 +298,9 @@ export function WorkloadDistributionAnalyzer() {
       </div>
 
       {viewMode === 'personal' && personalWorkload && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Workload Gauge */}
-          <div className="lg:col-span-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 flex flex-col items-center">
+          <div className="lg:col-span-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex flex-col items-center">
             <h3 className="text-sm font-medium text-secondary-500 dark:text-secondary-400 mb-4">
               Current Workload
             </h3>
@@ -313,7 +313,7 @@ export function WorkloadDistributionAnalyzer() {
           </div>
 
           {/* Breakdown */}
-          <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Workload Breakdown</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg">
@@ -363,7 +363,7 @@ export function WorkloadDistributionAnalyzer() {
       )}
 
       {viewMode === 'team' && teamWorkload && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Team Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
@@ -393,9 +393,9 @@ export function WorkloadDistributionAnalyzer() {
           </div>
 
           {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Bar Chart */}
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Team Workload Scores
               </h3>
@@ -428,7 +428,7 @@ export function WorkloadDistributionAnalyzer() {
             </div>
 
             {/* Pie Chart */}
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Distribution
               </h3>
@@ -464,7 +464,7 @@ export function WorkloadDistributionAnalyzer() {
           </div>
 
           {/* Team Members */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Team Members</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {teamWorkload.teamMembers.map((member) => (

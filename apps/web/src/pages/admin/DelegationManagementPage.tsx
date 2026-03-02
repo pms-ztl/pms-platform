@@ -301,11 +301,11 @@ export function DelegationManagementPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <PageHeader title="Delegation Management" subtitle="Loading delegations..." />
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 animate-pulse h-16" />
+            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 animate-pulse h-16" />
           ))}
         </div>
       </div>
@@ -317,7 +317,7 @@ export function DelegationManagementPage() {
   // -----------------------------------------------------------------------
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ---- Page header ---- */}
       <PageHeader title="Delegation Management" subtitle="Create and manage delegation assignments across your organization.">
         <button
@@ -689,7 +689,7 @@ export function DelegationManagementPage() {
                   {/* Timeline line */}
                   <div className="absolute left-4 top-2 bottom-2 w-0.5 bg-secondary-200 dark:bg-secondary-700" />
 
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {auditEvents.map((event) => (
                       <div key={event.id} className="relative pl-10">
                         {/* Timeline dot */}

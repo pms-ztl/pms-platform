@@ -68,7 +68,7 @@ function MentorCard({ mentor, onRequest }: { mentor: MentorMatch; onRequest: (id
       <div className="mt-4 space-y-2">
         {mentor.sharedSkills.length > 0 && (
           <div>
-            <p className="text-3xs font-semibold text-secondary-400 tracking-wider mb-1">Shared Skills</p>
+            <p className="text-2xs font-semibold text-secondary-400 tracking-wider mb-1">Shared Skills</p>
             <div className="flex flex-wrap gap-1">
               {mentor.sharedSkills.slice(0, 4).map((s) => (
                 <span key={s} className="text-2xs px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">{s}</span>
@@ -78,7 +78,7 @@ function MentorCard({ mentor, onRequest }: { mentor: MentorMatch; onRequest: (id
         )}
         {mentor.complementarySkills.length > 0 && (
           <div>
-            <p className="text-3xs font-semibold text-secondary-400 tracking-wider mb-1">Can Teach You</p>
+            <p className="text-2xs font-semibold text-secondary-400 tracking-wider mb-1">Can Teach You</p>
             <div className="flex flex-wrap gap-1">
               {mentor.complementarySkills.slice(0, 4).map((s) => (
                 <span key={s} className="text-2xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300">{s}</span>
@@ -131,7 +131,7 @@ function MentorshipCard({ mentorship }: { mentorship: Mentorship }) {
       </div>
 
       <div className="mt-4">
-        <p className="text-3xs font-semibold text-secondary-400 tracking-wider mb-1.5">Focus Areas</p>
+        <p className="text-2xs font-semibold text-secondary-400 tracking-wider mb-1.5">Focus Areas</p>
         <div className="flex flex-wrap gap-1.5">
           {mentorship.focusAreas.map((area) => (
             <span key={area} className="text-2xs px-2 py-0.5 rounded-full bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300">{area}</span>

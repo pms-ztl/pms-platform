@@ -313,7 +313,7 @@ export function OKRHierarchyView({ treeData, onSelect }: OKRHierarchyViewProps) 
 
       {subMode === 'tree' ? (
         /* Visual Tree */
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 overflow-x-auto">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 overflow-x-auto">
           <div className="flex flex-col items-center gap-0 min-w-fit">
             {treeData.map((root) => (
               <div key={root.id} className="mb-8 last:mb-0">

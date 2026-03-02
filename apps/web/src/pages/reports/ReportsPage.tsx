@@ -290,7 +290,7 @@ export function ReportsPage() {
   // -------------------------------------------------------------------------
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Reports" subtitle="Generate, download, and schedule performance reports" />
 
@@ -300,7 +300,7 @@ export function ReportsPage() {
       {isManager && (
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Quick Analytics</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <TeamPerformanceChart managerId={user?.id ?? ''} />
             <GoalCompletionTrends months={6} />
             <FeedbackAnalysisChart months={6} />
@@ -315,7 +315,7 @@ export function ReportsPage() {
       {/* ================================================================= */}
       {/* Generate Report Section                                           */}
       {/* ================================================================= */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center gap-2 mb-5">
           <ChartBarIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -810,7 +810,7 @@ export function ReportsPage() {
       {/* ================================================================= */}
       {showScheduleModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Create Report Schedule

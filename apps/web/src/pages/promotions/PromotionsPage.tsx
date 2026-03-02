@@ -307,7 +307,7 @@ export function PromotionsPage() {
   // =========================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Page Header */}
       <PageHeader
         title="Promotion Management"
@@ -473,7 +473,7 @@ export function PromotionsPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={resetCreateForm} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200/60 dark:border-white/[0.06] max-h-[85vh] overflow-y-auto">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4 border border-secondary-200/60 dark:border-white/[0.06] max-h-[85vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Nominate for Promotion</h2>
                 <button onClick={resetCreateForm} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
@@ -715,7 +715,7 @@ export function PromotionsPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => { setShowDeferModal(null); setDeferReason(''); setDeferUntil(''); }} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4 border border-secondary-200/60 dark:border-white/[0.06]">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Defer Promotion</h2>
                 <button onClick={() => { setShowDeferModal(null); setDeferReason(''); setDeferUntil(''); }} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">

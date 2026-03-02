@@ -194,7 +194,7 @@ function ToggleRow({
 
 function OverviewTab({ tenant }: { tenant: SATenant }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-1">
         <DetailRow label="Created" value={formatDate(tenant.createdAt)} />
         <DetailRow label="Slug" value={tenant.slug} />
@@ -579,7 +579,7 @@ export function SATenantDetailPage() {
   // ---- Loading state ----
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <Link
           to="/sa/tenants"
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -589,7 +589,7 @@ export function SATenantDetailPage() {
         </Link>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+            <div key={i} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
                 <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
@@ -604,7 +604,7 @@ export function SATenantDetailPage() {
   // ---- Error state ----
   if (isError || !tenant) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <Link
           to="/sa/tenants"
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -627,7 +627,7 @@ export function SATenantDetailPage() {
 
   // ---- Render ----
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Back button */}
       <Link
         to="/sa/tenants"
@@ -717,7 +717,7 @@ export function SATenantDetailPage() {
       {/* ------------------------------------------------------------------ */}
       {/* Subscription Details + Designated Manager                          */}
       {/* ------------------------------------------------------------------ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Subscription Details */}
         <SectionCard title="Subscription Details" icon={KeyIcon}>
           <div className="space-y-1">
@@ -788,7 +788,7 @@ export function SATenantDetailPage() {
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
         {/* Tab bar */}
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex -mb-px px-6 gap-6" aria-label="Tabs">
+          <nav className="flex -mb-px px-6 gap-4" aria-label="Tabs">
             {TABS.map((tab) => {
               const isSelected = activeTab === tab;
               const tabIcons: Record<TabName, React.ForwardRefExoticComponent<any>> = {

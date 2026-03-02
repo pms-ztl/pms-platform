@@ -270,7 +270,7 @@ export function GoalsPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Goals" subtitle="Track and manage your goals and OKRs">
         <button onClick={() => setShowCreateModal(true)} className="btn-primary">
@@ -394,7 +394,7 @@ export function GoalsPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/30 dark:bg-black/50" onClick={() => setShowCreateModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-transparent dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4 border border-transparent dark:border-secondary-700">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Create New Goal</h2>
               <form
                 onSubmit={(e) => {

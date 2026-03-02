@@ -51,9 +51,12 @@ const CPISScoreDisplay = ({
 
   const neonColors = ['#22d3ee', '#a78bfa', '#34d399', '#fbbf24', '#fb7185', '#818cf8', '#2dd4bf', '#e879f9'];
 
+  // Scale radar so orb edge = 0 score, outer ring = 100 score
+  // This ensures ALL scores are visible outside the orb
   const radarPoints = dimensions.map((d, i) => {
     const angle = (Math.PI * 2 * i) / dimCount - Math.PI / 2;
-    const r = ((d.rawScore ?? 0) / 100) * maxR; // no Math.max — 0 stays at center, hidden by orb
+    const score = d.rawScore ?? 0;
+    const r = score > 0 ? orbR + (score / 100) * (maxR - orbR) : orbR;
     return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
   }).join(' ');
 
@@ -228,11 +231,12 @@ const CPISScoreDisplay = ({
             CPIS
           </text>
 
-          {/* Data point dots — only outside the orb, guard against 0/null/NaN */}
+          {/* Data point dots — scaled so orb edge = 0, outer ring = 100 */}
           {dimensions.map((d, i) => {
             const angle = (Math.PI * 2 * i) / dimCount - Math.PI / 2;
-            const r = ((d.rawScore ?? 0) / 100) * maxR;
-            if (!d.rawScore || isNaN(r) || r < orbR + 10) return null;
+            const score = d.rawScore ?? 0;
+            if (!score || isNaN(score)) return null;
+            const r = orbR + (score / 100) * (maxR - orbR);
             const px = cx + r * Math.cos(angle);
             const py = cy + r * Math.sin(angle);
             return (
@@ -265,32 +269,47 @@ const CPISScoreDisplay = ({
                 >
                   {d.code}
                 </text>
-                {/* "i" info button */}
-                <g
-                  className="cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (isActive) { setActiveDim(null); return; }
-                    /* Convert SVG coords → screen coords for the portal tooltip */
-                    if (svgRef.current) {
-                      const pt = svgRef.current.createSVGPoint();
-                      pt.x = x; pt.y = y + 9;
-                      const ctm = svgRef.current.getScreenCTM();
-                      if (ctm) {
-                        const screenPt = pt.matrixTransform(ctm);
-                        setDimTipPos({ top: screenPt.y + 14, left: screenPt.x });
-                      }
-                    }
-                    setActiveDim(d.code);
-                  }}
-                >
-                  <circle cx={x + 18} cy={y + 9} r="7" fill={isActive ? `${col}` : 'rgba(255,255,255,0.08)'} stroke={col} strokeWidth="1" opacity={isActive ? 1 : 0.6} />
-                  <text x={x + 18} y={y + 9} textAnchor="middle" dominantBaseline="central"
-                    fill={isActive ? '#000' : col} fontSize="9" fontWeight="800" style={{ pointerEvents: 'none' }}
-                  >
-                    i
-                  </text>
-                </g>
+                {/* "i" info button — uniform gap from label */}
+                {(() => {
+                  const codeW = d.code.length * 6; // approximate half-width of label text
+                  const btnX = x + codeW + 8; // consistent 8px gap from text edge
+                  const btnY = y + 9;
+                  return (
+                    <g
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isActive) { setActiveDim(null); return; }
+                        if (svgRef.current) {
+                          const pt = svgRef.current.createSVGPoint();
+                          pt.x = x; pt.y = btnY;
+                          const ctm = svgRef.current.getScreenCTM();
+                          if (ctm) {
+                            const screenPt = pt.matrixTransform(ctm);
+                            setDimTipPos({ top: screenPt.y + 14, left: screenPt.x });
+                          }
+                        }
+                        setActiveDim(d.code);
+                      }}
+                    >
+                      {/* Outer glow ring */}
+                      <circle cx={btnX} cy={btnY} r="9" fill="none" stroke={col} strokeWidth="0.5" opacity={isActive ? 0.5 : 0.15} />
+                      {/* Main button */}
+                      <circle cx={btnX} cy={btnY} r="6.5"
+                        fill={isActive ? col : `rgba(255,255,255,0.05)`}
+                        stroke={col} strokeWidth="1"
+                        opacity={isActive ? 1 : 0.7}
+                        style={{ filter: isActive ? `drop-shadow(0 0 4px ${col})` : 'none' }}
+                      />
+                      <text x={btnX} y={btnY} textAnchor="middle" dominantBaseline="central"
+                        fill={isActive ? '#000' : col} fontSize="8" fontWeight="800"
+                        style={{ pointerEvents: 'none', fontFamily: 'serif', fontStyle: 'italic' }}
+                      >
+                        i
+                      </text>
+                    </g>
+                  );
+                })()}
               </g>
             );
           })}

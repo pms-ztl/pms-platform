@@ -99,13 +99,13 @@ function PageSkeleton() {
           </div>
         ))}
       </div>
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-80">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-80">
         <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-40 mb-4" />
         <div className="h-60 bg-secondary-100 dark:bg-secondary-700/50 rounded-lg" />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-72">
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-72">
             <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-36 mb-4" />
             <div className="h-52 bg-secondary-100 dark:bg-secondary-700/50 rounded-lg" />
           </div>
@@ -275,7 +275,7 @@ export function SkillGapHeatmapPage() {
             </div>
             <div className="min-w-0">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Total Skills</p>
-              <p className="text-xl md:text-2xl font-bold text-secondary-900 dark:text-white">{stats.totalSkills}</p>
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">{stats.totalSkills}</p>
             </div>
           </div>
         </div>
@@ -286,7 +286,7 @@ export function SkillGapHeatmapPage() {
             </div>
             <div className="min-w-0">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Critical Gaps</p>
-              <p className="text-xl md:text-2xl font-bold text-red-600 dark:text-red-400">{stats.criticalGaps}</p>
+              <p className="text-xl font-bold text-red-600 dark:text-red-400">{stats.criticalGaps}</p>
             </div>
           </div>
         </div>
@@ -297,7 +297,7 @@ export function SkillGapHeatmapPage() {
             </div>
             <div className="min-w-0">
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Avg Skill Level</p>
-              <p className="text-xl md:text-2xl font-bold text-secondary-900 dark:text-white">{(stats.avgLevel ?? 0).toFixed(1)}</p>
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">{(stats.avgLevel ?? 0).toFixed(1)}</p>
             </div>
           </div>
         </div>
@@ -316,7 +316,7 @@ export function SkillGapHeatmapPage() {
 
       {/* Heatmap Table */}
       {departments.length > 0 && heatmapCategories.length > 0 && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Department × Skill Category Heatmap</h3>
@@ -394,7 +394,7 @@ export function SkillGapHeatmapPage() {
 
       {/* Top Skill Gaps Bar Chart */}
       {barData.length > 0 && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Top Skill Gaps</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">
             {selectedCategory ? `Filtered by: ${selectedCategory}` : 'All categories'} — top {barData.length} gaps by severity
@@ -449,9 +449,9 @@ export function SkillGapHeatmapPage() {
       )}
 
       {/* Radar + Severity Donut */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Department Skill Radar */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">
             {selectedDept ? `${selectedDept} — Skill Profile` : 'Organization Average Skill Profile'}
           </h3>
@@ -490,7 +490,7 @@ export function SkillGapHeatmapPage() {
         </div>
 
         {/* Gap Severity Distribution */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Gap Severity Distribution</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Breakdown of skill gaps by severity level</p>
           {gaps.length > 0 ? (

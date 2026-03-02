@@ -266,7 +266,7 @@ export function EngagementDashboardPage() {
   const allFailed = errorOverview && !overview;
   if (allFailed && !loadingOverview) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div>
           <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Engagement Dashboard</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Monitor employee engagement levels and trends</p>
@@ -365,7 +365,7 @@ export function EngagementDashboardPage() {
   // ============================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ── Page Header ── */}
       <div>
         <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
@@ -492,7 +492,7 @@ export function EngagementDashboardPage() {
       {/* 2. Engagement Distribution                                         */}
       {/* ================================================================== */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           Engagement Distribution
         </h2>
         {loadingOverview ? (
@@ -552,7 +552,7 @@ export function EngagementDashboardPage() {
       {/* ================================================================== */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium text-secondary-900 dark:text-white">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
             Engagement Trend
           </h2>
           <div className="inline-flex rounded-lg bg-secondary-100 dark:bg-secondary-700 p-0.5">
@@ -635,10 +635,10 @@ export function EngagementDashboardPage() {
       {/* ================================================================== */}
       {/* 4. Department Comparison                                           */}
       {/* ================================================================== */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         {/* Bar chart */}
         <div className="xl:col-span-2 card card-body dark:bg-secondary-800 dark:border-secondary-700">
-          <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
             Department Comparison
           </h2>
           {loadingDepts ? (
@@ -738,7 +738,7 @@ export function EngagementDashboardPage() {
 
       {/* Department table */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           Department Details
         </h2>
         {loadingDepts ? (
@@ -845,7 +845,7 @@ export function EngagementDashboardPage() {
       {/* ================================================================== */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium text-secondary-900 dark:text-white">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
             At-Risk Employees
           </h2>
           {atRiskEmployees && atRiskEmployees.length > 0 && (
@@ -982,7 +982,7 @@ export function EngagementDashboardPage() {
       {/* 6. Recent Events Timeline                                          */}
       {/* ================================================================== */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           Recent Engagement Events
         </h2>
         {loadingEvents ? (
@@ -1002,7 +1002,7 @@ export function EngagementDashboardPage() {
             {/* Vertical timeline line */}
             <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-secondary-200 dark:bg-secondary-700" />
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {events.map((event, idx) => {
                 const IconComponent = EVENT_CATEGORY_ICONS[event.eventCategory] || ClockIcon;
                 const isPositive = event.positiveIndicator;

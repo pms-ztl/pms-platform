@@ -39,7 +39,7 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
   const totalCount = chartData.length;
 
   return (
-    <div className="glass-deep rounded-2xl p-6">
+    <div className="glass-deep rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <BoltIcon className="w-5 h-5 text-cyan-500" />
@@ -53,26 +53,26 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
         </div>
       </div>
 
-      <div className="h-52">
+      <div style={{ height: Math.max(100, chartData.length * 65 + 30) }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
             layout="vertical"
-            margin={{ top: 0, right: 10, left: 0, bottom: 0 }}
-            barGap={2}
-            barSize={8}
+            margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+            barGap={4}
+            barSize={14}
           >
             <XAxis
               type="number"
-              tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #94a3b8)' }}
+              tick={{ fontSize: 12, fill: 'var(--color-secondary-400, #94a3b8)' }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
               type="category"
               dataKey="name"
-              width={150}
-              tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #64748b)' }}
+              width={180}
+              tick={{ fontSize: 13, fill: 'var(--color-secondary-500, #64748b)' }}
               axisLine={false}
               tickLine={false}
             />

@@ -481,7 +481,7 @@ export function HelpPage() {
               <section className="mb-12">
                 <div className="flex items-center gap-2 mb-6">
                   <BookOpenIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
-                  <h2 className="text-xl font-semibold text-secondary-900 dark:text-white">Quick Guides</h2>
+                  <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Quick Guides</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                   {filteredGuides.map((guide) => (
@@ -501,15 +501,15 @@ export function HelpPage() {
               <section className="mb-12">
                 <div className="flex items-center gap-2 mb-6">
                   <LightBulbIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
-                  <h2 className="text-xl font-semibold text-secondary-900 dark:text-white">
+                  <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                     Frequently Asked Questions
                   </h2>
                 </div>
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {filteredFAQCategories.map((category) => (
                     <div
                       key={category.name}
-                      className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6"
+                      className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4"
                     >
                       <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
                         {category.name}
@@ -537,7 +537,7 @@ export function HelpPage() {
           {/* ── Quick Actions Sidebar ─────────────────────────────────── */}
           <aside className="lg:w-80 flex-shrink-0">
             <div className="lg:sticky lg:top-8">
-              <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+              <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
                 <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Quick Actions</h3>
                 <div className="space-y-1.5">
                   {quickActions.map((action) => {
@@ -558,7 +558,7 @@ export function HelpPage() {
               </div>
 
               {/* ── Contact Support Card ──────────────────────────────── */}
-              <div className="mt-4 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 rounded-xl border border-primary-200 dark:border-primary-800 p-6">
+              <div className="mt-4 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 rounded-xl border border-primary-200 dark:border-primary-800 p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <ShieldCheckIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
                   <h3 className="text-sm font-semibold text-primary-900 dark:text-primary-200">Need More Help?</h3>

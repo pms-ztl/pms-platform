@@ -323,7 +323,7 @@ export function CompliancePage() {
   // ========================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ---- Header ---- */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -422,7 +422,7 @@ export function CompliancePage() {
       </div>
 
       {/* ---- Main content area: table + deadlines sidebar ---- */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* ---- Left: Filters + Table (3 cols) ---- */}
         <div className="lg:col-span-3 space-y-4">
           {/* Status filter tabs */}

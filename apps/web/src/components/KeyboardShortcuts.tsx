@@ -110,7 +110,7 @@ export function KeyboardShortcuts() {
 
   return (
     <Modal open={isOpen} onClose={() => setIsOpen(false)} title="Keyboard Shortcuts" size="lg">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {SHORTCUT_GROUPS.map((group) => (
           <div key={group.label}>
             <h3 className="text-xs font-bold tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">

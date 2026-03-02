@@ -336,6 +336,8 @@ export function AIChatWidget() {
   const [renameValue, setRenameValue] = useState('');
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState({ width: 400, height: 560 });
+  const [fabIdle, setFabIdle] = useState(false);
+  const fabIdleTimer = useRef<ReturnType<typeof setTimeout>>();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -459,6 +461,26 @@ export function AIChatWidget() {
 
   useEffect(() => {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 300);
+  }, [isOpen]);
+
+  /* Auto-hide FAB after 5s of idle — reappear on scroll/mouse/touch */
+  useEffect(() => {
+    if (isOpen) return;
+    const resetIdle = () => {
+      setFabIdle(false);
+      clearTimeout(fabIdleTimer.current);
+      fabIdleTimer.current = setTimeout(() => setFabIdle(true), 5000);
+    };
+    resetIdle();
+    window.addEventListener('scroll', resetIdle, { passive: true });
+    window.addEventListener('mousemove', resetIdle, { passive: true });
+    window.addEventListener('touchstart', resetIdle, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', resetIdle);
+      window.removeEventListener('mousemove', resetIdle);
+      window.removeEventListener('touchstart', resetIdle);
+      clearTimeout(fabIdleTimer.current);
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -595,12 +617,12 @@ export function AIChatWidget() {
     statusDotText: isDark ? 'text-emerald-300/80' : 'text-white/80',
   };
 
-  // ── Floating Button (always frosted glass — solidifies on hover) ────
+  // ── Floating Button (auto-hides after 5s idle) ────
   if (!isOpen) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-50 flex items-center justify-center rounded-full focus:outline-none fab-glass-btn"
+        className={`fixed bottom-6 right-6 z-50 flex items-center justify-center rounded-full focus:outline-none fab-glass-btn transition-all duration-500 ${fabIdle ? 'opacity-0 pointer-events-none translate-y-2' : 'opacity-100 translate-y-0'}`}
         title="Open AI Assistant"
       >
         <ChatBubbleOvalLeftEllipsisIcon className="text-white/50 drop-shadow-sm" />
@@ -1140,9 +1162,9 @@ export function AIChatWidget() {
           </button>
         </div>
         <div className="mt-1 flex items-center justify-center gap-0.5">
-          <span className={`text-3xs ${t.footerSub}`}>Powered by</span>
+          <span className={`text-2xs ${t.footerSub}`}>Powered by</span>
           <span
-            className="text-3xs font-semibold"
+            className="text-2xs font-semibold"
             style={{
               background: 'linear-gradient(90deg, #6366f1, #06b6d4)',
               WebkitBackgroundClip: 'text',

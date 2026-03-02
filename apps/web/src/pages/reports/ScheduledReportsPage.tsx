@@ -97,7 +97,7 @@ function PageSkeleton() {
           </div>
         ))}
       </div>
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-72">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-72">
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="h-10 bg-secondary-100 dark:bg-secondary-700/50 rounded mb-2" />
         ))}

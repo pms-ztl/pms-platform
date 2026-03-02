@@ -382,7 +382,7 @@ function StatCard({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm text-secondary-500 dark:text-secondary-400">{title}</p>
-          <p className="text-2xl font-bold text-secondary-900 dark:text-white">{value}</p>
+          <p className="text-xl font-bold text-secondary-900 dark:text-white">{value}</p>
         </div>
         {trend !== undefined && (
           <div
@@ -436,7 +436,7 @@ function ActivityTimeline({ events }: { events: AuditEvent[] }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {Array.from(grouped.entries()).map(([dateKey, dateEvents]) => (
         <div key={dateKey}>
           <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3 sticky top-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl py-1 z-10">
@@ -619,7 +619,7 @@ export function AuditLogPage() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <PageHeader title="Audit Trail" subtitle="Track all system activities and changes">
         <div className="flex items-center gap-2">
@@ -780,7 +780,7 @@ export function AuditLogPage() {
       </div>
 
       {/* ── Main Content Area ──────────────────────────────────────────────── */}
-      <div className={clsx('grid gap-6', showTimeline ? 'grid-cols-1 xl:grid-cols-3' : 'grid-cols-1')}>
+      <div className={clsx('grid gap-4', showTimeline ? 'grid-cols-1 xl:grid-cols-3' : 'grid-cols-1')}>
         {/* Table */}
         <div className={clsx(showTimeline ? 'xl:col-span-2' : '')}>
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">

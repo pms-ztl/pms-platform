@@ -73,11 +73,11 @@ export function LicenseDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <PageHeader title="License Dashboard" subtitle="Loading license information..." />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
                 <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" />
@@ -108,7 +108,7 @@ export function LicenseDashboardPage() {
     : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader
         title="License Dashboard"
@@ -167,7 +167,7 @@ export function LicenseDashboardPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Active Users */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/20">
               <UsersIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
@@ -175,7 +175,7 @@ export function LicenseDashboardPage() {
             <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">Active Employees</span>
           </div>
           <div className="flex items-end gap-1">
-            <span className="text-3xl font-bold text-secondary-900 dark:text-white">{usage?.activeUsers ?? 0}</span>
+            <span className="text-2xl font-bold text-secondary-900 dark:text-white">{usage?.activeUsers ?? 0}</span>
             <span className="text-lg text-secondary-500 pb-0.5">/ {usage?.licenseCount ?? 0}</span>
           </div>
           <div className="mt-3">
@@ -190,31 +190,31 @@ export function LicenseDashboardPage() {
         </div>
 
         {/* Archived Users */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-secondary-50 dark:bg-secondary-800">
               <ArrowTrendingUpIcon className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
             </div>
             <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">Archived Employees</span>
           </div>
-          <span className="text-3xl font-bold text-secondary-900 dark:text-white">{usage?.archivedUsers ?? 0}</span>
+          <span className="text-2xl font-bold text-secondary-900 dark:text-white">{usage?.archivedUsers ?? 0}</span>
           <p className="text-xs text-secondary-500 mt-3">Historical records preserved</p>
         </div>
 
         {/* Max Org Level */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/20">
               <ChartBarIcon className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             </div>
             <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">Organization Levels</span>
           </div>
-          <span className="text-3xl font-bold text-secondary-900 dark:text-white">L1 - L{usage?.maxLevel ?? 16}</span>
+          <span className="text-2xl font-bold text-secondary-900 dark:text-white">L1 - L{usage?.maxLevel ?? 16}</span>
           <p className="text-xs text-secondary-500 mt-3">Configured hierarchy depth</p>
         </div>
 
         {/* Subscription Status */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/20">
               <KeyIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -236,7 +236,7 @@ export function LicenseDashboardPage() {
       </div>
 
       {/* Details Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Subscription Details */}
         <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
           <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
@@ -348,7 +348,7 @@ export function LicenseDashboardPage() {
 
       {/* Employee Breakdown */}
       {breakdown && (breakdown.byLevel.length > 0 || breakdown.byDepartment.length > 0) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* By Level */}
           {breakdown.byLevel.length > 0 && (
             <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">

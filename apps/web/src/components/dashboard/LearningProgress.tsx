@@ -24,7 +24,7 @@ function LearningProgress() {
 
   if (!plans.length) {
     return (
-      <div className="glass-deep rounded-2xl p-6">
+      <div className="glass-deep rounded-2xl p-4">
         <div className="flex items-center gap-2 mb-4">
           <BookOpenIcon className="w-5 h-5 text-indigo-500" />
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Learning & Development</h3>
@@ -41,7 +41,7 @@ function LearningProgress() {
   }
 
   return (
-    <div className="glass-deep rounded-2xl p-6">
+    <div className="glass-deep rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <BookOpenIcon className="w-5 h-5 text-indigo-500" />

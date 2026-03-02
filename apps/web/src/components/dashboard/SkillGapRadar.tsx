@@ -63,7 +63,7 @@ function SkillGapRadar({ userId }: SkillGapRadarProps) {
 
   if (!matrix.length) {
     return (
-      <div className="glass-deep rounded-2xl p-6">
+      <div className="glass-deep rounded-2xl p-4">
         {header}
         <p className="text-sm text-secondary-500 dark:text-secondary-400">
           No skill assessments yet. Ask your manager to set up skill targets.
@@ -105,7 +105,7 @@ function SkillGapRadar({ userId }: SkillGapRadarProps) {
   );
 
   return (
-    <div className="glass-deep rounded-2xl p-6">
+    <div className="glass-deep rounded-2xl p-4">
       {header}
 
       {useRadar ? (

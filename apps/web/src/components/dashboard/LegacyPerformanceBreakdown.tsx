@@ -42,7 +42,7 @@ function LegacyPerformanceBreakdown({ perfScore, goalAttainment, reviewScoreVal,
               </span>
             </div>
             <div className="flex items-end gap-1">
-              <span className="text-2xl font-bold text-secondary-900 dark:text-white">{item.value}</span>
+              <span className="text-xl font-bold text-secondary-900 dark:text-white">{item.value}</span>
               <span className="text-sm text-secondary-400 mb-0.5">/100</span>
             </div>
             <div className="mt-3 h-1.5 bg-secondary-100 dark:bg-white/5 rounded-full overflow-hidden">

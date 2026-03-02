@@ -374,7 +374,7 @@ export function SuccessionPage() {
     }
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Summary Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <StatCard label="Total Employees" value={totalEmployees} icon={UserGroupIcon} color="primary" />
@@ -704,7 +704,7 @@ export function SuccessionPage() {
       <div className="fixed inset-0 z-50 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
-          <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4 border border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Succession Plan</h2>
               <button
@@ -886,7 +886,7 @@ export function SuccessionPage() {
   // =========================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Page Header */}
       <PageHeader
         title="Succession Planning"
@@ -905,7 +905,7 @@ export function SuccessionPage() {
 
       {/* Tabs */}
       <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
-        <nav className="flex gap-6" aria-label="Succession planning tabs">
+        <nav className="flex gap-4" aria-label="Succession planning tabs">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;

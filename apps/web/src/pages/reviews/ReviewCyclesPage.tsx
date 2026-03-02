@@ -264,7 +264,7 @@ export function ReviewCyclesPage() {
   // =========================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <PageHeader title="Review Cycles" subtitle="Create and manage performance review cycles">
         {isHR && (
@@ -277,10 +277,10 @@ export function ReviewCyclesPage() {
 
       {/* ── Active Cycle Banner ──────────────────────────────────────────── */}
       {activeCycle && (
-        <div className="relative overflow-hidden rounded-2xl border border-primary-200 dark:border-primary-800 bg-gradient-to-br from-primary-50 via-white to-blue-50 dark:from-primary-900/30 dark:via-secondary-800 dark:to-blue-900/20 p-6 shadow-lg">
+        <div className="relative overflow-hidden rounded-2xl border border-primary-200 dark:border-primary-800 bg-gradient-to-br from-primary-50 via-white to-blue-50 dark:from-primary-900/30 dark:via-secondary-800 dark:to-blue-900/20 p-4 shadow-lg">
           <div className="absolute -top-20 -right-20 w-56 h-56 bg-primary-200/30 dark:bg-primary-700/10 rounded-full blur-3xl" />
           <div className="relative z-10">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-1">
                   <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-semibold', STATUS_COLORS.ACTIVE)}>
@@ -290,7 +290,7 @@ export function ReviewCyclesPage() {
                     {activeDaysRemaining} day{activeDaysRemaining !== 1 ? 's' : ''} remaining
                   </span>
                 </div>
-                <h2 className="text-xl font-bold text-secondary-900 dark:text-white break-words">
+                <h2 className="text-lg font-bold text-secondary-900 dark:text-white break-words">
                   {activeCycle.name}
                 </h2>
                 <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
@@ -608,7 +608,7 @@ export function ReviewCyclesPage() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm"
               onClick={() => setShowCreateModal(false)}
             />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-xl w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-xl w-full p-4 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   Create Review Cycle
@@ -688,7 +688,7 @@ export function ReviewCyclesPage() {
                     Auto-assign reviewers
                   </label>
                 </div>
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4">
                   <label className="flex items-center gap-2 text-sm text-secondary-700 dark:text-secondary-300">
                     <input type="checkbox" name="selfAssessment" defaultChecked className="rounded border-secondary-300 text-primary-600 focus:ring-primary-500" />
                     Include self-assessment
@@ -751,7 +751,7 @@ export function ReviewCyclesPage() {
                         {detailCycle.type.replace('_', ' ')}
                       </span>
                     </div>
-                    <h3 className="text-xl font-bold text-secondary-900 dark:text-white">
+                    <h3 className="text-lg font-bold text-secondary-900 dark:text-white">
                       {detailCycle.name}
                     </h3>
                     {detailCycle.description && (

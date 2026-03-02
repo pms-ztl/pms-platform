@@ -524,7 +524,7 @@ export function MilestoneTracker() {
             ))}
           </div>
         ) : (
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <TimelineView milestones={timeline.milestones} />
           </div>
         )
@@ -548,7 +548,7 @@ export function MilestoneTracker() {
       {/* Create Milestone Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowCreateModal(false)}>
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl p-4 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Create Milestone</h3>
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               <div>

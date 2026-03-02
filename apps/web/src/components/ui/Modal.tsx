@@ -58,7 +58,7 @@ export function Modal({ open, onClose, title, description, children, size = 'md'
                 {/* Gradient accent bar */}
                 <div className="h-[2px] bg-gradient-to-r from-primary-500 via-primary-400 to-cyan-400 rounded-t-2xl" />
                 {title && (
-                  <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.05] px-6 py-4">
+                  <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.05] px-5 py-3">
                     <div>
                       <Dialog.Title className="text-lg font-semibold text-secondary-900 dark:text-white">
                         {title}
@@ -77,7 +77,7 @@ export function Modal({ open, onClose, title, description, children, size = 'md'
                     </button>
                   </div>
                 )}
-                <div className="px-6 py-4">{children}</div>
+                <div className="px-5 py-3">{children}</div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

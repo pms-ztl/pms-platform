@@ -430,7 +430,7 @@ export function RealtimePerformancePage() {
                   <currentTab.icon className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold text-secondary-900 dark:text-white">
+                  <h1 className="text-xl font-bold text-secondary-900 dark:text-white">
                     Real-Time Performance
                   </h1>
                   <p className="text-xs text-secondary-500 dark:text-secondary-400 hidden sm:block">

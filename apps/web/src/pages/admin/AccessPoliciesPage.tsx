@@ -397,7 +397,7 @@ export function AccessPoliciesPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div>
           <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Access Policies</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading policies...</p>
@@ -406,7 +406,7 @@ export function AccessPoliciesPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 animate-pulse h-16"
+              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 animate-pulse h-16"
             />
           ))}
         </div>
@@ -419,7 +419,7 @@ export function AccessPoliciesPage() {
   // -----------------------------------------------------------------------
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ---- Page header ---- */}
       <PageHeader title="Access Policies" subtitle="Create and manage access control policies for your organization.">
         <button
@@ -433,7 +433,7 @@ export function AccessPoliciesPage() {
 
       {/* ---- Status tabs ---- */}
       <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
-        <nav className="-mb-px flex gap-6" aria-label="Policy status tabs">
+        <nav className="-mb-px flex gap-4" aria-label="Policy status tabs">
           {TABS.map((tab) => {
             const isActive = activeTab === tab.value;
             const count = tab.value === 'ALL'
@@ -769,7 +769,7 @@ export function AccessPoliciesPage() {
       {/* Create / Edit Modal                                               */}
       {/* ================================================================= */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 backdrop-blur-sm p-4 sm:p-8">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 backdrop-blur-sm p-4 sm:p-6">
           <div className="relative w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl">
             {/* Modal header */}
             <div className="flex items-center justify-between border-b border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">

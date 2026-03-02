@@ -185,14 +185,14 @@ export function PerformanceBenchmarkPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6 p-6">
+      <div className="space-y-4 p-4">
         <div className="h-8 w-72 rounded bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="h-24 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
           ))}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="h-72 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
           <div className="h-72 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
         </div>
@@ -207,7 +207,7 @@ export function PerformanceBenchmarkPage() {
 
   if (!hasData) {
     return (
-      <div className="space-y-6 p-6">
+      <div className="space-y-4 p-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
@@ -248,7 +248,7 @@ export function PerformanceBenchmarkPage() {
   // ── main render ───────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 p-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -282,14 +282,14 @@ export function PerformanceBenchmarkPage() {
               <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
               <s.icon className={clsx('w-4 h-4', s.color)} />
             </div>
-            <p className={clsx('text-2xl font-bold mt-1', s.color)}>{s.value}</p>
+            <p className={clsx('text-xl font-bold mt-1', s.color)}>{s.value}</p>
           </div>
         ))}
       </div>
 
       {/* RadarChart — Team vs Org Benchmark */}
       {radarData.length > 0 && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">
             Team vs Organization Benchmark
           </h3>
@@ -335,10 +335,10 @@ export function PerformanceBenchmarkPage() {
       )}
 
       {/* 2-col: Department comparison + Score distribution */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Department comparison */}
         {deptBarData.length > 0 && (
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">
               Department Comparison
             </h3>
@@ -394,7 +394,7 @@ export function PerformanceBenchmarkPage() {
 
         {/* Score distribution histogram */}
         {distributionData.length > 0 && (
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">
               Percentile Distribution
             </h3>
@@ -436,7 +436,7 @@ export function PerformanceBenchmarkPage() {
       </div>
 
       {/* Comparison results table */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
           Individual Comparisons
         </h3>
@@ -531,7 +531,7 @@ export function PerformanceBenchmarkPage() {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md">
-          <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="flex items-center justify-between p-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Benchmark</h3>
             <button
               onClick={() => {
@@ -583,7 +583,7 @@ export function PerformanceBenchmarkPage() {
               />
             </div>
           </div>
-          <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="flex items-center justify-end gap-3 p-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
             <button
               onClick={() => {
                 setShowCreateModal(false);

@@ -142,7 +142,7 @@ export function CalibrationPage() {
                 {session.description && (
                   <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">{session.description}</p>
                 )}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 mt-3 text-sm text-secondary-500 dark:text-secondary-400">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-3 text-sm text-secondary-500 dark:text-secondary-400">
                   <span className="flex items-center gap-1">
                     <CalendarIcon className="h-4 w-4" />
                     {format(new Date(session.scheduledStart), 'MMM d, yyyy h:mm a')}
@@ -221,7 +221,7 @@ export function CalibrationPage() {
     const maxCount = Math.max(...ratingDistribution, 1);
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Workspace header */}
         <div className="flex items-center justify-between">
           <div>
@@ -234,7 +234,7 @@ export function CalibrationPage() {
             >
               ← Back to Sessions
             </button>
-            <h2 className="text-xl font-bold text-secondary-900 dark:text-white">{selectedSession.name}</h2>
+            <h2 className="text-lg font-bold text-secondary-900 dark:text-white">{selectedSession.name}</h2>
             <p className="text-secondary-500 dark:text-secondary-400">Calibration Workspace</p>
           </div>
           <div className="flex items-center gap-4">
@@ -245,7 +245,7 @@ export function CalibrationPage() {
         </div>
 
         {/* Stats & Distribution */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Rating distribution chart */}
           <div className="lg:col-span-2 card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Rating Distribution</h3>
@@ -363,7 +363,7 @@ export function CalibrationPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {!showWorkspace ? (
         <>
           {/* Header */}
@@ -408,7 +408,7 @@ export function CalibrationPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4 border border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Create Calibration Session</h2>
               <form
                 onSubmit={(e) => {
@@ -558,7 +558,7 @@ function CalibrationReviewRow({
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowAdjustModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4 border border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
                 Adjust Rating for {review.reviewee.firstName} {review.reviewee.lastName}
               </h2>

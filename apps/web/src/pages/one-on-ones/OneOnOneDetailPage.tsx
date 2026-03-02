@@ -253,7 +253,7 @@ export function OneOnOneDetailPage() {
   const timeline = buildTimeline(meeting);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ================================================================= */}
       {/* HEADER                                                            */}
       {/* ================================================================= */}
@@ -318,8 +318,8 @@ export function OneOnOneDetailPage() {
       {/* ================================================================= */}
       {/* MEETING INFO CARD                                                 */}
       {/* ================================================================= */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Date / Time */}
           <div className="flex items-start gap-3">
             <CalendarIcon className="h-5 w-5 text-secondary-400 dark:text-secondary-500 mt-0.5" />
@@ -401,11 +401,11 @@ export function OneOnOneDetailPage() {
       {/* ================================================================= */}
       {/* MAIN CONTENT GRID                                                 */}
       {/* ================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* ---- LEFT COLUMN (2/3) ---- */}
         <div className="lg:col-span-2 space-y-6">
           {/* ─── AGENDA ─── */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center gap-2 mb-4">
               <ListBulletIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Agenda</h2>
@@ -436,7 +436,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── MANAGER NOTES ─── */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center gap-2 mb-4">
               <DocumentTextIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -467,7 +467,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── EMPLOYEE NOTES ─── */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center gap-2 mb-4">
               <DocumentTextIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -498,7 +498,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── SHARED NOTES ─── */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center gap-2 mb-4">
               <ChatBubbleLeftRightIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -525,7 +525,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── ACTION ITEMS ─── */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center gap-2 mb-4">
               <CheckCircleIcon className="h-5 w-5 text-secondary-400" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
@@ -610,9 +610,9 @@ export function OneOnOneDetailPage() {
         </div>
 
         {/* ---- RIGHT COLUMN (1/3) ---- */}
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* ─── MEETING TIMELINE ─── */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
               Meeting Timeline
             </h2>
@@ -647,7 +647,7 @@ export function OneOnOneDetailPage() {
           </div>
 
           {/* ─── PARTICIPANT DETAILS ─── */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
               Participants
             </h2>
@@ -723,7 +723,7 @@ export function OneOnOneDetailPage() {
               className="fixed inset-0 bg-black/30 dark:bg-black/50"
               onClick={() => setShowCancelConfirm(false)}
             />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6 border border-transparent dark:border-secondary-700">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4 border border-transparent dark:border-secondary-700">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">
                 Cancel Meeting
               </h2>

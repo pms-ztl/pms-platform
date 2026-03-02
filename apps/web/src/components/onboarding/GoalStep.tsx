@@ -73,7 +73,7 @@ export function GoalStep({ onNext, onSkip }: GoalStepProps) {
         Get started with a goal that matters to you
       </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Form */}
         <div className="lg:col-span-3 space-y-4">
           {/* Goal Type Toggle */}

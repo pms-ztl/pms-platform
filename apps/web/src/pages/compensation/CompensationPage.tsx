@@ -334,7 +334,7 @@ export function CompensationPage() {
   // ========================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ---- Header ---- */}
       <PageHeader
         title="Compensation Management"
@@ -872,7 +872,7 @@ function SummaryCard({ icon, label, value, bgClass }: { icon: React.ReactNode; l
       <div className="flex-shrink-0">{icon}</div>
       <div className="min-w-0">
         <p className="text-xs sm:text-sm font-medium text-secondary-500 dark:text-secondary-400 leading-tight">{label}</p>
-        <p className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">{value}</p>
+        <p className="text-xl font-bold text-secondary-900 dark:text-white">{value}</p>
       </div>
     </div>
   );

@@ -54,7 +54,7 @@ export function SettingsPage() {
   };
 
   const renderNotifications = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Email Notifications</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Choose what emails you'd like to receive.</p>
@@ -126,7 +126,7 @@ export function SettingsPage() {
   ];
 
   const renderAppearance = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Theme</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Choose how the application looks.</p>
@@ -136,7 +136,7 @@ export function SettingsPage() {
               key={opt.key}
               onClick={() => setTheme(opt.key)}
               className={clsx(
-                'p-3 sm:p-4 border rounded-xl text-center transition-all duration-200',
+                'p-2.5 sm:p-3 border rounded-xl text-center transition-all duration-200',
                 theme === opt.key
                   ? 'border-primary-500 ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/30'
                   : 'border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-600'
@@ -190,7 +190,7 @@ export function SettingsPage() {
   );
 
   const renderPrivacy = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Profile Visibility</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Control who can see your information.</p>
@@ -259,7 +259,7 @@ export function SettingsPage() {
   );
 
   const renderOrganization = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div>
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Organization Settings</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
@@ -321,11 +321,11 @@ export function SettingsPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Settings" subtitle="Manage your account settings and preferences" />
 
-      <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-8">
         {/* Sidebar — horizontal scroll on mobile, vertical on md+ */}
         <div className="w-full md:w-64 md:flex-shrink-0">
           <nav className="flex md:flex-col gap-1 overflow-x-auto pb-2 md:pb-0 md:space-y-1 md:gap-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>

@@ -317,7 +317,7 @@ function HealthGauge({ score, healthLevel }: { score: number; healthLevel: Organ
         {/* Centre label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
-            className="text-4xl font-bold font-display"
+            className="text-2xl font-bold font-display"
             style={{ color: fillColor }}
           >
             {score}
@@ -578,7 +578,7 @@ export function HealthDashboardPage() {
       {/* ================================================================== */}
       {/* 2. Health Gauge + Component Radar (side by side)                   */}
       {/* ================================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Gauge — compact */}
         <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
           <h2 className="text-sm font-semibold text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
@@ -732,7 +732,7 @@ export function HealthDashboardPage() {
       {/* 3. Component Score Cards (7 across)                                */}
       {/* ================================================================== */}
       <div>
-        <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           Component Scores
         </h2>
         {loadingLatest ? (
@@ -763,7 +763,7 @@ export function HealthDashboardPage() {
       {/* 4. People Metrics Row                                              */}
       {/* ================================================================== */}
       <div>
-        <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           People Metrics
         </h2>
         {loadingLatest ? (
@@ -810,7 +810,7 @@ export function HealthDashboardPage() {
       {/* 5. Department Comparison                                           */}
       {/* ================================================================== */}
       <div>
-        <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           Department Health Comparison
         </h2>
 
@@ -843,7 +843,7 @@ export function HealthDashboardPage() {
           return loadingDepts ? (
             <ChartSkeleton />
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Bar chart */}
               <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
                 <div className="h-64">
@@ -915,7 +915,7 @@ export function HealthDashboardPage() {
       {/* 6. Strengths, Concerns & Recommendations (3 cols)                  */}
       {/* ================================================================== */}
       {loadingLatest ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
               <SkeletonPulse className="h-5 w-24 mb-4" />
@@ -928,7 +928,7 @@ export function HealthDashboardPage() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Strengths */}
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <div className="flex items-center gap-2 mb-4">
@@ -999,7 +999,7 @@ export function HealthDashboardPage() {
       {/* 7. Historical Trend                                                */}
       {/* ================================================================== */}
       <div>
-        <h2 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           Historical Trend
         </h2>
 

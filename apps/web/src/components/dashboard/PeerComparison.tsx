@@ -31,7 +31,7 @@ function PeerComparison({ percentile, score }: PeerComparisonProps) {
   ];
 
   return (
-    <div className="glass-deep rounded-2xl p-6">
+    <div className="glass-deep rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <UsersIcon className="w-5 h-5 text-blue-500" />

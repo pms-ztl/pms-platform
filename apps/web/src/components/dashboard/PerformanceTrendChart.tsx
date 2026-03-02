@@ -34,7 +34,7 @@ function PerformanceTrendChart({ currentScore }: PerformanceTrendChartProps) {
 
   if (!chartData.length) {
     return (
-      <div className="glass-deep rounded-2xl p-6">
+      <div className="glass-deep rounded-2xl p-4">
         <div className="flex items-center gap-2 mb-4">
           <ArrowTrendingUpIcon className="w-5 h-5 text-primary-500" />
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Performance Trend</h3>
@@ -45,14 +45,14 @@ function PerformanceTrendChart({ currentScore }: PerformanceTrendChartProps) {
   }
 
   return (
-    <div className="glass-deep rounded-2xl p-6">
+    <div className="glass-deep rounded-2xl p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <ArrowTrendingUpIcon className="w-5 h-5 text-primary-500" />
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Performance Trend</h3>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-2xl font-bold text-secondary-900 dark:text-white">{Math.round(currentScore)}</span>
+          <span className="text-xl font-bold text-secondary-900 dark:text-white">{Math.round(currentScore)}</span>
           <span className="text-xs text-secondary-500 dark:text-secondary-400">/100</span>
         </div>
       </div>

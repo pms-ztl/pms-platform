@@ -327,7 +327,7 @@ export function ReviewsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Performance Reviews" subtitle="Manage review cycles and complete your reviews">
         {isHRAdmin && (
@@ -374,7 +374,7 @@ export function ReviewsPage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowCreateCycleModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Create Review Cycle</h2>
               <form
                 onSubmit={(e) => {

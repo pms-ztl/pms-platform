@@ -152,14 +152,14 @@ export function RBACDashboardPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div>
           <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">RBAC Dashboard</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading access control data...</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
                 <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" />
@@ -167,9 +167,9 @@ export function RBACDashboardPage() {
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6 h-64">
+            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-64">
               <div className="animate-pulse space-y-4">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/4" />
                 <div className="h-40 bg-secondary-200 dark:bg-secondary-700 rounded" />
@@ -184,7 +184,7 @@ export function RBACDashboardPage() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="RBAC Dashboard" subtitle="Overview of roles, permissions, and access control across your organization">
         <button
@@ -229,7 +229,7 @@ export function RBACDashboardPage() {
       </div>
 
       {/* Row 2: Charts & Permission Coverage */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Pie Chart: Role Distribution */}
         <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
           <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
@@ -418,14 +418,14 @@ function StatCard({
   iconColor: string;
 }) {
   return (
-    <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+    <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
       <div className="flex items-center gap-3 mb-3">
         <div className={`p-2 rounded-lg ${colorClass}`}>
           <Icon className={`h-5 w-5 ${iconColor}`} />
         </div>
         <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">{label}</span>
       </div>
-      <span className="text-3xl font-bold text-secondary-900 dark:text-white">{value}</span>
+      <span className="text-2xl font-bold text-secondary-900 dark:text-white">{value}</span>
     </div>
   );
 }

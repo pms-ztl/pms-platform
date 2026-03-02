@@ -206,9 +206,9 @@ export function DataExportPage() {
 
       {/* ── Reports Tab ── */}
       {activeTab === 'reports' && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Report Generator */}
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Generate Report</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
               <div>
@@ -285,7 +285,7 @@ function ReportsList({
 }) {
   if (loading) {
     return (
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex justify-center py-12">
           <div className="glass-spinner" />
         </div>
@@ -295,7 +295,7 @@ function ReportsList({
 
   if (reports.length === 0) {
     return (
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6 text-center py-16">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 text-center py-16">
         <DocumentChartBarIcon className="h-12 w-12 mx-auto text-secondary-300 dark:text-secondary-600 mb-3" />
         <p className="text-lg font-medium text-secondary-500 dark:text-secondary-400">No reports yet</p>
         <p className="text-sm text-secondary-400 dark:text-secondary-500 mt-1">Generate your first report to see it here.</p>

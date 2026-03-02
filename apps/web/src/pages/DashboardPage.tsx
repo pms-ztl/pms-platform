@@ -11,6 +11,8 @@ import {
   UserGroupIcon,
   ShieldCheckIcon,
   ExclamationTriangleIcon,
+  ChartBarIcon,
+  AcademicCapIcon,
 } from '@heroicons/react/24/outline';
 import { StarIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
 
@@ -298,6 +300,51 @@ function DashboardContent() {
       bgGradient: 'from-amber-500/10 to-orange-400/10',
       iconBg: 'bg-amber-500',
     },
+    {
+      name: 'Goal Attainment',
+      value: perfLoading ? '...' : `${Math.round(goalAttainment)}`,
+      suffix: '%',
+      icon: ChartBarIcon,
+      change: goalAttainment >= 90 ? 'Excellent progress' : goalAttainment >= 70 ? 'Good progress' : goalAttainment > 0 ? 'Needs improvement' : 'No data yet',
+      changeType: goalAttainment >= 70 ? 'positive' : goalAttainment >= 50 ? 'neutral' : goalAttainment > 0 ? 'negative' : 'neutral',
+      gradient: 'from-teal-500 to-emerald-400',
+      bgGradient: 'from-teal-500/10 to-emerald-400/10',
+      iconBg: 'bg-teal-500',
+    },
+    {
+      name: 'Review Score',
+      value: perfLoading ? '...' : Math.round(reviewScoreVal),
+      suffix: '/100',
+      icon: AcademicCapIcon,
+      change: reviewScoreVal >= 80 ? 'Outstanding' : reviewScoreVal >= 60 ? 'Meets expectations' : reviewScoreVal > 0 ? 'Below expectations' : 'No reviews yet',
+      changeType: reviewScoreVal >= 70 ? 'positive' : reviewScoreVal >= 50 ? 'neutral' : reviewScoreVal > 0 ? 'negative' : 'neutral',
+      gradient: 'from-pink-500 to-rose-400',
+      bgGradient: 'from-pink-500/10 to-rose-400/10',
+      iconBg: 'bg-pink-500',
+    },
+    {
+      name: 'Star Rating',
+      value: perfLoading ? '...' : derivedRating.toFixed(1),
+      suffix: '/5',
+      icon: StarIcon,
+      change: derivedRating >= 4 ? 'Top performer' : derivedRating >= 3 ? 'Solid performer' : derivedRating > 0 ? 'Room to grow' : 'Not rated yet',
+      changeType: derivedRating >= 4 ? 'positive' : derivedRating >= 3 ? 'neutral' : derivedRating > 0 ? 'negative' : 'neutral',
+      gradient: 'from-yellow-500 to-amber-400',
+      bgGradient: 'from-yellow-500/10 to-amber-400/10',
+      iconBg: 'bg-yellow-500',
+    },
+    {
+      name: 'At-Risk Goals',
+      value: atRiskGoals.length,
+      icon: ExclamationTriangleIcon,
+      change: atRiskGoals.length === 0
+        ? (goalsData?.data?.length ? 'All goals healthy' : 'No goals yet')
+        : `${atRiskGoals.filter((r: any) => r.riskLevel === 'CRITICAL').length} critical`,
+      changeType: atRiskGoals.length === 0 ? 'positive' : 'negative',
+      gradient: 'from-red-500 to-orange-400',
+      bgGradient: 'from-red-500/10 to-orange-400/10',
+      iconBg: 'bg-red-500',
+    },
   ];
 
   // ── Build real achievement badges from computed data ────────────────────
@@ -381,7 +428,7 @@ function DashboardContent() {
               <CalendarDaysIcon className="w-3 h-3" />
               {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
-            <h1 className="text-4xl lg:text-5xl font-bold mb-1.5 tracking-tight flex items-center flex-wrap gap-x-3" style={{
+            <h1 className="text-2xl lg:text-3xl font-bold mb-1.5 tracking-tight flex items-center flex-wrap gap-x-3" style={{
                 fontFamily: "'Libre Baskerville', Georgia, serif",
                 color: 'rgba(255,255,255,0.97)',
                 textShadow: [
@@ -503,74 +550,203 @@ function DashboardContent() {
               </div>
             )}
 
-            {/* Quick Snapshot — 4 mini stat cards */}
+            {/* Quick Snapshot — 8 mini stat cards */}
             <div className="grid grid-cols-4 gap-2 mt-3">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
-                <div className="flex items-center gap-1.5 mb-1">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
                   <FlagIcon className="w-4 h-4 text-cyan-300" />
                   <span className="text-xs font-medium text-white/60 tracking-wide">Goals</span>
                 </div>
                 <p className="text-base font-bold text-white">{goalsData?.data?.length ?? 0}</p>
                 <p className="text-2xs text-white/50 mt-0">{avgProgress}% Average Progress</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
-                <div className="flex items-center gap-1.5 mb-1">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
                   <ChatBubbleLeftRightIcon className="w-4 h-4 text-emerald-300" />
                   <span className="text-xs font-medium text-white/60 tracking-wide">Feedback</span>
                 </div>
                 <p className="text-base font-bold text-white">{feedbackData?.meta?.total ?? 0}</p>
                 <p className="text-2xs text-white/50 mt-0">{feedbackScoreVal > 0 ? `${Math.round(feedbackScoreVal)}/100 Sentiment` : 'No Data Yet'}</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
-                <div className="flex items-center gap-1.5 mb-1">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
                   <ClipboardDocumentCheckIcon className="w-4 h-4 text-violet-300" />
                   <span className="text-xs font-medium text-white/60 tracking-wide">Reviews</span>
                 </div>
                 <p className="text-base font-bold text-white">{reviewsData?.length ?? 0}</p>
                 <p className="text-2xs text-white/50 mt-0">{pendingReviews.length > 0 ? `${pendingReviews.length} Pending` : 'All Complete'}</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10">
-                <div className="flex items-center gap-1.5 mb-1">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
                   <TrophyIcon className="w-4 h-4 text-amber-300" />
                   <MetricTooltip code="CPIS" className="text-xs font-medium text-white/60 tracking-wide">CPIS</MetricTooltip>
                 </div>
                 <p className="text-base font-bold text-white">{Math.round(overallScore)}</p>
                 <p className="text-2xs text-white/50 mt-0">Grade {cpisGrade ?? '—'}</p>
               </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <ChartBarIcon className="w-4 h-4 text-teal-300" />
+                  <span className="text-xs font-medium text-white/60 tracking-wide">Attainment</span>
+                </div>
+                <p className="text-base font-bold text-white">{Math.round(goalAttainment)}%</p>
+                <p className="text-2xs text-white/50 mt-0">{goalAttainment >= 90 ? 'Excellent' : goalAttainment >= 70 ? 'Good' : goalAttainment > 0 ? 'Needs Work' : 'No Data'}</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <AcademicCapIcon className="w-4 h-4 text-pink-300" />
+                  <span className="text-xs font-medium text-white/60 tracking-wide">Review Score</span>
+                </div>
+                <p className="text-base font-bold text-white">{Math.round(reviewScoreVal)}</p>
+                <p className="text-2xs text-white/50 mt-0">{reviewScoreVal >= 80 ? 'Outstanding' : reviewScoreVal >= 60 ? 'Meets Exp.' : reviewScoreVal > 0 ? 'Below Exp.' : 'No Reviews'}</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <StarIcon className="w-4 h-4 text-yellow-300" />
+                  <span className="text-xs font-medium text-white/60 tracking-wide">Star Rating</span>
+                </div>
+                <p className="text-base font-bold text-white">{derivedRating.toFixed(1)}<span className="text-xs text-white/40">/5</span></p>
+                <p className="text-2xs text-white/50 mt-0">{derivedRating >= 4 ? 'Top Performer' : derivedRating >= 3 ? 'Solid' : derivedRating > 0 ? 'Growing' : 'Not Rated'}</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+                <div className="flex items-center justify-center gap-1.5 mb-1">
+                  <ExclamationTriangleIcon className="w-4 h-4 text-red-300" />
+                  <span className="text-xs font-medium text-white/60 tracking-wide">At Risk</span>
+                </div>
+                <p className="text-base font-bold text-white">{atRiskGoals.length}</p>
+                <p className="text-2xs text-white/50 mt-0">{atRiskGoals.length === 0 ? 'All Healthy' : `${atRiskGoals.filter((r: any) => r.riskLevel === 'CRITICAL').length} Critical`}</p>
+              </div>
             </div>
 
-            {/* CPIS Top Dimensions — horizontal mini-bars (sorted by score desc) */}
-            {cpisDimensions.length > 0 && (
-              <div className="mt-2 space-y-1.5">
-                <p className="text-2xs font-semibold text-white/50 tracking-wider">Performance Dimensions</p>
-                {[...cpisDimensions].sort((a: any, b: any) => b.rawScore - a.rawScore).slice(0, 4).map((dim: any, i: number) => {
-                  const barColors = ['#22d3ee', '#a78bfa', '#34d399', '#fbbf24'];
-                  const hasData = dim.rawScore > 0;
-                  return (
-                    <div key={dim.code} className="flex items-center gap-3">
-                      <MetricTooltip code={dim.code} className="text-xs font-bold text-white/70 w-8 text-right justify-end">{dim.code}</MetricTooltip>
-                      <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden relative">
-                        {hasData ? (
-                          <div
-                            className="h-full rounded-full transition-all duration-1000"
-                            style={{
-                              width: `${Math.min(100, dim.rawScore)}%`,
-                              backgroundColor: barColors[i],
-                              boxShadow: `0 0 6px ${barColors[i]}60`,
-                            }}
-                          />
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-3xs text-white/30 font-medium tracking-wider">No data</span>
-                          </div>
-                        )}
-                      </div>
-                      <span className={`text-xs font-bold w-8 ${hasData ? 'text-white/80' : 'text-white/30'}`}>{hasData ? Math.round(dim.rawScore) : '—'}</span>
+            {/* CPIS Dimensions — neon gradient pillars with reflection */}
+            {cpisDimensions.length > 0 && (() => {
+              const dimColorMap: Record<string, { dark: string; mid: string; light: string; rgb: string }> = {
+                GAI: { dark: '#1d4ed8', mid: '#3b82f6', light: '#93c5fd', rgb: '59,130,246' },    // blue (matches tooltip)
+                RQS: { dark: '#6d28d9', mid: '#a78bfa', light: '#ddd6fe', rgb: '167,139,250' },   // violet
+                FSI: { dark: '#047857', mid: '#34d399', light: '#a7f3d0', rgb: '52,211,153' },    // emerald
+                CIS: { dark: '#b45309', mid: '#fbbf24', light: '#fef08a', rgb: '251,191,36' },    // amber
+                CRI: { dark: '#be123c', mid: '#fb7185', light: '#fecdd3', rgb: '251,113,133' },   // rose (matches tooltip)
+                GTS: { dark: '#4338ca', mid: '#818cf8', light: '#c7d2fe', rgb: '129,140,248' },   // indigo (matches tooltip)
+                EQS: { dark: '#0f766e', mid: '#2dd4bf', light: '#99f6e4', rgb: '45,212,191' },    // teal (matches tooltip)
+                III: { dark: '#a21caf', mid: '#e879f9', light: '#f5d0fe', rgb: '232,121,249' },   // fuchsia (matches tooltip)
+              };
+              const fallback = { dark: '#475569', mid: '#94a3b8', light: '#cbd5e1', rgb: '148,163,184' };
+              const sorted = [...cpisDimensions].sort((a: any, b: any) => b.rawScore - a.rawScore);
+              const BAR_MAX = 64;
+              return (
+                <div className="mt-3">
+                  <style>{`
+                    @keyframes pillarGrow { 0% { height:0; opacity:0; } 60% { opacity:1; } 85% { height:calc(var(--ph) * 1.06); } 100% { height:var(--ph); } }
+                    @keyframes scoreIn { 0% { opacity:0; transform:translateY(6px) scale(0.8); } 100% { opacity:1; transform:translateY(0) scale(1); } }
+                    @keyframes capPulse { 0%,100% { opacity:0.6; transform:scaleX(1); } 50% { opacity:1; transform:scaleX(1.15); } }
+                    @keyframes shineSlide { 0% { transform:translateX(-100%) skewX(-15deg); } 100% { transform:translateX(250%) skewX(-15deg); } }
+                  `}</style>
+                  <p className="text-2xs font-semibold text-white/50 tracking-wider mb-2">Performance Dimensions</p>
+                  <div className="relative">
+                    {/* Glass shelf line */}
+                    <div className="absolute bottom-[18px] left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                    <div className="grid grid-cols-8 gap-[6px] px-0 items-end">
+                      {sorted.map((dim: any, i: number) => {
+                        const { dark, mid, light, rgb } = dimColorMap[dim.code] || fallback;
+                        const score = Math.round(dim.rawScore);
+                        const h = Math.max(8, Math.round((score / 100) * BAR_MAX));
+                        return (
+                          <MetricTooltip key={dim.code} code={dim.code} clickToReveal className="group flex flex-col items-center cursor-pointer w-full [&>span]:border-transparent [&>span]:w-full">
+                            <div className="flex flex-col items-center w-full">
+                            {/* Score */}
+                            <span
+                              className="text-sm font-black tabular-nums mb-1"
+                              style={{
+                                fontFamily: "'Times New Roman', Times, serif",
+                                color: light,
+                                textShadow: `0 0 10px rgba(${rgb},0.7), 0 0 20px rgba(${rgb},0.3)`,
+                                animation: `scoreIn 0.5s ease-out ${0.8 + i * 0.07}s both`,
+                              } as any}
+                            >{score}</span>
+                            {/* Pillar + reflection container — fixed height so all bars share same baseline */}
+                            <div className="flex flex-col items-center justify-end w-full" style={{ height: `${BAR_MAX + 14}px` }}>
+                              {/* Main pillar — GPU-only transitions for smooth hover */}
+                              <div
+                                className="relative w-full rounded-t-lg overflow-hidden will-change-transform group-hover:-translate-y-1.5 transition-transform duration-500 ease-out"
+                                style={{
+                                  '--ph': `${h}px`,
+                                  animation: `pillarGrow 0.9s cubic-bezier(0.34,1.56,0.64,1) ${0.2 + i * 0.08}s both`,
+                                } as any}
+                              >
+                                {/* Frosted glass gradient fill */}
+                                <div className="absolute inset-0" style={{
+                                  background: `linear-gradient(to top, ${dark}99 0%, ${mid}77 50%, ${light}55 100%)`,
+                                  backdropFilter: 'blur(12px) saturate(1.5)',
+                                  WebkitBackdropFilter: 'blur(12px) saturate(1.5)',
+                                }} />
+                                {/* Hover brighten overlay — opacity-only transition */}
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out" style={{
+                                  background: `linear-gradient(to top, ${dark}33 0%, ${mid}22 50%, rgba(255,255,255,0.12) 100%)`,
+                                }} />
+                                {/* Inner glass border */}
+                                <div className="absolute inset-0 rounded-t-lg" style={{
+                                  border: '1px solid rgba(255,255,255,0.15)',
+                                  borderBottom: 'none',
+                                }} />
+                                {/* Hover border glow — opacity only */}
+                                <div className="absolute inset-0 rounded-t-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out" style={{
+                                  border: `1px solid rgba(${rgb},0.3)`,
+                                  borderBottom: 'none',
+                                }} />
+                                {/* Glass shine left edge */}
+                                <div className="absolute inset-y-0 left-0 w-[40%]" style={{
+                                  background: 'linear-gradient(to right, rgba(255,255,255,0.2), transparent)',
+                                }} />
+                                {/* Shine sweep — opacity only */}
+                                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out overflow-hidden">
+                                  <div className="absolute inset-y-0 w-[40%]" style={{
+                                    background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent)',
+                                    animation: 'shineSlide 2s ease-in-out infinite',
+                                  }} />
+                                </div>
+                                {/* Glowing cap */}
+                                <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-lg" style={{
+                                  background: light,
+                                  boxShadow: `0 0 8px ${mid}, 0 0 16px rgba(${rgb},0.5)`,
+                                  animation: `capPulse 2.5s ease-in-out ${i * 0.3}s infinite`,
+                                }} />
+                                {/* Neon bloom — opacity only */}
+                                <div className="absolute -inset-1 rounded-t-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out pointer-events-none" style={{
+                                  boxShadow: `0 0 20px rgba(${rgb},0.4), 0 0 40px rgba(${rgb},0.15)`,
+                                }} />
+                                {/* Frosted base */}
+                                <div className="absolute bottom-0 left-0 right-0 h-[40%]" style={{
+                                  background: 'linear-gradient(to top, rgba(255,255,255,0.1), transparent)',
+                                  borderTop: '1px solid rgba(255,255,255,0.08)',
+                                }} />
+                              </div>
+                              {/* Reflection (mirrored, faded) — fixed height for uniform baseline */}
+                              <div
+                                className="w-full rounded-b-lg opacity-[0.15] group-hover:opacity-[0.25] transition-opacity"
+                                style={{
+                                  height: '12px',
+                                  background: `linear-gradient(to bottom, ${mid}, transparent)`,
+                                  transform: 'scaleY(-1)',
+                                  filter: 'blur(1px)',
+                                  maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.6), transparent)',
+                                  WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.6), transparent)',
+                                }}
+                              />
+                            </div>
+                            {/* Label */}
+                            <span
+                              className="text-3xs font-bold text-white/45 mt-1 tracking-wider group-hover:text-white/90 transition-colors"
+                              style={{ animation: `scoreIn 0.4s ease-out ${0.9 + i * 0.06}s both` } as any}
+                            >{dim.code}</span>
+                            </div>
+                          </MetricTooltip>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           {/* CPIS Score Visualization — 8-dimension radar chart */}
@@ -592,7 +768,7 @@ function DashboardContent() {
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2 py-6">
-                <div className="text-4xl font-bold text-white">{Math.round(overallScore)}</div>
+                <div className="text-2xl font-bold text-white">{Math.round(overallScore)}</div>
                 <p className="text-white/60 text-sm">Performance Score</p>
                 {percentile !== null && percentile > 0 && (
                   <p className="text-white/50 text-xs">Top {Math.max(1, 100 - percentile)}%</p>

@@ -233,7 +233,7 @@ export function EmployeeCard({ userId, onClose }: EmployeeCardProps) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Export buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <h2 className="text-lg sm:text-xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
+        <h2 className="text-base sm:text-lg font-bold text-secondary-900 dark:text-white flex items-center gap-2">
           <IdentificationIcon className="h-5 w-5 sm:h-6 sm:w-6 text-primary-500 flex-shrink-0" />
           Employee Performance Card
         </h2>

@@ -192,7 +192,7 @@ export function AIAccessManagementPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <ShieldCheckIcon className="h-12 w-12 text-secondary-400 mb-4" />
-        <h2 className="text-xl font-semibold text-secondary-900 dark:text-white">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
           Access Denied
         </h2>
         <p className="text-secondary-500 dark:text-secondary-400 mt-2">
@@ -207,9 +207,9 @@ export function AIAccessManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Shimmer header */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 p-8">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 p-4">
           <div className="animate-pulse space-y-4">
             <div className="h-6 bg-white/20 rounded w-1/3" />
             <div className="h-10 bg-white/20 rounded w-1/2" />
@@ -221,7 +221,7 @@ export function AIAccessManagementPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6"
+              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4"
             >
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
@@ -231,7 +231,7 @@ export function AIAccessManagementPage() {
           ))}
         </div>
         {/* Shimmer table */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="animate-pulse space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="flex items-center gap-4">
@@ -253,7 +253,7 @@ export function AIAccessManagementPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <XCircleIcon className="h-12 w-12 text-red-400 mb-4" />
-        <h2 className="text-xl font-semibold text-secondary-900 dark:text-white">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
           Failed to Load AI Access Data
         </h2>
         <p className="text-secondary-500 dark:text-secondary-400 mt-2 max-w-md">
@@ -275,7 +275,7 @@ export function AIAccessManagementPage() {
   // ---- Render --------------------------------------------------------------
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Success toast */}
       {successMessage && (
         <div className="fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-lg bg-green-600 text-white shadow-lg animate-fade-in">
@@ -287,7 +287,7 @@ export function AIAccessManagementPage() {
       {/* ------------------------------------------------------------------ */}
       {/* Gradient Header                                                     */}
       {/* ------------------------------------------------------------------ */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 p-8">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 p-4">
         {/* Background decorative elements */}
         <div className="absolute top-0 right-0 -mt-4 -mr-4 h-32 w-32 rounded-full bg-white/10 blur-2xl" />
         <div className="absolute bottom-0 left-0 -mb-6 -ml-6 h-40 w-40 rounded-full bg-white/5 blur-3xl" />
@@ -340,7 +340,7 @@ export function AIAccessManagementPage() {
       {/* ------------------------------------------------------------------ */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Total users */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/20">
               <UserGroupIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
@@ -349,14 +349,14 @@ export function AIAccessManagementPage() {
               Total Users
             </span>
           </div>
-          <span className="text-3xl font-bold text-secondary-900 dark:text-white">
+          <span className="text-2xl font-bold text-secondary-900 dark:text-white">
             {totalUsers}
           </span>
           <p className="text-xs text-secondary-500 mt-2">Active employees in the organization</p>
         </div>
 
         {/* AI-enabled users */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-violet-50 dark:bg-violet-900/20">
               <SparklesIcon className="h-5 w-5 text-violet-600 dark:text-violet-400" />
@@ -366,7 +366,7 @@ export function AIAccessManagementPage() {
             </span>
           </div>
           <div className="flex items-end gap-2">
-            <span className="text-3xl font-bold text-secondary-900 dark:text-white">
+            <span className="text-2xl font-bold text-secondary-900 dark:text-white">
               {aiEnabledCount}
             </span>
             <span className="text-lg text-secondary-400 pb-0.5">/ {totalUsers}</span>
@@ -382,7 +382,7 @@ export function AIAccessManagementPage() {
         </div>
 
         {/* Percentage card */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/20">
               <CheckCircleIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -391,7 +391,7 @@ export function AIAccessManagementPage() {
               Adoption Rate
             </span>
           </div>
-          <span className="text-3xl font-bold text-secondary-900 dark:text-white">
+          <span className="text-2xl font-bold text-secondary-900 dark:text-white">
             {percentage}%
           </span>
           <p className="text-xs text-secondary-500 mt-2">
@@ -403,7 +403,7 @@ export function AIAccessManagementPage() {
       {/* ------------------------------------------------------------------ */}
       {/* Delegate to Managers Toggle                                         */}
       {/* ------------------------------------------------------------------ */}
-      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 mt-0.5">

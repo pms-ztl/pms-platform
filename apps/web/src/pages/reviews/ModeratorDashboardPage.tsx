@@ -558,7 +558,7 @@ export function ModeratorDashboardPage() {
   // -------------------------------------------------------------------------
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -623,7 +623,7 @@ export function ModeratorDashboardPage() {
           <div className="glass-spinner h-10 w-10" />
         </div>
       ) : (
-        <div className="flex gap-6" style={{ minHeight: '70vh' }}>
+        <div className="flex gap-4" style={{ minHeight: '70vh' }}>
           {/* Left Panel: Employee List (30%) */}
           <div className="w-[30%] flex-shrink-0 flex flex-col bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
             {/* Search & Filters */}
@@ -740,7 +740,7 @@ export function ModeratorDashboardPage() {
             ) : (
               <>
                 {/* a. Review Summary Card */}
-                <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+                <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
@@ -784,7 +784,7 @@ export function ModeratorDashboardPage() {
                           </p>
                           <p
                             className={clsx(
-                              'text-3xl font-bold',
+                              'text-xl font-bold',
                               getRatingColor(selectedEmployee.computedRating)
                             )}
                           >
@@ -826,22 +826,22 @@ export function ModeratorDashboardPage() {
 
                 {/* c. Compiled Summary */}
                 {compiledData && (
-                  <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6 space-y-6">
+                  <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 space-y-4">
                     <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">
                       Compiled Summary
                     </h3>
 
                     {/* Weighted Average */}
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4">
                       <div className="text-center">
                         <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-1">
                           Weighted Average
                         </p>
-                        <p className={clsx('text-4xl font-bold', getRatingColor(compiledData.weightedAvg))}>
+                        <p className={clsx('text-2xl font-bold', getRatingColor(compiledData.weightedAvg))}>
                           {compiledData.weightedAvg}
                         </p>
                         <RatingStars rating={compiledData.weightedAvg} size="md" />
-                        <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-1">
+                        <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
                           Self 20% / Manager 50% / Peer 30%
                         </p>
                       </div>
@@ -969,7 +969,7 @@ export function ModeratorDashboardPage() {
                 )}
 
                 {/* d. Actions */}
-                <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+                <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
                   <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-4">
                     Moderation Actions
                   </h3>
@@ -1013,7 +1013,7 @@ export function ModeratorDashboardPage() {
 
       {/* Team-Wide Rating Distribution (bottom) */}
       {employeeSummaries.length > 0 && (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-1">
             Team Rating Distribution
           </h3>
@@ -1071,7 +1071,7 @@ export function ModeratorDashboardPage() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm"
               onClick={() => setShowCalibrateModal(false)}
             />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   Calibrate Rating
@@ -1169,7 +1169,7 @@ export function ModeratorDashboardPage() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm"
               onClick={() => setShowSendBackModal(false)}
             />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-secondary-200/50 dark:border-secondary-700/50 animate-scale-in">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   Send Back for Revision

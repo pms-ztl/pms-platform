@@ -363,7 +363,7 @@ export function EmployeeDirectoryPage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Employee Directory" subtitle="Browse and search employees across your organization" />
 

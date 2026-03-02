@@ -276,7 +276,7 @@ export function ActivityHeatmap({ mode = 'individual' }: { mode?: 'individual' |
         ) : mode === 'individual' ? (
           <HeatmapGrid data={individualData || []} />
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Team aggregate */}
             <div>
               <h4 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">

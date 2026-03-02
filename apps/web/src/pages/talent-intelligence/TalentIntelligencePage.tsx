@@ -172,7 +172,7 @@ export function TalentIntelligencePage() {
 
   if (isLoading && recUserId) {
     return (
-      <div className="space-y-6 p-6">
+      <div className="space-y-4 p-4">
         <div className="h-8 w-72 rounded bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -187,7 +187,7 @@ export function TalentIntelligencePage() {
   // ── main ──────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 p-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -244,7 +244,7 @@ export function TalentIntelligencePage() {
       {/* Recommendations table + radar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Table */}
-        <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Promotion Recommendations</h3>
           {recommendations.length === 0 ? (
             <div className="text-center py-16 text-secondary-400 text-sm">
@@ -314,7 +314,7 @@ export function TalentIntelligencePage() {
         </div>
 
         {/* Radar chart */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-2">Score Breakdown</h3>
           {selectedRec ? (
             <>
@@ -367,7 +367,7 @@ export function TalentIntelligencePage() {
       </div>
 
       {/* Succession Plans */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Succession Plans</h3>
         {successionPlans.length === 0 ? (
           <div className="text-center py-12 text-secondary-400 text-sm">
@@ -416,7 +416,7 @@ export function TalentIntelligencePage() {
       {showGenerateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md">
-            <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-between p-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Generate Promotion Recommendation</h3>
               <button onClick={() => setShowGenerateModal(false)} className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-200">
                 <XMarkIcon className="w-5 h-5" />
@@ -443,7 +443,7 @@ export function TalentIntelligencePage() {
                 </div>
               ))}
             </div>
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-end gap-3 p-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button onClick={() => setShowGenerateModal(false)} className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors">Cancel</button>
               <button
                 onClick={() => {
@@ -469,7 +469,7 @@ export function TalentIntelligencePage() {
       {showSuccessionModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md">
-            <div className="flex items-center justify-between p-6 border-b border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-between p-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Succession Plan</h3>
               <button onClick={() => setShowSuccessionModal(false)} className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-200">
                 <XMarkIcon className="w-5 h-5" />
@@ -505,7 +505,7 @@ export function TalentIntelligencePage() {
                 </select>
               </div>
             </div>
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-end gap-3 p-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button onClick={() => setShowSuccessionModal(false)} className="px-4 py-2 text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 rounded-lg transition-colors">Cancel</button>
               <button
                 onClick={() => {

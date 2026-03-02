@@ -163,7 +163,7 @@ export function ProfilePage() {
     : 0;
 
   const renderOverview = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
@@ -276,7 +276,7 @@ export function ProfilePage() {
   );
 
   const renderSecurity = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Password</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
@@ -329,7 +329,7 @@ export function ProfilePage() {
   );
 
   const renderActivity = () => (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Recent Activity</h3>
         <div className="space-y-4">
@@ -359,10 +359,10 @@ export function ProfilePage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 sm:gap-6">
+        <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 sm:gap-4">
           <div className="relative group flex-shrink-0">
             {user?.avatarUrl ? (
               <img src={getAvatarUrl(user.avatarUrl, 'md') || user.avatarUrl} alt={user.firstName} className="w-20 h-20 rounded-full object-cover" />
@@ -453,7 +453,7 @@ export function ProfilePage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowChangePasswordModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Change Password</h2>
               <form
                 onSubmit={(e) => {
@@ -505,7 +505,7 @@ export function ProfilePage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowMfaModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-6">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Setup Two-Factor Authentication</h2>
               <div className="space-y-4">
                 <p className="text-sm text-secondary-600 dark:text-secondary-400">
@@ -566,7 +566,7 @@ export function ProfilePage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowAvatarModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-6">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Change Profile Photo</h2>
 
               {/* Upload from PC */}
@@ -577,7 +577,7 @@ export function ProfilePage() {
                 </h3>
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-2 border-dashed border-secondary-300 dark:border-secondary-600 rounded-lg p-6 text-center cursor-pointer hover:border-primary-500 transition-colors"
+                  className="border-2 border-dashed border-secondary-300 dark:border-secondary-600 rounded-lg p-4 text-center cursor-pointer hover:border-primary-500 transition-colors"
                 >
                   <CameraIcon className="h-10 w-10 mx-auto text-secondary-400 dark:text-secondary-500 mb-2" />
                   <p className="text-sm text-secondary-600 dark:text-secondary-400">
@@ -638,7 +638,7 @@ export function ProfilePage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowEmployeeCardModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-4xl w-full p-4 max-h-[90vh] overflow-y-auto">
               <EmployeeCard onClose={() => setShowEmployeeCardModal(false)} />
             </div>
           </div>

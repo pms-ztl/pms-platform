@@ -488,7 +488,7 @@ export function EvidencePage() {
   // ========================================================================
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ---- Header ---- */}
       <PageHeader
         title="Evidence Management"

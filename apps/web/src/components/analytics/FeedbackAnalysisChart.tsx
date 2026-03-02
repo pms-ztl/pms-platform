@@ -36,7 +36,7 @@ function FeedbackAnalysisChart({ months = 12, className = '' }: FeedbackAnalysis
 
   if (!trends.length) {
     return (
-      <div className={`glass-deep rounded-2xl p-6 ${className}`}>
+      <div className={`glass-deep rounded-2xl p-4 ${className}`}>
         <div className="flex items-center gap-2 mb-4">
           <ChatBubbleLeftRightIcon className="w-5 h-5 text-teal-500" />
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Feedback Analysis</h3>
@@ -63,7 +63,7 @@ function FeedbackAnalysisChart({ months = 12, className = '' }: FeedbackAnalysis
   }));
 
   return (
-    <div className={`glass-deep rounded-2xl p-6 ${className}`}>
+    <div className={`glass-deep rounded-2xl p-4 ${className}`}>
       <div className="flex items-center gap-2 mb-4">
         <ChatBubbleLeftRightIcon className="w-5 h-5 text-teal-500" />
         <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Feedback Analysis</h3>
