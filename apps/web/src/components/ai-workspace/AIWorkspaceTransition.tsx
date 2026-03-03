@@ -60,13 +60,18 @@ function pRgba(rgb: string, a: number): string {
 function buildAccent(
   phase: AITransitionPhase,
   palette: Record<number, string>,
+  isLight: boolean,
 ) {
-  const color     = pHex(palette[400]);
-  const colorDim  = pRgba(palette[400], 0.14);
-  const ringA     = pRgba(palette[400], 0.7);
-  const ringB     = pRgba(palette[300], 0.5);
-  const scanMid   = pHex(palette[400]);
-  const color2    = pHex(palette[300]);   // lighter shade after flip
+  // Light mode: use darker shades (600-700) for contrast on light bg
+  // Dark mode: use brighter shades (300-400) for contrast on dark bg
+  const primary   = isLight ? 700 : 400;
+  const secondary = isLight ? 600 : 300;
+  const color     = pHex(palette[primary]);
+  const colorDim  = pRgba(palette[primary], 0.14);
+  const ringA     = pRgba(palette[primary], isLight ? 0.4 : 0.7);
+  const ringB     = pRgba(palette[secondary], isLight ? 0.3 : 0.5);
+  const scanMid   = pHex(palette[primary]);
+  const color2    = pHex(palette[secondary]);
 
   if (phase === 'entering') {
     return {
@@ -94,7 +99,7 @@ export function AIWorkspaceTransition({ phase }: Props) {
   const isLight = theme === 'light';
 
   const p = ACCENT_COLORS[accentColor].palette;
-  const a = buildAccent(phase, p);
+  const a = buildAccent(phase, p, isLight);
 
   // Status text flips at 1 500 ms (when parent performs the real mode switch)
   const [statusText,  setStatusText]  = useState(a.label1);
@@ -120,7 +125,10 @@ export function AIWorkspaceTransition({ phase }: Props) {
         background: `
           radial-gradient(ellipse 70% 65% at 50% 50%, ${a.color}18 0%, transparent 65%),
           radial-gradient(ellipse 50% 45% at 30% 40%, ${a.ringB}10 0%, transparent 60%),
-          linear-gradient(135deg, rgba(15,20,40,${isLight ? '0.97' : '0.85'}) 0%, rgba(10,15,35,${isLight ? '0.98' : '0.9'}) 50%, rgba(15,20,40,${isLight ? '0.97' : '0.85'}) 100%)
+          ${isLight
+            ? 'linear-gradient(135deg, rgba(240,243,250,0.97) 0%, rgba(230,235,245,0.98) 50%, rgba(240,243,250,0.97) 100%)'
+            : 'linear-gradient(135deg, rgba(15,20,40,0.85) 0%, rgba(10,15,35,0.9) 50%, rgba(15,20,40,0.85) 100%)'
+          }
         `,
         animation: 'aiOverlayLifecycle 3s ease forwards',
         pointerEvents: fading ? 'none' : 'all',
@@ -130,8 +138,8 @@ export function AIWorkspaceTransition({ phase }: Props) {
       <div
         className="absolute inset-0"
         style={{
-          backdropFilter: `blur(32px) saturate(1.3) brightness(${isLight ? '0.25' : '0.55'})`,
-          WebkitBackdropFilter: `blur(32px) saturate(1.3) brightness(${isLight ? '0.25' : '0.55'})`,
+          backdropFilter: `blur(32px) saturate(1.3) brightness(${isLight ? '1.1' : '0.55'})`,
+          WebkitBackdropFilter: `blur(32px) saturate(1.3) brightness(${isLight ? '1.1' : '0.55'})`,
         }}
       />
 

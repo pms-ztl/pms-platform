@@ -73,7 +73,7 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
               type="category"
               dataKey="name"
               width={180}
-              tick={{ fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-200, #e2e8f0)' }}
+              tick={{ fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-500, #64748b)' }}
               axisLine={false}
               tickLine={false}
             />

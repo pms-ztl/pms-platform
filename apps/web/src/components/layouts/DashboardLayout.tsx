@@ -175,7 +175,7 @@ function SidebarContent({
     <div className="flex flex-col h-full overflow-hidden">
       {/* Logo */}
       <div className={clsx('flex shrink-0 items-center h-14 border-b border-secondary-200 dark:border-white/[0.06]', collapsed ? 'justify-center px-2' : 'px-4')}>
-        <span className="text-xl font-display font-bold bg-gradient-to-r from-primary-400 via-accent-400 to-primary-300 bg-clip-text text-transparent">
+        <span className="text-xl font-display font-bold bg-gradient-to-r from-indigo-600 to-violet-500 dark:from-indigo-400 dark:to-violet-300 bg-clip-text text-transparent">
           {collapsed ? 'P' : 'PMS'}
         </span>
         {!collapsed && (
@@ -300,8 +300,13 @@ export function DashboardLayout() {
 
   const handleAIWorkspaceToggle = () => {
     if (aiTransitionPhase !== 'idle') return; // block double-trigger
-    if (isAiMode && location.pathname === '/dashboard') {
-      setAiTransitionPhase('exiting');
+    if (isAiMode) {
+      // Exit AI mode — play animation on dashboard, direct reset elsewhere
+      if (location.pathname === '/dashboard') {
+        setAiTransitionPhase('exiting');
+      } else {
+        setAiMode(false);
+      }
     } else {
       if (location.pathname !== '/dashboard') navigate('/dashboard');
       setAiTransitionPhase('entering');
@@ -589,7 +594,7 @@ export function DashboardLayout() {
                   'relative flex items-center gap-1.5 rounded-lg transition-all duration-200',
                   isAiMode
                     ? 'h-8 px-2.5 bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 text-cyan-400 ring-1 ring-cyan-500/40 shadow-[0_0_10px_rgba(34,211,238,0.2)]'
-                    : 'h-8 px-2.5 bg-primary-500/10 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300 ring-1 ring-primary-500/20 dark:ring-primary-400/20 hover:bg-primary-500/20 dark:hover:bg-primary-500/25 hover:ring-primary-500/35'
+                    : 'h-8 px-2.5 bg-primary-600 dark:bg-primary-500/20 text-white dark:text-primary-300 ring-1 ring-primary-500 dark:ring-primary-500/30 hover:bg-primary-700 dark:hover:bg-primary-500/30'
                 )}
               >
                 <CpuChipIcon className="h-4 w-4 shrink-0" />

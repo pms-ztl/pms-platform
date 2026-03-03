@@ -73,6 +73,7 @@ import {
   type SADashboardStats,
   type SASystemConfig,
 } from '@/lib/api';
+import { useThemeStore } from '@/store/theme';
 
 // ============================================================================
 // Demo Data Fallbacks
@@ -408,6 +409,11 @@ function SectionTitle({ icon: Icon, title, badge }: { icon: React.ComponentType<
 export function SADashboardPage() {
   const queryClient = useQueryClient();
   const [cacheClearLoading, setCacheClearLoading] = useState(false);
+  const { theme } = useThemeStore();
+  const isDark = theme === 'deep-dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const chartGrid = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.1)';
+  const chartTick = isDark ? 'rgba(156,163,175,0.8)' : 'rgba(75,85,99,0.85)';
+  const chartLegend = isDark ? 'rgba(156,163,175,0.8)' : 'rgba(75,85,99,0.85)';
 
   // ── Core Data ──
   const {
@@ -784,15 +790,15 @@ export function SADashboardPage() {
                     <stop offset="100%" stopColor="#a78bfa" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
                 <XAxis
                   dataKey="month"
-                  tick={{ fontSize: 11, fill: 'rgba(156,163,175,0.8)' }}
+                  tick={{ fontSize: 11, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 11, fill: 'rgba(156,163,175,0.8)' }}
+                  tick={{ fontSize: 11, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`}
@@ -836,10 +842,10 @@ export function SADashboardPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueByPlan} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" horizontal={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} horizontal={false} />
                 <XAxis
                   type="number"
-                  tick={{ fontSize: 11, fill: 'rgba(156,163,175,0.8)' }}
+                  tick={{ fontSize: 11, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`}
@@ -847,7 +853,7 @@ export function SADashboardPage() {
                 <YAxis
                   type="category"
                   dataKey="name"
-                  tick={{ fontSize: 12, fill: 'rgba(156,163,175,0.9)' }}
+                  tick={{ fontSize: 12, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                   width={90}
@@ -1260,10 +1266,10 @@ export function SADashboardPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={auditChartData} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" horizontal={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} horizontal={false} />
                 <XAxis
                   type="number"
-                  tick={{ fontSize: 11, fill: 'rgba(156,163,175,0.8)' }}
+                  tick={{ fontSize: 11, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                   allowDecimals={false}
@@ -1271,7 +1277,7 @@ export function SADashboardPage() {
                 <YAxis
                   type="category"
                   dataKey="name"
-                  tick={{ fontSize: 11, fill: 'rgba(156,163,175,0.8)' }}
+                  tick={{ fontSize: 11, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                   width={110}
@@ -1567,21 +1573,21 @@ export function SADashboardPage() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={tenantUsage} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 10, fill: 'rgba(156,163,175,0.8)' }}
+                  tick={{ fontSize: 10, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: 'rgba(156,163,175,0.8)' }}
+                  tick={{ fontSize: 10, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <Tooltip content={<GlassTooltip />} />
                 <Legend
-                  wrapperStyle={{ fontSize: '10px', color: 'rgba(156,163,175,0.8)' }}
+                  wrapperStyle={{ fontSize: '10px', color: chartLegend }}
                   iconType="circle"
                   iconSize={7}
                 />

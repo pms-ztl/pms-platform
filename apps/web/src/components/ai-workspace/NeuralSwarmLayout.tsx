@@ -19,6 +19,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import type { AITheme, SwarmMode } from '@/store/ai-workspace';
+import { useThemeStore } from '@/store/theme';
 import * as T from './ai-theme';
 import { ParticleBackground } from './ParticleBackground';
 import { GlassmorphismOverlay } from './GlassmorphismOverlay';
@@ -139,6 +140,13 @@ export function NeuralSwarmLayout() {
     useAIWorkspaceStore();
   const pendingApprovalCount = useAITasksStore((s) => s.pendingApprovals.length);
 
+  // Sync AI workspace theme with main dashboard theme
+  const mainTheme = useThemeStore((s) => s.theme);
+  useEffect(() => {
+    const mapped: AITheme = mainTheme === 'light' ? 'light' : 'deep-dark';
+    if (theme !== mapped) setTheme(mapped);
+  }, [mainTheme]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Track the previous mode for fade transitions
   const [displayedMode, setDisplayedMode] = useState<SwarmMode>(swarmMode);
   const [transitioning, setTransitioning] = useState(false);
@@ -194,7 +202,7 @@ export function NeuralSwarmLayout() {
 
   return (
     <div
-      className={`fixed inset-0 z-[200] flex flex-col ${T.bg(theme)} overflow-hidden`}
+      className={`ai-workspace-page fixed inset-0 z-[200] flex flex-col ${T.bg(theme)} overflow-hidden`}
     >
       {/* Particle background layer */}
       <ParticleBackground />
@@ -302,7 +310,7 @@ export function NeuralSwarmLayout() {
           <div className={`hidden sm:flex items-center rounded-lg p-0.5 ${modeSwitcherContainer(theme)}`}>
             {(['light', 'deep-dark'] as AITheme[]).map((t) => {
               const isActive = theme === t;
-              const label = t === 'light' ? 'Light' : 'Abyss';
+              const label = t === 'light' ? 'Light' : 'Dark';
               return (
                 <button
                   key={t}

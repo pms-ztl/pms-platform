@@ -3,9 +3,10 @@ import { UsersIcon } from '@heroicons/react/24/outline';
 interface PeerComparisonProps {
   percentile: number | null;
   score: number;
+  dimensions?: Array<{ code: string; rawScore: number; name: string }>;
 }
 
-function PeerComparison({ percentile, score }: PeerComparisonProps) {
+function PeerComparison({ percentile, score, dimensions }: PeerComparisonProps) {
   if (percentile === null || percentile <= 0) {
     return null; // Don't render if no percentile data
   }
@@ -79,6 +80,27 @@ function PeerComparison({ percentile, score }: PeerComparisonProps) {
       <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-3">
         Anonymous comparison across your organization. No individual data is shared.
       </p>
+
+      {/* Dimension Score Breakdown */}
+      {dimensions && dimensions.length > 0 && (
+        <div className="mt-4 pt-3 border-t border-secondary-100 dark:border-white/[0.06]">
+          <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 mb-2.5">Score Breakdown</p>
+          <div className="space-y-2">
+            {dimensions.slice(0, 4).map((d) => {
+              const barColor = d.rawScore >= 80 ? 'bg-emerald-500' : d.rawScore >= 60 ? 'bg-blue-500' : d.rawScore >= 40 ? 'bg-amber-500' : 'bg-red-400';
+              return (
+                <div key={d.code} className="flex items-center gap-2">
+                  <span className="text-2xs font-medium text-secondary-500 dark:text-secondary-400 w-8 shrink-0">{d.code}</span>
+                  <div className="flex-1 h-1.5 rounded-full bg-secondary-100 dark:bg-white/[0.06]">
+                    <div className={`h-full rounded-full ${barColor} transition-all`} style={{ width: `${Math.min(d.rawScore, 100)}%` }} />
+                  </div>
+                  <span className="text-2xs font-semibold text-secondary-600 dark:text-secondary-300 w-6 text-right">{Math.round(d.rawScore)}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

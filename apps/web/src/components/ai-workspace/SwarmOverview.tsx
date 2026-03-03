@@ -759,7 +759,7 @@ function LiveActivityFeed({ theme }: { theme: AITheme }) {
           Live Swarm Activity
         </h2>
         {hasLiveData && (
-          <span className="text-2xs font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">
+          <span className={`text-2xs font-semibold px-2 py-0.5 rounded-full ${theme === 'light' ? 'bg-green-100 text-green-700' : 'bg-green-500/10 text-green-400'}`}>
             {activeAgents.length} active
           </span>
         )}
@@ -812,17 +812,17 @@ function LiveActivityFeed({ theme }: { theme: AITheme }) {
                   </p>
                   <div className="flex items-center gap-2 mt-1">
                     <span className={`text-2xs font-medium ${
-                      agent.status === 'executing' ? 'text-amber-400' :
-                      agent.status === 'awaiting_approval' ? 'text-orange-400' :
-                      'text-primary-400'
+                      agent.status === 'executing' ? (theme === 'light' ? 'text-amber-600' : 'text-amber-400') :
+                      agent.status === 'awaiting_approval' ? (theme === 'light' ? 'text-orange-600' : 'text-orange-400') :
+                      (theme === 'light' ? 'text-primary-600' : 'text-primary-400')
                     }`}>
                       {statusText}
                     </span>
                     {agent.isProactive && (
-                      <span className="text-2xs text-primary-400">Proactive</span>
+                      <span className={`text-2xs ${theme === 'light' ? 'text-primary-600' : 'text-primary-400'}`}>Proactive</span>
                     )}
                     {agent.parentTaskId && (
-                      <span className="text-2xs text-primary-300">Sub-task</span>
+                      <span className={`text-2xs ${theme === 'light' ? 'text-primary-500' : 'text-primary-300'}`}>Sub-task</span>
                     )}
                     {agent.totalSteps > 0 && (
                       <div className={`flex-1 h-1 rounded-full max-w-[80px] ${theme === 'light' ? 'bg-gray-200' : 'bg-white/5'}`}>

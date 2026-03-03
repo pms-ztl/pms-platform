@@ -2027,7 +2027,7 @@ export default function ChatPage() {
     : displayConversations;
 
   return (
-    <div className="flex h-[calc(100vh-7.5rem)] overflow-hidden rounded-2xl card shadow-lg landscape-scroll">
+    <div className="flex h-[calc(100vh-12rem)] overflow-hidden rounded-2xl card shadow-lg landscape-scroll">
       {/* ═══ Sidebar ═══ */}
       <div className={clsx(
         'flex flex-col bg-white/60 dark:bg-secondary-900/40 backdrop-blur-xl transition-all duration-300 border-r border-secondary-200/50 dark:border-secondary-700/30',

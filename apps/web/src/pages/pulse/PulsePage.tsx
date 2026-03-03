@@ -147,8 +147,8 @@ function PersonalSparkline({ history }: { history: PulseResponse[] }) {
       <div className="h-24">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
-            <XAxis dataKey="date" tick={{ fontSize: 10 }} stroke="#9ca3af" />
-            <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 10 }} stroke="#9ca3af" width={20} />
+            <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} />
+            <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} width={20} />
             <Tooltip
               cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
               content={({ active, payload }) => {
@@ -709,9 +709,9 @@ export function PulsePage() {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={trendChartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:opacity-20" />
-                      <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="#9ca3af" />
-                      <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 11 }} stroke="#9ca3af" width={25} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" />
+                      <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} />
+                      <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} width={25} />
                       <Tooltip
                         cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
                         content={({ active, payload, label }) => {
@@ -788,13 +788,14 @@ export function PulsePage() {
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={deptChartData} layout="vertical" margin={{ left: 10, right: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:opacity-20" horizontal={false} />
-                    <XAxis type="number" domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} tick={{ fontSize: 11 }} stroke="#9ca3af" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" horizontal={false} />
+                    <XAxis type="number" domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} />
                     <YAxis
                       type="category"
                       dataKey="name"
-                      tick={{ fontSize: 11 }}
-                      stroke="#9ca3af"
+                      tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }}
+                      axisLine={false}
+                      tickLine={false}
                       width={100}
                     />
                     <Tooltip

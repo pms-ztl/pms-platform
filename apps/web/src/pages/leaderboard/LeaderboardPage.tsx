@@ -688,6 +688,33 @@ export function LeaderboardPage() {
                 </div>
               )}
             </div>
+
+            {/* Performance Insights */}
+            <div className="mt-6 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+              <div className="flex items-center gap-2 mb-4">
+                <SparklesIcon className="h-5 w-5 text-amber-500" />
+                <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Performance Insights</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {(() => {
+                  const topPerformer = entries?.[0];
+                  const totalEntries = entries?.length ?? 0;
+                  const avgScore = totalEntries > 0 ? (entries ?? []).reduce((s: number, e: any) => s + (e.score ?? 0), 0) / totalEntries : 0;
+                  return [
+                    { icon: TrophyIcon, label: 'Top Score', value: topPerformer ? `${(topPerformer.score ?? 0).toFixed(1)}` : '—', sub: topPerformer ? `${topPerformer.user.firstName} ${topPerformer.user.lastName}` : '', color: 'text-amber-500' },
+                    { icon: ChartBarIcon, label: 'Org Average', value: avgScore.toFixed(1), sub: `Across ${totalEntries} employees`, color: 'text-blue-500' },
+                    { icon: ArrowTrendingUpIcon, label: 'Departments', value: `${departmentScores?.length ?? 0}`, sub: 'Active departments', color: 'text-emerald-500' },
+                  ].map((card) => (
+                    <div key={card.label} className="text-center p-3 rounded-xl bg-secondary-50/80 dark:bg-white/[0.03]">
+                      <card.icon className={clsx('h-5 w-5 mx-auto mb-1', card.color)} />
+                      <p className="text-lg font-bold text-secondary-900 dark:text-white">{card.value}</p>
+                      <p className="text-xs text-secondary-500 dark:text-secondary-400">{card.label}</p>
+                      {card.sub && <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-0.5">{card.sub}</p>}
+                    </div>
+                  ));
+                })()}
+              </div>
+            </div>
           </div>
 
           {/* Sidebar toggle */}

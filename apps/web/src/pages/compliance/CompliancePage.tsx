@@ -530,7 +530,7 @@ export function CompliancePage() {
                               <div className="text-sm font-medium text-secondary-900 dark:text-white">
                                 {r.employee
                                   ? `${r.employee.firstName} ${r.employee.lastName}`
-                                  : '--'}
+                                  : 'Unassigned'}
                               </div>
                               <div className="text-xs text-secondary-500 dark:text-secondary-400">
                                 {r.employee?.jobTitle ?? ''}

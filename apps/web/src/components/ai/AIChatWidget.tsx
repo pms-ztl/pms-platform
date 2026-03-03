@@ -995,7 +995,7 @@ export function AIChatWidget() {
                 style={{ background: `linear-gradient(135deg, ${_p5}, ${_p3})`, filter: 'blur(6px)' }}
               />
             </div>
-            <p className={`text-xs font-semibold ${t.emptyTitle}`}>How can I help you today?</p>
+            <p className={`text-sm font-semibold ${t.emptyTitle}`}>How can I help you today?</p>
             <p className={`mt-0.5 text-2xs ${t.emptySubtitle}`}>
               Ask about performance, goals, team data, or anything else.
             </p>
@@ -1047,7 +1047,7 @@ export function AIChatWidget() {
             {/* Bubble */}
             <div className="group relative max-w-[82%]">
               <div
-                className={`rounded-xl px-3 py-2 text-xs leading-relaxed ${
+                className={`rounded-xl px-3 py-2 text-sm leading-relaxed ${
                   msg.role === 'user' ? 'rounded-tr-sm text-white' : `rounded-tl-sm ${t.assistantText}`
                 }`}
                 style={
@@ -1157,7 +1157,7 @@ export function AIChatWidget() {
             onChange={(e) => setMessage(e.target.value)}
             placeholder={voice.isListening ? 'Listening...' : 'Ask anything...'}
             disabled={chatMutation.isPending}
-            className={`flex-1 bg-transparent py-2 text-xs focus:outline-none disabled:opacity-50 ${t.inputText}`}
+            className={`flex-1 bg-transparent py-2 text-sm focus:outline-none disabled:opacity-50 ${t.inputText}`}
           />
           {/* Voice mic button */}
           <VoiceMicButton

@@ -376,6 +376,7 @@ function App() {
           <Route path="chat" element={<ChatPage />} />
           <Route path="notifications" element={<NotificationsPage />} />
           <Route path="admin/licenses" element={<RoleGuard path="/admin/licenses"><LicenseDashboardPage /></RoleGuard>} />
+          <Route path="excel-upload" element={<Navigate to="/admin/excel-upload" replace />} />
           <Route path="admin/excel-upload" element={<RoleGuard path="/admin/excel-upload"><ExcelUploadPage /></RoleGuard>} />
           <Route path="admin/ai-access" element={<RoleGuard path="/admin/ai-access"><AIAccessManagementPage /></RoleGuard>} />
           <Route path="admin/roles" element={<RoleGuard path="/admin/roles"><RoleManagementPage /></RoleGuard>} />

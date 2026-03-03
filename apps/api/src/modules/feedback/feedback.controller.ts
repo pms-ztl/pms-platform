@@ -56,19 +56,17 @@ export class FeedbackController {
         validatedData
       );
 
-      // Notify the recipient asynchronously
-      try {
-        const senderName = `${req.user!.firstName} ${req.user!.lastName}`;
-        await notificationsService.notifyFeedbackReceived(
-          validatedData.toUserId,
-          req.tenantId!,
-          validatedData.type,
-          validatedData.isAnonymous || false,
-          senderName
-        );
-      } catch (notifErr) {
+      // Fire-and-forget: send notification in background (don't block response)
+      const senderName = `${req.user!.firstName} ${req.user!.lastName}`;
+      notificationsService.notifyFeedbackReceived(
+        validatedData.toUserId,
+        req.tenantId!,
+        validatedData.type,
+        validatedData.isAnonymous || false,
+        senderName
+      ).catch((notifErr) => {
         logger.warn('Failed to send feedback notification', { error: notifErr });
-      }
+      });
 
       res.status(201).json({
         success: true,
@@ -301,21 +299,19 @@ export class FeedbackController {
 
       await feedbackService.requestFeedback(req.tenantId!, req.user!.id, requestData);
 
-      // Also send email notification via proper notification service
-      try {
-        const senderName = `${req.user!.firstName} ${req.user!.lastName}`;
-        await notificationsService.send({
-          userId: requestData.fromUserId,
-          tenantId: req.tenantId!,
-          type: 'FEEDBACK_RECEIVED',
-          channel: 'email',
-          title: 'Feedback Requested',
-          body: requestData.message || `${senderName} has requested your feedback.`,
-          data: { requestedBy: req.user!.id },
-        });
-      } catch (notifErr) {
+      // Fire-and-forget: send email notification in background (don't block response)
+      const senderName = `${req.user!.firstName} ${req.user!.lastName}`;
+      notificationsService.send({
+        userId: requestData.fromUserId,
+        tenantId: req.tenantId!,
+        type: 'FEEDBACK_RECEIVED',
+        channel: 'email',
+        title: 'Feedback Requested',
+        body: requestData.message || `${senderName} has requested your feedback.`,
+        data: { requestedBy: req.user!.id },
+      }).catch((notifErr) => {
         logger.warn('Failed to send feedback request email notification', { error: notifErr });
-      }
+      });
 
       res.status(200).json({
         success: true,

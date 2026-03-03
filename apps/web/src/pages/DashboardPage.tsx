@@ -558,7 +558,7 @@ function DashboardContent() {
                   <MetricTooltip code="CPIS" className="text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wide">CPIS</MetricTooltip>
                 </div>
                 <p className="text-base font-bold text-secondary-900 dark:text-white">{Math.round(overallScore)}</p>
-                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">Grade {cpisGrade ?? '—'}</p>
+                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">Grade {cpisGrade ?? 'N/A'}</p>
               </div>
               <div className="bg-white/60 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-secondary-200/50 dark:border-white/10 text-center">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
@@ -800,7 +800,7 @@ function DashboardContent() {
 
       {/* ═══════════════════ Engagement — Peer Comparison & Check-in ═══════════════════ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <PeerComparison percentile={percentile} score={overallScore} />
+        <PeerComparison percentile={percentile} score={overallScore} dimensions={cpisDimensions} />
         <QuickCheckinWidget />
       </div>
 
@@ -810,10 +810,90 @@ function DashboardContent() {
         <RecognitionFeed />
       </div>
 
-      {/* ═══════════════════ Schedule — 1-on-1s & Calendar ═══════════════════ */}
+      {/* ═══════════════════ Schedule — Calendar & Deadlines ═══════════════════ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <UpcomingOneOnOnes />
         <CalendarPlanner />
+        <div className="space-y-6">
+          <UpcomingOneOnOnes />
+          {/* Upcoming Deadlines — goal due-dates with progress */}
+          <div className="glass-deep rounded-2xl overflow-hidden">
+            <div className="card-header bg-gradient-to-r from-orange-50/80 to-amber-50/50 dark:from-orange-500/[0.06] dark:to-amber-500/[0.03]">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl shadow-lg">
+                  <CalendarDaysIcon className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Upcoming Deadlines</h2>
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400">Goal milestones this quarter</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 space-y-3">
+              {(() => {
+                const now = new Date();
+                const upcoming = (goalsData?.data ?? [])
+                  .filter((g: any) => g.dueDate && new Date(g.dueDate) >= now && g.progress < 100)
+                  .sort((a: any, b: any) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
+                  .slice(0, 5);
+                if (upcoming.length === 0) {
+                  return (
+                    <div className="text-center py-6">
+                      <CheckCircleIcon className="h-8 w-8 text-emerald-400 mx-auto mb-2" />
+                      <p className="text-sm text-secondary-500 dark:text-secondary-400">All caught up! No upcoming deadlines.</p>
+                    </div>
+                  );
+                }
+                return upcoming.map((g: any) => {
+                  const due = new Date(g.dueDate);
+                  const daysLeft = Math.ceil((due.getTime() - now.getTime()) / 86400000);
+                  const urgency = daysLeft <= 3 ? 'text-red-500' : daysLeft <= 7 ? 'text-amber-500' : 'text-secondary-400 dark:text-secondary-500';
+                  const barColor = daysLeft <= 3 ? 'bg-red-500' : daysLeft <= 7 ? 'bg-amber-500' : 'bg-emerald-500';
+                  return (
+                    <div key={g.id} className="group">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-medium text-secondary-800 dark:text-secondary-200 truncate max-w-[70%]">{g.title}</p>
+                        <span className={`text-xs font-semibold ${urgency}`}>
+                          {daysLeft === 0 ? 'Today' : daysLeft === 1 ? 'Tomorrow' : `${daysLeft}d left`}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-1.5 rounded-full bg-secondary-100 dark:bg-white/[0.06]">
+                          <div className={`h-full rounded-full ${barColor} transition-all`} style={{ width: `${Math.min(g.progress, 100)}%` }} />
+                        </div>
+                        <span className="text-xs text-secondary-500 dark:text-secondary-400 w-8 text-right">{g.progress}%</span>
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+          </div>
+          {/* Quick Performance Stats */}
+          <div className="glass-deep rounded-2xl p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <ChartBarIcon className="w-5 h-5 text-violet-500" />
+              <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Quick Stats</h3>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="text-center p-3 rounded-xl bg-secondary-50/80 dark:bg-white/[0.03]">
+                <p className="text-xl font-bold text-secondary-900 dark:text-white">{goalsData?.data?.length ?? 0}</p>
+                <p className="text-xs text-secondary-500 dark:text-secondary-400">Active Goals</p>
+              </div>
+              <div className="text-center p-3 rounded-xl bg-secondary-50/80 dark:bg-white/[0.03]">
+                <p className="text-xl font-bold text-secondary-900 dark:text-white">{avgProgress}%</p>
+                <p className="text-xs text-secondary-500 dark:text-secondary-400">Avg Progress</p>
+              </div>
+              <div className="text-center p-3 rounded-xl bg-secondary-50/80 dark:bg-white/[0.03]">
+                <p className="text-xl font-bold text-secondary-900 dark:text-white">{pendingReviews.length}</p>
+                <p className="text-xs text-secondary-500 dark:text-secondary-400">Pending Reviews</p>
+              </div>
+              <div className="text-center p-3 rounded-xl bg-secondary-50/80 dark:bg-white/[0.03]">
+                <p className="text-xl font-bold text-secondary-900 dark:text-white">{atRiskGoals.length}</p>
+                <p className="text-xs text-secondary-500 dark:text-secondary-400">At Risk</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ═══════════════════ Manager Goal Cascade Overview ═══════════════════ */}

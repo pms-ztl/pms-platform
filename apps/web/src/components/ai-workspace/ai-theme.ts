@@ -38,7 +38,7 @@ export function textSecondary(theme: AITheme) {
 }
 
 export function textMuted(theme: AITheme) {
-  return theme === 'light' ? 'text-gray-400' : 'text-gray-600';
+  return theme === 'light' ? 'text-gray-500' : 'text-gray-600';
 }
 
 // ── Border colors ────────────────────────────────────────────
