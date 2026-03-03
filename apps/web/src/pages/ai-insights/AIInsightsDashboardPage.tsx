@@ -360,7 +360,7 @@ export function AIInsightsDashboardPage() {
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Anomaly Severity Breakdown</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Distribution by severity level</p>
           {severityDonutData.length === 0 ? (
-            <div className="text-center py-16 text-secondary-400 text-sm">No anomaly data available</div>
+            <div className="text-center py-8 text-secondary-400 text-sm">No anomaly data available</div>
           ) : (
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">

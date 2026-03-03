@@ -619,7 +619,7 @@ export function ModeratorDashboardPage() {
 
       {/* Main Layout: Employee List + Main Panel */}
       {isLoading ? (
-        <div className="flex justify-center py-16">
+        <div className="flex justify-center py-8">
           <div className="glass-spinner h-10 w-10" />
         </div>
       ) : (

@@ -179,11 +179,11 @@ export function SASecurityPage() {
           {activeTab === 'threats' && (
             <div>
               {threatsLoading ? (
-                <div className="flex justify-center py-16">
+                <div className="flex justify-center py-8">
                   <div className="glass-spinner" />
                 </div>
               ) : !threats?.recentAttempts?.length ? (
-                <div className="text-center py-16">
+                <div className="text-center py-8">
                   <CheckCircleIcon className="mx-auto h-12 w-12 text-green-300 dark:text-green-600" />
                   <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No recent threats</h3>
                   <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
@@ -259,11 +259,11 @@ export function SASecurityPage() {
           {activeTab === 'blocked' && (
             <div>
               {blockedLoading ? (
-                <div className="flex justify-center py-16">
+                <div className="flex justify-center py-8">
                   <div className="glass-spinner" />
                 </div>
               ) : !blockedIps?.length ? (
-                <div className="text-center py-16">
+                <div className="text-center py-8">
                   <GlobeAltIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
                   <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No blocked IPs</h3>
                   <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
@@ -335,11 +335,11 @@ export function SASecurityPage() {
           {activeTab === 'sessions' && (
             <div>
               {sessionsLoading ? (
-                <div className="flex justify-center py-16">
+                <div className="flex justify-center py-8">
                   <div className="glass-spinner" />
                 </div>
               ) : !sessions?.length ? (
-                <div className="text-center py-16">
+                <div className="text-center py-8">
                   <ComputerDesktopIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
                   <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No active sessions</h3>
                   <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">

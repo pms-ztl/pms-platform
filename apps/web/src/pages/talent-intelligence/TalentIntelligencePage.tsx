@@ -250,7 +250,7 @@ export function TalentIntelligencePage() {
         <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Promotion Recommendations</h3>
           {recommendations.length === 0 ? (
-            <div className="text-center py-16 text-secondary-400 text-sm">
+            <div className="text-center py-8 text-secondary-400 text-sm">
               {recUserId ? 'No recommendations found for this employee.' : 'Select an employee above to view promotion recommendations.'}
             </div>
           ) : (

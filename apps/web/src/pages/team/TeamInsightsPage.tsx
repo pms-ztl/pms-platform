@@ -341,7 +341,7 @@ export function TeamInsightsPage() {
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="text-sm text-secondary-400 text-center py-16">No goal trend data available.</p>
+            <p className="text-sm text-secondary-400 text-center py-8">No goal trend data available.</p>
           )}
         </div>
 
@@ -411,7 +411,7 @@ export function TeamInsightsPage() {
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="text-sm text-secondary-400 text-center py-16">No feedback trend data available.</p>
+            <p className="text-sm text-secondary-400 text-center py-8">No feedback trend data available.</p>
           )}
         </div>
 

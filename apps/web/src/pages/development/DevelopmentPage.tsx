@@ -719,11 +719,11 @@ export function DevelopmentPage() {
 
       {/* ── Content ── */}
       {isLoading ? (
-        <div className="flex justify-center py-16">
+        <div className="flex justify-center py-8">
           <div className="glass-spinner" />
         </div>
       ) : plans.length === 0 ? (
-        <div className="text-center py-16 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="text-center py-8 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
           <AcademicCapIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
             {isTeamView ? 'No team development plans' : 'No development plans yet'}

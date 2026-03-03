@@ -363,7 +363,7 @@ export function DelegationManagementPage() {
 
       {/* ---- Data table ---- */}
       {filteredDelegations.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-secondary-300 dark:border-secondary-700 py-16">
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-secondary-300 dark:border-secondary-700 py-8">
           <UserGroupIcon className="h-12 w-12 text-secondary-400 dark:text-secondary-500 mb-4" />
           <p className="text-lg font-medium text-secondary-900 dark:text-white">No delegations found</p>
           <p className="text-secondary-500 dark:text-secondary-400 mt-1">

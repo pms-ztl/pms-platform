@@ -357,7 +357,7 @@ export function SuccessionPage() {
   const renderNineBoxGrid = () => {
     if (nineBoxLoading) {
       return (
-        <div className="flex justify-center py-16">
+        <div className="flex justify-center py-8">
           <div className="glass-spinner" />
         </div>
       );
@@ -519,7 +519,7 @@ export function SuccessionPage() {
   const renderPlans = () => {
     if (plansLoading) {
       return (
-        <div className="flex justify-center py-16">
+        <div className="flex justify-center py-8">
           <div className="glass-spinner" />
         </div>
       );

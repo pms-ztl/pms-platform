@@ -295,7 +295,7 @@ function ReportsList({
 
   if (reports.length === 0) {
     return (
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 text-center py-16">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 text-center py-8">
         <DocumentChartBarIcon className="h-12 w-12 mx-auto text-secondary-300 dark:text-secondary-600 mb-3" />
         <p className="text-lg font-medium text-secondary-500 dark:text-secondary-400">No reports yet</p>
         <p className="text-sm text-secondary-400 dark:text-secondary-500 mt-1">Generate your first report to see it here.</p>

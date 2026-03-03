@@ -254,7 +254,7 @@ export function AnomalyDetectionPage() {
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Severity Distribution</h3>
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Anomalies by severity level</p>
           {severityDonutData.length === 0 ? (
-            <div className="text-center py-16 text-secondary-400 text-sm">No anomaly data</div>
+            <div className="text-center py-8 text-secondary-400 text-sm">No anomaly data</div>
           ) : (
             <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
@@ -338,7 +338,7 @@ export function AnomalyDetectionPage() {
       <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Anomalies</h3>
         {filteredAnomalies.length === 0 ? (
-          <div className="text-center py-16 text-secondary-400 text-sm">
+          <div className="text-center py-8 text-secondary-400 text-sm">
             {allAnomalies.length === 0 ? 'No anomalies detected. Your organization looks healthy!' : 'No anomalies match the current filters.'}
           </div>
         ) : (

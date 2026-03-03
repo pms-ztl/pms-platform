@@ -342,7 +342,7 @@ export function PIPPage() {
 
       {/* PIP Cards */}
       {filteredPips.length === 0 ? (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-16 px-6">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-8 px-6">
           <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
             No Performance Improvement Plans found

@@ -307,7 +307,7 @@ export function MentoringHubPage() {
               ))}
             </div>
           ) : matchList.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-8">
               <SparklesIcon className="h-16 w-16 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-secondary-500">No mentor matches yet</h3>
               <p className="text-sm text-secondary-400 mt-1">Complete your skills profile to get personalized mentor recommendations</p>
@@ -327,7 +327,7 @@ export function MentoringHubPage() {
           {mentorshipsLoading ? (
             <div className="space-y-4">{[1, 2].map((i) => <div key={i} className="h-32 rounded-2xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />)}</div>
           ) : mentorshipList.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-8">
               <UserGroupIcon className="h-16 w-16 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-secondary-500">No mentorships yet</h3>
               <p className="text-sm text-secondary-400 mt-1">Find a mentor and request a mentorship to get started</p>
@@ -363,7 +363,7 @@ export function MentoringHubPage() {
           {learningLoading ? (
             <div className="space-y-3">{[1, 2, 3].map((i) => <div key={i} className="h-20 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />)}</div>
           ) : learningItems.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-8">
               <BookOpenIcon className="h-16 w-16 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-secondary-500">No learning path yet</h3>
               <p className="text-sm text-secondary-400 mt-1">Start a mentorship or update your development plan to generate a learning path</p>

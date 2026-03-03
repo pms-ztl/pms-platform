@@ -533,7 +533,7 @@ export function AIAccessManagementPage() {
             <tbody className="divide-y divide-secondary-100 dark:divide-secondary-800">
               {enrichedUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-16 text-center">
+                  <td colSpan={4} className="px-6 py-8 text-center">
                     <UserGroupIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
                     <p className="text-sm font-medium text-secondary-900 dark:text-white">
                       No users found

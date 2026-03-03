@@ -117,11 +117,11 @@ export function NotificationsPage() {
       {/* Grouped Notification List */}
       <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm ring-1 ring-secondary-200 dark:ring-secondary-700 overflow-hidden">
         {isLoading ? (
-          <div className="flex items-center justify-center py-16">
+          <div className="flex items-center justify-center py-8">
             <div className="glass-spinner"></div>
           </div>
         ) : notifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-secondary-400">
+          <div className="flex flex-col items-center justify-center py-8 text-secondary-400">
             <BellIcon className="h-12 w-12 mb-3 opacity-50" />
             <p className="text-lg font-medium">No notifications</p>
             <p className="text-sm mt-1">

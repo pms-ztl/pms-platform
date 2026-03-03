@@ -13,7 +13,7 @@ interface EmptyStateProps {
 
 export function EmptyState({ icon, title, description, action, className }: EmptyStateProps) {
   return (
-    <div className={clsx('flex flex-col items-center justify-center py-16 px-4 text-center', className)}>
+    <div className={clsx('flex flex-col items-center justify-center py-8 px-4 text-center', className)}>
       {icon && (
         <div className="relative mb-4">
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary-400/20 to-cyan-400/20 blur-xl animate-pulse" />

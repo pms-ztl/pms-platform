@@ -485,7 +485,7 @@ export function SkillGapHeatmapPage() {
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="text-sm text-secondary-400 text-center py-16">No radar data available.</p>
+            <p className="text-sm text-secondary-400 text-center py-8">No radar data available.</p>
           )}
         </div>
 
@@ -532,7 +532,7 @@ export function SkillGapHeatmapPage() {
               </div>
             </div>
           ) : (
-            <p className="text-sm text-secondary-400 text-center py-16">No data available.</p>
+            <p className="text-sm text-secondary-400 text-center py-8">No data available.</p>
           )}
           {/* Legend */}
           <div className="flex flex-wrap gap-3 mt-2 justify-center">

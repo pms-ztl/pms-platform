@@ -801,11 +801,11 @@ export function AuditLogPage() {
 
             {/* Table Body */}
             {eventsLoading ? (
-              <div className="flex justify-center py-16">
+              <div className="flex justify-center py-8">
                 <div className="glass-spinner" />
               </div>
             ) : events.length === 0 ? (
-              <div className="text-center py-16">
+              <div className="text-center py-8">
                 <ShieldCheckIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
                 <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">
                   No audit events found

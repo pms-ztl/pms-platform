@@ -441,7 +441,7 @@ export function PerformanceBenchmarkPage() {
           Individual Comparisons
         </h3>
         {comparisons.length === 0 ? (
-          <div className="text-center py-16 text-secondary-400 text-sm">
+          <div className="text-center py-8 text-secondary-400 text-sm">
             No individual comparison data available yet.
           </div>
         ) : (

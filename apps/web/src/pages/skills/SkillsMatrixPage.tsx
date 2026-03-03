@@ -717,14 +717,14 @@ export function SkillsMatrixPage() {
           </div>
 
           {loadingMySkills ? (
-            <div className="text-center py-16">
+            <div className="text-center py-8">
               <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-secondary-500 dark:text-secondary-400 mt-3 text-sm">
                 Loading your skills...
               </p>
             </div>
           ) : filteredSkills.length === 0 ? (
-            <div className="text-center py-16 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="text-center py-8 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06]">
               <AcademicCapIcon className="w-12 h-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
               <p className="text-secondary-600 dark:text-secondary-400 font-medium">
                 No skill assessments yet
@@ -964,14 +964,14 @@ export function SkillsMatrixPage() {
 
           {/* Heatmap Table */}
           {loadingTeam ? (
-            <div className="text-center py-16">
+            <div className="text-center py-8">
               <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-secondary-500 dark:text-secondary-400 mt-3 text-sm">
                 Loading team skills...
               </p>
             </div>
           ) : !teamSkills || teamSkills.length === 0 ? (
-            <div className="text-center py-16 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="text-center py-8 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06]">
               <UserGroupIcon className="w-12 h-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
               <p className="text-secondary-600 dark:text-secondary-400 font-medium">
                 No team skill data available

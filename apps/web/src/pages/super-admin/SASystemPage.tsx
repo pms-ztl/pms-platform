@@ -193,7 +193,7 @@ export function SASystemPage() {
           <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">System Configuration</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading configuration...</p>
         </div>
-        <div className="flex justify-center py-16">
+        <div className="flex justify-center py-8">
           <div className="glass-spinner" />
         </div>
       </div>

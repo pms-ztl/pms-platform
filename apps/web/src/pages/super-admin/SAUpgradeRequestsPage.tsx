@@ -454,7 +454,7 @@ function StatusLabel({ status, notes }: { status: string; notes?: string }) {
 
 function LoadingState() {
   return (
-    <div className="flex flex-col items-center justify-center py-16">
+    <div className="flex flex-col items-center justify-center py-8">
       <svg className="animate-spin h-8 w-8 text-indigo-500 mb-4" viewBox="0 0 24 24" fill="none">
         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -470,7 +470,7 @@ function LoadingState() {
 
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16">
+    <div className="flex flex-col items-center justify-center py-8">
       <XCircleIcon className="h-10 w-10 text-red-400 mb-3" />
       <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">Something went wrong</p>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 max-w-md text-center">{message}</p>
@@ -499,7 +499,7 @@ function EmptyState({ statusFilter }: { statusFilter: StatusFilter }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-16">
+    <div className="flex flex-col items-center justify-center py-8">
       <InboxIcon className="h-12 w-12 text-gray-400 dark:text-gray-500 mb-3" />
       <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">No requests found</p>
       <p className="text-sm text-gray-500 dark:text-gray-400">{messages[statusFilter]}</p>

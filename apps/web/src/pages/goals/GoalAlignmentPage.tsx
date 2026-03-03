@@ -474,14 +474,14 @@ export function GoalAlignmentPage() {
 
       {/* Loading */}
       {isLoading && (
-        <div className="flex justify-center py-16">
+        <div className="flex justify-center py-8">
           <div className="glass-spinner" />
         </div>
       )}
 
       {/* Empty state */}
       {!isLoading && filteredTree.length === 0 && (
-        <div className="text-center py-16 card card-body dark:bg-secondary-800">
+        <div className="text-center py-8 card card-body dark:bg-secondary-800">
           <svg className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM7 14h7v7H7v-7z" />
           </svg>

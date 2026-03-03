@@ -370,7 +370,7 @@ export function WellbeingDashboardPage() {
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="text-sm text-secondary-400 text-center py-16">No department data available.</p>
+            <p className="text-sm text-secondary-400 text-center py-8">No department data available.</p>
           )}
         </div>
       </div>
@@ -475,7 +475,7 @@ export function WellbeingDashboardPage() {
               </div>
             </div>
           ) : (
-            <p className="text-sm text-secondary-400 text-center py-16">No mood distribution data.</p>
+            <p className="text-sm text-secondary-400 text-center py-8">No mood distribution data.</p>
           )}
           <div className="flex justify-center gap-3 mt-2">
             {MOOD_COLORS.map((c, i) => (

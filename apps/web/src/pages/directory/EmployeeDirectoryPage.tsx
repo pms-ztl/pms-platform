@@ -325,7 +325,7 @@ export function EmployeeDirectoryPage() {
   // ── Empty state ──
 
   const renderEmptyState = () => (
-    <div className="card card-body flex flex-col items-center justify-center py-16 text-center">
+    <div className="card card-body flex flex-col items-center justify-center py-8 text-center">
       <div className="w-24 h-24 rounded-full bg-secondary-100 dark:bg-secondary-800 flex items-center justify-center mb-6">
         <UserGroupIcon className="h-12 w-12 text-secondary-400 dark:text-secondary-500" />
       </div>

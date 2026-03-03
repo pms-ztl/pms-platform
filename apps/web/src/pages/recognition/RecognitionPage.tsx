@@ -153,7 +153,7 @@ export function RecognitionPage() {
         {/* ── Main Recognition Feed ──────────────────────────── */}
         <div className="lg:col-span-2 space-y-4">
           {wallLoading ? (
-            <div className="flex justify-center py-16">
+            <div className="flex justify-center py-8">
               <div className="relative h-10 w-10">
                 <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-amber-500 border-r-orange-400" />
                 <div className="absolute inset-1.5 animate-spin rounded-full border-2 border-transparent border-b-rose-400 border-l-amber-400" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }} />
