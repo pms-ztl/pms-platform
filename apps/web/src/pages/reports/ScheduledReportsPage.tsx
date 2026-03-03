@@ -26,6 +26,7 @@ interface ReportSchedule {
   id: string;
   reportDefinitionId?: string;
   reportType?: string;
+  reportDefinition?: { id: string; name: string; reportType?: string };
   cronExpression: string;
   nextRunAt: string | null;
   lastRunAt: string | null;
@@ -355,8 +356,9 @@ export function ScheduledReportsPage() {
                   <tr key={sched.id} className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/30 transition-colors">
                     <td className="px-6 py-3">
                       <p className="text-sm font-medium text-secondary-900 dark:text-white">
-                        {REPORT_TYPES.find((t) => t.value === (sched.reportType || sched.reportDefinitionId))?.label
-                          || sched.reportType || sched.reportDefinitionId || 'Unknown'}
+                        {sched.reportDefinition?.name
+                          || REPORT_TYPES.find((t) => t.value === sched.reportType)?.label
+                          || sched.reportType || 'Report Schedule'}
                       </p>
                     </td>
                     <td className="px-6 py-3">
