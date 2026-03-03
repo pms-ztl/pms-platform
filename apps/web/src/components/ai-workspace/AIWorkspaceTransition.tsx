@@ -10,12 +10,17 @@
  *   2 400 – 3 000 ms → overlay fades out (pointer-events off at 2 400 ms)
  *   At exactly 1 500 ms the parent flips `isAiMode` in the background.
  *
+ * All colours are derived from the active accent-color palette so
+ * the transition matches whatever theme the user has chosen.
+ *
  * Keyframes live in index.html so they are always available.
  */
 
 import { useEffect, useState } from 'react';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 import type { AITransitionPhase } from '@/store/ai-workspace';
+import { useThemeStore } from '@/store/theme';
+import { ACCENT_COLORS } from '@/lib/accent-colors';
 
 // ── Fixed node positions (deterministic, no randomness on re-render) ──────
 
@@ -38,32 +43,42 @@ const NODES = [
   { x: '60%', y: '72%', delay: '0.25s', size: 4 },
 ];
 
-// ── Accent colours per phase ──────────────────────────────────────────────
+/** Convert "R G B" palette string → hex #RRGGBB */
+function pHex(rgb: string): string {
+  const [r, g, b] = rgb.split(' ').map(Number);
+  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+/** Convert "R G B" → rgba(R,G,B,a) */
+function pRgba(rgb: string, a: number): string {
+  return `rgba(${rgb.split(' ').join(',')},${a})`;
+}
 
-function accent(phase: AITransitionPhase) {
+// ── Accent colours per phase (derived from active accent palette) ─────────
+// The overlay is always dark/cinematic so we use bright 300-400 level shades.
+// "Entering" uses the main accent; "exiting" uses a warmer shifted hue.
+
+function buildAccent(
+  phase: AITransitionPhase,
+  palette: Record<number, string>,
+) {
+  const color     = pHex(palette[400]);
+  const colorDim  = pRgba(palette[400], 0.14);
+  const ringA     = pRgba(palette[400], 0.7);
+  const ringB     = pRgba(palette[300], 0.5);
+  const scanMid   = pHex(palette[400]);
+  const color2    = pHex(palette[300]);   // lighter shade after flip
+
   if (phase === 'entering') {
     return {
-      color:      '#22d3ee',          // cyan-400
-      colorDim:   'rgba(34,211,238,0.14)',
-      ringA:      'rgba(34,211,238,0.7)',
-      ringB:      'rgba(52,211,153,0.5)',  // emerald
-      scanFrom:   'transparent',
-      scanMid:    '#22d3ee',
-      label1:     'INITIALIZING SWARM…',
-      label2:     '✓  SWARM ONLINE',
-      color2:     '#34d399',          // emerald-400 after flip
+      color, colorDim, ringA, ringB, scanMid, color2,
+      label1: 'INITIALIZING SWARM…',
+      label2: '✓  SWARM ONLINE',
     };
   }
   return {
-    color:      '#f97316',          // orange-500
-    colorDim:   'rgba(249,115,22,0.14)',
-    ringA:      'rgba(249,115,22,0.7)',
-    ringB:      'rgba(251,191,36,0.5)',  // amber
-    scanFrom:   'transparent',
-    scanMid:    '#f97316',
-    label1:     'DISCONNECTING…',
-    label2:     '✓  RETURNING TO DASHBOARD',
-    color2:     '#a78bfa',          // violet after flip
+    color, colorDim, ringA, ringB, scanMid, color2,
+    label1: 'DISCONNECTING…',
+    label2: '✓  RETURNING TO DASHBOARD',
   };
 }
 
@@ -74,7 +89,12 @@ interface Props {
 }
 
 export function AIWorkspaceTransition({ phase }: Props) {
-  const a = accent(phase);
+  const theme = useThemeStore((s) => s.theme);
+  const accentColor = useThemeStore((s) => s.accentColor);
+  const isLight = theme === 'light';
+
+  const p = ACCENT_COLORS[accentColor].palette;
+  const a = buildAccent(phase, p);
 
   // Status text flips at 1 500 ms (when parent performs the real mode switch)
   const [statusText,  setStatusText]  = useState(a.label1);
@@ -100,7 +120,7 @@ export function AIWorkspaceTransition({ phase }: Props) {
         background: `
           radial-gradient(ellipse 70% 65% at 50% 50%, ${a.color}18 0%, transparent 65%),
           radial-gradient(ellipse 50% 45% at 30% 40%, ${a.ringB}10 0%, transparent 60%),
-          linear-gradient(135deg, rgba(15,20,40,0.85) 0%, rgba(10,15,35,0.9) 50%, rgba(15,20,40,0.85) 100%)
+          linear-gradient(135deg, rgba(15,20,40,${isLight ? '0.97' : '0.85'}) 0%, rgba(10,15,35,${isLight ? '0.98' : '0.9'}) 50%, rgba(15,20,40,${isLight ? '0.97' : '0.85'}) 100%)
         `,
         animation: 'aiOverlayLifecycle 3s ease forwards',
         pointerEvents: fading ? 'none' : 'all',
@@ -110,8 +130,8 @@ export function AIWorkspaceTransition({ phase }: Props) {
       <div
         className="absolute inset-0"
         style={{
-          backdropFilter: 'blur(32px) saturate(1.3) brightness(0.55)',
-          WebkitBackdropFilter: 'blur(32px) saturate(1.3) brightness(0.55)',
+          backdropFilter: `blur(32px) saturate(1.3) brightness(${isLight ? '0.25' : '0.55'})`,
+          WebkitBackdropFilter: `blur(32px) saturate(1.3) brightness(${isLight ? '0.25' : '0.55'})`,
         }}
       />
 

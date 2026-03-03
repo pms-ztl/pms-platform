@@ -399,7 +399,7 @@ export function AccessPoliciesPage() {
     return (
       <div className="space-y-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Access Policies</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Access Policies</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading policies...</p>
         </div>
         <div className="space-y-3">
@@ -652,7 +652,7 @@ export function AccessPoliciesPage() {
                 <select
                   value={simUserId}
                   onChange={(e) => setSimUserId(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                 >
                   <option value="">-- Select user --</option>
                   {users.map((u) => (
@@ -824,7 +824,7 @@ export function AccessPoliciesPage() {
                   <select
                     value={formType}
                     onChange={(e) => setFormType(e.target.value as PolicyType)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                   >
                     {POLICY_TYPES.map((t) => (
                       <option key={t} value={t}>

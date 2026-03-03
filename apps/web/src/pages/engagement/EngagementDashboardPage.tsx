@@ -26,8 +26,6 @@ import {
 import {
   LineChart,
   Line,
-  BarChart,
-  Bar,
   RadarChart,
   Radar,
   PolarGrid,
@@ -38,7 +36,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
 } from 'recharts';
 import clsx from 'clsx';
 
@@ -159,7 +156,6 @@ function TrendIndicator({
   if (!direction || direction === 'STABLE') {
     return (
       <span className="inline-flex items-center gap-1 text-secondary-400">
-        <MinusIcon className={iconClass} />
         <span className={textClass}>Stable</span>
       </span>
     );
@@ -268,7 +264,7 @@ export function EngagementDashboardPage() {
     return (
       <div className="space-y-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Engagement Dashboard</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Engagement Dashboard</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Monitor employee engagement levels and trends</p>
         </div>
         <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -368,7 +364,7 @@ export function EngagementDashboardPage() {
     <div className="space-y-4">
       {/* ── Page Header ── */}
       <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
+        <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">
           Engagement Dashboard
         </h1>
         <p className="mt-1 text-secondary-600 dark:text-secondary-400">
@@ -513,7 +509,9 @@ export function EngagementDashboardPage() {
                     title={`${level.label}: ${count} (${Number(pct ?? 0).toFixed(1)}%)`}
                   >
                     {pct >= 8 && (
-                      <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-white">
+                      <span
+                        className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
+                      >
                         {Number(pct ?? 0).toFixed(0)}%
                       </span>
                     )}
@@ -644,69 +642,78 @@ export function EngagementDashboardPage() {
           {loadingDepts ? (
             <SkeletonChart />
           ) : deptChartData.length > 0 ? (
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={deptChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    className="stroke-secondary-200 dark:stroke-secondary-700"
-                  />
-                  <XAxis
-                    dataKey="name"
-                    className="fill-secondary-500 dark:fill-secondary-400"
-                    tick={{ fontSize: 11 }}
-                    interval={0}
-                    angle={-20}
-                    textAnchor="end"
-                    height={50}
-                  />
-                  <YAxis
-                    domain={[0, 5]}
-                    className="fill-secondary-500 dark:fill-secondary-400"
-                    tick={{ fontSize: 12 }}
-                  />
-                  <Tooltip
-                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                    content={({ active, payload }) => {
-                      if (!active || !payload?.length) return null;
-                      const item = payload[0].payload;
-                      return (
-                        <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl">
-                          <p className="text-sm font-medium text-white">
-                            {item.fullName}
-                          </p>
-                          <p className="text-sm" style={{ color: getScoreColor(item.score) }}>
-                            Score: {item.score}
-                          </p>
-                          <p className="text-xs text-slate-300">
-                            At-Risk: {item.atRisk}
-                          </p>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Bar
-                    dataKey="score"
-                    radius={[4, 4, 0, 0]}
-                    cursor="pointer"
-                    onClick={(data: any) => {
-                      if (data?.id) setSelectedDeptId(data.id === selectedDeptId ? null : data.id);
-                    }}
+            <div className="space-y-3 py-1">
+              {deptChartData.map((dept, index) => {
+                const maxScore = 5;
+                const pct = maxScore > 0 ? (dept.score / maxScore) * 100 : 0;
+                const isSelected = selectedDeptId === dept.id;
+                const isDimmed = selectedDeptId && !isSelected;
+                const barHex = isSelected
+                  ? '#8b5cf6'
+                  : DEPT_BAR_COLORS[index % DEPT_BAR_COLORS.length];
+                return (
+                  <div
+                    key={dept.id}
+                    className={clsx(
+                      'group flex items-center gap-3 cursor-pointer transition-opacity duration-300',
+                      isDimmed ? 'opacity-40' : 'opacity-100',
+                    )}
+                    onClick={() => setSelectedDeptId(dept.id === selectedDeptId ? null : dept.id)}
                   >
-                    {deptChartData.map((entry, index) => (
-                      <Cell
-                        key={entry.id}
-                        fill={
-                          selectedDeptId === entry.id
-                            ? '#8b5cf6'
-                            : DEPT_BAR_COLORS[index % DEPT_BAR_COLORS.length]
-                        }
-                        opacity={selectedDeptId && selectedDeptId !== entry.id ? 0.4 : 1}
+                    <span className="w-28 sm:w-36 text-sm font-semibold text-secondary-800 dark:text-secondary-100 text-right truncate shrink-0">
+                      {dept.fullName}
+                    </span>
+                    <div className="flex-1 relative h-8 rounded-lg bg-secondary-200/70 dark:bg-secondary-700/40 overflow-hidden">
+                      <div
+                        className="absolute inset-y-0 left-0 rounded-lg transition-all duration-700 ease-out group-hover:brightness-110"
+                        style={{ width: `${Math.max(pct, 3)}%`, background: barHex }}
                       />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+                      <div className="absolute inset-0 flex items-center px-3">
+                        {pct > 12 && (
+                          <span
+                            className="text-xs font-bold text-white"
+                            style={{
+                              marginLeft: `max(0px, calc(${pct}% - 44px))`,
+                              textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                            }}
+                          >
+                            {dept.score.toFixed(1)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-20 shrink-0 text-right">
+                      <span className="text-sm font-bold" style={{ color: getScoreColor(dept.score) }}>
+                        {dept.score.toFixed(1)}
+                      </span>
+                      {dept.atRisk > 0 && (
+                        <span className="ml-1.5 text-2xs font-semibold text-red-500 dark:text-red-400">
+                          {dept.atRisk} risk
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+              {/* Scale legend */}
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-secondary-200/40 dark:border-secondary-700/40 px-0">
+                <span className="text-2xs text-secondary-400 dark:text-secondary-500">0</span>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full" style={{ background: '#22c55e' }} />
+                    <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">≥ 4.5 Excellent</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full" style={{ background: '#3b82f6' }} />
+                    <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">3.5–4.4 Good</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full" style={{ background: '#f97316' }} />
+                    <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">&lt; 3.5 Needs Focus</span>
+                  </div>
+                </div>
+                <span className="text-2xs text-secondary-400 dark:text-secondary-500">5.0</span>
+              </div>
             </div>
           ) : (
             <p className="text-secondary-500 dark:text-secondary-400 text-center py-12">

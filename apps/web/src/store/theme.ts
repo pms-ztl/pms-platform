@@ -1,39 +1,35 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { type AccentColor, applyAccentColor } from '@/lib/accent-colors';
 
-export type Theme = 'light' | 'dark' | 'deep-dark' | 'system';
+export type Theme = 'light' | 'deep-dark' | 'system';
 
 interface ThemeState {
   theme: Theme;
+  accentColor: AccentColor;
   compactMode: boolean;
   animationsEnabled: boolean;
   setTheme: (theme: Theme) => void;
+  setAccentColor: (color: AccentColor) => void;
   setCompactMode: (enabled: boolean) => void;
   setAnimationsEnabled: (enabled: boolean) => void;
 }
 
-const getSystemTheme = () => {
+const getSystemTheme = (): 'light' | 'deep-dark' => {
   if (typeof window !== 'undefined') {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'deep-dark' : 'light';
   }
-  return 'dark';
+  return 'deep-dark';
 };
 
 const applyTheme = (theme: Theme) => {
   const root = document.documentElement;
   const effectiveTheme = theme === 'system' ? getSystemTheme() : theme;
 
-  if (effectiveTheme === 'dark' || effectiveTheme === 'deep-dark') {
-    root.classList.add('dark');
-  } else {
-    root.classList.remove('dark');
-  }
-
-  // deep-dark adds an extra class for pure-black backgrounds
   if (effectiveTheme === 'deep-dark') {
-    root.classList.add('deep-dark');
+    root.classList.add('dark', 'deep-dark');
   } else {
-    root.classList.remove('deep-dark');
+    root.classList.remove('dark', 'deep-dark');
   }
 };
 
@@ -58,12 +54,17 @@ const applyAnimations = (enabled: boolean) => {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      theme: 'dark',
+      theme: 'deep-dark' as Theme,
+      accentColor: 'violet' as AccentColor,
       compactMode: false,
       animationsEnabled: true,
       setTheme: (theme) => {
         applyTheme(theme);
         set({ theme });
+      },
+      setAccentColor: (color) => {
+        applyAccentColor(color);
+        set({ accentColor: color });
       },
       setCompactMode: (enabled) => {
         applyCompactMode(enabled);
@@ -78,7 +79,10 @@ export const useThemeStore = create<ThemeState>()(
       name: 'pms-theme',
       onRehydrateStorage: () => (state) => {
         if (state) {
+          // Migrate legacy 'dark' → 'deep-dark' (removed blueish dark mode)
+          if ((state.theme as string) === 'dark') state.theme = 'deep-dark';
           applyTheme(state.theme);
+          applyAccentColor(state.accentColor ?? 'violet');
           applyCompactMode(state.compactMode);
           applyAnimations(state.animationsEnabled);
         }

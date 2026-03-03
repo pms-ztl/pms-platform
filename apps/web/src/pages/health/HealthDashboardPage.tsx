@@ -543,7 +543,7 @@ export function HealthDashboardPage() {
         <div>
           <div className="flex items-center gap-3">
             <HeartIcon className="h-7 w-7 text-primary-600 dark:text-primary-400" />
-            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
+            <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">
               Organizational Health
             </h1>
           </div>
@@ -844,19 +844,46 @@ export function HealthDashboardPage() {
             <ChartSkeleton />
           ) : (
             <div className="space-y-4">
-              {/* Bar chart */}
+              {/* Horizontal bar chart — premium inline labels */}
               <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={displayDepts} margin={{ top: 10, right: 20, left: 0, bottom: 30 }}>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
-                      <XAxis dataKey="name" angle={-35} textAnchor="end" tick={{ fontSize: 11 }} className="fill-secondary-500 dark:fill-secondary-400" />
-                      <YAxis domain={[0, 100]} className="fill-secondary-500 dark:fill-secondary-400" />
-                      <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#94a3b8', fontWeight: 600 }} itemStyle={{ color: '#e2e8f0' }} />
-                      <Legend />
-                      <Bar dataKey="healthScore" name="Health Score" radius={[4, 4, 0, 0]} fill="#3b82f6" />
-                    </BarChart>
-                  </ResponsiveContainer>
+                <div className="space-y-3 py-1">
+                  {[...displayDepts]
+                    .sort((a: any, b: any) => b.healthScore - a.healthScore)
+                    .map((dept: any) => {
+                      const score = dept.healthScore ?? 0;
+                      const barColor = score >= 80 ? 'from-green-500 to-emerald-400' : score >= 60 ? 'from-blue-500 to-indigo-400' : 'from-amber-500 to-orange-400';
+                      const scoreColor = score >= 80 ? 'text-green-600 dark:text-green-400' : score >= 60 ? 'text-blue-600 dark:text-blue-400' : 'text-amber-600 dark:text-amber-400';
+                      return (
+                        <div key={dept.name} className="group flex items-center gap-3">
+                          <span className="w-28 sm:w-32 text-sm font-semibold text-secondary-800 dark:text-secondary-100 text-right truncate shrink-0">{dept.name}</span>
+                          <div className="flex-1 relative h-8 rounded-lg bg-secondary-200/70 dark:bg-secondary-700/40 overflow-hidden">
+                            <div
+                              className={`absolute inset-y-0 left-0 rounded-lg bg-gradient-to-r ${barColor} transition-all duration-700 ease-out group-hover:brightness-110`}
+                              style={{ width: `${Math.max(score, 4)}%` }}
+                            />
+                            <div className="absolute inset-0 flex items-center px-3">
+                              {score > 15 && (
+                                <span
+                                  className="text-xs font-bold text-white"
+                                  style={{
+                                    marginLeft: `max(0px, calc(${score}% - 44px))`,
+                                    textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                                  }}
+                                >
+                                  {score}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <span className={`w-10 text-right text-sm font-bold ${scoreColor} shrink-0`}>{score}</span>
+                        </div>
+                      );
+                    })}
+                </div>
+                <div className="flex items-center justify-center gap-6 mt-3 pt-3 border-t border-secondary-200/40 dark:border-secondary-700/40">
+                  <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-gradient-to-r from-green-500 to-emerald-400" /><span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">≥ 80 Excellent</span></div>
+                  <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-400" /><span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">60–79 Good</span></div>
+                  <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-full bg-gradient-to-r from-amber-500 to-orange-400" /><span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">&lt; 60 Needs Focus</span></div>
                 </div>
               </div>
 
@@ -888,9 +915,9 @@ export function HealthDashboardPage() {
                             <span className="text-sm font-semibold text-secondary-900 dark:text-white">{row.healthScore}</span>
                           </div>
                         </td>
-                        <td className="px-3 py-2.5 text-center text-sm dark:text-secondary-300">{row.engagement}</td>
-                        <td className="px-3 py-2.5 text-center text-sm dark:text-secondary-300">{row.performance}</td>
-                        <td className="px-3 py-2.5 text-center text-sm dark:text-secondary-300">{row.headcount}</td>
+                        <td className="px-3 py-2.5 text-center text-sm text-secondary-700 dark:text-secondary-200">{row.engagement}</td>
+                        <td className="px-3 py-2.5 text-center text-sm text-secondary-700 dark:text-secondary-200">{row.performance}</td>
+                        <td className="px-3 py-2.5 text-center text-sm text-secondary-700 dark:text-secondary-200">{row.headcount}</td>
                         <td className="px-3 py-2.5 text-center text-sm">
                           <span className={clsx(row.turnover > 15 ? 'text-danger-600 dark:text-danger-400 font-semibold' : 'text-secondary-700 dark:text-secondary-300')}>
                             {Number(row.turnover ?? 0).toFixed(1)}%

@@ -394,7 +394,7 @@ export function HRAnalyticsPage() {
 
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <ScatterChart margin={{ top: 10, right: 30, bottom: 10, left: 10 }}>
+              <ScatterChart margin={{ top: 10, right: 30, bottom: 10, left: 20 }}>
                 <CartesianGrid {...GRID_STYLE} />
                 <XAxis
                   type="number"
@@ -408,9 +408,10 @@ export function HRAnalyticsPage() {
                   type="number"
                   dataKey="compensation"
                   name="Compensation"
+                  width={70}
                   tick={AXIS_STYLE}
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
-                  label={{ value: 'Compensation ($)', angle: -90, position: 'insideLeft', offset: 10, fill: '#9ca3af', fontSize: 12 }}
+                  label={{ value: 'Compensation ($)', angle: -90, position: 'insideLeft', offset: -5, fill: '#9ca3af', fontSize: 12 }}
                 />
                 <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<CompScatterTooltip />} />
                 {/* Trend line */}
@@ -1014,7 +1015,7 @@ export function HRAnalyticsPage() {
     <div className="space-y-4">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">HR Analytics & Bias Analysis</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">HR Analytics & Bias Analysis</h1>
         <p className="mt-1 text-secondary-600 dark:text-secondary-400">
           Compensation modeling, rating bias detection, and normalization tools
         </p>

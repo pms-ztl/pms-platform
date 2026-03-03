@@ -340,7 +340,7 @@ export function SAUsersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">User Management</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">User Management</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">
             Manage all users across tenants
           </p>
@@ -369,7 +369,7 @@ export function SAUsersPage() {
         <select
           value={roleFilter}
           onChange={(e) => handleRoleFilterChange(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
         >
           {ROLES.map((r) => (
             <option key={r.value} value={r.value}>

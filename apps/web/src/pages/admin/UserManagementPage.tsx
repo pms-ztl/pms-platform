@@ -408,7 +408,7 @@ export function UserManagementPage() {
                 </div>
                 <div>
                   <label className="label dark:text-secondary-300">Department</label>
-                  <select name="departmentId" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                  <select name="departmentId" className="input">
                     <option value="">Select Department</option>
                     {departments?.map((dept: Department) => (
                       <option key={dept.id} value={dept.id}>
@@ -526,7 +526,7 @@ export function UserManagementPage() {
                   <select
                     name="departmentId"
                     defaultValue={editingUser.department?.id || ''}
-                    className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                    className="input"
                   >
                     <option value="">No Department</option>
                     {departments?.map((dept: Department) => (

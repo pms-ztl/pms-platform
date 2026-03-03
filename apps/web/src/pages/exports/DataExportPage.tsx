@@ -142,7 +142,7 @@ export function DataExportPage() {
     <div className="max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-indigo-100 dark:bg-indigo-900/30">
             <ArrowDownTrayIcon className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
           </div>
@@ -213,19 +213,19 @@ export function DataExportPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Report Type</label>
-                <select value={reportType} onChange={(e) => setReportType(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white">
+                <select value={reportType} onChange={(e) => setReportType(e.target.value)} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white transition-all duration-300">
                   {REPORT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Scope</label>
-                <select value={reportScope} onChange={(e) => setReportScope(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white">
+                <select value={reportScope} onChange={(e) => setReportScope(e.target.value)} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white transition-all duration-300">
                   {REPORT_SCOPES.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Format</label>
-                <select value={reportFormat} onChange={(e) => setReportFormat(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white">
+                <select value={reportFormat} onChange={(e) => setReportFormat(e.target.value)} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white transition-all duration-300">
                   {REPORT_FORMATS.map((f) => <option key={f} value={f}>{f}</option>)}
                 </select>
               </div>
@@ -306,7 +306,7 @@ function ReportsList({
   return (
     <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
       <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
-        <h2 className="text-base font-semibold text-secondary-900 dark:text-white">Generated Reports</h2>
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Generated Reports</h2>
       </div>
       <div className="divide-y divide-secondary-100 dark:divide-secondary-700">
         {reports.map((report) => {

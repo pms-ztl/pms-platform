@@ -136,7 +136,7 @@ export function AIDevPlanPage() {
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
             <SparklesIcon className="h-7 w-7 text-purple-400" /> AI Development Plans
           </h1>
           <p className="text-sm text-gray-400 mt-1">AI-generated development plans with skill gap analysis, competency mapping &amp; learning paths</p>
@@ -469,7 +469,7 @@ export function AIDevPlanPage() {
 
               <div>
                 <label className="block text-sm text-gray-300 mb-1">Plan Type *</label>
-                <select value={genForm.planType} onChange={e => setGenForm(f => ({ ...f, planType: e.target.value }))} className="w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white focus:border-purple-500 focus:outline-none">
+                <select value={genForm.planType} onChange={e => setGenForm(f => ({ ...f, planType: e.target.value }))} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:outline-none focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300">
                   <option value="CAREER_GROWTH">Career Growth</option>
                   <option value="SKILL_DEVELOPMENT">Skill Development</option>
                   <option value="LEADERSHIP">Leadership</option>

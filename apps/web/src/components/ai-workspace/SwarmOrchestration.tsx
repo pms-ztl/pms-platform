@@ -50,28 +50,28 @@ interface ConversationTurn {
 
 const AGENT_INFO: Record<string, { name: string; cluster: string; clusterColor: string; tagline?: string }> = {
   // Orchestration
-  coordinator:        { name: 'Swarm Coordinator', cluster: 'Core', clusterColor: 'text-blue-400', tagline: 'Multi-agent task orchestration' },
+  coordinator:        { name: 'Swarm Coordinator', cluster: 'Core', clusterColor: 'text-primary-400', tagline: 'Multi-agent task orchestration' },
   // Core (20)
-  performance:        { name: 'Performance',   cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Reviews & ratings' },
-  nlp_query:          { name: 'Data Query',    cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Natural language queries' },
-  coaching:           { name: 'Coaching',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Micro-coaching tips' },
-  career:             { name: 'Career',         cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Growth paths' },
-  report:             { name: 'Reports',        cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Generate reports' },
-  workforce_intel:    { name: 'Workforce',      cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Burnout & retention' },
-  governance:         { name: 'Governance',     cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Bias & fairness' },
-  strategic_alignment:{ name: 'Strategy',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'OKR alignment' },
-  talent_marketplace: { name: 'Talent Market',  cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Skill matching' },
-  conflict_resolution:{ name: 'Conflict',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Team mediation' },
-  security:           { name: 'Security',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Audits & threats' },
-  notification:       { name: 'Notification',   cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Smart alerts' },
-  onboarding:         { name: 'Onboarding',     cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'New hire setup' },
-  license:            { name: 'License',        cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Seats & billing' },
-  excel_validation:   { name: 'Excel AI',       cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Data validation' },
-  goal_intelligence:  { name: 'Goal Intel',     cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'SMART goals & OKRs' },
-  performance_signal: { name: 'Perf Signal',    cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Evidence & signals' },
-  review_drafter:     { name: 'Review Drafter', cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Draft reviews' },
-  compensation_promotion:{ name: 'Comp & Promo', cluster: 'Core',      clusterColor: 'text-blue-400', tagline: 'Promotion readiness' },
-  one_on_one_advisor: { name: '1:1 Advisor',    cluster: 'Core',       clusterColor: 'text-blue-400', tagline: 'Meeting intelligence' },
+  performance:        { name: 'Performance',   cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Reviews & ratings' },
+  nlp_query:          { name: 'Data Query',    cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Natural language queries' },
+  coaching:           { name: 'Coaching',       cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Micro-coaching tips' },
+  career:             { name: 'Career',         cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Growth paths' },
+  report:             { name: 'Reports',        cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Generate reports' },
+  workforce_intel:    { name: 'Workforce',      cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Burnout & retention' },
+  governance:         { name: 'Governance',     cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Bias & fairness' },
+  strategic_alignment:{ name: 'Strategy',       cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'OKR alignment' },
+  talent_marketplace: { name: 'Talent Market',  cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Skill matching' },
+  conflict_resolution:{ name: 'Conflict',       cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Team mediation' },
+  security:           { name: 'Security',       cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Audits & threats' },
+  notification:       { name: 'Notification',   cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Smart alerts' },
+  onboarding:         { name: 'Onboarding',     cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'New hire setup' },
+  license:            { name: 'License',        cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Seats & billing' },
+  excel_validation:   { name: 'Excel AI',       cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Data validation' },
+  goal_intelligence:  { name: 'Goal Intel',     cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'SMART goals & OKRs' },
+  performance_signal: { name: 'Perf Signal',    cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Evidence & signals' },
+  review_drafter:     { name: 'Review Drafter', cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Draft reviews' },
+  compensation_promotion:{ name: 'Comp & Promo', cluster: 'Core',      clusterColor: 'text-primary-400', tagline: 'Promotion readiness' },
+  one_on_one_advisor: { name: '1:1 Advisor',    cluster: 'Core',       clusterColor: 'text-primary-400', tagline: 'Meeting intelligence' },
   // Bio-Performance (10)
   neuro_focus:        { name: 'Neuro Focus',    cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Deep work patterns' },
   circadian_sync:     { name: 'Circadian',      cluster: 'Bio',        clusterColor: 'text-emerald-400', tagline: 'Body clock sync' },
@@ -143,7 +143,7 @@ const CLUSTER_BORDER_COLOR: Record<string, string> = {
 };
 
 const CLUSTER_BG_TINT: Record<string, string> = {
-  Core:       'bg-blue-500/5',
+  Core:       'bg-primary-500/5',
   Bio:        'bg-emerald-500/5',
   Learning:   'bg-purple-500/5',
   Workforce:  'bg-amber-500/5',
@@ -162,8 +162,8 @@ function getAgentInfo(agentType: string) {
 function renderMarkdown(content: string, isLight: boolean): string {
   const boldClass = isLight ? 'font-semibold text-gray-900' : 'font-semibold text-white';
   const codeClass = isLight
-    ? 'rounded bg-gray-200 px-1.5 py-0.5 text-xs font-mono text-blue-700'
-    : 'rounded bg-white/10 px-1.5 py-0.5 text-xs font-mono text-cyan-300';
+    ? 'rounded bg-gray-200 px-1.5 py-0.5 text-xs font-mono text-primary-700'
+    : 'rounded bg-white/10 px-1.5 py-0.5 text-xs font-mono text-primary-300';
   const headColor = isLight ? 'text-gray-900' : 'text-white';
 
   let html = content
@@ -180,7 +180,7 @@ function renderMarkdown(content: string, isLight: boolean): string {
   html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, (_m, _lang, code) => {
     const blockClass = isLight
       ? 'rounded-lg bg-gray-100 border border-gray-200 p-3 my-2 text-xs font-mono text-gray-800 overflow-x-auto whitespace-pre-wrap'
-      : 'rounded-lg bg-black/30 border border-white/10 p-3 my-2 text-xs font-mono text-cyan-200 overflow-x-auto whitespace-pre-wrap';
+      : 'rounded-lg bg-black/30 border border-white/10 p-3 my-2 text-xs font-mono text-primary-200 overflow-x-auto whitespace-pre-wrap';
     return `<pre class="${blockClass}">${code.trim()}</pre>`;
   });
 
@@ -438,9 +438,7 @@ function AgentPickerDropdown({
   // --- Glassmorphism panel styles ---
   const glassBase = isLight
     ? 'bg-white/80 backdrop-blur-2xl border-gray-200/60 shadow-[0_8px_32px_rgba(0,0,0,0.08)]'
-    : theme === 'dark'
-      ? 'bg-gray-900/70 backdrop-blur-2xl border-white/[0.08] shadow-[0_8px_40px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.05)_inset]'
-      : 'bg-black/60 backdrop-blur-2xl border-white/[0.06] shadow-[0_8px_40px_rgba(0,0,0,0.7),0_0_0_1px_rgba(255,255,255,0.04)_inset]';
+    : 'bg-black/60 backdrop-blur-2xl border-white/[0.06] shadow-[0_8px_40px_rgba(0,0,0,0.7),0_0_0_1px_rgba(255,255,255,0.04)_inset]';
 
   const panelClasses = inline
     ? `w-full max-h-72 overflow-y-auto rounded-2xl border ${glassBase} ${T.scrollbar(theme)}`
@@ -448,9 +446,7 @@ function AgentPickerDropdown({
 
   const searchBarBg = isLight
     ? 'bg-white/90 backdrop-blur-sm'
-    : theme === 'dark'
-      ? 'bg-gray-900/80 backdrop-blur-sm'
-      : 'bg-black/70 backdrop-blur-sm';
+    : 'bg-black/70 backdrop-blur-sm';
 
   return (
     <>
@@ -468,7 +464,7 @@ function AgentPickerDropdown({
               autoFocus
               className={`w-full rounded-xl border px-3 py-2 text-xs outline-none transition-all duration-200 ${
                 isLight
-                  ? 'bg-gray-50/80 border-gray-200 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 text-gray-900 placeholder:text-gray-400'
+                  ? 'bg-gray-50/80 border-gray-200 focus:border-primary-300 focus:ring-2 focus:ring-primary-100 text-gray-900 placeholder:text-gray-400'
                   : 'bg-white/[0.06] border-white/[0.08] focus:border-cyan-500/40 focus:ring-2 focus:ring-cyan-500/10 text-white placeholder:text-gray-500'
               }`}
             />
@@ -512,8 +508,8 @@ function AgentPickerDropdown({
                         className={`group flex items-center gap-2.5 w-full text-left rounded-xl px-2.5 py-2 text-xs transition-all duration-200 ${
                           isSelected
                             ? isLight
-                              ? 'bg-blue-50/80 text-blue-700 ring-1 ring-blue-200/50 shadow-sm'
-                              : 'bg-cyan-500/10 text-cyan-300 ring-1 ring-cyan-400/20 shadow-sm shadow-cyan-500/5'
+                              ? 'bg-primary-50/80 text-primary-700 ring-1 ring-primary-200/50 shadow-sm'
+                              : 'bg-primary-500/10 text-primary-300 ring-1 ring-primary-400/20 shadow-sm shadow-primary-500/5'
                             : isDisabled
                               ? `opacity-30 cursor-not-allowed ${T.textMuted(theme)}`
                               : isLight
@@ -523,7 +519,7 @@ function AgentPickerDropdown({
                       >
                         <div className={`flex h-6 w-6 items-center justify-center rounded-lg transition-colors duration-200 ${
                           isSelected
-                            ? isLight ? 'bg-blue-100' : 'bg-cyan-400/15'
+                            ? isLight ? 'bg-primary-100' : 'bg-primary-400/15'
                             : isLight ? 'bg-gray-100 group-hover:bg-gray-200/80' : 'bg-white/[0.04] group-hover:bg-white/[0.08]'
                         }`}>
                           <PickerAgentIcon className={`h-3.5 w-3.5 ${info.clusterColor}`} />
@@ -531,7 +527,7 @@ function AgentPickerDropdown({
                         <span className="truncate font-medium">{info.name}</span>
                         {isSelected && (
                           <span className={`ml-auto text-3xs font-semibold flex-shrink-0 px-1.5 py-0.5 rounded-md ${
-                            isLight ? 'bg-blue-100 text-blue-600' : 'bg-cyan-400/15 text-cyan-400'
+                            isLight ? 'bg-primary-100 text-primary-600' : 'bg-primary-400/15 text-primary-400'
                           }`}>
                             Active
                           </span>
@@ -818,8 +814,7 @@ export function SwarmOrchestration() {
 
   return (
     <div className={`flex h-full flex-col ${
-      theme === 'deep-dark' ? 'bg-black/50' :
-      theme === 'dark'      ? 'bg-black/35' : ''
+      theme === 'deep-dark' ? 'bg-black/50' : ''
     }`}>
       {/* ================================================================== */}
       {/* TOP BAR                                                            */}
@@ -877,9 +872,7 @@ export function SwarmOrchestration() {
               className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium transition-all duration-200 ${
                 isLight
                   ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-                  : theme === 'dark'
-                    ? 'bg-white/10 text-gray-300 hover:bg-white/15 hover:text-white'
-                    : 'bg-white/8 text-gray-400 hover:bg-white/12 hover:text-gray-200'
+                  : 'bg-white/8 text-gray-400 hover:bg-white/12 hover:text-gray-200'
               }`}
             >
               <ArrowLeftIcon className="h-3.5 w-3.5" />

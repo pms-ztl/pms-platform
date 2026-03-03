@@ -376,6 +376,30 @@ export class ReviewsController {
     }
   }
 
+  async deleteReview(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const reviewId = req.params.id;
+
+      if (reviewId === undefined) {
+        throw new ValidationError('Review ID is required');
+      }
+
+      await reviewsService.deleteReview(
+        req.tenantId!,
+        req.user!.id,
+        reviewId,
+        req.user!.roles || []
+      );
+
+      res.status(200).json({
+        success: true,
+        message: 'Review deleted successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async acknowledgeReview(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const reviewId = req.params.id;

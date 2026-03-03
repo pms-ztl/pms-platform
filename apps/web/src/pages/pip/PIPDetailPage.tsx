@@ -430,7 +430,7 @@ export function PIPDetailPage() {
           </Link>
           <div>
             <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">
                 {pip.pipTitle}
               </h1>
               <span
@@ -1192,7 +1192,7 @@ export function PIPDetailPage() {
                   }
                   required
                   placeholder="e.g., Complete customer service training"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
               </div>
 
@@ -1207,7 +1207,7 @@ export function PIPDetailPage() {
                   }
                   rows={3}
                   placeholder="Describe the milestone requirements..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
               </div>
 
@@ -1222,7 +1222,7 @@ export function PIPDetailPage() {
                     setMilestoneForm((prev) => ({ ...prev, dueDate: e.target.value }))
                   }
                   required
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
               </div>
 
@@ -1322,7 +1322,7 @@ export function PIPDetailPage() {
                   onChange={(e) =>
                     setUpdateMilestoneForm((prev) => ({ ...prev, status: e.target.value }))
                   }
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 >
                   <option value="NOT_STARTED">Not Started</option>
                   <option value="IN_PROGRESS">In Progress</option>
@@ -1343,7 +1343,7 @@ export function PIPDetailPage() {
                       achievementLevel: e.target.value,
                     }))
                   }
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 >
                   <option value="">Select level (optional)</option>
                   <option value="EXCEEDS">Exceeds Expectations</option>
@@ -1367,7 +1367,7 @@ export function PIPDetailPage() {
                   }
                   rows={4}
                   placeholder="Provide evaluation notes for this milestone..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
               </div>
 
@@ -1421,7 +1421,7 @@ export function PIPDetailPage() {
                       setCheckInForm((prev) => ({ ...prev, checkInDate: e.target.value }))
                     }
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                   />
                 </div>
                 <div>
@@ -1433,7 +1433,7 @@ export function PIPDetailPage() {
                     onChange={(e) =>
                       setCheckInForm((prev) => ({ ...prev, checkInType: e.target.value }))
                     }
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                   >
                     <option value="SCHEDULED">Scheduled</option>
                     <option value="AD_HOC">Ad Hoc</option>
@@ -1454,7 +1454,7 @@ export function PIPDetailPage() {
                   required
                   rows={3}
                   placeholder="Summarize the employee's progress since the last check-in..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
               </div>
 
@@ -1630,7 +1630,7 @@ export function PIPDetailPage() {
                   required
                   rows={3}
                   placeholder="Provide your feedback..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
               </div>
 
@@ -1645,7 +1645,7 @@ export function PIPDetailPage() {
                   }
                   rows={2}
                   placeholder="Record employee's feedback (optional)..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
               </div>
 
@@ -1667,7 +1667,7 @@ export function PIPDetailPage() {
                             setCheckInForm((prev) => ({ ...prev, actionItems: updated }));
                           }}
                           placeholder="Action item"
-                          className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                         />
                         <div className="grid grid-cols-2 gap-2">
                           <input
@@ -1820,7 +1820,7 @@ export function PIPDetailPage() {
                   onChange={(e) =>
                     setCloseForm((prev) => ({ ...prev, outcome: e.target.value }))
                   }
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 >
                   <option value="SUCCESSFUL">Successful - Employee met PIP requirements</option>
                   <option value="UNSUCCESSFUL">
@@ -1842,7 +1842,7 @@ export function PIPDetailPage() {
                   }
                   rows={4}
                   placeholder="Provide closing notes and rationale for the outcome..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
               </div>
 
@@ -1903,7 +1903,7 @@ export function PIPDetailPage() {
                   }
                   rows={4}
                   placeholder="Add any comments or responses you would like to include with your acknowledgment..."
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
               </div>
 

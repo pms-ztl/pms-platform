@@ -298,12 +298,12 @@ export function CalendarPlanner() {
 
   // ── Render: Month View ──────────────────────────────────────────────────
   const renderMonthView = () => (
-    <div className="p-4">
+    <div className="p-3">
       <div className="grid grid-cols-7 gap-1 mb-2">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
           <div
             key={day}
-            className="text-center text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400 py-2.5 bg-secondary-50 dark:bg-secondary-800/50 rounded-lg"
+            className="text-center text-xs font-semibold tracking-wider text-secondary-500 dark:text-secondary-400 py-1.5 bg-secondary-50 dark:bg-secondary-800/50 rounded-lg"
           >
             {day}
           </div>
@@ -321,7 +321,7 @@ export function CalendarPlanner() {
               onClick={() => setSelectedDate(day)}
               onDoubleClick={() => handleDoubleClick(day)}
               className={clsx(
-                'min-h-[100px] p-2 rounded-lg cursor-pointer transition-colors select-none',
+                'min-h-[60px] p-1.5 rounded-lg cursor-pointer transition-colors select-none',
                 !isCurrentMonth && 'bg-secondary-50 dark:bg-secondary-900/50',
                 isCurrentMonth && !isSelected && !isToday(day) && 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl',
                 isToday(day) &&
@@ -348,8 +348,8 @@ export function CalendarPlanner() {
                   </span>
                 )}
               </div>
-              <div className="space-y-1">
-                {dayEvents.slice(0, 3).map((event) => (
+              <div className="space-y-0.5">
+                {dayEvents.slice(0, 2).map((event) => (
                   <div
                     key={event.id}
                     className={clsx(
@@ -362,9 +362,9 @@ export function CalendarPlanner() {
                     <span className="truncate">{event.title}</span>
                   </div>
                 ))}
-                {dayEvents.length > 3 && (
-                  <div className="text-xs text-secondary-500 dark:text-secondary-400 pl-1">
-                    +{dayEvents.length - 3} more
+                {dayEvents.length > 2 && (
+                  <div className="text-2xs text-secondary-500 dark:text-secondary-400 pl-1">
+                    +{dayEvents.length - 2} more
                   </div>
                 )}
               </div>
@@ -649,12 +649,12 @@ export function CalendarPlanner() {
       {viewMode === 'week' && renderWeekView()}
       {viewMode === 'day' && renderDayView()}
 
-      {/* Event details panel - only in month view */}
-      {viewMode === 'month' && selectedDate && (
-        <div className="border-t border-secondary-200/60 dark:border-white/[0.06] p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-secondary-900 dark:text-white">
-              {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+      {/* Event details panel - only in month view when events exist */}
+      {viewMode === 'month' && selectedDate && getEventsForDay(selectedDate).length > 0 && (
+        <div className="border-t border-secondary-200/60 dark:border-white/[0.06] p-3">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">
+              {format(selectedDate, 'EEE, MMM d')}
             </h3>
             <button
               onClick={() => setShowCreateModal(true)}
@@ -669,14 +669,14 @@ export function CalendarPlanner() {
               getEventsForDay(selectedDate).map((event) => (
                 <div
                   key={event.id}
-                  className="flex items-center gap-3 p-3 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg"
+                  className="flex items-center gap-2 p-2 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg"
                 >
                   <div className={clsx('p-2 rounded-lg text-white', event.color)}>
                     <EventIcon type={event.type} />
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-secondary-900 dark:text-white">{event.title}</p>
-                    <p className="text-sm text-secondary-500 dark:text-secondary-400 capitalize">
+                    <p className="text-sm font-medium text-secondary-900 dark:text-white">{event.title}</p>
+                    <p className="text-xs text-secondary-500 dark:text-secondary-400 capitalize">
                       {event.type} {event.status && `\u2022 ${event.status.toLowerCase()}`}
                       {event.startTime && ` \u2022 ${format(new Date(event.startTime), 'h:mm a')}`}
                     </p>
@@ -693,18 +693,14 @@ export function CalendarPlanner() {
                   )}
                 </div>
               ))
-            ) : (
-              <p className="text-sm text-secondary-500 dark:text-secondary-400 text-center py-4">
-                No events scheduled for this day
-              </p>
-            )}
+            ) : null}
           </div>
         </div>
       )}
 
       {/* Legend */}
-      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] px-4 py-3">
-        <div className="flex items-center gap-4 text-xs flex-wrap">
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] px-3 py-2">
+        <div className="flex items-center gap-3 text-2xs flex-wrap">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-blue-500" />
             <span className="text-secondary-600 dark:text-secondary-400">Goals</span>
@@ -852,7 +848,7 @@ export function CalendarPlanner() {
                     <label className="label dark:text-secondary-300">Event Type</label>
                     <select
                       name="type"
-                      className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                      className="input"
                     >
                       <option value="PERSONAL">Personal</option>
                       <option value="MEETING">Meeting</option>
@@ -866,7 +862,7 @@ export function CalendarPlanner() {
                     <label className="label dark:text-secondary-300">Color</label>
                     <select
                       name="color"
-                      className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                      className="input"
                     >
                       <option value="">Default (Teal)</option>
                       <option value="bg-blue-500">Blue</option>
@@ -887,7 +883,7 @@ export function CalendarPlanner() {
                     <label className="label dark:text-secondary-300">Recurrence</label>
                     <select
                       name="recurrenceRule"
-                      className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                      className="input"
                     >
                       <option value="">None</option>
                       <option value="FREQ=DAILY">Daily</option>
@@ -911,7 +907,7 @@ export function CalendarPlanner() {
                   <label className="label dark:text-secondary-300">Reminder</label>
                   <select
                     name="reminderMinutes"
-                    className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                    className="input"
                   >
                     <option value="">None</option>
                     <option value="5">5 minutes before</option>

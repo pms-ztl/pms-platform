@@ -268,7 +268,7 @@ export function OneOnOneDetailPage() {
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
+            <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">
               1-on-1 with {otherPerson?.firstName} {otherPerson?.lastName}
             </h1>
             <span

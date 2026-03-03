@@ -9,6 +9,7 @@ import {
   PencilIcon,
   PaperAirplaneIcon,
   HandThumbUpIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 import toast from 'react-hot-toast';
@@ -101,6 +102,7 @@ export function ReviewDetailPage() {
   const [summary, setSummary] = useState('');
   const [newStrength, setNewStrength] = useState('');
   const [newGrowthArea, setNewGrowthArea] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const { data: review, isLoading, error } = useQuery({
     queryKey: ['review', id],
@@ -166,11 +168,29 @@ export function ReviewDetailPage() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => reviewsApi.deleteReview(id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-reviews'] });
+      toast.success('Review deleted successfully');
+      navigate('/reviews');
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to delete review');
+      setShowDeleteConfirm(false);
+    },
+  });
+
   const isReviewer = review?.reviewer?.id === user?.id;
   const isReviewee = review?.reviewee?.id === user?.id;
   const canEdit = isReviewer && ['NOT_STARTED', 'IN_PROGRESS'].includes(review?.status || '');
   const canSubmit = isReviewer && review?.status === 'IN_PROGRESS';
   const canAcknowledge = isReviewee && review?.status === 'FINALIZED';
+  const userRoles = user?.roles ?? [];
+  const isAdmin = userRoles.some((r: string) =>
+    ['SUPER_ADMIN', 'TENANT_ADMIN', 'ADMIN', 'HR_ADMIN', 'Super Admin', 'Tenant Admin', 'HR Admin'].includes(r)
+  );
+  const canDelete = isAdmin || (isReviewer && ['NOT_STARTED', 'IN_PROGRESS'].includes(review?.status || ''));
 
   const handleSaveDraft = () => {
     saveDraftMutation.mutate({
@@ -239,7 +259,7 @@ export function ReviewDetailPage() {
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-secondary-900 dark:text-white dark:text-white">
+              <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white dark:text-white">
                 {review.type} Review
               </h1>
               <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', reviewStatusColors[review.status])}>
@@ -287,6 +307,15 @@ export function ReviewDetailPage() {
             >
               <HandThumbUpIcon className="h-5 w-5 mr-2" />
               Acknowledge
+            </button>
+          )}
+          {canDelete && (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="btn-secondary !text-danger-600 !border-danger-300 hover:!bg-danger-50 dark:!text-danger-400 dark:!border-danger-500/40 dark:hover:!bg-danger-500/10"
+            >
+              <TrashIcon className="h-5 w-5 mr-2" />
+              Delete
             </button>
           )}
         </div>
@@ -489,6 +518,52 @@ export function ReviewDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete confirmation dialog */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowDeleteConfirm(false)} />
+          <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-xl p-6 max-w-md w-full mx-4 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-danger-100 dark:bg-danger-500/20 flex items-center justify-center">
+                <TrashIcon className="h-5 w-5 text-danger-600 dark:text-danger-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Delete Review</h3>
+            </div>
+            <p className="text-secondary-600 dark:text-secondary-300 mb-6">
+              Are you sure you want to delete this <strong>{review.type.toLowerCase()}</strong> review
+              for <strong>{review.reviewee.firstName} {review.reviewee.lastName}</strong>?
+              This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="btn-secondary"
+                disabled={deleteMutation.isPending}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => deleteMutation.mutate()}
+                disabled={deleteMutation.isPending}
+                className="inline-flex items-center px-4 py-2 rounded-lg font-medium text-white bg-danger-600 hover:bg-danger-700 disabled:opacity-50 transition-colors"
+              >
+                {deleteMutation.isPending ? (
+                  <>
+                    <div className="glass-spinner h-4 w-4 mr-2" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <TrashIcon className="h-4 w-4 mr-2" />
+                    Delete Review
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

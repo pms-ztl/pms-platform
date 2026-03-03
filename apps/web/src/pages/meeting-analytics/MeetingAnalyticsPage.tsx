@@ -260,7 +260,7 @@ export function MeetingAnalyticsPage() {
   if (!meetings.length) {
     return (
       <div className="space-y-4 p-4">
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Meeting Analytics</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Meeting Analytics</h1>
         <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-16 text-center">
           <p className="text-secondary-400 text-sm">No meeting data available for the selected time range.</p>
         </div>
@@ -275,7 +275,7 @@ export function MeetingAnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Meeting Analytics</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Meeting Analytics</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
             One-on-one meeting insights &amp; trends
           </p>

@@ -2,7 +2,6 @@ import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import {
   SunIcon,
-  MoonIcon,
   ComputerDesktopIcon,
   CheckIcon,
 } from '@heroicons/react/24/outline';
@@ -39,19 +38,17 @@ function DeepDarkIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 const THEMES: { key: Theme; label: string; icon: IconComponent; description: string }[] = [
-  { key: 'light',     label: 'Light',     icon: SunIcon,          description: 'Bright & clean'   },
-  { key: 'dark',      label: 'Dark',      icon: MoonIcon,         description: 'Easy on the eyes' },
-  { key: 'deep-dark', label: 'Deep Dark', icon: DeepDarkIcon,     description: 'Pure black OLED'  },
+  { key: 'light',     label: 'Light',     icon: SunIcon,             description: 'Bright & clean'   },
+  { key: 'deep-dark', label: 'Dark',      icon: DeepDarkIcon,        description: 'Pure black OLED'  },
   { key: 'system',    label: 'System',    icon: ComputerDesktopIcon, description: 'Match OS setting' },
 ];
 
 function getCurrentIcon(theme: Theme): IconComponent {
   switch (theme) {
     case 'light':     return SunIcon;
-    case 'dark':      return MoonIcon;
     case 'deep-dark': return DeepDarkIcon;
     case 'system':    return ComputerDesktopIcon;
-    default:          return MoonIcon;
+    default:          return DeepDarkIcon;
   }
 }
 
@@ -64,7 +61,7 @@ export function ThemeToggle() {
   return (
     <Menu as="div" className="relative">
       <Menu.Button
-        className="flex items-center justify-center rounded-lg p-2 text-secondary-500 hover:text-secondary-700 hover:bg-secondary-100 dark:text-secondary-400 dark:hover:text-secondary-200 dark:hover:bg-white/[0.04] transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-secondary-900"
+        className="flex h-8 w-8 items-center justify-center rounded-lg text-secondary-500 hover:text-secondary-700 hover:bg-secondary-100 dark:text-secondary-400 dark:hover:text-secondary-200 dark:hover:bg-white/[0.04] transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-secondary-900"
         title="Change theme"
       >
         <span className="sr-only">Change theme</span>

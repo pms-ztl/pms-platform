@@ -424,7 +424,7 @@ function CreatePlanModal({ onClose }: { onClose: () => void }) {
               required
               value={planType}
               onChange={(e) => setPlanType(e.target.value)}
-              className="block w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+              className="block w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300"
             >
               <option value="CAREER_GROWTH">Career Growth</option>
               <option value="SKILL_DEVELOPMENT">Skill Development</option>
@@ -701,7 +701,7 @@ export function DevelopmentPage() {
           <select
             value={statusFilter}
             onChange={(e) => handleStatusChange(e.target.value)}
-            className="block rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 w-40"
+            className="block rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300 w-40"
           >
             <option value="">All Statuses</option>
             <option value="DRAFT">Draft</option>

@@ -27,29 +27,44 @@ interface GlassPalette {
   brightness: string;
 }
 
-const PALETTES: Record<AITheme, GlassPalette> = {
-  light: {
-    primary:    'rgba(99,102,241,0.08)',   // indigo
-    secondary:  'rgba(6,182,212,0.06)',    // cyan
-    tertiary:   'rgba(139,92,246,0.05)',   // violet
-    borderGlow: 'rgba(99,102,241,0.15)',
-    brightness: 'brightness(1.05)',
-  },
-  dark: {
-    primary:    'rgba(167,139,250,0.07)',  // purple
-    secondary:  'rgba(129,140,248,0.05)',  // indigo
-    tertiary:   'rgba(103,232,249,0.04)', // cyan
-    borderGlow: 'rgba(167,139,250,0.12)',
-    brightness: 'brightness(0.95)',
-  },
-  'deep-dark': {
-    primary:    'rgba(34,211,238,0.06)',   // cyan
-    secondary:  'rgba(52,211,153,0.04)',   // emerald
-    tertiary:   'rgba(45,212,191,0.03)',   // teal
-    borderGlow: 'rgba(34,211,238,0.10)',
-    brightness: 'brightness(0.9)',
-  },
-};
+/** Read --c-primary-{shade} CSS variable and return rgba string. */
+function _pRgba(shade: number, alpha: number): string {
+  if (typeof document === 'undefined') return `rgba(99,102,241,${alpha})`;
+  const val = getComputedStyle(document.documentElement).getPropertyValue(`--c-primary-${shade}`).trim();
+  const p = val.split(/\s+/).map(Number);
+  if (p.length !== 3 || p.some(isNaN)) return `rgba(99,102,241,${alpha})`;
+  return `rgba(${p[0]},${p[1]},${p[2]},${alpha})`;
+}
+
+/** Build palette dynamically so it follows the user's selected accent colour. */
+function getPalette(theme: AITheme): GlassPalette {
+  switch (theme) {
+    case 'light':
+      return {
+        primary:    _pRgba(500, 0.08),
+        secondary:  _pRgba(400, 0.06),
+        tertiary:   _pRgba(300, 0.05),
+        borderGlow: _pRgba(500, 0.15),
+        brightness: 'brightness(1.05)',
+      };
+    case 'dark':
+      return {
+        primary:    _pRgba(400, 0.07),
+        secondary:  _pRgba(300, 0.05),
+        tertiary:   _pRgba(200, 0.04),
+        borderGlow: _pRgba(400, 0.12),
+        brightness: 'brightness(0.95)',
+      };
+    case 'deep-dark':
+      return {
+        primary:    _pRgba(400, 0.06),
+        secondary:  _pRgba(300, 0.04),
+        tertiary:   _pRgba(200, 0.03),
+        borderGlow: _pRgba(400, 0.10),
+        brightness: 'brightness(0.9)',
+      };
+  }
+}
 
 // ── Orb definitions — deterministic positions & sizes ────────
 
@@ -146,7 +161,7 @@ function injectKeyframes() {
 
 export function GlassmorphismOverlay() {
   const { theme } = useAIWorkspaceStore();
-  const pal = PALETTES[theme];
+  const pal = getPalette(theme);
 
   // Inject keyframes on first render
   injectKeyframes();

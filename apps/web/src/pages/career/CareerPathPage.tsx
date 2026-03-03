@@ -395,12 +395,12 @@ export function CareerPathPage() {
             <div className="flex items-center gap-2">
               <FunnelIcon className="h-5 w-5 text-secondary-400 shrink-0" />
               <select value={deptFilter} onChange={(e) => setDeptFilter(e.target.value)}
-                className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500">
+                className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300">
                 <option value="">All Departments</option>
                 {uniqueDepts.map((d) => <option key={d} value={d}>{d}</option>)}
               </select>
               <select value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}
-                className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500">
+                className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300">
                 <option value="">All Levels</option>
                 {uniqueLevels.map((l) => <option key={l} value={l}>{l}</option>)}
               </select>

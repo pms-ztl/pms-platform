@@ -98,15 +98,8 @@ function modeSwitcherContainer(theme: AITheme): string {
   }
 }
 
-function activeModeButton(theme: AITheme): string {
-  switch (theme) {
-    case 'light':
-      return 'bg-blue-600 text-white shadow-md shadow-blue-500/30';
-    case 'dark':
-      return 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md shadow-purple-500/25';
-    case 'deep-dark':
-      return 'bg-gradient-to-r from-cyan-600 to-emerald-600 text-white shadow-md shadow-cyan-500/25';
-  }
+function activeModeButton(_theme: AITheme): string {
+  return 'bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-md shadow-primary-500/25';
 }
 
 function inactiveModeButton(theme: AITheme): string {
@@ -121,25 +114,11 @@ function inactiveModeButton(theme: AITheme): string {
 }
 
 function logoPillBg(theme: AITheme): string {
-  switch (theme) {
-    case 'light':
-      return 'bg-gradient-to-br from-blue-500/15 to-indigo-500/15';
-    case 'dark':
-      return 'bg-gradient-to-br from-purple-500/20 to-blue-500/20';
-    case 'deep-dark':
-      return 'bg-gradient-to-br from-cyan-500/15 to-emerald-500/15';
-  }
+  return 'bg-gradient-to-br from-primary-500/15 to-primary-400/15';
 }
 
-function badgeBg(theme: AITheme): string {
-  switch (theme) {
-    case 'light':
-      return 'bg-blue-500 text-white';
-    case 'dark':
-      return 'bg-purple-500 text-white';
-    case 'deep-dark':
-      return 'bg-cyan-500 text-black';
-  }
+function badgeBg(_theme: AITheme): string {
+  return 'bg-primary-500 text-white';
 }
 
 function pulsingDotColor(theme: AITheme): string {
@@ -321,9 +300,9 @@ export function NeuralSwarmLayout() {
 
           {/* Theme switcher — inline in header */}
           <div className={`hidden sm:flex items-center rounded-lg p-0.5 ${modeSwitcherContainer(theme)}`}>
-            {(['light', 'dark', 'deep-dark'] as AITheme[]).map((t) => {
+            {(['light', 'deep-dark'] as AITheme[]).map((t) => {
               const isActive = theme === t;
-              const label = t === 'light' ? 'Light' : t === 'dark' ? 'Dark' : 'Abyss';
+              const label = t === 'light' ? 'Light' : 'Abyss';
               return (
                 <button
                   key={t}

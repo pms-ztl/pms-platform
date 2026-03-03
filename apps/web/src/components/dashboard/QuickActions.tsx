@@ -83,7 +83,7 @@ function QuickActions({ pendingReviews, atRiskGoals, goalsData }: QuickActionsPr
                 <CheckCircleIcon className="w-8 h-8 text-emerald-500" />
               </div>
             </div>
-            <p className="text-secondary-900 dark:text-white font-medium">All caught up!</p>
+            <p className="text-sm text-secondary-900 dark:text-white font-medium">All caught up!</p>
             <p className="text-secondary-500 dark:text-secondary-400 text-sm mt-1">No pending tasks</p>
           </div>
         )}

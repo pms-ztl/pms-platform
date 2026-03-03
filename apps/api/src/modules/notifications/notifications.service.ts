@@ -4,7 +4,7 @@ import { logger } from '../../utils/logger';
 import { cacheGet, cacheSet, getRedisClient, isRedisAvailable } from '../../utils/redis';
 import { emailService } from '../../services/email';
 
-type NotificationType = 'GOAL_CREATED' | 'GOAL_UPDATED' | 'GOAL_COMPLETED' | 'REVIEW_ASSIGNED' | 'REVIEW_COMPLETED' | 'FEEDBACK_RECEIVED' | 'CALIBRATION_INVITE' | 'ONE_ON_ONE_REMINDER' | 'SYSTEM';
+type NotificationType = 'GOAL_CREATED' | 'GOAL_UPDATED' | 'GOAL_COMPLETED' | 'REVIEW_ASSIGNED' | 'REVIEW_COMPLETED' | 'FEEDBACK_RECEIVED' | 'CALIBRATION_INVITE' | 'ONE_ON_ONE_REMINDER' | 'CHAT_MESSAGE' | 'SYSTEM';
 type NotificationChannel = 'in_app' | 'email' | 'push' | 'sms' | 'slack' | 'teams';
 
 export interface SendNotificationInput {
@@ -485,6 +485,28 @@ export class NotificationsService {
     const body = `Goal "${goalTitle}" progress updated to ${progress}% by ${updatedBy}.`;
 
     await this.send({ userId, tenantId, type: 'GOAL_UPDATED', channel: 'in_app', title, body, data: { goalTitle, progress, updatedBy } });
+  }
+
+  async notifyChatMessage(
+    recipientId: string,
+    tenantId: string,
+    senderName: string,
+    messagePreview: string,
+    conversationId: string,
+  ): Promise<void> {
+    const preview = messagePreview.length > 80 ? messagePreview.slice(0, 80) + '…' : messagePreview;
+    const title = `New message from ${senderName}`;
+    const body = preview;
+
+    await this.send({
+      userId: recipientId,
+      tenantId,
+      type: 'CHAT_MESSAGE',
+      channel: 'in_app',
+      title,
+      body,
+      data: { conversationId, senderName },
+    });
   }
 
   async notifyCalibrationScheduled(

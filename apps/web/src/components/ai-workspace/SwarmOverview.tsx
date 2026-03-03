@@ -34,6 +34,25 @@ import type { AITheme } from '@/store/ai-workspace';
 import { aiApi } from '@/lib/api/ai';
 import * as T from './ai-theme';
 
+// ── Accent CSS-variable helpers (for SVG inline styles) ─────
+
+function _readPrimaryCssVar(shade: number): string {
+  if (typeof document === 'undefined') return '99 102 241';
+  return getComputedStyle(document.documentElement).getPropertyValue(`--c-primary-${shade}`).trim() || '99 102 241';
+}
+
+function _primaryHex(shade: number): string {
+  const parts = _readPrimaryCssVar(shade).split(/\s+/).map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return '#6366f1';
+  return '#' + parts.map((c) => c.toString(16).padStart(2, '0')).join('');
+}
+
+function _primaryRgba(shade: number, alpha: number): string {
+  const parts = _readPrimaryCssVar(shade).split(/\s+/).map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return `rgba(99,102,241,${alpha})`;
+  return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;
+}
+
 // ── Cluster data ────────────────────────────────────────────
 
 interface ClusterAgent {
@@ -61,11 +80,11 @@ const CLUSTER_DATA: Cluster[] = [
     name: 'Core Intelligence',
     icon: CpuChipIcon,
     svgLabel: 'Core',
-    color: 'from-blue-500 to-indigo-600',
-    glow: 'shadow-blue-500/40',
-    textColor: 'text-blue-400',
-    bgAccent: 'bg-blue-500/10',
-    borderAccent: 'border-blue-500/20',
+    color: 'from-primary-500 to-primary-600',
+    glow: 'shadow-primary-500/40',
+    textColor: 'text-primary-400',
+    bgAccent: 'bg-primary-500/10',
+    borderAccent: 'border-primary-500/20',
     agentCount: 20,
     agents: [
       { type: 'performance', name: 'Performance' },
@@ -278,9 +297,7 @@ function HeroStatCard({
   const cardBg =
     theme === 'light'
       ? 'bg-white/80 border-gray-200/60 shadow-sm'
-      : theme === 'dark'
-        ? 'bg-white/[0.06] border-white/[0.08]'
-        : 'bg-white/[0.03] border-white/[0.05]';
+      : 'bg-white/[0.03] border-white/[0.05]';
 
   return (
     <div
@@ -332,14 +349,17 @@ function hexPosition(index: number): { x: number; y: number } {
 }
 
 // Cluster gradient colors for SVG (first color of the tailwind gradient)
-const CLUSTER_SVG_COLORS = [
-  '#3b82f6', // blue-500
-  '#10b981', // emerald-500
-  '#a855f7', // purple-500
-  '#f59e0b', // amber-500
-  '#ec4899', // pink-500
-  '#ef4444', // red-500
-];
+// Core cluster (index 0) is computed dynamically to follow accent; rest are static.
+function getClusterSvgColors(): string[] {
+  return [
+    _primaryHex(500), // Core — accent-adaptive
+    '#10b981', // emerald-500
+    '#a855f7', // purple-500
+    '#f59e0b', // amber-500
+    '#ec4899', // pink-500
+    '#ef4444', // red-500
+  ];
+}
 
 // ── Neural Network Visualization ────────────────────────────
 
@@ -367,10 +387,10 @@ function NeuralNetworkVis({
   }, []);
 
   const lineColor =
-    theme === 'light' ? 'rgba(148,163,184,0.35)' : theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.05)';
+    theme === 'light' ? 'rgba(148,163,184,0.35)' : 'rgba(255,255,255,0.05)';
 
   const lineColorActive =
-    theme === 'light' ? 'rgba(99,102,241,0.3)' : theme === 'dark' ? 'rgba(168,85,247,0.2)' : 'rgba(34,211,238,0.15)';
+    theme === 'light' ? _primaryRgba(500, 0.3) : _primaryRgba(400, 0.15);
 
   return (
     <div className="relative mx-auto w-full max-w-[540px]">
@@ -435,8 +455,8 @@ function NeuralNetworkVis({
           cx={CENTER_X}
           cy={CENTER_Y}
           r={20}
-          fill={theme === 'light' ? 'rgba(99,102,241,0.1)' : 'rgba(255,255,255,0.05)'}
-          stroke={theme === 'light' ? 'rgba(99,102,241,0.3)' : 'rgba(255,255,255,0.1)'}
+          fill={theme === 'light' ? _primaryRgba(500, 0.1) : 'rgba(255,255,255,0.05)'}
+          stroke={theme === 'light' ? _primaryRgba(500, 0.3) : 'rgba(255,255,255,0.1)'}
           strokeWidth={1}
         />
         <text
@@ -445,7 +465,7 @@ function NeuralNetworkVis({
           textAnchor="middle"
           dominantBaseline="central"
           fontSize="14"
-          fill={theme === 'light' ? '#6366f1' : theme === 'dark' ? '#a78bfa' : '#22d3ee'}
+          fill={theme === 'light' ? _primaryHex(500) : _primaryHex(400)}
           fontWeight="bold"
         >
           70
@@ -454,7 +474,7 @@ function NeuralNetworkVis({
         {/* Cluster nodes */}
         {CLUSTER_DATA.map((cluster, i) => {
           const pos = positions[i];
-          const color = CLUSTER_SVG_COLORS[i];
+          const color = getClusterSvgColors()[i];
           return (
             <g
               key={cluster.id}
@@ -478,7 +498,7 @@ function NeuralNetworkVis({
                 cx={pos.x}
                 cy={pos.y}
                 r={32}
-                fill={theme === 'light' ? 'white' : theme === 'dark' ? 'rgba(15,15,30,0.85)' : 'rgba(0,0,0,0.9)'}
+                fill={theme === 'light' ? 'white' : 'rgba(0,0,0,0.9)'}
                 stroke={color}
                 strokeWidth={2}
                 opacity={0.95}
@@ -514,7 +534,7 @@ function NeuralNetworkVis({
                 textAnchor="middle"
                 dominantBaseline="central"
                 fontSize="10"
-                fill={theme === 'light' ? '#374151' : theme === 'dark' ? '#d1d5db' : '#9ca3af'}
+                fill={theme === 'light' ? '#374151' : '#9ca3af'}
                 fontWeight="500"
               >
                 {cluster.name}
@@ -547,23 +567,17 @@ function ClusterCard({
   const cardBg =
     theme === 'light'
       ? 'bg-white border-gray-200/80 shadow-sm'
-      : theme === 'dark'
-        ? 'bg-white/[0.04] border-white/[0.08] shadow-none'
-        : 'bg-white/[0.02] border-white/[0.05] shadow-none';
+      : 'bg-white/[0.02] border-white/[0.05] shadow-none';
 
   const chipBg =
     theme === 'light'
       ? 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200'
-      : theme === 'dark'
-        ? 'bg-white/[0.06] hover:bg-white/[0.12] text-gray-300 border-white/[0.06]'
-        : 'bg-white/[0.03] hover:bg-white/[0.08] text-gray-400 border-white/[0.04]';
+      : 'bg-white/[0.03] hover:bg-white/[0.08] text-gray-400 border-white/[0.04]';
 
   const orchestrateBg =
     theme === 'light'
       ? 'bg-gray-50 hover:bg-gray-100 text-gray-600 border-gray-200'
-      : theme === 'dark'
-        ? 'bg-white/[0.04] hover:bg-white/[0.08] text-gray-400 border-white/[0.06]'
-        : 'bg-white/[0.02] hover:bg-white/[0.06] text-gray-500 border-white/[0.04]';
+      : 'bg-white/[0.02] hover:bg-white/[0.06] text-gray-500 border-white/[0.04]';
 
   return (
     <div
@@ -674,7 +688,7 @@ function ActivityItem({
       className={`
         flex items-start gap-3 rounded-xl px-4 py-3
         transition-colors duration-200
-        ${theme === 'light' ? 'hover:bg-gray-50' : theme === 'dark' ? 'hover:bg-white/[0.03]' : 'hover:bg-white/[0.02]'}
+        ${theme === 'light' ? 'hover:bg-gray-50' : 'hover:bg-white/[0.02]'}
       `}
     >
       {/* Dot indicator */}
@@ -756,9 +770,7 @@ function LiveActivityFeed({ theme }: { theme: AITheme }) {
           ${T.scrollbar(theme)}
           ${theme === 'light'
             ? 'border-gray-200/60 bg-white/50'
-            : theme === 'dark'
-              ? 'border-white/[0.06] bg-white/[0.02]'
-              : 'border-white/[0.04] bg-white/[0.01]'
+            : 'border-white/[0.04] bg-white/[0.01]'
           }
         `}
       >
@@ -779,14 +791,14 @@ function LiveActivityFeed({ theme }: { theme: AITheme }) {
                 className={`
                   flex items-start gap-3 rounded-xl px-4 py-3
                   transition-colors duration-200
-                  ${theme === 'light' ? 'hover:bg-gray-50' : theme === 'dark' ? 'hover:bg-white/[0.03]' : 'hover:bg-white/[0.02]'}
+                  ${theme === 'light' ? 'hover:bg-gray-50' : 'hover:bg-white/[0.02]'}
                 `}
               >
                 <div className="mt-1.5 flex-shrink-0">
                   <div className={`h-2 w-2 rounded-full ${
                     agent.status === 'executing' ? 'bg-amber-400 animate-pulse' :
                     agent.status === 'awaiting_approval' ? 'bg-orange-400' :
-                    'bg-blue-400 animate-pulse'
+                    'bg-primary-400 animate-pulse'
                   }`} />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -802,15 +814,15 @@ function LiveActivityFeed({ theme }: { theme: AITheme }) {
                     <span className={`text-2xs font-medium ${
                       agent.status === 'executing' ? 'text-amber-400' :
                       agent.status === 'awaiting_approval' ? 'text-orange-400' :
-                      'text-blue-400'
+                      'text-primary-400'
                     }`}>
                       {statusText}
                     </span>
                     {agent.isProactive && (
-                      <span className="text-2xs text-cyan-400">Proactive</span>
+                      <span className="text-2xs text-primary-400">Proactive</span>
                     )}
                     {agent.parentTaskId && (
-                      <span className="text-2xs text-purple-400">Sub-task</span>
+                      <span className="text-2xs text-primary-300">Sub-task</span>
                     )}
                     {agent.totalSteps > 0 && (
                       <div className={`flex-1 h-1 rounded-full max-w-[80px] ${theme === 'light' ? 'bg-gray-200' : 'bg-white/5'}`}>
@@ -881,18 +893,14 @@ export function SwarmOverview() {
           <div
             className="absolute -top-64 -left-64 h-[44rem] w-[44rem] rounded-full blur-3xl"
             style={{
-              background: theme === 'deep-dark'
-                ? 'radial-gradient(circle, rgba(34,211,238,0.08) 0%, transparent 68%)'
-                : 'radial-gradient(circle, rgba(167,139,250,0.09) 0%, transparent 68%)',
+              background: `radial-gradient(circle, ${_primaryRgba(400, theme === 'deep-dark' ? 0.08 : 0.09)} 0%, transparent 68%)`,
               animation: 'floatOrb 20s ease-in-out infinite',
             }}
           />
           <div
             className="absolute -bottom-64 -right-64 h-[44rem] w-[44rem] rounded-full blur-3xl"
             style={{
-              background: theme === 'deep-dark'
-                ? 'radial-gradient(circle, rgba(52,211,153,0.07) 0%, transparent 68%)'
-                : 'radial-gradient(circle, rgba(129,140,248,0.08) 0%, transparent 68%)',
+              background: `radial-gradient(circle, ${_primaryRgba(300, theme === 'deep-dark' ? 0.07 : 0.08)} 0%, transparent 68%)`,
               animation: 'floatOrb 26s ease-in-out infinite reverse',
               animationDelay: '4s',
             }}
@@ -900,9 +908,7 @@ export function SwarmOverview() {
           <div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[32rem] w-[32rem] rounded-full blur-3xl"
             style={{
-              background: theme === 'deep-dark'
-                ? 'radial-gradient(circle, rgba(45,212,191,0.05) 0%, transparent 68%)'
-                : 'radial-gradient(circle, rgba(192,132,252,0.06) 0%, transparent 68%)',
+              background: `radial-gradient(circle, ${_primaryRgba(200, theme === 'deep-dark' ? 0.05 : 0.06)} 0%, transparent 68%)`,
               animation: 'floatOrb 32s ease-in-out infinite',
               animationDelay: '8s',
             }}
@@ -915,14 +921,12 @@ export function SwarmOverview() {
         <div
           className={`relative mb-8 overflow-hidden rounded-2xl border p-8 text-center backdrop-blur-xl
             ${theme === 'light'
-              ? 'border-indigo-200/60 bg-gradient-to-br from-indigo-50/80 to-purple-50/60'
-              : theme === 'dark'
-              ? 'border-white/[0.06] bg-gradient-to-br from-indigo-950/60 to-purple-950/40'
-              : 'border-white/[0.04] bg-gradient-to-br from-black/60 to-indigo-950/30'}`}
+              ? 'border-primary-200/60 bg-gradient-to-br from-primary-50/80 to-primary-100/60'
+              : 'border-white/[0.04] bg-gradient-to-br from-black/60 to-primary-950/30'}`}
         >
           {/* Decorative ambient orbs */}
-          <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl" />
-          <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-purple-500/10 blur-3xl" />
+          <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-primary-500/10 blur-3xl" />
+          <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-primary-400/10 blur-3xl" />
 
           {/* Live badge */}
           <div className="mb-4 flex items-center justify-center gap-3">
@@ -966,8 +970,8 @@ export function SwarmOverview() {
             icon={CpuChipIcon}
             value={70}
             label="Total Agents"
-            gradient="from-blue-500 to-indigo-600"
-            glowColor="rgba(99,102,241,0.35)"
+            gradient="from-primary-500 to-primary-600"
+            glowColor={_primaryRgba(500, 0.35)}
             theme={theme}
           />
           <HeroStatCard
@@ -1009,9 +1013,7 @@ export function SwarmOverview() {
               overflow-hidden rounded-2xl border backdrop-blur-xl
               ${theme === 'light'
                 ? 'border-gray-200/60 bg-white/50'
-                : theme === 'dark'
-                  ? 'border-white/[0.06] bg-white/[0.02]'
-                  : 'border-white/[0.04] bg-white/[0.01]'
+                : 'border-white/[0.04] bg-white/[0.01]'
               }
             `}
           >

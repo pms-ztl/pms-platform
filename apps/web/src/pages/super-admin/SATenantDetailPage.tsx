@@ -439,7 +439,7 @@ function SettingsTab({
         <select
           value={plan}
           onChange={(e) => setPlan(e.target.value as SATenant['plan'])}
-          className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          className="w-full px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
         >
           <option value="FREE">Free</option>
           <option value="STARTER">Starter</option>
@@ -647,7 +647,7 @@ export function SATenantDetailPage() {
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{tenant.name}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{tenant.name}</h1>
               <Badge label={tenant.status} colorClass={statusColors[tenant.status] || statusColors.ACTIVE} />
               <Badge label={tenant.plan} colorClass={planColors[tenant.plan] || planColors.FREE} />
             </div>

@@ -116,7 +116,7 @@ export function SASecurityPage() {
     <div className="space-y-4">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Security</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Security</h1>
         <p className="mt-1 text-secondary-600 dark:text-secondary-400">
           Monitor threats, manage blocked IPs, and view active sessions
         </p>

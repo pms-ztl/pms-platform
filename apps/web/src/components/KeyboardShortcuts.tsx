@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal } from '@/components/ui/Modal';
 import { useThemeStore } from '@/store/theme';
+import { useAIWorkspaceStore } from '@/store/ai-workspace';
 
 // ── Shortcut Data ────────────────────────────────────────────────────────────
 
@@ -25,8 +26,9 @@ const SHORTCUT_GROUPS = [
     ],
   },
   {
-    label: 'Theme',
+    label: 'AI & Theme',
     shortcuts: [
+      { keys: ['Ctrl/⌘', 'Shift', 'A'], description: 'Toggle AI Workspace' },
       { keys: ['Ctrl/⌘', 'Shift', 'L'], description: 'Toggle light / dark mode' },
     ],
   },
@@ -46,7 +48,9 @@ const GO_TO_MAP: Record<string, string> = {
 export function KeyboardShortcuts() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme, setTheme } = useThemeStore();
+  const { isAiMode, aiTransitionPhase, setAiTransitionPhase, setAiMode } = useAIWorkspaceStore();
   const lastKeyRef = useRef<string | null>(null);
   const lastKeyTimeRef = useRef(0);
 
@@ -71,10 +75,25 @@ export function KeyboardShortcuts() {
         return;
       }
 
+      // Ctrl/Cmd + Shift + A → Toggle AI Workspace
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        if (aiTransitionPhase !== 'idle') return;
+        if (isAiMode && location.pathname === '/dashboard') {
+          setAiTransitionPhase('exiting');
+        } else if (isAiMode) {
+          setAiMode(false);
+        } else {
+          setAiTransitionPhase('entering');
+          if (location.pathname !== '/dashboard') navigate('/dashboard');
+        }
+        return;
+      }
+
       // Ctrl/Cmd + Shift + L → Toggle theme
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'l') {
         e.preventDefault();
-        const nextTheme = theme === 'light' ? 'dark' : 'light';
+        const nextTheme = theme === 'light' ? 'deep-dark' : 'light';
         setTheme(nextTheme);
         return;
       }
@@ -106,7 +125,7 @@ export function KeyboardShortcuts() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isInputFocused, navigate, theme, setTheme]);
+  }, [isInputFocused, navigate, location.pathname, theme, setTheme, isAiMode, aiTransitionPhase, setAiTransitionPhase, setAiMode]);
 
   return (
     <Modal open={isOpen} onClose={() => setIsOpen(false)} title="Keyboard Shortcuts" size="lg">

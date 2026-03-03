@@ -263,6 +263,25 @@ export function OneOnOnesPage() {
     queryFn: () => usersApi.getMyReports(),
   });
 
+  // Admin roles or users with no direct reports: fetch all active employees as fallback
+  const userRoles = user?.roles ?? [];
+  const isAdminRole = userRoles.some((r: string) =>
+    ['SUPER_ADMIN', 'TENANT_ADMIN', 'ADMIN', 'HR_ADMIN'].includes(r)
+  );
+
+  const { data: allUsersData } = useQuery({
+    queryKey: ['users', 'all-for-1on1'],
+    queryFn: () => usersApi.list({ limit: 200, isActive: true }),
+    enabled: isAdminRole || (reports !== undefined && reports.length === 0),
+  });
+
+  // Use direct reports if available, otherwise all users (excluding self)
+  const employeeOptions: User[] = (() => {
+    if (reports && reports.length > 0) return reports;
+    if (allUsersData?.data) return allUsersData.data.filter((u: User) => u.id !== user?.id);
+    return [];
+  })();
+
   // ---------------------------------------------------------------------------
   // Mutations
   // ---------------------------------------------------------------------------
@@ -663,13 +682,13 @@ export function OneOnOnesPage() {
                     value={formEmployeeId}
                     onChange={(e) => setFormEmployeeId(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   >
                     <option value="">Select an employee...</option>
-                    {(reports || []).map((report: User) => (
-                      <option key={report.id} value={report.id}>
-                        {report.firstName} {report.lastName}
-                        {report.jobTitle ? ` - ${report.jobTitle}` : ''}
+                    {employeeOptions.map((emp: User) => (
+                      <option key={emp.id} value={emp.id}>
+                        {emp.firstName} {emp.lastName}
+                        {emp.jobTitle ? ` - ${emp.jobTitle}` : ''}
                       </option>
                     ))}
                   </select>
@@ -685,7 +704,7 @@ export function OneOnOnesPage() {
                     value={formScheduledAt}
                     onChange={(e) => setFormScheduledAt(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   />
                 </div>
 
@@ -697,7 +716,7 @@ export function OneOnOnesPage() {
                   <select
                     value={formDuration}
                     onChange={(e) => setFormDuration(Number(e.target.value))}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   >
                     {durationOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -717,7 +736,7 @@ export function OneOnOnesPage() {
                     value={formLocation}
                     onChange={(e) => setFormLocation(e.target.value)}
                     placeholder="e.g., Conference Room B"
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   />
                 </div>
 
@@ -731,7 +750,7 @@ export function OneOnOnesPage() {
                     value={formMeetingLink}
                     onChange={(e) => setFormMeetingLink(e.target.value)}
                     placeholder="https://meet.google.com/..."
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   />
                 </div>
 

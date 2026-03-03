@@ -513,16 +513,16 @@ export function ExcelUploadPage() {
               <SparklesIcon className="h-6 w-6 text-primary-500" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Employee Upload</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Employee Upload</h1>
               <p className="text-sm text-gray-500 dark:text-white/50">
                 AI-enhanced bulk onboarding with smart validation &amp; auto-corrections
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <StageIndicator currentStage={stage} />
-            <div className="flex gap-2 ml-2">
+            <div className="flex gap-2">
               {stage !== 'idle' && stage !== 'done' && (
                 <button onClick={handleReset} className="btn btn-secondary btn-sm inline-flex items-center gap-1.5 text-xs">
                   <ArrowPathIcon className="h-3.5 w-3.5" />

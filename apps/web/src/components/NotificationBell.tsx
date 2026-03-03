@@ -90,13 +90,13 @@ export function NotificationBell() {
     <div className="relative" ref={panelRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-lg text-secondary-500 hover:text-secondary-700 dark:text-secondary-400 dark:hover:text-white hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors"
+        className="relative flex h-8 w-8 items-center justify-center rounded-lg text-secondary-500 hover:text-secondary-700 dark:text-secondary-400 dark:hover:text-white hover:bg-secondary-100 dark:hover:bg-white/[0.04] transition-colors"
         aria-label="Notifications"
       >
         {unreadCount > 0 ? (
-          <BellAlertIcon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
+          <BellAlertIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
         ) : (
-          <BellIcon className="h-6 w-6" />
+          <BellIcon className="h-5 w-5" />
         )}
         {unreadCount > 0 && (
           <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-2xs font-bold text-white ring-2 ring-white dark:ring-secondary-800">
@@ -106,7 +106,7 @@ export function NotificationBell() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 max-h-[480px] overflow-hidden rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-lg ring-1 ring-secondary-200 dark:ring-secondary-700 z-50" style={{ fontSize: 16 }}>
+        <div className="absolute right-0 mt-2 w-96 max-h-[480px] overflow-hidden rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-lg ring-1 ring-secondary-200 dark:ring-secondary-700 z-50">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">

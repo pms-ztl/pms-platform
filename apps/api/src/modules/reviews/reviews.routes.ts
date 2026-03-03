@@ -84,6 +84,12 @@ router.post(
   (req, res, next) => reviewsController.submitReview(req, res, next)
 );
 
+router.delete(
+  '/:id',
+  authorize({ resource: 'reviews', action: 'delete', scope: 'own' }),
+  (req, res, next) => reviewsController.deleteReview(req, res, next)
+);
+
 router.post(
   '/:id/acknowledge',
   (req, res, next) => reviewsController.acknowledgeReview(req, res, next)

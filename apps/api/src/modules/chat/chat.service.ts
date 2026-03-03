@@ -974,6 +974,26 @@ Guidelines:
 
     return counts;
   }
+
+  // ── Clear Chat ──
+
+  /**
+   * Soft-delete all messages in a conversation for the requesting user.
+   * Only participants can clear the chat.
+   */
+  async clearChat(userId: string, conversationId: string) {
+    const participant = await prisma.chatParticipant.findFirst({
+      where: { conversationId, userId, leftAt: null },
+    });
+    if (!participant) throw new Error('Not a participant of this conversation');
+
+    const result = await prisma.chatMessage.updateMany({
+      where: { conversationId, deletedAt: null },
+      data: { deletedAt: new Date(), content: '' },
+    });
+
+    return { cleared: result.count };
+  }
 }
 
 export const chatService = new ChatService();

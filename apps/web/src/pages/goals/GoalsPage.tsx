@@ -431,7 +431,7 @@ export function GoalsPage() {
                 {/* Parent Goal Selector */}
                 <div>
                   <label className="label dark:text-secondary-300">Parent Goal (optional)</label>
-                  <select name="parentGoalId" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                  <select name="parentGoalId" className="input">
                     <option value="">None (top-level goal)</option>
                     {parentGoals?.map((g) => (
                       <option key={g.id} value={g.id}>
@@ -448,7 +448,7 @@ export function GoalsPage() {
                 {isManager && (
                   <div>
                     <label className="label dark:text-secondary-300">Assign To</label>
-                    <select name="ownerId" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                    <select name="ownerId" className="input">
                       <option value="">Myself</option>
                       {myReports?.map((report: User) => (
                         <option key={report.id} value={report.id}>
@@ -465,7 +465,7 @@ export function GoalsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">Goal Type</label>
-                    <select name="type" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                    <select name="type" className="input">
                       <option value="INDIVIDUAL">Individual</option>
                       <option value="TEAM">Team</option>
                       <option value="DEPARTMENT">Department</option>
@@ -476,7 +476,7 @@ export function GoalsPage() {
                   </div>
                   <div>
                     <label className="label dark:text-secondary-300">Priority</label>
-                    <select name="priority" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                    <select name="priority" className="input">
                       <option value="MEDIUM">Medium</option>
                       <option value="LOW">Low</option>
                       <option value="HIGH">High</option>
@@ -487,7 +487,7 @@ export function GoalsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">Due Date</label>
-                    <input name="dueDate" type="date" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white" />
+                    <input name="dueDate" type="date" className="input" />
                   </div>
                   <div>
                     <label className="label dark:text-secondary-300">Weight (0-10)</label>
@@ -498,7 +498,7 @@ export function GoalsPage() {
                       max="10"
                       step="0.5"
                       defaultValue="5"
-                      className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                      className="input"
                       placeholder="e.g., 5"
                     />
                     <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">

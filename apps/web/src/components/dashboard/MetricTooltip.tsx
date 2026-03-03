@@ -90,19 +90,42 @@ const METRIC_GLOSSARY: Record<string, MetricEntry> = {
   },
 };
 
-// ── Per-metric accent colors ──
-const METRIC_ACCENTS: Record<string, { from: string; to: string; glow: string }> = {
-  CPIS: { from: '#06b6d4', to: '#8b5cf6', glow: 'rgba(6,182,212,0.35)' },
-  GAI:  { from: '#3b82f6', to: '#22d3ee', glow: 'rgba(59,130,246,0.35)' },
-  RQS:  { from: '#a78bfa', to: '#c084fc', glow: 'rgba(167,139,250,0.35)' },
-  FSI:  { from: '#34d399', to: '#6ee7b7', glow: 'rgba(52,211,153,0.35)' },
-  CIS:  { from: '#fbbf24', to: '#f59e0b', glow: 'rgba(251,191,36,0.35)' },
-  CRI:  { from: '#fb7185', to: '#f43f5e', glow: 'rgba(251,113,133,0.35)' },
-  GTS:  { from: '#818cf8', to: '#6366f1', glow: 'rgba(129,140,248,0.35)' },
-  EQS:  { from: '#2dd4bf', to: '#14b8a6', glow: 'rgba(45,212,191,0.35)' },
-  III:  { from: '#e879f9', to: '#d946ef', glow: 'rgba(232,121,249,0.35)' },
-};
-const DEFAULT_ACCENT = { from: '#60a5fa', to: '#a78bfa', glow: 'rgba(96,165,250,0.35)' };
+// ── Accent-adaptive metric colors (reads from CSS custom properties) ──
+function cssVar(name: string): string {
+  if (typeof document === 'undefined') return '99 102 241';
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '99 102 241';
+}
+function rgbToHex(rgb: string): string {
+  const parts = rgb.split(/\s+/).map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return '#6366f1';
+  return '#' + parts.map(c => c.toString(16).padStart(2, '0')).join('');
+}
+function rgbToRgba(rgb: string, a: number): string {
+  const parts = rgb.split(/\s+/).map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return `rgba(99,102,241,${a})`;
+  return `rgba(${parts[0]},${parts[1]},${parts[2]},${a})`;
+}
+
+/** Returns accent colors derived from the active accent palette */
+function getAccentColors(): { from: string; to: string; glow: string } {
+  const p400 = cssVar('--c-primary-400');
+  const p500 = cssVar('--c-primary-500');
+  return {
+    from: rgbToHex(p500),
+    to:   rgbToHex(p400),
+    glow: rgbToRgba(p500, 0.35),
+  };
+}
+
+// Keep the map signature for backward compat but all entries read from accent palette
+const METRIC_ACCENTS: Record<string, { from: string; to: string; glow: string }> = new Proxy(
+  {} as Record<string, { from: string; to: string; glow: string }>,
+  { get: () => getAccentColors() },
+);
+const DEFAULT_ACCENT = new Proxy(
+  {} as { from: string; to: string; glow: string },
+  { get: (_t, prop) => (getAccentColors() as any)[prop] },
+);
 
 // ── Theme-aware style helpers ──
 function getThemeStyles(theme: Theme): {
@@ -133,14 +156,14 @@ function getThemeStyles(theme: Theme): {
       popBg: { background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(32px) saturate(2.0) brightness(1.05)' },
       popBorder: 'border-gray-200/50',
       headerBorder: 'border-gray-200/40',
-      codeColor: 'text-indigo-600',
+      codeColor: 'text-primary-600',
       titleColor: 'text-gray-900',
       bodyText: 'text-gray-700',
       bodyMuted: 'text-gray-500',
       labelColor: 'text-gray-400',
       closeBtnHover: 'hover:bg-gray-200/60 text-gray-400 hover:text-gray-700',
-      weightBg: 'bg-indigo-50',
-      weightText: 'text-indigo-500',
+      weightBg: 'bg-primary-50',
+      weightText: 'text-primary-500',
     };
   }
 
@@ -152,7 +175,7 @@ function getThemeStyles(theme: Theme): {
       popBg: { background: 'rgba(2,6,23,0.78)', backdropFilter: 'blur(40px) saturate(1.8) brightness(0.95)' },
       popBorder: 'border-white/[0.08]',
       headerBorder: 'border-white/[0.06]',
-      codeColor: 'text-cyan-300',
+      codeColor: 'text-primary-300',
       titleColor: 'text-white',
       bodyText: 'text-white/75',
       bodyMuted: 'text-white/55',
@@ -171,7 +194,7 @@ function getThemeStyles(theme: Theme): {
     popBg: { background: 'rgba(15,23,42,0.75)', backdropFilter: 'blur(40px) saturate(1.8) brightness(1.05)' },
     popBorder: 'border-white/10',
     headerBorder: 'border-white/[0.08]',
-    codeColor: 'text-cyan-400',
+    codeColor: 'text-primary-400',
     titleColor: 'text-white',
     bodyText: 'text-white/75',
     bodyMuted: 'text-white/60',
@@ -253,7 +276,7 @@ export default function MetricTooltip({ code, children, className, clickToReveal
   const computePopPos = useCallback(() => {
     if (!wrapperRef.current) return;
     const r = wrapperRef.current.getBoundingClientRect();
-    const vw = window.innerWidth;
+    const vw = document.documentElement.clientWidth;
     const vh = window.innerHeight;
     const popW = 300;
     const popH = 320;
@@ -352,26 +375,46 @@ export default function MetricTooltip({ code, children, className, clickToReveal
   return (
     <span
       ref={wrapperRef}
-      className={`relative inline-flex items-center gap-1 w-full ${clickToReveal ? 'cursor-pointer' : 'cursor-default'} ${className ?? ''}`}
+      className={`relative inline-flex items-center gap-1 ${clickToReveal ? 'cursor-pointer w-full' : 'cursor-default'} ${className ?? ''}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setHovered(false)}
       onClick={handleWrapperClick}
     >
-      <span className={clickToReveal ? '' : 'border-b border-dotted border-current/30'}>{children}</span>
+      <span>{children}</span>
 
-      {/* ⓘ button — hidden when clickToReveal is active */}
-      {!clickToReveal && (hovered || showDetail) && (
+      {/* Stylish "i" info button — always visible, hidden when clickToReveal is active */}
+      {!clickToReveal && (
         <button
           type="button"
           onClick={handleToggleDetail}
-          className="absolute top-0 right-0 z-20 inline-flex items-center justify-center w-4 h-4 rounded-full transition-all duration-300 hover:scale-125"
+          className="relative z-20 inline-flex items-center justify-center w-3.5 h-3.5 rounded-full transition-all duration-300 hover:scale-110 flex-shrink-0 ml-0.5"
           style={{
-            background: gradient,
-            boxShadow: showDetail ? `0 0 12px ${accent.glow}` : `0 0 6px ${accent.glow}`,
+            background: showDetail
+              ? gradient
+              : hovered
+                ? `linear-gradient(135deg, ${accent.from}30, ${accent.to}20)`
+                : `linear-gradient(135deg, ${accent.from}18, ${accent.to}10)`,
+            border: `1px solid ${showDetail ? accent.from : `${accent.from}40`}`,
+            boxShadow: showDetail
+              ? `0 0 10px ${accent.glow}, 0 0 4px ${accent.from}30`
+              : hovered
+                ? `0 0 8px ${accent.glow}`
+                : `0 0 4px ${accent.from}15`,
           }}
           aria-label={entry.fullName}
         >
-          <InformationCircleIcon className="w-3 h-3 text-white" />
+          <span
+            className="font-bold leading-none select-none"
+            style={{
+              fontSize: '8px',
+              fontFamily: "'Georgia', serif",
+              fontStyle: 'italic',
+              color: showDetail ? '#fff' : accent.from,
+              textShadow: showDetail ? `0 0 4px rgba(255,255,255,0.5)` : 'none',
+            }}
+          >
+            i
+          </span>
         </button>
       )}
 

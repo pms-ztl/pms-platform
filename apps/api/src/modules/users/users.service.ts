@@ -396,7 +396,7 @@ export class UsersService {
   /**
    * Update user's avatar URL
    */
-  async updateAvatar(tenantId: string, userId: string, avatarUrl: string): Promise<void> {
+  async updateAvatar(tenantId: string, userId: string, avatarUrl: string | null): Promise<void> {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,

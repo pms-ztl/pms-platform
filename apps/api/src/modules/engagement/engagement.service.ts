@@ -91,14 +91,22 @@ export class EngagementService {
       };
     });
 
+    // Derive participation rate and trend for computed engagement
+    const computedParticipation = Math.round(participationRate * 100);
+    const trendSummary = { improving: Math.round(n * 0.3), stable: Math.round(n * 0.55), declining: Math.round(n * 0.15) };
+
     return {
       overview: {
         totalEmployees,
+        averageScore: avgOverallScore,
         avgOverallScore,
         avgComponentScores: { participation, communication, collaboration, initiative, responsiveness },
         distribution,
         atRiskCount,
-        trendSummary: { improving: Math.round(n * 0.3), stable: Math.round(n * 0.55), declining: Math.round(n * 0.15) },
+        participationRate: computedParticipation,
+        trendDirection: 'STABLE' as string | null,
+        changeFromPrevious: null as number | null,
+        trendSummary,
       },
       trends,
       departments: departmentEngagement,
@@ -202,12 +210,37 @@ export class EngagementService {
       declining: latestScores.filter((s) => s.trendDirection === 'DOWN').length,
     };
 
+    // Compute participationRate: % of users who have at least one score
+    const totalActiveUsers = await prisma.user.count({ where: { tenantId, isActive: true, deletedAt: null } });
+    const participationRate = totalActiveUsers > 0
+      ? Math.round((totalEmployees / totalActiveUsers) * 100)
+      : 0;
+
+    // Derive overall trend direction from trendSummary
+    let trendDirection: string | null = 'STABLE';
+    let changeFromPrevious: number | null = null;
+    if (trendSummary.improving > trendSummary.declining + trendSummary.stable * 0.3) {
+      trendDirection = 'UP';
+      changeFromPrevious = totalEmployees > 0
+        ? Math.round((trendSummary.improving / totalEmployees) * 100 * 10) / 10
+        : null;
+    } else if (trendSummary.declining > trendSummary.improving + trendSummary.stable * 0.3) {
+      trendDirection = 'DOWN';
+      changeFromPrevious = totalEmployees > 0
+        ? -(Math.round((trendSummary.declining / totalEmployees) * 100 * 10) / 10)
+        : null;
+    }
+
     return {
       totalEmployees,
+      averageScore: avgOverallScore,
       avgOverallScore,
       avgComponentScores,
       distribution,
       atRiskCount,
+      participationRate,
+      trendDirection,
+      changeFromPrevious,
       trendSummary,
     };
   }

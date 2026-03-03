@@ -164,95 +164,111 @@ export function LicenseDashboardPage() {
         </div>
       )}
 
-      {/* Stats Cards */}
+      {/* Stats Cards — uniform structure: icon+label → value → subtitle */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Active Users */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/20">
-              <UsersIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
-            </div>
-            <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">Active Employees</span>
-          </div>
-          <div className="flex items-end gap-1">
-            <span className="text-2xl font-bold text-secondary-900 dark:text-white">{usage?.activeUsers ?? 0}</span>
-            <span className="text-lg text-secondary-500 pb-0.5">/ {usage?.licenseCount ?? 0}</span>
-          </div>
-          <div className="mt-3">
-            <div className="w-full h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-500 ${barColor}`}
-                style={{ width: `${Math.min(usage?.usagePercent ?? 0, 100)}%` }}
-              />
-            </div>
-            <p className="text-xs text-secondary-500 mt-1">{usage?.remaining ?? 0} seats available</p>
-          </div>
-        </div>
+        {[
+          {
+            icon: UsersIcon,
+            iconBg: 'bg-primary-50 dark:bg-primary-900/20',
+            iconColor: 'text-primary-600 dark:text-primary-400',
+            label: 'Active Employees',
+            value: `${usage?.activeUsers ?? 0}`,
+            suffix: `/ ${usage?.licenseCount ?? 0}`,
+            subtitle: `${usage?.remaining ?? 0} seats available`,
+            progress: usage?.usagePercent ?? 0,
+          },
+          {
+            icon: ArrowTrendingUpIcon,
+            iconBg: 'bg-secondary-50 dark:bg-secondary-800',
+            iconColor: 'text-secondary-600 dark:text-secondary-400',
+            label: 'Archived Employees',
+            value: `${usage?.archivedUsers ?? 0}`,
+            subtitle: 'Historical records preserved',
+          },
+          {
+            icon: ChartBarIcon,
+            iconBg: 'bg-indigo-50 dark:bg-indigo-900/20',
+            iconColor: 'text-indigo-600 dark:text-indigo-400',
+            label: 'Organization Levels',
+            value: `L1 – L${usage?.maxLevel ?? 16}`,
+            subtitle: 'Configured hierarchy depth',
+          },
+          {
+            icon: KeyIcon,
+            iconBg: 'bg-green-50 dark:bg-green-900/20',
+            iconColor: 'text-green-600 dark:text-green-400',
+            label: 'Subscription',
+            value: subscription?.plan ?? 'N/A',
+            badge: subscription?.status ?? 'N/A',
+            badgeColor: statusColor,
+            subtitle: subscription?.expiresAt
+              ? `Expires: ${new Date(subscription.expiresAt).toLocaleDateString()}`
+              : undefined,
+          },
+        ].map((card) => {
+          const Icon = card.icon;
+          return (
+            <div key={card.label} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5 flex flex-col">
+              {/* Header: icon + label */}
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className={`p-2 rounded-lg ${card.iconBg}`}>
+                  <Icon className={`h-5 w-5 ${card.iconColor}`} />
+                </div>
+                <span className="text-xs font-semibold uppercase tracking-wide text-secondary-400 dark:text-secondary-500">{card.label}</span>
+              </div>
 
-        {/* Archived Users */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-lg bg-secondary-50 dark:bg-secondary-800">
-              <ArrowTrendingUpIcon className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
-            </div>
-            <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">Archived Employees</span>
-          </div>
-          <span className="text-2xl font-bold text-secondary-900 dark:text-white">{usage?.archivedUsers ?? 0}</span>
-          <p className="text-xs text-secondary-500 mt-3">Historical records preserved</p>
-        </div>
+              {/* Main value — uniform size across all cards */}
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-2xl font-bold text-secondary-900 dark:text-white">{card.value}</span>
+                {card.suffix && (
+                  <span className="text-sm font-medium text-secondary-400 dark:text-secondary-500">{card.suffix}</span>
+                )}
+                {card.badge && (
+                  <span className={`text-2xs font-semibold px-2 py-0.5 rounded-full ml-1 ${card.badgeColor}`}>
+                    {card.badge}
+                  </span>
+                )}
+              </div>
 
-        {/* Max Org Level */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/20">
-              <ChartBarIcon className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-            </div>
-            <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">Organization Levels</span>
-          </div>
-          <span className="text-2xl font-bold text-secondary-900 dark:text-white">L1 - L{usage?.maxLevel ?? 16}</span>
-          <p className="text-xs text-secondary-500 mt-3">Configured hierarchy depth</p>
-        </div>
+              {/* Progress bar (only Active Employees) */}
+              {card.progress !== undefined && (
+                <div className="mt-3">
+                  <div className="w-full h-1.5 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${barColor}`}
+                      style={{ width: `${Math.min(card.progress, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              )}
 
-        {/* Subscription Status */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/20">
-              <KeyIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+              {/* Subtitle — uniform size */}
+              {card.subtitle && (
+                <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-auto pt-2">{card.subtitle}</p>
+              )}
             </div>
-            <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">Subscription</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-secondary-900 dark:text-white">{subscription?.plan ?? 'N/A'}</span>
-            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusColor}`}>
-              {subscription?.status ?? 'N/A'}
-            </span>
-          </div>
-          {subscription?.expiresAt && (
-            <p className="text-xs text-secondary-500 mt-3">
-              Expires: {new Date(subscription.expiresAt).toLocaleDateString()}
-            </p>
-          )}
-        </div>
+          );
+        })}
       </div>
 
       {/* Details Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Subscription Details */}
         <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
-          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center gap-2">
-              <BuildingOffice2Icon className="h-5 w-5 text-secondary-500" />
+              <BuildingOffice2Icon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Subscription Details</h2>
             </div>
           </div>
-          <div className="p-6 space-y-4">
+          <div className="p-5 space-y-0 divide-y divide-secondary-100 dark:divide-secondary-800">
             <DetailRow label="Organization" value={subscription?.companyName ?? '-'} />
             <DetailRow label="Plan" value={subscription?.plan ?? '-'} />
-            <DetailRow label="Tier" value={subscription?.tier ?? '-'} />
+            <DetailRow label="Tier" value={(subscription?.tier ?? '-').charAt(0).toUpperCase() + (subscription?.tier ?? '-').slice(1)} />
             <DetailRow
               label="Status"
               value={
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusColor}`}>
+                <span className={`text-2xs font-semibold px-2 py-0.5 rounded-full ${statusColor}`}>
                   {subscription?.status ?? '-'}
                 </span>
               }
@@ -267,10 +283,10 @@ export function LicenseDashboardPage() {
 
         {/* Designated Manager */}
         <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
-          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <UserPlusIcon className="h-5 w-5 text-secondary-500" />
+                <UserPlusIcon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Designated Manager</h2>
               </div>
               <button
@@ -281,9 +297,9 @@ export function LicenseDashboardPage() {
               </button>
             </div>
           </div>
-          <div className="p-6">
+          <div className="p-5">
             {subscription?.designatedManager ? (
-              <div className="space-y-4">
+              <div className="space-y-0 divide-y divide-secondary-100 dark:divide-secondary-800">
                 <DetailRow label="Name" value={subscription.designatedManager.name} />
                 <DetailRow label="Email" value={subscription.designatedManager.email} />
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
@@ -307,13 +323,13 @@ export function LicenseDashboardPage() {
 
       {/* License Usage Breakdown */}
       <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
-        <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
           <div className="flex items-center gap-2">
-            <CalendarDaysIcon className="h-5 w-5 text-secondary-500" />
+            <CalendarDaysIcon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">License Usage Summary</h2>
           </div>
         </div>
-        <div className="p-6">
+        <div className="p-5">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <UsageStat label="Total Licensed" value={usage?.licenseCount ?? 0} color="text-secondary-900 dark:text-white" />
             <UsageStat label="Active" value={usage?.activeUsers ?? 0} color="text-green-600 dark:text-green-400" />
@@ -352,13 +368,13 @@ export function LicenseDashboardPage() {
           {/* By Level */}
           {breakdown.byLevel.length > 0 && (
             <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
-              <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+              <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="flex items-center gap-2">
-                  <ChartBarIcon className="h-5 w-5 text-secondary-500" />
+                  <ChartBarIcon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
                   <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Employees by Level</h2>
                 </div>
               </div>
-              <div className="p-6 space-y-3">
+              <div className="p-5 space-y-3">
                 {breakdown.byLevel.map((item) => {
                   const maxCount = Math.max(...breakdown.byLevel.map((i) => i.count));
                   const pct = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
@@ -382,13 +398,13 @@ export function LicenseDashboardPage() {
           {/* By Department */}
           {breakdown.byDepartment.length > 0 && (
             <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
-              <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+              <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="flex items-center gap-2">
-                  <BuildingOffice2Icon className="h-5 w-5 text-secondary-500" />
+                  <BuildingOffice2Icon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
                   <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Employees by Department</h2>
                 </div>
               </div>
-              <div className="p-6 space-y-3">
+              <div className="p-5 space-y-3">
                 {breakdown.byDepartment.slice(0, 10).map((item) => {
                   const maxCount = Math.max(...breakdown.byDepartment.map((i) => i.count));
                   const pct = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
@@ -414,9 +430,9 @@ export function LicenseDashboardPage() {
       {/* Upload History */}
       {Array.isArray(uploadHistory) && uploadHistory.length > 0 && (
         <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
-          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center gap-2">
-              <ArrowTrendingUpIcon className="h-5 w-5 text-secondary-500" />
+              <ArrowTrendingUpIcon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Recent Excel Uploads</h2>
             </div>
           </div>
@@ -475,18 +491,18 @@ export function LicenseDashboardPage() {
 
 function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-secondary-100 dark:border-secondary-800 last:border-0">
-      <span className="text-sm text-secondary-500 dark:text-secondary-400">{label}</span>
-      <span className="text-sm font-medium text-secondary-900 dark:text-white">{typeof value === 'string' ? value : value}</span>
+    <div className="flex items-center justify-between py-2.5">
+      <span className="text-xs font-medium text-secondary-400 dark:text-secondary-500">{label}</span>
+      <span className="text-xs font-semibold text-secondary-900 dark:text-white">{typeof value === 'string' ? value : value}</span>
     </div>
   );
 }
 
 function UsageStat({ label, value, color }: { label: string; value: number | string; color: string }) {
   return (
-    <div className="text-center p-3 rounded-lg bg-secondary-50 dark:bg-secondary-800">
-      <p className={`text-2xl font-bold ${color}`}>{value}</p>
-      <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">{label}</p>
+    <div className="text-center p-3 rounded-lg bg-secondary-50 dark:bg-secondary-800/60">
+      <p className={`text-xl font-bold ${color}`}>{value}</p>
+      <p className="text-2xs font-medium text-secondary-400 dark:text-secondary-500 mt-1">{label}</p>
     </div>
   );
 }

@@ -32,7 +32,7 @@ import * as T from './ai-theme';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: typeof CheckCircleIcon; bgClass: string }> = {
   pending: { label: 'Pending', color: 'text-gray-400', icon: ClockIcon, bgClass: 'bg-gray-500/10' },
-  planning: { label: 'Planning', color: 'text-blue-400', icon: CpuChipIcon, bgClass: 'bg-blue-500/10' },
+  planning: { label: 'Planning', color: 'text-primary-400', icon: CpuChipIcon, bgClass: 'bg-primary-500/10' },
   executing: { label: 'Executing', color: 'text-amber-400', icon: BoltIcon, bgClass: 'bg-amber-500/10' },
   awaiting_approval: { label: 'Needs Approval', color: 'text-orange-400', icon: ExclamationTriangleIcon, bgClass: 'bg-orange-500/10' },
   completed: { label: 'Completed', color: 'text-emerald-400', icon: CheckCircleIcon, bgClass: 'bg-emerald-500/10' },
@@ -190,7 +190,7 @@ export function SwarmTasks() {
                 className={`w-full text-left px-4 py-3 border-b ${T.borderLight(theme)} transition-all ${
                   isSelected
                     ? `${T.accentBg(theme)} border-l-2 ${
-                        theme === 'light' ? 'border-l-blue-500' : theme === 'dark' ? 'border-l-purple-500' : 'border-l-cyan-500'
+                        theme === 'light' ? 'border-l-blue-500' : 'border-l-cyan-500'
                       }`
                     : `${T.surfaceHover(theme)}`
                 }`}
@@ -206,17 +206,17 @@ export function SwarmTasks() {
                         {statusCfg.label}
                       </span>
                       {task.agentType === 'coordinator' && (
-                        <span className="text-2xs px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400">
+                        <span className="text-2xs px-1.5 py-0.5 rounded bg-primary-500/10 text-primary-400">
                           Multi-Agent
                         </span>
                       )}
                       {task.parentTaskId && (
-                        <span className="text-2xs px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400">
+                        <span className="text-2xs px-1.5 py-0.5 rounded bg-primary-500/10 text-primary-300">
                           Sub-task
                         </span>
                       )}
                       {task.isProactive && (
-                        <span className="text-2xs px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400">
+                        <span className="text-2xs px-1.5 py-0.5 rounded bg-primary-500/10 text-primary-400">
                           Auto
                         </span>
                       )}
@@ -269,7 +269,7 @@ export function SwarmTasks() {
                     );
                   })()}
                   {selectedTask.isProactive && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-primary-500/10 text-primary-400">
                       <SparklesIcon className="h-3 w-3" />
                       Proactive
                     </span>

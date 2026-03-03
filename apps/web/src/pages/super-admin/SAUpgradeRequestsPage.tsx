@@ -231,7 +231,7 @@ export function SAUpgradeRequestsPage() {
           </div>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 Upgrade Requests
               </h1>
               {pendingCount > 0 && (

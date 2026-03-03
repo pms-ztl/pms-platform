@@ -11,7 +11,6 @@ import { useState, useRef, useEffect } from 'react';
 import {
   SunIcon,
   MoonIcon,
-  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useAIWorkspaceStore, type AITheme } from '@/store/ai-workspace';
 
@@ -25,19 +24,12 @@ const THEME_META: Record<AITheme, { label: string; icon: typeof SunIcon; color: 
     activeBg: 'bg-amber-500/15',
     dotColor: 'bg-amber-400',
   },
-  dark: {
-    label: 'Dark',
-    icon: MoonIcon,
-    color: 'text-purple-400',
-    activeBg: 'bg-purple-500/15',
-    dotColor: 'bg-purple-400',
-  },
   'deep-dark': {
     label: 'Abyss',
     icon: MoonIcon,
-    color: 'text-cyan-400',
-    activeBg: 'bg-cyan-500/15',
-    dotColor: 'bg-cyan-400',
+    color: 'text-primary-400',
+    activeBg: 'bg-primary-500/15',
+    dotColor: 'bg-primary-400',
   },
 };
 
@@ -67,12 +59,10 @@ export function FloatingAIToggle() {
   const pillClasses =
     theme === 'light'
       ? 'bg-white text-gray-700 ring-1 ring-gray-200 shadow-md'
-      : theme === 'dark'
-      ? 'bg-gray-800 text-purple-400 ring-1 ring-purple-500/30 shadow-lg shadow-purple-500/20'
-      : 'bg-gray-950 text-cyan-400 ring-1 ring-cyan-500/30 shadow-lg shadow-cyan-500/20';
+      : 'bg-gray-900 text-primary-400 ring-1 ring-primary-500/30 shadow-lg shadow-primary-500/20';
 
   return (
-    <div ref={menuRef} className="fixed bottom-5 left-5 z-50" style={{ fontSize: 16 }}>
+    <div ref={menuRef} className="fixed bottom-5 left-5 z-50">
       {/* Pop-up menu */}
       {menuOpen && (
         <div className="absolute bottom-full left-0 mb-2 min-w-[140px] rounded-xl bg-gray-900/95 backdrop-blur-xl ring-1 ring-white/10 shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
@@ -82,7 +72,7 @@ export function FloatingAIToggle() {
           </div>
 
           {/* Theme buttons */}
-          {(['light', 'dark', 'deep-dark'] as AITheme[]).map((t) => {
+          {(['light', 'deep-dark'] as AITheme[]).map((t) => {
             const m = THEME_META[t];
             const Icon = m.icon;
             const isActive = theme === t;

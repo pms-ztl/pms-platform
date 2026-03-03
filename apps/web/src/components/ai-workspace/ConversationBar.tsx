@@ -47,10 +47,8 @@ export function ConversationBar({ activeConversationId, onSelectConversation, on
         className={`flex flex-shrink-0 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
           !activeConversationId
             ? theme === 'light'
-              ? 'border-blue-300 bg-blue-50 text-blue-700 shadow-sm'
-              : theme === 'dark'
-              ? 'border-purple-500/40 bg-purple-500/10 text-purple-300 shadow-sm shadow-purple-500/20'
-              : 'border-cyan-500/40 bg-cyan-500/10 text-cyan-300 shadow-sm shadow-cyan-500/20'
+              ? 'border-primary-300 bg-primary-50 text-primary-700 shadow-sm'
+              : 'border-primary-500/40 bg-primary-500/10 text-primary-300 shadow-sm shadow-primary-500/20'
             : theme === 'light'
             ? 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-gray-700'
             : 'border-white/10 bg-white/5 text-gray-400 hover:border-white/20 hover:text-gray-300'
@@ -79,10 +77,8 @@ export function ConversationBar({ activeConversationId, onSelectConversation, on
             className={`group flex flex-shrink-0 items-center gap-2 rounded-lg border px-3 py-1.5 transition-all duration-200 ${
               isActive
                 ? theme === 'light'
-                  ? 'border-blue-200 bg-blue-50 text-blue-800 shadow-sm ring-1 ring-blue-300'
-                  : theme === 'dark'
-                  ? 'border-transparent bg-gradient-to-r from-purple-500/15 via-blue-500/15 to-cyan-500/15 text-white shadow-sm ring-1 ring-purple-500/30'
-                  : 'border-transparent bg-gradient-to-r from-cyan-500/15 via-emerald-500/15 to-teal-500/15 text-white shadow-sm ring-1 ring-cyan-500/30'
+                  ? 'border-primary-200 bg-primary-50 text-primary-800 shadow-sm ring-1 ring-primary-300'
+                  : 'border-transparent bg-gradient-to-r from-primary-500/15 via-primary-400/15 to-primary-300/15 text-white shadow-sm ring-1 ring-primary-500/30'
                 : theme === 'light'
                 ? 'border-gray-100 bg-white text-gray-500 hover:border-gray-200 hover:bg-gray-50 hover:text-gray-700'
                 : 'border-white/5 bg-white/[0.02] text-gray-400 hover:border-white/10 hover:bg-white/5 hover:text-gray-300'

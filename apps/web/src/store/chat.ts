@@ -53,6 +53,7 @@ interface ChatState {
   removeConversation: (conversationId: string) => void;
   updateConversationName: (conversationId: string, name: string) => void;
   toggleConversationMuted: (conversationId: string) => void;
+  clearMessages: () => void;
   reset: () => void;
 }
 
@@ -194,6 +195,8 @@ export const useChatStore = create<ChatState>()((set) => ({
         c.id === conversationId ? { ...c, isMuted: !c.isMuted } : c
       ),
     })),
+
+  clearMessages: () => set({ messages: [] }),
 
   reset: () =>
     set({

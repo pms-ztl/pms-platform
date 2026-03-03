@@ -16,9 +16,11 @@ import {
   ExclamationTriangleIcon,
   FlagIcon,
   ArrowRightIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { HelpAssistantChat } from '@/components/help/HelpAssistantChat';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -299,42 +301,42 @@ function GuideCard({ guide, isExpanded, onToggle }: { guide: Guide; isExpanded: 
     <div
       className={clsx(
         'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] transition-all duration-200',
-        isExpanded && 'ring-2 ring-primary-500/30'
+        isExpanded && 'ring-2 ring-primary-500/30 sm:col-span-2 xl:col-span-3'
       )}
     >
-      <div className="p-6">
-        <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
-            <Icon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+      <div className="p-4">
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
+            <Icon className="h-4.5 w-4.5 text-primary-600 dark:text-primary-400" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-base font-semibold text-secondary-900 dark:text-white">{guide.title}</h3>
-            <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">{guide.description}</p>
+            <h3 className="text-base font-semibold text-secondary-900 dark:text-white leading-snug">{guide.title}</h3>
+            <p className="mt-0.5 text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed">{guide.description}</p>
           </div>
         </div>
         <button
           onClick={onToggle}
-          className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+          className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
         >
           {isExpanded ? 'Close Guide' : 'Read Guide'}
           <ChevronDownIcon
-            className={clsx('h-4 w-4 transition-transform duration-200', isExpanded && 'rotate-180')}
+            className={clsx('h-3.5 w-3.5 transition-transform duration-200', isExpanded && 'rotate-180')}
           />
         </button>
       </div>
 
-      {/* Expanded guide content */}
+      {/* Expanded guide content — spans full grid width */}
       <div
         className={clsx(
           'overflow-hidden transition-all duration-300 ease-in-out',
           isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
         )}
       >
-        <div className="px-6 pb-6 border-t border-secondary-100 dark:border-secondary-700 pt-4">
-          <ol className="space-y-3">
+        <div className="px-4 pb-4 border-t border-secondary-100 dark:border-secondary-700 pt-3">
+          <ol className="space-y-2">
             {guide.content.map((step, idx) => (
-              <li key={idx} className="flex gap-3 text-sm text-secondary-700 dark:text-secondary-300">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 text-xs font-semibold flex items-center justify-center">
+              <li key={idx} className="flex gap-2.5 text-sm text-secondary-700 dark:text-secondary-300 leading-relaxed">
+                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 text-2xs font-bold flex items-center justify-center">
                   {idx + 1}
                 </span>
                 <span className="pt-0.5">{step}</span>
@@ -382,6 +384,7 @@ function FAQAccordionItem({ item, isOpen, onToggle }: { item: FAQItem; isOpen: b
 
 export function HelpPage() {
   usePageTitle('Help');
+  const [view, setView] = useState<'guides' | 'assistant'>('guides');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
   const [openFAQs, setOpenFAQs] = useState<Set<string>>(new Set());
@@ -433,151 +436,203 @@ export function HelpPage() {
   const hasResults = filteredGuides.length > 0 || filteredFAQCategories.length > 0;
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* ── Header ──────────────────────────────────────────────────── */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Help & Knowledge Base</h1>
-          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-            Find answers, explore guides, and learn how to get the most out of PMS.
-          </p>
-        </div>
-
-        {/* ── Search Bar ──────────────────────────────────────────────── */}
-        <div className="relative mb-10">
-          <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary-400" />
-          <input
-            type="text"
-            placeholder="Search guides and frequently asked questions..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] rounded-lg pl-11 pr-4 py-3 w-full text-sm text-secondary-900 dark:text-white placeholder-secondary-400 dark:placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 text-sm"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-
-        {/* ── No results message ──────────────────────────────────────── */}
-        {searchQuery && !hasResults && (
-          <div className="text-center py-12">
-            <BookOpenIcon className="h-12 w-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
-            <p className="text-secondary-500 dark:text-secondary-400 text-sm">
-              No results found for "<span className="font-medium">{searchQuery}</span>". Try a different search term.
+    <div className="space-y-5">
+      {/* ── Header + View Toggle + Search ────────────────────────────── */}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Help & Knowledge Base</h1>
+            <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
+              Find answers, explore guides, and learn how to get the most out of PMS.
             </p>
           </div>
-        )}
+          <div className="flex items-center gap-3">
+            {/* View toggle */}
+            <div className="flex gap-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg border border-secondary-200/60 dark:border-white/[0.06] p-1">
+              <button
+                onClick={() => setView('guides')}
+                className={clsx(
+                  'px-3 py-1.5 rounded-md text-sm font-semibold transition-all',
+                  view === 'guides'
+                    ? 'bg-primary-600 text-white shadow-sm'
+                    : 'text-secondary-600 dark:text-secondary-400 hover:text-secondary-900 dark:hover:text-white'
+                )}
+              >
+                Guides & FAQ
+              </button>
+              <button
+                onClick={() => setView('assistant')}
+                className={clsx(
+                  'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-semibold transition-all',
+                  view === 'assistant'
+                    ? 'bg-primary-600 text-white shadow-sm'
+                    : 'text-secondary-600 dark:text-secondary-400 hover:text-secondary-900 dark:hover:text-white'
+                )}
+              >
+                <SparklesIcon className="h-3.5 w-3.5" />
+                AI Assistant
+              </button>
+            </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* ── Main Content ────────────────────────────────────────── */}
-          <div className="flex-1 min-w-0">
-            {/* ── Quick Guides ────────────────────────────────────────── */}
-            {filteredGuides.length > 0 && (
-              <section className="mb-12">
-                <div className="flex items-center gap-2 mb-6">
-                  <BookOpenIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
-                  <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Quick Guides</h2>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {filteredGuides.map((guide) => (
-                    <GuideCard
-                      key={guide.id}
-                      guide={guide}
-                      isExpanded={expandedGuide === guide.id}
-                      onToggle={() => toggleGuide(guide.id)}
-                    />
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* ── FAQ Section ─────────────────────────────────────────── */}
-            {filteredFAQCategories.length > 0 && (
-              <section className="mb-12">
-                <div className="flex items-center gap-2 mb-6">
-                  <LightBulbIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
-                  <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
-                    Frequently Asked Questions
-                  </h2>
-                </div>
-                <div className="space-y-4">
-                  {filteredFAQCategories.map((category) => (
-                    <div
-                      key={category.name}
-                      className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4"
-                    >
-                      <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
-                        {category.name}
-                      </h3>
-                      <div>
-                        {category.items.map((item, idx) => {
-                          const key = `${category.name}-${idx}`;
-                          return (
-                            <FAQAccordionItem
-                              key={key}
-                              item={item}
-                              isOpen={openFAQs.has(key)}
-                              onToggle={() => toggleFAQ(key)}
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
+            {/* Search — only show for guides view */}
+            {view === 'guides' && (
+              <div className="relative sm:w-80 flex-shrink-0 hidden sm:block">
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-secondary-400" />
+                <input
+                  type="text"
+                  placeholder="Search guides & FAQs..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] rounded-lg pl-9 pr-4 py-2 w-full text-xs text-secondary-900 dark:text-white placeholder-secondary-400 dark:placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 text-2xs font-medium"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
             )}
           </div>
+        </div>
 
-          {/* ── Quick Actions Sidebar ─────────────────────────────────── */}
-          <aside className="lg:w-80 flex-shrink-0">
-            <div className="lg:sticky lg:top-8">
-              <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-                <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Quick Actions</h3>
-                <div className="space-y-1.5">
-                  {quickActions.map((action) => {
-                    const Icon = action.icon;
-                    return (
-                      <Link
-                        key={action.path}
-                        to={action.path}
-                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-secondary-700 dark:text-secondary-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-400 transition-colors group"
-                      >
-                        <Icon className="h-5 w-5 text-secondary-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors" />
-                        <span className="flex-1">{action.label}</span>
-                        <ArrowRightIcon className="h-4 w-4 text-secondary-300 dark:text-secondary-600 group-hover:text-primary-500 transition-colors" />
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
+        {/* Mobile search — only show for guides view */}
+        {view === 'guides' && (
+          <div className="relative sm:hidden">
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-secondary-400" />
+            <input
+              type="text"
+              placeholder="Search guides & FAQs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] rounded-lg pl-9 pr-4 py-2 w-full text-xs text-secondary-900 dark:text-white placeholder-secondary-400 dark:placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 text-2xs font-medium"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        )}
+      </div>
 
-              {/* ── Contact Support Card ──────────────────────────────── */}
-              <div className="mt-4 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 rounded-xl border border-primary-200 dark:border-primary-800 p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <ShieldCheckIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
-                  <h3 className="text-sm font-semibold text-primary-900 dark:text-primary-200">Need More Help?</h3>
-                </div>
-                <p className="text-xs text-primary-700 dark:text-primary-300 leading-relaxed mb-4">
-                  If you cannot find an answer to your question, reach out to your HR administrator or contact your organization's support team.
-                </p>
+      {/* ── AI Assistant View ──────────────────────────────────────── */}
+      {view === 'assistant' && <HelpAssistantChat />}
+
+      {/* ── Guides & FAQ View ──────────────────────────────────────── */}
+      {view === 'guides' && (
+        <>
+          {/* Quick Actions — horizontal strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {quickActions.map((action) => {
+              const Icon = action.icon;
+              return (
                 <Link
-                  to="/settings"
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-700 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-200 transition-colors"
+                  key={action.path}
+                  to={action.path}
+                  className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-medium bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] text-secondary-700 dark:text-secondary-300 hover:border-primary-300 dark:hover:border-primary-500/30 hover:text-primary-700 dark:hover:text-primary-400 transition-all group"
                 >
-                  Go to Settings
-                  <ArrowRightIcon className="h-3 w-3" />
+                  <Icon className="h-4 w-4 text-secondary-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors flex-shrink-0" />
+                  <span className="flex-1 truncate">{action.label}</span>
+                  <ArrowRightIcon className="h-3 w-3 text-secondary-300 dark:text-secondary-600 group-hover:text-primary-500 transition-colors flex-shrink-0" />
                 </Link>
+              );
+            })}
+          </div>
+
+          {/* No results message */}
+          {searchQuery && !hasResults && (
+            <div className="text-center py-12">
+              <BookOpenIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
+              <p className="text-secondary-500 dark:text-secondary-400 text-sm">
+                No results found for "<span className="font-medium">{searchQuery}</span>". Try a different search term.
+              </p>
+            </div>
+          )}
+
+          {/* Quick Guides — full width grid */}
+          {filteredGuides.length > 0 && (
+            <section>
+              <div className="flex items-center gap-2 mb-3">
+                <BookOpenIcon className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Quick Guides</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {filteredGuides.map((guide) => (
+                  <GuideCard
+                    key={guide.id}
+                    guide={guide}
+                    isExpanded={expandedGuide === guide.id}
+                    onToggle={() => toggleGuide(guide.id)}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* FAQ Section — full width */}
+          {filteredFAQCategories.length > 0 && (
+            <section>
+              <div className="flex items-center gap-2 mb-3">
+                <LightBulbIcon className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
+                  Frequently Asked Questions
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                {filteredFAQCategories.map((category) => (
+                  <div
+                    key={category.name}
+                    className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4"
+                  >
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-secondary-400 dark:text-secondary-500 mb-3">
+                      {category.name}
+                    </h3>
+                    <div>
+                      {category.items.map((item, idx) => {
+                        const key = `${category.name}-${idx}`;
+                        return (
+                          <FAQAccordionItem
+                            key={key}
+                            item={item}
+                            isOpen={openFAQs.has(key)}
+                            onToggle={() => toggleFAQ(key)}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Need More Help — bottom banner with AI assistant CTA */}
+          <div className="bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/10 rounded-xl border border-primary-200/60 dark:border-primary-800/40 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <SparklesIcon className="h-5 w-5 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+              <div>
+                <h3 className="text-sm font-bold text-primary-900 dark:text-primary-200">Need More Help?</h3>
+                <p className="text-sm text-primary-700 dark:text-primary-300 mt-0.5">
+                  Ask our AI assistant anything about the PMS platform — features, how-to guides, and more.
+                </p>
               </div>
             </div>
-          </aside>
-        </div>
-      </div>
+            <button
+              onClick={() => setView('assistant')}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-primary-600 text-white hover:bg-primary-700 transition-colors flex-shrink-0"
+            >
+              <SparklesIcon className="h-3.5 w-3.5" />
+              Ask AI Assistant
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

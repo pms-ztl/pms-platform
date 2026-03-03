@@ -562,7 +562,7 @@ export function ModeratorDashboardPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">
             Moderator Dashboard
           </h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">
@@ -587,7 +587,7 @@ export function ModeratorDashboardPage() {
                 setSelectedCycleId(e.target.value);
                 setSelectedEmployeeId(null);
               }}
-              className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white pr-8"
+              className="input pr-8"
             >
               {!cycles || cycles.length === 0 ? (
                 <option value="">No review cycles available</option>
@@ -638,13 +638,13 @@ export function ModeratorDashboardPage() {
                   className="input pl-9 text-sm dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
                 />
               </div>
-              <div className="flex gap-1">
+              <div className="flex flex-wrap gap-1">
                 {(['ALL', 'PENDING', 'IN_PROGRESS', 'COMPLETE'] as const).map((s) => (
                   <button
                     key={s}
                     onClick={() => setStatusFilter(s)}
                     className={clsx(
-                      'px-2.5 py-1 rounded-lg text-xs font-medium transition-colors',
+                      'px-2 py-1 rounded-lg text-2xs font-semibold whitespace-nowrap transition-colors',
                       statusFilter === s
                         ? 'bg-primary-600 text-white'
                         : 'bg-secondary-100 text-secondary-600 hover:bg-secondary-200 dark:bg-secondary-700 dark:text-secondary-300 dark:hover:bg-secondary-600'

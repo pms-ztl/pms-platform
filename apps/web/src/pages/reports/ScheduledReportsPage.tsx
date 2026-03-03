@@ -224,7 +224,7 @@ export function ScheduledReportsPage() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Report Schedules</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Report Schedules</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Loading schedules...</p>
         </div>
         <PageSkeleton />
@@ -237,7 +237,7 @@ export function ScheduledReportsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Report Schedules</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Report Schedules</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
             Manage automated report generation schedules
           </p>
@@ -466,7 +466,7 @@ export function ScheduledReportsPage() {
                 <select
                   value={reportType}
                   onChange={(e) => setReportType(e.target.value)}
-                  className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+                  className="w-full border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-3 py-2 text-sm bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
                 >
                   {REPORT_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>{t.label}</option>

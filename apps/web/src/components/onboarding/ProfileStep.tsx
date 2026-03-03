@@ -181,7 +181,7 @@ export function ProfileStep({ onNext, onSkip }: ProfileStepProps) {
           <select
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
-            className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
           >
             {COMMON_TIMEZONES.map((tz) => (
               <option key={tz} value={tz}>{tz.replace(/_/g, ' ')}</option>

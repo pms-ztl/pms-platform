@@ -197,7 +197,7 @@ export function SuperAdminLayout() {
 
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1 items-center">
-              <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
                 Super Admin Console
               </h1>
             </div>

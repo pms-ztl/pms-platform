@@ -371,9 +371,10 @@ export function AuthLayout({ children }: AuthLayoutProps) {
   // Position-based state (for 3D parallax — where cursor IS)
   const cursorNX = useRef(0);    // normalized cursor X: -1 (left) to +1 (right)
   const cursorNY = useRef(0);    // normalized cursor Y: -1 (top) to +1 (bottom)
-  // Velocity-based state (for video speed — how fast cursor moves)
-  const velX = useRef(0);
-  const targetVelX = useRef(0);
+  // Velocity-based state (for video speed — total cursor speed, any direction)
+  const velSpeed = useRef(0);
+  const targetSpeed = useRef(0);
+  const lastDirX = useRef(0); // track horizontal direction for rewind
 
   // Get whichever video element is currently "on top"
   const getActiveVideo = useCallback(() => {
@@ -442,82 +443,134 @@ export function AuthLayout({ children }: AuthLayoutProps) {
     };
   }, [getActiveVideo]);
 
-  // ── MAIN RAF LOOP — position-based 3D parallax + velocity-based video speed ──
+  // ── Disable CSS transitions during resize to prevent lag ──
+  useEffect(() => {
+    const wrap = videoWrapRef.current;
+    if (!wrap) return;
+    let resizeTimer = 0;
+    const onResize = () => {
+      wrap.style.transition = 'none';
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        wrap.style.transition = 'transform 0.15s cubic-bezier(0.33, 1, 0.68, 1)';
+      }, 200);
+    };
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => {
+      window.removeEventListener('resize', onResize);
+      clearTimeout(resizeTimer);
+    };
+  }, []);
+
+  // ── 3D PARALLAX: Set target transform on mousemove, CSS transition handles smoothing ──
+  useEffect(() => {
+    const container = screenRef.current;
+    const wrap = videoWrapRef.current;
+    if (!container || !wrap) return;
+
+    let raf = 0;
+    const handleMove = (e: MouseEvent) => {
+      const now = Date.now();
+      const dt = now - lastMousePos.current.time;
+      const rect = container.getBoundingClientRect();
+
+      // ── Position: normalized -1 to +1 ──
+      const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      cursorNX.current = nx;
+      cursorNY.current = ny;
+
+      // ── 3D TRANSFORM: set target directly, CSS transition handles smooth interpolation ──
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const rotY = nx * 3;
+        const rotX = -ny * 2;
+        const tx = nx * 15;
+        const ty = ny * 10;
+        wrap.style.transform = `perspective(1200px) rotateY(${rotY}deg) rotateX(${rotX}deg) translate3d(${tx}px, ${ty}px, 0)`;
+      });
+
+      // ── Total cursor speed (any direction) for video speed ──
+      if (dt >= 10) {
+        const dx = e.clientX - lastMousePos.current.x;
+        const dy = e.clientY - lastMousePos.current.y;
+        const timeFactor = Math.max(dt, 1);
+        // Total speed = magnitude of velocity vector (both axes)
+        const speed = Math.sqrt(dx * dx + dy * dy) / timeFactor;
+        targetSpeed.current = Math.min(speed * 1.0, 1);
+        lastDirX.current = dx; // remember horizontal direction for rewind
+        lastMousePos.current = { x: e.clientX, y: e.clientY, time: now };
+      }
+    };
+
+    const handleLeave = () => {
+      cursorNX.current = 0;
+      cursorNY.current = 0;
+      targetSpeed.current = 0;
+      // Animate back to center via CSS transition
+      wrap.style.transform = 'perspective(1200px) rotateY(0deg) rotateX(0deg) translate3d(0px, 0px, 0)';
+    };
+
+    container.addEventListener('mousemove', handleMove, { passive: true });
+    container.addEventListener('mouseleave', handleLeave);
+    return () => {
+      container.removeEventListener('mousemove', handleMove);
+      container.removeEventListener('mouseleave', handleLeave);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // ── VIDEO SPEED RAF LOOP — only handles velocity smoothing + playback rate ──
+  // Separated from transforms so video decode doesn't block GPU compositing.
   useEffect(() => {
     let running = true;
     const BASE_RATE = 0.5;
-    const VEL_LERP = 0.08;     // gentle velocity smoothing
-    const VEL_DECAY = 0.02;    // slow velocity decay
-    const POS_LERP = 0.035;    // silky position interpolation (lower = smoother)
-    const TRANSFORM_LERP = 0.04; // double-smooth for transform output
-
-    // Smoothed cursor position (approaches cursorNX/NY gently)
-    const smoothCX = { current: 0 };
-    const smoothCY = { current: 0 };
-    // Smoothed transform output values (double-buffered for silk)
-    const smoothRotY = { current: 0 };
-    const smoothRotX = { current: 0 };
-    const smoothScale = { current: 1 };
-    const smoothTX = { current: 0 };
-    const smoothTY = { current: 0 };
+    const VEL_LERP = 0.18;
+    const VEL_DECAY = 0.06;
+    const RATE_LERP = 0.12;
     const smoothRate = { current: BASE_RATE };
+    let frameSkip = 0;
 
     const tick = () => {
       if (!running) return;
 
-      // ── POSITION smoothing: gently approach cursor position ──
-      smoothCX.current += (cursorNX.current - smoothCX.current) * POS_LERP;
-      smoothCY.current += (cursorNY.current - smoothCY.current) * POS_LERP;
+      // Smooth total speed (any direction)
+      velSpeed.current += (targetSpeed.current - velSpeed.current) * VEL_LERP;
+      targetSpeed.current *= (1 - VEL_DECAY);
+      const speed = velSpeed.current;
 
-      // ── VELOCITY smoothing: for video speed ──
-      velX.current += (targetVelX.current - velX.current) * VEL_LERP;
-      targetVelX.current *= (1 - VEL_DECAY);
-
-      const absVX = Math.abs(velX.current);
-
-      // ── VIDEO SPEED: horizontal velocity drives playback ──
+      // Compute target playback rate proportional to TOTAL cursor speed
       let targetPlayRate = BASE_RATE;
       const vid = getActiveVideo();
       if (vid && vid.duration && vid.duration !== Infinity) {
-        if (velX.current > 0.03) {
-          // Moving RIGHT → play forward faster
-          targetPlayRate = BASE_RATE + absVX * 4;
-        } else if (velX.current < -0.03) {
-          // Moving LEFT → gently rewind (seek backward)
-          const rewindAmount = absVX * 0.06;
-          vid.currentTime = Math.max(0, vid.currentTime - rewindAmount);
-          targetPlayRate = 0.15;
+        if (speed > 0.02) {
+          if (lastDirX.current < -2) {
+            // Cursor moving primarily LEFT → gently rewind
+            const rewindAmount = speed * 0.07;
+            vid.currentTime = Math.max(0, vid.currentTime - rewindAmount);
+            targetPlayRate = 0.15;
+          } else {
+            // Any other movement → speed up proportionally
+            targetPlayRate = BASE_RATE + speed * 4.5;
+          }
         }
         targetPlayRate = Math.max(0.15, Math.min(targetPlayRate, 3));
       }
 
-      // Smooth the playback rate
-      smoothRate.current += (targetPlayRate - smoothRate.current) * 0.06;
-      if (videoARef.current) videoARef.current.playbackRate = smoothRate.current;
-      if (videoBRef.current) videoBRef.current.playbackRate = smoothRate.current;
+      // Smooth the rate
+      smoothRate.current += (targetPlayRate - smoothRate.current) * RATE_LERP;
 
-      // ── 3D TRANSFORMS — driven by cursor POSITION (where it IS on screen) ──
-      // Target values: cursor center = neutral, edges = max tilt/shift
-      const cx = smoothCX.current;  // -1 to +1
-      const cy = smoothCY.current;  // -1 to +1
-      const dist = Math.sqrt(cx * cx + cy * cy); // distance from center (0 to ~1.4)
-
-      const tRotY = cx * 4;            // left/right tilt ±4°
-      const tRotX = -cy * 2.5;         // up/down tilt ±2.5°
-      const tScale = 1 + dist * 0.025; // subtle zoom toward edges (up to 1.035)
-      const tTX = cx * 20;             // horizontal shift ±20px
-      const tTY = cy * 12;             // vertical shift ±12px
-
-      // Double-smooth: lerp toward target transforms
-      smoothRotY.current += (tRotY - smoothRotY.current) * TRANSFORM_LERP;
-      smoothRotX.current += (tRotX - smoothRotX.current) * TRANSFORM_LERP;
-      smoothScale.current += (tScale - smoothScale.current) * TRANSFORM_LERP;
-      smoothTX.current += (tTX - smoothTX.current) * TRANSFORM_LERP;
-      smoothTY.current += (tTY - smoothTY.current) * TRANSFORM_LERP;
-
-      const wrap = videoWrapRef.current;
-      if (wrap) {
-        wrap.style.transform = `perspective(1200px) rotateY(${smoothRotY.current}deg) rotateX(${smoothRotX.current}deg) scale(${smoothScale.current}) translate(${smoothTX.current}px, ${smoothTY.current}px)`;
+      // Only update playbackRate every 3 frames to avoid decode stutter
+      frameSkip++;
+      if (frameSkip >= 3) {
+        frameSkip = 0;
+        const rate = Math.round(smoothRate.current * 100) / 100;
+        if (videoARef.current && Math.abs(videoARef.current.playbackRate - rate) > 0.02) {
+          videoARef.current.playbackRate = rate;
+        }
+        if (videoBRef.current && Math.abs(videoBRef.current.playbackRate - rate) > 0.02) {
+          videoBRef.current.playbackRate = rate;
+        }
       }
 
       decayRaf.current = requestAnimationFrame(tick);
@@ -527,52 +580,17 @@ export function AuthLayout({ children }: AuthLayoutProps) {
     return () => { running = false; cancelAnimationFrame(decayRaf.current); };
   }, [getActiveVideo]);
 
-  // ── CURSOR TRACKING — position + horizontal velocity ──
-  useEffect(() => {
-    const container = screenRef.current;
-    if (!container) return;
-
-    const handleMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const now = Date.now();
-      const dt = now - lastMousePos.current.time;
-
-      // ── Position: normalized -1 to +1 based on where cursor IS on screen ──
-      cursorNX.current = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-      cursorNY.current = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-
-      // ── Horizontal velocity: for video speed control (throttled to ~60fps) ──
-      if (dt >= 16) {
-        const dx = e.clientX - lastMousePos.current.x;
-        const timeFactor = Math.max(dt, 1);
-        const rawVX = (dx / timeFactor) * 0.8;
-        targetVelX.current = Math.max(-1, Math.min(rawVX, 1));
-        lastMousePos.current = { x: e.clientX, y: e.clientY, time: now };
-      }
-    };
-
-    const handleLeave = () => {
-      // Smoothly return to center (refs decay via RAF loop lerp)
-      cursorNX.current = 0;
-      cursorNY.current = 0;
-      targetVelX.current = 0;
-    };
-
-    container.addEventListener('mousemove', handleMove);
-    container.addEventListener('mouseleave', handleLeave);
-    return () => {
-      container.removeEventListener('mousemove', handleMove);
-      container.removeEventListener('mouseleave', handleLeave);
-    };
-  }, []);
-
   return (
     <div ref={screenRef} className="auth-page h-screen relative overflow-hidden">
       {/* ── BG Video — 3D reactive wrapper ── */}
       <div
         ref={videoWrapRef}
-        className="video-wrap-bg absolute -inset-[5%] z-0"
-        style={{ willChange: 'transform, filter', transition: 'filter 0.3s ease-out' }}
+        className="video-wrap-bg absolute -inset-[8%] z-0"
+        style={{
+          willChange: 'transform',
+          transition: 'transform 0.15s cubic-bezier(0.33, 1, 0.68, 1)',
+          contain: 'layout style paint',
+        }}
       >
         <video
           ref={videoARef}
@@ -599,21 +617,23 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       </div>
 
       {/* Heavy darken overlay for text readability over black hole video */}
-      <div className="absolute inset-0 bg-black/[0.55] pointer-events-none" />
+      <div className="absolute inset-0 bg-black/[0.55] pointer-events-none" style={{ contain: 'strict' }} />
 
       {/* Strong vignette — darkens edges heavily, keeps center slightly brighter */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.7) 100%)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.7) 100%)', contain: 'strict' }} />
 
       {/* Additional top/bottom gradient for text areas */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.4) 100%)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.4) 100%)', contain: 'strict' }} />
 
       <CursorGlow containerRef={screenRef} />
 
-      {/* ── Premium floating animations ─────────────────────────────── */}
-      <FloatingParticles />
-      <AuroraWaves />
-      <FloatingOrbs />
-      <LightStreaks />
+      {/* ── Premium floating animations (GPU-isolated) ────────────── */}
+      <div style={{ contain: 'layout style paint' }}>
+        <FloatingParticles />
+        <AuroraWaves />
+        <FloatingOrbs />
+        <LightStreaks />
+      </div>
 
       {/* ── MAIN CONTENT — 55/45 split, full height ─────────────────── */}
       <div className="relative z-10 h-full flex">
@@ -623,15 +643,15 @@ export function AuthLayout({ children }: AuthLayoutProps) {
 
           {/* TOP: Logo — #9: slide in + glitch hover on PMS */}
           <div className="flex items-center gap-5 animate-slide-right-fade" style={{ animationDelay: '0.2s' }}>
-            <div className="group relative w-20 h-20 rounded-2xl bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] flex items-center justify-center hover:bg-white/[0.18] hover:border-white/[0.3] hover:shadow-[0_0_40px_rgba(255,255,255,0.12)] transition-all duration-600 cursor-pointer">
+            <div className="group relative w-14 h-14 rounded-2xl bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] flex items-center justify-center hover:bg-white/[0.18] hover:border-white/[0.3] hover:shadow-[0_0_40px_rgba(255,255,255,0.12)] transition-all duration-600 cursor-pointer">
               {/* Pulse ring on hover */}
               <div className="absolute inset-0 rounded-2xl border border-white/[0.15] opacity-0 group-hover:animate-pulse-ring" />
-              <SparklesIcon className="w-10 h-10 text-white group-hover:scale-125 group-hover:rotate-[20deg] transition-all duration-500" />
+              <SparklesIcon className="w-7 h-7 text-white group-hover:scale-125 group-hover:rotate-[20deg] transition-all duration-500" />
             </div>
-            <div className="flex items-baseline gap-3">
+            <div className="flex items-baseline gap-2.5">
               {/* #10: PMS text with breathing glow + glitch on hover */}
-              <span className="text-5xl font-display font-bold text-white tracking-wide animate-text-glow cursor-default hover:animate-glitch transition-all" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>PMS</span>
-              <span className="text-3xl font-display font-light text-white/70 animate-text-reveal" style={{ animationDelay: '0.5s', textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>Suite</span>
+              <span className="text-4xl font-display font-bold text-white tracking-wide animate-text-glow cursor-default hover:animate-glitch transition-all" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>PMS</span>
+              <span className="text-2xl font-display font-light text-white/70 animate-text-reveal" style={{ animationDelay: '0.5s', textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>Suite</span>
             </div>
           </div>
 
@@ -644,7 +664,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
                 <h1
                   className="font-display font-black tracking-tighter text-white"
                   style={{
-                    fontSize: 'clamp(4.5rem, 8vw, 8rem)',
+                    fontSize: 'clamp(3.2rem, 6vw, 6rem)',
                     lineHeight: 1.05,
                     paddingBottom: '0.1em',
                     textShadow: '0 2px 16px rgba(0,0,0,0.7), 0 4px 40px rgba(0,0,0,0.5)',
@@ -676,7 +696,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
 
             {/* #14: Typewriter description text — Ranade font, Title Case */}
             <p
-              className="text-white/90 text-2xl xl:text-3xl leading-[1.7] mt-8 mb-7 max-w-[700px] min-h-[4em]"
+              className="text-white/90 text-lg xl:text-xl leading-[1.7] mt-6 mb-5 max-w-[600px] min-h-[4em]"
               style={{ fontFamily: "'Ranade', sans-serif", textShadow: '0 2px 12px rgba(0,0,0,0.6), 0 4px 30px rgba(0,0,0,0.4)' }}
             >
               <TypewriterText

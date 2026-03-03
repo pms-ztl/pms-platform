@@ -599,6 +599,63 @@ export class ReviewsService {
     return updatedReview;
   }
 
+  async deleteReview(
+    tenantId: string,
+    userId: string,
+    reviewId: string,
+    userRoles: string[]
+  ): Promise<void> {
+    const review = await prisma.review.findFirst({
+      where: {
+        id: reviewId,
+        tenantId,
+        deletedAt: null,
+      },
+      include: {
+        reviewee: { select: { firstName: true, lastName: true } },
+      },
+    });
+
+    if (review === null) {
+      throw new NotFoundError('Review', reviewId);
+    }
+
+    // Admin roles can delete any non-finalized review
+    const isAdmin = userRoles.some((r: string) =>
+      ['Super Admin', 'SUPER_ADMIN', 'Tenant Admin', 'TENANT_ADMIN', 'HR Admin', 'HR_ADMIN'].includes(r)
+    );
+
+    // Regular users can only delete reviews they are the reviewer of
+    if (!isAdmin && review.reviewerId !== userId) {
+      throw new AuthorizationError('You do not have permission to delete this review');
+    }
+
+    // Cannot delete already submitted/finalized/acknowledged reviews (unless admin)
+    const protectedStatuses: ReviewStatus[] = [
+      ReviewStatus.SUBMITTED,
+      ReviewStatus.CALIBRATED,
+      ReviewStatus.FINALIZED,
+      ReviewStatus.ACKNOWLEDGED,
+    ];
+
+    if (!isAdmin && protectedStatuses.includes(review.status)) {
+      throw new ValidationError('Cannot delete a review that has already been submitted');
+    }
+
+    // Soft delete
+    await prisma.review.update({
+      where: { id: reviewId },
+      data: { deletedAt: new Date() },
+    });
+
+    auditLogger('REVIEW_DELETED', userId, tenantId, 'review', reviewId, {
+      revieweeId: review.revieweeId,
+      revieweeName: `${review.reviewee.firstName} ${review.reviewee.lastName}`,
+      reviewType: review.type,
+      reviewStatus: review.status,
+    });
+  }
+
   async acknowledgeReview(tenantId: string, userId: string, reviewId: string): Promise<Review> {
     const review = await prisma.review.findFirst({
       where: {

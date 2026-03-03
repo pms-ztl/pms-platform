@@ -377,25 +377,10 @@ export function SuccessionPage() {
       <div className="space-y-4">
         {/* Summary Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <StatCard label="Total Employees" value={totalEmployees} icon={UserGroupIcon} color="primary" />
-          <StatCard
-            label="Stars"
-            value={totalEmployees > 0 ? `${quadrantSummary.stars} (${Math.round((quadrantSummary.stars / totalEmployees) * 100)}%)` : '0'}
-            icon={ShieldCheckIcon}
-            color="green"
-          />
-          <StatCard
-            label="High Potential Row"
-            value={totalEmployees > 0 ? `${quadrantSummary.highPotential} (${Math.round((quadrantSummary.highPotential / totalEmployees) * 100)}%)` : '0'}
-            icon={ChevronUpIcon}
-            color="blue"
-          />
-          <StatCard
-            label="Underperformers"
-            value={totalEmployees > 0 ? `${quadrantSummary.underperformers} (${Math.round((quadrantSummary.underperformers / totalEmployees) * 100)}%)` : '0'}
-            icon={ExclamationTriangleIcon}
-            color="red"
-          />
+          <StatCard label="Total Employees" count={totalEmployees} total={0} icon={UserGroupIcon} color="primary" />
+          <StatCard label="Stars" count={quadrantSummary.stars} total={totalEmployees} icon={ShieldCheckIcon} color="green" />
+          <StatCard label="High Potential" count={quadrantSummary.highPotential} total={totalEmployees} icon={ChevronUpIcon} color="blue" />
+          <StatCard label="Underperformers" count={quadrantSummary.underperformers} total={totalEmployees} icon={ExclamationTriangleIcon} color="red" />
         </div>
 
         {/* 9-Box Grid */}
@@ -755,7 +740,7 @@ export function SuccessionPage() {
                 <select
                   name="criticality"
                   required
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                 >
                   <option value="">Select criticality...</option>
                   <option value="CRITICAL">Critical</option>
@@ -787,7 +772,7 @@ export function SuccessionPage() {
                   <select
                     name="turnoverRisk"
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   >
                     <option value="">Select...</option>
                     <option value="HIGH">High</option>
@@ -802,7 +787,7 @@ export function SuccessionPage() {
                   <select
                     name="vacancyImpact"
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   >
                     <option value="">Select...</option>
                     <option value="SEVERE">Severe</option>
@@ -834,7 +819,7 @@ export function SuccessionPage() {
                   <select
                     name="reviewFrequency"
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   >
                     <option value="">Select...</option>
                     <option value="QUARTERLY">Quarterly</option>
@@ -946,46 +931,76 @@ export function SuccessionPage() {
 
 function StatCard({
   label,
-  value,
+  count,
+  total,
   icon: Icon,
   color,
 }: {
   label: string;
-  value: string | number;
+  count: number;
+  total: number;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   color: 'primary' | 'green' | 'blue' | 'red';
 }) {
-  const colorMap = {
-    primary: {
-      iconBg: 'bg-primary-100 dark:bg-primary-900/40',
-      iconText: 'text-primary-600 dark:text-primary-400',
-    },
-    green: {
-      iconBg: 'bg-green-100 dark:bg-green-900/40',
-      iconText: 'text-green-600 dark:text-green-400',
-    },
-    blue: {
-      iconBg: 'bg-blue-100 dark:bg-blue-900/40',
-      iconText: 'text-blue-600 dark:text-blue-400',
-    },
-    red: {
-      iconBg: 'bg-red-100 dark:bg-red-900/40',
-      iconText: 'text-red-600 dark:text-red-400',
-    },
+  const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+  const showRing = total > 0;
+
+  const ringColorMap = {
+    primary: 'text-primary-500 dark:text-primary-400',
+    green: 'text-green-500 dark:text-green-400',
+    blue: 'text-blue-500 dark:text-blue-400',
+    red: 'text-red-500 dark:text-red-400',
+  };
+  const iconBgMap = {
+    primary: 'bg-primary-100 dark:bg-primary-900/40',
+    green: 'bg-green-100 dark:bg-green-900/40',
+    blue: 'bg-blue-100 dark:bg-blue-900/40',
+    red: 'bg-red-100 dark:bg-red-900/40',
+  };
+  const iconTextMap = {
+    primary: 'text-primary-600 dark:text-primary-400',
+    green: 'text-green-600 dark:text-green-400',
+    blue: 'text-blue-600 dark:text-blue-400',
+    red: 'text-red-600 dark:text-red-400',
+  };
+  const pctTextMap = {
+    primary: 'text-primary-600 dark:text-primary-300',
+    green: 'text-green-600 dark:text-green-300',
+    blue: 'text-blue-600 dark:text-blue-300',
+    red: 'text-red-600 dark:text-red-300',
   };
 
-  const c = colorMap[color];
+  const R = 18;
+  const CIRC = 2 * Math.PI * R;
+  const offset = CIRC * (1 - pct / 100);
 
   return (
     <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-      <div className="flex flex-col gap-2">
-        <div className={clsx('p-2 rounded-lg w-fit', c.iconBg)}>
-          <Icon className={clsx('h-5 w-5', c.iconText)} />
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex flex-col gap-1.5 min-w-0">
+          <div className={clsx('p-1.5 rounded-lg w-fit', iconBgMap[color])}>
+            <Icon className={clsx('h-4 w-4', iconTextMap[color])} />
+          </div>
+          <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 leading-tight">{label}</p>
+          <p className="text-2xl font-bold text-secondary-900 dark:text-white leading-none">{count}</p>
+          {showRing && (
+            <p className="text-2xs text-secondary-400 dark:text-secondary-500">of {total} employees</p>
+          )}
         </div>
-        <div className="min-w-0">
-          <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">{label}</p>
-          <p className="text-lg font-bold text-secondary-900 dark:text-white whitespace-nowrap">{value}</p>
-        </div>
+        {showRing && (
+          <div className="relative shrink-0 w-11 h-11">
+            <svg className="w-11 h-11 -rotate-90" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r={R} fill="none" stroke="currentColor" strokeWidth="3.5"
+                className="text-secondary-200/60 dark:text-secondary-700/60" />
+              <circle cx="22" cy="22" r={R} fill="none" stroke="currentColor" strokeWidth="3.5"
+                strokeDasharray={CIRC} strokeDashoffset={offset} strokeLinecap="round"
+                className={clsx('transition-all duration-700', ringColorMap[color])} />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className={clsx('text-xs font-bold', pctTextMap[color])}>{pct}%</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

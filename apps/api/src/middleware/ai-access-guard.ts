@@ -30,6 +30,14 @@ export async function aiAccessGuard(
     return;
   }
 
+  // Help Assistant: available to ALL authenticated users regardless of AI subscription.
+  // It's a platform help feature, not a premium AI feature.
+  const agentType = (req.body as Record<string, unknown> | undefined)?.agentType;
+  if (agentType === 'help_assistant') {
+    next();
+    return;
+  }
+
   // Development mode: bypass subscription & feature checks for all users
   if (isDevelopment) {
     next();

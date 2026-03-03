@@ -107,7 +107,7 @@ function ScenarioForm({
   params: Record<string, any>;
   setParams: (p: Record<string, any>) => void;
 }) {
-  const inputCls = 'w-full text-sm rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:outline-none';
+  const inputCls = 'w-full text-sm rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 focus:outline-none transition-all duration-300';
   const labelCls = 'block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1';
 
   switch (scenario) {
@@ -197,7 +197,7 @@ export function PerformanceSimulatorPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
             <BeakerIcon className="h-7 w-7 text-primary-500" />
             Performance Simulator
           </h1>

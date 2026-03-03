@@ -333,7 +333,7 @@ export function ReportsPage() {
               <select
                 value={reportType}
                 onChange={(e) => setReportType(e.target.value)}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
               >
                 {REPORT_TYPES.map((type) => (
                   <option key={type} value={type}>
@@ -352,7 +352,7 @@ export function ReportsPage() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
               />
             </div>
 
@@ -365,7 +365,7 @@ export function ReportsPage() {
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
               />
             </div>
 
@@ -377,7 +377,7 @@ export function ReportsPage() {
               <select
                 value={scope}
                 onChange={(e) => setScope(e.target.value)}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
               >
                 {SCOPE_OPTIONS.map((s) => (
                   <option key={s} value={s}>
@@ -837,7 +837,7 @@ export function ReportsPage() {
                 <select
                   value={reportType}
                   onChange={(e) => setReportType(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 >
                   {REPORT_TYPES.map((type) => (
                     <option key={type} value={type}>
@@ -857,7 +857,7 @@ export function ReportsPage() {
                   value={scheduleCron}
                   onChange={(e) => setScheduleCron(e.target.value)}
                   placeholder="e.g., 0 9 * * 1 (Every Monday at 9 AM)"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 />
                 <p className="mt-1 text-xs text-secondary-500 dark:text-secondary-400">
                   Standard cron format: minute hour day-of-month month day-of-week
@@ -875,7 +875,7 @@ export function ReportsPage() {
                     value={scheduleStartDate}
                     onChange={(e) => setScheduleStartDate(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                   />
                 </div>
                 <div>
@@ -886,7 +886,7 @@ export function ReportsPage() {
                     type="date"
                     value={scheduleEndDate}
                     onChange={(e) => setScheduleEndDate(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-secondary-100 px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                   />
                   <p className="mt-1 text-xs text-secondary-500 dark:text-secondary-400">
                     Optional. Leave empty for no end date.

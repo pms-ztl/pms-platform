@@ -62,7 +62,7 @@ export function NotificationsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Notifications</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Notifications</h1>
           <p className="text-secondary-500 dark:text-secondary-400 text-sm mt-1">
             Stay updated with alerts, reviews, and team activity
           </p>

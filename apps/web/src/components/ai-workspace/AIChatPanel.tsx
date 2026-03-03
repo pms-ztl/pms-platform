@@ -69,8 +69,8 @@ const DEFAULT_PROMPTS = [
 function renderMessageContent(content: string, isLight: boolean): string {
   const boldClass = isLight ? 'font-semibold text-gray-900' : 'font-semibold text-white';
   const codeClass = isLight
-    ? 'rounded bg-gray-200 px-1.5 py-0.5 text-xs font-mono text-blue-700'
-    : 'rounded bg-white/10 px-1.5 py-0.5 text-xs font-mono text-cyan-300';
+    ? 'rounded bg-gray-200 px-1.5 py-0.5 text-xs font-mono text-primary-700'
+    : 'rounded bg-white/10 px-1.5 py-0.5 text-xs font-mono text-primary-300';
   const liClass = isLight ? 'ml-4 list-disc text-gray-700' : 'ml-4 list-disc text-gray-300';
 
   let html = content
@@ -206,9 +206,7 @@ export function AIChatPanel({
         {/* Empty State */}
         {messages.length === 0 && !chatMutation.isPending && (
           <div className="flex h-full flex-col items-center justify-center text-center px-6">
-            <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${
-              theme === 'deep-dark' ? 'from-cyan-500/20 to-emerald-500/20' : 'from-purple-500/20 to-cyan-500/20'
-            } mb-5`}>
+            <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-400/20 mb-5`}>
               <SparklesIcon className={`h-8 w-8 ${T.accentText(theme)}`} />
             </div>
             <h3 className={`text-lg font-semibold ${T.textPrimary(theme)} mb-2`}>
@@ -244,9 +242,9 @@ export function AIChatPanel({
           <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'assistant' && (
               <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${
-                theme === 'deep-dark' ? 'from-cyan-500/30 to-emerald-500/30' : 'from-purple-500/30 to-cyan-500/30'
+                'from-primary-500/30 to-primary-400/30'
               } mt-1`}>
-                <SparklesIcon className={`h-4 w-4 ${theme === 'deep-dark' ? 'text-cyan-300' : 'text-purple-300'}`} />
+                <SparklesIcon className={`h-4 w-4 ${'text-primary-300'}`} />
               </div>
             )}
 
@@ -267,10 +265,8 @@ export function AIChatPanel({
             </div>
 
             {msg.role === 'user' && (
-              <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${
-                theme === 'light' ? 'from-blue-500/20 to-indigo-500/20' : 'from-blue-500/30 to-indigo-500/30'
-              } mt-1`}>
-                <UserIcon className={`h-4 w-4 ${theme === 'light' ? 'text-blue-600' : 'text-blue-300'}`} />
+              <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500/20 to-primary-400/20 mt-1`}>
+                <UserIcon className={`h-4 w-4 ${theme === 'light' ? 'text-primary-600' : 'text-primary-300'}`} />
               </div>
             )}
           </div>
@@ -280,9 +276,9 @@ export function AIChatPanel({
         {chatMutation.isPending && (
           <div className="flex gap-3 justify-start">
             <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${
-              theme === 'deep-dark' ? 'from-cyan-500/30 to-emerald-500/30' : 'from-purple-500/30 to-cyan-500/30'
+              'from-primary-500/30 to-primary-400/30'
             } mt-1`}>
-              <SparklesIcon className={`h-4 w-4 ${theme === 'deep-dark' ? 'text-cyan-300' : 'text-purple-300'}`} />
+              <SparklesIcon className={`h-4 w-4 ${'text-primary-300'}`} />
             </div>
             <div className={`rounded-2xl px-4 py-3 ${T.assistantBubble(theme)}`}>
               <div className="flex items-center gap-1.5">

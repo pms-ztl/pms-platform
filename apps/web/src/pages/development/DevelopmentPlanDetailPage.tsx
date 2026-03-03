@@ -447,7 +447,7 @@ export function DevelopmentPlanDetailPage() {
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
+              <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">
                 {plan.planName}
               </h1>
               <span
@@ -778,7 +778,7 @@ export function DevelopmentPlanDetailPage() {
                         <select
                           value={editActivityStatus}
                           onChange={(e) => setEditActivityStatus(e.target.value)}
-                          className="input text-sm dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                          className="input text-sm"
                         >
                           {ACTIVITY_STATUSES.map((s) => (
                             <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
@@ -1122,7 +1122,7 @@ export function DevelopmentPlanDetailPage() {
                 <select
                   value={newActivityType}
                   onChange={(e) => setNewActivityType(e.target.value)}
-                  className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                  className="input"
                 >
                   {ACTIVITY_TYPES.map((t) => (
                     <option key={t} value={t}>{t}</option>
@@ -1201,7 +1201,7 @@ export function DevelopmentPlanDetailPage() {
                 <select
                   value={newActivityPriority}
                   onChange={(e) => setNewActivityPriority(e.target.value)}
-                  className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                  className="input"
                 >
                   {PRIORITIES.map((p) => (
                     <option key={p} value={p}>{p}</option>
@@ -1288,7 +1288,7 @@ export function DevelopmentPlanDetailPage() {
                 <select
                   value={newCheckpointType}
                   onChange={(e) => setNewCheckpointType(e.target.value)}
-                  className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                  className="input"
                 >
                   {CHECKPOINT_TYPES.map((t) => (
                     <option key={t} value={t}>{t}</option>

@@ -26,7 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             border: '1px solid rgba(148, 163, 184, 0.15)',
             borderRadius: '12px',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
-            fontSize: '13px',
+            fontSize: '14px',
             padding: '10px 14px',
             maxWidth: '340px',
           },

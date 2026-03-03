@@ -424,7 +424,7 @@ export function CalibrationPage() {
               >
                 <div>
                   <label className="label dark:text-secondary-300">Review Cycle</label>
-                  <select name="cycleId" required className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                  <select name="cycleId" required className="input">
                     <option value="">Select a review cycle...</option>
                     {cycles?.map((cycle: ReviewCycle) => (
                       <option key={cycle.id} value={cycle.id}>

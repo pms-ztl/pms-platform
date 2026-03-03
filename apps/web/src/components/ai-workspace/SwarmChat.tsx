@@ -93,6 +93,15 @@ interface ChatMessage {
   suggestedActions?: AIChatResponse['suggestedActions'];
 }
 
+// ── Accent CSS-variable helper ────────────────────────────────────
+function _pRgba(shade: number, alpha: number): string {
+  if (typeof document === 'undefined') return `rgba(99,102,241,${alpha})`;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(`--c-primary-${shade}`).trim();
+  const p = v.split(/\s+/).map(Number);
+  if (p.length !== 3 || p.some(isNaN)) return `rgba(99,102,241,${alpha})`;
+  return `rgba(${p[0]},${p[1]},${p[2]},${alpha})`;
+}
+
 // Icon type — heroicons are ForwardRefExoticComponent; we use 'as IconComponent' to cast
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type IconComponent = React.FC<any>;
@@ -119,7 +128,7 @@ const AGENT_CLUSTERS: ClusterDef[] = [
     id: 'core',
     name: 'Core',
     icon: CogIcon,
-    gradient: 'from-blue-500 to-indigo-500',
+    gradient: 'from-primary-500 to-primary-600',
     agents: [
       { type: 'performance', icon: ChartBarIcon, name: 'Performance', desc: 'Reviews & ratings' },
       { type: 'nlp_query', icon: MagnifyingGlassIcon, name: 'Data Query', desc: 'Ask about data' },
@@ -277,8 +286,8 @@ const DEFAULT_AGENT_PROMPTS = [
 function renderMarkdown(content: string, isLight: boolean): string {
   const boldClass = isLight ? 'font-semibold text-gray-900' : 'font-semibold text-white';
   const codeClass = isLight
-    ? 'rounded bg-gray-200 px-1.5 py-0.5 text-xs font-mono text-blue-700'
-    : 'rounded bg-white/10 px-1.5 py-0.5 text-xs font-mono text-cyan-300';
+    ? 'rounded bg-gray-200 px-1.5 py-0.5 text-xs font-mono text-primary-700'
+    : 'rounded bg-white/10 px-1.5 py-0.5 text-xs font-mono text-primary-300';
   const headColor = isLight ? 'text-gray-900' : 'text-white';
 
   let html = content
@@ -297,7 +306,7 @@ function renderMarkdown(content: string, isLight: boolean): string {
   html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, (_m, _lang, code) => {
     const blockClass = isLight
       ? 'rounded-lg bg-gray-100 border border-gray-200 p-3 my-2 text-xs font-mono text-gray-800 overflow-x-auto whitespace-pre-wrap'
-      : 'rounded-lg bg-black/30 border border-white/10 p-3 my-2 text-xs font-mono text-cyan-200 overflow-x-auto whitespace-pre-wrap';
+      : 'rounded-lg bg-black/30 border border-white/10 p-3 my-2 text-xs font-mono text-primary-200 overflow-x-auto whitespace-pre-wrap';
     return `<pre class="${blockClass}">${code.trim()}</pre>`;
   });
 
@@ -392,7 +401,6 @@ function AgentSidebar({
       className={`flex flex-col border-r transition-all duration-300 ${T.surface(theme)} ${T.border(theme)} ${
         selectedAgent ? 'hidden md:flex md:w-[280px] md:flex-shrink-0' : 'w-full md:w-[280px] md:flex-shrink-0'
       }`}
-      style={{ fontSize: 14 }}
     >
       {/* Header */}
       <div className={`flex items-center justify-between border-b px-3 py-2 ${T.borderLight(theme)}`}>
@@ -525,11 +533,9 @@ function TypingIndicator({ theme, agentName }: { theme: AITheme; agentName?: str
   return (
     <div className="flex gap-3 justify-start">
       <div
-        className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${
-          theme === 'deep-dark' ? 'from-cyan-500/30 to-emerald-500/30' : 'from-purple-500/30 to-cyan-500/30'
-        } mt-1`}
+        className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500/30 to-primary-400/30 mt-1`}
       >
-        <SparklesIcon className={`h-4 w-4 ${theme === 'deep-dark' ? 'text-cyan-300' : 'text-purple-300'}`} />
+        <SparklesIcon className={`h-4 w-4 text-primary-300`} />
       </div>
       <div className={`rounded-2xl px-4 py-3 ${T.assistantBubble(theme)}`}>
         {agentName && (
@@ -779,18 +785,14 @@ export function SwarmChat() {
           <div
             className="absolute -top-40 -right-40 h-[30rem] w-[30rem] rounded-full blur-3xl"
             style={{
-              background: theme === 'deep-dark'
-                ? 'radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 68%)'
-                : 'radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 68%)',
+              background: `radial-gradient(circle, ${_pRgba(400, theme === 'deep-dark' ? 0.07 : 0.08)} 0%, transparent 68%)`,
               animation: 'floatOrb 22s ease-in-out infinite',
             }}
           />
           <div
             className="absolute -bottom-40 -left-40 h-[26rem] w-[26rem] rounded-full blur-3xl"
             style={{
-              background: theme === 'deep-dark'
-                ? 'radial-gradient(circle, rgba(52,211,153,0.06) 0%, transparent 68%)'
-                : 'radial-gradient(circle, rgba(129,140,248,0.07) 0%, transparent 68%)',
+              background: `radial-gradient(circle, ${_pRgba(300, theme === 'deep-dark' ? 0.06 : 0.07)} 0%, transparent 68%)`,
               animation: 'floatOrb 28s ease-in-out infinite reverse',
               animationDelay: '6s',
             }}
@@ -830,7 +832,7 @@ export function SwarmChat() {
             <div className="flex items-center gap-3 min-w-0">
               <div
                 className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${
-                  currentCluster?.gradient ?? 'from-blue-500 to-indigo-500'
+                  currentCluster?.gradient ?? 'from-primary-500 to-primary-600'
                 } shadow-lg`}
               >
                 <currentAgent.icon className="h-5 w-5 text-white" />
@@ -931,7 +933,7 @@ export function SwarmChat() {
                         key={conv.id}
                         className={`group flex items-center gap-3 px-4 py-2.5 transition-colors cursor-pointer ${
                           isActive
-                            ? theme === 'light' ? 'bg-blue-50' : 'bg-white/[0.06]'
+                            ? theme === 'light' ? 'bg-primary-50' : 'bg-white/[0.06]'
                             : theme === 'light' ? 'hover:bg-gray-50' : 'hover:bg-white/[0.03]'
                         }`}
                         onClick={() => !isRenaming && handleLoadConversation(conv.id)}
@@ -1044,7 +1046,7 @@ export function SwarmChat() {
                 <>
                   <div
                     className={`flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${
-                      currentCluster?.gradient ?? 'from-blue-500 to-indigo-500'
+                      currentCluster?.gradient ?? 'from-primary-500 to-primary-600'
                     } mb-5 shadow-xl`}
                   >
                     <currentAgent.icon className="h-10 w-10 text-white" />
@@ -1103,12 +1105,12 @@ export function SwarmChat() {
                   <div
                     className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${
                       currentCluster?.gradient ??
-                      (theme === 'deep-dark' ? 'from-cyan-500/30 to-emerald-500/30' : 'from-purple-500/30 to-cyan-500/30')
+                      'from-primary-500/30 to-primary-400/30'
                     } mt-1`}
                   >
                     {currentAgent
                       ? <currentAgent.icon className="h-4 w-4 text-white" />
-                      : <SparklesIcon className={`h-4 w-4 ${theme === 'deep-dark' ? 'text-cyan-300' : 'text-purple-300'}`} />
+                      : <SparklesIcon className={`h-4 w-4 text-primary-300`} />
                     }
                   </div>
                 )}
@@ -1144,10 +1146,10 @@ export function SwarmChat() {
                 {msg.role === 'user' && (
                   <div
                     className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${
-                      theme === 'light' ? 'from-blue-500/20 to-indigo-500/20' : 'from-blue-500/30 to-indigo-500/30'
+                      theme === 'light' ? 'from-primary-500/20 to-primary-400/20' : 'from-primary-500/30 to-primary-400/30'
                     } mt-1`}
                   >
-                    <UserIcon className={`h-4 w-4 ${theme === 'light' ? 'text-blue-600' : 'text-blue-300'}`} />
+                    <UserIcon className={`h-4 w-4 ${theme === 'light' ? 'text-primary-600' : 'text-primary-300'}`} />
                   </div>
                 )}
               </div>
@@ -1184,7 +1186,7 @@ export function SwarmChat() {
                       }}
                       className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all duration-200 ${
                         theme === 'light'
-                          ? 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100'
+                          ? 'border-primary-200 bg-primary-50 text-primary-700 hover:bg-primary-100'
                           : `border-white/10 bg-white/5 ${T.accentText(theme)} hover:bg-white/10`
                       }`}
                     >
@@ -1239,7 +1241,7 @@ export function SwarmChat() {
         )}
 
         {/* Input Area */}
-        <div className={`border-t px-4 py-3 ${T.border(theme)}`} style={{ fontSize: 14 }}>
+        <div className={`border-t px-4 py-3 ${T.border(theme)}`}>
           <form onSubmit={handleSubmit} className="flex items-end gap-3">
             <div className="relative flex-1">
               <textarea

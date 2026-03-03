@@ -591,7 +591,7 @@ export function GoalDetailPage() {
                     type="text"
                     defaultValue={goal.title}
                     required
-                    className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                    className="input"
                   />
                 </div>
                 <div>
@@ -600,13 +600,13 @@ export function GoalDetailPage() {
                     name="description"
                     rows={3}
                     defaultValue={goal.description || ''}
-                    className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                    className="input"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="label dark:text-secondary-300">Status</label>
-                    <select name="status" defaultValue={goal.status} className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                    <select name="status" defaultValue={goal.status} className="input">
                       <option value="DRAFT">Draft</option>
                       <option value="ACTIVE">Active</option>
                       <option value="ON_HOLD">On Hold</option>
@@ -616,7 +616,7 @@ export function GoalDetailPage() {
                   </div>
                   <div>
                     <label className="label dark:text-secondary-300">Priority</label>
-                    <select name="priority" defaultValue={goal.priority} className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                    <select name="priority" defaultValue={goal.priority} className="input">
                       <option value="LOW">Low</option>
                       <option value="MEDIUM">Medium</option>
                       <option value="HIGH">High</option>
@@ -665,7 +665,7 @@ export function GoalDetailPage() {
                     max="100"
                     defaultValue={goal.progress}
                     required
-                    className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                    className="input"
                   />
                 </div>
                 <div>
@@ -798,7 +798,7 @@ export function GoalDetailPage() {
                 {/* Assignee */}
                 <div>
                   <label className="label dark:text-secondary-300">Assign To</label>
-                  <select name="ownerId" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white">
+                  <select name="ownerId" className="input">
                     <option value="">Myself</option>
                     {myReports?.map((report: User) => (
                       <option key={report.id} value={report.id}>
@@ -811,7 +811,7 @@ export function GoalDetailPage() {
                 <div className="grid grid-cols-3 gap-3">
                   <div>
                     <label className="label dark:text-secondary-300">Type</label>
-                    <select name="type" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white text-sm">
+                    <select name="type" className="input text-sm">
                       <option value="INDIVIDUAL">Individual</option>
                       <option value="TEAM">Team</option>
                       <option value="DEPARTMENT">Department</option>
@@ -820,7 +820,7 @@ export function GoalDetailPage() {
                   </div>
                   <div>
                     <label className="label dark:text-secondary-300">Priority</label>
-                    <select name="priority" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white text-sm">
+                    <select name="priority" className="input text-sm">
                       <option value="MEDIUM">Medium</option>
                       <option value="LOW">Low</option>
                       <option value="HIGH">High</option>
@@ -829,7 +829,7 @@ export function GoalDetailPage() {
                   </div>
                   <div>
                     <label className="label dark:text-secondary-300">Weight</label>
-                    <input name="weight" type="number" min="0" max="10" step="0.5" defaultValue="5" className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white text-sm" />
+                    <input name="weight" type="number" min="0" max="10" step="0.5" defaultValue="5" className="input text-sm" />
                   </div>
                 </div>
 
@@ -839,7 +839,7 @@ export function GoalDetailPage() {
                     name="dueDate"
                     type="date"
                     defaultValue={goal.dueDate ? goal.dueDate.substring(0, 10) : ''}
-                    className="input dark:bg-secondary-700 dark:border-secondary-600 dark:text-white"
+                    className="input"
                   />
                 </div>
 

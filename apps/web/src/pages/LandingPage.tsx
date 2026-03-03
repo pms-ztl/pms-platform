@@ -18,6 +18,7 @@ import {
   BeakerIcon,
   HeartIcon,
   RocketLaunchIcon,
+  ChartBarSquareIcon,
 } from '@heroicons/react/24/outline';
 
 
@@ -76,6 +77,83 @@ function useParallax(speed = 0.3) {
   return offset;
 }
 
+// ── Auto scroll-nudge: GPU-accelerated bounce with hold ─────────────────
+// Targets only the scrollable content layer (not the fixed bg video).
+// Uses translateY for GPU compositing → true 60fps.
+//
+// Timeline per cycle:
+//   0 – UP_DUR      → smooth ease up to PEAK
+//   UP_DUR – +HOLD  → hold at PEAK for 0.5s
+//   +HOLD – +DOWN   → smooth ease back down to 0
+//   +DOWN – +REST   → sit at 0, rest before next cycle
+function useScrollNudge() {
+  useEffect(() => {
+    let stopped = false;
+    let raf = 0;
+
+    const PEAK     = 120;   // max shift (px)
+    const UP_DUR   = 800;   // smooth rise (ms)
+    const HOLD     = 500;   // hold at top (ms)
+    const DOWN_DUR = 800;   // smooth release (ms)
+    const REST     = 1500;  // pause at bottom before next cycle (ms)
+    const TOTAL    = UP_DUR + HOLD + DOWN_DUR + REST;
+
+    const el = document.querySelector('.landing-scroll-content') as HTMLElement | null;
+    if (!el) return;
+
+    el.style.willChange = 'transform';
+
+    // sin² easeInOut: 0→1 smooth
+    const ease = (t: number) => { const s = Math.sin(t * Math.PI * 0.5); return s * s; };
+
+    let t0 = 0;
+    const step = (now: number) => {
+      if (stopped) return;
+      if (!t0) t0 = now;
+      const elapsed = (now - t0) % TOTAL;
+
+      let pos = 0;
+      if (elapsed < UP_DUR) {
+        // Phase 1: smooth rise
+        pos = PEAK * ease(elapsed / UP_DUR);
+      } else if (elapsed < UP_DUR + HOLD) {
+        // Phase 2: hold at peak
+        pos = PEAK;
+      } else if (elapsed < UP_DUR + HOLD + DOWN_DUR) {
+        // Phase 3: smooth release
+        const t = (elapsed - UP_DUR - HOLD) / DOWN_DUR;
+        pos = PEAK * (1 - ease(t));
+      }
+      // Phase 4 (REST): pos stays 0
+
+      el.style.transform = `translateY(${-pos}px)`;
+      raf = requestAnimationFrame(step);
+    };
+
+    const timer = setTimeout(() => { raf = requestAnimationFrame(step); }, 3000);
+
+    const stop = () => {
+      stopped = true;
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+      el.style.transform = '';
+      el.style.willChange = '';
+      detach();
+    };
+    const detach = () => {
+      window.removeEventListener('wheel', stop);
+      window.removeEventListener('touchstart', stop);
+      window.removeEventListener('mousedown', stop);
+      window.removeEventListener('keydown', stop);
+    };
+    window.addEventListener('wheel', stop, { passive: true });
+    window.addEventListener('touchstart', stop, { passive: true });
+    window.addEventListener('mousedown', stop, { passive: true });
+    window.addEventListener('keydown', stop);
+
+    return () => { stop(); };
+  }, []);
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ── AMBIENT BACKGROUND COMPONENTS ────────────────────────────────────────────
@@ -511,10 +589,79 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
 
 function ScrollDownIndicator() {
   return (
-    <div className="landing-scroll-indicator flex flex-col items-center gap-2">
-      <span className="text-white/30 text-xs tracking-[0.2em] uppercase">Scroll</span>
-      <ChevronDownIcon className="w-5 h-5 text-white/30" />
-    </div>
+    <>
+      <style>{`
+        @keyframes lsi-jump {
+          0%       { transform: translateY(0); }
+          8%       { transform: translateY(-20px); }
+          16%      { transform: translateY(0); }
+          22%      { transform: translateY(-10px); }
+          30%      { transform: translateY(0); }
+          100%     { transform: translateY(0); }
+        }
+        @keyframes lsi-wheel {
+          0%       { transform: translateY(0); opacity: 1; }
+          35%      { transform: translateY(12px); opacity: 0; }
+          36%      { transform: translateY(-4px); opacity: 0; }
+          55%      { transform: translateY(0); opacity: 1; }
+          100%     { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes lsi-chev1 {
+          0%       { transform: translateY(0); opacity: 0.3; }
+          25%      { transform: translateY(5px); opacity: 1; }
+          50%      { transform: translateY(10px); opacity: 0; }
+          51%      { transform: translateY(0); opacity: 0; }
+          75%      { opacity: 0.3; }
+          100%     { transform: translateY(0); opacity: 0.3; }
+        }
+        @keyframes lsi-chev2 {
+          0%       { transform: translateY(0); opacity: 0.15; }
+          25%      { transform: translateY(5px); opacity: 0.8; }
+          50%      { transform: translateY(10px); opacity: 0; }
+          51%      { transform: translateY(0); opacity: 0; }
+          75%      { opacity: 0.15; }
+          100%     { transform: translateY(0); opacity: 0.15; }
+        }
+      `}</style>
+      <div
+        data-always-animate
+        className="flex flex-col items-center gap-1"
+        style={{ animation: 'lsi-jump 2.8s cubic-bezier(0.3,0,0.2,1) infinite' }}
+      >
+        {/* Mouse-shaped scroll capsule */}
+        <div
+          className="relative flex justify-center pt-2"
+          style={{
+            width: 26, height: 42, borderRadius: 9999,
+            border: '2px solid rgba(255,255,255,0.45)',
+            boxShadow: '0 0 12px rgba(148,210,255,0.15), inset 0 0 6px rgba(148,210,255,0.05)',
+          }}
+        >
+          <div
+            style={{
+              width: 4, height: 10, borderRadius: 9999,
+              background: 'rgba(255,255,255,0.8)',
+              boxShadow: '0 0 6px rgba(148,210,255,0.4)',
+              animation: 'lsi-wheel 2s ease-in-out infinite',
+            }}
+          />
+        </div>
+        {/* Double cascading chevrons */}
+        <div className="flex flex-col items-center" style={{ marginTop: -2, gap: 0 }}>
+          <ChevronDownIcon
+            className="w-5 h-5"
+            style={{ color: 'rgba(255,255,255,0.55)', animation: 'lsi-chev1 1.8s ease-in-out infinite' }}
+          />
+          <ChevronDownIcon
+            className="w-5 h-5"
+            style={{ color: 'rgba(255,255,255,0.3)', marginTop: -6, animation: 'lsi-chev2 1.8s ease-in-out 0.2s infinite' }}
+          />
+        </div>
+        <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase' as const, marginTop: 2 }}>
+          Discover More
+        </span>
+      </div>
+    </>
   );
 }
 
@@ -787,6 +934,7 @@ const USPS = [
   { icon: BeakerIcon, title: 'Performance Simulator', description: 'Scenario planning and what-if analysis to model organizational changes before they happen.' },
   { icon: HeartIcon, title: 'Cultural Intelligence', description: 'Friction index analysis, burnout detection, and team health scoring for proactive intervention.' },
   { icon: RocketLaunchIcon, title: 'Rapid Deployment', description: 'Go live in days, not months — cloud-native SaaS with zero-downtime updates and automated migrations.' },
+  { icon: ChartBarSquareIcon, title: 'Advanced Analytics', description: 'CPIS radar scoring, multi-dimensional skill matrices, and predictive workforce insights with real-time dashboards.' },
 ];
 
 const BENTO_ITEMS = [
@@ -982,6 +1130,7 @@ export default function LandingPage() {
   const heroRef = useInView(0.1);
   const codeRef = useInView(0.15);
   const parallaxOffset = useParallax(0.15);
+  useScrollNudge();
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const handleVideoLoaded = useCallback(() => { if (videoRef.current) videoRef.current.playbackRate = 0.6; }, []);
@@ -1004,7 +1153,7 @@ export default function LandingPage() {
       <CursorGlow containerRef={pageRef} />
 
       {/* ═══ SCROLLABLE CONTENT ═══════════════════════════════════════════ */}
-      <div className="relative z-10">
+      <div className="landing-scroll-content relative z-10">
 
         {/* Parallax decorative elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">

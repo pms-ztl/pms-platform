@@ -14,6 +14,7 @@ import {
   PhotoIcon,
   SparklesIcon,
   IdentificationIcon,
+  TrashIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
@@ -138,6 +139,20 @@ export function ProfilePage() {
     },
     onError: (error) => {
       toast.error(error instanceof Error ? error.message : 'Failed to set AI avatar');
+    },
+  });
+
+  const removeAvatarMutation = useMutation({
+    mutationFn: () => usersApi.removeAvatar(),
+    onSuccess: () => {
+      if (user) {
+        setUser({ ...user, avatarUrl: null as any });
+      }
+      setShowAvatarModal(false);
+      toast.success('Profile photo removed');
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to remove profile photo');
     },
   });
 
@@ -591,6 +606,20 @@ export function ProfilePage() {
                   <p className="text-sm text-primary-600 dark:text-primary-400 mt-2">Uploading...</p>
                 )}
               </div>
+
+              {/* Remove current photo */}
+              {user?.avatarUrl && (
+                <div className="mb-6">
+                  <button
+                    onClick={() => removeAvatarMutation.mutate()}
+                    disabled={removeAvatarMutation.isPending}
+                    className="flex w-full items-center justify-center gap-2 py-2.5 rounded-lg border border-red-200 dark:border-red-800/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all text-sm font-medium disabled:opacity-50"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                    {removeAvatarMutation.isPending ? 'Removing...' : 'Remove Current Photo'}
+                  </button>
+                </div>
+              )}
 
               {/* AI Avatars */}
               <div>

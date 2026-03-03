@@ -108,7 +108,7 @@ function FieldEditor({
         <select
           value={val}
           onChange={(e) => setVal(e.target.value)}
-          className="text-xs rounded-md border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white px-2 py-1 focus:ring-1 focus:ring-primary-500 focus:outline-none"
+          className="text-xs rounded-md border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-2 py-1 focus:ring-1 focus:ring-primary-500/50 focus:outline-none backdrop-blur-sm transition-all duration-300"
         >
           <option value="">Select...</option>
           {(field.options || []).map((opt) => (
@@ -175,7 +175,7 @@ function AddFieldForm({ onAdd, onCancel }: { onAdd: (f: CustomField) => void; on
         <select
           value={type}
           onChange={(e) => setType(e.target.value as FieldType)}
-          className="text-xs rounded-md border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-white px-2 py-1 focus:ring-1 focus:ring-primary-500 focus:outline-none"
+          className="text-xs rounded-md border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-2 py-1 focus:ring-1 focus:ring-primary-500/50 focus:outline-none backdrop-blur-sm transition-all duration-300"
         >
           {FIELD_TYPES.map((ft) => (
             <option key={ft.value} value={ft.value}>{ft.label}</option>

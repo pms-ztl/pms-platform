@@ -221,7 +221,7 @@ export function SkillGapHeatmapPage() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Skill Gap Analytics</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Skill Gap Analytics</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Loading skill data...</p>
         </div>
         <PageSkeleton />
@@ -232,7 +232,7 @@ export function SkillGapHeatmapPage() {
   if (gaps.length === 0 && heatmap.length === 0) {
     return (
       <div className="p-6 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white mb-6">Skill Gap Analytics</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white mb-6">Skill Gap Analytics</h1>
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-12 text-center">
           <PuzzlePieceIcon className="h-12 w-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">No Skill Data Available</h3>
@@ -256,7 +256,7 @@ export function SkillGapHeatmapPage() {
           <select
             value={selectedCategory ?? ''}
             onChange={(e) => setSelectedCategory(e.target.value || null)}
-            className="text-sm border border-secondary-300 dark:border-secondary-600 rounded-lg px-2 sm:px-3 py-1.5 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 max-w-[160px] sm:max-w-none truncate"
+            className="text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-2 sm:px-3 py-1.5 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 max-w-[160px] sm:max-w-none truncate transition-all duration-300"
           >
             <option value="">All Categories</option>
             {uniqueCategories.map((cat) => (

@@ -190,7 +190,7 @@ export function SASystemPage() {
     return (
       <div className="space-y-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">System Configuration</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">System Configuration</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading configuration...</p>
         </div>
         <div className="flex justify-center py-16">
@@ -204,7 +204,7 @@ export function SASystemPage() {
     <div className="space-y-4">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">System Configuration</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">System Configuration</h1>
         <p className="mt-1 text-secondary-600 dark:text-secondary-400">
           Manage platform-wide settings, email, security, and maintenance
         </p>
@@ -318,7 +318,7 @@ export function SASystemPage() {
                 <select
                   value={generalForm.defaultPlan}
                   onChange={(e) => setGeneralForm((f) => ({ ...f, defaultPlan: e.target.value }))}
-                  className="w-full max-w-xs rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full max-w-xs rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
                 >
                   <option value="FREE">Free</option>
                   <option value="STARTER">Starter</option>

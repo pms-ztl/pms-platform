@@ -348,7 +348,7 @@ export function PromotionsPage() {
         <select
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
         >
           {PROMOTION_STATUSES.map((s) => (
             <option key={s} value={s}>{s === 'ALL' ? 'All Statuses' : statusLabels[s] || s}</option>
@@ -357,7 +357,7 @@ export function PromotionsPage() {
         <select
           value={typeFilter}
           onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
         >
           {PROMOTION_TYPES.map((t) => (
             <option key={t} value={t}>{t === 'ALL' ? 'All Types' : typeLabels[t] || t}</option>
@@ -511,7 +511,7 @@ export function PromotionsPage() {
                     value={formEmployeeId}
                     onChange={(e) => setFormEmployeeId(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   >
                     <option value="">Select an employee...</option>
                     {(reports || []).map((r: any) => (
@@ -536,7 +536,7 @@ export function PromotionsPage() {
                       if (newType === 'LEVEL_PROMOTION') { setFormProposedRole(''); }
                       if (newType === 'TITLE_CHANGE' || newType === 'LATERAL_MOVE') { setFormProposedLevel(''); }
                     }}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   >
                     {PROMOTION_TYPES.filter((t) => t !== 'ALL').map((t) => (
                       <option key={t} value={t}>{typeLabels[t]}</option>
@@ -636,7 +636,7 @@ export function PromotionsPage() {
                     type="date"
                     value={formEffectiveDate}
                     onChange={(e) => setFormEffectiveDate(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   />
                 </div>
 
@@ -753,7 +753,7 @@ export function PromotionsPage() {
                     type="date"
                     value={deferUntil}
                     onChange={(e) => setDeferUntil(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
                   />
                 </div>
                 <div className="flex justify-end gap-3 pt-2">

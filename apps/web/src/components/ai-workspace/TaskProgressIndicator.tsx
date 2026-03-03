@@ -33,7 +33,7 @@ const STATUS_ICON: Record<string, typeof BoltIcon> = {
 };
 
 const STATUS_COLOR: Record<string, string> = {
-  planning: 'text-blue-400',
+  planning: 'text-primary-400',
   executing: 'text-amber-400',
   completed: 'text-emerald-400',
   failed: 'text-red-400',

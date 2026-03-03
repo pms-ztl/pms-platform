@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect, useRef, useCallback } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Dialog, Transition, Menu } from '@headlessui/react';
 import {
@@ -52,7 +52,7 @@ function NavLink({
       title={collapsed ? item.name : undefined}
       className={clsx(
         'group relative flex items-center rounded-lg text-sm font-medium transition-all duration-200',
-        collapsed ? 'justify-center p-2.5' : 'gap-x-2.5 px-2.5 py-1.5',
+        collapsed ? 'justify-center p-2.5' : 'gap-x-2 px-2.5 py-1.5',
         isActive
           ? 'bg-primary-500/10 text-primary-700 dark:text-primary-300 shadow-[inset_0_1px_0_rgba(139,92,246,0.1)] sidebar-glow-active'
           : 'text-secondary-500 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-white/[0.04] hover:text-secondary-900 dark:hover:text-secondary-200'
@@ -74,7 +74,7 @@ function NavLink({
         )}
         aria-hidden="true"
       />
-      {!collapsed && item.name}
+      {!collapsed && <span className="truncate">{item.name}</span>}
     </Link>
   );
 }
@@ -101,7 +101,12 @@ function NavSectionGroup({
   if (filtered.length === 0) return null;
 
   const hasActiveChild = filtered.some((item) => pathname === item.href || pathname.startsWith(item.href + '/'));
-  const [isOpen, setIsOpen] = useState(!section.collapsible || hasActiveChild);
+  const [isOpen, setIsOpen] = useState(true);
+
+  // Auto-open section when a child route becomes active
+  useEffect(() => {
+    if (hasActiveChild && !isOpen) setIsOpen(true);
+  }, [hasActiveChild]);
 
   if (collapsed) {
     return (
@@ -123,7 +128,7 @@ function NavSectionGroup({
           section.collapsible && 'cursor-pointer group'
         )}
       >
-        <span className="text-xs font-bold tracking-[0.1em] text-secondary-600 dark:text-primary-400/40 flex-1 text-left">
+        <span className="text-xs font-bold tracking-[0.1em] text-secondary-600 dark:text-primary-400/40 flex-1 text-left truncate">
           {section.label}
         </span>
         {section.collapsible && (
@@ -158,8 +163,6 @@ function SidebarContent({
   collapsed,
   onNavigate,
   onToggleCollapse,
-  onAIWorkspaceClick,
-  isAiMode,
 }: {
   userRoles: string[];
   isAdmin: boolean;
@@ -167,8 +170,6 @@ function SidebarContent({
   collapsed?: boolean;
   onNavigate?: () => void;
   onToggleCollapse?: () => void;
-  onAIWorkspaceClick: () => void;
-  isAiMode: boolean;
 }) {
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -187,36 +188,6 @@ function SidebarContent({
             <LiveIndicator />
           </div>
         )}
-      </div>
-
-      {/* Neural Swarm AI entry button */}
-      <div className="shrink-0 px-2 py-2 border-b border-secondary-200 dark:border-white/[0.06]">
-        <button
-          onClick={onAIWorkspaceClick}
-          title={collapsed ? (isAiMode ? 'Exit AI Workspace' : 'Neural Swarm AI') : undefined}
-          className={clsx(
-            'w-full flex items-center rounded-lg transition-all duration-300',
-            collapsed ? 'justify-center p-2.5' : 'gap-x-2.5 px-3 py-2',
-            isAiMode
-              ? 'bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 border border-cyan-500/30 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.15)]'
-              : 'bg-gradient-to-r from-indigo-500/10 to-purple-500/10 hover:from-indigo-500/20 hover:to-purple-500/20 border border-indigo-500/20 hover:border-indigo-500/35 text-indigo-600 dark:text-indigo-300 hover:text-indigo-700 dark:hover:text-indigo-200'
-          )}
-        >
-          <CpuChipIcon className={clsx('shrink-0', collapsed ? 'h-5 w-5' : 'h-4 w-4')} />
-          {!collapsed && (
-            <>
-              <span className="flex-1 text-left text-sm font-medium break-words">
-                {isAiMode ? 'Exit AI Mode' : 'Neural Swarm AI'}
-              </span>
-              {isAiMode && (
-                <span className="relative flex h-1.5 w-1.5 shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                </span>
-              )}
-            </>
-          )}
-        </button>
       </div>
 
       {/* Scrollable nav */}
@@ -258,13 +229,13 @@ function SidebarContent({
           <button
             onClick={onToggleCollapse}
             className={clsx(
-              'flex w-full items-center rounded-lg p-2 text-secondary-500 dark:text-secondary-500 hover:bg-secondary-100 dark:hover:bg-white/[0.04] hover:text-secondary-800 dark:hover:text-secondary-300 transition-colors',
-              collapsed ? 'justify-center' : 'gap-2 px-3'
+              'flex w-full items-center rounded-lg text-sm font-medium text-secondary-500 dark:text-secondary-500 hover:bg-secondary-100 dark:hover:bg-white/[0.04] hover:text-secondary-800 dark:hover:text-secondary-300 transition-colors',
+              collapsed ? 'justify-center p-2.5' : 'gap-x-2 px-2.5 py-1.5'
             )}
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <ChevronRightIcon className={clsx('h-4 w-4 transition-transform duration-200', !collapsed && 'rotate-180')} />
-            {!collapsed && <span className="text-sm font-medium">Collapse</span>}
+            <ChevronRightIcon className={clsx('h-4 w-4 shrink-0 transition-transform duration-200', !collapsed && 'rotate-180')} />
+            {!collapsed && <span className="truncate">Collapse</span>}
           </button>
         )}
       </div>
@@ -272,11 +243,26 @@ function SidebarContent({
   );
 }
 
+// ── Sidebar resize constants ─────────────────────────────────────────────
+const SIDEBAR_MIN = 180;
+const SIDEBAR_MAX = 320;
+const SIDEBAR_DEFAULT = 208;
+const SIDEBAR_COLLAPSED = 64;
+const SIDEBAR_AUTO_COLLAPSE = 140;
+
 // ── Main Layout ──────────────────────────────────────────────────────────
 
 export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() =>
+    localStorage.getItem('sidebar-collapsed') === 'true',
+  );
+  const [sidebarW, setSidebarW] = useState(() => {
+    const saved = localStorage.getItem('sidebar-width');
+    return saved ? Math.max(SIDEBAR_MIN, Math.min(SIDEBAR_MAX, Number(saved))) : SIDEBAR_DEFAULT;
+  });
+  const isResizingRef = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout, refreshToken } = useAuthStore();
@@ -316,10 +302,144 @@ export function DashboardLayout() {
   // Route change loading bar
   useRouteChangeLoader();
 
+  // ── Sidebar drag-resize handlers ──────────────────────────────────────
+  // ZERO React re-renders during drag: direct DOM manipulation only.
+  // State is synced back on mouseup with snap animation.
+  const sidebarElRef = useRef<HTMLDivElement>(null);
+  const contentElRef = useRef<HTMLDivElement>(null);
+  const SNAP_TO_COLLAPSE = 110; // drag left past this → collapse
+  const SNAP_TO_EXPAND = SIDEBAR_MIN; // drag right past this → fully expanded
+
+  const startResize = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    isResizingRef.current = true;
+    setIsDragging(true);
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+
+    const sidebarEl = sidebarElRef.current;
+    const contentEl = contentElRef.current;
+    let dragW = sidebarCollapsed ? SIDEBAR_COLLAPSED : sidebarW;
+    const startedCollapsed = sidebarCollapsed;
+
+    // Kill transitions during drag for instant feedback
+    if (sidebarEl) sidebarEl.style.transition = 'none';
+    if (contentEl) contentEl.style.transition = 'none';
+
+    const onMouseMove = (ev: MouseEvent) => {
+      if (!isResizingRef.current) return;
+      const x = ev.clientX;
+
+      if (startedCollapsed) {
+        // ── Expanding from collapsed: follow mouse immediately ──
+        // Width tracks the cursor from collapsed (64) up to SIDEBAR_MAX.
+        // Below collapsed → clamp to collapsed. Between collapsed and
+        // SIDEBAR_MIN → visual feedback (sidebar grows with icons).
+        // Past SIDEBAR_MIN → normal expanded sizing.
+        if (x <= SIDEBAR_COLLAPSED) {
+          dragW = SIDEBAR_COLLAPSED;
+        } else if (x >= SIDEBAR_MIN) {
+          dragW = Math.min(SIDEBAR_MAX, x);
+        } else {
+          // Between collapsed and min: show visual growth so drag feels alive
+          dragW = x;
+        }
+      } else {
+        // ── Normal expanded drag ──
+        if (x < SNAP_TO_COLLAPSE) {
+          dragW = SIDEBAR_COLLAPSED;
+        } else {
+          dragW = Math.max(SIDEBAR_MIN, Math.min(SIDEBAR_MAX, x));
+        }
+      }
+
+      // Direct DOM update — zero React re-renders
+      if (sidebarEl) sidebarEl.style.width = `${dragW}px`;
+      if (contentEl) contentEl.style.paddingLeft = `${dragW}px`;
+    };
+
+    const onMouseUp = () => {
+      isResizingRef.current = false;
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
+
+      // ── Snap decision ──
+      // If final width is between collapsed and SIDEBAR_MIN, snap to
+      // whichever is closer (with bias toward expanding if past midpoint).
+      const midpoint = (SIDEBAR_COLLAPSED + SIDEBAR_MIN) / 2;
+      let finalCollapsed: boolean;
+      let finalW: number;
+
+      if (dragW <= SIDEBAR_COLLAPSED) {
+        finalCollapsed = true;
+        finalW = SIDEBAR_COLLAPSED;
+      } else if (dragW >= SIDEBAR_MIN) {
+        finalCollapsed = false;
+        finalW = dragW;
+      } else if (dragW >= midpoint) {
+        // Past midpoint → snap open to SIDEBAR_MIN
+        finalCollapsed = false;
+        finalW = SIDEBAR_MIN;
+      } else {
+        // Before midpoint → snap back to collapsed
+        finalCollapsed = true;
+        finalW = SIDEBAR_COLLAPSED;
+      }
+
+      // Animate the snap with a brief transition
+      if (sidebarEl) {
+        sidebarEl.style.transition = 'width 0.2s ease-out';
+        sidebarEl.style.width = `${finalW}px`;
+      }
+      if (contentEl) {
+        contentEl.style.transition = 'padding-left 0.2s ease-out';
+        contentEl.style.paddingLeft = `${finalW}px`;
+      }
+
+      // Clear inline transitions after snap animation completes
+      setTimeout(() => {
+        if (sidebarEl) sidebarEl.style.transition = '';
+        if (contentEl) contentEl.style.transition = '';
+      }, 250);
+
+      // Sync final state to React (single re-render)
+      setSidebarCollapsed(finalCollapsed);
+      if (!finalCollapsed) setSidebarW(finalW);
+      localStorage.setItem('sidebar-collapsed', String(finalCollapsed));
+      if (!finalCollapsed) localStorage.setItem('sidebar-width', String(finalW));
+      setIsDragging(false);
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  }, [sidebarCollapsed, sidebarW]);
+
+  // Persist width to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('sidebar-width', String(sidebarW));
+  }, [sidebarW]);
+
+  const handleDoubleClickResize = useCallback(() => {
+    setSidebarW(SIDEBAR_DEFAULT);
+    setSidebarCollapsed(false);
+    localStorage.setItem('sidebar-width', String(SIDEBAR_DEFAULT));
+    localStorage.setItem('sidebar-collapsed', 'false');
+  }, []);
+
+  const handleToggleCollapse = useCallback(() => {
+    const next = !sidebarCollapsed;
+    setSidebarCollapsed(next);
+    localStorage.setItem('sidebar-collapsed', String(next));
+  }, [sidebarCollapsed]);
+
+  // Computed pixel values for inline styles
+  const effectiveSidebarPx = sidebarCollapsed ? SIDEBAR_COLLAPSED : sidebarW;
+
   const userRoles = user?.roles ?? [];
   const isAdmin = userRoles.some((r: string) => ['SUPER_ADMIN', 'HR_ADMIN', 'ADMIN'].includes(r));
-  const sidebarWidth = sidebarCollapsed ? 'w-16' : 'w-56';
-  const contentPadding = sidebarCollapsed ? 'lg:pl-16' : 'lg:pl-56';
 
   const handleLogout = async () => {
     try {
@@ -381,14 +501,12 @@ export function DashboardLayout() {
                   </div>
                 </Transition.Child>
 
-                <div className="flex grow flex-col bg-white dark:bg-surface-dark" style={{ fontSize: 14 }}>
+                <div className="flex grow flex-col bg-white dark:bg-surface-dark">
                   <SidebarContent
                     userRoles={userRoles}
                     isAdmin={isAdmin}
                     pathname={location.pathname}
                     onNavigate={() => setSidebarOpen(false)}
-                    onAIWorkspaceClick={() => { handleAIWorkspaceToggle(); setSidebarOpen(false); }}
-                    isAiMode={isAiMode}
                   />
                 </div>
               </Dialog.Panel>
@@ -399,27 +517,42 @@ export function DashboardLayout() {
 
       {/* Desktop sidebar */}
       <div
+        ref={sidebarElRef}
         className={clsx(
-          'hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col transition-all duration-300',
-          sidebarWidth,
+          'hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col',
+          !isDragging ? 'transition-all duration-300' : 'transition-[width] duration-150 ease-out',
           aiTransitionPhase !== 'idle' && 'opacity-0 blur-sm pointer-events-none'
         )}
+        style={{ width: effectiveSidebarPx }}
       >
-        <div className="flex grow flex-col overflow-hidden bg-white dark:bg-surface-dark border-r border-secondary-200/60 dark:border-white/[0.06] frosted-noise" style={{ fontSize: 14 }}>
+        <div className="relative flex grow flex-col overflow-hidden bg-white dark:bg-surface-dark border-r border-secondary-200/60 dark:border-white/[0.06] frosted-noise">
           <SidebarContent
             userRoles={userRoles}
             isAdmin={isAdmin}
             pathname={location.pathname}
             collapsed={sidebarCollapsed}
-            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-            onAIWorkspaceClick={handleAIWorkspaceToggle}
-            isAiMode={isAiMode}
+            onToggleCollapse={handleToggleCollapse}
           />
+          {/* Resize drag handle — always visible so user can drag-expand from collapsed */}
+          {aiTransitionPhase === 'idle' && (
+            <div
+              onMouseDown={startResize}
+              onDoubleClick={handleDoubleClickResize}
+              className="absolute top-0 right-0 w-[6px] h-full cursor-col-resize z-[60] group"
+            >
+              <div className="absolute inset-0 bg-transparent group-hover:bg-primary-500/10 active:bg-primary-500/20 transition-colors duration-200" />
+              <div className="absolute top-1/2 -translate-y-1/2 right-[1px] w-[3px] h-10 rounded-full bg-primary-500/0 group-hover:bg-primary-500/50 active:bg-primary-500/70 transition-all duration-200" />
+            </div>
+          )}
         </div>
       </div>
 
       {/* Main content */}
-      <div className={clsx('flex-1 flex flex-col min-h-0 transition-all duration-300', contentPadding)}>
+      <div
+        ref={contentElRef}
+        className={clsx('flex-1 flex flex-col min-h-0 sidebar-content-offset', !isDragging ? 'transition-all duration-300' : 'transition-[padding] duration-150 ease-out')}
+        style={{ paddingLeft: effectiveSidebarPx }}
+      >
         {/* Top bar */}
         <div className={clsx(
           'sticky top-0 z-40 flex h-14 shrink-0 items-center gap-x-4 glass-nav px-4 sm:gap-x-6 sm:px-6 lg:px-8 transition-all duration-300',
@@ -439,22 +572,25 @@ export function DashboardLayout() {
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1" />
             <div className="flex items-center gap-x-4 lg:gap-x-5">
-              {/* Neural Swarm AI quick-toggle */}
+              {/* Neural Swarm AI — primary entry point (top bar utility) */}
               <button
                 onClick={handleAIWorkspaceToggle}
-                title={isAiMode ? 'Exit AI Workspace' : 'Open Neural Swarm AI'}
+                title={isAiMode ? 'Exit AI Workspace (Ctrl+Shift+A)' : 'Open Neural Swarm AI (Ctrl+Shift+A)'}
                 className={clsx(
-                  'relative flex h-8 w-8 items-center justify-center rounded-lg transition-all duration-200',
+                  'relative flex items-center gap-1.5 rounded-lg transition-all duration-200',
                   isAiMode
-                    ? 'bg-gradient-to-br from-cyan-500/25 to-emerald-500/25 text-cyan-400 ring-1 ring-cyan-500/40 shadow-[0_0_10px_rgba(34,211,238,0.2)]'
-                    : 'text-secondary-500 dark:text-secondary-400 hover:bg-white/[0.06] hover:text-secondary-200 dark:hover:text-white'
+                    ? 'h-8 px-2.5 bg-gradient-to-r from-cyan-500/20 to-emerald-500/20 text-cyan-400 ring-1 ring-cyan-500/40 shadow-[0_0_10px_rgba(34,211,238,0.2)]'
+                    : 'h-8 px-2.5 bg-primary-500/10 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300 ring-1 ring-primary-500/20 dark:ring-primary-400/20 hover:bg-primary-500/20 dark:hover:bg-primary-500/25 hover:ring-primary-500/35'
                 )}
               >
-                <CpuChipIcon className="h-5 w-5" />
+                <CpuChipIcon className="h-4 w-4 shrink-0" />
+                <span className="hidden sm:inline text-xs font-semibold tracking-tight">
+                  {isAiMode ? 'Exit AI' : 'AI'}
+                </span>
                 {isAiMode && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                  <span className="relative flex h-1.5 w-1.5 shrink-0">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-400" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan-400" />
                   </span>
                 )}
               </button>

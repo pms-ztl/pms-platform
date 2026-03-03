@@ -338,7 +338,7 @@ export function AnalyticsPage() {
         <select
           value={selectedCycleId}
           onChange={(e) => setSelectedCycleId(e.target.value)}
-          className="input w-64 dark:bg-secondary-800 dark:border-secondary-700 dark:text-white"
+          className="input w-64"
         >
           <option value="">All Cycles</option>
           {cycles?.map((cycle: ReviewCycle) => (

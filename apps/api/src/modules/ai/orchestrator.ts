@@ -37,6 +37,7 @@ import { PerformanceSignalAgent } from './agents/performance-signal.agent';
 import { ReviewDrafterAgent } from './agents/review-drafter.agent';
 import { CompensationPromotionAgent } from './agents/compensation-promotion.agent';
 import { OneOnOneAdvisorAgent } from './agents/one-on-one-advisor.agent';
+import { HelpAssistantAgent } from './agents/help-assistant.agent';
 
 // ── Lazy imports: Bio-Performance cluster ────────────────
 
@@ -126,6 +127,7 @@ const AGENT_TYPES = [
   // Primary Agents (5 new)
   'goal_intelligence', 'performance_signal', 'review_drafter', 'compensation_promotion',
   'one_on_one_advisor',
+  'help_assistant',
   // Bio-Performance (10)
   'neuro_focus', 'circadian_sync', 'micro_break', 'cortisol_monitor',
   'ergonomics', 'sleep_optimizer', 'hydration_nutrition', 'vocal_tone',
@@ -166,6 +168,7 @@ const CLUSTER_MAP: Record<ClusterId, readonly string[]> = {
     // Primary Agents
     'goal_intelligence', 'performance_signal', 'review_drafter', 'compensation_promotion',
     'one_on_one_advisor',
+    'help_assistant',
   ],
   bio_performance: [
     'neuro_focus', 'circadian_sync', 'micro_break', 'cortisol_monitor',
@@ -243,6 +246,7 @@ Available agents:
 - conflict_resolution: Team conflicts, friction, toxic communication, morale issues
 - talent_marketplace: Internal mobility, skill marketplace, project matching
 - strategic_alignment: OKR alignment, strategy shifts, milestone tracking, 1:1 prep
+- help_assistant: PMS help, how-to questions, platform guides, FAQ, system overview, "how do I", "what is", "help me understand", getting started, navigating the platform
 
 Respond with ONLY the agent type, nothing else.`,
 
@@ -364,6 +368,7 @@ class AgentOrchestrator {
     f.set('review_drafter', () => new ReviewDrafterAgent());
     f.set('compensation_promotion', () => new CompensationPromotionAgent());
     f.set('one_on_one_advisor', () => new OneOnOneAdvisorAgent());
+    f.set('help_assistant', () => new HelpAssistantAgent());
     // Bio-Performance (10)
     f.set('neuro_focus', () => new NeuroFocusAgent());
     f.set('circadian_sync', () => new CircadianSyncAgent());

@@ -22,11 +22,11 @@ interface QuickAction {
 }
 
 const QUICK_ACTIONS: QuickAction[] = [
-  { id: 'draft-review', label: 'Draft Review', icon: DocumentTextIcon, prompt: 'Help me draft a performance review for my direct report. Walk me through the key areas to cover.', gradient: 'from-purple-500/20 to-violet-500/20' },
-  { id: 'set-goals', label: 'Set Goals', icon: FlagIcon, prompt: 'Help me create SMART goals for the upcoming quarter. Consider my team\'s current performance data.', gradient: 'from-blue-500/20 to-indigo-500/20' },
-  { id: 'team-report', label: 'Team Report', icon: UserGroupIcon, prompt: 'Generate a comprehensive team performance report including key metrics, trends, and recommendations.', gradient: 'from-cyan-500/20 to-teal-500/20' },
-  { id: 'analyze-performance', label: 'Analyze Performance', icon: ChartBarIcon, prompt: 'Analyze my team\'s performance trends over the past quarter. Highlight any outliers or concerning patterns.', gradient: 'from-emerald-500/20 to-green-500/20' },
-  { id: 'security-check', label: 'Security Check', icon: ShieldCheckIcon, prompt: 'Run a security audit check. Show me any unusual login activity, access violations, or security alerts.', gradient: 'from-rose-500/20 to-red-500/20' },
+  { id: 'draft-review', label: 'Draft Review', icon: DocumentTextIcon, prompt: 'Help me draft a performance review for my direct report. Walk me through the key areas to cover.', gradient: 'from-primary-500/20 to-primary-400/20' },
+  { id: 'set-goals', label: 'Set Goals', icon: FlagIcon, prompt: 'Help me create SMART goals for the upcoming quarter. Consider my team\'s current performance data.', gradient: 'from-primary-500/15 to-primary-300/15' },
+  { id: 'team-report', label: 'Team Report', icon: UserGroupIcon, prompt: 'Generate a comprehensive team performance report including key metrics, trends, and recommendations.', gradient: 'from-primary-600/20 to-primary-500/20' },
+  { id: 'analyze-performance', label: 'Analyze Performance', icon: ChartBarIcon, prompt: 'Analyze my team\'s performance trends over the past quarter. Highlight any outliers or concerning patterns.', gradient: 'from-primary-400/20 to-primary-300/20' },
+  { id: 'security-check', label: 'Security Check', icon: ShieldCheckIcon, prompt: 'Run a security audit check. Show me any unusual login activity, access violations, or security alerts.', gradient: 'from-primary-600/15 to-primary-500/15' },
 ];
 
 interface QuickActionsRibbonProps { onAction: (prompt: string) => void; }

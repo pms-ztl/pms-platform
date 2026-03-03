@@ -15,6 +15,7 @@ import { prisma } from '@pms/database';
 
 import { logger, auditLogger } from '../../utils/logger';
 import type { RoleCategory } from './base-agent';
+import { chatService } from '../chat/chat.service';
 
 // ── Import existing tool functions ───────────────────────
 
@@ -1711,6 +1712,52 @@ const WRITE_TOOLS: ToolDefinition[] = [
     execute: async (tenantId, userId, params) =>
       createPerformanceBenchmark(tenantId, userId, params as any),
   },
+  {
+    name: 'send_email',
+    description:
+      'Send an email to a colleague within the same organization. The recipient must be an active user in the tenant. Emails are sent via the PMS platform SMTP service with a branded template.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        to: { type: 'string', description: 'Recipient email address (must be an active user in the organization)' },
+        subject: { type: 'string', description: 'Email subject line (required)' },
+        body: { type: 'string', description: 'Email body text (plain text, required)' },
+      },
+      required: ['to', 'subject', 'body'],
+    },
+    impactLevel: 'high_write',
+    requiresApproval: true,
+    execute: async (tenantId, userId, params) => {
+      try {
+        // Look up the sender's details
+        const sender = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { id: true, email: true, firstName: true, lastName: true },
+        });
+        if (!sender) {
+          return { success: false, data: null, error: 'Sender user not found' };
+        }
+
+        const result = await chatService.sendEmail(
+          { id: sender.id, email: sender.email, firstName: sender.firstName, lastName: sender.lastName },
+          tenantId,
+          params.to as string,
+          params.subject as string,
+          params.body as string,
+        );
+
+        auditLogger('AI_SEND_EMAIL', userId, tenantId, 'email', undefined, {
+          to: params.to,
+          subject: params.subject,
+        });
+
+        return { success: true, data: result };
+      } catch (err) {
+        logger.error('send_email tool failed', { tenantId, userId, error: (err as Error).message });
+        return { success: false, data: null, error: (err as Error).message };
+      }
+    },
+  },
 ];
 
 // ── Delegation Tool (Inter-Agent Communication) ────────────
@@ -1790,6 +1837,7 @@ export class ToolRegistry {
       'create_innovation_contribution', // Submit own innovation ideas
       'create_calendar_event',       // Create own calendar events
       'log_skill_progress',          // Track own skill progression
+      'send_email',                  // Send email to colleagues (requires approval)
     ]);
 
     return Array.from(this.tools.values()).filter((t) => {

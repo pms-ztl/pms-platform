@@ -284,7 +284,7 @@ export function SATenantsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Tenants</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Tenants</h1>
           <p className="mt-1 text-gray-600 dark:text-gray-400">
             Manage organizations and their subscriptions
           </p>
@@ -312,7 +312,7 @@ export function SATenantsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
           >
             {STATUS_OPTIONS.map((status) => (
               <option key={status} value={status}>
@@ -491,7 +491,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
                   <select
                     value={plan}
                     onChange={(e) => setPlan(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
                   >
                     {PLAN_OPTIONS.map((p) => (
                       <option key={p} value={p}>
@@ -523,7 +523,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
                 <select
                   value={maxLevel}
                   onChange={(e) => setMaxLevel(Number(e.target.value))}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
                 >
                   {LEVEL_OPTIONS.map((l) => (
                     <option key={l} value={l}>
@@ -688,7 +688,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
                           updated[idx] = { ...updated[idx], category: e.target.value };
                           setCustomRoles(updated);
                         }}
-                        className="w-28 px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-28 px-2 py-1.5 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
                       >
                         <option value="ADMIN">Admin</option>
                         <option value="HR">HR</option>

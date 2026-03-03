@@ -108,6 +108,12 @@ router.post(
   (req, res, next) => usersController.setAiAvatar(req, res, next)
 );
 
+// Remove avatar for current user
+router.delete(
+  '/me/avatar',
+  (req, res, next) => usersController.removeAvatar(req, res, next)
+);
+
 // Designated manager assignment (Tenant Admin / HR Admin only)
 router.put(
   '/designated-manager',

@@ -10,6 +10,7 @@ import clsx from 'clsx';
 
 import { useAuthStore } from '@/store/auth';
 import { useThemeStore } from '@/store/theme';
+import { ACCENT_COLORS, type AccentColor } from '@/lib/accent-colors';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { PageHeader } from '@/components/ui';
 
@@ -18,7 +19,7 @@ type SettingsTab = 'notifications' | 'appearance' | 'privacy' | 'organization';
 export function SettingsPage() {
   usePageTitle('Settings');
   const { user } = useAuthStore();
-  const { theme, setTheme, compactMode, setCompactMode, animationsEnabled, setAnimationsEnabled } = useThemeStore();
+  const { theme, setTheme, accentColor, setAccentColor, compactMode, setCompactMode, animationsEnabled, setAnimationsEnabled } = useThemeStore();
   const [activeTab, setActiveTab] = useState<SettingsTab>('notifications');
 
   // Notification settings state
@@ -120,9 +121,8 @@ export function SettingsPage() {
 
   const themeOptions: { key: typeof theme; label: string; description: string; previewStyle: React.CSSProperties }[] = [
     { key: 'light',     label: 'Light',      description: 'Clean white backgrounds',   previewStyle: { backgroundColor: '#ffffff', border: '1px solid #d1d5db' } },
-    { key: 'dark',      label: 'Dark',        description: 'Easy on the eyes',          previewStyle: { backgroundColor: '#1e293b' } },
-    { key: 'deep-dark', label: 'Deep Dark',   description: 'Pure black, high contrast', previewStyle: { backgroundColor: '#000000', border: '1px solid #22d3ee', boxShadow: '0 0 8px rgba(6,182,212,0.3)' } },
-    { key: 'system',    label: 'System',      description: 'Follows OS preference',     previewStyle: { background: 'linear-gradient(to right, #ffffff, #1e293b)' } },
+    { key: 'deep-dark', label: 'Dark',        description: 'Pure black, high contrast', previewStyle: { backgroundColor: '#000000', border: '1px solid #22d3ee', boxShadow: '0 0 8px rgba(6,182,212,0.3)' } },
+    { key: 'system',    label: 'System',      description: 'Follows OS preference',     previewStyle: { background: 'linear-gradient(to right, #ffffff, #000000)' } },
   ];
 
   const renderAppearance = () => (
@@ -148,6 +148,36 @@ export function SettingsPage() {
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-6">
+        <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Accent Color</h3>
+        <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Personalize the app with your preferred color.</p>
+        <div className="flex flex-wrap gap-2.5">
+          {(Object.entries(ACCENT_COLORS) as [AccentColor, typeof ACCENT_COLORS[AccentColor]][]).map(([key, meta]) => (
+            <button
+              key={key}
+              onClick={() => setAccentColor(key)}
+              title={meta.label}
+              className={clsx(
+                'relative w-9 h-9 rounded-full transition-all duration-200 flex items-center justify-center',
+                accentColor === key
+                  ? 'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-secondary-900 ring-current scale-110'
+                  : 'hover:scale-110'
+              )}
+              style={{ backgroundColor: meta.hex, color: meta.hex }}
+            >
+              {accentColor === key && (
+                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </button>
+          ))}
+        </div>
+        <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-2">
+          Selected: <span className="font-medium" style={{ color: ACCENT_COLORS[accentColor].hex }}>{ACCENT_COLORS[accentColor].label}</span>
+        </p>
       </div>
 
       <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-6">

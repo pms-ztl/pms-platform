@@ -20,13 +20,14 @@ interface GoalVelocityProps {
 function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
   if (!goals?.length || !goalRisks?.length) return null;
 
-  // Merge goal titles with risk data
+  // Merge goal titles with risk data — truncate long names for Y-axis readability
   const chartData = goalRisks.slice(0, 6).map((risk) => {
     const goal = goals.find((g) => g.id === risk.goalId);
-    const title = goal?.title ?? risk.goalTitle;
+    const fullTitle = goal?.title ?? risk.goalTitle;
+    const name = fullTitle.length > 28 ? fullTitle.slice(0, 26) + '…' : fullTitle;
     return {
-      name: title,
-      fullTitle: title,
+      name,
+      fullTitle,
       current: Math.round(risk.currentVelocity * 100) / 100,
       required: Math.round(risk.requiredVelocity * 100) / 100,
       onTrack: risk.currentVelocity >= risk.requiredVelocity,
@@ -53,18 +54,18 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
         </div>
       </div>
 
-      <div style={{ height: Math.max(100, chartData.length * 65 + 30) }}>
+      <div style={{ height: Math.max(160, chartData.length * 90 + 50) }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
             layout="vertical"
-            margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
-            barGap={4}
-            barSize={14}
+            margin={{ top: 10, right: 20, left: 16, bottom: 10 }}
+            barGap={8}
+            barSize={22}
           >
             <XAxis
               type="number"
-              tick={{ fontSize: 12, fill: 'var(--color-secondary-400, #94a3b8)' }}
+              tick={{ fontSize: 11, fontWeight: 500, fill: 'var(--color-secondary-600, #475569)' }}
               axisLine={false}
               tickLine={false}
             />
@@ -72,7 +73,7 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
               type="category"
               dataKey="name"
               width={180}
-              tick={{ fontSize: 13, fill: 'var(--color-secondary-500, #64748b)' }}
+              tick={{ fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-200, #e2e8f0)' }}
               axisLine={false}
               tickLine={false}
             />
@@ -85,7 +86,7 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
                 border: '1px solid rgba(148, 163, 184, 0.15)',
                 borderRadius: '0.75rem',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                fontSize: '0.75rem',
+                fontSize: '0.875rem',
                 color: '#f1f5f9',
               }}
               labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
@@ -114,7 +115,7 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
         </ResponsiveContainer>
       </div>
 
-      <div className="flex items-center gap-4 mt-2 text-xs text-secondary-400 dark:text-secondary-500">
+      <div className="flex items-center gap-4 mt-3 text-sm text-secondary-600 dark:text-secondary-300 font-medium">
         <div className="flex items-center gap-1">
           <div className="w-2 h-2 rounded-full bg-emerald-500" />
           On Track

@@ -11,7 +11,6 @@ import {
   TrashIcon,
   MegaphoneIcon,
   ArchiveBoxIcon,
-  MapPinIcon,
   PaperAirplaneIcon,
   ClockIcon,
   EyeIcon,
@@ -30,6 +29,15 @@ import { format } from 'date-fns';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { PageHeader } from '@/components/ui';
+
+// ── Custom Pin (thumbtack) icon ──
+function PinIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 3.75L7.5 3.75a.75.75 0 00-.53 1.28l1.72 1.72-1.94 5.19a.75.75 0 00.17.79l.1.1a.75.75 0 00.53.22h3.2v5.2a.75.75 0 001.5 0v-5.2h3.2a.75.75 0 00.53-.22l.1-.1a.75.75 0 00.17-.79l-1.94-5.19 1.72-1.72a.75.75 0 00-.53-1.28z" />
+    </svg>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -460,7 +468,7 @@ export function AnnouncementsPage() {
       {pinnedAnnouncements.length > 0 && (
         <div className="space-y-3">
           <h2 className="flex items-center gap-2 text-sm font-semibold text-secondary-700 dark:text-secondary-300 tracking-wider">
-            <MapPinIcon className="h-4 w-4 text-amber-500" />
+            <PinIcon className="h-4 w-4 text-amber-500" />
             Pinned Announcements
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

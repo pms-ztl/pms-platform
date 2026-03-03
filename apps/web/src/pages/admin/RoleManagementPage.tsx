@@ -173,7 +173,31 @@ export function RoleManagementPage() {
   const loadCatalog = useCallback(async () => {
     try {
       const data = await api.get<any[]>('/roles/permissions-catalog');
-      setPermissionsCatalog(Array.isArray(data) ? data : []);
+      const raw = Array.isArray(data) ? data : [];
+      // API returns { resource, actions[], scopes[] } — transform to
+      // { resource, permissions: [{ resource, action, scope, key }] }
+      const transformed: PermissionCatalogGroup[] = raw.map((group: any) => {
+        const permissions: Permission[] = [];
+        const actions: string[] = group.actions ?? [];
+        const scopes: string[] = group.scopes ?? [];
+        for (const action of actions) {
+          for (const scope of scopes) {
+            const key = `${group.resource}:${action}:${scope}`;
+            permissions.push({
+              resource: group.resource,
+              action,
+              scope,
+              key,
+            });
+          }
+        }
+        // If no actions/scopes but already has permissions array, use as-is
+        if (permissions.length === 0 && Array.isArray(group.permissions)) {
+          return group as PermissionCatalogGroup;
+        }
+        return { resource: group.resource, permissions };
+      });
+      setPermissionsCatalog(transformed);
     } catch {
       // Permissions catalog may not exist yet - silently ignore
     }
@@ -617,7 +641,7 @@ export function RoleManagementPage() {
                 <select
                   value={formCategory}
                   onChange={(e) => setFormCategory(e.target.value as Role['category'])}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                 >
                   {CATEGORY_OPTIONS.map((cat) => (
                     <option key={cat} value={cat}>
@@ -892,7 +916,7 @@ export function RoleManagementPage() {
                   <select
                     value={fallbackRoleId}
                     onChange={(e) => setFallbackRoleId(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                   >
                     <option value="">-- Select a role --</option>
                     {roles

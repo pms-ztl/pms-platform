@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, useRef, useEffect, useCallback, Fragment } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   StarIcon as StarSolid,
@@ -259,6 +259,153 @@ function Toast({
   );
 }
 
+// ─── Skill Category Combobox (editable dropdown) ────────────────────────────
+
+function SkillCategoryCombobox({
+  value,
+  onChange,
+  categories,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  categories: SkillCategory[];
+}) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sync external value into query when value changes (e.g. on edit)
+  useEffect(() => {
+    setQuery(value);
+  }, [value]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const filteredCategories = categories.filter((c) =>
+    c.name.toLowerCase().includes(query.toLowerCase()),
+  );
+
+  // Whether the typed query is an exact match of an existing category
+  const isExactMatch = categories.some(
+    (c) => c.name.toLowerCase() === query.trim().toLowerCase(),
+  );
+
+  const handleSelect = useCallback(
+    (name: string) => {
+      setQuery(name);
+      onChange(name);
+      setOpen(false);
+    },
+    [onChange],
+  );
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setQuery(val);
+    onChange(val);
+    if (!open) setOpen(true);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setOpen(false);
+      inputRef.current?.blur();
+    }
+    if (e.key === 'Enter' && query.trim()) {
+      e.preventDefault();
+      // If there's exactly one match, select it
+      if (filteredCategories.length === 1) {
+        handleSelect(filteredCategories[0].name);
+      } else {
+        setOpen(false);
+      }
+    }
+  };
+
+  return (
+    <div ref={wrapperRef} className="relative">
+      <div className="relative">
+        <input
+          ref={inputRef}
+          type="text"
+          value={query}
+          onChange={handleInputChange}
+          onFocus={() => setOpen(true)}
+          onKeyDown={handleKeyDown}
+          placeholder="Select or type a category..."
+          className="w-full px-3 py-2 pr-8 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all"
+        />
+        <button
+          type="button"
+          tabIndex={-1}
+          onClick={() => { setOpen(!open); inputRef.current?.focus(); }}
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 transition-colors"
+        >
+          <ChevronDownIcon className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+        </button>
+      </div>
+
+      {/* Dropdown list */}
+      {open && (
+        <div className="absolute z-50 mt-1 w-full max-h-48 overflow-y-auto rounded-lg border border-secondary-200 dark:border-secondary-600 bg-white dark:bg-secondary-800 shadow-xl ring-1 ring-black/5">
+          {filteredCategories.length > 0 ? (
+            filteredCategories.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => handleSelect(c.name)}
+                className={clsx(
+                  'w-full text-left px-3 py-2 text-sm transition-colors',
+                  c.name === value
+                    ? 'bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 font-medium'
+                    : 'text-secondary-700 dark:text-secondary-300 hover:bg-secondary-50 dark:hover:bg-secondary-700',
+                )}
+              >
+                {c.name}
+                {c.description && (
+                  <span className="block text-xs text-secondary-400 dark:text-secondary-500 mt-0.5 truncate">
+                    {c.description}
+                  </span>
+                )}
+              </button>
+            ))
+          ) : query.trim() ? (
+            <div className="px-3 py-2.5 text-sm text-secondary-500 dark:text-secondary-400">
+              No matching categories
+            </div>
+          ) : (
+            <div className="px-3 py-2.5 text-sm text-secondary-500 dark:text-secondary-400">
+              No categories available — type to create one
+            </div>
+          )}
+
+          {/* "Create new" option when query doesn't match existing */}
+          {query.trim() && !isExactMatch && (
+            <button
+              type="button"
+              onClick={() => handleSelect(query.trim())}
+              className="w-full text-left px-3 py-2 text-sm border-t border-secondary-100 dark:border-secondary-700 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-500/10 font-medium transition-colors"
+            >
+              <PlusIcon className="w-4 h-4 inline mr-1.5 -mt-0.5" />
+              Create &quot;{query.trim()}&quot;
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Page Component ────────────────────────────────────────────────────
 
 export function SkillsMatrixPage() {
@@ -513,7 +660,7 @@ export function SkillsMatrixPage() {
         <div className="absolute -bottom-12 -left-12 w-44 h-44 bg-gradient-to-tr from-indigo-500/15 to-cyan-500/10 rounded-full blur-3xl" />
         <div className="relative z-10 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Skills Matrix</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Skills Matrix</h1>
             <p className="text-secondary-500 dark:text-secondary-400 text-sm mt-1">
               Track, assess, and develop skills across your organization
             </p>
@@ -1101,25 +1248,16 @@ export function SkillsMatrixPage() {
               </button>
             </div>
             <div className="p-4 space-y-4">
-              {/* Skill Category */}
-              <div>
+              {/* Skill Category — editable combobox */}
+              <div className="relative">
                 <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
                   Skill Category
                 </label>
-                <select
+                <SkillCategoryCombobox
                   value={formData.skillCategory}
-                  onChange={(e) =>
-                    setFormData({ ...formData, skillCategory: e.target.value })
-                  }
-                  className="w-full px-3 py-2 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500"
-                >
-                  <option value="">Select category...</option>
-                  {(categories || []).map((c) => (
-                    <option key={c.id} value={c.name}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => setFormData({ ...formData, skillCategory: val })}
+                  categories={categories || []}
+                />
               </div>
 
               {/* Skill Name */}

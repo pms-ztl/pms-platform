@@ -683,7 +683,7 @@ export function ManagerDashboardPage() {
               <UserGroupIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
+              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Team Performance Overview
               </h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">
@@ -814,7 +814,7 @@ export function ManagerDashboardPage() {
               <ClockIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
+              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Action Items
               </h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">
@@ -874,7 +874,7 @@ export function ManagerDashboardPage() {
             <FlagIcon className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
+            <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
               Goal Tracker
             </h2>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">
@@ -998,7 +998,7 @@ export function ManagerDashboardPage() {
 
       {/* ══════════════════════════ Quick Actions Grid ══════════════════════════ */}
       <div>
-        <h2 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1089,7 +1089,7 @@ export function ManagerDashboardPage() {
               <ArrowPathIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-secondary-900 dark:text-white">
+              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Recent Activity
               </h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">

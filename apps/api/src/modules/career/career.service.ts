@@ -62,13 +62,21 @@ class CareerService {
     const userLevel = Math.round(avgSkillLevel);
 
     // Build next roles from career paths data
-    const nextRoles = careerPaths.slice(0, 3).map((cp, i) => {
-      const roles = (cp.roles as any[]) || [];
-      const nextRole = roles.find((r: any) => r.level > userLevel) || roles[0];
+    // roles[] can be strings or objects — normalise before searching
+    const nextRoles = careerPaths.slice(0, 3).map((cp) => {
+      const raw = (cp.roles as any[]) || [];
+      const normalised = raw.map((r: any) => {
+        if (typeof r === 'string') {
+          const lvl = parseInt((r.match(/L(\d+)/)?.[1]) || '0', 10);
+          return { title: r, level: lvl || 1 };
+        }
+        return { title: r.title || cp.pathName, level: r.level || 1 };
+      });
+      const nextRole = normalised.find((r) => r.level > userLevel) || normalised[normalised.length - 1] || null;
       return {
         id: cp.id,
         title: nextRole?.title || cp.pathName,
-        level: (nextRole?.level || userLevel) + 1,
+        level: nextRole?.level || userLevel + 1,
         department: cp.department || currentDept,
         requiredSkills: this.extractSkillNames((cp.skillRequirements as Record<string, any>) || {}),
         avgTimeToReach: cp.averageDuration ? `${Math.round(cp.averageDuration / 12)}y` : '1-2y',
@@ -199,16 +207,30 @@ class CareerService {
     const roles: Array<{ id: string; title: string; department: string; levelRange: string; description: string; requiredSkills: string[] }> = [];
 
     // Add from career paths
+    // roles[] can be:
+    //   strings:  ['Frontend Engineer L3', 'Staff Engineer L7', ...]
+    //   objects:  [{ title, level, description, requiredSkills }, ...]
+    const seenTitles = new Set<string>();
     for (const cp of careerPaths) {
       const cpRoles = (cp.roles as any[]) || [];
       for (const r of cpRoles) {
+        const isString = typeof r === 'string';
+        const title = isString ? r : (r.title || cp.pathName);
+        // Deduplicate by title within the same tenant
+        if (seenTitles.has(title)) continue;
+        seenTitles.add(title);
+
+        // Extract level from string like "Frontend Engineer L3" → 3
+        const levelFromStr = isString ? parseInt((r.match(/L(\d+)/)?.[1]) || '0', 10) : 0;
+        const level = isString ? (levelFromStr || 1) : (r.level || 1);
+
         roles.push({
-          id: `${cp.id}-${r.title || r.level}`,
-          title: r.title || cp.pathName,
+          id: `${cp.id}-${title.replace(/\s+/g, '-')}`,
+          title,
           department: cp.department || 'General',
-          levelRange: `Level ${r.level || 1}`,
-          description: r.description || cp.pathDescription || '',
-          requiredSkills: (Array.isArray(r.requiredSkills) ? r.requiredSkills.map(String) : [])
+          levelRange: `Level ${level}`,
+          description: isString ? cp.pathDescription || '' : (r.description || cp.pathDescription || ''),
+          requiredSkills: (isString ? [] : (Array.isArray(r.requiredSkills) ? r.requiredSkills.map(String) : []))
             .concat(this.extractSkillNames((cp.skillRequirements as Record<string, any>) || {}))
             .filter((v: string, i: number, a: string[]) => a.indexOf(v) === i)
             .slice(0, 5),

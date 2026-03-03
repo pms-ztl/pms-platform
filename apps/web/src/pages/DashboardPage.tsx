@@ -16,9 +16,11 @@ import {
 } from '@heroicons/react/24/outline';
 import { StarIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { goalsApi, reviewsApi, feedbackApi, performanceMathApi, type Goal } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { useThemeStore } from '@/store/theme';
+import { ACCENT_COLORS } from '@/lib/accent-colors';
 import { useAIWorkspaceStore } from '@/store/ai-workspace';
 import { CalendarPlanner } from '@/components/calendar';
 import { AIWorkspacePage } from '@/pages/AIWorkspacePage';
@@ -26,7 +28,6 @@ import { OnboardingWizard } from '@/components/onboarding';
 import { QuickCheckinWidget } from '@/components/checkins/QuickCheckinWidget';
 
 import {
-  AnimatedWaves,
   CPISScoreDisplay,
   UpcomingOneOnOnes,
   StatsGrid,
@@ -70,8 +71,17 @@ export function DashboardPage() {
 }
 
 // ─── Dashboard Content (non-AI mode) ────────────────────────────────────────
+// Helper: convert "R G B" palette string to rgba(R,G,B,alpha)
+function pRgba(rgbStr: string, a: number) {
+  return `rgba(${rgbStr.replace(/ /g, ',')},${a})`;
+}
+
 function DashboardContent() {
   const { user } = useAuthStore();
+  const accentColor = useThemeStore((s) => s.accentColor);
+  const theme = useThemeStore((s) => s.theme);
+  const isDark = theme !== 'light';
+  const p = useMemo(() => ACCENT_COLORS[accentColor].palette, [accentColor]);
 
   // ── Onboarding Wizard ──────────────────────────────────────────────────
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -379,143 +389,206 @@ function DashboardContent() {
       )}
 
       {/* ═══════════════════ Hero Section ═══════════════════ */}
-      <div className="relative overflow-hidden rounded-2xl border px-7 py-4 text-white shine-sweep"
+      <div
+        className="relative overflow-visible rounded-2xl glass-banner px-7 py-4"
         style={{
-          background: 'linear-gradient(135deg, rgba(124,58,237,0.78) 0%, rgba(139,92,246,0.62) 38%, rgba(109,40,217,0.72) 72%, rgba(91,33,182,0.82) 100%)',
-          backdropFilter: 'blur(56px) saturate(210%) brightness(1.1)',
-          WebkitBackdropFilter: 'blur(56px) saturate(210%) brightness(1.1)',
-          borderColor: 'rgba(255,255,255,0.12)',
-          boxShadow: [
-            '0 16px 48px -12px rgba(109,40,217,0.35)',
-            '0 4px 16px -4px rgba(91,33,182,0.25)',
-            '0 0 0 1px rgba(255,255,255,0.12)',
-            'inset 0 1px 0 rgba(255,255,255,0.25)',
-            'inset 0 -1px 0 rgba(0,0,0,0.15)',
-          ].join(', '),
-        }}>
-        <AnimatedWaves />
+          boxShadow: isDark
+            ? `0 4px 32px -6px ${pRgba(p[500], 0.15)}, 0 1px 4px ${pRgba(p[400], 0.06)}`
+            : `0 4px 24px -4px ${pRgba(p[500], 0.12)}, 0 1px 6px ${pRgba(p[600], 0.08)}, 0 0 0 1px ${pRgba(p[300], 0.15)}`,
+        }}
+      >
+        {/* ── Accent-adaptive gradient glow system ── */}
+        <style>{`
+          @keyframes hero-orb-drift-a { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(12px,-8px) scale(1.06); } 66% { transform: translate(-6px,10px) scale(0.95); } }
+          @keyframes hero-orb-drift-b { 0%,100% { transform: translate(0,0) scale(1); } 40% { transform: translate(-10px,6px) scale(1.08); } 75% { transform: translate(8px,-12px) scale(0.94); } }
+          @keyframes hero-shimmer-sweep { 0% { transform: translateX(-120%) skewX(-18deg); } 100% { transform: translateX(220%) skewX(-18deg); } }
+          @keyframes hero-edge-pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+          @keyframes hero-flare-pulse { 0%,100% { opacity: 0.25; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.3); } }
+        `}</style>
 
-        {/* ── Premium frosted glass layers ── */}
-        {/* 1. Film-grain noise texture */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.05] mix-blend-overlay"
-          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundSize: 'cover' }} />
-        {/* 2. Top-edge bright reflection strip */}
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-white/75 to-transparent pointer-events-none" />
-        {/* 3. Left-edge glint */}
-        <div className="absolute inset-y-0 left-0 w-[2px] bg-gradient-to-b from-white/55 via-white/15 to-transparent pointer-events-none" />
-        {/* 4. Inner radial glow — top-left light source */}
-        <div className="absolute -top-16 -left-16 w-[260px] h-[260px] rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(196,181,253,0.12) 40%, transparent 68%)' }} />
-        {/* 5. Diagonal specular streak */}
-        <div className="absolute -top-full left-[38%] w-1/4 h-[300%] -rotate-12 pointer-events-none"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)' }} />
-        {/* 6. Bottom depth vignette */}
-        <div className="absolute inset-x-0 bottom-0 h-2/5 pointer-events-none"
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.22), transparent)' }} />
+        {/* ① Primary orb — top-right, accent-colored, animated drift */}
+        <div
+          className="absolute -top-20 -right-20 w-80 h-80 rounded-full blur-3xl pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${pRgba(p[400], isDark ? 0.35 : 0.20)} 0%, ${pRgba(p[500], isDark ? 0.18 : 0.10)} 45%, transparent 72%)`,
+            animation: 'hero-orb-drift-a 8s ease-in-out infinite',
+          }}
+        />
+        {/* ② Secondary orb — bottom-left, lighter accent, counter-drift */}
+        <div
+          className="absolute -bottom-16 -left-20 w-72 h-72 rounded-full blur-3xl pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${pRgba(p[300], isDark ? 0.28 : 0.18)} 0%, ${pRgba(p[600], isDark ? 0.12 : 0.07)} 50%, transparent 78%)`,
+            animation: 'hero-orb-drift-b 10s ease-in-out infinite',
+          }}
+        />
+        {/* ③ Mid orb — center-right, warm accent haze */}
+        <div
+          className="absolute top-1/4 right-[15%] w-56 h-56 rounded-full blur-3xl pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${pRgba(p[isDark ? 300 : 200], isDark ? 0.18 : 0.12)} 0%, transparent 65%)`,
+            animation: 'hero-orb-drift-a 12s ease-in-out 2s infinite reverse',
+          }}
+        />
+        {/* ④ Wide ambient ellipse — center-top, very diffused */}
+        <div
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-44 rounded-full blur-3xl pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse 100% 80%, ${pRgba(p[isDark ? 400 : 200], isDark ? 0.14 : 0.10)} 0%, transparent 70%)`,
+          }}
+        />
+        {/* ⑤ Mesh gradient — multi-stop angled wash for depth */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `
+              linear-gradient(135deg, ${pRgba(p[isDark ? 500 : 200], isDark ? 0.07 : 0.09)} 0%, transparent 35%),
+              linear-gradient(225deg, ${pRgba(p[isDark ? 400 : 300], isDark ? 0.05 : 0.07)} 0%, transparent 30%),
+              linear-gradient(45deg, ${pRgba(p[isDark ? 300 : 100], isDark ? 0.04 : 0.06)} 0%, transparent 40%)
+            `,
+          }}
+        />
 
-        <div className="absolute top-3 right-4 opacity-20">
-          <div className="relative animate-float-3d">
-            <RocketLaunchIcon className="w-10 h-10" />
+        {/* ⑥ Accent edge glow — top border with breathing pulse */}
+        <div
+          className="absolute top-0 left-0 right-0 h-px pointer-events-none rounded-t-2xl"
+          style={{
+            background: `linear-gradient(90deg, transparent 8%, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.22 : 0.18)} 30%, ${pRgba(p[isDark ? 300 : 400], isDark ? 0.40 : 0.35)} 50%, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.22 : 0.18)} 70%, transparent 92%)`,
+            animation: 'hero-edge-pulse 4s ease-in-out infinite',
+          }}
+        />
+        {/* ⑦ Accent edge glow — bottom border */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-px pointer-events-none rounded-b-2xl"
+          style={{
+            background: `linear-gradient(90deg, transparent 12%, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.12 : 0.10)} 35%, ${pRgba(p[isDark ? 300 : 400], isDark ? 0.20 : 0.16)} 50%, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.12 : 0.10)} 65%, transparent 88%)`,
+            animation: 'hero-edge-pulse 4s ease-in-out 2s infinite',
+          }}
+        />
+        {/* ⑧ Left edge glow — vertical accent border */}
+        <div
+          className="absolute top-0 bottom-0 left-0 w-px pointer-events-none rounded-l-2xl"
+          style={{
+            background: `linear-gradient(180deg, transparent 10%, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.10 : 0.08)} 35%, ${pRgba(p[isDark ? 300 : 400], isDark ? 0.16 : 0.12)} 50%, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.10 : 0.08)} 65%, transparent 90%)`,
+          }}
+        />
+        {/* ⑨ Right edge glow */}
+        <div
+          className="absolute top-0 bottom-0 right-0 w-px pointer-events-none rounded-r-2xl"
+          style={{
+            background: `linear-gradient(180deg, transparent 10%, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.10 : 0.08)} 35%, ${pRgba(p[isDark ? 300 : 400], isDark ? 0.16 : 0.12)} 50%, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.10 : 0.08)} 65%, transparent 90%)`,
+          }}
+        />
+
+        {/* ⑩ Shimmer sweep — diagonal light beam moving across */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div
+            className="absolute inset-y-0 w-[60%]"
+            style={{
+              background: `linear-gradient(105deg, transparent 30%, ${pRgba(p[isDark ? 300 : 200], isDark ? 0.08 : 0.06)} 45%, ${pRgba(p[isDark ? 200 : 100], isDark ? 0.12 : 0.09)} 50%, ${pRgba(p[isDark ? 300 : 200], isDark ? 0.08 : 0.06)} 55%, transparent 70%)`,
+              animation: 'hero-shimmer-sweep 6s ease-in-out 1s infinite',
+            }}
+          />
+        </div>
+
+        {/* ⑪ Corner accent flares — pulsing accent dots in corners */}
+        <div
+          className="absolute top-3 left-3 w-2.5 h-2.5 rounded-full pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.6 : 0.35)} 0%, transparent 70%)`,
+            boxShadow: `0 0 8px ${pRgba(p[400], isDark ? 0.3 : 0.15)}`,
+            animation: 'hero-flare-pulse 3s ease-in-out infinite',
+          }}
+        />
+        <div
+          className="absolute top-3 right-14 w-2 h-2 rounded-full pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${pRgba(p[isDark ? 300 : 400], isDark ? 0.5 : 0.30)} 0%, transparent 70%)`,
+            boxShadow: `0 0 6px ${pRgba(p[300], isDark ? 0.25 : 0.12)}`,
+            animation: 'hero-flare-pulse 3s ease-in-out 1s infinite',
+          }}
+        />
+        <div
+          className="absolute bottom-3 left-6 w-1.5 h-1.5 rounded-full pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${pRgba(p[isDark ? 400 : 500], isDark ? 0.5 : 0.25)} 0%, transparent 70%)`,
+            boxShadow: `0 0 5px ${pRgba(p[400], isDark ? 0.2 : 0.10)}`,
+            animation: 'hero-flare-pulse 3s ease-in-out 0.5s infinite',
+          }}
+        />
+        <div
+          className="absolute bottom-4 right-[40%] w-1.5 h-1.5 rounded-full pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${pRgba(p[isDark ? 300 : 400], isDark ? 0.45 : 0.22)} 0%, transparent 70%)`,
+            animation: 'hero-flare-pulse 3s ease-in-out 1.5s infinite',
+          }}
+        />
+
+        {/* ⑫ Decorative floating icons */}
+        <div className="absolute top-3 right-4 pointer-events-none" style={{ opacity: isDark ? 0.20 : 0.12 }}>
+          <div className="relative animate-float-3d" style={{ color: pRgba(p[isDark ? 400 : 600], 1) }}>
+            <ChartBarIcon className="w-10 h-10" />
           </div>
         </div>
-        <div className="absolute bottom-6 right-24 opacity-15">
-          <SparklesIcon className="w-7 h-7 animate-spin-slow" />
+        <div className="absolute bottom-6 right-24 pointer-events-none" style={{ opacity: isDark ? 0.15 : 0.08 }}>
+          <ArrowTrendingUpIcon className="w-7 h-7 animate-spin-slow" style={{ color: pRgba(p[isDark ? 300 : 500], 1) }} />
         </div>
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex-1">
-            <div className="flex items-center gap-1.5 text-white/70 text-xs font-medium mb-1">
+            <div className="flex items-center gap-1.5 text-secondary-600 dark:text-secondary-400 text-xs font-medium mb-1">
               <CalendarDaysIcon className="w-3 h-3" />
               {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
-            <h1 className="text-2xl lg:text-3xl font-bold mb-1.5 tracking-tight flex items-center flex-wrap gap-x-3" style={{
+            <h1 className="text-xl sm:text-2xl font-bold mb-1.5 tracking-tight flex items-center flex-wrap gap-x-3 text-secondary-900 dark:text-white" style={{
                 fontFamily: "'Libre Baskerville', Georgia, serif",
-                color: 'rgba(255,255,255,0.97)',
-                textShadow: [
-                  '0 1px 2px rgba(0,0,0,0.4)',
-                  '0 0 16px rgba(255,255,255,0.6)',
-                  '0 0 40px rgba(196,181,253,0.55)',
-                  '0 0 80px rgba(139,92,246,0.35)',
-                  '0 0 140px rgba(124,58,237,0.2)',
-                ].join(', '),
               }}>
               {getGreeting().replace(/\b\w/g, (c) => c.toUpperCase())}, {user?.firstName}!
-              {/* Animated SVG icon — replaces emoji */}
+              {/* Minimal performance indicator */}
               {overallScore >= 80 ? (
-                /* Rocket — high performer */
-                <svg className="inline-block w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0" style={{ animation: 'rocketLaunch 3s ease-in-out infinite' }} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                /* Trophy — high performer */
+                <svg className="inline-block w-8 h-8 lg:w-9 lg:h-9 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: 'greetIconFloat 3s ease-in-out infinite' }}>
                   <style>{`
-                    @keyframes rocketLaunch {
-                      0%,100% { transform: translateY(0) rotate(-45deg); }
-                      50%      { transform: translateY(-8px) rotate(-45deg); }
-                    }
-                    @keyframes flamePulse {
-                      0%,100% { opacity: 1; transform: scaleY(1); }
-                      50%      { opacity: 0.6; transform: scaleY(0.7); }
+                    @keyframes greetIconFloat {
+                      0%,100% { transform: translateY(0); opacity: 0.95; }
+                      50%     { transform: translateY(-3px); opacity: 1; }
                     }
                   `}</style>
-                  {/* Body */}
-                  <path d="M32 4C20 4 12 20 12 32l20 20c12 0 28-8 28-20C60 20 44 4 32 4Z" fill="rgba(255,255,255,0.9)" />
-                  {/* Window */}
-                  <circle cx="34" cy="24" r="6" fill="rgba(139,92,246,0.8)" />
-                  <circle cx="34" cy="24" r="4" fill="rgba(196,181,253,0.9)" />
-                  {/* Fins */}
-                  <path d="M12 32 L4 44 L16 40Z" fill="rgba(255,255,255,0.6)" />
-                  <path d="M32 52 L24 60 L28 48Z" fill="rgba(255,255,255,0.6)" />
-                  {/* Flame */}
-                  <path d="M16 40 Q20 50 26 48 Q22 56 18 58 Q14 54 16 40Z" fill="rgba(251,146,60,0.9)" style={{ animation: 'flamePulse 0.5s ease-in-out infinite', transformOrigin: '20px 48px' }} />
-                  <path d="M18 42 Q21 50 24 49" stroke="rgba(253,224,71,0.9)" strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M7 4h10v5a5 5 0 01-10 0V4z" fill={pRgba(p[500],0.2)} stroke={pRgba(p[500],0.8)} strokeWidth="1.5" />
+                  <path d="M4 4h3v3a3 3 0 01-3-3z" stroke={pRgba(p[400],0.6)} strokeWidth="1.5" fill="none" />
+                  <path d="M20 4h-3v3a3 3 0 003-3z" stroke={pRgba(p[400],0.6)} strokeWidth="1.5" fill="none" />
+                  <line x1="12" y1="14" x2="12" y2="17" stroke={pRgba(p[500],0.7)} strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M8 20h8" stroke={pRgba(p[500],0.7)} strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M9 17h6" stroke={pRgba(p[400],0.5)} strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               ) : overallScore >= 50 ? (
-                /* Upward arrow / trending — mid performer */
-                <svg className="inline-block w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                /* Trending up — mid performer */
+                <svg className="inline-block w-8 h-8 lg:w-9 lg:h-9 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: 'greetIconFloat 3s ease-in-out infinite' }}>
                   <style>{`
-                    @keyframes arrowPulse {
-                      0%,100% { transform: translateY(0); }
-                      50%      { transform: translateY(-6px); }
+                    @keyframes greetIconFloat {
+                      0%,100% { transform: translateY(0); opacity: 0.95; }
+                      50%     { transform: translateY(-3px); opacity: 1; }
                     }
                   `}</style>
-                  <g style={{ animation: 'arrowPulse 2s ease-in-out infinite' }}>
-                    {/* Chart line */}
-                    <polyline points="8,48 20,36 32,40 44,22 56,12" stroke="rgba(255,255,255,0.9)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    {/* Arrow head */}
-                    <polyline points="44,12 56,12 56,24" stroke="rgba(255,255,255,0.9)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    {/* Dots */}
-                    <circle cx="8"  cy="48" r="3.5" fill="rgba(255,255,255,0.7)" />
-                    <circle cx="20" cy="36" r="3.5" fill="rgba(255,255,255,0.7)" />
-                    <circle cx="32" cy="40" r="3.5" fill="rgba(255,255,255,0.7)" />
-                    <circle cx="44" cy="22" r="3.5" fill="rgba(255,255,255,0.7)" />
-                    <circle cx="56" cy="12" r="4.5" fill="rgba(167,139,250,1)" />
-                  </g>
+                  <polyline points="3,17 9,11 13,15 21,7" stroke={pRgba(p[500],0.8)} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                  <polyline points="16,7 21,7 21,12" stroke={pRgba(p[500],0.8)} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                 </svg>
               ) : (
-                /* Spark / ignite — building performer */
-                <svg className="inline-block w-10 h-10 lg:w-12 lg:h-12 flex-shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                /* Target / bullseye — building performer */
+                <svg className="inline-block w-8 h-8 lg:w-9 lg:h-9 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ animation: 'greetIconFloat 3s ease-in-out infinite' }}>
                   <style>{`
-                    @keyframes sparkRotate {
-                      0%   { transform: rotate(0deg) scale(1); }
-                      25%  { transform: rotate(15deg) scale(1.1); }
-                      75%  { transform: rotate(-15deg) scale(0.95); }
-                      100% { transform: rotate(0deg) scale(1); }
-                    }
-                    @keyframes rayPulse {
-                      0%,100% { opacity: 0.5; transform: scaleX(1); }
-                      50%      { opacity: 1; transform: scaleX(1.3); }
+                    @keyframes greetIconFloat {
+                      0%,100% { transform: translateY(0); opacity: 0.95; }
+                      50%     { transform: translateY(-3px); opacity: 1; }
                     }
                   `}</style>
-                  <g style={{ animation: 'sparkRotate 2.5s ease-in-out infinite', transformOrigin: '32px 32px' }}>
-                    {/* Star / spark core */}
-                    <path d="M32 8 L36 28 L56 32 L36 36 L32 56 L28 36 L8 32 L28 28Z" fill="rgba(255,255,255,0.95)" />
-                  </g>
-                  {/* Rays */}
-                  <line x1="32" y1="2"  x2="32" y2="10" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'rayPulse 1.5s ease-in-out infinite 0.1s', transformOrigin: '32px 6px' }} />
-                  <line x1="58" y1="32" x2="50" y2="32" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'rayPulse 1.5s ease-in-out infinite 0.3s', transformOrigin: '54px 32px' }} />
-                  <line x1="32" y1="62" x2="32" y2="54" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'rayPulse 1.5s ease-in-out infinite 0.5s', transformOrigin: '32px 58px' }} />
-                  <line x1="6"  y1="32" x2="14" y2="32" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'rayPulse 1.5s ease-in-out infinite 0.7s', transformOrigin: '10px 32px' }} />
+                  <circle cx="12" cy="12" r="9" stroke={pRgba(p[400],0.4)} strokeWidth="1.5" fill="none" />
+                  <circle cx="12" cy="12" r="5.5" stroke={pRgba(p[500],0.6)} strokeWidth="1.5" fill="none" />
+                  <circle cx="12" cy="12" r="2" fill={pRgba(p[500],0.8)} />
                 </svg>
               )}
             </h1>
-            <p className="text-white/80 text-xs max-w-xl leading-relaxed">
+            <p className="text-secondary-600 dark:text-secondary-300 text-xs max-w-xl leading-relaxed">
               {cpisData
                 ? overallScore >= 90
                   ? `Exceptional performance! You're ranked as "${cpisRankLabel}" with a ${cpisGrade} grade. Top-tier across all 8 dimensions.`
@@ -541,10 +614,10 @@ function DashboardContent() {
                 {achievements.map((achievement, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-3.5 py-1.5 hover:bg-white/20 transition-all duration-300 cursor-pointer group border border-white/10 hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] elastic-scale"
+                    className="flex items-center gap-2 bg-primary-50/60 dark:bg-white/10 backdrop-blur-md rounded-full px-3.5 py-1.5 hover:bg-primary-100/70 dark:hover:bg-white/20 transition-all duration-300 cursor-pointer group border border-primary-200/50 dark:border-white/10 hover:border-primary-300/60 dark:hover:border-white/20 elastic-scale"
                   >
-                    <achievement.icon className="w-4 h-4 text-white group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
-                    <span className="text-xs font-semibold">{achievement.label}</span>
+                    <achievement.icon className="w-4 h-4 text-primary-600 dark:text-white group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
+                    <span className="text-xs font-semibold text-secondary-700 dark:text-white">{achievement.label}</span>
                   </div>
                 ))}
               </div>
@@ -552,69 +625,69 @@ function DashboardContent() {
 
             {/* Quick Snapshot — 8 mini stat cards */}
             <div className="grid grid-cols-4 gap-2 mt-3">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+              <div className="bg-white/60 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-secondary-200/50 dark:border-white/10 text-center">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <FlagIcon className="w-4 h-4 text-cyan-300" />
-                  <span className="text-xs font-medium text-white/60 tracking-wide">Goals</span>
+                  <FlagIcon className="w-4 h-4 text-cyan-700 dark:text-cyan-300" />
+                  <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wide">Goals</span>
                 </div>
-                <p className="text-base font-bold text-white">{goalsData?.data?.length ?? 0}</p>
-                <p className="text-2xs text-white/50 mt-0">{avgProgress}% Average Progress</p>
+                <p className="text-base font-bold text-secondary-900 dark:text-white">{goalsData?.data?.length ?? 0}</p>
+                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">{avgProgress}% Average Progress</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+              <div className="bg-white/60 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-secondary-200/50 dark:border-white/10 text-center">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <ChatBubbleLeftRightIcon className="w-4 h-4 text-emerald-300" />
-                  <span className="text-xs font-medium text-white/60 tracking-wide">Feedback</span>
+                  <ChatBubbleLeftRightIcon className="w-4 h-4 text-emerald-700 dark:text-emerald-300" />
+                  <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wide">Feedback</span>
                 </div>
-                <p className="text-base font-bold text-white">{feedbackData?.meta?.total ?? 0}</p>
-                <p className="text-2xs text-white/50 mt-0">{feedbackScoreVal > 0 ? `${Math.round(feedbackScoreVal)}/100 Sentiment` : 'No Data Yet'}</p>
+                <p className="text-base font-bold text-secondary-900 dark:text-white">{feedbackData?.meta?.total ?? 0}</p>
+                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">{feedbackScoreVal > 0 ? `${Math.round(feedbackScoreVal)}/100 Sentiment` : 'No Data Yet'}</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+              <div className="bg-white/60 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-secondary-200/50 dark:border-white/10 text-center">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <ClipboardDocumentCheckIcon className="w-4 h-4 text-violet-300" />
-                  <span className="text-xs font-medium text-white/60 tracking-wide">Reviews</span>
+                  <ClipboardDocumentCheckIcon className="w-4 h-4 text-violet-700 dark:text-violet-300" />
+                  <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wide">Reviews</span>
                 </div>
-                <p className="text-base font-bold text-white">{reviewsData?.length ?? 0}</p>
-                <p className="text-2xs text-white/50 mt-0">{pendingReviews.length > 0 ? `${pendingReviews.length} Pending` : 'All Complete'}</p>
+                <p className="text-base font-bold text-secondary-900 dark:text-white">{reviewsData?.length ?? 0}</p>
+                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">{pendingReviews.length > 0 ? `${pendingReviews.length} Pending` : 'All Complete'}</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+              <div className="bg-white/60 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-secondary-200/50 dark:border-white/10 text-center">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <TrophyIcon className="w-4 h-4 text-amber-300" />
-                  <MetricTooltip code="CPIS" className="text-xs font-medium text-white/60 tracking-wide">CPIS</MetricTooltip>
+                  <TrophyIcon className="w-4 h-4 text-amber-700 dark:text-amber-300" />
+                  <MetricTooltip code="CPIS" className="text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wide">CPIS</MetricTooltip>
                 </div>
-                <p className="text-base font-bold text-white">{Math.round(overallScore)}</p>
-                <p className="text-2xs text-white/50 mt-0">Grade {cpisGrade ?? '—'}</p>
+                <p className="text-base font-bold text-secondary-900 dark:text-white">{Math.round(overallScore)}</p>
+                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">Grade {cpisGrade ?? '—'}</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+              <div className="bg-white/60 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-secondary-200/50 dark:border-white/10 text-center">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <ChartBarIcon className="w-4 h-4 text-teal-300" />
-                  <span className="text-xs font-medium text-white/60 tracking-wide">Attainment</span>
+                  <ChartBarIcon className="w-4 h-4 text-teal-700 dark:text-teal-300" />
+                  <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wide">Attainment</span>
                 </div>
-                <p className="text-base font-bold text-white">{Math.round(goalAttainment)}%</p>
-                <p className="text-2xs text-white/50 mt-0">{goalAttainment >= 90 ? 'Excellent' : goalAttainment >= 70 ? 'Good' : goalAttainment > 0 ? 'Needs Work' : 'No Data'}</p>
+                <p className="text-base font-bold text-secondary-900 dark:text-white">{Math.round(goalAttainment)}%</p>
+                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">{goalAttainment >= 90 ? 'Excellent' : goalAttainment >= 70 ? 'Good' : goalAttainment > 0 ? 'Needs Work' : 'No Data'}</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+              <div className="bg-white/60 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-secondary-200/50 dark:border-white/10 text-center">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <AcademicCapIcon className="w-4 h-4 text-pink-300" />
-                  <span className="text-xs font-medium text-white/60 tracking-wide">Review Score</span>
+                  <AcademicCapIcon className="w-4 h-4 text-pink-700 dark:text-pink-300" />
+                  <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wide">Review Score</span>
                 </div>
-                <p className="text-base font-bold text-white">{Math.round(reviewScoreVal)}</p>
-                <p className="text-2xs text-white/50 mt-0">{reviewScoreVal >= 80 ? 'Outstanding' : reviewScoreVal >= 60 ? 'Meets Exp.' : reviewScoreVal > 0 ? 'Below Exp.' : 'No Reviews'}</p>
+                <p className="text-base font-bold text-secondary-900 dark:text-white">{Math.round(reviewScoreVal)}</p>
+                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">{reviewScoreVal >= 80 ? 'Outstanding' : reviewScoreVal >= 60 ? 'Meets Exp.' : reviewScoreVal > 0 ? 'Below Exp.' : 'No Reviews'}</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+              <div className="bg-white/60 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-secondary-200/50 dark:border-white/10 text-center">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <StarIcon className="w-4 h-4 text-yellow-300" />
-                  <span className="text-xs font-medium text-white/60 tracking-wide">Star Rating</span>
+                  <StarIcon className="w-4 h-4 text-yellow-700 dark:text-yellow-300" />
+                  <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wide">Star Rating</span>
                 </div>
-                <p className="text-base font-bold text-white">{derivedRating.toFixed(1)}<span className="text-xs text-white/40">/5</span></p>
-                <p className="text-2xs text-white/50 mt-0">{derivedRating >= 4 ? 'Top Performer' : derivedRating >= 3 ? 'Solid' : derivedRating > 0 ? 'Growing' : 'Not Rated'}</p>
+                <p className="text-base font-bold text-secondary-900 dark:text-white">{derivedRating.toFixed(1)}<span className="text-xs text-secondary-600 dark:text-secondary-300">/5</span></p>
+                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">{derivedRating >= 4 ? 'Top Performer' : derivedRating >= 3 ? 'Solid' : derivedRating > 0 ? 'Growing' : 'Not Rated'}</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/10 text-center">
+              <div className="bg-white/60 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-secondary-200/50 dark:border-white/10 text-center">
                 <div className="flex items-center justify-center gap-1.5 mb-1">
-                  <ExclamationTriangleIcon className="w-4 h-4 text-red-300" />
-                  <span className="text-xs font-medium text-white/60 tracking-wide">At Risk</span>
+                  <ExclamationTriangleIcon className="w-4 h-4 text-red-700 dark:text-red-300" />
+                  <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wide">At Risk</span>
                 </div>
-                <p className="text-base font-bold text-white">{atRiskGoals.length}</p>
-                <p className="text-2xs text-white/50 mt-0">{atRiskGoals.length === 0 ? 'All Healthy' : `${atRiskGoals.filter((r: any) => r.riskLevel === 'CRITICAL').length} Critical`}</p>
+                <p className="text-base font-bold text-secondary-900 dark:text-white">{atRiskGoals.length}</p>
+                <p className="text-2xs text-secondary-600 dark:text-secondary-300 mt-0">{atRiskGoals.length === 0 ? 'All Healthy' : `${atRiskGoals.filter((r: any) => r.riskLevel === 'CRITICAL').length} Critical`}</p>
               </div>
             </div>
 
@@ -641,10 +714,10 @@ function DashboardContent() {
                     @keyframes capPulse { 0%,100% { opacity:0.6; transform:scaleX(1); } 50% { opacity:1; transform:scaleX(1.15); } }
                     @keyframes shineSlide { 0% { transform:translateX(-100%) skewX(-15deg); } 100% { transform:translateX(250%) skewX(-15deg); } }
                   `}</style>
-                  <p className="text-2xs font-semibold text-white/50 tracking-wider mb-2">Performance Dimensions</p>
+                  <p className="text-2xs font-semibold text-secondary-600 dark:text-secondary-400 tracking-wider mb-2">Performance Dimensions</p>
                   <div className="relative">
                     {/* Glass shelf line */}
-                    <div className="absolute bottom-[18px] left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                    <div className="absolute bottom-[18px] left-0 right-0 h-px bg-gradient-to-r from-transparent via-secondary-300/30 dark:via-white/20 to-transparent" />
                     <div className="grid grid-cols-8 gap-[6px] px-0 items-end">
                       {sorted.map((dim: any, i: number) => {
                         const { dark, mid, light, rgb } = dimColorMap[dim.code] || fallback;
@@ -658,8 +731,8 @@ function DashboardContent() {
                               className="text-sm font-black tabular-nums mb-1"
                               style={{
                                 fontFamily: "'Times New Roman', Times, serif",
-                                color: light,
-                                textShadow: `0 0 10px rgba(${rgb},0.7), 0 0 20px rgba(${rgb},0.3)`,
+                                color: isDark ? light : dark,
+                                textShadow: isDark ? `0 0 10px rgba(${rgb},0.7), 0 0 20px rgba(${rgb},0.3)` : 'none',
                                 animation: `scoreIn 0.5s ease-out ${0.8 + i * 0.07}s both`,
                               } as any}
                             >{score}</span>
@@ -735,7 +808,7 @@ function DashboardContent() {
                             </div>
                             {/* Label */}
                             <span
-                              className="text-3xs font-bold text-white/45 mt-1 tracking-wider group-hover:text-white/90 transition-colors"
+                              className="text-3xs font-bold text-secondary-600 dark:text-secondary-400 mt-1 tracking-wider group-hover:text-secondary-900 dark:group-hover:text-white/90 transition-colors"
                               style={{ animation: `scoreIn 0.4s ease-out ${0.9 + i * 0.06}s both` } as any}
                             >{dim.code}</span>
                             </div>
@@ -750,7 +823,22 @@ function DashboardContent() {
           </div>
 
           {/* CPIS Score Visualization — 8-dimension radar chart */}
-          <div className="flex-shrink-0 flex flex-col items-center bg-black/20 backdrop-blur-xl rounded-2xl p-3 border border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_24px_60px_-10px_rgba(0,0,0,0.5)] hover:bg-black/25 transition-all duration-500 lg:max-w-[320px]">
+          <div
+            className="relative flex-shrink-0 flex flex-col items-center bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-2xl p-3 border hover:bg-white/70 dark:hover:bg-white/8 transition-all duration-500 lg:max-w-[320px]"
+            style={{
+              borderColor: isDark ? pRgba(p[400], 0.12) : pRgba(p[300], 0.25),
+              boxShadow: isDark
+                ? `0 8px 32px -8px ${pRgba(p[500], 0.18)}, inset 0 1px 0 ${pRgba(p[400], 0.06)}`
+                : `0 4px 20px -6px ${pRgba(p[500], 0.10)}, inset 0 1px 0 ${pRgba(p[200], 0.30)}`,
+            }}
+          >
+            {/* Accent glow behind radar */}
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full blur-3xl pointer-events-none"
+              style={{
+                background: `radial-gradient(circle, ${pRgba(p[isDark ? 400 : 300], isDark ? 0.15 : 0.10)} 0%, transparent 70%)`,
+              }}
+            />
             {cpisData ? (
               <CPISScoreDisplay
                 score={overallScore}
@@ -763,15 +851,15 @@ function DashboardContent() {
               />
             ) : perfLoading ? (
               <div className="flex flex-col items-center gap-3 py-8">
-                <div className="w-16 h-16 rounded-full border-2 border-white/20 border-t-white/60 animate-spin" />
-                <p className="text-white/60 text-sm">Computing CPIS...</p>
+                <div className="w-16 h-16 rounded-full border-2 border-secondary-200 dark:border-white/20 border-t-primary-500 dark:border-t-white/60 animate-spin" />
+                <p className="text-secondary-600 dark:text-secondary-400 text-sm">Computing CPIS...</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2 py-6">
-                <div className="text-2xl font-bold text-white">{Math.round(overallScore)}</div>
-                <p className="text-white/60 text-sm">Performance Score</p>
+                <div className="text-2xl font-bold text-secondary-900 dark:text-white">{Math.round(overallScore)}</div>
+                <p className="text-secondary-600 dark:text-secondary-400 text-sm">Performance Score</p>
                 {percentile !== null && percentile > 0 && (
-                  <p className="text-white/50 text-xs">Top {Math.max(1, 100 - percentile)}%</p>
+                  <p className="text-secondary-600 dark:text-secondary-300 text-xs">Top {Math.max(1, 100 - percentile)}%</p>
                 )}
               </div>
             )}

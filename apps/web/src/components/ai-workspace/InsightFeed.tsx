@@ -157,8 +157,8 @@ export function InsightFeed({ className = '' }: InsightFeedProps) {
                 isCritical ? 'holo-shimmer-ai' : ''
               } ${
                 theme === 'light'
-                  ? `border-gray-200 bg-white ${!insight.isRead ? 'ring-1 ring-blue-200' : ''} hover:bg-gray-50`
-                  : `border-white/10 bg-white/[0.04] ${!insight.isRead ? 'ring-1 ring-purple-500/20' : ''} hover:bg-white/[0.07]`
+                  ? `border-gray-200 bg-white ${!insight.isRead ? 'ring-1 ring-primary-200' : ''} hover:bg-gray-50`
+                  : `border-white/10 bg-white/[0.04] ${!insight.isRead ? 'ring-1 ring-primary-500/20' : ''} hover:bg-white/[0.07]`
               } ${isCritical && !insight.isRead ? 'bioluminescent-subtle' : ''}`}
             >
               <div className="flex items-start gap-2">

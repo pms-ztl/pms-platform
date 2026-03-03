@@ -450,6 +450,21 @@ export class UsersController {
       next(error);
     }
   }
+  async removeAvatar(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.params.id || req.user!.id;
+      await usersService.updateAvatar(req.tenantId!, userId, null);
+
+      res.status(200).json({
+        success: true,
+        data: { avatarUrl: null },
+        message: 'Profile photo removed successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getSubscriptionInfo(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const info = await usersService.getSubscriptionInfo(req.tenantId!);

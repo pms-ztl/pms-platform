@@ -224,9 +224,7 @@ function StatCard({
       <ArrowTrendingUpIcon className="h-4 w-4 text-green-500" />
     ) : trend === 'down' ? (
       <ArrowTrendingDownIcon className="h-4 w-4 text-red-500" />
-    ) : (
-      <MinusIcon className="h-4 w-4 text-secondary-400" />
-    );
+    ) : null;
 
   return (
     <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
@@ -234,7 +232,7 @@ function StatCard({
         <div className={clsx('p-3 rounded-lg', iconBg)}>
           <Icon className={clsx('h-6 w-6', iconColor)} />
         </div>
-        {trend !== undefined && <div>{trendIcon}</div>}
+        {trendIcon && <div>{trendIcon}</div>}
       </div>
       <div className="mt-3">
         <p className="text-sm text-secondary-500 dark:text-secondary-400">{label}</p>
@@ -593,7 +591,7 @@ export function PulsePage() {
             <select
               value={analyticsDays}
               onChange={(e) => setAnalyticsDays(Number(e.target.value))}
-              className="text-sm border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-1.5 bg-white dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-3 py-1.5 bg-white/90 dark:bg-secondary-900/60 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
             >
               <option value={7}>Last 7 days</option>
               <option value={14}>Last 14 days</option>

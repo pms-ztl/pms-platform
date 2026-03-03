@@ -1,6 +1,7 @@
 import type { Server, Socket } from 'socket.io';
 import { chatService } from './chat.service';
 import { logger } from '../../utils/logger';
+import { notificationsService } from '../notifications/notifications.service';
 
 interface SocketUser {
   userId: string;
@@ -58,12 +59,28 @@ export function initChatSocket(io: Server): void {
         // Also notify participants who are NOT currently in the room
         const convo = await chatService.getConversation(data.conversationId);
         if (convo) {
+          const senderName = `${(message as any).sender?.firstName || ''} ${(message as any).sender?.lastName || ''}`.trim() || 'Someone';
           for (const p of convo.participants) {
             if (p.userId !== user.userId) {
+              // Chat-specific event (updates ChatPage sidebar)
               io.to(`user:${p.userId}`).emit('chat:notification', {
                 conversationId: data.conversationId,
                 message,
               });
+              // Global notification event (shows toast via useSocket.ts on any page)
+              io.to(`user:${p.userId}`).emit('notification:new', {
+                title: `New message from ${senderName}`,
+                body: data.content.length > 80 ? data.content.slice(0, 80) + '…' : data.content,
+                data: { conversationId: data.conversationId, type: 'CHAT_MESSAGE' },
+              });
+              // Persist notification in DB (for offline users / notification center)
+              notificationsService.notifyChatMessage(
+                p.userId,
+                user.tenantId,
+                senderName,
+                data.content,
+                data.conversationId,
+              ).catch((err) => logger.warn('Failed to persist chat notification', { error: err }));
             }
           }
         }
@@ -177,12 +194,25 @@ export function initChatSocket(io: Server): void {
         // Notify participants of the target conversation
         const convo = await chatService.getConversation(data.targetConversationId);
         if (convo) {
+          const senderName = `${(forwarded as any).sender?.firstName || ''} ${(forwarded as any).sender?.lastName || ''}`.trim() || 'Someone';
           for (const p of convo.participants) {
             if (p.userId !== user.userId) {
               io.to(`user:${p.userId}`).emit('chat:notification', {
                 conversationId: data.targetConversationId,
                 message: forwarded,
               });
+              io.to(`user:${p.userId}`).emit('notification:new', {
+                title: `Forwarded message from ${senderName}`,
+                body: ((forwarded as any).content || '').slice(0, 80),
+                data: { conversationId: data.targetConversationId, type: 'CHAT_MESSAGE' },
+              });
+              notificationsService.notifyChatMessage(
+                p.userId,
+                user.tenantId,
+                senderName,
+                (forwarded as any).content || 'Forwarded message',
+                data.targetConversationId,
+              ).catch((err) => logger.warn('Failed to persist forwarded chat notification', { error: err }));
             }
           }
         }

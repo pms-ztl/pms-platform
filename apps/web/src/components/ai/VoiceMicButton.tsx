@@ -110,8 +110,8 @@ export function VoiceMicButton({
           <MicrophoneIcon
             className={`h-4 w-4 transition-colors ${
               isDark
-                ? 'text-gray-400 hover:text-indigo-300'
-                : 'text-gray-500 hover:text-indigo-500'
+                ? 'text-gray-400 hover:text-primary-300'
+                : 'text-gray-500 hover:text-primary-500'
             }`}
           />
         )}

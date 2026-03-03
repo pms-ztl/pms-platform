@@ -2,10 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Default 105% scale for all devices ────────────────────────────────── */
+/* ── Global scale: 120% zoom for data-dense enterprise dashboard ─────────
+ * CSS zoom uniformly scales ALL elements (text, spacing, borders, layout)
+ * without inflating the rem base — so overlays/widgets don't need resets.
+ * This is different from the old font-size: clamp() which ONLY inflated
+ * text, causing mismatches where every overlay needed fontSize: 14/16.
+ *
+ * zoom: 1.2 gives comfortable reading on 1366-1920px laptop/desktop screens.
+ * Effective visual sizes: text-sm→16.8px, text-lg→21.6px, text-2xl→28.8px
+ *
+ * Auth/landing pages opt out via their own reset (these are standalone).
+ * ───────────────────────────────────────────────────────────────────────── */
 html {
-  zoom: 1.05;
+  zoom: 1.2;
 }
+/* Auth & landing pages: reset zoom to 100% (standalone layouts) */
+html:has(.auth-page),
+html:has(.landing-page) {
+  zoom: 1;
+}
+
+/* ── Typography scale (Tailwind defaults at 16px rem base) ───────────────
+ *   text-3xs = 9px    — micro labels (SVG, charts)
+ *   text-2xs = 10px   — tiny badges, chart ticks
+ *   text-xs  = 12px   — captions, metadata, timestamps, badges
+ *   text-sm  = 14px   — body text, table cells, form inputs, nav items
+ *   text-base= 16px   — prominent body, modal descriptions
+ *   text-lg  = 18px   — section headings (h2/h3), card titles
+ *   text-xl  = 20px   — page title mobile, sub-headings
+ *   text-2xl = 24px   — page title desktop (h1)
+ *   text-3xl = 30px   — hero headings
+ *   text-4xl+          — landing/marketing pages only
+ *
+ * Responsive sizing is at the component level via Tailwind prefixes
+ * (text-xl sm:text-2xl) — NOT by inflating the root font-size.
+ * ───────────────────────────────────────────────────────────────────────── */
 
 /* ── CSS Custom Properties for Theming ─────────────────────────────────── *
  * Values are space-separated RGB channels (e.g. 139 92 246) so Tailwind's
@@ -115,27 +146,17 @@ html {
   html {
     @apply antialiased scroll-smooth;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-    font-size: clamp(100%, 1.435vw, 143.75%);
-    /* Responsive: 16px min → scales with viewport → 23px max
-       At 1600px viewport: ~23px (matches original design)
-       At 1366px viewport: ~19.6px (comfortable for smaller screens)
-       At 1920px viewport: capped at 23px */
-  }
-
-  /* Reset font-size on auth/login/landing pages so the inflated base doesn't affect them */
-  html:has(.auth-page),
-  html:has(.landing-page) {
-    font-size: 100%;
+    font-size: 100%; /* 16px — universal standard, never inflated */
   }
 
 
   body {
     @apply bg-secondary-50 text-secondary-900 transition-colors duration-300;
     background-image:
-      radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.06) 0px, transparent 50%),
-      radial-gradient(at 80% 20%, rgba(6, 182, 212, 0.05) 0px, transparent 40%),
-      radial-gradient(at 100% 60%, rgba(139, 92, 246, 0.04) 0px, transparent 45%),
-      radial-gradient(at 20% 100%, rgba(167, 139, 250, 0.04) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, rgb(var(--c-primary-500) / 0.06) 0px, transparent 50%),
+      radial-gradient(at 80% 20%, rgb(var(--c-primary-300) / 0.05) 0px, transparent 40%),
+      radial-gradient(at 100% 60%, rgb(var(--c-primary-500) / 0.04) 0px, transparent 45%),
+      radial-gradient(at 20% 100%, rgb(var(--c-primary-400) / 0.04) 0px, transparent 50%);
     background-attachment: fixed;
     letter-spacing: -0.01em;
   }
@@ -265,16 +286,80 @@ html {
     @apply btn bg-transparent text-secondary-600 hover:bg-secondary-100/80 focus:ring-secondary-500 dark:text-secondary-400 dark:hover:bg-white/5;
   }
 
-  .input {
+  .input,
+  .input-field {
     @apply w-full px-4 py-3 border border-secondary-200 rounded-xl shadow-sm bg-white/90 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 disabled:bg-secondary-100 disabled:cursor-not-allowed transition-all duration-300 dark:bg-secondary-900/60 dark:border-secondary-700/50 dark:text-white dark:placeholder-secondary-500 dark:focus:ring-primary-500/40 dark:focus:border-primary-500;
   }
 
-  .input:focus {
+  .input:focus,
+  .input-field:focus {
     box-shadow: 0 0 0 4px rgb(var(--c-primary-500) / 0.1), 0 4px 15px -3px rgb(var(--c-primary-500) / 0.2);
   }
 
-  .dark .input:focus {
+  .dark .input:focus,
+  .dark .input-field:focus {
     box-shadow: 0 0 0 4px rgb(var(--c-primary-500) / 0.12), 0 4px 15px -3px rgb(var(--c-primary-500) / 0.2);
+  }
+
+  /* ── Themed Select Dropdowns ─────────────────────────────────────────── */
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgb(var(--c-secondary-200));
+    border-radius: 0.75rem;
+    color: rgb(var(--c-secondary-900));
+    font-size: 0.875rem;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  select:focus {
+    outline: none;
+    border-color: rgb(var(--c-primary-400));
+    box-shadow: 0 0 0 3px rgb(var(--c-primary-500) / 0.12), 0 4px 12px -2px rgb(var(--c-primary-500) / 0.15);
+  }
+
+  select:hover:not(:focus):not(:disabled) {
+    border-color: rgb(var(--c-primary-300));
+  }
+
+  select option {
+    background-color: #ffffff;
+    color: rgb(var(--c-secondary-900));
+    padding: 0.5rem;
+  }
+
+  .dark select {
+    background-color: rgb(var(--c-secondary-900) / 0.7);
+    border-color: rgb(var(--c-secondary-700) / 0.5);
+    color: #f1f5f9;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  }
+
+  .dark select:focus {
+    border-color: rgb(var(--c-primary-500));
+    box-shadow: 0 0 0 3px rgb(var(--c-primary-500) / 0.15), 0 4px 12px -2px rgb(var(--c-primary-500) / 0.2);
+  }
+
+  .dark select:hover:not(:focus):not(:disabled) {
+    border-color: rgb(var(--c-primary-500) / 0.4);
+  }
+
+  .dark select option {
+    background-color: rgb(var(--c-secondary-800));
+    color: #f1f5f9;
+  }
+
+  select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   .label {
@@ -499,6 +584,30 @@ html {
     background: linear-gradient(rgb(var(--c-surface)), rgb(var(--c-surface))) padding-box,
                 linear-gradient(135deg, rgb(var(--c-primary-500)), #06b6d4) border-box;
   }
+}
+
+/* ── Select Option Theming (outside @layer for max specificity) ──────── */
+select option {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  padding: 8px 12px;
+}
+
+.dark select option {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+select option:checked,
+select option:hover {
+  background-color: rgb(var(--c-primary-100)) !important;
+  color: rgb(var(--c-primary-900)) !important;
+}
+
+.dark select option:checked,
+.dark select option:hover {
+  background-color: rgb(var(--c-primary-900)) !important;
+  color: rgb(var(--c-primary-100)) !important;
 }
 
 /* Custom Scrollbar */
@@ -808,14 +917,13 @@ html {
 
 .dark .glass-banner,
 .dark .glass-banner-okr {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(24px) saturate(150%);
   -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.02);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 /* Stat card - solid dark surface with gradient top-edge on hover */
@@ -2565,6 +2673,13 @@ html.transitioning *::after {
   font-size: 0.75rem;
 }
 
+/* ── Sidebar content offset — reset on mobile ─────────────────────────── */
+@media (max-width: 1023px) {
+  .sidebar-content-offset {
+    padding-left: 0 !important;
+  }
+}
+
 /* Compact buttons */
 .compact .btn {
   padding: 0.5rem 1rem;
@@ -2620,6 +2735,12 @@ html.transitioning *::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.001ms !important;
+}
+/* Exempt: landing scroll indicator must always bounce (UX-critical) */
+.no-animations [data-always-animate],
+.no-animations [data-always-animate] * {
+  animation-duration: revert !important;
+  animation-iteration-count: revert !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -3087,14 +3208,52 @@ html.transitioning *::after {
   mix-blend-mode: screen;
 }
 
-/* Scroll-down bounce indicator */
-@keyframes landing-scroll-bounce {
-  0%, 100% { transform: translateY(0); opacity: 0.6; }
-  50% { transform: translateY(10px); opacity: 1; }
+/* ── Scroll-down indicator: jump-jump bounce ──────────────────────────
+   Multi-stage "jump" that catches the eye even without cursor movement.
+   Stage 1: hop up → land. Stage 2: smaller hop → land. Then rest & repeat.
+   3s cycle keeps it eye-catching but not annoying. */
+
+@keyframes landing-scroll-jump {
+  0%       { transform: translateY(0); }
+  8%       { transform: translateY(-18px); }
+  16%      { transform: translateY(0); }
+  20%      { transform: translateY(-8px); }
+  28%      { transform: translateY(0); }
+  100%     { transform: translateY(0); }
 }
 
 .landing-scroll-indicator {
-  animation: landing-scroll-bounce 2s ease-in-out infinite;
+  animation: landing-scroll-jump 3s cubic-bezier(0.3, 0, 0.2, 1) infinite;
+}
+
+/* Mouse wheel dot scrolling down inside the capsule */
+@keyframes landing-scroll-wheel {
+  0%       { transform: translateY(0); opacity: 1; }
+  40%      { transform: translateY(10px); opacity: 0; }
+  41%      { transform: translateY(-4px); opacity: 0; }
+  60%      { transform: translateY(0); opacity: 1; }
+  100%     { transform: translateY(0); opacity: 1; }
+}
+
+.landing-scroll-wheel {
+  animation: landing-scroll-wheel 2.2s ease-in-out infinite;
+}
+
+/* Cascading chevrons — first then second, waterfall downward */
+@keyframes landing-chevron-cascade {
+  0%       { transform: translateY(0); opacity: 0.2; }
+  30%      { transform: translateY(6px); opacity: 1; }
+  60%      { transform: translateY(12px); opacity: 0; }
+  61%      { transform: translateY(0); opacity: 0; }
+  80%      { opacity: 0.2; }
+  100%     { transform: translateY(0); opacity: 0.2; }
+}
+
+.landing-chevron-1 {
+  animation: landing-chevron-cascade 2s ease-in-out infinite;
+}
+.landing-chevron-2 {
+  animation: landing-chevron-cascade 2s ease-in-out 0.25s infinite;
 }
 
 /* Glass feature card top glow line */
@@ -3434,11 +3593,11 @@ html.transitioning *::after {
   }
 }
 
-/* ── FAB: solid idle (44px to match ScrollToTop) → glow on hover ──── */
+/* ── FAB: accent-adaptive solid idle (44px to match ScrollToTop) → glow on hover ── */
 .fab-glass-btn {
-  background: rgba(99, 102, 241, 0.7);
+  background: rgb(var(--c-primary-500) / 0.7);
   border: none;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 12px rgb(var(--c-primary-500) / 0.3);
   width: 44px !important;
   height: 44px !important;
 }
@@ -3451,11 +3610,11 @@ html.transitioning *::after {
 .fab-glass-btn:hover {
   width: 44px !important;
   height: 44px !important;
-  background: rgba(99, 102, 241, 0.85);
+  background: rgb(var(--c-primary-500) / 0.85);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.4), 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 20px rgb(var(--c-primary-500) / 0.4), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 .fab-glass-btn:hover svg {
   width: 20px;

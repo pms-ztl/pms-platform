@@ -390,7 +390,7 @@ export function EmployeeProfilePage() {
         >
           <ArrowLeftIcon className="h-5 w-5" />
         </button>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
+        <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">
           Employee Profile
         </h1>
       </div>

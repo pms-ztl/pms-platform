@@ -30,7 +30,6 @@ import {
   TrashIcon,
   LinkIcon,
   ArrowTopRightOnSquareIcon,
-  MapPinIcon,
   ShareIcon,
   InformationCircleIcon,
   CheckIcon,
@@ -45,6 +44,15 @@ import {
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/solid';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import type { ConversationData, ChatMessageData, ChatUser, SearchResultData } from '@/lib/api/chat';
+
+// ── Custom Pin (thumbtack) icon ──
+function PinIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 3.75L7.5 3.75a.75.75 0 00-.53 1.28l1.72 1.72-1.94 5.19a.75.75 0 00.17.79l.1.1a.75.75 0 00.53.22h3.2v5.2a.75.75 0 001.5 0v-5.2h3.2a.75.75 0 00.53-.22l.1-.1a.75.75 0 00.17-.79l-1.94-5.19 1.72-1.72a.75.75 0 00-.53-1.28z" />
+    </svg>
+  );
+}
 
 // ── Helpers ──
 
@@ -168,8 +176,8 @@ function DeliveryStatus({ isOwn }: { isOwn: boolean }) {
 function Avatar({ name, avatarUrl, isOnline, size = 'md' }: {
   name: string; avatarUrl?: string | null; isOnline?: boolean; size?: 'sm' | 'md' | 'lg';
 }) {
-  const sz = { sm: 'h-9 w-9 text-xs', md: 'h-11 w-11 text-sm', lg: 'h-14 w-14 text-base' };
-  const dot = { sm: 'h-2.5 w-2.5 border-[1.5px]', md: 'h-3 w-3 border-2', lg: 'h-3.5 w-3.5 border-2' };
+  const sz = { sm: 'h-8 w-8 text-xs', md: 'h-9 w-9 text-sm', lg: 'h-10 w-10 text-sm' };
+  const dot = { sm: 'h-2 w-2 border-[1.5px]', md: 'h-2.5 w-2.5 border-[1.5px]', lg: 'h-3 w-3 border-2' };
   const parts = name.split(' ');
   const initials = getInitials(parts[0], parts[1]);
 
@@ -480,9 +488,9 @@ function ConversationItem({ convo, isActive, onClick, onlineUsers }: {
       {convo.type === 'DIRECT' ? (
         <Avatar name={convo.name || 'User'} avatarUrl={convo.avatarUrl} isOnline={isOnline} />
       ) : (
-        <div className={clsx('flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br', TYPE_COLORS[convo.type], 'bg-opacity-10')}>
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-secondary-100 to-secondary-50 dark:from-secondary-700/60 dark:to-secondary-800/60">
-            <TypeIcon className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
+        <div className={clsx('flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br', TYPE_COLORS[convo.type], 'bg-opacity-10')}>
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-secondary-100 to-secondary-50 dark:from-secondary-700/60 dark:to-secondary-800/60">
+            <TypeIcon className="h-4 w-4 text-secondary-500 dark:text-secondary-400" />
           </div>
         </div>
       )}
@@ -531,13 +539,15 @@ function ConversationItem({ convo, isActive, onClick, onlineUsers }: {
 
 // ── Conversation Menu ──
 
-function ConversationMenu({ convo, onClose }: {
+function ConversationMenu({ convo, onClose, onClearChat }: {
   convo: ConversationData;
   onClose: () => void;
+  onClearChat: () => void;
 }) {
   const { user } = useAuthStore();
   const { removeConversation, updateConversationName, toggleConversationMuted } = useChatStore();
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const [newName, setNewName] = useState(convo.name || '');
   const ref = useRef<HTMLDivElement>(null);
@@ -581,7 +591,22 @@ function ConversationMenu({ convo, onClose }: {
 
   return (
     <div ref={ref} className="absolute right-0 top-full mt-1 z-30 w-52 rounded-xl glass-deep shadow-xl border border-secondary-200/60 dark:border-secondary-700/50 py-1 overflow-hidden">
-      {showLeaveConfirm ? (
+      {showClearConfirm ? (
+        <div className="p-3 space-y-2">
+          <p className="text-xs text-secondary-600 dark:text-secondary-300 font-medium">Clear all messages?</p>
+          <p className="text-2xs text-secondary-400 dark:text-secondary-500">This will remove all messages in this conversation. This action cannot be undone.</p>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowClearConfirm(false)}
+              className="flex-1 text-xs font-semibold py-1.5 rounded-lg bg-secondary-100 dark:bg-secondary-800/50 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-all">
+              Cancel
+            </button>
+            <button onClick={() => { onClearChat(); onClose(); }}
+              className="flex-1 text-xs font-semibold py-1.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all">
+              Clear
+            </button>
+          </div>
+        </div>
+      ) : showLeaveConfirm ? (
         <div className="p-3 space-y-2">
           <p className="text-xs text-secondary-600 dark:text-secondary-300 font-medium">Leave this conversation?</p>
           <p className="text-2xs text-secondary-400 dark:text-secondary-500">You will no longer receive messages from this chat.</p>
@@ -632,6 +657,13 @@ function ConversationMenu({ convo, onClose }: {
               Rename
             </button>
           )}
+
+          {/* Clear Chat */}
+          <button onClick={() => setShowClearConfirm(true)}
+            className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
+            <TrashIcon className="h-4 w-4" />
+            Clear Chat
+          </button>
 
           {/* Leave - only for group/channel */}
           {isGroupOrChannel && (
@@ -766,7 +798,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
             'flex items-center gap-1.5 px-2 py-0.5 text-2xs font-medium',
             isOwn ? 'justify-end text-amber-200/80' : 'text-amber-500/80'
           )}>
-            <MapPinIcon className="h-3 w-3" />
+            <PinIcon className="h-3 w-3" />
             <span>Pinned{message.pinnedBy ? ` by ${message.pinnedBy.firstName}` : ''}</span>
           </div>
         )}
@@ -839,7 +871,7 @@ function MessageBubble({ message, isOwn, showSender, userId, conversationId, soc
                   ? 'bg-amber-50 dark:bg-amber-900/30 ring-amber-200 dark:ring-amber-700/50 text-amber-500'
                   : 'bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl ring-secondary-200/60 dark:ring-secondary-700/50 text-secondary-400 hover:text-amber-500'
               )}>
-              <MapPinIcon className="h-3.5 w-3.5" />
+              <PinIcon className="h-3.5 w-3.5" />
             </button>
           )}
 
@@ -1105,7 +1137,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
   return (
     <div className="w-[320px] max-w-full flex-shrink-0 flex flex-col bg-white/70 dark:bg-secondary-900/50 backdrop-blur-xl border-l border-secondary-200/50 dark:border-secondary-700/30">
       <div className="flex items-center gap-3 px-4 py-3.5 border-b border-secondary-200/50 dark:border-secondary-700/30">
-        <MapPinIcon className="h-5 w-5 text-amber-500 flex-shrink-0" />
+        <PinIcon className="h-5 w-5 text-amber-500 flex-shrink-0" />
         <h4 className="text-sm font-display font-bold text-secondary-900 dark:text-white flex-1">Pinned Messages</h4>
         <span className="text-2xs font-semibold text-secondary-400 bg-secondary-100 dark:bg-secondary-800/50 px-2 py-0.5 rounded-full">{pinnedMessages.length}</span>
         <button onClick={onClose}
@@ -1120,7 +1152,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
           </div>
         ) : pinnedMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <MapPinIcon className="h-8 w-8 text-secondary-300 dark:text-secondary-600 mb-2" />
+            <PinIcon className="h-8 w-8 text-secondary-300 dark:text-secondary-600 mb-2" />
             <p className="text-xs text-secondary-400 dark:text-secondary-500">No pinned messages</p>
             <p className="text-2xs text-secondary-400 dark:text-secondary-500 mt-1">Pin important messages to find them easily</p>
           </div>
@@ -1137,7 +1169,7 @@ function PinnedMessagesPanel({ conversationId, onClose }: {
                 </div>
                 <button onClick={() => handleUnpin(msg.id)} title="Unpin"
                   className="rounded-lg p-1 text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-all flex-shrink-0">
-                  <MapPinIcon className="h-3.5 w-3.5" />
+                  <PinIcon className="h-3.5 w-3.5" />
                 </button>
               </div>
               <p className="text-xs text-secondary-600 dark:text-secondary-300 leading-relaxed">{msg.content}</p>
@@ -1769,6 +1801,7 @@ export default function ChatPage() {
     showInfo, setShowInfo,
     forwardingMessage, setForwardingMessage,
     removeConversation, updateConversationName, toggleConversationMuted,
+    clearMessages,
   } = useChatStore();
 
   const [input, setInput] = useState('');
@@ -1782,6 +1815,14 @@ export default function ChatPage() {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
+
+  const handleClearChat = useCallback(async () => {
+    if (!activeConversationId) return;
+    try {
+      await chatApi.clearChat(activeConversationId);
+      clearMessages();
+    } catch { /* ignore */ }
+  }, [activeConversationId, clearMessages]);
 
   // Load conversations
   const { refetch: refetchConversations } = useQuery({
@@ -1998,24 +2039,24 @@ export default function ChatPage() {
         <div className="flex-shrink-0 px-5 pt-5 pb-3">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/25">
-                <ChatBubbleLeftRightIcon className="h-5 w-5 text-white" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/25">
+                <ChatBubbleLeftRightIcon className="h-4 w-4 text-white" />
               </div>
               <div>
-                <h2 className="text-base font-display font-bold text-secondary-900 dark:text-white">Messages</h2>
+                <h2 className="text-lg font-display font-bold text-secondary-900 dark:text-white">Messages</h2>
                 <p className="text-2xs text-secondary-400 dark:text-secondary-500 font-medium">{displayConversations.length} conversations</p>
               </div>
             </div>
             <div className="flex items-center gap-1.5">
               <button onClick={() => setShowEmail(true)}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-500/10 dark:bg-accent-500/15 text-accent-600 dark:text-accent-400 hover:bg-accent-500/20 dark:hover:bg-accent-500/25 transition-all hover:scale-105 active:scale-95"
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent-500/10 dark:bg-accent-500/15 text-accent-600 dark:text-accent-400 hover:bg-accent-500/20 dark:hover:bg-accent-500/25 transition-all hover:scale-105 active:scale-95"
                 title="Compose email">
-                <EnvelopeIcon className="h-5 w-5" />
+                <EnvelopeIcon className="h-4 w-4" />
               </button>
               <button onClick={() => setShowNewChat(true)}
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-500/10 dark:bg-primary-500/15 text-primary-600 dark:text-primary-400 hover:bg-primary-500/20 dark:hover:bg-primary-500/25 transition-all hover:scale-105 active:scale-95"
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-500/10 dark:bg-primary-500/15 text-primary-600 dark:text-primary-400 hover:bg-primary-500/20 dark:hover:bg-primary-500/25 transition-all hover:scale-105 active:scale-95"
                 title="New conversation">
-                <PlusIcon className="h-5 w-5" />
+                <PlusIcon className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -2069,68 +2110,74 @@ export default function ChatPage() {
               <button onClick={() => setShowSidebar(true)} className="md:hidden rounded-lg p-1.5 text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800 transition">
                 <ArrowLeftIcon className="h-5 w-5" />
               </button>
-              <Avatar
-                name={activeConvo.name || 'Chat'}
-                avatarUrl={activeConvo.avatarUrl}
-                size="lg"
-                isOnline={activeConvo.type === 'DIRECT' ? onlineUsers.has(activeConvo.participants.find((p) => p.userId !== user?.id)?.userId || '') : undefined}
-              />
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-display font-bold text-secondary-900 dark:text-white truncate">{activeConvo.name || 'Chat'}</h3>
-                <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 truncate">
-                  {activeConvo.type === 'DIRECT'
-                    ? (onlineUsers.has(activeConvo.participants.find((p) => p.userId !== user?.id)?.userId || '')
-                        ? <span className="text-success-500 font-medium">Online</span>
-                        : 'Offline')
-                    : `${activeConvo.participants.length} members`
-                  }
-                </p>
-              </div>
-              <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              <button
+                onClick={() => setShowInfo(!showInfo)}
+                className="flex items-center gap-3 min-w-0 flex-1 text-left rounded-lg hover:bg-secondary-100/60 dark:hover:bg-secondary-800/40 -ml-1 pl-1 pr-2 py-1 transition-all"
+                title="View conversation details"
+              >
+                <Avatar
+                  name={activeConvo.name || 'Chat'}
+                  avatarUrl={activeConvo.avatarUrl}
+                  size="md"
+                  isOnline={activeConvo.type === 'DIRECT' ? onlineUsers.has(activeConvo.participants.find((p) => p.userId !== user?.id)?.userId || '') : undefined}
+                />
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-display font-bold text-secondary-900 dark:text-white truncate">{activeConvo.name || 'Chat'}</h3>
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5 truncate">
+                    {activeConvo.type === 'DIRECT'
+                      ? (onlineUsers.has(activeConvo.participants.find((p) => p.userId !== user?.id)?.userId || '')
+                          ? <span className="text-success-500 font-medium">Online</span>
+                          : 'Offline')
+                      : `${activeConvo.participants.length} members`
+                    }
+                  </p>
+                </div>
+              </button>
+              <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
                 {activeConvo.type !== 'DIRECT' && (
-                  <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary-100/60 dark:bg-secondary-800/40">
-                    <UserGroupIcon className="h-4 w-4 text-secondary-400" />
-                    <span className="text-xs font-semibold text-secondary-500 dark:text-secondary-400">{activeConvo.participants.length}</span>
+                  <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-md bg-secondary-100/60 dark:bg-secondary-800/40">
+                    <UserGroupIcon className="h-3.5 w-3.5 text-secondary-400" />
+                    <span className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400">{activeConvo.participants.length}</span>
                   </div>
                 )}
                 {/* Search button */}
                 <button onClick={() => setShowSearch(!showSearch)} title="Search messages"
                   className={clsx(
-                    'hidden sm:flex h-9 w-9 items-center justify-center rounded-xl transition-all hover:scale-105 active:scale-95',
+                    'hidden sm:flex h-7 w-7 items-center justify-center rounded-lg transition-all hover:scale-105 active:scale-95',
                     showSearch
                       ? 'bg-primary-500/15 text-primary-600 dark:text-primary-400'
                       : 'text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50'
                   )}>
-                  <MagnifyingGlassIcon className="h-4.5 w-4.5" />
+                  <MagnifyingGlassIcon className="h-3.5 w-3.5" />
                 </button>
                 {/* Pin button — hidden on small mobile */}
                 <button onClick={() => setShowPinned(!showPinned)} title="Pinned messages"
                   className={clsx(
-                    'hidden sm:flex h-9 w-9 items-center justify-center rounded-xl transition-all hover:scale-105 active:scale-95',
+                    'hidden sm:flex h-7 w-7 items-center justify-center rounded-lg transition-all hover:scale-105 active:scale-95',
                     showPinned
                       ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
                       : 'text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50'
                   )}>
-                  <MapPinIcon className="h-4.5 w-4.5" />
+                  <PinIcon className="h-3.5 w-3.5" />
                 </button>
                 {/* Info button */}
                 <button onClick={() => setShowInfo(!showInfo)} title="Conversation details"
                   className={clsx(
-                    'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl transition-all hover:scale-105 active:scale-95',
+                    'flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-lg transition-all hover:scale-105 active:scale-95',
                     showInfo
                       ? 'bg-primary-500/15 text-primary-600 dark:text-primary-400'
                       : 'text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50'
                   )}>
-                  <InformationCircleIcon className="h-4.5 w-4.5" />
+                  <InformationCircleIcon className="h-3.5 w-3.5" />
                 </button>
                 {/* Conversation menu */}
                 <div className="relative">
                   <button onClick={() => setShowConvoMenu(!showConvoMenu)}
-                    className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50 transition-all hover:scale-105 active:scale-95">
-                    <EllipsisHorizontalIcon className="h-5 w-5" />
+                    className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-lg text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-800/50 transition-all hover:scale-105 active:scale-95">
+                    <EllipsisHorizontalIcon className="h-4 w-4" />
                   </button>
                   {showConvoMenu && (
-                    <ConversationMenu convo={activeConvo} onClose={() => setShowConvoMenu(false)} />
+                    <ConversationMenu convo={activeConvo} onClose={() => setShowConvoMenu(false)} onClearChat={handleClearChat} />
                   )}
                 </div>
               </div>

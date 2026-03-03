@@ -143,10 +143,17 @@ class SkillsController {
 
       const data = parsed.data;
 
-      // Resolve skillCategoryId from skillCategory name if not provided
+      // Resolve skillCategoryId from skillCategory name — auto-create if new
       let skillCategoryId = data.skillCategoryId;
       if (!skillCategoryId && data.skillCategory) {
         skillCategoryId = await skillsService.findCategoryIdByName(req.tenantId!, data.skillCategory);
+        if (!skillCategoryId) {
+          // Auto-create the category so users can type custom category names
+          const newCat = await skillsService.createCategory(req.tenantId!, {
+            name: data.skillCategory,
+          });
+          skillCategoryId = newCat.id;
+        }
       }
       if (!skillCategoryId) throw new ValidationError('Skill category is required');
 
@@ -177,12 +184,24 @@ class SkillsController {
       if (!parsed.success) throw new ValidationError('Invalid data', { errors: parsed.error.format() });
 
       const data = parsed.data;
+
+      // Resolve skillCategory name → id (auto-create if new)
+      let resolvedCategoryId: string | undefined;
+      if (data.skillCategory) {
+        resolvedCategoryId = await skillsService.findCategoryIdByName(req.tenantId!, data.skillCategory);
+        if (!resolvedCategoryId) {
+          const newCat = await skillsService.createCategory(req.tenantId!, { name: data.skillCategory });
+          resolvedCategoryId = newCat.id;
+        }
+      }
+
       const currentLevel = typeof data.currentLevel === 'number'
         ? ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'][Math.min(data.currentLevel - 1, 3)] || 'BEGINNER'
         : data.currentLevel;
 
       const assessment = await skillsService.updateAssessment(req.tenantId!, req.params.id, {
         ...data,
+        ...(resolvedCategoryId ? { skillCategoryId: resolvedCategoryId } : {}),
         currentLevel,
         targetLevel: typeof data.targetLevel === 'number' ? String(data.targetLevel) : data.targetLevel,
       });

@@ -327,7 +327,7 @@ export function CompliancePage() {
       {/* ---- Header ---- */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">
             Compliance Dashboard
           </h1>
           <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
@@ -692,7 +692,7 @@ export function CompliancePage() {
             >
               <div className="flex items-center gap-2">
                 <CalendarDaysIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
-                <h2 className="text-sm font-semibold text-secondary-900 dark:text-white">
+                <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   Upcoming Deadlines
                 </h2>
               </div>

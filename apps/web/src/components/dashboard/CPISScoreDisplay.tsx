@@ -4,9 +4,21 @@ import { StarIcon } from '@heroicons/react/24/solid';
 import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { useThemeStore } from '@/store/theme';
+import { ACCENT_COLORS } from '@/lib/accent-colors';
 import { getThemeStyles, ensureAnimations } from './MetricTooltip';
 
-const GRADE_SCALE = [
+/** Convert "R G B" palette string → hex #RRGGBB */
+function pHex(rgb: string): string {
+  const [r, g, b] = rgb.split(' ').map(Number);
+  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+/** Convert "R G B" → rgba(R,G,B,a) */
+function pRgba(rgb: string, a: number): string {
+  return `rgba(${rgb.split(' ').join(',')},${a})`;
+}
+
+// Grade scale with dual color sets — bright (dark/deep-dark bg) and saturated (light bg)
+const GRADE_SCALE_DARK = [
   { grade: 'A+', range: '90–100', color: '#10b981', glow: 'rgba(16,185,129,0.4)', desc: 'Exceptional performer' },
   { grade: 'A',  range: '80–89',  color: '#10b981', glow: 'rgba(16,185,129,0.3)', desc: 'Strong performer' },
   { grade: 'B+', range: '70–79',  color: '#3b82f6', glow: 'rgba(59,130,246,0.3)', desc: 'Above average' },
@@ -14,6 +26,15 @@ const GRADE_SCALE = [
   { grade: 'C+', range: '50–59',  color: '#f59e0b', glow: 'rgba(245,158,11,0.3)', desc: 'Meeting expectations' },
   { grade: 'C',  range: '40–49',  color: '#f59e0b', glow: 'rgba(245,158,11,0.25)', desc: 'Needs improvement' },
   { grade: 'D',  range: '< 40',   color: '#ef4444', glow: 'rgba(239,68,68,0.35)', desc: 'Underperforming' },
+];
+const GRADE_SCALE_LIGHT = [
+  { grade: 'A+', range: '90–100', color: '#047857', glow: 'rgba(4,120,87,0.25)', desc: 'Exceptional performer' },
+  { grade: 'A',  range: '80–89',  color: '#047857', glow: 'rgba(4,120,87,0.20)', desc: 'Strong performer' },
+  { grade: 'B+', range: '70–79',  color: '#1d4ed8', glow: 'rgba(29,78,216,0.20)', desc: 'Above average' },
+  { grade: 'B',  range: '60–69',  color: '#1d4ed8', glow: 'rgba(29,78,216,0.15)', desc: 'Solid contributor' },
+  { grade: 'C+', range: '50–59',  color: '#b45309', glow: 'rgba(180,83,9,0.20)', desc: 'Meeting expectations' },
+  { grade: 'C',  range: '40–49',  color: '#b45309', glow: 'rgba(180,83,9,0.15)', desc: 'Needs improvement' },
+  { grade: 'D',  range: '< 40',   color: '#b91c1c', glow: 'rgba(185,28,28,0.25)', desc: 'Underperforming' },
 ];
 
 export interface CPISScoreDisplayProps {
@@ -42,6 +63,20 @@ const DIM_INFO: Record<string, { full: string; role: string }> = {
 const CPISScoreDisplay = ({
   score, grade, starRating, rankLabel, dimensions, confidence, trajectory,
 }: CPISScoreDisplayProps) => {
+  const theme = useThemeStore((s) => s.theme);
+  const accentColor = useThemeStore((s) => s.accentColor);
+  const isDark = theme !== 'light';
+  const T = getThemeStyles(theme);
+
+  // Accent palette for radar gradients
+  const ap = ACCENT_COLORS[accentColor].palette;
+  const ac = {
+    light:  pHex(ap[300]),  // lighter shade
+    mid:    pHex(ap[400]),  // main accent
+    strong: pHex(ap[500]),  // stronger
+    deep:   pHex(ap[600]),  // deepest
+  };
+
   const vb = 400;
   const cx = vb / 2;
   const cy = vb / 2;
@@ -49,7 +84,12 @@ const CPISScoreDisplay = ({
   const orbR = 44;
   const dimCount = dimensions.length || 8;
 
-  const neonColors = ['#22d3ee', '#a78bfa', '#34d399', '#fbbf24', '#fb7185', '#818cf8', '#2dd4bf', '#e879f9'];
+  // Neon colors: bright variants for dark/deep-dark bg, saturated-dark variants for light bg
+  // Dark mode  (400-level): cyan, violet, emerald, amber, rose, indigo, teal, fuchsia — bright on dark
+  // Light mode (700-level): high contrast ≥4.5:1 against white glass per WCAG AA
+  const neonColorsDark  = ['#22d3ee', '#a78bfa', '#34d399', '#fbbf24', '#fb7185', '#818cf8', '#2dd4bf', '#e879f9'];
+  const neonColorsLight = ['#0e7490', '#6d28d9', '#047857', '#b45309', '#be123c', '#4338ca', '#0f766e', '#a21caf'];
+  const neonColors = isDark ? neonColorsDark : neonColorsLight;
 
   // Scale radar so orb edge = 0 score, outer ring = 100 score
   // This ensures ALL scores are visible outside the orb
@@ -62,16 +102,26 @@ const CPISScoreDisplay = ({
 
   const rings = [25, 50, 75, 100];
 
-  const gradeColor = grade === 'A+' || grade === 'A' ? '#10b981'
-    : grade === 'B+' || grade === 'B' ? '#3b82f6'
-    : grade === 'C+' || grade === 'C' ? '#f59e0b'
-    : '#ef4444';
+  // Grade colors: bright for dark mode, saturated-dark for light mode (WCAG AA ≥3:1 large text)
+  const gradeColor = isDark
+    ? (grade === 'A+' || grade === 'A' ? '#10b981'    // emerald-500
+      : grade === 'B+' || grade === 'B' ? '#3b82f6'   // blue-500
+      : grade === 'C+' || grade === 'C' ? '#f59e0b'   // amber-500
+      : '#ef4444')                                      // red-500
+    : (grade === 'A+' || grade === 'A' ? '#047857'     // emerald-700
+      : grade === 'B+' || grade === 'B' ? '#1d4ed8'    // blue-700
+      : grade === 'C+' || grade === 'C' ? '#b45309'    // amber-700
+      : '#b91c1c');                                      // red-700
+
+  const GRADE_SCALE = isDark ? GRADE_SCALE_DARK : GRADE_SCALE_LIGHT;
 
   const trajIcon = trajectory.direction === 'improving' ? '▲' : trajectory.direction === 'declining' ? '▼' : '●';
-  const trajColor = trajectory.direction === 'improving' ? '#34d399' : trajectory.direction === 'declining' ? '#fb7185' : '#d4d4d8';
+  const trajColor = trajectory.direction === 'improving'
+    ? (isDark ? '#34d399' : '#047857')    // emerald-400 / emerald-700
+    : trajectory.direction === 'declining'
+    ? (isDark ? '#fb7185' : '#be123c')    // rose-400 / rose-700
+    : (isDark ? '#a1a1aa' : '#52525b');   // zinc-400 / zinc-600
 
-  const theme = useThemeStore((s) => s.theme);
-  const T = getThemeStyles(theme);
   const [showInfo, setShowInfo] = useState(false);
   const [hoveredGrade, setHoveredGrade] = useState<string | null>(null);
   const infoBtnRef = useRef<HTMLButtonElement>(null);
@@ -134,20 +184,20 @@ const CPISScoreDisplay = ({
     <div className="flex flex-col items-center gap-2.5 w-full">
       {/* Radar Chart */}
       <div className="relative w-full max-w-[300px] aspect-square mx-auto">
-        {/* Soft ambient glow behind chart */}
-        <div className="absolute inset-[-16px] bg-gradient-to-br from-cyan-500/20 via-violet-500/15 to-blue-500/20 rounded-full blur-3xl" />
+        {/* Soft ambient glow behind chart — accent-adaptive */}
+        <div className="absolute inset-[-16px] rounded-full blur-3xl" style={{ background: `radial-gradient(circle, ${pRgba(ap[400], isDark ? 0.20 : 0.15)} 0%, ${pRgba(ap[500], isDark ? 0.12 : 0.08)} 50%, transparent 75%)` }} />
 
-        <svg ref={svgRef} viewBox={`0 0 ${vb} ${vb}`} className="relative z-10 w-full h-full select-none" style={{ filter: 'drop-shadow(0 0 16px rgba(56,189,248,0.25))', cursor: 'default' }}>
+        <svg ref={svgRef} viewBox={`0 0 ${vb} ${vb}`} className="relative z-10 w-full h-full select-none" style={{ filter: isDark ? `drop-shadow(0 0 16px ${pRgba(ap[400], 0.25)})` : `drop-shadow(0 0 12px ${pRgba(ap[500], 0.15)})`, cursor: 'default' }}>
           <defs>
             <radialGradient id="cpis-fill-v2" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.55" />
-              <stop offset="70%" stopColor="#3b82f6" stopOpacity="0.30" />
-              <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.15" />
+              <stop offset="0%" stopColor={ac.mid} stopOpacity="0.55" />
+              <stop offset="70%" stopColor={ac.strong} stopOpacity="0.30" />
+              <stop offset="100%" stopColor={ac.deep} stopOpacity="0.15" />
             </radialGradient>
             <linearGradient id="cpis-stroke-v2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#22d3ee" />
-              <stop offset="50%" stopColor="#60a5fa" />
-              <stop offset="100%" stopColor="#a78bfa" />
+              <stop offset="0%" stopColor={ac.light} />
+              <stop offset="50%" stopColor={ac.mid} />
+              <stop offset="100%" stopColor={ac.strong} />
             </linearGradient>
             <filter id="neon-glow">
               <feGaussianBlur stdDeviation="3" result="blur1" />
@@ -166,7 +216,7 @@ const CPISScoreDisplay = ({
               </feMerge>
             </filter>
             <radialGradient id="orb-fill" cx="40%" cy="35%" r="60%">
-              <stop offset="0%" stopColor="rgba(56,189,248,0.25)" />
+              <stop offset="0%" stopColor={pRgba(ap[400], 0.25)} />
               <stop offset="100%" stopColor="rgba(0,0,0,0.75)" />
             </radialGradient>
           </defs>
@@ -182,7 +232,7 @@ const CPISScoreDisplay = ({
                   return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
                 }).join(' ')}
                 fill="none"
-                stroke={`rgba(255,255,255,${ri === 3 ? 0.25 : 0.08})`}
+                stroke={isDark ? `rgba(255,255,255,${ri === 3 ? 0.25 : 0.08})` : `rgba(0,0,0,${ri === 3 ? 0.15 : 0.06})`}
                 strokeWidth={ri === 3 ? '1.2' : '0.7'}
               />
             );
@@ -198,7 +248,7 @@ const CPISScoreDisplay = ({
                 y1={cy + (orbR + 2) * Math.sin(angle)}
                 x2={cx + maxR * Math.cos(angle)}
                 y2={cy + maxR * Math.sin(angle)}
-                stroke="rgba(255,255,255,0.12)"
+                stroke={isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)'}
                 strokeWidth="0.8"
               />
             );
@@ -218,15 +268,15 @@ const CPISScoreDisplay = ({
 
           {/* Center orb */}
           <circle cx={cx} cy={cy} r={orbR} fill="url(#orb-fill)" stroke="url(#cpis-stroke-v2)" strokeWidth="2" filter="url(#soft-glow)" />
-          <circle cx={cx} cy={cy} r={orbR - 4} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+          <circle cx={cx} cy={cy} r={orbR - 4} fill="none" stroke={isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)'} strokeWidth="1" />
           <text x={cx} y={cy - 10} textAnchor="middle" dominantBaseline="central"
             fill="white" fontSize="38" fontWeight="800"
-            style={{ textShadow: '0 0 16px rgba(56,189,248,0.7)' }}
+            style={{ textShadow: `0 0 16px ${pRgba(ap[400], 0.7)}` }}
           >
             {Math.round(score)}
           </text>
           <text x={cx} y={cy + 18} textAnchor="middle" dominantBaseline="central"
-            fill="rgba(147,197,253,0.9)" fontSize="12" fontWeight="700" letterSpacing="3"
+            fill={pRgba(ap[300], 0.9)} fontSize="12" fontWeight="700" letterSpacing="3"
           >
             CPIS
           </text>
@@ -242,7 +292,7 @@ const CPISScoreDisplay = ({
             return (
               <g key={`pt-${d.code}`}>
                 <circle cx={px} cy={py} r="6" fill={neonColors[i]} opacity="0.25" />
-                <circle cx={px} cy={py} r="3.5" fill={neonColors[i]} stroke="rgba(255,255,255,0.9)" strokeWidth="1.5" filter="url(#soft-glow)" />
+                <circle cx={px} cy={py} r="3.5" fill={neonColors[i]} stroke={isDark ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.8)'} strokeWidth="1.5" filter="url(#soft-glow)" />
               </g>
             );
           })}
@@ -255,17 +305,17 @@ const CPISScoreDisplay = ({
             const y = cy + labelR * Math.sin(angle);
             const hasScore = d.rawScore && d.rawScore > 0;
             const isActive = activeDim === d.code;
-            const col = hasScore ? neonColors[i] : 'rgba(255,255,255,0.4)';
+            const col = hasScore ? neonColors[i] : (isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.25)');
             return (
               <g key={`lbl-${d.code}`} opacity={hasScore ? 1 : 0.35}>
                 <text x={x} y={y - 8} textAnchor="middle" dominantBaseline="central"
-                  fill="rgba(255,255,255,0.85)" fontSize="13" fontWeight="700"
+                  fill={isDark ? 'rgba(255,255,255,0.85)' : 'rgba(15,23,42,0.8)'} fontSize="13" fontWeight="700"
                 >
                   {hasScore ? Math.round(d.rawScore) : '—'}
                 </text>
                 <text x={x} y={y + 9} textAnchor="middle" dominantBaseline="central"
                   fill={col} fontSize="11" fontWeight="800"
-                  style={hasScore ? { textShadow: `0 0 6px ${neonColors[i]}70` } : undefined}
+                  style={hasScore && isDark ? { textShadow: `0 0 6px ${neonColors[i]}70` } : undefined}
                 >
                   {d.code}
                 </text>
@@ -296,7 +346,7 @@ const CPISScoreDisplay = ({
                       <circle cx={btnX} cy={btnY} r="9" fill="none" stroke={col} strokeWidth="0.5" opacity={isActive ? 0.5 : 0.15} />
                       {/* Main button */}
                       <circle cx={btnX} cy={btnY} r="6.5"
-                        fill={isActive ? col : `rgba(255,255,255,0.05)`}
+                        fill={isActive ? col : (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)')}
                         stroke={col} strokeWidth="1"
                         opacity={isActive ? 1 : 0.7}
                         style={{ filter: isActive ? `drop-shadow(0 0 4px ${col})` : 'none' }}
@@ -315,64 +365,81 @@ const CPISScoreDisplay = ({
           })}
         </svg>
 
-        {/* Dimension info tooltip — portalled */}
-        {activeDim && DIM_INFO[activeDim] && createPortal(
-          <div
-            ref={dimTipRef}
-            className="fixed z-[9999]"
-            style={{
-              top: dimTipPos.top,
-              left: Math.max(12, Math.min(dimTipPos.left - 120, window.innerWidth - 252)),
-              animation: 'mt-pop-in 0.25s cubic-bezier(0.34,1.56,0.64,1) both',
-            }}
-          >
-            <div
-              className={`relative w-[240px] rounded-xl border ${T.popBorder} overflow-hidden p-3`}
-              style={{
-                ...T.popBg,
-                boxShadow: '0 16px 48px -8px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)',
-              }}
-            >
-              {(() => {
-                const info = DIM_INFO[activeDim];
-                const dim = dimensions.find(dd => dd.code === activeDim);
-                const idx = dimensions.findIndex(dd => dd.code === activeDim);
-                const col = idx >= 0 ? neonColors[idx] : '#60a5fa';
-                return (
-                  <>
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-xs font-extrabold tracking-wide px-1.5 py-0.5 rounded-md"
-                        style={{ background: `${col}20`, color: col }}
-                      >
-                        {activeDim}
-                      </span>
-                      <span className={`text-2xs font-bold ${T.bodyMuted}`}>
-                        Weight: {dim ? `${Math.round(dim.weight * 100)}%` : '—'}
-                      </span>
-                    </div>
-                    <p className={`text-xs font-semibold ${T.titleColor} mb-1`}>{info.full}</p>
-                    <p className={`text-2xs ${T.bodyMuted} leading-relaxed`}>{info.role}</p>
-                    {dim && dim.rawScore > 0 && (
-                      <div className="mt-2 flex items-center gap-2">
-                        <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                          <div className="h-full rounded-full" style={{ width: `${dim.rawScore}%`, background: col, boxShadow: `0 0 6px ${col}60` }} />
-                        </div>
-                        <span className="text-xs font-bold" style={{ color: col }}>{Math.round(dim.rawScore)}</span>
-                      </div>
-                    )}
-                  </>
-                );
-              })()}
-              <button
-                onClick={() => setActiveDim(null)}
-                className={`absolute top-2 right-2 p-0.5 rounded-md ${T.closeBtnHover} transition-all hover:rotate-90`}
+        {/* Dimension info tooltip — portalled inside a full-viewport container
+             so CSS clamp() can use 100% = viewport width/height reliably */}
+        {activeDim && DIM_INFO[activeDim] && (() => {
+          const tipW = 240;
+          const tipH = 160;
+          const PAD = 16;
+
+          // Desired center position based on click point
+          const desiredLeft = dimTipPos.left - tipW / 2;
+          const desiredTop = dimTipPos.top;
+
+          return createPortal(
+            <div className="fixed inset-0 z-[9999] pointer-events-none">
+              <div
+                ref={dimTipRef}
+                className="absolute pointer-events-auto"
+                style={{
+                  /* CSS clamp ensures tooltip stays within viewport regardless of
+                     JS viewport-width discrepancies, scrollbars, or CSS transforms.
+                     100% here = the fixed inset-0 parent = true viewport size. */
+                  top: `clamp(${PAD}px, ${desiredTop}px, calc(100% - ${tipH + PAD}px))`,
+                  left: `clamp(${PAD}px, ${desiredLeft}px, calc(100% - ${tipW + PAD}px))`,
+                  width: tipW,
+                  animation: 'mt-pop-in 0.25s cubic-bezier(0.34,1.56,0.64,1) both',
+                }}
               >
-                <XMarkIcon className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>,
-          document.body,
-        )}
+                <div
+                  className={`relative rounded-xl border ${T.popBorder} p-3`}
+                  style={{
+                    ...T.popBg,
+                    boxShadow: '0 16px 48px -8px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)',
+                  }}
+                >
+                {(() => {
+                  const info = DIM_INFO[activeDim];
+                  const dim = dimensions.find(dd => dd.code === activeDim);
+                  const idx = dimensions.findIndex(dd => dd.code === activeDim);
+                  const col = idx >= 0 ? neonColors[idx] : '#60a5fa';
+                  return (
+                    <>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-xs font-extrabold tracking-wide px-1.5 py-0.5 rounded-md"
+                          style={{ background: `${col}20`, color: col }}
+                        >
+                          {activeDim}
+                        </span>
+                        <span className={`text-2xs font-bold ${T.bodyMuted}`}>
+                          Weight: {dim ? `${Math.round(dim.weight * 100)}%` : '—'}
+                        </span>
+                      </div>
+                      <p className={`text-xs font-semibold ${T.titleColor} mb-1 break-words`}>{info.full}</p>
+                      <p className={`text-2xs ${T.bodyMuted} leading-relaxed break-words`}>{info.role}</p>
+                      {dim && dim.rawScore > 0 && (
+                        <div className="mt-2 flex items-center gap-2">
+                          <div className="flex-1 h-1.5 bg-secondary-200 dark:bg-white/10 rounded-full overflow-hidden">
+                            <div className="h-full rounded-full" style={{ width: `${dim.rawScore}%`, background: col, boxShadow: `0 0 6px ${col}60` }} />
+                          </div>
+                          <span className="text-xs font-bold" style={{ color: col }}>{Math.round(dim.rawScore)}</span>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
+                <button
+                  onClick={() => setActiveDim(null)}
+                  className={`absolute top-2 right-2 p-0.5 rounded-md ${T.closeBtnHover} transition-all hover:rotate-90`}
+                >
+                  <XMarkIcon className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              </div>
+            </div>,
+            document.body,
+          );
+        })()}
       </div>
 
       {/* Grade + Stars + Trajectory */}
@@ -384,7 +451,7 @@ const CPISScoreDisplay = ({
               color: gradeColor,
               borderColor: gradeColor,
               backgroundColor: gradeColor + '20',
-              textShadow: `0 0 10px ${gradeColor}60`,
+              textShadow: isDark ? `0 0 10px ${gradeColor}60` : 'none',
             }}
           >
             {grade}
@@ -400,7 +467,7 @@ const CPISScoreDisplay = ({
             }}
             aria-label="Grade info"
           >
-            <InformationCircleIcon className="w-3.5 h-3.5 text-white/80" />
+            <InformationCircleIcon className="w-3.5 h-3.5 text-secondary-500 dark:text-white/80" />
           </button>
         </span>
 
@@ -557,7 +624,7 @@ const CPISScoreDisplay = ({
         )}
         <div className="flex items-center gap-0.5">
           {[1, 2, 3, 4, 5].map(i => (
-            <StarIcon key={i} className={clsx('w-5 h-5', i <= starRating ? 'text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.6)]' : 'text-white/15')} />
+            <StarIcon key={i} className={clsx('w-5 h-5', i <= starRating ? 'text-amber-600 dark:text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.4)]' : 'text-secondary-300 dark:text-white/15')} />
           ))}
         </div>
         <span className="text-sm font-bold italic flex items-center gap-1" style={{ color: trajColor, fontFamily: "'Libre Baskerville', Georgia, serif" }}>
@@ -566,8 +633,7 @@ const CPISScoreDisplay = ({
       </div>
 
       {/* Rank label */}
-      <p className="text-white text-base font-bold tracking-wider text-center"
-        style={{ textShadow: '0 0 12px rgba(139,92,246,0.4)' }}
+      <p className="text-secondary-900 dark:text-white text-base font-bold tracking-wider text-center"
       >
         {rankLabel.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')}
       </p>
@@ -575,17 +641,17 @@ const CPISScoreDisplay = ({
       {/* Confidence bar */}
       <div className="w-full max-w-[250px] mx-auto">
         <div className="flex justify-between text-xs mb-1">
-          <span className="text-cyan-300/70 font-semibold">{Math.round(confidence.lowerBound)}</span>
-          <span className="font-bold text-white/80">{Math.round(confidence.level * 100)}% Confidence</span>
-          <span className="text-violet-300/70 font-semibold">{Math.round(confidence.upperBound)}</span>
+          <span className="font-semibold" style={{ color: isDark ? pRgba(ap[300], 0.7) : pRgba(ap[700], 1) }}>{Math.round(confidence.lowerBound)}</span>
+          <span className="font-bold text-secondary-700 dark:text-white/80">{Math.round(confidence.level * 100)}% Confidence</span>
+          <span className="font-semibold" style={{ color: isDark ? pRgba(ap[400], 0.7) : pRgba(ap[600], 1) }}>{Math.round(confidence.upperBound)}</span>
         </div>
-        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-secondary-200 dark:bg-white/10 rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-1000"
             style={{
               width: `${confidence.level * 100}%`,
-              background: 'linear-gradient(90deg, #22d3ee, #60a5fa, #a78bfa)',
-              boxShadow: '0 0 8px rgba(96,165,250,0.5)',
+              background: `linear-gradient(90deg, ${ac.light}, ${ac.mid}, ${ac.strong})`,
+              boxShadow: `0 0 8px ${pRgba(ap[400], 0.5)}`,
             }}
           />
         </div>

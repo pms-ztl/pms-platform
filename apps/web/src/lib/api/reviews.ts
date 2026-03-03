@@ -74,4 +74,5 @@ export const reviewsApi = {
   submitReview: (id: string, data: SubmitReviewInput) =>
     api.post<Review>(`/reviews/${id}/submit`, data),
   acknowledgeReview: (id: string) => api.post<Review>(`/reviews/${id}/acknowledge`),
+  deleteReview: (id: string) => api.delete<void>(`/reviews/${id}`),
 };

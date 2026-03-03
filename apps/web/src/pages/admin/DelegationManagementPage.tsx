@@ -475,7 +475,7 @@ export function DelegationManagementPage() {
                 <select
                   value={formDelegatorId}
                   onChange={(e) => setFormDelegatorId(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                 >
                   <option value="">-- Select delegator --</option>
                   {users.map((u) => (
@@ -492,7 +492,7 @@ export function DelegationManagementPage() {
                 <select
                   value={formDelegateId}
                   onChange={(e) => setFormDelegateId(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                 >
                   <option value="">-- Select delegate --</option>
                   {users.map((u) => (
@@ -509,7 +509,7 @@ export function DelegationManagementPage() {
                 <select
                   value={formType}
                   onChange={(e) => setFormType(e.target.value as DelegationType)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                 >
                   {TYPE_OPTIONS.map((t) => (
                     <option key={t} value={t}>{TYPE_LABELS[t]}</option>

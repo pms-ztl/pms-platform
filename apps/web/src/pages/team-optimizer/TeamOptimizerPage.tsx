@@ -137,7 +137,7 @@ export function TeamOptimizerPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
             <UserGroupIcon className="w-6 h-6 text-indigo-500" />
             Team Optimizer
           </h1>
@@ -446,7 +446,7 @@ export function TeamOptimizerPage() {
               <div>
                 <label className="block text-xs font-medium text-secondary-700 dark:text-secondary-300 mb-1">Optimization Type</label>
                 <select value={optForm.optimizationType} onChange={(e) => setOptForm((p) => ({ ...p, optimizationType: e.target.value }))}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300">
                   {OPT_TYPES.map((t) => <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>)}
                 </select>
               </div>

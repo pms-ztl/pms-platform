@@ -331,7 +331,7 @@ export function UpgradeRequestPage() {
     return (
       <div className="space-y-4">
         <div>
-          <h1 className="text-lg font-bold text-secondary-900 dark:text-white">Upgrade Plan</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Upgrade Plan</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading subscription information...</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

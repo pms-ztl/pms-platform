@@ -91,6 +91,7 @@ export const usersApi = {
     return api.postFormData<{ avatarUrl: string }>('/users/me/avatar', formData);
   },
   setAiAvatar: (avatarUrl: string) => api.post<{ avatarUrl: string }>('/users/me/ai-avatar', { avatarUrl }),
+  removeAvatar: () => api.delete<{ avatarUrl: null }>('/users/me/avatar'),
   // AI Access Management
   toggleAiAccess: (userId: string, enabled: boolean) =>
     api.put<{ userId: string; aiAccessEnabled: boolean }>(`/users/${userId}/ai-access`, { enabled }),

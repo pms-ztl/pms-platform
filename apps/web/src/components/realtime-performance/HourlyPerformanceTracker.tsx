@@ -213,7 +213,7 @@ export function HourlyPerformanceTracker() {
           <select
             value={refreshInterval}
             onChange={(e) => setRefreshInterval(Number(e.target.value))}
-            className="text-xs border border-secondary-300 dark:border-secondary-600 rounded px-2 py-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl"
+            className="text-xs border border-secondary-200 dark:border-secondary-700/50 rounded px-2 py-1 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm transition-all duration-300"
           >
             <option value={30000}>30s</option>
             <option value={60000}>1m</option>

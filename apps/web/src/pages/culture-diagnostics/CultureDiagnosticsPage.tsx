@@ -135,7 +135,7 @@ export function CultureDiagnosticsPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
+      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-sm space-y-1">
         <p className="font-semibold text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color || p.fill }}>{p.name}: {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}</p>
@@ -170,7 +170,7 @@ export function CultureDiagnosticsPage() {
       <div className="space-y-4 p-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
               <HeartIcon className="w-6 h-6 text-rose-500" />
               Culture & Organizational Health
             </h1>
@@ -197,17 +197,17 @@ export function CultureDiagnosticsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white flex items-center gap-2">
             <HeartIcon className="w-6 h-6 text-rose-500" />
             Culture & Organizational Health
           </h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
             Comprehensive organizational health metrics and culture diagnostics
-          </p>
+            </p>
         </div>
         <div className="flex items-center gap-3">
           <select value={period} onChange={(e) => setPeriod(e.target.value)}
-            className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:border-transparent">
+            className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300">
             {PERIODS.map((p) => <option key={p} value={p}>{p.charAt(0) + p.slice(1).toLowerCase()}</option>)}
           </select>
           <button
@@ -225,7 +225,7 @@ export function CultureDiagnosticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Gauge */}
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 flex flex-col items-center">
-          <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-2">Overall Health</h3>
+          <h3 className="text-base font-semibold text-secondary-700 dark:text-secondary-300 mb-2">Overall Health</h3>
           <div className="h-[100px] w-[200px] mx-auto">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
@@ -236,8 +236,8 @@ export function CultureDiagnosticsPage() {
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-2xl font-bold mt-[-30px]" style={{ color: level.color }}>{(health.overallHealthScore ?? 0).toFixed(0)}</p>
-          <span className={clsx('px-3 py-1 rounded-full text-xs font-medium mt-2', level.cls)}>{health.healthLevel}</span>
+          <p className="text-3xl font-bold mt-[-30px]" style={{ color: level.color }}>{(health.overallHealthScore ?? 0).toFixed(0)}</p>
+          <span className={clsx('px-3 py-1 rounded-full text-sm font-semibold mt-2', level.cls)}>{health.healthLevel}</span>
         </div>
 
         {/* 7-dimension bar chart */}
@@ -247,8 +247,8 @@ export function CultureDiagnosticsPage() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dimensionData} layout="vertical" margin={{ top: 5, right: 20, bottom: 5, left: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} horizontal={false} />
-                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                <YAxis type="category" dataKey="dimension" tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} width={75} />
+                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 13, fill: 'var(--color-secondary-700, #374151)' }} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="dimension" tick={{ fontSize: 14, fontWeight: 500, fill: 'var(--color-secondary-800, #1f2937)' }} axisLine={false} tickLine={false} width={100} />
                 <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 <Bar dataKey="score" name="Score" barSize={16} radius={[0, 6, 6, 0]}>
                   {dimensionData.map((d, i) => <Cell key={i} fill={scoreColor(d.score)} />)}
@@ -270,10 +270,10 @@ export function CultureDiagnosticsPage() {
         ].map((s) => (
           <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
             <div className="flex items-center justify-between">
-              <p className="text-xs text-secondary-500 dark:text-secondary-400">{s.label}</p>
-              <s.icon className={clsx('w-4 h-4', s.color)} />
+              <p className="text-sm font-medium text-secondary-600 dark:text-secondary-400">{s.label}</p>
+              <s.icon className={clsx('w-5 h-5', s.color)} />
             </div>
-            <p className={clsx('text-2xl font-bold mt-1', s.color)}>{s.value}</p>
+            <p className={clsx('text-3xl font-bold mt-1', s.color)}>{s.value}</p>
           </div>
         ))}
       </div>
@@ -285,13 +285,13 @@ export function CultureDiagnosticsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Culture Profile</h3>
-              <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Competing Values Framework</p>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Competing Values Framework</p>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={cultureRadar} cx="50%" cy="50%" outerRadius="70%">
                     <PolarGrid stroke="var(--color-secondary-300, #d1d5db)" />
-                    <PolarAngleAxis dataKey="type" tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 8, fill: 'var(--color-secondary-400, #9ca3af)' }} />
+                    <PolarAngleAxis dataKey="type" tick={{ fontSize: 14, fontWeight: 500, fill: 'var(--color-secondary-800, #1f2937)' }} />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} />
                     <Radar name="Culture Score" dataKey="score" stroke="#e11d48" fill="#e11d48" fillOpacity={0.25} />
                     <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                   </RadarChart>
@@ -305,10 +305,10 @@ export function CultureDiagnosticsPage() {
                 {cultureDimensions.map((d) => (
                   <div key={d.name}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-secondary-700 dark:text-secondary-300">{d.name}</span>
-                      <span className="text-xs font-bold" style={{ color: scoreColor(d.score) }}>{(d.score ?? 0).toFixed(0)}</span>
+                      <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">{d.name}</span>
+                      <span className="text-sm font-bold" style={{ color: scoreColor(d.score) }}>{(d.score ?? 0).toFixed(0)}</span>
                     </div>
-                    <div className="w-full h-2 rounded-full bg-secondary-200 dark:bg-secondary-600 overflow-hidden">
+                    <div className="w-full h-2.5 rounded-full bg-secondary-200 dark:bg-secondary-600 overflow-hidden">
                       <div className="h-full rounded-full transition-all" style={{ width: `${d.score}%`, backgroundColor: scoreColor(d.score) }} />
                     </div>
                   </div>
@@ -320,28 +320,28 @@ export function CultureDiagnosticsPage() {
           {/* Cultural Strengths & Weaknesses */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-              <h3 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-3">Cultural Strengths</h3>
+              <h3 className="text-base font-semibold text-green-700 dark:text-green-400 mb-3">Cultural Strengths</h3>
               {diagnostic.culturalStrengths?.length ? (
                 <ul className="space-y-2">
                   {diagnostic.culturalStrengths.map((s, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-secondary-700 dark:text-secondary-300">
+                    <li key={i} className="flex items-start gap-2 text-sm text-secondary-700 dark:text-secondary-300">
                       <CheckCircleIcon className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />{s}
                     </li>
                   ))}
                 </ul>
-              ) : <p className="text-xs text-secondary-400">No strengths identified.</p>}
+              ) : <p className="text-sm text-secondary-400">No strengths identified.</p>}
             </div>
             <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-              <h3 className="text-sm font-semibold text-red-700 dark:text-red-400 mb-3">Cultural Weaknesses</h3>
+              <h3 className="text-base font-semibold text-red-700 dark:text-red-400 mb-3">Cultural Weaknesses</h3>
               {diagnostic.culturalWeaknesses?.length ? (
                 <ul className="space-y-2">
                   {diagnostic.culturalWeaknesses.map((w, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-secondary-700 dark:text-secondary-300">
+                    <li key={i} className="flex items-start gap-2 text-sm text-secondary-700 dark:text-secondary-300">
                       <ExclamationTriangleIcon className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />{w}
                     </li>
                   ))}
                 </ul>
-              ) : <p className="text-xs text-secondary-400">No weaknesses identified.</p>}
+              ) : <p className="text-sm text-secondary-400">No weaknesses identified.</p>}
             </div>
           </div>
         </>
@@ -354,24 +354,24 @@ export function CultureDiagnosticsPage() {
           {health.strengths?.length ? (
             <ul className="space-y-2">
               {health.strengths.map((s, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-secondary-700 dark:text-secondary-300">
+                <li key={i} className="flex items-start gap-2 text-sm text-secondary-700 dark:text-secondary-300">
                   <CheckCircleIcon className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />{s}
                 </li>
               ))}
             </ul>
-          ) : <p className="text-xs text-secondary-400">No strengths data.</p>}
+          ) : <p className="text-sm text-secondary-400">No strengths data.</p>}
         </div>
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-amber-700 dark:text-amber-400 mb-3">Concerns</h3>
           {health.concerns?.length ? (
             <ul className="space-y-2">
               {health.concerns.map((c, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs text-secondary-700 dark:text-secondary-300">
+                <li key={i} className="flex items-start gap-2 text-sm text-secondary-700 dark:text-secondary-300">
                   <ExclamationTriangleIcon className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />{c}
                 </li>
               ))}
             </ul>
-          ) : <p className="text-xs text-secondary-400">No concerns identified.</p>}
+          ) : <p className="text-sm text-secondary-400">No concerns identified.</p>}
         </div>
       </div>
 
@@ -386,9 +386,9 @@ export function CultureDiagnosticsPage() {
                   <span className="text-2xs font-bold text-rose-600 dark:text-rose-400">{i + 1}</span>
                 </div>
                 <div className="flex-1">
-                  {rec.category && <span className="px-2 py-0.5 rounded text-2xs font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-300 mr-2">{rec.category}</span>}
-                  <p className="text-xs text-secondary-700 dark:text-secondary-300 mt-1">{typeof rec === 'string' ? rec : rec.description || rec.action || rec.recommendation || JSON.stringify(rec)}</p>
-                  {rec.impact && <p className="text-2xs text-secondary-400 mt-1">Expected impact: {rec.impact}</p>}
+                  {rec.category && <span className="px-2 py-0.5 rounded text-xs font-medium bg-secondary-100 text-secondary-600 dark:bg-secondary-700 dark:text-secondary-300 mr-2">{rec.category}</span>}
+                  <p className="text-sm text-secondary-700 dark:text-secondary-300 mt-1">{typeof rec === 'string' ? rec : rec.description || rec.action || rec.recommendation || JSON.stringify(rec)}</p>
+                  {rec.impact && <p className="text-xs text-secondary-400 mt-1">Expected impact: {rec.impact}</p>}
                 </div>
                 {rec.priority && (
                   <span className={clsx('px-2 py-0.5 rounded text-2xs font-medium shrink-0',

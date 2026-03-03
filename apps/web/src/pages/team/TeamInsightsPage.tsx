@@ -175,7 +175,7 @@ export function TeamInsightsPage() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Team Insights</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Team Insights</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Loading team analytics...</p>
         </div>
         <PageSkeleton />
@@ -187,7 +187,7 @@ export function TeamInsightsPage() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Team Insights</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Team Insights</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Performance distribution, health metrics, and team analytics</p>
         </div>
         <div className="flex flex-col items-center justify-center py-24 text-center">
@@ -203,7 +203,7 @@ export function TeamInsightsPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Team Insights</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Team Insights</h1>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
           Performance distribution, health metrics, and team analytics for your direct reports
         </p>

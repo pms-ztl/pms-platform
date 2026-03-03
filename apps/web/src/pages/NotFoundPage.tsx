@@ -14,7 +14,7 @@ export function NotFoundPage() {
         </p>
 
         {/* Title */}
-        <h1 className="-mt-4 text-2xl font-bold text-secondary-900 dark:text-white">
+        <h1 className="-mt-4 text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">
           Page not found
         </h1>
 

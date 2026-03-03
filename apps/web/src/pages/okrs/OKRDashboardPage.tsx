@@ -413,7 +413,7 @@ export function OKRDashboardPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-40 bg-orange-500/10 rounded-full blur-3xl" />
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-xl font-bold">OKR Dashboard</h1>
+            <h1 className="text-xl sm:text-2xl font-bold">OKR Dashboard</h1>
             <p className="text-secondary-500 dark:text-white/80 text-sm mt-1">
               Objectives & Key Results — {currentQuarterLabel()}
             </p>
@@ -458,7 +458,7 @@ export function OKRDashboardPage() {
         <select
           value={filterQuarter}
           onChange={(e) => setFilterQuarter(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
         >
           <option value="all">All Quarters</option>
           {quarters.map((q) => (
@@ -468,7 +468,7 @@ export function OKRDashboardPage() {
         <select
           value={filterOwner}
           onChange={(e) => setFilterOwner(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
         >
           <option value="all">All Owners</option>
           {owners.map((o) => (
@@ -478,7 +478,7 @@ export function OKRDashboardPage() {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
         >
           <option value="all">All Statuses</option>
           {statuses.map((s) => (

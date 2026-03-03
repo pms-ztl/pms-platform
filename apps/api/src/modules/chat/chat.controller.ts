@@ -147,6 +147,21 @@ export async function deleteMessage(req: AuthenticatedRequest, res: Response, ne
   }
 }
 
+// ── Clear Chat ──
+
+export async function clearChat(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    const { conversationId } = req.params;
+    const data = await chatService.clearChat(req.user!.id, conversationId);
+    res.json({ success: true, data });
+  } catch (error: any) {
+    if (error.message?.includes('Not a participant')) {
+      res.status(403).json({ success: false, error: { message: error.message } }); return;
+    }
+    next(error);
+  }
+}
+
 // ── Reactions ──
 
 export async function toggleReaction(req: AuthenticatedRequest, res: Response, next: NextFunction) {

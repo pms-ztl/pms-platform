@@ -84,6 +84,24 @@ import { VoiceMicButton } from './VoiceMicButton';
 // Icon type alias for agent options
 type AgentIcon = React.FC<React.SVGProps<SVGSVGElement>>;
 
+// ── Accent-adaptive color helpers (read from CSS custom properties) ──
+function _cssVar(name: string): string {
+  if (typeof document === 'undefined') return '99 102 241';
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '99 102 241';
+}
+function _pRgba(shade: number, alpha: number): string {
+  const v = _cssVar(`--c-primary-${shade}`);
+  const p = v.split(/\s+/).map(Number);
+  if (p.length !== 3 || p.some(isNaN)) return `rgba(99,102,241,${alpha})`;
+  return `rgba(${p[0]},${p[1]},${p[2]},${alpha})`;
+}
+function _pHex(shade: number): string {
+  const v = _cssVar(`--c-primary-${shade}`);
+  const p = v.split(/\s+/).map(Number);
+  if (p.length !== 3 || p.some(isNaN)) return '#6366f1';
+  return '#' + p.map(c => c.toString(16).padStart(2, '0')).join('');
+}
+
 // ── Agent Options (grouped by cluster) ─────────────────────
 
 const AGENT_GROUPS: Array<{
@@ -225,32 +243,32 @@ function renderMarkdown(content: string, isDark: boolean): string {
     /```(\w*)\n?([\s\S]*?)```/g,
     isDark
       ? '<pre class="my-2 rounded-lg bg-gray-900/90 p-3 text-sm font-mono text-emerald-300 overflow-x-auto border border-gray-700/50 leading-relaxed"><code>$2</code></pre>'
-      : '<pre class="my-2 rounded-lg bg-gray-100 p-3 text-sm font-mono text-indigo-700 overflow-x-auto border border-gray-200 leading-relaxed"><code>$2</code></pre>',
+      : '<pre class="my-2 rounded-lg bg-gray-100 p-3 text-sm font-mono text-primary-700 overflow-x-auto border border-gray-200 leading-relaxed"><code>$2</code></pre>',
   );
 
   // Headers — slightly bigger than body text
   html = html.replace(
     /^#### (.+)$/gm,
     isDark
-      ? '<h5 class="mt-2 mb-1 text-sm font-bold text-indigo-400">$1</h5>'
-      : '<h5 class="mt-2 mb-1 text-sm font-bold text-indigo-600">$1</h5>',
+      ? '<h5 class="mt-2 mb-1 text-sm font-bold text-primary-400">$1</h5>'
+      : '<h5 class="mt-2 mb-1 text-sm font-bold text-primary-600">$1</h5>',
   );
   html = html.replace(
     /^### (.+)$/gm,
     isDark
-      ? '<h4 class="mt-2.5 mb-1 text-sm font-bold tracking-wide text-indigo-400">$1</h4>'
-      : '<h4 class="mt-2.5 mb-1 text-sm font-bold tracking-wide text-indigo-600">$1</h4>',
+      ? '<h4 class="mt-2.5 mb-1 text-sm font-bold tracking-wide text-primary-400">$1</h4>'
+      : '<h4 class="mt-2.5 mb-1 text-sm font-bold tracking-wide text-primary-600">$1</h4>',
   );
   html = html.replace(
     /^## (.+)$/gm,
     isDark
-      ? '<h3 class="mt-2.5 mb-1 text-base font-bold text-indigo-300">$1</h3>'
-      : '<h3 class="mt-2.5 mb-1 text-base font-bold text-indigo-700">$1</h3>',
+      ? '<h3 class="mt-2.5 mb-1 text-base font-bold text-primary-300">$1</h3>'
+      : '<h3 class="mt-2.5 mb-1 text-base font-bold text-primary-700">$1</h3>',
   );
   html = html.replace(
     /^# (.+)$/gm,
     isDark
-      ? '<h2 class="mt-2.5 mb-1.5 text-base font-extrabold text-indigo-200">$1</h2>'
+      ? '<h2 class="mt-2.5 mb-1.5 text-base font-extrabold text-primary-200">$1</h2>'
       : '<h2 class="mt-2.5 mb-1.5 text-base font-extrabold text-gray-900">$1</h2>',
   );
 
@@ -274,32 +292,32 @@ function renderMarkdown(content: string, isDark: boolean): string {
   html = html.replace(
     /`([^`]+)`/g,
     isDark
-      ? '<code class="rounded bg-white/10 px-1.5 py-0.5 text-sm font-mono text-cyan-300 border border-white/5">$1</code>'
-      : '<code class="rounded bg-indigo-50 px-1.5 py-0.5 text-sm font-mono text-indigo-600 border border-indigo-100">$1</code>',
+      ? '<code class="rounded bg-white/10 px-1.5 py-0.5 text-sm font-mono text-primary-300 border border-white/5">$1</code>'
+      : '<code class="rounded bg-primary-50 px-1.5 py-0.5 text-sm font-mono text-primary-600 border border-primary-100">$1</code>',
   );
 
   // Links
   html = html.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
     isDark
-      ? '<a href="$2" target="_blank" rel="noopener" class="text-cyan-400 underline decoration-cyan-400/30 hover:decoration-cyan-400 transition-colors">$1</a>'
-      : '<a href="$2" target="_blank" rel="noopener" class="text-indigo-600 underline decoration-indigo-300 hover:decoration-indigo-600 transition-colors">$1</a>',
+      ? '<a href="$2" target="_blank" rel="noopener" class="text-primary-400 underline decoration-primary-400/30 hover:decoration-primary-400 transition-colors">$1</a>'
+      : '<a href="$2" target="_blank" rel="noopener" class="text-primary-600 underline decoration-primary-300 hover:decoration-primary-600 transition-colors">$1</a>',
   );
 
   // Numbered lists — same size as body
   html = html.replace(
     /^(\d+)\.\s+(.+)$/gm,
     isDark
-      ? '<div class="flex gap-2 my-1 items-start"><span class="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-indigo-500/20 text-2xs font-bold text-indigo-300">$1</span><span class="flex-1">$2</span></div>'
-      : '<div class="flex gap-2 my-1 items-start"><span class="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-2xs font-bold text-indigo-600">$1</span><span class="flex-1">$2</span></div>',
+      ? '<div class="flex gap-2 my-1 items-start"><span class="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-primary-500/20 text-2xs font-bold text-primary-300">$1</span><span class="flex-1">$2</span></div>'
+      : '<div class="flex gap-2 my-1 items-start"><span class="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-primary-100 text-2xs font-bold text-primary-600">$1</span><span class="flex-1">$2</span></div>',
   );
 
   // Bullet lists — same size as body
   html = html.replace(
     /^[-*]\s+(.+)$/gm,
     isDark
-      ? '<div class="flex gap-2 my-1 items-start"><span class="mt-2 flex-shrink-0 h-1.5 w-1.5 rounded-full bg-gradient-to-r from-cyan-400 to-indigo-400"></span><span class="flex-1">$1</span></div>'
-      : '<div class="flex gap-2 my-1 items-start"><span class="mt-2 flex-shrink-0 h-1.5 w-1.5 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500"></span><span class="flex-1">$1</span></div>',
+      ? '<div class="flex gap-2 my-1 items-start"><span class="mt-2 flex-shrink-0 h-1.5 w-1.5 rounded-full bg-gradient-to-r from-primary-300 to-primary-500"></span><span class="flex-1">$1</span></div>'
+      : '<div class="flex gap-2 my-1 items-start"><span class="mt-2 flex-shrink-0 h-1.5 w-1.5 rounded-full bg-gradient-to-r from-primary-400 to-primary-500"></span><span class="flex-1">$1</span></div>',
   );
 
   // Horizontal rules
@@ -541,19 +559,21 @@ export function AIChatWidget() {
     (o) => o.value === (agentType ?? ''),
   );
 
-  // ── Theme tokens ──────────────────────────────────────
+  // ── Theme tokens (accent-adaptive via CSS custom properties) ──
+  const _p5 = _pHex(500), _p4 = _pHex(400), _p6 = _pHex(600), _p3 = _pHex(300);
   const t = {
     panel: isDark
-      ? 'linear-gradient(180deg, #0f0f23 0%, #1a1a3e 50%, #0d0d1f 100%)'
+      ? 'rgba(10, 10, 20, 0.65)'
       : 'linear-gradient(180deg, #ffffff 0%, #f8faff 50%, #f0f4ff 100%)',
-    panelBorder: isDark ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.15)',
+    panelBlur: isDark ? 'blur(28px) saturate(160%)' : 'none',
+    panelBorder: isDark ? 'rgba(255,255,255,0.1)' : _pRgba(500, 0.15),
     panelShadow: isDark
-      ? '0 0 40px rgba(99,102,241,0.15), 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
-      : '0 0 40px rgba(99,102,241,0.08), 0 20px 60px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8)',
+      ? `0 0 40px ${_pRgba(500, 0.1)}, 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)`
+      : `0 0 40px ${_pRgba(500, 0.08)}, 0 20px 60px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8)`,
     headerBg: isDark
-      ? 'linear-gradient(135deg, rgba(99,102,241,0.15), rgba(6,182,212,0.1))'
-      : 'linear-gradient(135deg, #6366f1, #7c3aed)',
-    headerBorder: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(99,102,241,0.1)',
+      ? `linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))`
+      : `linear-gradient(135deg, ${_p5}, ${_p6})`,
+    headerBorder: isDark ? 'rgba(255,255,255,0.08)' : _pRgba(500, 0.1),
     titleColor: 'text-white',
     headerBtnClass: isDark
       ? 'text-gray-400 hover:bg-white/10 hover:text-white'
@@ -563,54 +583,51 @@ export function AIChatWidget() {
     selectorText: isDark ? 'text-gray-300' : 'text-gray-700',
     selectorChevron: isDark ? 'text-gray-500' : 'text-gray-400',
     dropdownBg: isDark
-      ? 'linear-gradient(180deg, #1e1e3f, #161630)'
+      ? 'rgba(15, 15, 25, 0.85)'
       : 'linear-gradient(180deg, #ffffff, #f8f9ff)',
-    dropdownBorder: isDark ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.15)',
-    dropdownShadow: isDark ? '0 8px 32px rgba(0,0,0,0.5)' : '0 8px 32px rgba(0,0,0,0.12)',
-    groupLabel: isDark ? 'text-indigo-400/60' : 'text-indigo-500/80',
+    dropdownBlur: isDark ? 'blur(24px) saturate(150%)' : 'none',
+    dropdownBorder: isDark ? 'rgba(255,255,255,0.1)' : _pRgba(500, 0.15),
+    dropdownShadow: isDark ? '0 8px 32px rgba(0,0,0,0.4)' : '0 8px 32px rgba(0,0,0,0.12)',
+    groupLabel: isDark ? 'text-primary-400/60' : 'text-primary-500/80',
     optionText: isDark ? 'text-gray-400' : 'text-gray-600',
-    optionActive: isDark ? 'bg-indigo-500/10 text-indigo-300' : 'bg-indigo-50 text-indigo-600',
+    optionActive: isDark ? 'bg-primary-500/10 text-primary-300' : 'bg-primary-50 text-primary-600',
     optionHover: isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50',
     emptyTitle: isDark ? 'text-white/90' : 'text-gray-800',
     emptySubtitle: isDark ? 'text-gray-400/80' : 'text-gray-500',
     emptyOrbBg: isDark
-      ? 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(6,182,212,0.2))'
-      : 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))',
-    emptyOrbBorder: isDark ? 'rgba(99,102,241,0.15)' : 'rgba(99,102,241,0.15)',
-    suggestionBg: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(99,102,241,0.04)',
-    suggestionBorder: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(99,102,241,0.1)',
-    suggestionText: isDark ? 'text-gray-300 group-hover:text-white' : 'text-gray-600 group-hover:text-indigo-700',
+      ? `linear-gradient(135deg, ${_pRgba(500, 0.2)}, ${_pRgba(400, 0.2)})`
+      : `linear-gradient(135deg, ${_pRgba(500, 0.1)}, ${_pRgba(400, 0.1)})`,
+    emptyOrbBorder: _pRgba(500, 0.15),
+    suggestionBg: isDark ? 'rgba(255,255,255,0.04)' : _pRgba(500, 0.04),
+    suggestionBorder: isDark ? 'rgba(255,255,255,0.08)' : _pRgba(500, 0.1),
+    suggestionText: isDark ? 'text-gray-300 group-hover:text-white' : 'text-gray-600 group-hover:text-primary-700',
     userBubbleBg: isDark
-      ? 'linear-gradient(135deg, #3b82f6, #6366f1)'
-      : 'linear-gradient(135deg, #6366f1, #7c3aed)',
+      ? `linear-gradient(135deg, ${_p4}, ${_p5})`
+      : `linear-gradient(135deg, ${_p5}, ${_p6})`,
     userBubbleShadow: isDark
-      ? '0 2px 12px rgba(99,102,241,0.25)'
-      : '0 2px 12px rgba(99,102,241,0.2)',
-    assistantBubbleBg: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.9)',
-    assistantBubbleBorder: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
-    assistantBubbleShadow: isDark ? '0 2px 8px rgba(0,0,0,0.2)' : '0 2px 8px rgba(0,0,0,0.04)',
+      ? `0 2px 12px ${_pRgba(500, 0.25)}`
+      : `0 2px 12px ${_pRgba(500, 0.2)}`,
+    assistantBubbleBg: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.9)',
+    assistantBubbleBorder: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
+    assistantBubbleShadow: isDark ? '0 2px 8px rgba(0,0,0,0.15)' : '0 2px 8px rgba(0,0,0,0.04)',
     assistantText: isDark ? 'text-gray-200' : 'text-gray-700',
     userAvatarBg: isDark
-      ? 'linear-gradient(135deg, #06b6d4, #3b82f6)'
-      : 'linear-gradient(135deg, #6366f1, #7c3aed)',
-    aiAvatarBg: isDark
-      ? 'linear-gradient(135deg, #6366f1, #8b5cf6)'
-      : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-    copyBtnBg: isDark ? 'bg-gray-800/80' : 'bg-white shadow-md',
-    copyBtnBorder: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
+      ? `linear-gradient(135deg, ${_p4}, ${_p5})`
+      : `linear-gradient(135deg, ${_p5}, ${_p6})`,
+    aiAvatarBg: `linear-gradient(135deg, ${_p5}, ${_p4})`,
+    copyBtnBg: isDark ? 'bg-black/40 backdrop-blur-sm' : 'bg-white shadow-md',
+    copyBtnBorder: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)',
     copyBtnText: isDark ? 'text-gray-400 hover:text-white' : 'text-gray-400 hover:text-gray-700',
     timestampText: isDark ? 'text-gray-500/60' : 'text-gray-400/80',
     typingBg: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
     typingBorder: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
     typingLabel: isDark ? 'text-gray-400' : 'text-gray-500',
-    inputAreaBg: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.02)',
-    inputAreaBorder: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-    inputBg: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
-    inputBorder: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+    inputAreaBg: isDark ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.02)',
+    inputAreaBorder: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+    inputBg: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+    inputBorder: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)',
     inputText: isDark ? 'text-white placeholder-gray-500' : 'text-gray-800 placeholder-gray-400',
-    sendBtnActive: isDark
-      ? 'linear-gradient(135deg, #6366f1, #8b5cf6)'
-      : 'linear-gradient(135deg, #6366f1, #7c3aed)',
+    sendBtnActive: `linear-gradient(135deg, ${_p5}, ${_p4})`,
     sendBtnInactive: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
     footerSub: isDark ? 'text-gray-500/50' : 'text-gray-400/70',
     borderSub: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
@@ -637,8 +654,9 @@ export function AIChatWidget() {
       style={{
         width: dimensions.width,
         height: dimensions.height,
-        fontSize: 14,  // Reset root clamp scaling — compact fixed-size container
         background: t.panel,
+        backdropFilter: t.panelBlur,
+        WebkitBackdropFilter: t.panelBlur,
         border: `1px solid ${t.panelBorder}`,
         boxShadow: t.panelShadow,
         animation: 'swarm-mode-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -667,7 +685,7 @@ export function AIChatWidget() {
           window.addEventListener('mouseup', onUp);
         }}
       >
-        <div className="w-2.5 h-2.5 border-t-2 border-l-2 border-gray-400/40 group-hover:border-indigo-400/70 rounded-tl m-1 transition-colors" />
+        <div className="w-2.5 h-2.5 border-t-2 border-l-2 border-gray-400/40 group-hover:border-primary-400/70 rounded-tl m-1 transition-colors" />
       </div>
 
       {/* ── Header ─────────────────────────────────────── */}
@@ -682,8 +700,8 @@ export function AIChatWidget() {
           <div
             className="flex h-7 w-7 items-center justify-center rounded-lg"
             style={{
-              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              boxShadow: '0 0 10px rgba(99, 102, 241, 0.4)',
+              background: `linear-gradient(135deg, ${_p5}, ${_p4})`,
+              boxShadow: `0 0 10px ${_pRgba(500, 0.4)}`,
             }}
           >
             <ChatBubbleOvalLeftEllipsisIcon className="h-3.5 w-3.5 text-white" />
@@ -712,10 +730,10 @@ export function AIChatWidget() {
             }}
             className="flex items-center gap-1 rounded-md px-2 py-1 text-2xs font-semibold transition-all hover:scale-105 active:scale-95"
             style={{
-              background: 'linear-gradient(135deg, rgba(99,102,241,0.6), rgba(139,92,246,0.6))',
+              background: `linear-gradient(135deg, ${_pRgba(500, 0.6)}, ${_pRgba(400, 0.6)})`,
               border: '1px solid rgba(255,255,255,0.2)',
               color: 'white',
-              boxShadow: '0 0 10px rgba(99,102,241,0.4)',
+              boxShadow: `0 0 10px ${_pRgba(500, 0.4)}`,
             }}
             title="Open full Neural Swarm workspace"
           >
@@ -776,6 +794,8 @@ export function AIChatWidget() {
             className="absolute left-2.5 right-2.5 top-full z-20 mt-1 max-h-[220px] overflow-y-auto rounded-lg py-1"
             style={{
               background: t.dropdownBg,
+              backdropFilter: t.dropdownBlur,
+              WebkitBackdropFilter: t.dropdownBlur,
               border: `1px solid ${t.dropdownBorder}`,
               boxShadow: t.dropdownShadow,
             }}
@@ -815,7 +835,7 @@ export function AIChatWidget() {
             <h4 className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>Chat History</h4>
             <button
               onClick={() => setHistoryOpen(false)}
-              className={`text-2xs font-medium rounded-md px-2 py-0.5 transition-all ${isDark ? 'text-indigo-400 hover:bg-white/5' : 'text-indigo-600 hover:bg-indigo-50'}`}
+              className={`text-2xs font-medium rounded-md px-2 py-0.5 transition-all ${isDark ? 'text-primary-400 hover:bg-white/5' : 'text-primary-600 hover:bg-primary-50'}`}
             >
               Back to chat
             </button>
@@ -844,7 +864,7 @@ export function AIChatWidget() {
                           }
                           if (e.key === 'Escape') setRenamingId(null);
                         }}
-                        className={`flex-1 rounded-md px-2 py-1 text-2xs focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
+                        className={`flex-1 rounded-md px-2 py-1 text-2xs focus:outline-none focus:ring-1 focus:ring-primary-500 ${
                           isDark ? 'bg-white/5 text-white border border-white/10' : 'bg-white text-gray-800 border border-gray-200'
                         }`}
                         placeholder="Enter new title..."
@@ -852,7 +872,7 @@ export function AIChatWidget() {
                       <button
                         onClick={() => renameValue.trim() && renameMutation.mutate({ id: convo.id, title: renameValue.trim() })}
                         disabled={renameMutation.isPending}
-                        className="px-1.5 py-1 text-2xs font-medium text-indigo-500 hover:text-indigo-400 disabled:opacity-50"
+                        className="px-1.5 py-1 text-2xs font-medium text-primary-500 hover:text-primary-400 disabled:opacity-50"
                       >
                         Save
                       </button>
@@ -868,7 +888,7 @@ export function AIChatWidget() {
                       onClick={() => loadConversation(convo.id)}
                       className={`w-full text-left flex items-center gap-2 rounded-lg px-2 py-2 transition-all ${
                         convo.id === activeConversationId
-                          ? isDark ? 'bg-indigo-500/10 border border-indigo-500/20' : 'bg-indigo-50 border border-indigo-200'
+                          ? isDark ? 'bg-primary-500/10 border border-primary-500/20' : 'bg-primary-50 border border-primary-200'
                           : isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'
                       }`}
                     >
@@ -876,11 +896,11 @@ export function AIChatWidget() {
                         className="flex-shrink-0 flex h-7 w-7 items-center justify-center rounded-md"
                         style={{
                           background: isDark
-                            ? 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))'
-                            : 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))',
+                            ? `linear-gradient(135deg, ${_pRgba(500, 0.2)}, ${_pRgba(400, 0.2)})`
+                            : `linear-gradient(135deg, ${_pRgba(500, 0.1)}, ${_pRgba(400, 0.1)})`,
                         }}
                       >
-                        <ChatBubbleOvalLeftEllipsisIcon className={`h-3.5 w-3.5 ${isDark ? 'text-indigo-400' : 'text-indigo-500'}`} />
+                        <ChatBubbleOvalLeftEllipsisIcon className={`h-3.5 w-3.5 ${isDark ? 'text-primary-400' : 'text-primary-500'}`} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className={`text-2xs font-medium truncate ${isDark ? 'text-white' : 'text-gray-800'}`}>
@@ -915,7 +935,7 @@ export function AIChatWidget() {
                   {menuOpenId === convo.id && renamingId !== convo.id && (
                     <div
                       className={`absolute right-2 top-full z-30 mt-0.5 rounded-lg py-1 shadow-lg ${
-                        isDark ? 'bg-gray-800 border border-white/10' : 'bg-white border border-gray-200'
+                        isDark ? 'bg-black/70 backdrop-blur-xl border border-white/10' : 'bg-white border border-gray-200'
                       }`}
                       style={{ minWidth: 120 }}
                     >
@@ -965,14 +985,14 @@ export function AIChatWidget() {
                 style={{
                   background: t.emptyOrbBg,
                   border: `1px solid ${t.emptyOrbBorder}`,
-                  boxShadow: '0 0 20px rgba(99,102,241,0.1)',
+                  boxShadow: `0 0 20px ${_pRgba(500, 0.1)}`,
                 }}
               >
-                <ChatBubbleOvalLeftEllipsisIcon className="h-5 w-5 text-indigo-400" />
+                <ChatBubbleOvalLeftEllipsisIcon className="h-5 w-5 text-primary-400" />
               </div>
               <span
                 className="absolute -inset-1.5 rounded-2xl animate-pulse opacity-20"
-                style={{ background: 'linear-gradient(135deg, #6366f1, #06b6d4)', filter: 'blur(6px)' }}
+                style={{ background: `linear-gradient(135deg, ${_p5}, ${_p3})`, filter: 'blur(6px)' }}
               />
             </div>
             <p className={`text-xs font-semibold ${t.emptyTitle}`}>How can I help you today?</p>
@@ -1011,14 +1031,14 @@ export function AIChatWidget() {
             {msg.role === 'assistant' ? (
               <div
                 className="flex-shrink-0 mt-0.5 flex h-6 w-6 items-center justify-center rounded-md"
-                style={{ background: t.aiAvatarBg, boxShadow: '0 0 6px rgba(99,102,241,0.3)' }}
+                style={{ background: t.aiAvatarBg, boxShadow: `0 0 6px ${_pRgba(500, 0.3)}` }}
               >
                 <ChatBubbleOvalLeftEllipsisIcon className="h-3 w-3 text-white" />
               </div>
             ) : (
               <div
                 className="flex-shrink-0 mt-0.5 flex h-6 w-6 items-center justify-center rounded-md text-2xs font-bold text-white"
-                style={{ background: t.userAvatarBg, boxShadow: '0 0 6px rgba(99,102,241,0.2)' }}
+                style={{ background: t.userAvatarBg, boxShadow: `0 0 6px ${_pRgba(500, 0.2)}` }}
               >
                 U
               </div>
@@ -1064,7 +1084,7 @@ export function AIChatWidget() {
                       {speakingMsgId === msg.id ? (
                         <StopIcon className="h-2.5 w-2.5 text-red-400" />
                       ) : (
-                        <SpeakerWaveIcon className={`h-2.5 w-2.5 ${isDark ? 'text-gray-400 hover:text-indigo-300' : 'text-gray-400 hover:text-indigo-500'}`} />
+                        <SpeakerWaveIcon className={`h-2.5 w-2.5 ${isDark ? 'text-gray-400 hover:text-primary-300' : 'text-gray-400 hover:text-primary-500'}`} />
                       )}
                     </button>
                   )}
@@ -1099,7 +1119,7 @@ export function AIChatWidget() {
           <div className="flex gap-2">
             <div
               className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md"
-              style={{ background: t.aiAvatarBg, boxShadow: '0 0 6px rgba(99,102,241,0.3)' }}
+              style={{ background: t.aiAvatarBg, boxShadow: `0 0 6px ${_pRgba(500, 0.3)}` }}
             >
               <SparklesIcon className="h-3 w-3 text-white" />
             </div>
@@ -1109,9 +1129,9 @@ export function AIChatWidget() {
             >
               <div className="flex items-center gap-1">
                 <span className={`text-3xs mr-0.5 ${t.typingLabel}`}>Thinking</span>
-                <div className="h-1 w-1 rounded-full animate-bounce" style={{ background: '#6366f1', animationDelay: '0ms' }} />
-                <div className="h-1 w-1 rounded-full animate-bounce" style={{ background: '#8b5cf6', animationDelay: '150ms' }} />
-                <div className="h-1 w-1 rounded-full animate-bounce" style={{ background: '#06b6d4', animationDelay: '300ms' }} />
+                <div className="h-1 w-1 rounded-full animate-bounce" style={{ background: _p5, animationDelay: '0ms' }} />
+                <div className="h-1 w-1 rounded-full animate-bounce" style={{ background: _p4, animationDelay: '150ms' }} />
+                <div className="h-1 w-1 rounded-full animate-bounce" style={{ background: _p3, animationDelay: '300ms' }} />
               </div>
             </div>
           </div>
@@ -1155,7 +1175,7 @@ export function AIChatWidget() {
               background:
                 message.trim() && !chatMutation.isPending ? t.sendBtnActive : t.sendBtnInactive,
               boxShadow:
-                message.trim() && !chatMutation.isPending ? '0 0 10px rgba(99,102,241,0.3)' : 'none',
+                message.trim() && !chatMutation.isPending ? `0 0 10px ${_pRgba(500, 0.3)}` : 'none',
             }}
           >
             <PaperAirplaneIcon className="h-3.5 w-3.5" />
@@ -1166,7 +1186,7 @@ export function AIChatWidget() {
           <span
             className="text-2xs font-semibold"
             style={{
-              background: 'linear-gradient(90deg, #6366f1, #06b6d4)',
+              background: `linear-gradient(90deg, ${_p5}, ${_p3})`,
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}

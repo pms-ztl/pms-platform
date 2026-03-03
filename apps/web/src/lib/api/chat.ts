@@ -152,6 +152,9 @@ export const chatApi = {
   deleteMessage: (conversationId: string, messageId: string) =>
     api.delete<ChatMessageData>(`/chat/conversations/${conversationId}/messages/${messageId}`),
 
+  clearChat: (conversationId: string) =>
+    api.delete<{ cleared: number }>(`/chat/conversations/${conversationId}/clear`),
+
   toggleReaction: (conversationId: string, messageId: string, emoji: string) =>
     api.post<{ message: ChatMessageData; action: string }>(`/chat/conversations/${conversationId}/messages/${messageId}/reactions`, { emoji }),
 

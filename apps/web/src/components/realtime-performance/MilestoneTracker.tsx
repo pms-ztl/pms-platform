@@ -591,7 +591,7 @@ export function MilestoneTracker() {
                 </label>
                 <select
                   name="milestoneType"
-                  className="w-full px-3 py-2 border border-secondary-300 dark:border-secondary-600 rounded-lg bg-white dark:bg-secondary-700 text-secondary-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white backdrop-blur-sm transition-all duration-300"
                 >
                   <option value="checkpoint">Checkpoint</option>
                   <option value="deliverable">Deliverable</option>

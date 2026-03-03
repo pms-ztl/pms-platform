@@ -191,7 +191,7 @@ export function WellbeingDashboardPage() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Wellbeing & Burnout Dashboard</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Wellbeing & Burnout Dashboard</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Loading wellbeing data...</p>
         </div>
         <PageSkeleton />
@@ -204,7 +204,7 @@ export function WellbeingDashboardPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">Wellbeing & Burnout Dashboard</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Wellbeing & Burnout Dashboard</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
             Monitor team wellness, mood trends, and burnout risk indicators
           </p>

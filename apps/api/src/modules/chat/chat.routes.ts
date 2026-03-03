@@ -44,6 +44,7 @@ router.post('/conversations/:conversationId/messages/:messageId/reactions', vali
 router.post('/conversations/:conversationId/messages/:messageId/pin', validateConversationId, ctrl.togglePinMessage);
 router.post('/conversations/:conversationId/messages/:messageId/forward', validateConversationId, ctrl.forwardMessage);
 router.post('/conversations/:conversationId/read', validateConversationId, ctrl.markRead);
+router.delete('/conversations/:conversationId/clear', validateConversationId, ctrl.clearChat);
 
 // Email
 router.post('/email/send', ctrl.sendEmail);

@@ -10,7 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { PageHeader } from '@/components/ui';
 import toast from 'react-hot-toast';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+// Recharts removed — custom donut chart replaces PieChart to avoid label overlap
 
 import { rbacApi, type RoleDistribution, type RecentRoleChange } from '@/lib/api/rbac';
 import { usePageTitle } from '@/hooks/usePageTitle';
@@ -154,7 +154,7 @@ export function RBACDashboardPage() {
     return (
       <div className="space-y-4">
         <div>
-          <h1 className="text-2xl font-bold text-secondary-900 dark:text-white">RBAC Dashboard</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">RBAC Dashboard</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Loading access control data...</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -237,49 +237,7 @@ export function RBACDashboardPage() {
           </div>
           <div className="p-6">
             {pieData.length > 0 ? (
-              <ResponsiveContainer width="100%" height={280}>
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    dataKey="userCount"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={100}
-                    innerRadius={50}
-                    paddingAngle={2}
-                    label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                    labelLine={true}
-                  >
-                    {pieData.map((_, idx) => (
-                      <Cell key={`cell-${idx}`} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                    contentStyle={{
-                      background: 'rgba(15, 23, 42, 0.80)',
-                      backdropFilter: 'blur(16px)',
-                      WebkitBackdropFilter: 'blur(16px)',
-                      border: '1px solid rgba(148, 163, 184, 0.15)',
-                      borderRadius: '0.75rem',
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                      fontSize: '0.75rem',
-                      color: '#f1f5f9',
-                    }}
-                    labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-                    itemStyle={{ color: '#e2e8f0' }}
-                    formatter={(value: number) => [`${value} users`, 'Count']}
-                  />
-                  <Legend
-                    verticalAlign="bottom"
-                    height={36}
-                    formatter={(value: string) => (
-                      <span className="text-xs text-secondary-600 dark:text-secondary-400">{value}</span>
-                    )}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              <DonutChart data={pieData} colors={PIE_COLORS} totalUsers={usersWithRoles} />
             ) : (
               <div className="flex flex-col items-center justify-center h-64 text-center">
                 <ShieldCheckIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mb-3" />
@@ -403,6 +361,70 @@ export function RBACDashboardPage() {
 }
 
 // ── Sub-components ───────────────────────────────────────────────────────────
+
+function DonutChart({
+  data,
+  colors,
+  totalUsers,
+}: {
+  data: RoleDistribution[];
+  colors: string[];
+  totalUsers: number;
+}) {
+  // Build conic-gradient stops
+  let cumulative = 0;
+  const stops = data.map((d, i) => {
+    const pct = totalUsers > 0 ? (d.userCount / totalUsers) * 100 : 0;
+    const start = cumulative;
+    cumulative += pct;
+    return `${colors[i % colors.length]} ${start}% ${cumulative}%`;
+  });
+
+  const gradient = `conic-gradient(${stops.join(', ')})`;
+
+  return (
+    <div className="flex flex-col sm:flex-row items-center gap-6">
+      {/* Donut */}
+      <div className="relative shrink-0">
+        <div
+          className="w-44 h-44 rounded-full"
+          style={{ background: gradient }}
+        />
+        {/* Inner cut-out for donut effect */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-24 h-24 rounded-full bg-white dark:bg-secondary-900/95 flex flex-col items-center justify-center shadow-inner">
+            <span className="text-2xl font-bold text-secondary-900 dark:text-white">{totalUsers}</span>
+            <span className="text-2xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">Users</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div className="flex-1 space-y-2.5 w-full">
+        {data.map((d, i) => {
+          const pct = totalUsers > 0 ? ((d.userCount / totalUsers) * 100).toFixed(0) : '0';
+          return (
+            <div key={d.name} className="flex items-center gap-3">
+              <div
+                className="w-3 h-3 rounded-full shrink-0"
+                style={{ backgroundColor: colors[i % colors.length] }}
+              />
+              <span className="text-sm font-medium text-secondary-800 dark:text-secondary-200 flex-1 truncate">
+                {d.name}
+              </span>
+              <span className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tabular-nums">
+                {d.userCount}
+              </span>
+              <span className="text-xs text-secondary-400 dark:text-secondary-500 w-10 text-right tabular-nums">
+                {pct}%
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function StatCard({
   icon: Icon,

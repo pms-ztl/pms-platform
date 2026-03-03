@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type AITheme = 'light' | 'dark' | 'deep-dark';
+export type AITheme = 'light' | 'deep-dark';
 export type SwarmMode = 'overview' | 'chat' | 'orchestrate' | 'tasks';
 export type AITransitionPhase = 'idle' | 'entering' | 'exiting';
 
@@ -24,7 +24,7 @@ interface AIWorkspaceState {
   toggleAiMode: () => void;
   /** Explicitly set AI mode */
   setAiMode: (mode: boolean) => void;
-  /** Cycle through themes: light -> dark -> deep-dark -> light */
+  /** Cycle through themes: light -> deep-dark -> light */
   cycleTheme: () => void;
   /** Set a specific theme */
   setTheme: (theme: AITheme) => void;
@@ -48,13 +48,13 @@ interface AIWorkspaceState {
   setAiTransitionPhase: (phase: AITransitionPhase) => void;
 }
 
-const THEME_ORDER: AITheme[] = ['light', 'dark', 'deep-dark'];
+const THEME_ORDER: AITheme[] = ['light', 'deep-dark'];
 
 export const useAIWorkspaceStore = create<AIWorkspaceState>()(
   persist(
     (set) => ({
       isAiMode: false,
-      theme: 'dark',
+      theme: 'deep-dark' as AITheme,
       swarmMode: 'overview' as SwarmMode,
       selectedAgent: null,
       orchestrationAgents: [] as string[],
@@ -121,6 +121,10 @@ export const useAIWorkspaceStore = create<AIWorkspaceState>()(
         agentPanelOpen: state.agentPanelOpen,
         insightPanelOpen: state.insightPanelOpen,
       }),
+      onRehydrateStorage: () => (state) => {
+        // Migrate legacy 'dark' → 'deep-dark' (removed blueish dark mode)
+        if (state && (state.theme as string) === 'dark') state.theme = 'deep-dark';
+      },
     },
   ),
 );

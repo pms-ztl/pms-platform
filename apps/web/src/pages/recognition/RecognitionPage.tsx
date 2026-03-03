@@ -128,7 +128,7 @@ export function RecognitionPage() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-secondary-900 dark:text-white tracking-tight">Recognition Wall</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white tracking-tight">Recognition Wall</h1>
               <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-0.5">Celebrate your team's achievements and contributions</p>
             </div>
           </div>
@@ -299,7 +299,7 @@ export function RecognitionPage() {
                 <select
                   value={period}
                   onChange={e => setPeriod(e.target.value as any)}
-                  className="text-xs border border-secondary-200 dark:border-secondary-600 rounded-lg px-2 py-1 bg-white/80 dark:bg-secondary-700/80 text-secondary-600 dark:text-secondary-300 backdrop-blur-sm focus:ring-2 focus:ring-amber-500/30 focus:border-amber-400"
+                  className="text-xs border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-2 py-1 bg-white/90 dark:bg-secondary-900/60 text-secondary-600 dark:text-secondary-300 backdrop-blur-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 >
                   <option value="month">This Month</option>
                   <option value="quarter">This Quarter</option>
