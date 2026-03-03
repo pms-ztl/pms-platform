@@ -18,7 +18,7 @@ import toast from 'react-hot-toast';
 
 import { mentoringApi, type MentorMatch, type Mentorship, type LearningPathItem } from '@/lib/api';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { PageHeader } from '@/components/ui';
+import { PageHeader, SafeGrid } from '@/components/ui';
 
 // ── Tab definitions ──────────────────────────────────────────────────────────
 
@@ -299,13 +299,13 @@ export function MentoringHubPage() {
       {activeTab === 'find' && (
         <div>
           {matchesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <SafeGrid minWidth={300}>
               {[1, 2, 3].map((i) => (
                 <div key={i} className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5 animate-pulse">
                   <div className="flex gap-4"><div className="w-14 h-14 rounded-full bg-secondary-200 dark:bg-secondary-700" /><div className="flex-1 space-y-2"><div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-2/3" /><div className="h-3 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" /></div></div>
                 </div>
               ))}
-            </div>
+            </SafeGrid>
           ) : matchList.length === 0 ? (
             <div className="text-center py-8">
               <SparklesIcon className="h-16 w-16 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
@@ -313,11 +313,11 @@ export function MentoringHubPage() {
               <p className="text-sm text-secondary-400 mt-1">Complete your skills profile to get personalized mentor recommendations</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <SafeGrid minWidth={300}>
               {matchList.map((mentor) => (
                 <MentorCard key={mentor.id} mentor={mentor} onRequest={(id) => requestMutation.mutate(id)} />
               ))}
-            </div>
+            </SafeGrid>
           )}
         </div>
       )}
@@ -333,11 +333,11 @@ export function MentoringHubPage() {
               <p className="text-sm text-secondary-400 mt-1">Find a mentor and request a mentorship to get started</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <SafeGrid minWidth={300}>
               {mentorshipList.map((m) => (
                 <MentorshipCard key={m.id} mentorship={m} />
               ))}
-            </div>
+            </SafeGrid>
           )}
         </div>
       )}

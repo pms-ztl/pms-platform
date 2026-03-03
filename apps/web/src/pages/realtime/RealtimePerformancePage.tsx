@@ -403,7 +403,7 @@ export function RealtimePerformancePage() {
   const currentTab = tabs.find(t => t.id === activeTab)!;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-0">
       {/* Header */}
       <div className="sticky top-0 z-30 bg-white dark:bg-surface-dark/80 backdrop-blur-md border-b border-secondary-200 dark:border-white/[0.06] shadow-sm">
         <div className={clsx(
@@ -484,10 +484,7 @@ export function RealtimePerformancePage() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-black/50" onClick={() => setIsMobileMenuOpen(false)}>
-          <div
-            className="absolute left-0 top-16 w-72 h-[calc(100vh-4rem)] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-xl overflow-y-auto landscape-scroll"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="absolute left-0 top-16 w-72 h-[calc(100vh-4rem)] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl shadow-xl overflow-y-auto landscape-scroll" onClick={(e) => e.stopPropagation()}> {/* ui-allow: fixed-height — mobile drawer container */}
             <div className="p-4 space-y-2">
               {tabs.map((tab) => (
                 <button

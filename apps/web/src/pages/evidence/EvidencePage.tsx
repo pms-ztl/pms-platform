@@ -760,7 +760,7 @@ export function EvidencePage() {
                         {isExpanded && (
                           <tr className="bg-secondary-50/50 dark:bg-secondary-900/30">
                             <td colSpan={7} className="px-6 py-4">
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm"> {/* ui-allow: grid-cols-3 — layout grid, not card collection */}
                                 <div>
                                   <p className="font-medium text-secondary-600 dark:text-secondary-300 mb-1">
                                     Description
@@ -849,7 +849,7 @@ export function EvidencePage() {
       {/* ---- Create / Edit Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingEvidence ? 'Edit Evidence' : 'New Evidence'}
@@ -1043,7 +1043,7 @@ export function EvidencePage() {
       {/* ---- View Detail Modal ---- */}
       {showViewModal && viewingEvidence && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Evidence Details

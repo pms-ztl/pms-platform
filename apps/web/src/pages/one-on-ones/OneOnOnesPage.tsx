@@ -18,6 +18,7 @@ import {
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { format } from 'date-fns';
+import { SafeGrid } from '@/components/ui';
 
 import { oneOnOnesApi, usersApi, type OneOnOne, type User } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
@@ -628,9 +629,9 @@ export function OneOnOnesPage() {
         renderEmptyState()
       ) : (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <SafeGrid minWidth={320} gap="gap-4">
             {meetings.map((meeting) => renderMeetingCard(meeting))}
-          </div>
+          </SafeGrid>
           {renderPagination()}
         </>
       )}

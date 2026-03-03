@@ -381,39 +381,39 @@ export function FeedbackPage() {
       {/* Stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="card card-body">
-          <div className="flex items-center">
-            <div className="p-2 rounded-lg bg-success-100">
-              <HandThumbUpIcon className="h-6 w-6 text-success-600" />
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-success-100 dark:bg-success-900/30">
+              <HandThumbUpIcon className="h-5 w-5 text-success-600" />
             </div>
-            <div className="ml-4">
-              <p className="text-sm text-secondary-500 dark:text-secondary-400">Praise Received</p>
-              <p className="text-2xl font-semibold text-secondary-900 dark:text-white">
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400">Praise Received</p>
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">
                 {receivedFeedback?.data?.filter((f) => f.type === 'PRAISE').length || 0}
               </p>
             </div>
           </div>
         </div>
         <div className="card card-body">
-          <div className="flex items-center">
-            <div className="p-2 rounded-lg bg-primary-100">
-              <PaperAirplaneIcon className="h-6 w-6 text-primary-600" />
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-primary-100 dark:bg-primary-900/30">
+              <PaperAirplaneIcon className="h-5 w-5 text-primary-600" />
             </div>
-            <div className="ml-4">
-              <p className="text-sm text-secondary-500 dark:text-secondary-400">Feedback Given</p>
-              <p className="text-2xl font-semibold text-secondary-900 dark:text-white">
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400">Feedback Given</p>
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">
                 {givenFeedback?.data?.length || 0}
               </p>
             </div>
           </div>
         </div>
         <div className="card card-body">
-          <div className="flex items-center">
-            <div className="p-2 rounded-lg bg-warning-100">
-              <ChatBubbleLeftRightIcon className="h-6 w-6 text-warning-600" />
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-warning-100 dark:bg-warning-900/30">
+              <ChatBubbleLeftRightIcon className="h-5 w-5 text-warning-600" />
             </div>
-            <div className="ml-4">
-              <p className="text-sm text-secondary-500 dark:text-secondary-400">Unacknowledged</p>
-              <p className="text-2xl font-semibold text-secondary-900 dark:text-white">
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400">Unacknowledged</p>
+              <p className="text-xl font-bold text-secondary-900 dark:text-white">
                 {receivedFeedback?.data?.filter((f) => !f.isAcknowledged).length || 0}
               </p>
             </div>

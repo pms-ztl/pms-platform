@@ -785,7 +785,7 @@ export function AccessPoliciesPage() {
             </div>
 
             {/* Modal body */}
-            <div className="space-y-5 px-6 py-5 max-h-[70vh] overflow-y-auto">
+            <div className="space-y-5 px-6 py-5 max-h-[70vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
               {/* Name */}
               <div>
                 <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">

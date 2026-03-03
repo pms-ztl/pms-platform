@@ -362,7 +362,7 @@ function DashboardSkeleton() {
 
 function DashboardError({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+    <div className="flex flex-col items-center justify-center py-12 text-center">
       <ExclamationTriangleIcon className="h-12 w-12 text-red-400 mb-4" />
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Failed to Load Dashboard</h2>
       <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-md">{message}</p>

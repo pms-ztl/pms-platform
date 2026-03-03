@@ -404,9 +404,9 @@ export function OKRDashboardPage() {
   // -------------------------------------------------------------------------
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl glass-banner-okr p-5 text-secondary-900 dark:text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl glass-banner-okr p-5 pb-4 text-secondary-900 dark:text-white shadow-xl">
         {/* Decorative gradient orbs — visible through the glass */}
         <div className="absolute -top-20 -right-20 w-72 h-72 bg-gradient-to-br from-amber-500/30 to-orange-500/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-gradient-to-tr from-red-500/20 to-amber-500/15 rounded-full blur-3xl" />

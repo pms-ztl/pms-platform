@@ -522,7 +522,7 @@ export function HealthDashboardPage() {
   // ── Error state ──
   if (errorLatest) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 text-center">
+      <div className="flex flex-col items-center justify-center py-8 text-center">
         <ExclamationTriangleIcon className="h-12 w-12 text-danger-400 mb-4" />
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
           Unable to load health metrics

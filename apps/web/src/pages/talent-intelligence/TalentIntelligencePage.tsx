@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   RadarChart,
@@ -29,7 +29,7 @@ import {
 } from '@/lib/api/actionable-insights';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useAuthStore } from '@/store/auth';
-import { EmployeePicker } from '@/components/ui';
+import { EmployeePicker, ChartTooltip as SharedChartTooltip } from '@/components/ui';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -157,19 +157,10 @@ export function TalentIntelligencePage() {
     onError: () => toast.error('Failed to create succession plan'),
   });
 
-  // ── tooltip ───────────────────────────────────────────────────────────
-
-  const ChartTooltip = ({ active, payload, label }: any) => {
-    if (!active || !payload?.length) return null;
-    return (
-      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-        <p className="font-semibold text-white">{label}</p>
-        {payload.map((p: any, i: number) => (
-          <p key={i} style={{ color: p.color }}>{p.name}: {p.value?.toFixed(1)}</p>
-        ))}
-      </div>
-    );
-  };
+  // ── auto-select first recommendation ─────────────────────────────────
+  useEffect(() => {
+    if (recommendations.length > 0 && !selectedRec) setSelectedRec(recommendations[0]);
+  }, [recommendations]);
 
   // ── skeleton ──────────────────────────────────────────────────────────
 
@@ -329,7 +320,7 @@ export function TalentIntelligencePage() {
                     <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 9, fill: 'var(--color-secondary-500, #6b7280)' }} />
                     <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 8, fill: 'var(--color-secondary-400, #9ca3af)' }} />
                     <Radar name="Score" dataKey="score" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.3} />
-                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<SharedChartTooltip />} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
@@ -362,7 +353,7 @@ export function TalentIntelligencePage() {
               )}
             </>
           ) : (
-            <div className="flex items-center justify-center h-56 text-secondary-400 text-xs">
+            <div className="flex items-center justify-center py-6 text-secondary-400 text-xs">
               Select a recommendation to see the score breakdown
             </div>
           )}
@@ -373,7 +364,7 @@ export function TalentIntelligencePage() {
       <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Succession Plans</h3>
         {successionPlans.length === 0 ? (
-          <div className="text-center py-12 text-secondary-400 text-sm">
+          <div className="text-center py-6 text-secondary-400 text-sm">
             No succession plans yet. Create one to track critical position backups.
           </div>
         ) : (

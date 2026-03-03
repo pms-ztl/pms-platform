@@ -784,7 +784,7 @@ function DashboardContent() {
       )}
 
       {/* ═══════════════════ Goals & Actions ═══════════════════ */}
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3"> {/* ui-allow: rigid-grid — layout grid, not card collection */}
         <GoalsWithRisk goalsData={goalsData} goalRisks={goalRisks} goalMappings={goalMappings} />
         <QuickActions pendingReviews={pendingReviews} atRiskGoals={atRiskGoals} goalsData={goalsData} />
       </div>

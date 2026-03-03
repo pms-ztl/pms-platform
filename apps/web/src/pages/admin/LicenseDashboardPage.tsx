@@ -63,10 +63,10 @@ export function LicenseDashboardPage() {
 
   if (!isAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-        <ShieldCheckIcon className="h-12 w-12 text-secondary-400 mb-4" />
-        <h2 className="text-xl font-semibold text-secondary-900 dark:text-white">Access Denied</h2>
-        <p className="text-secondary-500 dark:text-secondary-400 mt-2">You need admin permissions to view this page.</p>
+      <div className="flex flex-col items-center justify-center py-10 text-center">
+        <ShieldCheckIcon className="h-10 w-10 text-secondary-400 mb-3" />
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Access Denied</h2>
+        <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">You need admin permissions to view this page.</p>
       </div>
     );
   }

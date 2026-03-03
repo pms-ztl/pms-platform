@@ -230,7 +230,7 @@ function StatCard({
 
 function LoadingState({ message = 'Loading data...' }: { message?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-secondary-400 dark:text-secondary-500">
+    <div className="flex flex-col items-center justify-center py-8 text-secondary-400 dark:text-secondary-500">
       <div className="animate-spin rounded-full h-10 w-10 border-2 border-primary-500 border-t-transparent mb-4" />
       <p className="text-sm font-medium">{message}</p>
     </div>
@@ -243,7 +243,7 @@ function LoadingState({ message = 'Loading data...' }: { message?: string }) {
 
 function ErrorState({ message = 'Failed to load data' }: { message?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-secondary-400 dark:text-secondary-500">
+    <div className="flex flex-col items-center justify-center py-8 text-secondary-400 dark:text-secondary-500">
       <ExclamationTriangleIcon className="h-10 w-10 mb-3 opacity-40 text-danger-400" />
       <p className="text-sm font-medium">{message}</p>
       <p className="text-xs mt-1">Please try again later</p>
@@ -257,7 +257,7 @@ function ErrorState({ message = 'Failed to load data' }: { message?: string }) {
 
 function EmptyState({ message = 'No data available' }: { message?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-secondary-400 dark:text-secondary-500">
+    <div className="flex flex-col items-center justify-center py-8 text-secondary-400 dark:text-secondary-500">
       <ChartBarSquareIcon className="h-10 w-10 mb-3 opacity-40" />
       <p className="text-sm font-medium">{message}</p>
       <p className="text-xs mt-1">Data will appear here once reviews and compensation records are available</p>

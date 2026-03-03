@@ -256,16 +256,54 @@ export function PerformanceSimulatorPage() {
         {/* Results panel */}
         <div className="lg:col-span-2 space-y-5">
           {!result && !simulationMutation.isPending && (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <BeakerIcon className="h-16 w-16 text-secondary-300 dark:text-secondary-600 mb-4" />
-              <h3 className="text-lg font-semibold text-secondary-500 dark:text-secondary-400">No simulation yet</h3>
-              <p className="text-sm text-secondary-400 dark:text-secondary-500 mt-1">Select a scenario, configure parameters, and click "Run Simulation"</p>
+            <div className="py-6 space-y-5">
+              {/* 3-step guidance */}
+              <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
+                <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
+                  <BeakerIcon className="h-5 w-5 text-primary-500" /> How to run a simulation
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {[
+                    { step: '1', title: 'Select a scenario type', desc: 'Choose from rating change, promotion, career paths, and more' },
+                    { step: '2', title: 'Configure parameters', desc: 'Set the inputs for your what-if scenario on the left panel' },
+                    { step: '3', title: 'Click Run Simulation', desc: 'View projected impacts, cascading effects, and recommendations' },
+                  ].map((s) => (
+                    <div key={s.step} className="flex gap-3">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                        <span className="text-xs font-bold text-primary-600 dark:text-primary-400">{s.step}</span>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-secondary-900 dark:text-white">{s.title}</p>
+                        <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{s.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Skeleton preview cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {[
+                  { title: 'Projected Impact', lines: 3 },
+                  { title: 'Cascading Effects', lines: 2 },
+                  { title: 'Recommendations', lines: 2 },
+                ].map((card) => (
+                  <div key={card.title} className="rounded-xl border-2 border-dashed border-secondary-200 dark:border-secondary-700 p-4">
+                    <p className="text-xs font-medium text-secondary-400 dark:text-secondary-500 mb-3">{card.title}</p>
+                    <div className="space-y-2">
+                      {Array.from({ length: card.lines }).map((_, i) => (
+                        <div key={i} className="h-2.5 rounded bg-secondary-100 dark:bg-secondary-700/50" style={{ width: `${70 + Math.random() * 30}%` }} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
           {simulationMutation.isPending && (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-16 h-16 rounded-full border-4 border-primary-200 border-t-primary-600 animate-spin mb-4" />
+            <div className="flex flex-col items-center justify-center py-10">
+              <div className="w-12 h-12 rounded-full border-4 border-primary-200 border-t-primary-600 animate-spin mb-3" />
               <p className="text-sm text-secondary-500 animate-pulse">Analyzing scenario impacts...</p>
             </div>
           )}

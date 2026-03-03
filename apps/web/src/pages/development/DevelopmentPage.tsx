@@ -15,7 +15,7 @@ import {
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { PageHeader } from '@/components/ui';
+import { PageHeader, SafeGrid, EmptyState } from '@/components/ui';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -386,7 +386,7 @@ function CreatePlanModal({ onClose }: { onClose: () => void }) {
         className="fixed inset-0"
         onClick={onClose}
       />
-      <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
+      <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
             Create Development Plan
@@ -723,32 +723,21 @@ export function DevelopmentPage() {
           <div className="glass-spinner" />
         </div>
       ) : plans.length === 0 ? (
-        <div className="text-center py-8 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
-          <AcademicCapIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-          <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
-            {isTeamView ? 'No team development plans' : 'No development plans yet'}
-          </h3>
-          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-            {isTeamView
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
+          <EmptyState
+            size="md"
+            icon={<AcademicCapIcon className="h-full w-full" />}
+            title={isTeamView ? 'No team development plans' : 'No development plans yet'}
+            description={isTeamView
               ? 'None of your team members have development plans matching the current filter.'
               : 'Get started by creating a development plan to track your professional growth.'}
-          </p>
-          {!isTeamView && (
-            <div className="mt-6">
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white rounded-lg px-4 py-2 text-sm font-medium inline-flex items-center gap-2 transition-colors"
-              >
-                <PlusIcon className="h-5 w-5" />
-                Create Plan
-              </button>
-            </div>
-          )}
+            actions={!isTeamView ? [{ label: 'Create Plan', onClick: () => setShowCreateModal(true) }] : []}
+          />
         </div>
       ) : (
         <>
           {/* Plan cards grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <SafeGrid minWidth={300}>
             {plans.map((plan) => (
               <PlanCard
                 key={plan.id}
@@ -757,7 +746,7 @@ export function DevelopmentPage() {
                 onDelete={(plan.userId === user?.id || hasManagerAccess) ? handleDeleteClick : undefined}
               />
             ))}
-          </div>
+          </SafeGrid>
 
           {/* Pagination */}
           {totalPages > 1 && (

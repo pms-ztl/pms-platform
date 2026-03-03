@@ -726,7 +726,7 @@ export function ModeratorDashboardPage() {
           <div className="flex-1 space-y-6 overflow-y-auto">
             {!selectedEmployee ? (
               <div className="flex items-center justify-center h-full bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
-                <div className="text-center py-20 px-8">
+                <div className="text-center py-8 px-8">
                   <ChartBarIcon className="h-16 w-16 mx-auto text-secondary-300 dark:text-secondary-600 mb-4" />
                   <h3 className="text-lg font-medium text-secondary-700 dark:text-secondary-300">
                     Select an employee

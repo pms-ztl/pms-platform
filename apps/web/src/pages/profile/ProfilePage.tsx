@@ -667,7 +667,7 @@ export function ProfilePage() {
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 dark:bg-black/70" onClick={() => setShowEmployeeCardModal(false)} />
-            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-4xl w-full p-4 max-h-[90vh] overflow-y-auto">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-4xl w-full p-4 max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
               <EmployeeCard onClose={() => setShowEmployeeCardModal(false)} />
             </div>
           </div>

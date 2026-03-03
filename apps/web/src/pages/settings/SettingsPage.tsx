@@ -357,7 +357,17 @@ export function SettingsPage() {
 
       <div className="flex flex-col md:flex-row gap-4 md:gap-8">
         {/* Sidebar — horizontal scroll on mobile, vertical on md+ */}
-        <div className="w-full md:w-64 md:flex-shrink-0">
+        <div className="w-full md:w-64 md:flex-shrink-0 h-fit md:sticky md:top-4">
+          {/* Account summary card — visible on md+ */}
+          <div className="hidden md:flex items-center gap-3 p-3 mb-3 rounded-xl bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+              {user?.firstName?.[0]}{user?.lastName?.[0]}
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-secondary-900 dark:text-white truncate">{user?.firstName} {user?.lastName}</p>
+              <p className="text-2xs text-secondary-500 dark:text-secondary-400 truncate">{user?.email}</p>
+            </div>
+          </div>
           <nav className="flex md:flex-col gap-1 overflow-x-auto pb-2 md:pb-0 md:space-y-1 md:gap-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {tabs.map((tab) => {
               const Icon = tab.icon;

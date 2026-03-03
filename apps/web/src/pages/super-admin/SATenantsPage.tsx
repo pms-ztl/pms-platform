@@ -422,7 +422,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-gray-200/50 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
+        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-gray-200/50 dark:border-gray-700 max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>

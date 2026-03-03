@@ -6,7 +6,7 @@ export function NotFoundPage() {
   usePageTitle('Page Not Found');
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center p-6">
+    <div className="flex py-12 items-center justify-center p-6">
       <div className="text-center">
         {/* Large 404 */}
         <p className="text-8xl font-extrabold tracking-tight text-primary-500/20 dark:text-primary-400/15 select-none">

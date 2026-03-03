@@ -140,9 +140,20 @@ function DetailCard({
         {/* Key Results */}
         {keyResults.length > 0 && (
           <div className="mt-4 border-t border-secondary-100 dark:border-secondary-700 pt-3">
-            <h4 className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2.5">
+            <h4 className="text-2xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-2">
               Key Results ({keyResults.length})
             </h4>
+            {/* Compact KR progress breakdown */}
+            <div className="flex h-2 rounded-full overflow-hidden mb-3 bg-secondary-100 dark:bg-secondary-700">
+              {keyResults.map((kr) => (
+                <div
+                  key={kr.id}
+                  className={clsx('h-full transition-all duration-300', progressColor(kr.progress))}
+                  style={{ width: `${100 / keyResults.length}%`, opacity: 0.3 + (kr.progress / 100) * 0.7 }}
+                  title={`${kr.title}: ${Math.round(kr.progress)}%`}
+                />
+              ))}
+            </div>
             <div className="space-y-2.5">
               {keyResults.map((kr) => (
                 <div key={kr.id} className="group/kr">
@@ -190,9 +201,9 @@ function DetailCard({
         )}
 
         {keyResults.length === 0 && (
-          <div className="mt-4 text-center py-3 border-t border-secondary-100 dark:border-secondary-700">
-            <FlagIcon className="mx-auto h-6 w-6 text-secondary-300 dark:text-secondary-600" />
-            <p className="text-2xs text-secondary-400 mt-1">No key results yet</p>
+          <div className="mt-3 text-center py-2 border-t border-secondary-100 dark:border-secondary-700">
+            <FlagIcon className="mx-auto h-5 w-5 text-secondary-300 dark:text-secondary-600" />
+            <p className="text-2xs text-secondary-400 mt-0.5">No key results yet</p>
           </div>
         )}
 
@@ -227,9 +238,9 @@ interface OKRDetailCardsViewProps {
 export function OKRDetailCardsView({ objectives, krByParent, onCheckin }: OKRDetailCardsViewProps) {
   if (objectives.length === 0) {
     return (
-      <div className="text-center py-16">
-        <FlagIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-        <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">No OKRs found</h3>
+      <div className="text-center py-8">
+        <FlagIcon className="mx-auto h-10 w-10 text-secondary-300 dark:text-secondary-600" />
+        <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No OKRs found</h3>
         <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
           Create objectives with type &quot;OKR Objective&quot; from the Goals page.
         </p>

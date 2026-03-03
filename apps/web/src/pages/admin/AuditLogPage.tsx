@@ -780,7 +780,7 @@ export function AuditLogPage() {
       </div>
 
       {/* ── Main Content Area ──────────────────────────────────────────────── */}
-      <div className={clsx('grid gap-4', showTimeline ? 'grid-cols-1 xl:grid-cols-3' : 'grid-cols-1')}>
+      <div className={clsx('grid gap-4', showTimeline ? 'grid-cols-1 xl:grid-cols-3' : 'grid-cols-1')}> {/* ui-allow: rigid-grid — layout grid, not card collection */}
         {/* Table */}
         <div className={clsx(showTimeline ? 'xl:col-span-2' : '')}>
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
@@ -918,7 +918,7 @@ export function AuditLogPage() {
                   <XMarkIcon className="h-4 w-4 text-secondary-400" />
                 </button>
               </div>
-              <div className="p-5 max-h-[calc(100vh-16rem)] overflow-y-auto">
+              <div className="p-5 max-h-[calc(100vh-16rem)] overflow-y-auto"> {/* ui-allow: fixed-height — scrollable table container */}
                 {eventsLoading ? (
                   <div className="flex justify-center py-8">
                     <div className="glass-spinner h-6 w-6" />

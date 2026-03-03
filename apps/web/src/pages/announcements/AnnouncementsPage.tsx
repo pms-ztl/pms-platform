@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   PlusIcon,
@@ -28,7 +28,7 @@ import { format } from 'date-fns';
 
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
-import { PageHeader } from '@/components/ui';
+import { PageHeader, MasterDetail, EmptyState } from '@/components/ui';
 
 // ── Custom Pin (thumbtack) icon ──
 function PinIcon({ className }: { className?: string }) {
@@ -162,6 +162,9 @@ export function AnnouncementsPage() {
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
+  // MasterDetail selection
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<Announcement | null>(null);
+
   // ---- Queries ----
   const { data: listResult, isLoading } = useQuery({
     queryKey: ['announcements', { page, status: statusFilter, priority: priorityFilter }],
@@ -264,6 +267,17 @@ export function AnnouncementsPage() {
     () => filteredAnnouncements.filter((a) => !(a.isPinned && a.status === 'PUBLISHED')),
     [filteredAnnouncements],
   );
+
+  // Auto-select first announcement when list loads
+  useEffect(() => {
+    if (!selectedAnnouncement && filteredAnnouncements.length > 0) {
+      setSelectedAnnouncement(filteredAnnouncements[0]);
+    }
+    // If selected item no longer in the list, clear it
+    if (selectedAnnouncement && !filteredAnnouncements.find((a) => a.id === selectedAnnouncement.id)) {
+      setSelectedAnnouncement(filteredAnnouncements[0] ?? null);
+    }
+  }, [filteredAnnouncements]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Summary counts
   const totalCount = meta.total;
@@ -464,131 +478,54 @@ export function AnnouncementsPage() {
         </div>
       </div>
 
-      {/* ---- Pinned Announcements ---- */}
-      {pinnedAnnouncements.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="flex items-center gap-2 text-sm font-semibold text-secondary-700 dark:text-secondary-300 tracking-wider">
-            <PinIcon className="h-4 w-4 text-amber-500" />
-            Pinned Announcements
-          </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {pinnedAnnouncements.map((a) => (
-              <div
-                key={a.id}
-                className="card card-body dark:bg-secondary-800 dark:border-secondary-700 border-l-4 border-l-amber-400 dark:border-l-amber-500 relative"
-              >
-                <div className="absolute top-3 right-3">
-                  <StarIconSolid className="h-5 w-5 text-amber-400" />
-                </div>
-                <div className="flex items-start gap-3 pr-8">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', priorityColors[a.priority] ?? '')}>
-                        {a.priority}
-                      </span>
-                      <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', categoryColors[a.category] ?? '')}>
-                        {categoryLabels[a.category] ?? a.category}
-                      </span>
-                    </div>
-                    <h3 className="text-base font-semibold text-secondary-900 dark:text-white mt-2">
-                      {a.title}
-                    </h3>
-                    <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1">
-                      {truncateContent(a.content, 200)}
-                    </p>
-                    <div className="flex items-center gap-3 mt-3 text-xs text-secondary-500 dark:text-secondary-400">
-                      {a.author && (
-                        <span className="flex items-center gap-1">
-                          <AuthorAvatar author={a.author} size="sm" />
-                          {a.author.firstName} {a.author.lastName}
-                        </span>
-                      )}
-                      <span className="flex items-center gap-1">
-                        <CalendarDaysIcon className="h-3.5 w-3.5" />
-                        {format(new Date(a.publishedAt ?? a.createdAt), 'MMM d, yyyy')}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                {/* Actions for pinned */}
-                {isManager && (
-                  <div className="flex items-center gap-1 mt-3 pt-3 border-t border-secondary-100 dark:border-secondary-700">
-                    <ActionBtn
-                      icon={<PencilSquareIcon className="h-4 w-4" />}
-                      title="Edit"
-                      onClick={() => openEditModal(a)}
-                    />
-                    <ActionBtn
-                      icon={<StarIcon className="h-4 w-4 text-amber-500" />}
-                      title="Unpin"
-                      onClick={() => pinMutation.mutate(a.id)}
-                    />
-                    <ActionBtn
-                      icon={<ArchiveBoxIcon className="h-4 w-4 text-purple-500" />}
-                      title="Archive"
-                      onClick={() => archiveMutation.mutate(a.id)}
-                    />
-                    <ActionBtn
-                      icon={<TrashIcon className="h-4 w-4 text-red-500" />}
-                      title="Delete"
-                      onClick={() => setDeleteConfirmId(a.id)}
-                    />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+      {/* ---- Master-Detail Announcements List ---- */}
+      {isLoading ? (
+        <div className="flex justify-center py-8">
+          <div className="glass-spinner" />
         </div>
-      )}
-
-      {/* ---- Main Announcements List ---- */}
-      <div className="space-y-3">
-        {pinnedAnnouncements.length > 0 && regularAnnouncements.length > 0 && (
-          <h2 className="flex items-center gap-2 text-sm font-semibold text-secondary-700 dark:text-secondary-300 tracking-wider">
-            <MegaphoneIcon className="h-4 w-4" />
-            All Announcements
-          </h2>
-        )}
-
-        {isLoading ? (
-          <div className="flex justify-center py-8">
-            <div className="glass-spinner" />
-          </div>
-        ) : regularAnnouncements.length === 0 && pinnedAnnouncements.length === 0 ? (
-          <div className="card dark:bg-secondary-800 dark:border-secondary-700">
-            <div className="text-center py-8">
-              <MegaphoneIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-              <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">
-                No announcements found
-              </h3>
-              <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-                {isManager
-                  ? 'Get started by creating your first announcement.'
-                  : 'There are no announcements at this time. Check back later.'}
-              </p>
-              {isManager && (
-                <button onClick={openCreateModal} className="btn-primary mt-4">
-                  <PlusIcon className="h-5 w-5 mr-2 inline" />
-                  New Announcement
-                </button>
+      ) : filteredAnnouncements.length === 0 ? (
+        <EmptyState
+          icon={<MegaphoneIcon className="h-full w-full" />}
+          title="No announcements found"
+          description={
+            isManager
+              ? 'Get started by creating your first announcement.'
+              : 'There are no announcements at this time. Check back later.'
+          }
+          actions={isManager ? [{ label: 'New Announcement', onClick: openCreateModal }] : []}
+        />
+      ) : (
+        <MasterDetail<Announcement>
+          items={filteredAnnouncements}
+          selectedItem={selectedAnnouncement}
+          onClearSelection={() => setSelectedAnnouncement(null)}
+          detailTitle="Announcement"
+          detailWidth={460}
+          renderList={(items) => (
+            <div className="space-y-3">
+              {/* Pinned header */}
+              {pinnedAnnouncements.length > 0 && (
+                <h2 className="flex items-center gap-2 text-sm font-semibold text-secondary-700 dark:text-secondary-300 tracking-wider">
+                  <PinIcon className="h-4 w-4 text-amber-500" />
+                  Pinned
+                </h2>
               )}
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {regularAnnouncements.map((a) => {
-              const isExpanded = expandedCard === a.id;
-              return (
-                <div
-                  key={a.id}
-                  className={clsx(
-                    'card dark:bg-secondary-800 dark:border-secondary-700 overflow-hidden transition-shadow hover:shadow-md',
-                    a.priority === 'CRITICAL' && a.status === 'PUBLISHED' && 'ring-1 ring-red-300 dark:ring-red-700',
-                  )}
-                >
-                  {/* Card Header */}
-                  <div className="px-5 py-4">
-                    <div className="flex items-start justify-between gap-2">
+              {/* Items list */}
+              {items.map((a) => {
+                const isSelected = selectedAnnouncement?.id === a.id;
+                const isPinned = a.isPinned && a.status === 'PUBLISHED';
+                return (
+                  <div
+                    key={a.id}
+                    onClick={() => setSelectedAnnouncement(a)}
+                    className={clsx(
+                      'card dark:bg-secondary-800 dark:border-secondary-700 overflow-hidden cursor-pointer transition-all hover:shadow-md',
+                      isSelected && 'ring-2 ring-primary-500 dark:ring-primary-400',
+                      isPinned && 'border-l-4 border-l-amber-400 dark:border-l-amber-500',
+                      a.priority === 'CRITICAL' && a.status === 'PUBLISHED' && !isSelected && 'ring-1 ring-red-300 dark:ring-red-700',
+                    )}
+                  >
+                    <div className="px-4 py-3">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', priorityColors[a.priority] ?? '')}>
                           <span className="inline-flex items-center gap-1">
@@ -599,179 +536,202 @@ export function AnnouncementsPage() {
                         <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', statusColors[a.status] ?? '')}>
                           {a.status}
                         </span>
+                        {isPinned && <StarIconSolid className="h-3.5 w-3.5 text-amber-400 ml-auto flex-shrink-0" />}
                       </div>
-                      {a.isPinned && (
-                        <StarIconSolid className="h-4 w-4 text-amber-400 flex-shrink-0" />
-                      )}
-                    </div>
-
-                    <h3
-                      className="text-base font-semibold text-secondary-900 dark:text-white mt-3 cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                      onClick={() => setExpandedCard(isExpanded ? null : a.id)}
-                    >
-                      {a.title}
-                    </h3>
-
-                    <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-1.5">
-                      {isExpanded ? a.content : truncateContent(a.content)}
-                    </p>
-
-                    {a.content.length > 150 && (
-                      <button
-                        onClick={() => setExpandedCard(isExpanded ? null : a.id)}
-                        className="text-xs text-primary-600 dark:text-primary-400 hover:underline mt-1"
-                      >
-                        {isExpanded ? 'Show less' : 'Read more'}
-                      </button>
-                    )}
-
-                    {/* Category & Audience */}
-                    <div className="flex items-center gap-2 mt-3 flex-wrap">
-                      <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', categoryColors[a.category] ?? 'bg-secondary-100 text-secondary-700')}>
-                        <TagIcon className="h-3 w-3 inline mr-0.5" />
-                        {categoryLabels[a.category] ?? a.category}
-                      </span>
-                      <span className="text-xs text-secondary-400 dark:text-secondary-500 flex items-center gap-1">
-                        <UserGroupIcon className="h-3 w-3" />
-                        {(a.targetAudience ?? []).map((t) => audienceLabels[t] ?? t).join(', ') || 'All'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card Footer */}
-                  <div className="px-5 py-3 bg-secondary-50/50 dark:bg-secondary-900/30 border-t border-secondary-100 dark:border-secondary-700">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-xs text-secondary-500 dark:text-secondary-400">
+                      <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mt-2 line-clamp-2">
+                        {a.title}
+                      </h3>
+                      <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1 line-clamp-2">
+                        {a.content}
+                      </p>
+                      <div className="flex items-center gap-2 mt-2 text-2xs text-secondary-400 dark:text-secondary-500">
                         {a.author && (
-                          <span className="flex items-center gap-1.5">
+                          <span className="flex items-center gap-1">
                             <AuthorAvatar author={a.author} size="sm" />
                             {a.author.firstName} {a.author.lastName}
                           </span>
                         )}
-                        <span className="text-secondary-300 dark:text-secondary-600">|</span>
                         <span>{format(new Date(a.createdAt), 'MMM d, yyyy')}</span>
                       </div>
-                      {isManager && (
-                        <div className="flex items-center gap-0.5">
-                          <ActionBtn
-                            icon={<PencilSquareIcon className="h-4 w-4" />}
-                            title="Edit"
-                            onClick={() => openEditModal(a)}
-                          />
-                          {a.status === 'DRAFT' && (
-                            <ActionBtn
-                              icon={<PaperAirplaneIcon className="h-4 w-4 text-green-600 dark:text-green-400" />}
-                              title="Publish"
-                              onClick={() => publishMutation.mutate(a.id)}
-                            />
-                          )}
-                          {a.status === 'PUBLISHED' && (
-                            <>
-                              <ActionBtn
-                                icon={
-                                  a.isPinned
-                                    ? <StarIconSolid className="h-4 w-4 text-amber-500" />
-                                    : <StarIcon className="h-4 w-4 text-secondary-400" />
-                                }
-                                title={a.isPinned ? 'Unpin' : 'Pin'}
-                                onClick={() => pinMutation.mutate(a.id)}
-                              />
-                              <ActionBtn
-                                icon={<ArchiveBoxIcon className="h-4 w-4 text-purple-500" />}
-                                title="Archive"
-                                onClick={() => archiveMutation.mutate(a.id)}
-                              />
-                            </>
-                          )}
-                          <ActionBtn
-                            icon={<TrashIcon className="h-4 w-4 text-red-500" />}
-                            title="Delete"
-                            onClick={() => setDeleteConfirmId(a.id)}
-                          />
-                        </div>
-                      )}
                     </div>
+                  </div>
+                );
+              })}
 
-                    {/* Scheduled / Expires info */}
-                    {(a.scheduledAt || a.expiresAt) && (
-                      <div className="flex flex-wrap gap-3 mt-2 text-xs text-secondary-400 dark:text-secondary-500">
-                        {a.scheduledAt && (
-                          <span className="flex items-center gap-1">
-                            <ClockIcon className="h-3 w-3" />
-                            Scheduled: {format(new Date(a.scheduledAt), 'MMM d, yyyy HH:mm')}
-                          </span>
-                        )}
-                        {a.expiresAt && (
-                          <span className="flex items-center gap-1">
-                            <CalendarDaysIcon className="h-3 w-3" />
-                            Expires: {format(new Date(a.expiresAt), 'MMM d, yyyy HH:mm')}
-                          </span>
-                        )}
-                      </div>
-                    )}
+              {/* Pagination */}
+              {meta.totalPages > 1 && (
+                <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-secondary-500 dark:text-secondary-400">
+                      {(meta.page - 1) * meta.limit + 1}-{Math.min(meta.page * meta.limit, meta.total)} of {meta.total}
+                    </p>
+                    <div className="flex gap-1">
+                      <button
+                        disabled={page <= 1}
+                        onClick={() => setPage((p) => Math.max(1, p - 1))}
+                        className="p-1.5 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700 disabled:opacity-40"
+                      >
+                        <ChevronLeftIcon className="h-5 w-5" />
+                      </button>
+                      {Array.from({ length: Math.min(meta.totalPages, 5) }, (_, i) => {
+                        let pageNum: number;
+                        if (meta.totalPages <= 5) {
+                          pageNum = i + 1;
+                        } else if (page <= 3) {
+                          pageNum = i + 1;
+                        } else if (page >= meta.totalPages - 2) {
+                          pageNum = meta.totalPages - 4 + i;
+                        } else {
+                          pageNum = page - 2 + i;
+                        }
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => setPage(pageNum)}
+                            className={clsx(
+                              'px-3 py-1.5 rounded text-sm font-medium transition-colors',
+                              page === pageNum
+                                ? 'bg-primary-600 text-white'
+                                : 'hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-600 dark:text-secondary-400',
+                            )}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      })}
+                      <button
+                        disabled={page >= meta.totalPages}
+                        onClick={() => setPage((p) => p + 1)}
+                        className="p-1.5 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700 disabled:opacity-40"
+                      >
+                        <ChevronRightIcon className="h-5 w-5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Pagination */}
-        {filteredAnnouncements.length > 0 && (
-          <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-secondary-500 dark:text-secondary-400">
-                Showing {(meta.page - 1) * meta.limit + 1}
-                {' '}-{' '}
-                {Math.min(meta.page * meta.limit, meta.total)} of {meta.total}
-              </p>
-              <div className="flex gap-1">
-                <button
-                  disabled={page <= 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="p-1.5 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700 disabled:opacity-40"
-                >
-                  <ChevronLeftIcon className="h-5 w-5" />
-                </button>
-                {/* Page numbers */}
-                {Array.from({ length: Math.min(meta.totalPages, 5) }, (_, i) => {
-                  let pageNum: number;
-                  if (meta.totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (page <= 3) {
-                    pageNum = i + 1;
-                  } else if (page >= meta.totalPages - 2) {
-                    pageNum = meta.totalPages - 4 + i;
-                  } else {
-                    pageNum = page - 2 + i;
-                  }
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => setPage(pageNum)}
-                      className={clsx(
-                        'px-3 py-1.5 rounded text-sm font-medium transition-colors',
-                        page === pageNum
-                          ? 'bg-primary-600 text-white'
-                          : 'hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-600 dark:text-secondary-400',
-                      )}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-                <button
-                  disabled={page >= meta.totalPages}
-                  onClick={() => setPage((p) => p + 1)}
-                  className="p-1.5 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700 disabled:opacity-40"
-                >
-                  <ChevronRightIcon className="h-5 w-5" />
-                </button>
-              </div>
+              )}
             </div>
-          </div>
-        )}
-      </div>
+          )}
+          renderDetail={(a) => (
+            <div className="space-y-4">
+              {/* Title */}
+              <h2 className="text-lg font-bold text-secondary-900 dark:text-white">{a.title}</h2>
+
+              {/* Badges */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', statusColors[a.status] ?? '')}>
+                  {a.status}
+                </span>
+                <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', priorityColors[a.priority] ?? '')}>
+                  <span className="inline-flex items-center gap-1">
+                    {priorityIcons[a.priority]}
+                    {a.priority}
+                  </span>
+                </span>
+                <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', categoryColors[a.category] ?? 'bg-secondary-100 text-secondary-700')}>
+                  <TagIcon className="h-3 w-3 inline mr-0.5" />
+                  {categoryLabels[a.category] ?? a.category}
+                </span>
+                {a.isPinned && <StarIconSolid className="h-4 w-4 text-amber-400" />}
+              </div>
+
+              {/* Meta */}
+              <div className="flex flex-wrap items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">
+                {a.author && (
+                  <span className="flex items-center gap-1.5">
+                    <AuthorAvatar author={a.author} size="md" />
+                    {a.author.firstName} {a.author.lastName}
+                  </span>
+                )}
+                <span className="flex items-center gap-1">
+                  <CalendarDaysIcon className="h-3.5 w-3.5" />
+                  {format(new Date(a.createdAt), 'MMM d, yyyy')}
+                </span>
+              </div>
+
+              {/* Audience */}
+              <div className="flex items-center gap-1.5 text-xs text-secondary-500 dark:text-secondary-400">
+                <UserGroupIcon className="h-3.5 w-3.5 flex-shrink-0" />
+                {(a.targetAudience ?? []).map((t) => audienceLabels[t] ?? t).join(', ') || 'All Employees'}
+              </div>
+
+              {/* Scheduling info */}
+              {(a.scheduledAt || a.expiresAt) && (
+                <div className="flex flex-wrap gap-3 text-xs text-secondary-400 dark:text-secondary-500">
+                  {a.scheduledAt && (
+                    <span className="flex items-center gap-1">
+                      <ClockIcon className="h-3 w-3" />
+                      Scheduled: {format(new Date(a.scheduledAt), 'MMM d, yyyy HH:mm')}
+                    </span>
+                  )}
+                  {a.expiresAt && (
+                    <span className="flex items-center gap-1">
+                      <CalendarDaysIcon className="h-3 w-3" />
+                      Expires: {format(new Date(a.expiresAt), 'MMM d, yyyy HH:mm')}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Full content */}
+              <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-4">
+                <p className="text-sm text-secondary-700 dark:text-secondary-300 whitespace-pre-wrap leading-relaxed">
+                  {a.content}
+                </p>
+              </div>
+
+              {/* Actions */}
+              {isManager && (
+                <div className="flex items-center gap-2 pt-2 border-t border-secondary-200/60 dark:border-white/[0.06]">
+                  <button
+                    onClick={() => openEditModal(a)}
+                    className="btn-secondary text-xs flex items-center gap-1.5"
+                  >
+                    <PencilSquareIcon className="h-4 w-4" />
+                    Edit
+                  </button>
+                  {a.status === 'DRAFT' && (
+                    <button
+                      onClick={() => publishMutation.mutate(a.id)}
+                      className="btn-primary text-xs flex items-center gap-1.5"
+                    >
+                      <PaperAirplaneIcon className="h-4 w-4" />
+                      Publish
+                    </button>
+                  )}
+                  {a.status === 'PUBLISHED' && (
+                    <>
+                      <button
+                        onClick={() => pinMutation.mutate(a.id)}
+                        className="btn-secondary text-xs flex items-center gap-1.5"
+                      >
+                        {a.isPinned
+                          ? <StarIconSolid className="h-4 w-4 text-amber-500" />
+                          : <StarIcon className="h-4 w-4" />}
+                        {a.isPinned ? 'Unpin' : 'Pin'}
+                      </button>
+                      <button
+                        onClick={() => archiveMutation.mutate(a.id)}
+                        className="btn-secondary text-xs flex items-center gap-1.5"
+                      >
+                        <ArchiveBoxIcon className="h-4 w-4 text-purple-500" />
+                        Archive
+                      </button>
+                    </>
+                  )}
+                  <button
+                    onClick={() => setDeleteConfirmId(a.id)}
+                    className="btn-secondary text-xs flex items-center gap-1.5 text-red-600 hover:text-red-700"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        />
+      )}
 
       {/* ---- Delete Confirmation Modal ---- */}
       {deleteConfirmId && (
@@ -812,7 +772,7 @@ export function AnnouncementsPage() {
       {/* ---- Create / Edit Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingAnnouncement ? 'Edit Announcement' : 'New Announcement'}

@@ -359,7 +359,7 @@ export function CalendarPage() {
   };
 
   return (
-    <div className="flex gap-6 h-[calc(100vh-8rem)]">
+    <div className="flex gap-6 min-h-0">
       {/* ── Main Calendar Area ── */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
@@ -590,7 +590,7 @@ export function CalendarPage() {
       </div>
 
       {/* ── Sidebar ── */}
-      <div className="w-80 flex-shrink-0 flex flex-col gap-4 overflow-y-auto hidden lg:flex">
+      <div className="w-80 flex-shrink-0 flex flex-col gap-4 hidden lg:flex sticky top-4 self-start">
         {/* Selected Date */}
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center justify-between mb-3">
@@ -704,6 +704,47 @@ export function CalendarPage() {
             <div className="flex justify-between"><span>Today</span><kbd className="px-1.5 py-0.5 rounded bg-secondary-100 dark:bg-secondary-700 font-mono">T</kbd></div>
             <div className="flex justify-between"><span>New event</span><span>Double-click</span></div>
           </div>
+        </div>
+
+        {/* Today's Agenda */}
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+          <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-3">
+            Today's Agenda
+          </h3>
+          {(() => {
+            const todayEvents = filteredEvents
+              .filter((e) => isSameDay(e.date, new Date()))
+              .sort((a, b) => {
+                if (a.startTime && b.startTime) return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
+                return 0;
+              });
+            if (todayEvents.length === 0) {
+              return (
+                <div className="text-center py-4">
+                  <CalendarDaysIcon className="mx-auto h-7 w-7 text-secondary-300 dark:text-secondary-600" />
+                  <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1.5">No events today</p>
+                </div>
+              );
+            }
+            return (
+              <div className="space-y-2">
+                {todayEvents.map((evt) => (
+                  <div
+                    key={evt.id}
+                    className="flex items-start gap-2 p-2 rounded-lg bg-secondary-50 dark:bg-secondary-700/40"
+                  >
+                    <div className={clsx('w-2 h-2 rounded-full mt-1.5 flex-shrink-0', evt.color)} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-secondary-900 dark:text-white break-words">{evt.title}</p>
+                      {evt.startTime && (
+                        <p className="text-2xs text-secondary-400">{format(new Date(evt.startTime), 'h:mm a')}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>

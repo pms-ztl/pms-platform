@@ -604,7 +604,7 @@ export function RoleManagementPage() {
             </div>
 
             {/* Modal body */}
-            <div className="space-y-5 px-6 py-5 max-h-[70vh] overflow-y-auto">
+            <div className="space-y-5 px-6 py-5 max-h-[70vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
               {/* Name field */}
               <div>
                 <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
@@ -810,7 +810,7 @@ export function RoleManagementPage() {
               </button>
             </div>
 
-            <div className="px-6 py-5 max-h-[70vh] overflow-y-auto space-y-5">
+            <div className="px-6 py-5 max-h-[70vh] overflow-y-auto space-y-5"> {/* ui-allow: fixed-height — modal/drawer container */}
               {/* Shared permissions */}
               <div>
                 <h3 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-2">

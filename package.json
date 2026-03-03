@@ -27,7 +27,9 @@
     "db:migrate": "turbo run db:migrate --filter=@pms/database",
     "db:seed": "turbo run db:seed --filter=@pms/database",
     "clean": "turbo run clean && rm -rf node_modules",
-    "test:api-health": "npx ts-node --transpile-only scripts/api-health-check.ts"
+    "test:api-health": "npx ts-node --transpile-only scripts/api-health-check.ts",
+    "ui:guardrails": "node scripts/ui-guardrails.mjs",
+    "ui:audit": "npx playwright test --config=apps/web/playwright.config.ts"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

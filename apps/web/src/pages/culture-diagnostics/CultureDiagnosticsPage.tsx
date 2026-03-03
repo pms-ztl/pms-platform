@@ -179,7 +179,7 @@ export function CultureDiagnosticsPage() {
             </p>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center py-24">
+        <div className="flex flex-col items-center justify-center py-8">
           <HeartIcon className="w-16 h-16 text-secondary-300 dark:text-secondary-600 mb-4" />
           <h3 className="text-lg font-semibold text-secondary-700 dark:text-secondary-300 mb-2">No health data available</h3>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 text-center max-w-md">

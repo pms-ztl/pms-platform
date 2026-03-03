@@ -454,7 +454,7 @@ export function ScheduledReportsPage() {
       {/* Create Schedule Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-secondary-200/60 dark:border-white/[0.06] max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-secondary-200/60 dark:border-white/[0.06] max-w-lg w-full max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Report Schedule</h3>
               <button onClick={() => setShowCreateModal(false)} className="p-1 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">

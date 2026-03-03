@@ -1,19 +1,42 @@
+import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline';
+
+// ---------------------------------------------------------------------------
+// StatCard — Metric/stat display card (no reserved right space)
+// ---------------------------------------------------------------------------
+// HARD RULES:
+//   • NO justify-between when rightContent is absent
+//   • Icon renders beside label/value only when provided
+//   • Optional rightContent (sparkline, badge) — space allocated conditionally
+//   • data-testid for automated layout audit
+// ---------------------------------------------------------------------------
 
 interface StatCardProps {
   label: string;
   value: string | number;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   trend?: {
     value: number;
     label?: string;
   };
+  /** Optional right-side content (sparkline, mini chart). Only allocated when provided. */
+  rightContent?: ReactNode;
   variant?: 'default' | 'gradient' | 'glass';
   className?: string;
+  'data-testid'?: string;
 }
 
-export function StatCard({ label, value, icon, trend, variant = 'default', className }: StatCardProps) {
+export function StatCard({
+  label,
+  value,
+  icon,
+  trend,
+  rightContent,
+  variant = 'default',
+  className,
+  'data-testid': testId,
+}: StatCardProps) {
   const isPositive = trend && trend.value >= 0;
 
   const variantClasses = {
@@ -32,10 +55,35 @@ export function StatCard({ label, value, icon, trend, variant = 'default', class
         variantClasses[variant],
         className
       )}
+      data-testid={testId ?? 'ui-card'}
     >
       {/* Gradient top-edge on hover */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary-500/60 to-cyan-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-      <div className="flex items-start justify-between gap-2">
+      <div className={clsx(
+        'flex gap-3',
+        rightContent ? 'items-start justify-between' : 'items-start',
+      )}>
+        {/* Icon on the left if provided */}
+        {icon && (
+          <div
+            className={clsx(
+              'flex-shrink-0 rounded-xl p-2.5',
+              variant === 'gradient'
+                ? 'bg-white/20'
+                : 'bg-primary-50 dark:bg-primary-900/30'
+            )}
+          >
+            <div
+              className={clsx(
+                'h-6 w-6',
+                variant === 'gradient' ? 'text-white' : 'text-primary-600 dark:text-primary-400'
+              )}
+            >
+              {icon}
+            </div>
+          </div>
+        )}
+        {/* Label + Value + Trend */}
         <div className="flex-1 min-w-0">
           <p
             className={clsx(
@@ -85,24 +133,9 @@ export function StatCard({ label, value, icon, trend, variant = 'default', class
             </div>
           )}
         </div>
-        {icon && (
-          <div
-            className={clsx(
-              'flex-shrink-0 rounded-xl p-2.5',
-              variant === 'gradient'
-                ? 'bg-white/20'
-                : 'bg-primary-50 dark:bg-primary-900/30'
-            )}
-          >
-            <div
-              className={clsx(
-                'h-6 w-6',
-                variant === 'gradient' ? 'text-white' : 'text-primary-600 dark:text-primary-400'
-              )}
-            >
-              {icon}
-            </div>
-          </div>
+        {/* Right content — ONLY rendered when provided */}
+        {rightContent && (
+          <div className="flex-shrink-0">{rightContent}</div>
         )}
       </div>
     </div>

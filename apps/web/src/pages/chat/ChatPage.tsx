@@ -1423,7 +1423,7 @@ function EmailComposeModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-secondary-950/60 backdrop-blur-sm animate-[fade-in_0.2s_ease]">
-      <div className="w-full max-w-2xl mx-4 rounded-2xl glass-deep shadow-xl shadow-primary-500/5 border border-secondary-200/60 dark:border-secondary-700/50 overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="w-full max-w-2xl mx-4 rounded-2xl glass-deep shadow-xl shadow-primary-500/5 border border-secondary-200/60 dark:border-secondary-700/50 overflow-hidden max-h-[90vh] flex flex-col"> {/* ui-allow: fixed-height — modal/drawer container */}
 
         {/* Header */}
         <div className="relative px-6 py-5 border-b border-secondary-200/60 dark:border-secondary-700/50 flex-shrink-0">
@@ -2027,7 +2027,7 @@ export default function ChatPage() {
     : displayConversations;
 
   return (
-    <div className="flex h-[calc(100vh-12rem)] overflow-hidden rounded-2xl card shadow-lg landscape-scroll">
+    <div className="flex h-[calc(100vh-12rem)] overflow-hidden rounded-2xl card shadow-lg landscape-scroll"> {/* ui-allow: fixed-height — chat layout requires viewport height */}
       {/* ═══ Sidebar ═══ */}
       <div className={clsx(
         'flex flex-col bg-white/60 dark:bg-secondary-900/40 backdrop-blur-xl transition-all duration-300 border-r border-secondary-200/50 dark:border-secondary-700/30',

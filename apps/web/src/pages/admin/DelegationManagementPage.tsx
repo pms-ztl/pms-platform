@@ -466,7 +466,7 @@ export function DelegationManagementPage() {
             </div>
 
             {/* Body */}
-            <div className="space-y-4 px-6 py-5 max-h-[70vh] overflow-y-auto">
+            <div className="space-y-4 px-6 py-5 max-h-[70vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
               {/* Delegator */}
               <div>
                 <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
@@ -676,7 +676,7 @@ export function DelegationManagementPage() {
             </div>
 
             {/* Body */}
-            <div className="px-6 py-5 max-h-[70vh] overflow-y-auto">
+            <div className="px-6 py-5 max-h-[70vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
               {auditLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <Spinner className="h-6 w-6 text-primary-600" />

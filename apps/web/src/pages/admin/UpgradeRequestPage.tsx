@@ -316,7 +316,7 @@ export function UpgradeRequestPage() {
   // Access guard
   if (!isAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+      <div className="flex flex-col items-center justify-center py-12 text-center">
         <ShieldCheckIcon className="h-12 w-12 text-secondary-400 mb-4" />
         <h2 className="text-xl font-semibold text-secondary-900 dark:text-white">Access Denied</h2>
         <p className="text-secondary-500 dark:text-secondary-400 mt-2">
@@ -620,7 +620,7 @@ export function UpgradeRequestPage() {
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl shadow-2xl">
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl shadow-2xl"> {/* ui-allow: fixed-height — modal/drawer container */}
             {/* Header */}
             <div className={`sticky top-0 z-10 flex items-center justify-between rounded-t-2xl border-b border-secondary-100 dark:border-secondary-800 bg-gradient-to-r ${selectedPlan.bgGradient} px-6 py-4`}>
               <div className="flex items-center gap-3">

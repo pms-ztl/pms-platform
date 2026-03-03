@@ -25,6 +25,7 @@ import { format, isPast, differenceInDays } from 'date-fns';
 
 import { api, usersApi } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { EmptyState } from '@/components/ui';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -500,23 +501,15 @@ export function CompliancePage() {
                 <div className="glass-spinner" />
               </div>
             ) : filteredReviews.length === 0 ? (
-              <div className="text-center py-8">
-                <ShieldCheckIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-                <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">
-                  No compliance reviews found
-                </h3>
-                <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
-                  {statusFilter !== 'ALL' || typeFilter !== 'ALL'
-                    ? 'Try adjusting your filters to see more results.'
-                    : 'Get started by creating a new compliance review.'}
-                </p>
-                {isManager && statusFilter === 'ALL' && typeFilter === 'ALL' && (
-                  <button onClick={openCreateModal} className="btn-primary mt-4">
-                    <PlusIcon className="h-5 w-5 mr-2 inline" />
-                    New Review
-                  </button>
-                )}
-              </div>
+              <EmptyState
+                size="sm"
+                icon={<ShieldCheckIcon className="h-full w-full" />}
+                title="No compliance reviews found"
+                description={statusFilter !== 'ALL' || typeFilter !== 'ALL'
+                  ? 'Try adjusting your filters to see more results.'
+                  : 'Get started by creating a new compliance review.'}
+                actions={isManager && statusFilter === 'ALL' && typeFilter === 'ALL' ? [{ label: 'New Review', onClick: openCreateModal }] : []}
+              />
             ) : (
               <>
                 <div className="overflow-x-auto">
@@ -802,7 +795,7 @@ export function CompliancePage() {
       {/* ---- View Details Modal ---- */}
       {viewingReview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Review Details
@@ -964,7 +957,7 @@ export function CompliancePage() {
       {/* ---- Create / Edit Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingReview ? 'Edit Compliance Review' : 'New Compliance Review'}

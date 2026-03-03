@@ -1166,7 +1166,7 @@ export function PIPDetailPage() {
       {/* Add Milestone Modal */}
       {showAddMilestoneModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Add Milestone
@@ -1299,7 +1299,7 @@ export function PIPDetailPage() {
       {/* Update Milestone Modal */}
       {showUpdateMilestoneModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Update Milestone
@@ -1395,7 +1395,7 @@ export function PIPDetailPage() {
       {/* Add Check-In Modal */}
       {showAddCheckInModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Add Check-In
@@ -1797,7 +1797,7 @@ export function PIPDetailPage() {
       {/* Close PIP Modal */}
       {showCloseModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Close Performance Improvement Plan
@@ -1870,7 +1870,7 @@ export function PIPDetailPage() {
       {/* Acknowledge PIP Modal */}
       {showAcknowledgeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-4 max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 Acknowledge PIP

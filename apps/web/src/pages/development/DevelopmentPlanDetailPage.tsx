@@ -1104,7 +1104,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {showAddActivity && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4 max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Add Activity</h2>
               <button
@@ -1245,7 +1245,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {showAddCheckpoint && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4 max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Add Checkpoint</h2>
               <button
@@ -1322,7 +1322,7 @@ export function DevelopmentPlanDetailPage() {
       {/* ================================================================ */}
       {completeCheckpointId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4 max-h-[85vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl max-w-lg w-full mx-4 p-4 max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Complete Checkpoint</h2>
               <button

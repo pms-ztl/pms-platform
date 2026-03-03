@@ -11,3 +11,8 @@ export { Breadcrumbs } from './Breadcrumbs';
 export { TopLoadingBar } from './TopLoadingBar';
 export { PageHeader } from './PageHeader';
 export { EmployeePicker } from './EmployeePicker';
+// Layout primitives — prevent blank-space anti-patterns
+export { SafeGrid } from './SafeGrid';
+export { SafePanel } from './SafePanel';
+export { MasterDetail } from './MasterDetail';
+export { ChartTooltip } from './ChartTooltip';

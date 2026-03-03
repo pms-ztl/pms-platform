@@ -25,6 +25,7 @@ import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { aiInsightsApi, type AnomalyItem, type AnomalyStats } from '@/lib/api/ai-insights';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { ChartTooltip } from '@/components/ui';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -175,20 +176,6 @@ export function AnomalyDetectionPage() {
     },
     onError: () => toast.error('Detection failed'),
   });
-
-  // ── tooltip ─────────────────────────────────────────────────────────────
-
-  const ChartTooltip = ({ active, payload, label }: any) => {
-    if (!active || !payload?.length) return null;
-    return (
-      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-        <p className="font-semibold text-white">{label}</p>
-        {payload.map((p: any, i: number) => (
-          <p key={i} style={{ color: p.color }}>{p.name}: {p.value}</p>
-        ))}
-      </div>
-    );
-  };
 
   // ── skeleton ────────────────────────────────────────────────────────────
 

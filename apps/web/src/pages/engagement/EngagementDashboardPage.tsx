@@ -268,7 +268,7 @@ export function EngagementDashboardPage() {
           <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Engagement Dashboard</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Monitor employee engagement levels and trends</p>
         </div>
-        <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div className="flex flex-col items-center justify-center py-8 text-center">
           <ExclamationTriangleIcon className="h-12 w-12 text-amber-400 mb-4" />
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">No engagement data available</h2>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Engagement metrics haven&apos;t been generated yet, or you may not have permission to view this data.</p>

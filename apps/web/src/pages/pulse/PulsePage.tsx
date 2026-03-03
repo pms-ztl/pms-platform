@@ -422,41 +422,97 @@ export function PulsePage() {
           ) : (
             /* Check-in Form */
             <div className="space-y-4">
-              {/* Mood Buttons */}
-              <div>
-                <p className="text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-4 text-center">
-                  How are you feeling right now?
-                </p>
-                <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
-                  {MOOD_OPTIONS.map((mood) => (
-                    <button
-                      key={mood.score}
-                      onClick={() => setSelectedMood(mood.score)}
-                      className={clsx(
-                        'group relative flex flex-col items-center gap-2 rounded-2xl px-4 py-4 sm:px-5 sm:py-5 border-2 transition-all duration-200',
-                        'hover:scale-105 hover:shadow-lg active:scale-95',
-                        selectedMood === mood.score
-                          ? clsx(mood.bg, mood.border, 'ring-2', mood.ring, 'shadow-md scale-105')
-                          : 'border-secondary-200 dark:border-secondary-600 bg-white dark:bg-secondary-700/50 hover:border-secondary-300 dark:hover:border-secondary-500'
-                      )}
-                    >
-                      <MoodFaceIcon
-                        score={mood.score}
-                        className="w-10 h-10 sm:w-12 sm:h-12 transition-transform duration-200 group-hover:scale-110"
-                        selected={selectedMood === mood.score}
-                      />
-                      <span
+              {/* Desktop: 3-col layout — Today summary | Mood selection | Trend note */}
+              <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr_180px] gap-4 items-start">
+                {/* Left: Today summary (hidden on mobile) */}
+                <div className="hidden lg:flex flex-col gap-2 pt-6">
+                  <p className="text-2xs font-semibold text-secondary-400 dark:text-secondary-500 uppercase tracking-wider">
+                    Today
+                  </p>
+                  <div className="bg-white/60 dark:bg-secondary-700/40 rounded-lg px-3 py-2">
+                    <p className="text-2xs text-secondary-500 dark:text-secondary-400">Last mood</p>
+                    <p className="text-sm font-bold text-secondary-900 dark:text-white flex items-center gap-1.5">
+                      {myHistory && myHistory.length > 0 ? (
+                        <>
+                          <MoodFaceIcon score={myHistory[0].moodScore as 1|2|3|4|5} className="w-4 h-4" />
+                          {getMoodLabel(myHistory[0].moodScore)}
+                        </>
+                      ) : '\u2014'}
+                    </p>
+                  </div>
+                  <div className="bg-white/60 dark:bg-secondary-700/40 rounded-lg px-3 py-2">
+                    <p className="text-2xs text-secondary-500 dark:text-secondary-400">Streak</p>
+                    <p className="text-sm font-bold text-secondary-900 dark:text-white">
+                      {(() => {
+                        if (!myHistory || myHistory.length === 0) return '\u2014';
+                        let streak = 0;
+                        for (const h of myHistory) {
+                          if (h.moodScore > 0) streak++;
+                          else break;
+                        }
+                        return `${streak} day${streak !== 1 ? 's' : ''}`;
+                      })()}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Center: Mood Buttons */}
+                <div>
+                  <p className="text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-4 text-center">
+                    How are you feeling right now?
+                  </p>
+                  <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
+                    {MOOD_OPTIONS.map((mood) => (
+                      <button
+                        key={mood.score}
+                        onClick={() => setSelectedMood(mood.score)}
                         className={clsx(
-                          'text-xs sm:text-sm font-medium transition-colors',
+                          'group relative flex flex-col items-center gap-2 rounded-2xl px-4 py-4 sm:px-5 sm:py-5 border-2 transition-all duration-200',
+                          'hover:scale-105 hover:shadow-lg active:scale-95',
                           selectedMood === mood.score
-                            ? mood.text
-                            : 'text-secondary-600 dark:text-secondary-400'
+                            ? clsx(mood.bg, mood.border, 'ring-2', mood.ring, 'shadow-md scale-105')
+                            : 'border-secondary-200 dark:border-secondary-600 bg-white dark:bg-secondary-700/50 hover:border-secondary-300 dark:hover:border-secondary-500'
                         )}
                       >
-                        {mood.label}
-                      </span>
-                    </button>
-                  ))}
+                        <MoodFaceIcon
+                          score={mood.score}
+                          className="w-10 h-10 sm:w-12 sm:h-12 transition-transform duration-200 group-hover:scale-110"
+                          selected={selectedMood === mood.score}
+                        />
+                        <span
+                          className={clsx(
+                            'text-xs sm:text-sm font-medium transition-colors',
+                            selectedMood === mood.score
+                              ? mood.text
+                              : 'text-secondary-600 dark:text-secondary-400'
+                          )}
+                        >
+                          {mood.label}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right: Trend note (hidden on mobile) */}
+                <div className="hidden lg:flex flex-col gap-2 pt-6">
+                  <p className="text-2xs font-semibold text-secondary-400 dark:text-secondary-500 uppercase tracking-wider">
+                    Trend
+                  </p>
+                  <div className="bg-white/60 dark:bg-secondary-700/40 rounded-lg px-3 py-2">
+                    <p className="text-2xs text-secondary-500 dark:text-secondary-400">Recent average</p>
+                    <p className="text-sm font-bold text-secondary-900 dark:text-white">
+                      {myHistory && myHistory.length >= 2
+                        ? `${(myHistory.slice(0, 7).reduce((s, h) => s + h.moodScore, 0) / Math.min(7, myHistory.length)).toFixed(1)}/5`
+                        : '\u2014'}
+                    </p>
+                  </div>
+                  <div className="bg-white/60 dark:bg-secondary-700/40 rounded-lg px-3 py-2">
+                    <p className="text-2xs text-secondary-500 dark:text-secondary-400">Check-ins</p>
+                    <p className="text-sm font-bold text-secondary-900 dark:text-white">
+                      {myHistory ? myHistory.length : 0}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -773,12 +829,72 @@ export function PulsePage() {
             </div>
           </div>
 
-          {/* Pulse Activity Heatmap */}
+          {/* Pulse Activity Heatmap + KPI stack */}
           {trendData && Array.isArray(trendData) && trendData.length > 0 && (
-            <EngagementHeatmap
-              trends={(trendData as PulseTrendPoint[]).map((t) => ({ date: t.date, score: t.averageMood }))}
-              mode="pulse"
-            />
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
+              <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
+                Pulse Check-in Activity
+              </h3>
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-6">
+                {/* Heatmap on left */}
+                <EngagementHeatmap
+                  trends={(trendData as PulseTrendPoint[]).map((t) => ({ date: t.date, score: t.averageMood }))}
+                  mode="pulse"
+                  className="!p-0 !border-0 !shadow-none !rounded-none !bg-transparent"
+                />
+                {/* KPI stack on right */}
+                <div className="flex flex-col gap-3">
+                  {[
+                    {
+                      label: 'Streak',
+                      value: (() => {
+                        if (!myHistory || myHistory.length === 0) return '\u2014';
+                        let streak = 0;
+                        for (const h of myHistory) {
+                          if (h.moodScore > 0) streak++;
+                          else break;
+                        }
+                        return `${streak} day${streak !== 1 ? 's' : ''}`;
+                      })(),
+                      color: 'text-violet-600 dark:text-violet-400',
+                    },
+                    {
+                      label: 'Response rate',
+                      value: analyticsOverview?.participationRate != null
+                        ? `${Math.round(analyticsOverview.participationRate)}%`
+                        : '\u2014',
+                      color: 'text-blue-600 dark:text-blue-400',
+                    },
+                    {
+                      label: 'Avg mood',
+                      value: analyticsOverview?.averageMood != null
+                        ? `${analyticsOverview.averageMood.toFixed(1)}/5`
+                        : '\u2014',
+                      color: 'text-emerald-600 dark:text-emerald-400',
+                    },
+                    {
+                      label: 'Last check-in',
+                      value: myHistory && myHistory.length > 0
+                        ? format(new Date(myHistory[0].surveyDate), 'MMM d')
+                        : '\u2014',
+                      color: 'text-amber-600 dark:text-amber-400',
+                    },
+                  ].map((kpi) => (
+                    <div
+                      key={kpi.label}
+                      className="bg-secondary-50 dark:bg-secondary-700/40 rounded-lg px-4 py-3"
+                    >
+                      <p className="text-2xs font-medium text-secondary-500 dark:text-secondary-400">
+                        {kpi.label}
+                      </p>
+                      <p className={clsx('text-lg font-bold mt-0.5', kpi.color)}>
+                        {kpi.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           )}
 
           {/* Department Heatmap / Bar Chart */}

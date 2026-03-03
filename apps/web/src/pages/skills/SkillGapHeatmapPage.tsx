@@ -27,7 +27,7 @@ import {
 import clsx from 'clsx';
 
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { PageHeader } from '@/components/ui';
+import { PageHeader, ChartTooltip } from '@/components/ui';
 import { skillsApi } from '@/lib/api';
 
 // ── Local Types (API returns `any`) ─────────────────────────────────────────
@@ -72,19 +72,7 @@ function gapColor(gap: number): string {
 const SEVERITY_COLORS = ['#ef4444', '#f59e0b', '#eab308', '#22c55e'];
 const SEVERITY_LABELS = ['Critical (>2)', 'Moderate (1-2)', 'Minor (0.5-1)', 'On Target (<0.5)'];
 
-function ChartTooltip({ active, payload, label }: any) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-      <p className="font-medium text-slate-300">{label}</p>
-      {payload.map((entry: any, idx: number) => (
-        <p key={idx} className="text-sm font-semibold" style={{ color: entry.color }}>
-          {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(2) : entry.value}
-        </p>
-      ))}
-    </div>
-  );
-}
+// ChartTooltip imported from '@/components/ui'
 
 // ── Skeleton ─────────────────────────────────────────────────────────────────
 
@@ -399,7 +387,7 @@ export function SkillGapHeatmapPage() {
           <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">
             {selectedCategory ? `Filtered by: ${selectedCategory}` : 'All categories'} — top {barData.length} gaps by severity
           </p>
-          <div className="h-[320px] md:h-[400px]">
+          <div style={{ height: Math.max(260, Math.min(barData.length * 70 + 140, 520)) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData} layout="vertical" margin={{ top: 0, right: 10, bottom: 0, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
@@ -427,12 +415,12 @@ export function SkillGapHeatmapPage() {
                     if (!active || !payload?.length) return null;
                     const d = payload[0].payload as SkillGap;
                     return (
-                      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1 max-w-[260px]">
-                        <p className="font-semibold text-white break-words">{d.skillName}</p>
-                        <p className="text-slate-300">Category: {d.category}</p>
-                        <p className="text-slate-300">Avg: {(d.avgRating ?? 0).toFixed(2)} / Target: {(d.targetLevel ?? 0).toFixed(1)}</p>
-                        <p style={{ color: gapColor(d.gap) }}>Gap: {(d.gap ?? 0).toFixed(2)}</p>
-                        <p className="text-slate-300">Affected: {d.employeesAffected}</p>
+                      <div className="rounded-lg bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-600 shadow-lg px-3 py-2 text-xs space-y-1 max-w-[260px]">
+                        <p className="font-semibold text-secondary-900 dark:text-white break-words">{d.skillName}</p>
+                        <p className="text-secondary-500 dark:text-secondary-400">Category: {d.category}</p>
+                        <p className="text-secondary-500 dark:text-secondary-400">Avg: {(d.avgRating ?? 0).toFixed(2)} / Target: {(d.targetLevel ?? 0).toFixed(1)}</p>
+                        <p className="font-semibold" style={{ color: gapColor(d.gap) }}>Gap: {(d.gap ?? 0).toFixed(2)}</p>
+                        <p className="text-secondary-500 dark:text-secondary-400">Affected: {d.employeesAffected}</p>
                       </div>
                     );
                   }}
@@ -480,7 +468,7 @@ export function SkillGapHeatmapPage() {
                     fillOpacity={0.2}
                     strokeWidth={2}
                   />
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={ChartTooltip} />
+                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
@@ -512,16 +500,7 @@ export function SkillGapHeatmapPage() {
                   </Pie>
                   <Tooltip
                     cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                    content={({ active, payload }) => {
-                      if (!active || !payload?.length) return null;
-                      const d = payload[0];
-                      return (
-                        <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs">
-                          <p className="font-semibold" style={{ color: d.payload.fill }}>{d.name}</p>
-                          <p className="text-slate-300">{d.value} skills</p>
-                        </div>
-                      );
-                    }}
+                    content={<ChartTooltip unit=" skills" />}
                   />
                 </PieChart>
               </ResponsiveContainer>

@@ -221,20 +221,20 @@ export function HelpAssistantChat() {
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-100 to-violet-100 dark:from-primary-900/30 dark:to-violet-900/30 flex items-center justify-center mb-4">
               <ChatBubbleLeftRightIcon className="h-7 w-7 text-primary-600 dark:text-primary-400" />
             </div>
-            <h3 className="text-sm font-bold text-secondary-900 dark:text-white mb-1">
+            <h3 className="text-2xl font-bold text-secondary-900 dark:text-white mb-1">
               How can I help you?
             </h3>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-5 max-w-xs">
+            <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-5 max-w-sm">
               Ask me anything about the PMS platform — features, how-to guides, review cycles, goals, feedback, and more.
             </p>
 
             {/* Suggested Questions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-lg">
               {SUGGESTED_QUESTIONS.map((q) => (
                 <button
                   key={q}
                   onClick={() => sendMessage(q)}
-                  className="text-left px-3 py-2 rounded-lg text-2xs text-secondary-700 dark:text-secondary-300 bg-secondary-50 dark:bg-secondary-700/50 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-400 border border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-500/30 transition-all"
+                  className="text-left px-3.5 py-2.5 rounded-lg text-xs text-secondary-700 dark:text-secondary-300 bg-secondary-50 dark:bg-secondary-700/50 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-400 border border-secondary-200/60 dark:border-white/[0.06] hover:border-primary-300 dark:hover:border-primary-500/30 transition-all"
                 >
                   {q}
                 </button>

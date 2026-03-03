@@ -172,12 +172,59 @@ export function TeamOptimizerPage() {
 
       {/* Empty state */}
       {!hasData && (
-        <div className="flex flex-col items-center justify-center py-24">
-          <UserGroupIcon className="w-16 h-16 text-secondary-300 dark:text-secondary-600 mb-4" />
-          <h3 className="text-lg font-semibold text-secondary-700 dark:text-secondary-300 mb-2">No optimizations yet</h3>
-          <p className="text-sm text-secondary-500 dark:text-secondary-400 text-center max-w-md">
-            Use "Optimize Team" to generate AI-driven team composition recommendations, or "Analyze Team" to assess an existing team.
-          </p>
+        <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left: How it works */}
+            <div>
+              <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
+                <UserGroupIcon className="h-5 w-5 text-indigo-500" /> How it works
+              </h3>
+              <div className="space-y-4">
+                {[
+                  { step: '1', title: 'Configure your team', desc: 'Set team name, size, required skills, and optimization type' },
+                  { step: '2', title: 'AI analyzes composition', desc: 'Our engine evaluates skill coverage, diversity, and collaboration potential' },
+                  { step: '3', title: 'Get recommendations', desc: 'Review recommended members, scores, strengths, risks, and implementation steps' },
+                ].map((s) => (
+                  <div key={s.step} className="flex gap-3">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
+                      <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{s.step}</span>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-secondary-900 dark:text-white">{s.title}</p>
+                      <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{s.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Quick actions */}
+            <div>
+              <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Quick actions</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={() => setShowOptimizeModal(true)}
+                  className="w-full text-left rounded-xl border-2 border-dashed border-indigo-300 dark:border-indigo-700 p-4 hover:border-indigo-400 dark:hover:border-indigo-600 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-all"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <PlusIcon className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                    <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-300">Optimize Team</p>
+                  </div>
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400">Build an optimal team composition with AI-driven member selection</p>
+                </button>
+                <button
+                  onClick={() => setShowAnalyzeModal(true)}
+                  className="w-full text-left rounded-xl border-2 border-dashed border-secondary-300 dark:border-secondary-600 p-4 hover:border-secondary-400 dark:hover:border-secondary-500 hover:bg-secondary-50/50 dark:hover:bg-secondary-700/20 transition-all"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <MagnifyingGlassIcon className="h-4 w-4 text-secondary-600 dark:text-secondary-400" />
+                    <p className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Analyze Team</p>
+                  </div>
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400">Assess an existing team's composition, strengths, and vulnerabilities</p>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
@@ -437,7 +484,7 @@ export function TeamOptimizerPage() {
       {/* Optimize Modal */}
       {showOptimizeModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
             <div className="flex items-center justify-between p-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Optimize Team Composition</h3>
               <button onClick={() => setShowOptimizeModal(false)} className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-200"><XMarkIcon className="w-5 h-5" /></button>

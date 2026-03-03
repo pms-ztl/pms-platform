@@ -441,7 +441,7 @@ export function HelpPage() {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Help & Knowledge Base</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white">Help & Knowledge Base</h1>
             <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
               Find answers, explore guides, and learn how to get the most out of PMS.
             </p>

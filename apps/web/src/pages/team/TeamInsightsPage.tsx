@@ -190,7 +190,7 @@ export function TeamInsightsPage() {
           <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Team Insights</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Performance distribution, health metrics, and team analytics</p>
         </div>
-        <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div className="flex flex-col items-center justify-center py-8 text-center">
           <ExclamationTriangleIcon className="h-12 w-12 text-amber-400 mb-4" />
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Unable to load team analytics</h2>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Team data is not available right now. You may not have direct reports assigned, or the data hasn&apos;t been generated yet.</p>

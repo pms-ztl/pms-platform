@@ -190,7 +190,7 @@ export function AIAccessManagementPage() {
 
   if (!isAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+      <div className="flex flex-col items-center justify-center py-12 text-center">
         <ShieldCheckIcon className="h-12 w-12 text-secondary-400 mb-4" />
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
           Access Denied
@@ -251,7 +251,7 @@ export function AIAccessManagementPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+      <div className="flex flex-col items-center justify-center py-12 text-center">
         <XCircleIcon className="h-12 w-12 text-red-400 mb-4" />
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
           Failed to Load AI Access Data

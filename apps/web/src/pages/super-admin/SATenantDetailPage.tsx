@@ -612,7 +612,7 @@ export function SATenantDetailPage() {
           <ArrowLeftIcon className="h-4 w-4" />
           Back to Tenants
         </Link>
-        <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="flex flex-col items-center justify-center py-8 text-center">
           <ExclamationTriangleIcon className="h-12 w-12 text-red-400 mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Failed to load tenant</h2>
           <p className="text-gray-500 dark:text-gray-400 mt-2">
