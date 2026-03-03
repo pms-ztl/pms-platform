@@ -30,7 +30,6 @@ import { QuickCheckinWidget } from '@/components/checkins/QuickCheckinWidget';
 import {
   CPISScoreDisplay,
   UpcomingOneOnOnes,
-  StatsGrid,
   CPISDimensionBreakdown,
   LegacyPerformanceBreakdown,
   GoalsWithRisk,
@@ -46,7 +45,7 @@ import {
   MANAGER_ROLES,
 } from '@/components/dashboard';
 import MetricTooltip from '@/components/dashboard/MetricTooltip';
-import type { StatItem, ActivityItem } from '@/components/dashboard';
+import type { ActivityItem } from '@/components/dashboard';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
 // ─── Main Dashboard ─────────────────────────────────────────────────────────
@@ -260,102 +259,6 @@ function DashboardContent() {
       time: 'Just now',
     });
   }
-
-  // ── Stats computed from math engine ────────────────────────────────────
-  const stats: StatItem[] = [
-    {
-      name: 'Active Goals',
-      value: goalsData?.data?.length ?? 0,
-      icon: FlagIcon,
-      change: atRiskGoals.length > 0
-        ? `${atRiskGoals.length} at risk`
-        : goalsData?.data?.length ? `${avgProgress}% Average Progress` : 'No goals yet',
-      changeType: atRiskGoals.length > 0 ? 'negative' : 'positive',
-      gradient: 'from-blue-500 to-cyan-400',
-      bgGradient: 'from-blue-500/10 to-cyan-400/10',
-      iconBg: 'bg-blue-500',
-    },
-    {
-      name: 'Pending Reviews',
-      value: pendingReviews.length,
-      icon: ClipboardDocumentCheckIcon,
-      change: pendingReviews.length > 0 ? 'Action needed' : 'All complete',
-      changeType: pendingReviews.length > 0 ? 'neutral' : 'positive',
-      gradient: 'from-violet-500 to-purple-400',
-      bgGradient: 'from-violet-500/10 to-purple-400/10',
-      iconBg: 'bg-violet-500',
-    },
-    {
-      name: 'Feedback Received',
-      value: feedbackData?.meta?.total ?? 0,
-      icon: ChatBubbleLeftRightIcon,
-      change: feedbackScoreVal > 0 ? `Sentiment: ${Math.round(feedbackScoreVal)}/100` : 'No feedback yet',
-      changeType: feedbackScoreVal >= 60 ? 'positive' : feedbackScoreVal >= 40 ? 'neutral' : 'negative',
-      gradient: 'from-emerald-500 to-teal-400',
-      bgGradient: 'from-emerald-500/10 to-teal-400/10',
-      iconBg: 'bg-emerald-500',
-    },
-    {
-      name: 'CPIS Score',
-      value: perfLoading ? '...' : Math.round(overallScore),
-      suffix: '/100',
-      icon: TrophyIcon,
-      change: cpisData
-        ? `${cpisGrade} · ${cpisRankLabel}`
-        : perfScore
-        ? `${confidence >= 0.7 ? 'High' : confidence >= 0.4 ? 'Medium' : 'Low'} confidence (${Math.round(confidence * 100)}%)`
-        : 'Computing...',
-      changeType: overallScore >= 70 ? 'positive' : overallScore >= 50 ? 'neutral' : 'negative',
-      gradient: 'from-amber-500 to-orange-400',
-      bgGradient: 'from-amber-500/10 to-orange-400/10',
-      iconBg: 'bg-amber-500',
-    },
-    {
-      name: 'Goal Attainment',
-      value: perfLoading ? '...' : `${Math.round(goalAttainment)}`,
-      suffix: '%',
-      icon: ChartBarIcon,
-      change: goalAttainment >= 90 ? 'Excellent progress' : goalAttainment >= 70 ? 'Good progress' : goalAttainment > 0 ? 'Needs improvement' : 'No data yet',
-      changeType: goalAttainment >= 70 ? 'positive' : goalAttainment >= 50 ? 'neutral' : goalAttainment > 0 ? 'negative' : 'neutral',
-      gradient: 'from-teal-500 to-emerald-400',
-      bgGradient: 'from-teal-500/10 to-emerald-400/10',
-      iconBg: 'bg-teal-500',
-    },
-    {
-      name: 'Review Score',
-      value: perfLoading ? '...' : Math.round(reviewScoreVal),
-      suffix: '/100',
-      icon: AcademicCapIcon,
-      change: reviewScoreVal >= 80 ? 'Outstanding' : reviewScoreVal >= 60 ? 'Meets expectations' : reviewScoreVal > 0 ? 'Below expectations' : 'No reviews yet',
-      changeType: reviewScoreVal >= 70 ? 'positive' : reviewScoreVal >= 50 ? 'neutral' : reviewScoreVal > 0 ? 'negative' : 'neutral',
-      gradient: 'from-pink-500 to-rose-400',
-      bgGradient: 'from-pink-500/10 to-rose-400/10',
-      iconBg: 'bg-pink-500',
-    },
-    {
-      name: 'Star Rating',
-      value: perfLoading ? '...' : derivedRating.toFixed(1),
-      suffix: '/5',
-      icon: StarIcon,
-      change: derivedRating >= 4 ? 'Top performer' : derivedRating >= 3 ? 'Solid performer' : derivedRating > 0 ? 'Room to grow' : 'Not rated yet',
-      changeType: derivedRating >= 4 ? 'positive' : derivedRating >= 3 ? 'neutral' : derivedRating > 0 ? 'negative' : 'neutral',
-      gradient: 'from-yellow-500 to-amber-400',
-      bgGradient: 'from-yellow-500/10 to-amber-400/10',
-      iconBg: 'bg-yellow-500',
-    },
-    {
-      name: 'At-Risk Goals',
-      value: atRiskGoals.length,
-      icon: ExclamationTriangleIcon,
-      change: atRiskGoals.length === 0
-        ? (goalsData?.data?.length ? 'All goals healthy' : 'No goals yet')
-        : `${atRiskGoals.filter((r: any) => r.riskLevel === 'CRITICAL').length} critical`,
-      changeType: atRiskGoals.length === 0 ? 'positive' : 'negative',
-      gradient: 'from-red-500 to-orange-400',
-      bgGradient: 'from-red-500/10 to-orange-400/10',
-      iconBg: 'bg-red-500',
-    },
-  ];
 
   // ── Build real achievement badges from computed data ────────────────────
   const achievements: Array<{ icon: any; label: string; color: string; bg: string }> = [];
@@ -880,50 +783,45 @@ function DashboardContent() {
         />
       )}
 
-      {/* ═══════════════════ Performance Trend & Skill Gap ═══════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <PerformanceTrendChart currentScore={overallScore} />
-        <SkillGapRadar userId={user?.id ?? ''} />
-      </div>
-
-      {/* ═══════════════════ Stats Grid ═══════════════════ */}
-      <StatsGrid stats={stats} />
-
-      {/* ═══════════════════ Quick Check-in ═══════════════════ */}
-      <QuickCheckinWidget />
-
-      {/* ═══════════════════ Peer Comparison ═══════════════════ */}
-      <PeerComparison percentile={percentile} score={overallScore} />
-
+      {/* ═══════════════════ Goals & Actions ═══════════════════ */}
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* ═══════════════════ Goals with Risk Indicators ═══════════════════ */}
         <GoalsWithRisk goalsData={goalsData} goalRisks={goalRisks} goalMappings={goalMappings} />
-
-        {/* ═══════════════════ Quick Actions ═══════════════════ */}
         <QuickActions pendingReviews={pendingReviews} atRiskGoals={atRiskGoals} goalsData={goalsData} />
       </div>
 
       {/* ═══════════════════ Goal Velocity ═══════════════════ */}
       <GoalVelocity goals={goalsData?.data} goalRisks={goalRisks} />
 
-      {/* ═══════════════════ Learning & Recognition ═══════════════════ */}
+      {/* ═══════════════════ Analytics — Trend & Skill Gap ═══════════════════ */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <PerformanceTrendChart currentScore={overallScore} />
+        <SkillGapRadar userId={user?.id ?? ''} />
+      </div>
+
+      {/* ═══════════════════ Engagement — Peer Comparison & Check-in ═══════════════════ */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <PeerComparison percentile={percentile} score={overallScore} />
+        <QuickCheckinWidget />
+      </div>
+
+      {/* ═══════════════════ Growth — Learning & Recognition ═══════════════════ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <LearningProgress />
         <RecognitionFeed />
       </div>
 
-      {/* ═══════════════════ Upcoming 1-on-1 Meetings ═══════════════════ */}
-      <UpcomingOneOnOnes />
-
-      {/* Calendar Planner */}
-      <CalendarPlanner />
+      {/* ═══════════════════ Schedule — 1-on-1s & Calendar ═══════════════════ */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <UpcomingOneOnOnes />
+        <CalendarPlanner />
+      </div>
 
       {/* ═══════════════════ Manager Goal Cascade Overview ═══════════════════ */}
       {isManager && teamTreeData && teamTreeData.length > 0 && (
         <ManagerGoalCascade teamTreeData={teamTreeData} userId={user?.id} />
       )}
 
-      {/* ═══════════════════ Real Activity Timeline ═══════════════════ */}
+      {/* ═══════════════════ Activity Timeline ═══════════════════ */}
       <RecentActivity recentActivity={recentActivity} />
     </div>
   );

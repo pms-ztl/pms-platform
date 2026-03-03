@@ -16,9 +16,10 @@
 html {
   zoom: 1.2;
 }
-/* Auth & landing pages: reset zoom to 100% (standalone layouts) */
+/* Auth, landing & super-admin pages: reset zoom to 100% (standalone layouts) */
 html:has(.auth-page),
-html:has(.landing-page) {
+html:has(.landing-page),
+html:has(.sa-page) {
   zoom: 1;
 }
 

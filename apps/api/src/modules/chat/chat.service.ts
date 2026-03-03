@@ -982,7 +982,7 @@ Guidelines:
    * Only participants can clear the chat.
    */
   async clearChat(userId: string, conversationId: string) {
-    const participant = await prisma.chatParticipant.findFirst({
+    const participant = await prisma.conversationParticipant.findFirst({
       where: { conversationId, userId, leftAt: null },
     });
     if (!participant) throw new Error('Not a participant of this conversation');

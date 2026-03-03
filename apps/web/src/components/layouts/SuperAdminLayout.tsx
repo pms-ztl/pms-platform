@@ -124,7 +124,7 @@ export function SuperAdminLayout() {
   };
 
   return (
-    <div className="min-h-screen sa-gradient-bg">
+    <div className="min-h-screen sa-gradient-bg sa-page">
       {/* Mobile sidebar */}
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>

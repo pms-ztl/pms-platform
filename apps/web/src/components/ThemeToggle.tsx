@@ -8,27 +8,29 @@ import {
 import clsx from 'clsx';
 import { useThemeStore, type Theme } from '@/store/theme';
 
-// ── Custom "Deep Dark / OLED" icon — crescent moon + 3 stars ──────────────
+// ── Custom "Deep Dark / OLED" icon — clean filled crescent moon ───────────
 
 function DeepDarkIcon({ className, ...props }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
       className={className}
       aria-hidden="true"
       {...props}
     >
-      {/* Crescent moon */}
-      <path d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
-      {/* Three stars scattered around the moon */}
-      <circle cx="18.5" cy="4"   r="0.85" fill="currentColor" stroke="none" />
-      <circle cx="21"   cy="7.5" r="0.65" fill="currentColor" stroke="none" />
-      <circle cx="20"   cy="2.5" r="0.55" fill="currentColor" stroke="none" />
+      <path
+        d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646Z"
+        fill="currentColor"
+        opacity="0.15"
+      />
+      <path
+        d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

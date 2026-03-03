@@ -117,7 +117,7 @@ export function ReportsPage() {
   const limit = 10;
 
   // Scheduled reports section
-  const [schedulesExpanded, setSchedulesExpanded] = useState(false);
+  const [schedulesExpanded, setSchedulesExpanded] = useState(true);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [scheduleCron, setScheduleCron] = useState('0 9 * * 1');
   const [scheduleStartDate, setScheduleStartDate] = useState('');

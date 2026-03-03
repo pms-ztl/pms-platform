@@ -578,7 +578,7 @@ export function SADashboardPage() {
 
   // ── Audit breakdown by action type ──
   const auditBreakdown = activityList.reduce((acc: Record<string, number>, log: any) => {
-    const action = log.action?.replace(/_/g, ' ') || 'Unknown';
+    const action = log.action?.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (c: string) => c.toUpperCase()).replace(/\bAi\b/g, 'AI').replace(/\bApi\b/g, 'API').replace(/\bSso\b/g, 'SSO').replace(/\bMfa\b/g, 'MFA') || 'Unknown';
     acc[action] = (acc[action] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
@@ -747,14 +747,14 @@ export function SADashboardPage() {
                 'bg-gradient-to-r', accent.shimmer,
               )} />
 
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex justify-center mb-3">
                 <div className={clsx('p-2 rounded-xl border border-transparent', accent.iconBg)}>
                   <Icon className={clsx('h-5 w-5', accent.iconText)} />
                 </div>
               </div>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{card.value}</p>
-              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-0.5">{card.label}</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{card.subtitle}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white text-center">{card.value}</p>
+              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-0.5 text-center">{card.label}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 text-center">{card.subtitle}</p>
             </div>
           );
         })}
@@ -1358,41 +1358,41 @@ export function SADashboardPage() {
                 const colors = getActionColor(log.action);
                 return (
                   <div key={log.id} className={clsx('px-5 py-3 hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-colors border-l-2', colors.border)}>
-                    <div className="flex items-center gap-3">
-                      <div className={clsx('p-1.5 rounded-lg flex-shrink-0', colors.bg)}>
+                    <div className="flex items-start gap-3">
+                      <div className={clsx('p-1.5 rounded-lg flex-shrink-0 mt-0.5', colors.bg)}>
                         <ActionIcon className={clsx('h-3.5 w-3.5', colors.text)} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-gray-800 dark:text-white/80 truncate">{log.userEmail}</span>
-                          <span className={clsx(
-                            'text-2xs font-semibold px-1.5 py-0.5 rounded-full',
-                            log.action?.includes('CREATE') || log.action?.includes('ADD')
-                              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
-                              : log.action?.includes('DELETE') || log.action?.includes('REMOVE')
-                              ? 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400'
-                              : log.action?.includes('LOGIN')
-                              ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400'
-                              : 'bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-gray-400'
-                          )}>
-                            {log.action?.replace(/_/g, ' ')}
-                          </span>
-                        </div>
+                        <p className="text-sm font-medium text-gray-800 dark:text-white/80 truncate">{log.userEmail}</p>
                         {log.resource && (
                           <p className="text-xs text-gray-400 dark:text-white/25 mt-0.5 truncate">
                             {log.resource} {log.resourceId && `(${String(log.resourceId).slice(0, 8)}...)`}
                           </p>
                         )}
                       </div>
-                      <span className="text-xs text-gray-400 dark:text-white/20 whitespace-nowrap flex-shrink-0">
-                        {(() => {
-                          try {
-                            return formatDistanceToNow(new Date(log.timestamp), { addSuffix: true });
-                          } catch {
-                            return format(new Date(log.timestamp), 'MMM d, HH:mm');
-                          }
-                        })()}
-                      </span>
+                      <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                        <span className={clsx(
+                          'text-2xs font-semibold px-1.5 py-0.5 rounded-full whitespace-nowrap',
+                          log.action?.includes('CREATE') || log.action?.includes('ADD')
+                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
+                            : log.action?.includes('DELETE') || log.action?.includes('REMOVE')
+                            ? 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400'
+                            : log.action?.includes('LOGIN')
+                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400'
+                            : 'bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-gray-400'
+                        )}>
+                          {log.action?.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, (c: string) => c.toUpperCase()).replace(/\bAi\b/g, 'AI').replace(/\bApi\b/g, 'API')}
+                        </span>
+                        <span className="text-xs text-gray-400 dark:text-white/20 whitespace-nowrap">
+                          {(() => {
+                            try {
+                              return formatDistanceToNow(new Date(log.timestamp), { addSuffix: true });
+                            } catch {
+                              return format(new Date(log.timestamp), 'MMM d, HH:mm');
+                            }
+                          })()}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );

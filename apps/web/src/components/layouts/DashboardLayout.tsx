@@ -27,7 +27,7 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ScrollToTop } from '@/components/ui/ScrollToTop';
 import { TopLoadingBar } from '@/components/ui/TopLoadingBar';
 import { useRouteChangeLoader } from '@/hooks/useRouteChangeLoader';
-import { navigationSections, adminSection, type NavItem, type NavSection } from '@/config/navigation';
+import { navigationSections, adminSection, bottomNavItems, type NavItem, type NavSection } from '@/config/navigation';
 import { AIWorkspaceTransition } from '@/components/ai-workspace/AIWorkspaceTransition';
 
 // Navigation config imported from @/config/navigation
@@ -217,8 +217,17 @@ function SidebarContent({
         )}
       </nav>
 
-      {/* Bottom: Settings + Collapse toggle */}
+      {/* Bottom: Help + Settings + Collapse toggle */}
       <div className="shrink-0 border-t border-secondary-200 dark:border-white/[0.06] px-2 py-2 space-y-1">
+        {bottomNavItems.map((item) => (
+          <NavLink
+            key={item.href}
+            item={item}
+            isActive={pathname === item.href}
+            collapsed={collapsed}
+            onClick={onNavigate}
+          />
+        ))}
         <NavLink
           item={{ name: 'Settings', href: '/settings', icon: Cog6ToothIcon }}
           isActive={pathname === '/settings'}
