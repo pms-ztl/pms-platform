@@ -208,14 +208,31 @@ export function CompliancePage() {
   const meta = listResult?.meta ?? { total: 0, page: 1, limit: PAGE_SIZE, totalPages: 1 };
   const deadlines = (deadlinesData ?? []) as ComplianceDeadline[];
 
-  const dashboard: ComplianceDashboard = dashboardData ?? {
-    totalReviews: meta.total,
-    pending: 0,
-    completed: 0,
-    overdue: 0,
-    complianceRate: 0,
-    inProgress: 0,
-  };
+  // The backend /compliance/dashboard returns a different shape than the
+  // frontend interface, so we compute the stats from the reviews list.
+  const dashboard: ComplianceDashboard = useMemo(() => {
+    if (dashboardData && typeof dashboardData.totalReviews === 'number') {
+      return dashboardData;
+    }
+    // Compute from the loaded reviews list when API shape differs
+    const allReviews = listResult?.data ?? [];
+    const total = listResult?.meta?.total ?? allReviews.length;
+    const pendingCount = allReviews.filter((r) => r.status === 'PENDING').length;
+    const completedCount = allReviews.filter((r) => r.status === 'COMPLETED').length;
+    const inProgressCount = allReviews.filter((r) => r.status === 'IN_PROGRESS').length;
+    const overdueCount = allReviews.filter(
+      (r) => r.status !== 'COMPLETED' && r.deadline && new Date(r.deadline) < new Date(),
+    ).length;
+    const rate = total > 0 ? Math.round((completedCount / total) * 100) : 100;
+    return {
+      totalReviews: total,
+      pending: pendingCount,
+      completed: completedCount,
+      overdue: overdueCount,
+      complianceRate: (dashboardData as any)?.complianceRate ?? rate,
+      inProgress: inProgressCount,
+    };
+  }, [dashboardData, listResult]);
 
   const filteredReviews = useMemo(() => {
     let result = reviews;

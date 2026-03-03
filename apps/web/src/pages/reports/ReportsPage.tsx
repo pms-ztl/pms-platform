@@ -764,9 +764,10 @@ export function ReportsPage() {
                         className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/50 transition-colors"
                       >
                         <td className="px-6 py-4 text-sm font-medium text-secondary-900 dark:text-white">
-                          {schedule.reportDefinitionId
-                            ? toReportTypeLabel(schedule.reportDefinitionId)
-                            : '--'}
+                          {schedule.reportDefinition?.name
+                            ?? (schedule.reportDefinitionId
+                              ? toReportTypeLabel(schedule.reportDefinitionId)
+                              : '--')}
                         </td>
                         <td className="px-6 py-4">
                           <code className="text-xs bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300 px-2 py-1 rounded">
