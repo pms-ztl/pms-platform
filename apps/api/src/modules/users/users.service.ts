@@ -563,66 +563,44 @@ export class UsersService {
   async getOrgChart(
     tenantId: string,
     rootUserId?: string,
-    depth: number = 3
-  ): Promise<Array<User & { children?: User[] }>> {
+    _depth: number = 3
+  ): Promise<User[]> {
+    // Return a flat list of all active users with manager relation included.
+    // The frontend rebuilds the hierarchy using user.manager.id references.
     const where: Record<string, unknown> = {
       tenantId,
       isActive: true,
       deletedAt: null,
     };
 
-    if (rootUserId !== undefined) {
-      where.id = rootUserId;
-    } else {
-      where.managerId = null; // Start from top-level managers
+    // When a root user is specified, return that user and all their reports
+    if (rootUserId) {
+      const collectIds = async (uid: string): Promise<string[]> => {
+        const reports = await prisma.user.findMany({
+          where: { tenantId, managerId: uid, isActive: true, deletedAt: null },
+          select: { id: true },
+        });
+        const childIds = await Promise.all(reports.map((r) => collectIds(r.id)));
+        return [uid, ...childIds.flat()];
+      };
+      const ids = await collectIds(rootUserId);
+      where.id = { in: ids };
     }
 
-    const buildTree = async (userId: string, currentDepth: number): Promise<User & { children?: User[] }> => {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-          department: {
-            select: { id: true, name: true },
-          },
-        },
-      });
-
-      if (user === null) {
-        throw new NotFoundError('User', userId);
-      }
-
-      if (currentDepth >= depth) {
-        return user;
-      }
-
-      const reports = await prisma.user.findMany({
-        where: {
-          tenantId,
-          managerId: userId,
-          isActive: true,
-          deletedAt: null,
-        },
-      });
-
-      const children = await Promise.all(
-        reports.map((r) => buildTree(r.id, currentDepth + 1))
-      );
-
-      return {
-        ...user,
-        children,
-      };
-    };
-
-    const topLevel = await prisma.user.findMany({
+    const users = await prisma.user.findMany({
       where,
+      include: {
+        department: {
+          select: { id: true, name: true },
+        },
+        manager: {
+          select: { id: true, firstName: true, lastName: true, jobTitle: true, email: true },
+        },
+      },
+      orderBy: [{ firstName: 'asc' }, { lastName: 'asc' }],
     });
 
-    const tree = await Promise.all(
-      topLevel.map((u) => buildTree(u.id, 0))
-    );
-
-    return tree;
+    return users;
   }
 
   async assignRole(

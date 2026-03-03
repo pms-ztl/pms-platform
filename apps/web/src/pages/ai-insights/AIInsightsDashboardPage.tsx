@@ -104,11 +104,19 @@ export function AIInsightsDashboardPage() {
 
   const sentimentTrend = useMemo(() => {
     const raw = Array.isArray(sentimentTrendRaw) ? sentimentTrendRaw : (sentimentTrendRaw as any)?.data ?? [];
-    const mapped = raw.map((p: any) => ({
-      date: p.date ? new Date(p.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '',
-      avgScore: typeof p.avgScore === 'number' ? p.avgScore : 0,
-      count: typeof p.count === 'number' ? p.count : 0,
-    }));
+    const mapped = raw.map((p: any) => {
+      // Handle both API formats: { month, averageRating, sentimentScore, reviewCount } and { date, avgScore, count }
+      const dateStr = p.date || p.month;
+      const score = p.avgScore ?? p.sentimentScore ?? p.averageRating ?? 0;
+      const cnt = p.count ?? p.reviewCount ?? 0;
+      return {
+        date: dateStr ? (dateStr.length <= 7
+          ? new Date(dateStr + '-15').toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
+          : new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })) : '',
+        avgScore: typeof score === 'number' ? score : 0,
+        count: typeof cnt === 'number' ? cnt : 0,
+      };
+    }).filter((p: any) => p.date && p.avgScore > 0);
     if (mapped.length) return mapped;
     // Demo data
     return [

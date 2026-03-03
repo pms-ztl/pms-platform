@@ -10,3 +10,4 @@ export { ScrollToTop } from './ScrollToTop';
 export { Breadcrumbs } from './Breadcrumbs';
 export { TopLoadingBar } from './TopLoadingBar';
 export { PageHeader } from './PageHeader';
+export { EmployeePicker } from './EmployeePicker';

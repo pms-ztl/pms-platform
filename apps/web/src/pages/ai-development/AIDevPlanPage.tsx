@@ -27,6 +27,8 @@ import {
   Legend,
 } from 'recharts';
 import { actionableInsightsApi, type GeneratedDevPlan } from '@/lib/api';
+import { useAuthStore } from '@/store/auth';
+import { EmployeePicker } from '@/components/ui';
 
 /* ── helpers ─────────────────────────────────────────────────────────── */
 
@@ -59,10 +61,11 @@ const CHART_COLORS = ['#3b82f6', '#f59e0b'];
 
 export function AIDevPlanPage() {
   const qc = useQueryClient();
+  const { user: currentUser } = useAuthStore();
 
   // ── state ──
-  const [userId, setUserId] = useState('');
-  const [lookupId, setLookupId] = useState('');
+  const [userId, setUserId] = useState(currentUser?.id ?? '');
+  const [lookupId, setLookupId] = useState(currentUser?.id ?? '');
   const [selectedPlan, setSelectedPlan] = useState<GeneratedDevPlan | null>(null);
   const [showGenModal, setShowGenModal] = useState(false);
   const [genForm, setGenForm] = useState({ userId: '', planType: 'CAREER_GROWTH', careerGoal: '', targetRole: '', targetLevel: '', duration: 6 });
@@ -148,10 +151,16 @@ export function AIDevPlanPage() {
 
       {/* ── User lookup ─────────────────────────────────────────────── */}
       <div className="rounded-xl border border-gray-700 bg-gray-800/60 p-4">
-        <label className="block text-sm font-medium text-gray-300 mb-2">Look up plans by User ID</label>
-        <div className="flex gap-2">
-          <input value={userId} onChange={e => setUserId(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleLookup()} placeholder="Enter user ID…" className="flex-1 min-w-0 rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white placeholder-gray-400 focus:border-purple-500 focus:outline-none" />
-          <button onClick={handleLookup} className="rounded-lg bg-gray-600 px-4 py-2 text-sm text-white hover:bg-gray-500 transition-colors flex-shrink-0 whitespace-nowrap">Search</button>
+        <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+          <EmployeePicker
+            value={userId}
+            onChange={(id) => { setUserId(id); if (id) setLookupId(id); }}
+            placeholder="Search employees..."
+            label="Look up development plans for"
+            dark
+            accent="purple"
+            className="flex-1 sm:max-w-sm"
+          />
         </div>
       </div>
 
@@ -184,7 +193,7 @@ export function AIDevPlanPage() {
           <SparklesIcon className="h-12 w-12 text-gray-600 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-300 mb-2">AI Development Plan Generator</h3>
           <p className="text-sm text-gray-500 max-w-md mx-auto">
-            Generate personalized development plans powered by AI. Enter a user ID above to view existing plans, or click <strong>Generate Plan</strong> to create a new one.
+            Generate personalized development plans powered by AI. Select an employee above to view existing plans, or click <strong>Generate Plan</strong> to create a new one.
           </p>
         </div>
       )}
@@ -463,8 +472,14 @@ export function AIDevPlanPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-300 mb-1">User ID *</label>
-                <input value={genForm.userId} onChange={e => setGenForm(f => ({ ...f, userId: e.target.value }))} placeholder="Employee user ID" className="w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-sm text-white placeholder-gray-400 focus:border-purple-500 focus:outline-none" />
+                <label className="block text-sm text-gray-300 mb-1">Employee *</label>
+                <EmployeePicker
+                  value={genForm.userId}
+                  onChange={(id) => setGenForm(f => ({ ...f, userId: id }))}
+                  placeholder="Search for an employee..."
+                  dark
+                  accent="purple"
+                />
               </div>
 
               <div>
@@ -508,7 +523,7 @@ export function AIDevPlanPage() {
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setShowGenModal(false)} className="rounded-lg border border-gray-600 px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">Cancel</button>
               <button onClick={() => {
-                if (!genForm.userId.trim()) { toast.error('User ID is required'); return; }
+                if (!genForm.userId.trim()) { toast.error('Please select an employee'); return; }
                 if (genForm.careerGoal.trim().length < 10) { toast.error('Career goal must be at least 10 characters'); return; }
                 generateMut.mutate(genForm);
               }} disabled={generateMut.isPending || !genForm.userId.trim() || genForm.careerGoal.trim().length < 10} className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-500 disabled:opacity-50 transition-colors">

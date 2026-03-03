@@ -83,12 +83,32 @@ export const engagementApi = {
     api.get<EngagementOverview>('/engagement/overview'),
 
   /** Get historical engagement trends */
-  getTrends: (params?: { months?: number }) =>
-    api.get<EngagementTrendPoint[]>('/engagement/trends', { params }),
+  getTrends: async (params?: { months?: number }): Promise<EngagementTrendPoint[]> => {
+    const raw = await api.get<any>('/engagement/trends', { params });
+    // API returns { months, trends: [...] } — extract the array & normalize field names
+    const trendArr: any[] = Array.isArray(raw) ? raw : (raw?.trends || []);
+    return trendArr.map((t: any) => ({
+      month: t.month,
+      averageScore: t.avgOverallScore ?? t.averageScore ?? 0,
+      atRiskCount: t.atRiskCount ?? 0,
+      totalEmployees: t.totalScores ?? t.totalEmployees ?? 0,
+    }));
+  },
 
   /** Get department-level engagement breakdown */
-  getDepartments: () =>
-    api.get<DepartmentEngagement[]>('/engagement/departments'),
+  getDepartments: async (): Promise<DepartmentEngagement[]> => {
+    const raw = await api.get<any[]>('/engagement/departments');
+    const arr = Array.isArray(raw) ? raw : [];
+    return arr.map((d: any) => ({
+      departmentId: d.departmentId,
+      departmentName: d.departmentName,
+      averageScore: d.avgEngagementScore ?? d.averageScore ?? 0,
+      employeeCount: d.employeeCount ?? 0,
+      atRiskCount: d.atRiskCount ?? 0,
+      topLevel: d.topLevel ?? d.distribution ? Object.entries(d.distribution || {}).sort(([,a]: any, [,b]: any) => b - a)[0]?.[0] ?? 'Unknown' : 'Unknown',
+      componentScores: d.componentScores ?? d.avgComponentScores ?? { participation: 0, communication: 0, collaboration: 0, initiative: 0, responsiveness: 0 },
+    }));
+  },
 
   /** Get at-risk employees list (returns { employees, meta }) */
   getAtRisk: (params?: { page?: number; limit?: number }) =>

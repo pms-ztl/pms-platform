@@ -28,6 +28,8 @@ import {
   type SuccessionPlan,
 } from '@/lib/api/actionable-insights';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useAuthStore } from '@/store/auth';
+import { EmployeePicker } from '@/components/ui';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -50,13 +52,14 @@ const CRITICALITY_BADGE: Record<string, { cls: string }> = {
 export function TalentIntelligencePage() {
   usePageTitle('Talent Intelligence');
   const queryClient = useQueryClient();
+  const { user: currentUser } = useAuthStore();
 
   const [selectedRec, setSelectedRec] = useState<PromotionRecommendation | null>(null);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [showSuccessionModal, setShowSuccessionModal] = useState(false);
   const [genForm, setGenForm] = useState({ userId: '', targetRole: '', targetLevel: '', targetDepartment: '' });
   const [succForm, setSuccForm] = useState({ positionId: '', positionTitle: '', currentIncumbent: '', criticality: 'HIGH' });
-  const [recUserId, setRecUserId] = useState('');
+  const [recUserId, setRecUserId] = useState(currentUser?.id ?? '');
 
   // ── queries ─────────────────────────────────────────────────────────────
 
@@ -212,13 +215,13 @@ export function TalentIntelligencePage() {
       {/* User lookup */}
       <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-          <label className="text-sm font-medium text-secondary-700 dark:text-secondary-300">Lookup recommendations for:</label>
-          <input
-            type="text"
+          <label className="text-sm font-medium text-secondary-700 dark:text-secondary-300 whitespace-nowrap">Lookup recommendations for:</label>
+          <EmployeePicker
             value={recUserId}
-            onChange={(e) => setRecUserId(e.target.value)}
-            placeholder="Enter User ID"
-            className="flex-1 sm:max-w-xs rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-700 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+            onChange={(id) => setRecUserId(id)}
+            placeholder="Search employees..."
+            accent="amber"
+            className="flex-1 sm:max-w-xs"
           />
         </div>
       </div>
@@ -248,7 +251,7 @@ export function TalentIntelligencePage() {
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">Promotion Recommendations</h3>
           {recommendations.length === 0 ? (
             <div className="text-center py-16 text-secondary-400 text-sm">
-              {recUserId ? 'No recommendations found for this user.' : 'Enter a User ID above to view promotion recommendations.'}
+              {recUserId ? 'No recommendations found for this employee.' : 'Select an employee above to view promotion recommendations.'}
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -423,8 +426,18 @@ export function TalentIntelligencePage() {
               </button>
             </div>
             <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-secondary-700 dark:text-secondary-300 mb-1">
+                  Employee <span className="text-red-500">*</span>
+                </label>
+                <EmployeePicker
+                  value={genForm.userId}
+                  onChange={(id) => setGenForm((p) => ({ ...p, userId: id }))}
+                  placeholder="Search for an employee..."
+                  accent="amber"
+                />
+              </div>
               {[
-                { label: 'User ID', key: 'userId' as const, required: true, placeholder: 'Employee user ID' },
                 { label: 'Target Role', key: 'targetRole' as const, required: true, placeholder: 'e.g. Senior Engineer' },
                 { label: 'Target Level', key: 'targetLevel' as const, required: false, placeholder: 'e.g. L5 (optional)' },
                 { label: 'Target Department', key: 'targetDepartment' as const, required: false, placeholder: 'e.g. Engineering (optional)' },

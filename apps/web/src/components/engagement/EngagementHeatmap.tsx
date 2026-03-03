@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 interface HeatmapPoint {
   date: string;
-  score: number; // 0-5 range
+  score: number; // 0-100 range
 }
 
 interface EngagementHeatmapProps {
@@ -25,10 +25,10 @@ const LEVEL_LABELS = ['No data', 'Very Low', 'Low', 'Moderate', 'High', 'Very Hi
 
 function scoreToLevel(score: number): number {
   if (!score || score <= 0) return 0;
-  if (score < 1.5) return 1;
-  if (score < 2.5) return 2;
-  if (score < 3.5) return 3;
-  if (score < 4.5) return 4;
+  if (score < 30) return 1;
+  if (score < 50) return 2;
+  if (score < 70) return 3;
+  if (score < 90) return 4;
   return 5;
 }
 
@@ -180,7 +180,7 @@ export function EngagementHeatmap({ trends, mode = 'engagement', className }: En
             style={{ left: tooltipPos.x, top: tooltipPos.y, transform: 'translate(-50%, -100%)' }}
           >
             <div className="bg-secondary-900 text-white text-xs rounded-lg px-3 py-1.5 whitespace-nowrap shadow-lg">
-              <span className="font-semibold">{(hoveredCell.score ?? 0).toFixed(1)}/5</span>
+              <span className="font-semibold">{(hoveredCell.score ?? 0).toFixed(1)}/100</span>
               <span className="text-secondary-300 ml-1">{LEVEL_LABELS[hoveredCell.level]}</span>
               <span className="text-secondary-400 ml-1">
                 {new Date(hoveredCell.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}

@@ -179,10 +179,11 @@ function TrendIndicator({
 // ── Score color helper ──
 
 function getScoreColor(score: number): string {
-  if (score >= 4.5) return '#16a34a';
-  if (score >= 3.5) return '#22c55e';
-  if (score >= 2.5) return '#eab308';
-  if (score >= 1.5) return '#f97316';
+  // Scores are on a 0-100 scale
+  if (score >= 90) return '#16a34a';
+  if (score >= 70) return '#22c55e';
+  if (score >= 50) return '#eab308';
+  if (score >= 30) return '#f97316';
   return '#ef4444';
 }
 
@@ -392,7 +393,7 @@ export function EngagementDashboardPage() {
                 </p>
                 <p className="text-2xl font-bold mt-1" style={{ color: getScoreColor(overview.averageScore ?? 0) }}>
                   {Number(overview.averageScore ?? 0).toFixed(1)}
-                  <span className="text-sm font-normal text-secondary-400 dark:text-secondary-500">/5.0</span>
+                  <span className="text-sm font-normal text-secondary-400 dark:text-secondary-500">/100</span>
                 </p>
               </div>
               <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
@@ -587,7 +588,7 @@ export function EngagementDashboardPage() {
                   tick={{ fontSize: 12 }}
                 />
                 <YAxis
-                  domain={[0, 5]}
+                  domain={[0, 100]}
                   className="fill-secondary-500 dark:fill-secondary-400"
                   tick={{ fontSize: 12 }}
                 />
@@ -644,8 +645,7 @@ export function EngagementDashboardPage() {
           ) : deptChartData.length > 0 ? (
             <div className="space-y-3 py-1">
               {deptChartData.map((dept, index) => {
-                const maxScore = 5;
-                const pct = maxScore > 0 ? (dept.score / maxScore) * 100 : 0;
+                const pct = Math.min(100, dept.score);
                 const isSelected = selectedDeptId === dept.id;
                 const isDimmed = selectedDeptId && !isSelected;
                 const barHex = isSelected
@@ -701,18 +701,18 @@ export function EngagementDashboardPage() {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1.5">
                     <div className="w-3 h-3 rounded-full" style={{ background: '#22c55e' }} />
-                    <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">≥ 4.5 Excellent</span>
+                    <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">≥ 90 Excellent</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-3 h-3 rounded-full" style={{ background: '#3b82f6' }} />
-                    <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">3.5–4.4 Good</span>
+                    <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">70–89 Good</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-3 h-3 rounded-full" style={{ background: '#f97316' }} />
-                    <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">&lt; 3.5 Needs Focus</span>
+                    <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300">&lt; 70 Needs Focus</span>
                   </div>
                 </div>
-                <span className="text-2xs text-secondary-400 dark:text-secondary-500">5.0</span>
+                <span className="text-2xs text-secondary-400 dark:text-secondary-500">100</span>
               </div>
             </div>
           ) : (
@@ -777,7 +777,7 @@ export function EngagementDashboardPage() {
               </thead>
               <tbody className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                 {departments.map((dept) => {
-                  const pct = ((dept.averageScore ?? 0) / 5) * 100;
+                  const pct = Math.min(100, dept.averageScore ?? 0);
                   return (
                     <tr
                       key={dept.departmentId}

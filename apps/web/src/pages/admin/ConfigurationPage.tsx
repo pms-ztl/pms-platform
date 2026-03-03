@@ -210,14 +210,30 @@ function ModalShell({
 // ---------------------------------------------------------------------------
 
 function RatingScalesTab() {
-  const { data: scales, isLoading, error } = useQuery({
+  const { data: rawScales, isLoading, error } = useQuery({
     queryKey: ['admin-config', 'rating-scales'],
     queryFn: () => adminConfigApi.getRatingScales(),
   });
 
   if (isLoading) return <Spinner />;
   if (error) return <ErrorBanner message={(error as Error).message || 'Failed to load rating scales'} />;
-  if (!scales || scales.length === 0) {
+
+  // Normalize API response: can be flat RatingScale[] or nested { ratingScale, templateName, sectionName }[]
+  const scales: RatingScale[] = (rawScales || []).map((raw: any, idx: number) => {
+    if (raw.ratingScale) {
+      const rs = raw.ratingScale;
+      return {
+        id: raw.templateId ? `${raw.templateId}-${idx}` : `scale-${idx}`,
+        name: rs.name || `${raw.templateName} — ${raw.sectionName}`,
+        minValue: rs.minValue ?? rs.min ?? 1,
+        maxValue: rs.maxValue ?? rs.max ?? 5,
+        levels: Array.isArray(rs.levels) ? rs.levels : [],
+      };
+    }
+    return { id: raw.id || `scale-${idx}`, name: raw.name || 'Unnamed Scale', minValue: raw.minValue ?? 1, maxValue: raw.maxValue ?? 5, levels: raw.levels || [] };
+  });
+
+  if (scales.length === 0) {
     return (
       <EmptyState
         icon={StarIcon}
@@ -229,7 +245,7 @@ function RatingScalesTab() {
 
   return (
     <div className="space-y-4">
-      {(scales as RatingScale[]).map((scale) => (
+      {scales.map((scale) => (
         <div
           key={scale.id}
           className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden"

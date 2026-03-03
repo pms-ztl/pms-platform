@@ -58,9 +58,11 @@ function OverviewCard({
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  // First 3 cards render visible immediately to avoid blank viewport on load
+  const [isVisible, setIsVisible] = useState(index < 3);
 
   useEffect(() => {
+    if (isVisible) return; // already visible
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -68,11 +70,11 @@ function OverviewCard({
           observer.disconnect();
         }
       },
-      { threshold: 0.08, rootMargin: '60px' }
+      { threshold: 0.05, rootMargin: '200px' }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, []);
+  }, [isVisible]);
 
   return (
     <div
