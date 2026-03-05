@@ -10,6 +10,24 @@ import { dataAggregationService, PeriodType, AggregationType } from './data-aggr
 const redisConnection = new Redis(process.env.REDIS_URL || 'redis://127.0.0.1:6379', {
   maxRetriesPerRequest: null,
   tls: process.env.REDIS_URL?.startsWith('rediss://') ? {} : undefined,
+  retryStrategy(times) {
+    // Back off aggressively to avoid burning Upstash free-tier requests
+    return Math.min(times * 2000, 60000);
+  },
+});
+
+// Suppress repetitive Redis error logs after first occurrence
+let redisErrorLogged = false;
+redisConnection.on('error', (err) => {
+  const msg = err.message || '';
+  if (msg.includes('max requests limit exceeded')) {
+    if (!redisErrorLogged) {
+      logger.warn('Redis rate limit reached — workers will pause', { error: msg });
+      redisErrorLogged = true;
+    }
+    return; // don't spam logs
+  }
+  logger.error('Redis connection error', { error: msg });
 });
 
 export interface ReportJobData {
@@ -55,6 +73,10 @@ export class JobQueueService {
   private notificationWorker: Worker;
 
   private queueEvents: Map<string, QueueEvents>;
+
+  /** True when Redis rate limit is hit — pauses all workers */
+  private rateLimited = false;
+  private rateLimitTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     // Initialize queues
@@ -132,6 +154,35 @@ export class JobQueueService {
   }
 
   /**
+   * Detect Upstash rate-limit errors and pause all workers to stop the retry storm
+   */
+  private handleRateLimitError(err: Error): void {
+    if (this.rateLimited) return; // already paused
+
+    const msg = err.message || '';
+    if (!msg.includes('max requests limit exceeded') && !msg.includes('ERR max')) return;
+
+    this.rateLimited = true;
+    logger.warn('Redis rate limit hit — pausing all workers for 60 minutes', { error: msg });
+
+    // Pause all workers to stop polling Redis
+    const workers = [this.reportWorker, this.aggregationWorker, this.exportWorker, this.notificationWorker];
+    for (const w of workers) {
+      try { w.pause(); } catch (_) { /* ignore */ }
+    }
+
+    // Auto-resume after 60 minutes (Upstash resets daily)
+    if (this.rateLimitTimer) clearTimeout(this.rateLimitTimer);
+    this.rateLimitTimer = setTimeout(() => {
+      this.rateLimited = false;
+      logger.info('Resuming workers after rate-limit cooldown');
+      for (const w of workers) {
+        try { w.resume(); } catch (_) { /* ignore */ }
+      }
+    }, 60 * 60 * 1000);
+  }
+
+  /**
    * Setup worker event handlers
    */
   private setupWorkerEventHandlers(): void {
@@ -148,11 +199,15 @@ export class JobQueueService {
       });
 
       worker.on('failed', (job, err) => {
+        this.handleRateLimitError(err);
         logger.error('Worker failed job', { queue: worker.name, jobId: job?.id, error: err.message });
       });
 
       worker.on('error', (err) => {
-        logger.error('Worker error', { queue: worker.name, error: err.message });
+        this.handleRateLimitError(err);
+        if (!this.rateLimited) {
+          logger.error('Worker error', { queue: worker.name, error: err.message });
+        }
       });
     });
   }
@@ -165,6 +220,9 @@ export class JobQueueService {
     delay?: number;
     jobId?: string;
   }): Promise<Job> {
+    if (this.rateLimited) {
+      throw new Error('Report queue temporarily unavailable — Redis rate limit reached. Try again later.');
+    }
     logger.info('Adding report generation job', { reportType: data.reportType, tenantId: data.tenantId });
 
     // Create background job record in database
@@ -307,6 +365,9 @@ export class JobQueueService {
     priority?: number;
     delay?: number;
   }): Promise<Job> {
+    if (this.rateLimited) {
+      throw new Error('Aggregation queue temporarily unavailable — Redis rate limit reached. Try again later.');
+    }
     logger.info('Adding data aggregation job', { tenantId: data.tenantId, periodType: data.periodType });
 
     const backgroundJob = await prisma.backgroundJob.create({
@@ -569,6 +630,11 @@ export class JobQueueService {
    */
   async shutdown(): Promise<void> {
     logger.info('Shutting down job queue service');
+
+    if (this.rateLimitTimer) {
+      clearTimeout(this.rateLimitTimer);
+      this.rateLimitTimer = null;
+    }
 
     await Promise.all([
       this.reportWorker.close(),
