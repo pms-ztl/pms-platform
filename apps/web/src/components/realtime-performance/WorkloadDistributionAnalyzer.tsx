@@ -29,6 +29,7 @@ import {
 } from 'recharts';
 import clsx from 'clsx';
 import { fetchWithAuth } from '@/lib/fetch-with-auth';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface WorkloadAnalysis {
   userId: string;
@@ -215,6 +216,7 @@ const RedistributionCard = ({
 );
 
 export function WorkloadDistributionAnalyzer() {
+  const cc = useChartColors();
   const [viewMode, setViewMode] = useState<'personal' | 'team'>('personal');
 
   const { data: personalWorkload, isLoading: loadingPersonal } = useQuery({
@@ -402,11 +404,11 @@ export function WorkloadDistributionAnalyzer() {
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
-                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} />
-                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
-                    <Bar dataKey="workload" radius={[4, 4, 0, 0]}>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-300 dark:stroke-secondary-500" strokeOpacity={0.5} />
+                    <XAxis dataKey="name" tick={{  fontSize: 11, fontWeight: 600 }} className="fill-secondary-500 dark:fill-secondary-300" />
+                    <YAxis domain={[0, 100]} tick={{  fontSize: 11, fontWeight: 600 }} className="fill-secondary-500 dark:fill-secondary-300" />
+                    <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} />
+                    <Bar dataKey="workload" name="Workload" radius={[4, 4, 0, 0]}>
                       {chartData.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
@@ -443,12 +445,14 @@ export function WorkloadDistributionAnalyzer() {
                       outerRadius={80}
                       paddingAngle={5}
                       dataKey="value"
+                      strokeWidth={2}
+                      stroke="rgba(30, 41, 59, 0.6)"
                     >
                       {pieData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
+                    <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>

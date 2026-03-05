@@ -16,3 +16,5 @@ export { SafeGrid } from './SafeGrid';
 export { SafePanel } from './SafePanel';
 export { MasterDetail } from './MasterDetail';
 export { ChartTooltip } from './ChartTooltip';
+export { AccentLegend } from './AccentLegend';
+export type { LegendItem } from './AccentLegend';

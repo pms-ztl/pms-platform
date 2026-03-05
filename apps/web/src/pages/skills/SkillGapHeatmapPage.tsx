@@ -29,6 +29,7 @@ import clsx from 'clsx';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { PageHeader, ChartTooltip } from '@/components/ui';
 import { skillsApi } from '@/lib/api';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── Local Types (API returns `any`) ─────────────────────────────────────────
 
@@ -77,6 +78,7 @@ const SEVERITY_LABELS = ['Critical (>2)', 'Moderate (1-2)', 'Minor (0.5-1)', 'On
 // ── Skeleton ─────────────────────────────────────────────────────────────────
 
 function PageSkeleton() {
+  const cc = useChartColors();
   return (
     <div className="space-y-6 animate-pulse">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -221,8 +223,8 @@ export function SkillGapHeatmapPage() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white mb-6">Skill Gap Analytics</h1>
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-12 text-center">
-          <PuzzlePieceIcon className="h-12 w-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 text-center">
+          <PuzzlePieceIcon className="h-8 w-8 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2">No Skill Data Available</h3>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 max-w-md mx-auto">
             Skill gap analytics will appear here once skill assessments are created. Start by visiting the Skills Matrix page.
@@ -233,7 +235,7 @@ export function SkillGapHeatmapPage() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
       {/* Header */}
       <PageHeader
         title="Skill Gap Analytics"
@@ -244,7 +246,7 @@ export function SkillGapHeatmapPage() {
           <select
             value={selectedCategory ?? ''}
             onChange={(e) => setSelectedCategory(e.target.value || null)}
-            className="text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-2 sm:px-3 py-1.5 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 max-w-[160px] sm:max-w-none truncate transition-all duration-300"
+            className="text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-2 sm:px-3 py-1.5 bg-white dark:bg-secondary-800 backdrop-blur-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 max-w-[160px] sm:max-w-none truncate transition-all duration-300"
           >
             <option value="">All Categories</option>
             {uniqueCategories.map((cat) => (
@@ -390,25 +392,25 @@ export function SkillGapHeatmapPage() {
           <div style={{ height: Math.max(260, Math.min(barData.length * 70 + 140, 520)) }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData} layout="vertical" margin={{ top: 0, right: 10, bottom: 0, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
                 <XAxis
                   type="number"
                   domain={[0, 'auto']}
-                  tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+                  tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                   axisLine={false}
                   tickLine={false}
-                  label={{ value: 'Gap Magnitude', position: 'insideBottom', offset: -5, fontSize: 10, fill: '#9ca3af' }}
+                  label={{ value: 'Gap Magnitude', position: 'insideBottom', offset: -5, fontSize: 11, fontWeight: 600, fill: '#cbd5e1' }}
                 />
                 <YAxis
                   type="category"
                   dataKey="displayName"
-                  tick={{ fontSize: 9, fill: 'var(--color-secondary-500, #6b7280)' }}
+                  tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                   axisLine={false}
                   tickLine={false}
                   width={100}
                 />
-                <Tooltip
-                  cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                <Tooltip isAnimationActive={false}
+                  cursor={{ fill: cc.cursorFill }}
                   allowEscapeViewBox={{ x: false, y: false }}
                   wrapperStyle={{ zIndex: 50, maxWidth: '90vw' }}
                   content={({ active, payload }) => {
@@ -453,22 +455,22 @@ export function SkillGapHeatmapPage() {
                   <PolarGrid stroke="var(--color-secondary-300, #d1d5db)" />
                   <PolarAngleAxis
                     dataKey="category"
-                    tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }}
+                    tick={{  fontSize: 10, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                   />
                   <PolarRadiusAxis
                     domain={[0, 5]}
-                    tick={{ fontSize: 9, fill: 'var(--color-secondary-400, #9ca3af)' }}
+                    tick={{  fontSize: 9, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                     axisLine={false}
                   />
                   <Radar
                     name="Skill Level"
                     dataKey="value"
-                    stroke="#6366f1"
-                    fill="#6366f1"
+                    stroke={cc.primary}
+                    fill={cc.primary}
                     fillOpacity={0.2}
                     strokeWidth={2}
                   />
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                  <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
@@ -498,8 +500,8 @@ export function SkillGapHeatmapPage() {
                       <Cell key={i} fill={SEVERITY_COLORS[i]} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                  <Tooltip isAnimationActive={false}
+                    cursor={{ fill: cc.cursorFill }}
                     content={<ChartTooltip unit=" skills" />}
                   />
                 </PieChart>

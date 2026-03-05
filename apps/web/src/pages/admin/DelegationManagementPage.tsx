@@ -305,7 +305,7 @@ export function DelegationManagementPage() {
         <PageHeader title="Delegation Management" subtitle="Loading delegations..." />
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 animate-pulse h-16" />
+            <div key={i} className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 animate-pulse h-16" />
           ))}
         </div>
       </div>
@@ -371,7 +371,7 @@ export function DelegationManagementPage() {
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
+        <div className="overflow-x-auto rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white dark:bg-secondary-800 backdrop-blur-xl">
           <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
             <thead className="bg-secondary-50 dark:bg-secondary-800">
               <tr>
@@ -475,7 +475,7 @@ export function DelegationManagementPage() {
                 <select
                   value={formDelegatorId}
                   onChange={(e) => setFormDelegatorId(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                 >
                   <option value="">-- Select delegator --</option>
                   {users.map((u) => (
@@ -492,7 +492,7 @@ export function DelegationManagementPage() {
                 <select
                   value={formDelegateId}
                   onChange={(e) => setFormDelegateId(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                 >
                   <option value="">-- Select delegate --</option>
                   {users.map((u) => (
@@ -509,7 +509,7 @@ export function DelegationManagementPage() {
                 <select
                   value={formType}
                   onChange={(e) => setFormType(e.target.value as DelegationType)}
-                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                 >
                   {TYPE_OPTIONS.map((t) => (
                     <option key={t} value={t}>{TYPE_LABELS[t]}</option>
@@ -526,7 +526,7 @@ export function DelegationManagementPage() {
                   type="date"
                   value={formStartDate}
                   onChange={(e) => setFormStartDate(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -539,7 +539,7 @@ export function DelegationManagementPage() {
                   type="date"
                   value={formEndDate}
                   onChange={(e) => setFormEndDate(e.target.value)}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -553,7 +553,7 @@ export function DelegationManagementPage() {
                   onChange={(e) => setFormReason(e.target.value)}
                   placeholder="Reason for this delegation..."
                   rows={3}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
                 />
               </div>
             </div>
@@ -600,7 +600,7 @@ export function DelegationManagementPage() {
                 onChange={(e) => setActionReason(e.target.value)}
                 placeholder="Reason for rejection..."
                 rows={3}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
+                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
               />
             </div>
             <div className="flex items-center justify-end gap-3 border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">
@@ -641,7 +641,7 @@ export function DelegationManagementPage() {
                 onChange={(e) => setActionReason(e.target.value)}
                 placeholder="Reason for revocation..."
                 rows={3}
-                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
+                className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
               />
             </div>
             <div className="flex items-center justify-end gap-3 border-t border-secondary-200/60 dark:border-white/[0.06] px-6 py-4">

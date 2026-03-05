@@ -446,16 +446,16 @@ export function LeaderboardPage() {
             <RankChange change={null} />
           </div>
         </td>
-        <td className="px-4 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-3">
+        <td className="px-4 py-3 whitespace-nowrap max-w-[200px]">
+          <div className="flex items-center gap-3 min-w-0">
             <Avatar user={e.user} size="sm" />
-            <div>
-              <p className="text-sm font-medium text-secondary-900 dark:text-white">{e.user.firstName} {e.user.lastName}</p>
-              <p className="text-xs text-secondary-500 dark:text-secondary-400">{e.user.jobTitle}</p>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{e.user.firstName} {e.user.lastName}</p>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{e.user.jobTitle}</p>
             </div>
           </div>
         </td>
-        <td className="px-4 py-3 text-sm text-secondary-600 dark:text-secondary-400">{e.user.department}</td>
+        <td className="px-4 py-3 text-sm text-secondary-600 dark:text-secondary-400 truncate max-w-[140px]">{e.user.department}</td>
         <td className="px-4 py-3">
           <ScoreDisplay score={e.score} />
         </td>
@@ -477,10 +477,10 @@ export function LeaderboardPage() {
         <td className="px-4 py-3 whitespace-nowrap">
           <div className="flex items-center gap-2"><RankBadge rank={e.rank} /><RankChange change={null} /></div>
         </td>
-        <td className="px-4 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-3">
+        <td className="px-4 py-3 whitespace-nowrap max-w-[200px]">
+          <div className="flex items-center gap-3 min-w-0">
             <Avatar user={e.user} size="sm" />
-            <p className="text-sm font-medium text-secondary-900 dark:text-white">{e.user.firstName} {e.user.lastName}</p>
+            <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{e.user.firstName} {e.user.lastName}</p>
           </div>
         </td>
         <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{e.goalsCompleted} / {e.goalsTotal}</td>
@@ -512,10 +512,10 @@ export function LeaderboardPage() {
         <td className="px-4 py-3 whitespace-nowrap">
           <div className="flex items-center gap-2"><RankBadge rank={e.rank} /><RankChange change={null} /></div>
         </td>
-        <td className="px-4 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-3">
+        <td className="px-4 py-3 whitespace-nowrap max-w-[200px]">
+          <div className="flex items-center gap-3 min-w-0">
             <Avatar user={e.user} size="sm" />
-            <p className="text-sm font-medium text-secondary-900 dark:text-white">{e.user.firstName} {e.user.lastName}</p>
+            <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{e.user.firstName} {e.user.lastName}</p>
           </div>
         </td>
         <td className="px-4 py-3">
@@ -537,10 +537,10 @@ export function LeaderboardPage() {
         <td className="px-4 py-3 whitespace-nowrap">
           <div className="flex items-center gap-2"><RankBadge rank={e.rank} /><RankChange change={null} /></div>
         </td>
-        <td className="px-4 py-3 whitespace-nowrap">
-          <div className="flex items-center gap-3">
+        <td className="px-4 py-3 whitespace-nowrap max-w-[200px]">
+          <div className="flex items-center gap-3 min-w-0">
             <Avatar user={e.user} size="sm" />
-            <p className="text-sm font-medium text-secondary-900 dark:text-white">{e.user.firstName} {e.user.lastName}</p>
+            <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{e.user.firstName} {e.user.lastName}</p>
           </div>
         </td>
         <td className="px-4 py-3 text-sm font-semibold text-secondary-700 dark:text-secondary-300">{e.plansCompleted} / {e.plansTotal}</td>
@@ -606,7 +606,7 @@ export function LeaderboardPage() {
         </div>
 
         {/* Podium */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-3 sm:p-6 mb-6 sm:mb-8 overflow-hidden relative">
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-3 sm:p-6 mb-6 sm:mb-8 overflow-hidden relative">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 via-transparent to-primary-50/50 dark:from-amber-900/10 dark:to-primary-900/10 pointer-events-none" />
           <Podium entries={entries} />
         </div>
@@ -616,7 +616,7 @@ export function LeaderboardPage() {
           <div className={clsx('transition-all duration-300', sidebarOpen ? 'flex-1 min-w-0' : 'w-full')}>
 
             {/* Tab navigation */}
-            <div className="flex items-center gap-1 mb-4 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-1.5 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
+            <div className="flex items-center gap-1 mb-4 bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-1.5 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
@@ -638,7 +638,7 @@ export function LeaderboardPage() {
             </div>
 
             {/* Table */}
-            <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+            <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
               {isLoading ? (
                 <div className="flex items-center justify-center h-64">
                   <div className="animate-spin rounded-full h-10 w-10 border-2 border-primary-500 border-t-transparent" />
@@ -677,7 +677,7 @@ export function LeaderboardPage() {
             </div>
 
             {/* Department Comparison */}
-            <div className="mt-8 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+            <div className="mt-8 bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="flex items-center gap-2 mb-5">
                 <UserGroupIcon className="h-5 w-5 text-primary-500" />
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Department Comparison</h2>
@@ -690,7 +690,7 @@ export function LeaderboardPage() {
             </div>
 
             {/* Performance Insights */}
-            <div className="mt-6 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+            <div className="mt-6 bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="flex items-center gap-2 mb-4">
                 <SparklesIcon className="h-5 w-5 text-amber-500" />
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Performance Insights</h2>
@@ -731,7 +731,7 @@ export function LeaderboardPage() {
             <aside className="hidden lg:block w-80 shrink-0 space-y-6 animate-slide-in">
 
               {/* Rank Card */}
-              <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
+              <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
                 <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
                   <BoltIcon className="h-4 w-4 text-primary-500" /> My Rankings
                 </h3>
@@ -757,7 +757,7 @@ export function LeaderboardPage() {
               </div>
 
               {/* Scores & Percentiles */}
-              <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
+              <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
                 <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Scores & Percentiles</h3>
                 {myStats ? (
                   <div className="space-y-4">
@@ -796,7 +796,7 @@ export function LeaderboardPage() {
 
               {/* Current User Highlight */}
               {currentUserEntry && (
-                <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
+                <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-2xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
                   <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
                     <TrophyIcon className="h-4 w-4 text-amber-500" /> Your Position
                   </h3>

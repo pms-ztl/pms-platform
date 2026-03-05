@@ -411,7 +411,7 @@ export function RoleManagementPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 animate-pulse h-40"
+              className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 animate-pulse h-40"
             />
           ))}
         </div>
@@ -490,7 +490,7 @@ export function RoleManagementPage() {
             return (
               <div
                 key={role.id}
-                className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5 flex flex-col justify-between hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
+                className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5 flex flex-col justify-between hover:border-primary-400 dark:hover:border-primary-500 transition-colors"
               >
                 {/* Card top */}
                 <div>
@@ -615,7 +615,7 @@ export function RoleManagementPage() {
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="e.g. Department Manager"
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                 />
               </div>
 
@@ -629,7 +629,7 @@ export function RoleManagementPage() {
                   onChange={(e) => setFormDescription(e.target.value)}
                   placeholder="Brief description of this role..."
                   rows={3}
-                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
+                  className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors resize-none"
                 />
               </div>
 
@@ -641,7 +641,7 @@ export function RoleManagementPage() {
                 <select
                   value={formCategory}
                   onChange={(e) => setFormCategory(e.target.value as Role['category'])}
-                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                 >
                   {CATEGORY_OPTIONS.map((cat) => (
                     <option key={cat} value={cat}>
@@ -666,7 +666,7 @@ export function RoleManagementPage() {
                       value={permissionSearch}
                       onChange={(e) => setPermissionSearch(e.target.value)}
                       placeholder="Search permissions..."
-                      className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl pl-9 pr-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
+                      className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl pl-9 pr-3 py-2 text-sm text-secondary-900 dark:text-white placeholder-secondary-400 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-colors"
                     />
                   </div>
                 )}
@@ -916,7 +916,7 @@ export function RoleManagementPage() {
                   <select
                     value={fallbackRoleId}
                     onChange={(e) => setFallbackRoleId(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 outline-none transition-all duration-300"
                   >
                     <option value="">-- Select a role --</option>
                     {roles

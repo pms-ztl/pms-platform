@@ -34,6 +34,7 @@ import {
   type TeamCompositionAnalysis,
 } from '@/lib/api/actionable-insights';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -44,6 +45,7 @@ const PIE_COLORS = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd', '#818cf8', '#7c3
 // ── component ────────────────────────────────────────────────────────────────
 
 export function TeamOptimizerPage() {
+  const cc = useChartColors();
   usePageTitle('Team Optimizer');
 
   const [optimization, setOptimization] = useState<TeamOptimizationResult | null>(null);
@@ -110,8 +112,8 @@ export function TeamOptimizerPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-        <p className="font-semibold text-white">{label}</p>
+      <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 px-3 py-2 shadow-lg text-xs space-y-1">
+        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color || p.fill }}>{p.name}: {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}</p>
         ))}
@@ -244,10 +246,10 @@ export function TeamOptimizerPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
                     <PolarGrid stroke="var(--color-secondary-300, #d1d5db)" />
-                    <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 9, fill: 'var(--color-secondary-500, #6b7280)' }} />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 8 }} />
-                    <Radar name="Score" dataKey="score" stroke="#6366f1" fill="#6366f1" fillOpacity={0.3} />
-                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                    <PolarAngleAxis dataKey="dimension" tick={{  fontSize: 10, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{  fontSize: 9 }} />
+                    <Radar name="Score" dataKey="score" stroke={cc.primary} fill={cc.primary} fillOpacity={0.3} />
+                    <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
@@ -416,7 +418,7 @@ export function TeamOptimizerPage() {
                         <Pie data={seniorityData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} innerRadius={35} label={({ name, percent }: any) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false}>
                           {seniorityData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />)}
                         </Pie>
-                        <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
+                        <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
@@ -428,11 +430,11 @@ export function TeamOptimizerPage() {
                   <div className="h-48">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={skillDistData} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
-                        <XAxis dataKey="skill" tick={{ fontSize: 9, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                        <YAxis tick={{ fontSize: 9 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                        <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
-                        <Bar dataKey="count" name="Count" fill="#6366f1" barSize={20} radius={[4, 4, 0, 0]} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
+                        <XAxis dataKey="skill" tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+                        <YAxis tick={{  fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                        <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
+                        <Bar dataKey="count" name="Count" fill={cc.primary} barSize={20} radius={[4, 4, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -493,7 +495,7 @@ export function TeamOptimizerPage() {
               <div>
                 <label className="block text-xs font-medium text-secondary-700 dark:text-secondary-300 mb-1">Optimization Type</label>
                 <select value={optForm.optimizationType} onChange={(e) => setOptForm((p) => ({ ...p, optimizationType: e.target.value }))}
-                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300">
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300">
                   {OPT_TYPES.map((t) => <option key={t} value={t}>{t.replace(/_/g, ' ')}</option>)}
                 </select>
               </div>

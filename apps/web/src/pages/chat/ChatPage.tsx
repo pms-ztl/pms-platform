@@ -332,9 +332,9 @@ function NewChatDialog({ onClose, onSelectUser, onCreateGroup }: {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-secondary-950/60 backdrop-blur-sm animate-[fade-in_0.2s_ease]">
-      <div className="w-full max-w-lg mx-4 rounded-2xl glass-deep shadow-xl shadow-primary-500/5 border border-secondary-200/60 dark:border-secondary-700/50 overflow-hidden">
+      <div className="w-full max-w-md mx-4 rounded-2xl glass-deep shadow-xl shadow-primary-500/5 border border-secondary-200/60 dark:border-secondary-700/50 overflow-hidden">
         {/* Header */}
-        <div className="relative px-6 py-5 border-b border-secondary-200/60 dark:border-secondary-700/50">
+        <div className="relative px-4 py-3 border-b border-secondary-200/60 dark:border-secondary-700/50">
           <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-accent-500/5" />
           <div className="relative flex items-center justify-between">
             <div>
@@ -447,7 +447,7 @@ function NewChatDialog({ onClose, onSelectUser, onCreateGroup }: {
                   className="flex w-full items-center gap-3 rounded-xl p-2.5 text-left hover:bg-primary-50/30 dark:hover:bg-white/[0.03]/40 transition-all">
                   <div className={clsx('flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br', TYPE_COLORS.TEAM_CHANNEL, 'bg-opacity-10')}>
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-secondary-100 to-secondary-50 dark:from-secondary-700/60 dark:to-secondary-800/60">
-                      <HashtagIcon className="h-4.5 w-4.5 text-primary-600 dark:text-primary-400" />
+                      <HashtagIcon className="h-[1.125rem] w-[1.125rem] text-primary-600 dark:text-primary-400" />
                     </div>
                   </div>
                   <div className="min-w-0 flex-1">

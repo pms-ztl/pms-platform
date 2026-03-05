@@ -459,7 +459,7 @@ export function ManagerDashboardPage() {
   // ── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-8 pb-10">
+    <div className="space-y-4 pb-4">
       {/* ══════════════════════════ Header ══════════════════════════ */}
       <PageHeader title="Manager Dashboard" subtitle="Your team at a glance">
         <div className="flex items-center overflow-x-auto rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
@@ -806,8 +806,10 @@ export function ManagerDashboardPage() {
         </div>
       </SectionCard>
 
-      {/* ══════════════════════════ Action Items / Inbox ══════════════════════════ */}
-      <SectionCard>
+      {/* ══════════════════════════ Action Items + Goal Tracker Row ══════════════════════════ */}
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
+      {/* Action Items — narrower (2/5) */}
+      <SectionCard className="xl:col-span-2">
         <div className="px-6 py-4 border-b border-secondary-100 dark:border-secondary-700">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 shadow">
@@ -867,8 +869,8 @@ export function ManagerDashboardPage() {
         </div>
       </SectionCard>
 
-      {/* ══════════════════════════ Goal Tracker Section ══════════════════════════ */}
-      <SectionCard>
+      {/* Goal Tracker — wider (3/5) for upcoming deadlines */}
+      <SectionCard className="xl:col-span-3">
         <div className="px-6 py-4 border-b border-secondary-100 dark:border-secondary-700 flex items-center gap-3">
           <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow">
             <FlagIcon className="h-5 w-5 text-white" />
@@ -882,9 +884,9 @@ export function ManagerDashboardPage() {
             </p>
           </div>
         </div>
-        <div className="p-6">
+        <div className="p-4">
           {/* Status counts */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div className="flex items-center gap-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/30">
               <CheckCircleIcon className="w-8 h-8 text-emerald-500" />
               <div>
@@ -921,7 +923,7 @@ export function ManagerDashboardPage() {
           </div>
 
           {/* Two columns: closest to completion | most at risk */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Closest to Completion */}
             <div>
               <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-3 flex items-center gap-2">
@@ -995,6 +997,7 @@ export function ManagerDashboardPage() {
           </div>
         </div>
       </SectionCard>
+      </div>
 
       {/* ══════════════════════════ Quick Actions Grid ══════════════════════════ */}
       <div>
@@ -1098,7 +1101,7 @@ export function ManagerDashboardPage() {
             </div>
           </div>
         </div>
-        <div className="p-6">
+        <div className="p-4">
           {activityFeed.length === 0 && (
             <div className="text-center py-8">
               <ArrowPathIcon className="w-10 h-10 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />

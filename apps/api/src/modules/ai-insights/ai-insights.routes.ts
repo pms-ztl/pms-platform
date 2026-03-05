@@ -43,7 +43,7 @@ router.post('/sentiment/analyze', async (request, res) => {
       },
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -81,7 +81,7 @@ router.get('/sentiment/trend', async (request, res) => {
 
     res.json({ success: true, data: trend });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -111,7 +111,7 @@ router.get('/sentiment/history', async (request, res) => {
       })),
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -188,7 +188,7 @@ router.post('/anomaly/detect', async (request, res) => {
 
     res.json({ success: true, data: anomalies, meta: { detected: anomalies.length } });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -231,7 +231,7 @@ router.get('/anomaly/active', async (request, res) => {
 
     res.json({ success: true, data: anomalies, meta: { total: anomalies.length } });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -272,7 +272,7 @@ router.get('/anomaly/statistics', async (request, res) => {
       },
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -322,7 +322,7 @@ router.post('/benchmark/create', async (request, res) => {
       },
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -381,7 +381,7 @@ router.post('/benchmark/compare', async (request, res) => {
       },
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -426,7 +426,7 @@ router.get('/benchmark/comparisons', async (request, res) => {
 
     res.json({ success: true, data });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -506,7 +506,7 @@ router.get('/benchmark/team-summary', async (request, res) => {
       },
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -570,7 +570,7 @@ router.post('/productivity/predict', async (request, res) => {
       },
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -615,7 +615,7 @@ router.get('/productivity/predictions', async (request, res) => {
 
     res.json({ success: true, data: predictions });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -652,7 +652,7 @@ router.get('/engagement/history', async (request, res) => {
 
     res.json({ success: true, data: history.sort((a, b) => a.month.localeCompare(b.month)) });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 
@@ -700,7 +700,7 @@ router.get('/engagement/at-risk', async (request, res) => {
       meta: { total: atRisk.length },
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false, error: { message: err.message || 'An unexpected error occurred' } });
   }
 });
 

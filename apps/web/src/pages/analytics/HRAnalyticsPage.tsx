@@ -30,8 +30,10 @@ import {
 } from 'recharts';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
+import { ChartTooltip } from '@/components/ui';
 
 import { api } from '@/lib/api';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ---------------------------------------------------------------------------
 // Types (matching backend API response shapes)
@@ -129,36 +131,24 @@ interface NormalizationData {
 // Department color palette
 // ---------------------------------------------------------------------------
 
-const DEPT_COLORS: Record<string, string> = {
-  Engineering: '#3b82f6',
-  Marketing: '#8b5cf6',
-  Sales: '#f59e0b',
-  Finance: '#10b981',
-  'Human Resources': '#ec4899',
-  Product: '#06b6d4',
-  Design: '#f97316',
-  Operations: '#6366f1',
-};
-
-const RATING_BAR_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'];
-
-const getDeptColor = (dept: string): string => DEPT_COLORS[dept] ?? '#6b7280';
+// Department/Rating colors are generated inside component via useChartColors
 
 // ---------------------------------------------------------------------------
 // Custom Scatter Tooltip
 // ---------------------------------------------------------------------------
 
 function CompScatterTooltip({ active, payload }: any) {
+  const cc = useChartColors();
   if (!active || !payload || !payload.length) return null;
   const d = payload[0].payload;
   return (
-    <div className="bg-slate-900/80 backdrop-blur-xl text-white text-xs rounded-xl shadow-2xl p-3 border border-white/10">
+    <div className="bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white text-xs rounded-lg shadow-lg p-3 border border-secondary-200 dark:border-secondary-700">
       <p className="font-semibold text-sm mb-1">{d.name}</p>
-      <p className="text-slate-300">{d.department}</p>
+      <p className="text-secondary-600 dark:text-secondary-300">{d.department}</p>
       <div className="mt-2 space-y-1">
-        <p>Rating: <span className="font-medium text-primary-400">{d.rating}</span></p>
-        <p>Compensation: <span className="font-medium text-green-400">${d.compensation.toLocaleString()}</span></p>
-        <p>% from Median: <span className={clsx('font-medium', Number(d.pctFromMedian) >= 0 ? 'text-green-400' : 'text-red-400')}>{d.pctFromMedian}%</span></p>
+        <p>Rating: <span className="font-medium text-primary-600 dark:text-primary-400">{d.rating}</span></p>
+        <p>Compensation: <span className="font-medium text-green-600 dark:text-green-400">${d.compensation.toLocaleString()}</span></p>
+        <p>% from Median: <span className={clsx('font-medium', Number(d.pctFromMedian) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400')}>{d.pctFromMedian}%</span></p>
       </div>
     </div>
   );
@@ -170,7 +160,11 @@ function CompScatterTooltip({ active, payload }: any) {
 
 function DeptScatterDot(props: any) {
   const { cx, cy, payload } = props;
-  const color = getDeptColor(payload.department);
+  const cc = useChartColors();
+  const pal = cc.palette(8);
+  // Simple hash to consistently map department name → palette index
+  const hash = (payload.department || '').split('').reduce((a: number, c: string) => a + c.charCodeAt(0), 0);
+  const color = pal[hash % pal.length];
   return (
     <circle
       cx={cx}
@@ -179,7 +173,7 @@ function DeptScatterDot(props: any) {
       fill={color}
       fillOpacity={0.8}
       stroke={color}
-      strokeWidth={1.5}
+      strokeWidth={2}
       className="cursor-pointer hover:opacity-100 transition-opacity"
     />
   );
@@ -268,18 +262,8 @@ function EmptyState({ message = 'No data available' }: { message?: string }) {
 // ---------------------------------------------------------------------------
 // Recharts dark-mode axis tick style
 // ---------------------------------------------------------------------------
-const AXIS_STYLE = { fill: '#9ca3af', fontSize: 12 };
-const GRID_STYLE = { strokeDasharray: '3 3', stroke: '#374151' };
-const TOOLTIP_STYLE = {
-  background: 'rgba(15, 23, 42, 0.80)',
-  backdropFilter: 'blur(16px)',
-  WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(148, 163, 184, 0.15)',
-  borderRadius: '0.75rem',
-  boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-  fontSize: '0.75rem',
-  color: '#f1f5f9',
-};
+// AXIS_STYLE, GRID_STYLE, DEPT_COLORS, RATING_BAR_COLORS generated inside component
+// TOOLTIP_STYLE removed — now using <ChartTooltip /> component
 
 // ---------------------------------------------------------------------------
 // HRAnalyticsPage
@@ -288,6 +272,16 @@ const TOOLTIP_STYLE = {
 type TabKey = 'compensation' | 'bias' | 'normalization';
 
 export function HRAnalyticsPage() {
+  const cc = useChartColors();
+  const DEPT_COLORS_PAL = cc.palette(8);
+  const _deptColorMap = new Map<string, string>();
+  const getDeptColor = (dept: string): string => {
+    if (!_deptColorMap.has(dept)) _deptColorMap.set(dept, DEPT_COLORS_PAL[_deptColorMap.size % DEPT_COLORS_PAL.length]);
+    return _deptColorMap.get(dept)!;
+  };
+  const RATING_BAR_COLORS = [...cc.ratingColors];
+  const AXIS_STYLE = { fill: cc.tickColor, fontSize: 11, fontWeight: 600 };
+  const GRID_STYLE = { strokeDasharray: '3 3', stroke: cc.gridColor };
   const [activeTab, setActiveTab] = useState<TabKey>('compensation');
   const [showNormConfirm, setShowNormConfirm] = useState(false);
 
@@ -375,7 +369,7 @@ export function HRAnalyticsPage() {
 
         {/* Scatter Plot */}
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-          <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
+          <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-1">
             Performance vs Compensation
           </h3>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
@@ -402,7 +396,7 @@ export function HRAnalyticsPage() {
                   name="Rating"
                   domain={[2, 5.2]}
                   tick={AXIS_STYLE}
-                  label={{ value: 'Performance Rating', position: 'insideBottom', offset: -5, fill: '#9ca3af', fontSize: 12 }}
+                  label={{  value: 'Performance Rating', position: 'insideBottom', offset: -5, fill: cc.tickColor, fontSize: 11, fontWeight: 600 }}
                 />
                 <YAxis
                   type="number"
@@ -411,11 +405,11 @@ export function HRAnalyticsPage() {
                   width={70}
                   tick={AXIS_STYLE}
                   tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
-                  label={{ value: 'Compensation ($)', angle: -90, position: 'insideLeft', offset: -5, fill: '#9ca3af', fontSize: 12 }}
+                  label={{  value: 'Compensation ($)', angle: -90, position: 'insideLeft', offset: -5, fill: cc.tickColor, fontSize: 11, fontWeight: 600 }}
                 />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<CompScatterTooltip />} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<CompScatterTooltip />} />
                 {/* Trend line */}
-                <Scatter name="Trend" data={trendLineData} fill="none" line={{ stroke: '#6b7280', strokeWidth: 2, strokeDasharray: '8 4' }} shape={() => null as any} legendType="none" />
+                <Scatter name="Trend" data={trendLineData} fill="none" line={{ stroke: cc.semantic.neutral, strokeWidth: 2, strokeDasharray: '8 4' }} shape={() => null as any} legendType="none" />
                 {/* Employee dots */}
                 <Scatter name="Employees" data={scatterData} shape={<DeptScatterDot />} />
               </ScatterChart>
@@ -426,7 +420,7 @@ export function HRAnalyticsPage() {
         {/* Gap Analysis Card */}
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
           <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-white">
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white">
               Compensation Gap Analysis
             </h3>
             <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-0.5">
@@ -434,7 +428,7 @@ export function HRAnalyticsPage() {
             </p>
           </div>
           {compGapData.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="text-center py-4">
               <CheckCircleIcon className="mx-auto h-10 w-10 text-green-500" />
               <p className="mt-2 text-secondary-500 dark:text-secondary-400">No significant compensation gaps detected.</p>
             </div>
@@ -498,7 +492,7 @@ export function HRAnalyticsPage() {
         {/* Compensation Ratio by Department */}
         {deptRatios.length > 0 && (
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-4">
               Compensation Ratio by Department
             </h3>
             <div className="overflow-x-auto">
@@ -590,7 +584,7 @@ export function HRAnalyticsPage() {
         {/* Rating Distribution by Department */}
         {deptDistribution.length > 0 && (
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-1">
               Rating Distribution by Department
             </h3>
             <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
@@ -598,17 +592,17 @@ export function HRAnalyticsPage() {
             </p>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={biasDistChartData} margin={{ top: 10, right: 30, bottom: 10, left: 0 }}>
+                <BarChart data={biasDistChartData} margin={{ top: 10, right: 30, bottom: 20, left: 0 }}>
                   <CartesianGrid {...GRID_STYLE} />
-                  <XAxis dataKey="department" tick={AXIS_STYLE} interval={0} angle={-20} textAnchor="end" height={60} />
+                  <XAxis dataKey="department" tick={{ ...AXIS_STYLE, fontSize: 11 }} interval={0} angle={-15} textAnchor="end" height={70} />
                   <YAxis tick={AXIS_STYLE} />
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} itemStyle={{ color: '#e5e7eb' }} labelStyle={{ color: '#fff', fontWeight: 600 }} />
-                  <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Bar dataKey="Rating 1" fill={RATING_BAR_COLORS[0]} radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="Rating 2" fill={RATING_BAR_COLORS[1]} radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="Rating 3" fill={RATING_BAR_COLORS[2]} radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="Rating 4" fill={RATING_BAR_COLORS[3]} radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="Rating 5" fill={RATING_BAR_COLORS[4]} radius={[2, 2, 0, 0]} />
+                  <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+                  <Legend wrapperStyle={{  fontSize: '11px' }} />
+                  <Bar dataKey="Rating 1" fill={RATING_BAR_COLORS[0]} stroke={RATING_BAR_COLORS[0]} strokeWidth={2} radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="Rating 2" fill={RATING_BAR_COLORS[1]} stroke={RATING_BAR_COLORS[1]} strokeWidth={2} radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="Rating 3" fill={RATING_BAR_COLORS[2]} stroke={RATING_BAR_COLORS[2]} strokeWidth={2} radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="Rating 4" fill={RATING_BAR_COLORS[3]} stroke={RATING_BAR_COLORS[3]} strokeWidth={2} radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="Rating 5" fill={RATING_BAR_COLORS[4]} stroke={RATING_BAR_COLORS[4]} strokeWidth={2} radius={[2, 2, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -618,7 +612,7 @@ export function HRAnalyticsPage() {
         {/* Statistical Indicators */}
         {deptDistribution.length > 0 && (
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-4">
               Statistical Indicators by Department
             </h3>
             <div className="overflow-x-auto">
@@ -670,7 +664,7 @@ export function HRAnalyticsPage() {
         {/* Manager Comparison Chart */}
         {managerRatings.length > 0 && (
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-1">
               Manager Rating Comparison
             </h3>
             <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
@@ -679,30 +673,22 @@ export function HRAnalyticsPage() {
             </p>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={managerRatings} margin={{ top: 10, right: 30, bottom: 10, left: 0 }}>
+                <BarChart data={managerRatings} margin={{ top: 10, right: 30, bottom: 20, left: 0 }}>
                   <CartesianGrid {...GRID_STYLE} />
-                  <XAxis dataKey="manager" tick={AXIS_STYLE} />
+                  <XAxis dataKey="manager" tick={{ ...AXIS_STYLE, fontSize: 11 }} interval={0} angle={-15} textAnchor="end" height={60} />
                   <YAxis domain={[0, 5]} tick={AXIS_STYLE} />
-                  <Tooltip
-                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                    contentStyle={TOOLTIP_STYLE}
-                    labelStyle={{ color: '#fff', fontWeight: 600 }}
-                    formatter={(value: number, _: string, entry: any) => [
-                      `${(value ?? 0).toFixed(2)} (${entry.payload.reviewCount} reviews)`,
-                      'Average Rating',
-                    ]}
-                  />
-                  <ReferenceLine y={overallMean} stroke="#ef4444" strokeDasharray="6 3" strokeWidth={2} label={{ value: `Mean: ${(overallMean ?? 0).toFixed(2)}`, position: 'insideTopRight', fill: '#ef4444', fontSize: 11 }} />
-                  <Bar dataKey="avgRating" radius={[4, 4, 0, 0]}>
+                  <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+                  <ReferenceLine y={overallMean} stroke={cc.semantic.danger} strokeDasharray="6 3" strokeWidth={2} label={{ value: `Mean: ${(overallMean ?? 0).toFixed(2)}`, position: 'insideTopRight', fill: cc.semantic.danger, fontSize: 11 }} />
+                  <Bar dataKey="avgRating" name="Avg Rating" radius={[4, 4, 0, 0]}>
                     {managerRatings.map((entry, index) => (
                       <Cell
                         key={index}
                         fill={
                           entry.label === 'lenient'
-                            ? '#f59e0b'
+                            ? cc.semantic.warning
                             : entry.label === 'severe'
-                            ? '#8b5cf6'
-                            : '#3b82f6'
+                            ? cc.primary
+                            : cc.primary
                         }
                       />
                     ))}
@@ -736,7 +722,7 @@ export function HRAnalyticsPage() {
         {demographic.length > 0 && (
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
             <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
-              <h3 className="text-lg font-medium text-secondary-900 dark:text-white">
+              <h3 className="text-lg font-bold text-secondary-900 dark:text-white">
                 Demographic Parity Check
               </h3>
               <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-0.5">
@@ -842,7 +828,7 @@ export function HRAnalyticsPage() {
         {/* Before/After Visualization */}
         {distribution.length > 0 && (
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-1">
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-1">
               Before / After Distribution
             </h3>
             <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">
@@ -853,36 +839,36 @@ export function HRAnalyticsPage() {
                 <AreaChart data={distribution} margin={{ top: 10, right: 30, bottom: 10, left: 0 }}>
                   <defs>
                     <linearGradient id="colorOrig" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#6b7280" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#6b7280" stopOpacity={0.05} />
+                      <stop offset="5%" stopColor={cc.semantic.neutral} stopOpacity={0.3} />
+                      <stop offset="95%" stopColor={cc.semantic.neutral} stopOpacity={0.05} />
                     </linearGradient>
                     <linearGradient id="colorNorm" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.5} />
-                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0.05} />
+                      <stop offset="5%" stopColor={cc.primary} stopOpacity={0.5} />
+                      <stop offset="95%" stopColor={cc.primary} stopOpacity={0.05} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid {...GRID_STYLE} />
-                  <XAxis dataKey="rating" tick={AXIS_STYLE} label={{ value: 'Rating', position: 'insideBottom', offset: -5, fill: '#9ca3af', fontSize: 12 }} />
-                  <YAxis tick={AXIS_STYLE} label={{ value: 'Count', angle: -90, position: 'insideLeft', fill: '#9ca3af', fontSize: 12 }} />
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#fff', fontWeight: 600 }} itemStyle={{ color: '#e5e7eb' }} />
-                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <XAxis dataKey="rating" tick={AXIS_STYLE} label={{  value: 'Rating', position: 'insideBottom', offset: -5, fill: cc.tickColor, fontSize: 11, fontWeight: 600 }} />
+                  <YAxis tick={AXIS_STYLE} label={{  value: 'Count', angle: -90, position: 'insideLeft', fill: cc.tickColor, fontSize: 11, fontWeight: 600 }} />
+                  <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+                  <Legend wrapperStyle={{  fontSize: '11px' }} />
                   <Area
                     type="monotone"
                     dataKey="original"
                     name="Original Distribution"
-                    stroke="#6b7280"
-                    strokeWidth={2}
+                    stroke={cc.semantic.neutral}
+                    strokeWidth={3}
                     fill="url(#colorOrig)"
-                    dot={{ fill: '#6b7280', r: 3 }}
+                    dot={{ fill: cc.semantic.neutral, r: 3 }}
                   />
                   <Area
                     type="monotone"
                     dataKey="normalized"
                     name="Normalized Distribution"
-                    stroke="#2563eb"
-                    strokeWidth={2}
+                    stroke={cc.primary}
+                    strokeWidth={3}
                     fill="url(#colorNorm)"
-                    dot={{ fill: '#2563eb', r: 3 }}
+                    dot={{ fill: cc.primary, r: 3 }}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -894,7 +880,7 @@ export function HRAnalyticsPage() {
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
           <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-medium text-secondary-900 dark:text-white">
+              <h3 className="text-lg font-bold text-secondary-900 dark:text-white">
                 Normalization Preview
               </h3>
               <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-0.5">

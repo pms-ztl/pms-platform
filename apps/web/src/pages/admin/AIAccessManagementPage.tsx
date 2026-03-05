@@ -190,8 +190,8 @@ export function AIAccessManagementPage() {
 
   if (!isAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <ShieldCheckIcon className="h-12 w-12 text-secondary-400 mb-4" />
+      <div className="flex flex-col items-center justify-center py-4 text-center">
+        <ShieldCheckIcon className="h-8 w-8 text-secondary-400 mb-4" />
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
           Access Denied
         </h2>
@@ -221,7 +221,7 @@ export function AIAccessManagementPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4"
+              className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4"
             >
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
@@ -231,7 +231,7 @@ export function AIAccessManagementPage() {
           ))}
         </div>
         {/* Shimmer table */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="animate-pulse space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="flex items-center gap-4">
@@ -251,8 +251,8 @@ export function AIAccessManagementPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <XCircleIcon className="h-12 w-12 text-red-400 mb-4" />
+      <div className="flex flex-col items-center justify-center py-4 text-center">
+        <XCircleIcon className="h-8 w-8 text-red-400 mb-4" />
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
           Failed to Load AI Access Data
         </h2>
@@ -340,7 +340,7 @@ export function AIAccessManagementPage() {
       {/* ------------------------------------------------------------------ */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Total users */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/20">
               <UserGroupIcon className="h-5 w-5 text-primary-600 dark:text-primary-400" />
@@ -356,7 +356,7 @@ export function AIAccessManagementPage() {
         </div>
 
         {/* AI-enabled users */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-violet-50 dark:bg-violet-900/20">
               <SparklesIcon className="h-5 w-5 text-violet-600 dark:text-violet-400" />
@@ -382,7 +382,7 @@ export function AIAccessManagementPage() {
         </div>
 
         {/* Percentage card */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/20">
               <CheckCircleIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -403,7 +403,7 @@ export function AIAccessManagementPage() {
       {/* ------------------------------------------------------------------ */}
       {/* Delegate to Managers Toggle                                         */}
       {/* ------------------------------------------------------------------ */}
-      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
+      <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 mt-0.5">
@@ -503,7 +503,7 @@ export function AIAccessManagementPage() {
       {/* ------------------------------------------------------------------ */}
       {/* Users Table                                                         */}
       {/* ------------------------------------------------------------------ */}
-      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+      <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

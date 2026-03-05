@@ -646,17 +646,17 @@ export function CalendarPage() {
               </button>
             </div>
             <form onSubmit={handleCreateEvent} className="space-y-3">
-              <input name="title" placeholder="Event title" required className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400" />
-              <textarea name="description" placeholder="Description (optional)" rows={2} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 resize-none" />
-              <input name="eventDate" type="date" defaultValue={format(selectedDate, 'yyyy-MM-dd')} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
+              <input name="title" placeholder="Event title" required className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400" />
+              <textarea name="description" placeholder="Description (optional)" rows={2} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white placeholder:text-secondary-400 resize-none" />
+              <input name="eventDate" type="date" defaultValue={format(selectedDate, 'yyyy-MM-dd')} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <input name="startTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
-                <input name="endTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
+                <input name="startTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
+                <input name="endTime" type="time" className="rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-1.5 text-sm text-secondary-900 dark:text-white" />
               </div>
-              <select name="type" className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-1.5 text-sm text-secondary-900 dark:text-white transition-all duration-300">
+              <select name="type" className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-1.5 text-sm text-secondary-900 dark:text-white transition-all duration-300">
                 {EVENT_TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
-              <select name="color" className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-1.5 text-sm text-secondary-900 dark:text-white transition-all duration-300">
+              <select name="color" className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-1.5 text-sm text-secondary-900 dark:text-white transition-all duration-300">
                 {EVENT_COLORS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
               </select>
               <button type="submit" disabled={createMutation.isPending} className="w-full py-2 text-sm font-medium rounded-lg bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 transition-colors">

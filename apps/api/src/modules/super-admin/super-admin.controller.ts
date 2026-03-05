@@ -398,11 +398,11 @@ export async function getSystemConfig(req: Request, res: Response, next: NextFun
     const redis = (await import('../../utils/redis')).getRedisClient();
     const cached = await redis.get(SYSTEM_CONFIG_KEY);
     if (cached) {
-      res.json({ data: JSON.parse(cached) });
+      res.json({ success: true, data: JSON.parse(cached) });
     } else {
       // Store default config and return
       await redis.set(SYSTEM_CONFIG_KEY, JSON.stringify(DEFAULT_SYSTEM_CONFIG));
-      res.json({ data: DEFAULT_SYSTEM_CONFIG });
+      res.json({ success: true, data: DEFAULT_SYSTEM_CONFIG });
     }
   } catch (error) {
     next(error);
@@ -431,7 +431,7 @@ export async function updateSystemConfig(req: Request, res: Response, next: Next
     const { auditLogger: audit } = await import('../../utils/logger');
     audit('SYSTEM_CONFIG_UPDATED', user.id, 'platform', 'system', 'config', { changes: Object.keys(req.body) });
 
-    res.json({ data: updated });
+    res.json({ success: true, data: updated });
   } catch (error) {
     next(error);
   }

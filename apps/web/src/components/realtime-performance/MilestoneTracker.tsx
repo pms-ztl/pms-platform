@@ -134,7 +134,10 @@ const statusConfig = {
   },
 };
 
-const HealthGauge = ({ score }: { score: number }) => {
+const HealthGauge = ({ score: rawScore }: { score: number }) => {
+  // Clamp and round the score to avoid garbled display (e.g., 33.333333 → 33)
+  const score = Math.round(Math.min(100, Math.max(0, rawScore || 0)));
+
   const getColor = () => {
     if (score >= 80) return 'text-green-500';
     if (score >= 60) return 'text-yellow-500';

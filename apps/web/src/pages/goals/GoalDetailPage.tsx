@@ -161,7 +161,7 @@ export function GoalDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center py-12">
+      <div className="flex justify-center py-4">
         <div className="glass-spinner" />
       </div>
     );
@@ -169,7 +169,7 @@ export function GoalDetailPage() {
 
   if (error || !goal) {
     return (
-      <div className="text-center py-12">
+      <div className="text-center py-4">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Goal not found</h3>
         <p className="mt-1 text-secondary-500 dark:text-secondary-400">The goal you're looking for doesn't exist.</p>
         <Link to="/goals" className="btn-primary mt-4 inline-block">

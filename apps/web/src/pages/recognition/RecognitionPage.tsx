@@ -149,11 +149,11 @@ export function RecognitionPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* ── Main Recognition Feed ──────────────────────────── */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="space-y-4 bg-secondary-50 dark:bg-secondary-800/50 rounded-2xl p-4">
           {wallLoading ? (
-            <div className="flex justify-center py-8">
+            <div className="flex justify-center py-4">
               <div className="relative h-10 w-10">
                 <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-amber-500 border-r-orange-400" />
                 <div className="absolute inset-1.5 animate-spin rounded-full border-2 border-transparent border-b-rose-400 border-l-amber-400" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }} />
@@ -161,7 +161,7 @@ export function RecognitionPage() {
             </div>
           ) : !wall?.data?.length ? (
             /* ── Premium Empty State ── */
-            <div className="relative overflow-hidden rounded-2xl border border-secondary-200/60 dark:border-secondary-700/40 bg-white/70 dark:bg-secondary-800/50 backdrop-blur-sm p-12 text-center">
+            <div className="relative overflow-hidden rounded-2xl border border-secondary-200/60 dark:border-secondary-700/40 bg-white/70 dark:bg-secondary-800/50 backdrop-blur-sm p-6 text-center">
               <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 via-transparent to-orange-50/30 dark:from-amber-950/10 dark:via-transparent dark:to-orange-950/10" />
               <div className="relative z-10">
                 <div className="relative mx-auto mb-5 h-20 w-20">
@@ -216,12 +216,12 @@ export function RecognitionPage() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1 text-sm">
-                        <span className="font-semibold text-secondary-900 dark:text-white">
+                      <div className="flex items-center gap-1 text-sm flex-wrap min-w-0">
+                        <span className="font-semibold text-secondary-900 dark:text-white truncate max-w-[140px]">
                           {item.fromUser ? `${item.fromUser.firstName} ${item.fromUser.lastName}` : 'Anonymous'}
                         </span>
-                        <span className="text-secondary-400 dark:text-secondary-500">recognized</span>
-                        <span className="font-semibold text-secondary-900 dark:text-white">
+                        <span className="text-secondary-400 dark:text-secondary-500 flex-shrink-0">recognized</span>
+                        <span className="font-semibold text-secondary-900 dark:text-white truncate max-w-[140px]">
                           {item.toUser.firstName} {item.toUser.lastName}
                         </span>
                       </div>
@@ -259,7 +259,7 @@ export function RecognitionPage() {
 
               {/* Pagination */}
               {wall.meta && wall.meta.totalPages > 1 && (
-                <div className="flex justify-center gap-2 pt-4">
+                <div className="flex justify-center gap-2 pt-4 bg-secondary-50 dark:bg-secondary-800/50 rounded-xl p-3">
                   <button
                     onClick={() => setPage(p => Math.max(1, p - 1))}
                     disabled={page === 1}
@@ -284,9 +284,9 @@ export function RecognitionPage() {
         </div>
 
         {/* ── Sidebar — Leaderboard ─────────────────────────── */}
-        <div className="space-y-5">
+        <div className="space-y-4 bg-secondary-50 dark:bg-secondary-800/50 rounded-2xl p-4">
           {/* Top Recognized — Frosted Glass Card */}
-          <div className="relative overflow-hidden rounded-2xl border border-secondary-200/60 dark:border-secondary-700/40 bg-white/80 dark:bg-secondary-800/60 backdrop-blur-sm p-5">
+          <div className="relative overflow-hidden rounded-2xl border border-secondary-200/60 dark:border-secondary-700/40 bg-white/80 dark:bg-secondary-800/60 backdrop-blur-sm p-4">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 via-transparent to-transparent dark:from-amber-950/10 dark:via-transparent" />
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
@@ -299,7 +299,7 @@ export function RecognitionPage() {
                 <select
                   value={period}
                   onChange={e => setPeriod(e.target.value as any)}
-                  className="text-xs border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-2 py-1 bg-white/90 dark:bg-secondary-900/60 text-secondary-600 dark:text-secondary-300 backdrop-blur-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
+                  className="text-xs border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-2 py-1 bg-white dark:bg-secondary-800 text-secondary-600 dark:text-secondary-300 backdrop-blur-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
                 >
                   <option value="month">This Month</option>
                   <option value="quarter">This Quarter</option>
@@ -362,7 +362,7 @@ export function RecognitionPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-6">
+                <div className="text-center py-4">
                   <div className="mx-auto h-10 w-10 rounded-xl bg-secondary-100 dark:bg-secondary-700 flex items-center justify-center mb-2">
                     <TrophyIcon className="h-5 w-5 text-secondary-400" />
                   </div>
@@ -372,51 +372,54 @@ export function RecognitionPage() {
             </div>
           </div>
 
-          {/* Recognition Impact — Frosted Glassmorphism Card */}
-          <div className="relative overflow-hidden rounded-2xl border border-amber-200/40 dark:border-amber-500/15 bg-white/80 dark:bg-secondary-800/60 backdrop-blur-sm p-5">
-            {/* Gradient tint — translucent, not opaque */}
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-100/60 via-orange-100/40 to-rose-100/30 dark:from-amber-500/[0.08] dark:via-orange-500/[0.05] dark:to-rose-500/[0.03]" />
-            {/* Decorative orbs */}
-            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-amber-400/15 dark:bg-amber-500/10 blur-2xl" />
-            <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-rose-400/10 dark:bg-rose-500/10 blur-2xl" />
+          {/* Recognition Impact + Popular Values — 2-col sub-grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Recognition Impact — Frosted Glassmorphism Card */}
+            <div className="relative overflow-hidden rounded-2xl border border-amber-200/40 dark:border-amber-500/15 bg-white/80 dark:bg-secondary-800/60 backdrop-blur-sm p-4">
+              {/* Gradient tint — translucent, not opaque */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-100/60 via-orange-100/40 to-rose-100/30 dark:from-amber-500/[0.08] dark:via-orange-500/[0.05] dark:to-rose-500/[0.03]" />
+              {/* Decorative orbs */}
+              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-amber-400/15 dark:bg-amber-500/10 blur-2xl" />
+              <div className="absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-rose-400/10 dark:bg-rose-500/10 blur-2xl" />
 
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 shadow-md shadow-amber-500/20">
-                  <SparklesIcon className="h-4 w-4 text-white" />
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 shadow-md shadow-amber-500/20">
+                    <SparklesIcon className="h-4 w-4 text-white" />
+                  </div>
+                  <h3 className="text-sm font-bold text-secondary-900 dark:text-white">Recognition Impact</h3>
                 </div>
-                <h3 className="text-base font-semibold text-secondary-900 dark:text-white">Recognition Impact</h3>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-xl font-bold text-amber-600 dark:text-amber-400 tracking-tight">{wall?.meta?.total ?? 0}</span>
+                  <span className="text-sm text-secondary-500 dark:text-secondary-400 font-medium">total recognitions</span>
+                </div>
+                <p className="text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed">
+                  shared across the organization. Keep the appreciation flowing!
+                </p>
               </div>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-xl font-bold text-amber-600 dark:text-amber-400 tracking-tight">{wall?.meta?.total ?? 0}</span>
-                <span className="text-sm text-secondary-500 dark:text-secondary-400 font-medium">total recognitions</span>
-              </div>
-              <p className="text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed">
-                shared across the organization. Keep the appreciation flowing!
-              </p>
             </div>
-          </div>
 
-          {/* Value Categories — Frosted Glass */}
-          <div className="relative overflow-hidden rounded-2xl border border-secondary-200/60 dark:border-secondary-700/40 bg-white/80 dark:bg-secondary-800/60 backdrop-blur-sm p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 shadow-md shadow-violet-500/20">
-                <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
-                </svg>
+            {/* Value Categories — Frosted Glass */}
+            <div className="relative overflow-hidden rounded-2xl border border-secondary-200/60 dark:border-secondary-700/40 bg-white/80 dark:bg-secondary-800/60 backdrop-blur-sm p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 shadow-md shadow-violet-500/20">
+                  <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-bold text-secondary-900 dark:text-white">Popular Values</h3>
               </div>
-              <h3 className="text-sm font-bold text-secondary-900 dark:text-white">Popular Values</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {valueSuggestions.map(v => (
-                <span
-                  key={v}
-                  className="rounded-full px-3 py-1 text-xs font-medium bg-secondary-100/80 dark:bg-white/[0.06] text-secondary-600 dark:text-secondary-300 border border-secondary-200/50 dark:border-white/[0.06] transition-all hover:bg-secondary-200/80 dark:hover:bg-white/10 cursor-default"
-                >
-                  {v}
-                </span>
-              ))}
+              <div className="flex flex-wrap gap-2">
+                {valueSuggestions.map(v => (
+                  <span
+                    key={v}
+                    className="rounded-full px-3 py-1 text-xs font-medium bg-secondary-100/80 dark:bg-white/[0.06] text-secondary-600 dark:text-secondary-300 border border-secondary-200/50 dark:border-white/[0.06] transition-all hover:bg-secondary-200/80 dark:hover:bg-white/10 cursor-default"
+                  >
+                    {v}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -35,12 +35,14 @@ import { pulseApi, engagementApi, healthApi } from '@/lib/api';
 import type { AtRiskEmployee } from '@/lib/api';
 import { BurnoutRiskChart } from './BurnoutRiskChart';
 import { MoodFaceIcon } from '@/components/ui/MoodFaceIcon';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
+// Mood colors are semantic (never change with accent)
 const MOOD_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
 
-const MOOD_EMOJI: Record<number, string> = { 1: '😢', 2: '😟', 3: '😐', 4: '😊', 5: '🤩' };
+const MOOD_LABELS: Record<number, string> = { 1: 'Struggling', 2: 'Stressed', 3: 'Okay', 4: 'Good', 5: 'Great' };
 
 function stressColor(s: number): string {
   if (s >= 4) return 'text-red-600 dark:text-red-400';
@@ -55,10 +57,11 @@ const RISK_BADGE: Record<string, { bg: string; text: string }> = {
 };
 
 function ChartTooltip({ active, payload, label }: any) {
+  const cc = useChartColors();
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-      <p className="font-medium text-slate-300">{label}</p>
+    <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 px-3 py-2 shadow-lg text-xs space-y-1">
+      <p className="font-medium text-secondary-600 dark:text-secondary-300">{label}</p>
       {payload.map((entry: any, idx: number) => (
         <p key={idx} className="text-sm font-semibold" style={{ color: entry.color }}>
           {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(2) : Number(entry.value ?? 0).toFixed(2)}
@@ -72,7 +75,7 @@ function ChartTooltip({ active, payload, label }: any) {
 
 function PageSkeleton() {
   return (
-    <div className="space-y-6 animate-pulse">
+    <div className="space-y-4 animate-pulse">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-20">
@@ -81,13 +84,13 @@ function PageSkeleton() {
           </div>
         ))}
       </div>
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-80">
+      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-64">
         <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-40 mb-4" />
-        <div className="h-60 bg-secondary-100 dark:bg-secondary-700/50 rounded-lg" />
+        <div className="h-48 bg-secondary-100 dark:bg-secondary-700/50 rounded-lg" />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-72" />
+          <div key={i} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-56" />
         ))}
       </div>
     </div>
@@ -189,8 +192,8 @@ export function WellbeingDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="p-6 max-w-7xl mx-auto">
-        <div className="mb-6">
+      <div className="p-4 max-w-7xl mx-auto">
+        <div className="mb-4">
           <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Wellbeing & Burnout Dashboard</h1>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Loading wellbeing data...</p>
         </div>
@@ -200,7 +203,7 @@ export function WellbeingDashboardPage() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-4 max-w-7xl mx-auto space-y-4">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -297,36 +300,36 @@ export function WellbeingDashboardPage() {
               <AreaChart data={trendChartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                 <defs>
                   <linearGradient id="moodGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+                    <stop offset="5%" stopColor={cc.primary} stopOpacity={0.25} />
+                    <stop offset="95%" stopColor={cc.primary} stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="energyGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                    <stop offset="5%" stopColor={cc.semantic.warning} stopOpacity={0.25} />
+                    <stop offset="95%" stopColor={cc.semantic.warning} stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="stressGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                    <stop offset="5%" stopColor={cc.semantic.danger} stopOpacity={0.25} />
+                    <stop offset="95%" stopColor={cc.semantic.danger} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
                 <XAxis
                   dataKey="label"
-                  tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+                  tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
                   domain={[1, 5]}
-                  tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+                  tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                   axisLine={false}
                   tickLine={false}
                 />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={ChartTooltip} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Area type="monotone" dataKey="averageMood" name="Mood" stroke="#8b5cf6" fill="url(#moodGrad)" strokeWidth={2} />
-                <Area type="monotone" dataKey="averageEnergy" name="Energy" stroke="#f59e0b" fill="url(#energyGrad)" strokeWidth={2} />
-                <Area type="monotone" dataKey="averageStress" name="Stress" stroke="#ef4444" fill="url(#stressGrad)" strokeWidth={2} strokeDasharray="4 2" />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={ChartTooltip} />
+                <Legend wrapperStyle={{  fontSize: '11px' }} />
+                <Area type="monotone" dataKey="averageMood" name="Mood" stroke={cc.primary} fill="url(#moodGrad)" strokeWidth={3} />
+                <Area type="monotone" dataKey="averageEnergy" name="Energy" stroke={cc.semantic.warning} fill="url(#energyGrad)" strokeWidth={3} />
+                <Area type="monotone" dataKey="averageStress" name="Stress" stroke={cc.semantic.danger} fill="url(#stressGrad)" strokeWidth={3} strokeDasharray="4 2" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -344,33 +347,33 @@ export function WellbeingDashboardPage() {
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={deptBarData} layout="vertical" margin={{ top: 0, right: 20, bottom: 0, left: 10 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
                   <XAxis
                     type="number"
                     domain={[0, 5]}
-                    tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+                    tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <YAxis
                     type="category"
                     dataKey="departmentName"
-                    tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }}
+                    tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                     axisLine={false}
                     tickLine={false}
                     width={100}
                   />
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={ChartTooltip} />
+                  <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={ChartTooltip} />
                   <Bar dataKey="averageMood" name="Average Mood" radius={[0, 6, 6, 0]} maxBarSize={20}>
                     {deptBarData.map((d, i) => (
-                      <Cell key={i} fill={d.averageMood >= 4 ? '#22c55e' : d.averageMood >= 3 ? '#f59e0b' : '#ef4444'} />
+                      <Cell key={i} fill={d.averageMood >= 4 ? cc.semantic.success : d.averageMood >= 3 ? cc.semantic.warning : cc.semantic.danger} />
                     ))}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="text-sm text-secondary-400 text-center py-8">No department data available.</p>
+            <p className="text-sm text-secondary-400 text-center py-4">No department data available.</p>
           )}
         </div>
       </div>
@@ -378,7 +381,7 @@ export function WellbeingDashboardPage() {
       {/* At-Risk Employees */}
       {atRiskEmployees.length > 0 && (
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06]">
-          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white">At-Risk Employees</h3>
             <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-0.5">{atRiskEmployees.length} employees showing engagement concerns</p>
           </div>
@@ -452,15 +455,18 @@ export function WellbeingDashboardPage() {
                       <Cell key={i} fill={MOOD_COLORS[d.score - 1] || '#9ca3af'} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                  <Tooltip isAnimationActive={false}
+                    cursor={{ fill: cc.cursorFill }}
                     content={({ active, payload }) => {
                       if (!active || !payload?.length) return null;
                       const d = payload[0].payload;
                       return (
-                        <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs">
-                          <p className="font-semibold text-white">{MOOD_EMOJI[d.score] || ''} Mood {d.score}</p>
-                          <p className="text-slate-300">{d.value} responses</p>
+                        <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 px-3 py-2 shadow-lg text-xs">
+                          <p className="font-semibold text-secondary-900 dark:text-white flex items-center gap-1.5">
+                            <MoodFaceIcon score={d.score as 1|2|3|4|5} className="w-4 h-4" />
+                            {MOOD_LABELS[d.score] || `Mood ${d.score}`}
+                          </p>
+                          <p className="text-secondary-600 dark:text-secondary-300">{d.value} responses</p>
                         </div>
                       );
                     }}
@@ -475,13 +481,13 @@ export function WellbeingDashboardPage() {
               </div>
             </div>
           ) : (
-            <p className="text-sm text-secondary-400 text-center py-8">No mood distribution data.</p>
+            <p className="text-sm text-secondary-400 text-center py-4">No mood distribution data.</p>
           )}
           <div className="flex justify-center gap-3 mt-2">
             {MOOD_COLORS.map((c, i) => (
               <span key={i} className="inline-flex items-center gap-1 text-2xs text-secondary-500">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c }} />
-                {MOOD_EMOJI[i + 1]}
+                <MoodFaceIcon score={(i + 1) as 1|2|3|4|5} className="w-3.5 h-3.5" />
               </span>
             ))}
           </div>

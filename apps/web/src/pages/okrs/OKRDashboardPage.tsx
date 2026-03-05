@@ -404,9 +404,9 @@ export function OKRDashboardPage() {
   // -------------------------------------------------------------------------
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl glass-banner-okr p-5 pb-4 text-secondary-900 dark:text-white shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl glass-banner-okr p-4 pb-3 text-secondary-900 dark:text-white shadow-xl">
         {/* Decorative gradient orbs — visible through the glass */}
         <div className="absolute -top-20 -right-20 w-72 h-72 bg-gradient-to-br from-amber-500/30 to-orange-500/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-gradient-to-tr from-red-500/20 to-amber-500/15 rounded-full blur-3xl" />
@@ -433,7 +433,7 @@ export function OKRDashboardPage() {
         </div>
 
         {/* View Toggle */}
-        <div className="relative z-10 flex items-center gap-0.5 bg-secondary-100/60 dark:bg-white/15 backdrop-blur-sm p-1 rounded-xl border border-secondary-200/60 dark:border-white/20 mt-4 w-fit">
+        <div className="relative z-10 flex items-center gap-0.5 bg-secondary-100/60 dark:bg-white/15 backdrop-blur-sm p-1 rounded-xl border border-secondary-200/60 dark:border-white/20 mt-3 w-fit">
           {views.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -453,12 +453,12 @@ export function OKRDashboardPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex items-center gap-3 flex-wrap">
+      <div className="flex items-center gap-2 flex-wrap">
         <FunnelIcon className="h-4 w-4 text-secondary-400" />
         <select
           value={filterQuarter}
           onChange={(e) => setFilterQuarter(e.target.value)}
-          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
         >
           <option value="all">All Quarters</option>
           {quarters.map((q) => (
@@ -468,7 +468,7 @@ export function OKRDashboardPage() {
         <select
           value={filterOwner}
           onChange={(e) => setFilterOwner(e.target.value)}
-          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
         >
           <option value="all">All Owners</option>
           {owners.map((o) => (
@@ -478,7 +478,7 @@ export function OKRDashboardPage() {
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
         >
           <option value="all">All Statuses</option>
           {statuses.map((s) => (
@@ -488,46 +488,46 @@ export function OKRDashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/30">
-            <FlagIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] px-3 py-2.5 flex items-center gap-2.5">
+          <div className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-900/30">
+            <FlagIcon className="h-4 w-4 text-amber-600 dark:text-amber-400" />
           </div>
           <div>
-            <p className="text-xl font-bold text-secondary-900 dark:text-white">{stats.totalObj}</p>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400">Objectives</p>
+            <p className="text-lg font-bold text-secondary-900 dark:text-white leading-tight">{stats.totalObj}</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400">Objectives</p>
           </div>
         </div>
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900/30">
-            <FlagIcon className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] px-3 py-2.5 flex items-center gap-2.5">
+          <div className="p-1.5 rounded-lg bg-orange-100 dark:bg-orange-900/30">
+            <FlagIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
           </div>
           <div>
-            <p className="text-xl font-bold text-secondary-900 dark:text-white">{stats.totalKR}</p>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400">Key Results</p>
+            <p className="text-lg font-bold text-secondary-900 dark:text-white leading-tight">{stats.totalKR}</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400">Key Results</p>
           </div>
         </div>
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex items-center gap-3">
-          <OKRProgressRing progress={stats.avgProgress} size={44} strokeWidth={4} />
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] px-3 py-2.5 flex items-center gap-2.5">
+          <OKRProgressRing progress={stats.avgProgress} size={36} strokeWidth={3.5} />
           <div>
-            <p className="text-xl font-bold text-secondary-900 dark:text-white">{stats.avgProgress}%</p>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400">Average Progress</p>
+            <p className="text-lg font-bold text-secondary-900 dark:text-white leading-tight">{stats.avgProgress}%</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400">Avg Progress</p>
           </div>
         </div>
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30">
-            <FlagIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] px-3 py-2.5 flex items-center gap-2.5">
+          <div className="p-1.5 rounded-lg bg-green-100 dark:bg-green-900/30">
+            <FlagIcon className="h-4 w-4 text-green-600 dark:text-green-400" />
           </div>
           <div>
-            <p className="text-xl font-bold text-secondary-900 dark:text-white">{stats.onTrackPct}%</p>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400">On Track</p>
+            <p className="text-lg font-bold text-secondary-900 dark:text-white leading-tight">{stats.onTrackPct}%</p>
+            <p className="text-2xs text-secondary-500 dark:text-secondary-400">On Track</p>
           </div>
         </div>
       </div>
 
       {/* Content */}
       {isLoading ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           <SkeletonCard />
           <SkeletonCard />
           <SkeletonCard />

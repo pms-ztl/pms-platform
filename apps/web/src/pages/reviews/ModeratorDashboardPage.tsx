@@ -28,6 +28,7 @@ import {
 } from 'recharts';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import { ChartTooltip } from '@/components/ui';
 
 import {
   reviewsApi,
@@ -37,6 +38,7 @@ import {
   type User,
 } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ---------------------------------------------------------------------------
 // Types local to this page
@@ -188,6 +190,7 @@ function getRatingBg(rating: number): string {
 // ---------------------------------------------------------------------------
 
 function RatingStars({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'md' }) {
+  const cc = useChartColors();
   const sizeClass = size === 'md' ? 'h-5 w-5' : 'h-4 w-4';
   return (
     <div className="flex items-center gap-0.5">
@@ -475,7 +478,7 @@ export function ModeratorDashboardPage() {
       { rating: '2 Stars', count: dist[1], fill: '#f97316' },
       { rating: '3 Stars', count: dist[2], fill: '#eab308' },
       { rating: '4 Stars', count: dist[3], fill: '#22c55e' },
-      { rating: '5 Stars', count: dist[4], fill: '#3b82f6' },
+      { rating: '5 Stars', count: dist[4], fill: cc.primary },
     ];
   }, [employeeSummaries]);
 
@@ -662,7 +665,7 @@ export function ModeratorDashboardPage() {
             {/* Employee List */}
             <div className="flex-1 overflow-y-auto">
               {filteredEmployees.length === 0 ? (
-                <div className="text-center py-12 px-4">
+                <div className="text-center py-4 px-4">
                   <UserIcon className="h-10 w-10 mx-auto text-secondary-300 dark:text-secondary-600 mb-2" />
                   <p className="text-sm text-secondary-500 dark:text-secondary-400">
                     {!activeCycleId
@@ -877,36 +880,22 @@ export function ModeratorDashboardPage() {
                       <div className="h-48">
                         <ResponsiveContainer width="100%" height="100%">
                           <BarChart data={compiledDistributionData}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+                            <CartesianGrid strokeDasharray="3 3" stroke={cc.primaryExtraDark} opacity={0.3} />
                             <XAxis
                               dataKey="rating"
-                              tick={{ fill: '#9ca3af', fontSize: 12 }}
+                              tick={{  fill: '#cbd5e1', fontSize: 11, fontWeight: 600 }}
                               axisLine={{ stroke: '#4b5563' }}
                             />
                             <YAxis
-                              tick={{ fill: '#9ca3af', fontSize: 12 }}
+                              tick={{  fill: '#cbd5e1', fontSize: 11, fontWeight: 600 }}
                               axisLine={{ stroke: '#4b5563' }}
                               allowDecimals={false}
                             />
-                            <Tooltip
-                              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                              contentStyle={{
-                                background: 'rgba(15, 23, 42, 0.80)',
-                                backdropFilter: 'blur(16px)',
-                                WebkitBackdropFilter: 'blur(16px)',
-                                border: '1px solid rgba(148, 163, 184, 0.15)',
-                                borderRadius: '0.75rem',
-                                boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                                fontSize: '0.75rem',
-                                color: '#f1f5f9',
-                              }}
-                              labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-                              itemStyle={{ color: '#e2e8f0' }}
-                            />
+                            <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
                             <Bar
                               dataKey="count"
                               radius={[4, 4, 0, 0]}
-                              fill="#6366f1"
+                              fill={cc.primary}
                             />
                           </BarChart>
                         </ResponsiveContainer>
@@ -1024,36 +1013,22 @@ export function ModeratorDashboardPage() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={teamDistributionData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+                <CartesianGrid strokeDasharray="3 3" stroke={cc.primaryExtraDark} opacity={0.3} />
                 <XAxis
                   dataKey="rating"
-                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                  tick={{  fill: '#cbd5e1', fontSize: 11, fontWeight: 600 }}
                   axisLine={{ stroke: '#4b5563' }}
                 />
                 <YAxis
-                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                  tick={{  fill: '#cbd5e1', fontSize: 11, fontWeight: 600 }}
                   axisLine={{ stroke: '#4b5563' }}
                   allowDecimals={false}
                 />
-                <Tooltip
-                  cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                  contentStyle={{
-                    background: 'rgba(15, 23, 42, 0.80)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(148, 163, 184, 0.15)',
-                    borderRadius: '0.75rem',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                    fontSize: '0.75rem',
-                    color: '#f1f5f9',
-                  }}
-                  labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-                  itemStyle={{ color: '#e2e8f0' }}
-                />
+                <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
                 <Bar
                   dataKey="count"
                   radius={[6, 6, 0, 0]}
-                  fill="#8b5cf6"
+                  fill={cc.primary}
                 />
               </BarChart>
             </ResponsiveContainer>

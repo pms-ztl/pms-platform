@@ -18,6 +18,7 @@ import {
 import clsx from 'clsx';
 import { oneOnOnesApi, type OneOnOne } from '@/lib/api/one-on-ones';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -47,6 +48,7 @@ const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 7); // 7 AM – 6 PM
 
 function fmtMonth(d: Date) {
+  const cc = useChartColors();
   return d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
 }
 
@@ -224,8 +226,8 @@ export function MeetingAnalyticsPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-        <p className="font-semibold text-white">{label}</p>
+      <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 px-3 py-2 shadow-lg text-xs space-y-1">
+        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color }}>
             {p.name}: {p.value}
@@ -247,7 +249,7 @@ export function MeetingAnalyticsPage() {
           ))}
         </div>
         <div className="h-72 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="h-72 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
           <div className="h-72 rounded-xl bg-secondary-200 dark:bg-secondary-700 animate-pulse" />
         </div>
@@ -328,28 +330,28 @@ export function MeetingAnalyticsPage() {
             <AreaChart data={frequencyData} margin={{ top: 10, right: 20, bottom: 0, left: 0 }}>
               <defs>
                 <linearGradient id="gradTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                  <stop offset="5%" stopColor={cc.primary} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={cc.primary} stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="gradCompleted" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                  <stop offset="5%" stopColor={cc.semantic.success} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={cc.semantic.success} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
-              <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} allowDecimals={false} />
-              <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
-              <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Area type="monotone" dataKey="count" name="Total" stroke="#6366f1" fill="url(#gradTotal)" strokeWidth={2} />
-              <Area type="monotone" dataKey="completed" name="Completed" stroke="#22c55e" fill="url(#gradCompleted)" strokeWidth={2} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
+              <XAxis dataKey="label" tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} allowDecimals={false} />
+              <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
+              <Legend wrapperStyle={{  fontSize: '11px' }} />
+              <Area type="monotone" dataKey="count" name="Total" stroke={cc.primary} fill="url(#gradTotal)" strokeWidth={3} />
+              <Area type="monotone" dataKey="completed" name="Completed" stroke={cc.semantic.success} fill="url(#gradCompleted)" strokeWidth={3} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* 2-col: status distribution + action item trend */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Status distribution donut */}
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Status Distribution</h3>
@@ -373,7 +375,7 @@ export function MeetingAnalyticsPage() {
                     <Cell key={i} fill={e.color} />
                   ))}
                 </Pie>
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -386,13 +388,13 @@ export function MeetingAnalyticsPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={actionTrendData} margin={{ top: 10, right: 20, bottom: 0, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
-                <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="total" name="Total" fill="#e0e7ff" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="done" name="Done" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
+                <XAxis dataKey="label" tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
+                <Legend wrapperStyle={{  fontSize: '11px' }} />
+                <Bar dataKey="total" name="Total" fill={cc.primaryExtraLight} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="done" name="Done" fill={cc.primary} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -400,7 +402,7 @@ export function MeetingAnalyticsPage() {
       </div>
 
       {/* 2-col: duration histogram + cadence heatmap */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Duration histogram */}
         <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
           <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Duration Distribution</h3>
@@ -408,11 +410,11 @@ export function MeetingAnalyticsPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={durationData} margin={{ top: 10, right: 20, bottom: 0, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
-                <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
-                <Bar dataKey="count" name="Meetings" fill="#8b5cf6" radius={[4, 4, 0, 0]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
+                <XAxis dataKey="label" tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
+                <Bar dataKey="count" name="Meetings" fill={cc.primary} radius={[4, 4, 0, 0]}>
                   {durationData.map((_, i) => (
                     <Cell key={i} fill={['#c4b5fd', '#a78bfa', '#8b5cf6', '#7c3aed', '#6d28d9'][i]} />
                   ))}

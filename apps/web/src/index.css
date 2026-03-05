@@ -189,6 +189,38 @@ html:has(.ai-workspace-page) {
     background: transparent !important;
   }
 
+  /* ── Recharts: Ultra-smooth premium tooltip animation ──────────────────── *
+   * Recharts' default JS-based tooltip repositioning is choppy because it    *
+   * triggers React re-renders on every mousemove. We disable the internal    *
+   * animation and let the GPU handle it via CSS transform transitions.       *
+   * Result: 60fps butter-smooth tooltip tracking with premium easing.        */
+  .recharts-tooltip-wrapper {
+    transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 120ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+    will-change: transform, opacity;
+    pointer-events: none;
+    z-index: 50;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+  }
+
+  /* Tooltip content entrance animation */
+  .recharts-tooltip-wrapper > div {
+    animation: tooltipFadeIn 150ms cubic-bezier(0.22, 1, 0.36, 1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  @keyframes tooltipFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
   /* ── Recharts: subtle hover cursor instead of white/grey rectangle ──────── *
    * The default cursor rectangle on bar/area charts is opaque white/grey.
    * Replace with a very faint slate tint that works on all themes.             */
@@ -419,11 +451,11 @@ html:has(.ai-workspace-page) {
   }
 
   .card-header {
-    @apply px-6 py-4 border-b border-secondary-200/60 dark:border-white/5;
+    @apply px-4 py-3 border-b border-secondary-200/60 dark:border-white/5;
   }
 
   .card-body {
-    @apply p-6;
+    @apply p-4;
   }
 
   .badge {
@@ -3627,3 +3659,27 @@ html.transitioning *::after {
 .fab-glass-btn:active {
   transform: scale(0.9);
 }
+
+/* ── Dashboard Tab Animations ─────────────────────────────────────────── */
+@keyframes dashFadeInUp {
+  from { opacity: 0; transform: translateY(24px) }
+  to   { opacity: 1; transform: translateY(0) }
+}
+@keyframes dashScaleIn {
+  from { opacity: 0; transform: scale(0.92) }
+  to   { opacity: 1; transform: scale(1) }
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1) }
+  50%      { opacity: 0.5; transform: scale(1.5) }
+}
+.dash-fade-in-up { animation: dashFadeInUp 0.4s ease-out both }
+.dash-scale-in   { animation: dashScaleIn 0.3s ease-out both }
+.dash-stagger-1  { animation-delay: 0.06s }
+.dash-stagger-2  { animation-delay: 0.12s }
+.dash-stagger-3  { animation-delay: 0.18s }
+.dash-stagger-4  { animation-delay: 0.24s }
+.dash-stagger-5  { animation-delay: 0.30s }
+.dash-stagger-6  { animation-delay: 0.36s }
+.dash-stagger-7  { animation-delay: 0.42s }
+.dash-stagger-8  { animation-delay: 0.48s }

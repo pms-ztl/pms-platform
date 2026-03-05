@@ -171,7 +171,7 @@ export function ReviewsPage() {
   const renderMyReviews = () => {
     if (loadingReviews) {
       return (
-        <div className="flex justify-center py-12">
+        <div className="flex justify-center py-4">
           <div className="glass-spinner" />
         </div>
       );
@@ -183,46 +183,44 @@ export function ReviewsPage() {
     const reviewsReceived = rawReviewsReceived.length > 0 ? rawReviewsReceived : (MOCK_REVIEWS_RECEIVED as Review[]);
 
     return (
-      <div className="space-y-8">
+      <div className="space-y-4">
         {/* Reviews to complete */}
         <div>
-          <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4 flex items-center">
+          <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-3 flex items-center">
             <DocumentTextIcon className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
             Reviews to Complete ({reviewsToComplete.length})
           </h3>
-          <div className="grid gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {reviewsToComplete.map((review: Review) => (
               <Link
                 key={review.id}
                 to={`/reviews/${review.id}`}
                 className="card card-body hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
               >
-                <div className="flex items-start sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center flex-shrink-0">
-                      <span className="text-primary-700 dark:text-primary-300 font-medium text-sm sm:text-base">
-                        {review.reviewee.firstName[0]}{review.reviewee.lastName[0]}
-                      </span>
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-medium text-secondary-900 dark:text-white truncate">
-                        {review.reviewee.firstName} {review.reviewee.lastName}
-                      </p>
-                      <p className="text-sm text-secondary-500 dark:text-secondary-400 truncate">{review.reviewee.jobTitle || 'Employee'}</p>
-                      <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1 truncate">
-                        {review.type} Review • {review.cycle?.name}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <span className={clsx('px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap', reviewStatusColors[review.status])}>
-                      {review.status.replace('_', ' ')}
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center flex-shrink-0">
+                    <span className="text-primary-700 dark:text-primary-300 font-medium text-sm">
+                      {review.reviewee.firstName[0]}{review.reviewee.lastName[0]}
                     </span>
-                    {review.status === 'NOT_STARTED' && (
-                      <p className="text-xs text-danger-600 dark:text-danger-400 mt-2">Action needed</p>
-                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-secondary-900 dark:text-white truncate">
+                      {review.reviewee.firstName} {review.reviewee.lastName}
+                    </p>
+                    <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{review.reviewee.jobTitle || 'Employee'}</p>
                   </div>
                 </div>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs text-secondary-400 dark:text-secondary-500 truncate">
+                    {review.type} • {review.cycle?.name}
+                  </p>
+                  <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0', reviewStatusColors[review.status])}>
+                    {review.status.replace('_', ' ')}
+                  </span>
+                </div>
+                {review.status === 'NOT_STARTED' && (
+                  <p className="text-xs text-danger-600 dark:text-danger-400 mt-1">Action needed</p>
+                )}
               </Link>
             ))}
           </div>
@@ -230,38 +228,34 @@ export function ReviewsPage() {
 
         {/* Reviews received */}
         <div>
-          <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4 flex items-center">
+          <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-3 flex items-center">
             <ChartBarIcon className="h-5 w-5 mr-2 text-secondary-600 dark:text-secondary-400" />
             Your Reviews ({reviewsReceived.length})
           </h3>
-          <div className="grid gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {reviewsReceived.map((review: Review) => (
               <Link
                 key={review.id}
                 to={`/reviews/${review.id}`}
                 className="card card-body hover:border-primary-300 dark:hover:border-primary-600 transition-colors"
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-secondary-900 dark:text-white">{review.cycle?.name}</p>
-                    <p className="text-sm text-secondary-500 dark:text-secondary-400">
-                      {review.type} Review from {review.reviewer.firstName} {review.reviewer.lastName}
-                    </p>
-                    {review.submittedAt && (
-                      <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
-                        Submitted {format(new Date(review.submittedAt), 'MMM d, yyyy')}
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    <span className={clsx('px-2.5 py-1 rounded-full text-xs font-medium', reviewStatusColors[review.status])}>
-                      {review.status.replace('_', ' ')}
-                    </span>
-                    {review.overallRating && (
-                      <p className="text-lg font-bold text-primary-600 dark:text-primary-400 mt-2">{review.overallRating}/5</p>
-                    )}
-                  </div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', reviewStatusColors[review.status])}>
+                    {review.status.replace('_', ' ')}
+                  </span>
+                  {review.overallRating && (
+                    <p className="text-lg font-bold text-primary-600 dark:text-primary-400">{review.overallRating}/5</p>
+                  )}
                 </div>
+                <p className="font-medium text-secondary-900 dark:text-white truncate">{review.cycle?.name}</p>
+                <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate mt-1">
+                  {review.type} Review from {review.reviewer.firstName} {review.reviewer.lastName}
+                </p>
+                {review.submittedAt && (
+                  <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
+                    Submitted {format(new Date(review.submittedAt), 'MMM d, yyyy')}
+                  </p>
+                )}
               </Link>
             ))}
           </div>
@@ -273,7 +267,7 @@ export function ReviewsPage() {
   const renderCycles = () => {
     if (loadingCycles) {
       return (
-        <div className="flex justify-center py-12">
+        <div className="flex justify-center py-4">
           <div className="glass-spinner" />
         </div>
       );
@@ -282,43 +276,39 @@ export function ReviewsPage() {
     const displayCycles = (cycles && cycles.length > 0) ? cycles : (MOCK_CYCLES as ReviewCycle[]);
 
     return (
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {displayCycles.map((cycle: ReviewCycle) => (
-          <div key={cycle.id} className="card card-body">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-3">
-                  <h3 className="font-medium text-secondary-900 dark:text-white">{cycle.name}</h3>
-                  <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-medium', cycleStatusColors[cycle.status])}>
-                    {cycle.status}
-                  </span>
-                </div>
-                {cycle.description && (
-                  <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">{cycle.description}</p>
-                )}
-                <div className="flex items-center gap-4 mt-2 text-xs text-secondary-400 dark:text-secondary-500">
-                  <span>Type: {cycle.type}</span>
-                  <span>
-                    {format(new Date(cycle.startDate), 'MMM d')} - {format(new Date(cycle.endDate), 'MMM d, yyyy')}
-                  </span>
-                  {cycle.reviewCount !== undefined && <span>{cycle.reviewCount} reviews</span>}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                {isHRAdmin && cycle.status === 'DRAFT' && (
-                  <button
-                    onClick={() => launchCycleMutation.mutate(cycle.id)}
-                    disabled={launchCycleMutation.isPending}
-                    className="btn-primary text-sm"
-                  >
-                    <PlayIcon className="h-4 w-4 mr-1" />
-                    Launch
-                  </button>
-                )}
-                <Link to={`/reviews/cycles/${cycle.id}`} className="btn-secondary text-sm">
-                  View Details
-                </Link>
-              </div>
+          <div key={cycle.id} className="card card-body flex flex-col">
+            <div className="flex items-center justify-between mb-2">
+              <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', cycleStatusColors[cycle.status])}>
+                {cycle.status}
+              </span>
+              <span className="text-xs text-secondary-400 dark:text-secondary-500">{cycle.type}</span>
+            </div>
+            <h3 className="font-medium text-secondary-900 dark:text-white truncate">{cycle.name}</h3>
+            {cycle.description && (
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1 line-clamp-2">{cycle.description}</p>
+            )}
+            <div className="flex items-center gap-3 mt-2 text-xs text-secondary-400 dark:text-secondary-500">
+              <span>
+                {format(new Date(cycle.startDate), 'MMM d')} - {format(new Date(cycle.endDate), 'MMM d, yyyy')}
+              </span>
+              {cycle.reviewCount !== undefined && <span>{cycle.reviewCount} reviews</span>}
+            </div>
+            <div className="flex items-center gap-2 mt-3 pt-2 border-t border-secondary-100 dark:border-secondary-700">
+              {isHRAdmin && cycle.status === 'DRAFT' && (
+                <button
+                  onClick={() => launchCycleMutation.mutate(cycle.id)}
+                  disabled={launchCycleMutation.isPending}
+                  className="btn-primary text-sm"
+                >
+                  <PlayIcon className="h-4 w-4 mr-1" />
+                  Launch
+                </button>
+              )}
+              <Link to={`/reviews/cycles/${cycle.id}`} className="btn-secondary text-sm">
+                View Details
+              </Link>
             </div>
           </div>
         ))}

@@ -307,12 +307,12 @@ export function SATenantsPage() {
             className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="relative z-50 flex items-center gap-2">
           <FunnelIcon className="h-4 w-4 text-gray-400" />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+            className="text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
           >
             {STATUS_OPTIONS.map((status) => (
               <option key={status} value={status}>
@@ -422,9 +422,9 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-gray-200/50 dark:border-gray-700 max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
+        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-4 border border-gray-200/50 dark:border-gray-700 max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height -- modal/drawer container */}
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Create New Tenant</h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Set up a new organization</p>
@@ -437,9 +437,9 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Organization Info */}
-            <fieldset className="space-y-4">
+            <fieldset className="space-y-3">
               <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Organization
               </legend>
@@ -478,20 +478,20 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
             </fieldset>
 
             {/* Subscription Settings */}
-            <fieldset className="space-y-4">
+            <fieldset className="space-y-3">
               <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Subscription
               </legend>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
+                <div className="relative z-50">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Plan
                   </label>
                   <select
                     value={plan}
                     onChange={(e) => setPlan(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+                    className="w-full px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
                   >
                     {PLAN_OPTIONS.map((p) => (
                       <option key={p} value={p}>
@@ -516,14 +516,14 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
                 </div>
               </div>
 
-              <div>
+              <div className="relative z-50">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Max Org Levels
                 </label>
                 <select
                   value={maxLevel}
                   onChange={(e) => setMaxLevel(Number(e.target.value))}
-                  className="w-full px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+                  className="w-full px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
                 >
                   {LEVEL_OPTIONS.map((l) => (
                     <option key={l} value={l}>
@@ -535,7 +535,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
             </fieldset>
 
             {/* Initial Admin Account */}
-            <fieldset className="space-y-4">
+            <fieldset className="space-y-3">
               <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Initial Admin Account
               </legend>
@@ -585,7 +585,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
             </fieldset>
 
             {/* Optional Settings */}
-            <fieldset className="space-y-4">
+            <fieldset className="space-y-3">
               <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Optional Settings
               </legend>
@@ -633,7 +633,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
             </fieldset>
 
             {/* Roles Configuration */}
-            <fieldset className="space-y-4">
+            <fieldset className="space-y-3">
               <legend className="text-sm font-semibold text-gray-700 dark:text-gray-300 tracking-wider">
                 Roles Configuration
               </legend>
@@ -688,7 +688,7 @@ function CreateTenantModal({ isPending, onClose, onSubmit }: CreateTenantModalPr
                           updated[idx] = { ...updated[idx], category: e.target.value };
                           setCustomRoles(updated);
                         }}
-                        className="w-28 px-2 py-1.5 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+                        className="relative z-50 w-28 px-2 py-1.5 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
                       >
                         <option value="ADMIN">Admin</option>
                         <option value="HR">HR</option>

@@ -95,8 +95,8 @@ function StatCard({
     : '';
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-      <div className="flex items-center gap-3 mb-3">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+      <div className="flex items-center gap-3 mb-2">
         <div className={`p-2 rounded-lg ${iconBg}`}>
           <Icon className="h-5 w-5" />
         </div>
@@ -145,14 +145,14 @@ function SectionCard({
 }) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
         </div>
         {action}
       </div>
-      <div className="p-6">{children}</div>
+      <div className="p-4">{children}</div>
     </div>
   );
 }
@@ -407,7 +407,7 @@ function SettingsTab({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg space-y-5">
+    <form onSubmit={handleSubmit} className="max-w-lg space-y-4">
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Organization Name
@@ -432,14 +432,14 @@ function SettingsTab({
         />
       </div>
 
-      <div>
+      <div className="relative z-50">
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Plan
         </label>
         <select
           value={plan}
           onChange={(e) => setPlan(e.target.value as SATenant['plan'])}
-          className="w-full px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+          className="w-full px-3 py-2 text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
         >
           <option value="FREE">Free</option>
           <option value="STARTER">Starter</option>
@@ -794,6 +794,7 @@ export function SATenantDetailPage() {
               const tabIcons: Record<TabName, React.ForwardRefExoticComponent<any>> = {
                 Overview: GlobeAltIcon,
                 Features: Cog6ToothIcon,
+                Roles: ShieldCheckIcon,
                 Security: ShieldCheckIcon,
                 Settings: BuildingOffice2Icon,
               };
@@ -817,7 +818,7 @@ export function SATenantDetailPage() {
         </div>
 
         {/* Tab content */}
-        <div className="p-6">
+        <div className="p-4">
           {activeTab === 'Overview' && <OverviewTab tenant={tenant} />}
           {activeTab === 'Features' && (
             <FeaturesTab settings={tenant.settings} onToggle={handleFeatureToggle} />

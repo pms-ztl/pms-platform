@@ -232,8 +232,8 @@ const CPISScoreDisplay = ({
                   return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
                 }).join(' ')}
                 fill="none"
-                stroke={isDark ? `rgba(255,255,255,${ri === 3 ? 0.25 : 0.08})` : `rgba(0,0,0,${ri === 3 ? 0.15 : 0.06})`}
-                strokeWidth={ri === 3 ? '1.2' : '0.7'}
+                stroke={isDark ? `rgba(255,255,255,${ri === 3 ? 0.35 : 0.12})` : `rgba(0,0,0,${ri === 3 ? 0.20 : 0.10})`}
+                strokeWidth={ri === 3 ? '2' : '1'}
               />
             );
           })}
@@ -248,8 +248,8 @@ const CPISScoreDisplay = ({
                 y1={cy + (orbR + 2) * Math.sin(angle)}
                 x2={cx + maxR * Math.cos(angle)}
                 y2={cy + maxR * Math.sin(angle)}
-                stroke={isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)'}
-                strokeWidth="0.8"
+                stroke={isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.12)'}
+                strokeWidth="1.2"
               />
             );
           })}
@@ -260,17 +260,17 @@ const CPISScoreDisplay = ({
               points={radarPoints}
               fill="url(#cpis-fill-v2)"
               stroke="url(#cpis-stroke-v2)"
-              strokeWidth="2"
+              strokeWidth="2.5"
               strokeLinejoin="round"
               filter="url(#neon-glow)"
             />
           )}
 
           {/* Center orb */}
-          <circle cx={cx} cy={cy} r={orbR} fill="url(#orb-fill)" stroke="url(#cpis-stroke-v2)" strokeWidth="2" filter="url(#soft-glow)" />
+          <circle cx={cx} cy={cy} r={orbR} fill="url(#orb-fill)" stroke="url(#cpis-stroke-v2)" strokeWidth="2.5" filter="url(#soft-glow)" />
           <circle cx={cx} cy={cy} r={orbR - 4} fill="none" stroke={isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)'} strokeWidth="1" />
           <text x={cx} y={cy - 10} textAnchor="middle" dominantBaseline="central"
-            fill="white" fontSize="38" fontWeight="800"
+            fill="white" fontSize="40" fontWeight="900"
             style={{ textShadow: `0 0 16px ${pRgba(ap[400], 0.7)}` }}
           >
             {Math.round(score)}
@@ -309,12 +309,12 @@ const CPISScoreDisplay = ({
             return (
               <g key={`lbl-${d.code}`} opacity={hasScore ? 1 : 0.35}>
                 <text x={x} y={y - 8} textAnchor="middle" dominantBaseline="central"
-                  fill={isDark ? 'rgba(255,255,255,0.85)' : 'rgba(15,23,42,0.8)'} fontSize="13" fontWeight="700"
+                  fill={isDark ? 'rgba(255,255,255,0.90)' : 'rgba(15,23,42,0.85)'} fontSize="14" fontWeight="800"
                 >
                   {hasScore ? Math.round(d.rawScore) : '—'}
                 </text>
                 <text x={x} y={y + 9} textAnchor="middle" dominantBaseline="central"
-                  fill={col} fontSize="11" fontWeight="800"
+                  fill={col} fontSize="12" fontWeight="900"
                   style={hasScore && isDark ? { textShadow: `0 0 6px ${neonColors[i]}70` } : undefined}
                 >
                   {d.code}

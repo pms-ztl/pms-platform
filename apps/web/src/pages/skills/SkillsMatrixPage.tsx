@@ -208,11 +208,11 @@ function GapIndicator({ gap }: { gap: number }) {
 // ─── Heatmap Cell Color ─────────────────────────────────────────────────────
 
 function heatmapColor(rating: number): string {
-  if (rating >= 4.5) return 'bg-emerald-600 text-white';
-  if (rating >= 3.5) return 'bg-emerald-400 text-white';
-  if (rating >= 2.5) return 'bg-yellow-400 text-secondary-900';
-  if (rating >= 1.5) return 'bg-orange-400 text-white';
-  return 'bg-red-500 text-white';
+  if (rating >= 4.5) return 'bg-emerald-600 text-white dark:text-white';
+  if (rating >= 3.5) return 'bg-emerald-400 text-white dark:text-white';
+  if (rating >= 2.5) return 'bg-yellow-400 text-yellow-900 dark:text-yellow-900';
+  if (rating >= 1.5) return 'bg-orange-400 text-white dark:text-white';
+  return 'bg-red-500 text-white dark:text-white';
 }
 
 // ─── Toast Notification ─────────────────────────────────────────────────────
@@ -652,7 +652,7 @@ export function SkillsMatrixPage() {
   // ═════════════════════════════════════════════════════════════════════════
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-4 pb-4">
       {/* Page Header — frosted glassmorphism */}
       <div className="relative overflow-hidden rounded-2xl glass-banner p-4 shadow-lg frosted-noise">
         {/* Decorative gradient orbs */}
@@ -725,7 +725,7 @@ export function SkillsMatrixPage() {
             </div>
           ) : filteredSkills.length === 0 ? (
             <div className="text-center py-8 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06]">
-              <AcademicCapIcon className="w-12 h-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
+              <AcademicCapIcon className="w-8 h-8 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
               <p className="text-secondary-600 dark:text-secondary-400 font-medium">
                 No skill assessments yet
               </p>
@@ -776,7 +776,7 @@ export function SkillsMatrixPage() {
 
                             {/* Self Rating */}
                             <div className="text-center flex-shrink-0">
-                              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mb-0.5">
+                              <p className="text-2xs text-secondary-600 dark:text-secondary-300 mb-0.5">
                                 Self
                               </p>
                               <StarRating value={skill.selfRating} size="sm" readonly />
@@ -784,7 +784,7 @@ export function SkillsMatrixPage() {
 
                             {/* Manager Rating — hidden on mobile */}
                             <div className="hidden md:block text-center">
-                              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mb-0.5">
+                              <p className="text-2xs text-secondary-600 dark:text-secondary-300 mb-0.5">
                                 Manager
                               </p>
                               {skill.managerRating > 0 ? (
@@ -802,7 +802,7 @@ export function SkillsMatrixPage() {
 
                             {/* Target Level — hidden on mobile */}
                             <div className="hidden md:block text-center w-16">
-                              <p className="text-2xs text-secondary-400 dark:text-secondary-500 mb-0.5">
+                              <p className="text-2xs text-secondary-600 dark:text-secondary-300 mb-0.5">
                                 Target
                               </p>
                               <span className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">
@@ -972,28 +972,28 @@ export function SkillsMatrixPage() {
             </div>
           ) : !teamSkills || teamSkills.length === 0 ? (
             <div className="text-center py-8 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06]">
-              <UserGroupIcon className="w-12 h-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
+              <UserGroupIcon className="w-8 h-8 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
               <p className="text-secondary-600 dark:text-secondary-400 font-medium">
                 No team skill data available
               </p>
             </div>
           ) : (
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] overflow-x-auto">
+            <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] overflow-x-auto overflow-y-visible">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-secondary-500 dark:text-secondary-400 sticky left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-10">
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-secondary-600 dark:text-secondary-300 sticky left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-20">
                       Team Member
                     </th>
                     {teamCategories.map((cat) => (
                       <th
                         key={cat}
-                        className="text-center px-3 py-3 text-xs font-semibold text-secondary-500 dark:text-secondary-400 min-w-[90px]"
+                        className="text-center px-3 py-3 text-xs font-semibold text-secondary-600 dark:text-secondary-300 min-w-[90px]"
                       >
                         {cat}
                       </th>
                     ))}
-                    <th className="text-center px-3 py-3 text-xs font-semibold text-secondary-500 dark:text-secondary-400">
+                    <th className="text-center px-3 py-3 text-xs font-semibold text-secondary-600 dark:text-secondary-300">
                       Actions
                     </th>
                   </tr>
@@ -1004,7 +1004,7 @@ export function SkillsMatrixPage() {
                       key={member.userId}
                       className="hover:bg-secondary-50 dark:hover:bg-secondary-800/50 transition-colors"
                     >
-                      <td className="px-4 py-3 sticky left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-10">
+                      <td className="px-4 py-3 sticky left-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl z-20">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-cyan-500 flex items-center justify-center text-white text-xs font-semibold">
                             {member.firstName[0]}
@@ -1115,11 +1115,11 @@ export function SkillsMatrixPage() {
                         <span className="text-sm font-medium text-secondary-900 dark:text-white">
                           {gap.skillName}
                         </span>
-                        <span className="text-2xs text-secondary-400 px-1.5 py-0.5 bg-secondary-100 dark:bg-secondary-700 rounded">
+                        <span className="text-2xs text-secondary-600 dark:text-secondary-300 px-1.5 py-0.5 bg-secondary-100 dark:bg-secondary-700 rounded">
                           {gap.category}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">
+                      <div className="flex items-center gap-3 text-xs text-secondary-600 dark:text-secondary-300">
                         <span>Average: {(gap.avgRating ?? 0).toFixed(1)}</span>
                         <span>Target: {gap.targetLevel}</span>
                         <span className="font-semibold text-red-600 dark:text-red-400">
@@ -1158,13 +1158,13 @@ export function SkillsMatrixPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-secondary-200/60 dark:border-white/[0.06]">
-                    <th className="text-left px-3 py-2 text-xs font-semibold text-secondary-500 dark:text-secondary-400">
+                    <th className="text-left px-3 py-2 text-xs font-semibold text-secondary-600 dark:text-secondary-300">
                       Department
                     </th>
                     {heatmapCats.map((cat) => (
                       <th
                         key={cat}
-                        className="text-center px-2 py-2 text-xs font-semibold text-secondary-500 dark:text-secondary-400 min-w-[80px]"
+                        className="text-center px-2 py-2 text-xs font-semibold text-secondary-600 dark:text-secondary-300 min-w-[80px]"
                       >
                         {cat}
                       </th>

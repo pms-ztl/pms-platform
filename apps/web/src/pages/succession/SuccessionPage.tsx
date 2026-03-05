@@ -384,8 +384,8 @@ export function SuccessionPage() {
         </div>
 
         {/* 9-Box Grid */}
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 md:p-6">
-          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 md:mb-6">Talent 9-Box Grid</h2>
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-3">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-2 md:mb-3">Talent 9-Box Grid</h2>
 
           <div className="flex overflow-x-auto md:overflow-visible -mx-4 px-4 md:mx-0 md:px-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {/* Y-axis labels */}
@@ -399,7 +399,7 @@ export function SuccessionPage() {
 
             {/* Grid */}
             <div className="flex-1">
-              <div className="grid grid-cols-3 grid-rows-3 gap-1.5 md:gap-2 min-h-[240px] md:min-h-[360px] min-w-[280px] md:min-w-0">
+              <div className="grid grid-cols-3 grid-rows-3 gap-1 md:gap-1.5 min-h-[180px] md:min-h-[240px] min-w-[260px] md:min-w-0">
                 {NINE_BOX_CONFIG.map((cell) => {
                   const data = cellDataMap[cell.key];
                   const count = data?.employees.length || 0;
@@ -411,27 +411,27 @@ export function SuccessionPage() {
                       key={cell.key}
                       onClick={() => setSelectedCell(isSelected ? null : cell.key)}
                       className={clsx(
-                        'relative rounded-lg p-3 transition-all text-left flex flex-col justify-between',
+                        'relative rounded-lg p-2 transition-all text-left flex flex-col justify-between',
                         cell.bg, cell.bgDark,
                         isSelected
-                          ? 'ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-secondary-800 shadow-md scale-[1.02]'
+                          ? 'ring-2 ring-primary-500 ring-offset-1 dark:ring-offset-secondary-800 shadow-md scale-[1.02]'
                           : 'hover:shadow-md hover:scale-[1.01]',
                       )}
                       style={{ gridRow: cell.row + 1, gridColumn: cell.col + 1 }}
                     >
-                      <div>
-                        <p className={clsx('text-xs font-semibold', cell.textColor, cell.textColorDark)}>{cell.label}</p>
-                        <p className={clsx('text-2xl font-bold mt-1', cell.textColor, cell.textColorDark)}>{count}</p>
+                      <div className="flex items-start justify-between gap-1">
+                        <p className={clsx('text-2xs md:text-xs font-semibold leading-tight', cell.textColor, cell.textColorDark)}>{cell.label}</p>
+                        <p className={clsx('text-lg md:text-xl font-bold', cell.textColor, cell.textColorDark)}>{count}</p>
                       </div>
 
                       {/* Avatar stack */}
                       {displayEmployees.length > 0 && (
-                        <div className="flex -space-x-2 mt-2">
+                        <div className="flex -space-x-1.5 mt-1">
                           {displayEmployees.map((emp) => (
                             <EmployeeAvatar key={emp.id} employee={emp} size="sm" />
                           ))}
                           {count > 3 && (
-                            <div className="h-8 w-8 rounded-full bg-secondary-200 dark:bg-secondary-600 flex items-center justify-center text-xs font-medium text-secondary-600 dark:text-secondary-300 ring-2 ring-white dark:ring-secondary-800">
+                            <div className="h-7 w-7 rounded-full bg-secondary-200 dark:bg-secondary-600 flex items-center justify-center text-2xs font-medium text-secondary-600 dark:text-secondary-300 ring-2 ring-white dark:ring-secondary-800">
                               +{count - 3}
                             </div>
                           )}
@@ -560,11 +560,11 @@ export function SuccessionPage() {
           return (
             <div key={plan.id} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
               {/* Card header */}
-              <div className="p-5">
-                <div className="flex items-start justify-between gap-4">
+              <div className="p-4">
+                <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">{plan.positionTitle}</h3>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="text-base font-semibold text-secondary-900 dark:text-white">{plan.positionTitle}</h3>
                       <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', criticalityColors[plan.criticality])}>
                         {plan.criticality}
                       </span>
@@ -577,7 +577,7 @@ export function SuccessionPage() {
                     )}
 
                     {/* Metrics row */}
-                    <div className="flex items-center gap-4 mt-3 flex-wrap">
+                    <div className="flex items-center gap-2 mt-2 flex-wrap">
                       <div className="flex items-center gap-1.5">
                         <UserGroupIcon className="h-4 w-4 text-secondary-400" />
                         <span className="text-sm text-secondary-600 dark:text-secondary-300">
@@ -690,7 +690,7 @@ export function SuccessionPage() {
         <div className="flex min-h-full items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowCreateModal(false)} />
           <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4 border border-secondary-200/60 dark:border-white/[0.06]">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Create Succession Plan</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
@@ -740,7 +740,7 @@ export function SuccessionPage() {
                 <select
                   name="criticality"
                   required
-                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                 >
                   <option value="">Select criticality...</option>
                   <option value="CRITICAL">Critical</option>
@@ -772,7 +772,7 @@ export function SuccessionPage() {
                   <select
                     name="turnoverRisk"
                     required
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   >
                     <option value="">Select...</option>
                     <option value="HIGH">High</option>
@@ -787,7 +787,7 @@ export function SuccessionPage() {
                   <select
                     name="vacancyImpact"
                     required
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   >
                     <option value="">Select...</option>
                     <option value="SEVERE">Severe</option>
@@ -819,7 +819,7 @@ export function SuccessionPage() {
                   <select
                     name="reviewFrequency"
                     required
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   >
                     <option value="">Select...</option>
                     <option value="QUARTERLY">Quarterly</option>

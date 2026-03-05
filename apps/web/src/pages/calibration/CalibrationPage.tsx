@@ -103,7 +103,7 @@ export function CalibrationPage() {
   const renderSessionsList = () => {
     if (isLoading) {
       return (
-        <div className="flex justify-center py-12">
+        <div className="flex justify-center py-6">
           <div className="glass-spinner" />
         </div>
       );
@@ -111,7 +111,7 @@ export function CalibrationPage() {
 
     if (!sessions || sessions.length === 0) {
       return (
-        <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700 text-center py-12">
+        <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700 text-center py-6">
           <AdjustmentsHorizontalIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No calibration sessions</h3>
           <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
@@ -249,7 +249,7 @@ export function CalibrationPage() {
           {/* Rating distribution chart */}
           <div className="lg:col-span-2 card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Rating Distribution</h3>
-            <div className="flex items-end justify-center gap-4 h-40">
+            <div className="flex items-end justify-center gap-3 h-32">
               {ratingDistribution.map((count, index) => (
                 <div key={index} className="flex flex-col items-center gap-2">
                   <div
@@ -313,15 +313,15 @@ export function CalibrationPage() {
 
         {/* Reviews table */}
         <div className="card overflow-hidden dark:bg-secondary-800 dark:border-secondary-700">
-          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Reviews for Calibration</h3>
           </div>
           {loadingReviews ? (
-            <div className="flex justify-center py-12">
+            <div className="flex justify-center py-6">
               <div className="glass-spinner" />
             </div>
           ) : !sessionReviews || sessionReviews.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="text-center py-6">
               <p className="text-secondary-500 dark:text-secondary-400">No reviews in this calibration session.</p>
             </div>
           ) : (

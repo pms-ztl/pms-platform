@@ -55,12 +55,16 @@ const AGGREGATION_TYPE_MAP: Record<string, string> = {
 };
 
 const scheduleReportSchema = z.object({
-  reportDefinitionId: z.string().uuid(),
+  reportDefinitionId: z.string().uuid().optional(),
+  reportType: z.string().optional(),
   cronExpression: z.string(),
   timezone: z.string().optional(),
-  startDate: z.string().datetime(),
-  endDate: z.string().datetime().optional(),
-});
+  startDate: z.string(),
+  endDate: z.string().optional(),
+}).refine(
+  (data) => data.reportDefinitionId || data.reportType,
+  { message: 'Either reportDefinitionId or reportType is required' }
+);
 
 const updateScheduleSchema = z.object({
   cronExpression: z.string().optional(),
@@ -446,16 +450,20 @@ export class ReportsController {
       }
 
       const scheduleData = validation.data as {
-        reportDefinitionId: string;
+        reportDefinitionId?: string;
+        reportType?: string;
         cronExpression: string;
         timezone?: string;
         startDate: string;
         endDate?: string;
       };
 
+      // Use reportDefinitionId if provided, otherwise use reportType as fallback identifier
+      const definitionId = scheduleData.reportDefinitionId || scheduleData.reportType || '';
+
       const schedule = await reportSchedulerService.addSchedule({
         tenantId,
-        reportDefinitionId: scheduleData.reportDefinitionId,
+        reportDefinitionId: definitionId,
         cronExpression: scheduleData.cronExpression,
         timezone: scheduleData.timezone,
         startDate: new Date(scheduleData.startDate),

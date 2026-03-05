@@ -427,7 +427,7 @@ function App() {
           <Route path="audit" element={<Suspense fallback={<PageLoader />}><SAAuditPage /></Suspense>} />
           <Route path="security" element={<Suspense fallback={<PageLoader />}><SASecurityPage /></Suspense>} />
           <Route path="system" element={<Suspense fallback={<PageLoader />}><SASystemPage /></Suspense>} />
-          <Route path="settings" element={<Suspense fallback={<PageLoader />}><SASystemPage /></Suspense>} />
+          <Route path="settings" element={<SettingsPage />} />
           <Route path="upgrade-requests" element={<Suspense fallback={<PageLoader />}><SAUpgradeRequestsPage /></Suspense>} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>

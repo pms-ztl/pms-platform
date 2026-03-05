@@ -11,13 +11,15 @@ import {
 } from 'recharts';
 
 import { analyticsApi, type GoalTrend } from '@/lib/api';
-import { SkeletonCard } from '@/components/ui';
+import { SkeletonCard, ChartTooltip } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface PerformanceTrendChartProps {
   currentScore: number;
 }
 
 function PerformanceTrendChart({ currentScore }: PerformanceTrendChartProps) {
+  const cc = useChartColors();
   const { data: trends, isLoading } = useQuery({
     queryKey: ['goal-trends-dashboard'],
     queryFn: () => analyticsApi.getGoalTrends(12),
@@ -37,7 +39,7 @@ function PerformanceTrendChart({ currentScore }: PerformanceTrendChartProps) {
       <div className="glass-deep rounded-2xl p-4">
         <div className="flex items-center gap-2 mb-4">
           <ArrowTrendingUpIcon className="w-5 h-5 text-primary-500" />
-          <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Performance Trend</h3>
+          <h3 className="text-sm font-bold text-secondary-700 dark:text-secondary-300">Performance Trend</h3>
         </div>
         <p className="text-sm text-secondary-500 dark:text-secondary-400">Not enough data yet. Performance trends will appear as you progress.</p>
       </div>
@@ -45,11 +47,11 @@ function PerformanceTrendChart({ currentScore }: PerformanceTrendChartProps) {
   }
 
   return (
-    <div className="glass-deep rounded-2xl p-4">
-      <div className="flex items-center justify-between mb-4">
+    <div className="glass-deep rounded-2xl p-4 flex flex-col">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <ArrowTrendingUpIcon className="w-5 h-5 text-primary-500" />
-          <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Performance Trend</h3>
+          <h3 className="text-sm font-bold text-secondary-700 dark:text-secondary-300">Performance Trend</h3>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="text-xl font-bold text-secondary-900 dark:text-white">{Math.round(currentScore)}</span>
@@ -57,52 +59,38 @@ function PerformanceTrendChart({ currentScore }: PerformanceTrendChartProps) {
         </div>
       </div>
 
-      <div className="h-48">
+      <div className="flex-1 min-h-[10rem]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="perfTrendGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--color-primary-500, #8b5cf6)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--color-primary-500, #8b5cf6)" stopOpacity={0} />
+                <stop offset="5%" stopColor={cc.primary} stopOpacity={0.45} />
+                <stop offset="95%" stopColor={cc.primary} stopOpacity={0.05} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e2e8f0)" strokeOpacity={0.3} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" strokeOpacity={0.45} strokeWidth={1.5} />
             <XAxis
               dataKey="label"
-              tick={{ fontSize: 11, fill: 'var(--color-secondary-400, #94a3b8)' }}
+              tick={{   fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
               domain={[0, 100]}
-              tick={{ fontSize: 11, fill: 'var(--color-secondary-400, #94a3b8)' }}
+              tick={{   fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
               axisLine={false}
               tickLine={false}
             />
-            <Tooltip
-              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-              contentStyle={{
-                background: 'rgba(15, 23, 42, 0.80)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(148, 163, 184, 0.15)',
-                borderRadius: '0.75rem',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                fontSize: '0.75rem',
-                color: '#f1f5f9',
-              }}
-              labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-              itemStyle={{ color: '#e2e8f0' }}
-              formatter={(value: number) => [`${value}%`, 'Completion Rate']}
-            />
+            <Tooltip isAnimationActive={false} content={<ChartTooltip unit="%" />} cursor={{ fill: cc.cursorFill }} />
             <Area
               type="monotone"
               dataKey="rate"
-              stroke="var(--color-primary-500, #8b5cf6)"
-              strokeWidth={2}
+              name="Rate"
+              stroke={cc.primary}
+              strokeWidth={3}
               fill="url(#perfTrendGradient)"
-              dot={{ r: 3, fill: 'var(--color-primary-500, #8b5cf6)' }}
-              activeDot={{ r: 5 }}
+              dot={{ r: 4, fill: cc.primary, strokeWidth: 2, stroke: cc.primaryExtraDark }}
+              activeDot={{ r: 6 }}
             />
           </AreaChart>
         </ResponsiveContainer>

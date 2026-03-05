@@ -189,7 +189,7 @@ export default function DashboardPage() {
   const planTotal = planDistribution.reduce((sum: number, p: any) => sum + p.value, 0);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* ════════════════════════════════════════════════════════════════════
           Hero Welcome Banner
          ════════════════════════════════════════════════════════════════════ */}
@@ -400,7 +400,7 @@ export default function DashboardPage() {
       {/* ════════════════════════════════════════════════════════════════════
           Row: Tenant Plans Donut + System Health
          ════════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Tenant Plans Donut */}
         <div className="glass-card animate-fade-in-up stagger-6">
           <h3 className="text-base font-semibold text-white/90 mb-4 flex items-center gap-2">
@@ -529,7 +529,7 @@ export default function DashboardPage() {
       {/* ════════════════════════════════════════════════════════════════════
           Row: Recent Tenants + Recent Activity
          ════════════════════════════════════════════════════════════════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Recent Tenants */}
         <div className="glass-card animate-fade-in-up stagger-8">
           <h3 className="text-base font-semibold text-white/90 mb-4 flex items-center gap-2">

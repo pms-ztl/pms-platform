@@ -30,6 +30,7 @@ import {
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useAuthStore } from '@/store/auth';
 import { EmployeePicker, ChartTooltip as SharedChartTooltip } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -50,6 +51,7 @@ const CRITICALITY_BADGE: Record<string, { cls: string }> = {
 // ── component ────────────────────────────────────────────────────────────────
 
 export function TalentIntelligencePage() {
+  const cc = useChartColors();
   usePageTitle('Talent Intelligence');
   const queryClient = useQueryClient();
   const { user: currentUser } = useAuthStore();
@@ -317,10 +319,10 @@ export function TalentIntelligencePage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
                     <PolarGrid stroke="var(--color-secondary-300, #d1d5db)" />
-                    <PolarAngleAxis dataKey="dimension" tick={{ fontSize: 9, fill: 'var(--color-secondary-500, #6b7280)' }} />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 8, fill: 'var(--color-secondary-400, #9ca3af)' }} />
-                    <Radar name="Score" dataKey="score" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.3} />
-                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<SharedChartTooltip />} />
+                    <PolarAngleAxis dataKey="dimension" tick={{  fontSize: 10, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{  fontSize: 9, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} />
+                    <Radar name="Score" dataKey="score" stroke={cc.primary} fill={cc.primary} fillOpacity={0.3} />
+                    <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<SharedChartTooltip />} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
@@ -416,7 +418,7 @@ export function TalentIntelligencePage() {
                 <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-4 space-y-3">
               <div>
                 <label className="block text-xs font-medium text-secondary-700 dark:text-secondary-300 mb-1">
                   Employee <span className="text-red-500">*</span>
@@ -479,7 +481,7 @@ export function TalentIntelligencePage() {
                 <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-4 space-y-3">
               <div>
                 <label className="block text-xs font-medium text-secondary-700 dark:text-secondary-300 mb-1">Position Title <span className="text-red-500">*</span></label>
                 <input type="text" value={succForm.positionTitle} onChange={(e) => setSuccForm((p) => ({ ...p, positionTitle: e.target.value }))}
@@ -501,7 +503,7 @@ export function TalentIntelligencePage() {
               <div>
                 <label className="block text-xs font-medium text-secondary-700 dark:text-secondary-300 mb-1">Criticality</label>
                 <select value={succForm.criticality} onChange={(e) => setSuccForm((p) => ({ ...p, criticality: e.target.value }))}
-                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300">
+                  className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300">
                   <option value="CRITICAL">Critical</option>
                   <option value="HIGH">High</option>
                   <option value="MEDIUM">Medium</option>

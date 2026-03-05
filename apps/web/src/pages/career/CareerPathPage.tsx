@@ -235,8 +235,8 @@ export function CareerPathPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12">
-          <BriefcaseIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-4">
+          <BriefcaseIcon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
           <p className="mt-2 text-sm text-secondary-500 dark:text-secondary-400">Career path data not available</p>
         </div>
       )}
@@ -305,14 +305,14 @@ export function CareerPathPage() {
           {/* Growth Requirements Panel */}
           {selectedNextRole && (
             <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
-              <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
+              <div className="px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Growth Requirements</h3>
                 <button onClick={() => setSelectedNextRole(null)} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
                   <XMarkIcon className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
                 </button>
               </div>
               {growthLoading ? <Spinner /> : growthData ? (
-                <div className="p-6 space-y-4">
+                <div className="p-4 space-y-4">
                   <div>
                     <h4 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-3 flex items-center gap-2"><ChevronRightIcon className="h-4 w-4" /> Competency Comparison</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -375,7 +375,7 @@ export function CareerPathPage() {
                   </div>
                 </div>
               ) : (
-                <div className="p-6 text-center text-sm text-secondary-500 dark:text-secondary-400">Growth requirement data is not available for this role.</div>
+                <div className="p-4 text-center text-sm text-secondary-500 dark:text-secondary-400">Growth requirement data is not available for this role.</div>
               )}
             </div>
           )}
@@ -395,20 +395,20 @@ export function CareerPathPage() {
             <div className="flex items-center gap-2">
               <FunnelIcon className="h-5 w-5 text-secondary-400 shrink-0" />
               <select value={deptFilter} onChange={(e) => setDeptFilter(e.target.value)}
-                className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300">
+                className="relative z-50 rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300">
                 <option value="">All Departments</option>
                 {uniqueDepts.map((d) => <option key={d} value={d}>{d}</option>)}
               </select>
               <select value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}
-                className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300">
+                className="relative z-50 rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300">
                 <option value="">All Levels</option>
                 {uniqueLevels.map((l) => <option key={l} value={l}>{l}</option>)}
               </select>
             </div>
           </div>
           {rolesLoading ? <Spinner /> : filteredRoles.length === 0 ? (
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12">
-              <BriefcaseIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-4">
+              <BriefcaseIcon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
               <p className="mt-2 text-sm text-secondary-500 dark:text-secondary-400">No roles match your search criteria.</p>
             </div>
           ) : (
@@ -436,15 +436,15 @@ export function CareerPathPage() {
       {activeSection === 'goals' && (
         <div className="space-y-4">
           {goalsLoading ? <Spinner /> : !careerGoals || careerGoals.length === 0 ? (
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12">
-              <RocketLaunchIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-4">
+              <RocketLaunchIcon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
               <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">No career goals yet</h3>
               <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">Set career goals to track your progression toward target roles.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {careerGoals.map((goal) => (
-                <div key={goal.id} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
+                <div key={goal.id} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <h4 className="text-sm font-semibold text-secondary-900 dark:text-white">{goal.targetRole}</h4>

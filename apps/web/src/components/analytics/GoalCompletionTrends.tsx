@@ -12,7 +12,8 @@ import {
 } from 'recharts';
 
 import { analyticsApi, type GoalTrend } from '@/lib/api';
-import { SkeletonCard } from '@/components/ui';
+import { SkeletonCard, ChartTooltip } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface GoalCompletionTrendsProps {
   months?: number;
@@ -20,6 +21,8 @@ interface GoalCompletionTrendsProps {
 }
 
 function GoalCompletionTrends({ months = 12, className = '' }: GoalCompletionTrendsProps) {
+  const cc = useChartColors();
+  const [colorCreated, colorCompleted] = cc.palette(2);
   const { data, isLoading } = useQuery({
     queryKey: ['goal-trends', months],
     queryFn: () => analyticsApi.getGoalTrends(months),
@@ -64,35 +67,21 @@ function GoalCompletionTrends({ months = 12, className = '' }: GoalCompletionTre
           <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
             <defs>
               <linearGradient id="goalCreatedGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                <stop offset="5%" stopColor={colorCreated} stopOpacity={0.2} />
+                <stop offset="95%" stopColor={colorCreated} stopOpacity={0} />
               </linearGradient>
               <linearGradient id="goalCompletedGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                <stop offset="5%" stopColor={colorCompleted} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={colorCompleted} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
-            <XAxis dataKey="label" tick={{ fontSize: 10, fill: 'var(--color-secondary-400)' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400)' }} axisLine={false} tickLine={false} />
-            <Tooltip
-              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-              contentStyle={{
-                background: 'rgba(15, 23, 42, 0.80)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(148, 163, 184, 0.15)',
-                borderRadius: '0.75rem',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                fontSize: '0.75rem',
-                color: '#f1f5f9',
-              }}
-              labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-              itemStyle={{ color: '#e2e8f0' }}
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" strokeOpacity={0.4} />
+            <XAxis dataKey="label" tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+            <YAxis tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+            <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
             <Legend wrapperStyle={{ fontSize: '11px' }} />
-            <Area type="monotone" dataKey="created" name="Created" stroke="#3b82f6" fill="url(#goalCreatedGrad)" strokeWidth={2} />
-            <Area type="monotone" dataKey="completed" name="Completed" stroke="#10b981" fill="url(#goalCompletedGrad)" strokeWidth={2} />
+            <Area type="monotone" dataKey="created" name="Created" stroke={colorCreated} fill="url(#goalCreatedGrad)" strokeWidth={3} />
+            <Area type="monotone" dataKey="completed" name="Completed" stroke={colorCompleted} fill="url(#goalCompletedGrad)" strokeWidth={3} />
           </AreaChart>
         </ResponsiveContainer>
       </div>

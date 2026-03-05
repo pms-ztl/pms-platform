@@ -34,6 +34,7 @@ import {
   type TeamBenchmarkSummary,
 } from '@/lib/api/ai-insights';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -46,11 +47,13 @@ const PERCENTILE_COLORS: Record<string, string> = {
 const percentileColor = (p: number) =>
   p >= 75 ? PERCENTILE_COLORS.top : p >= 40 ? PERCENTILE_COLORS.mid : PERCENTILE_COLORS.low;
 
-const DEPT_COLORS = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd', '#818cf8', '#7c3aed', '#4f46e5', '#4338ca'];
+// Department colors derived from accent palette
 
 // ── component ────────────────────────────────────────────────────────────────
 
 export function PerformanceBenchmarkPage() {
+  const cc = useChartColors();
+  const DEPT_COLORS = cc.palette(8);
   usePageTitle('Performance Benchmarks');
   const queryClient = useQueryClient();
 
@@ -162,7 +165,10 @@ export function PerformanceBenchmarkPage() {
       setShowCreateModal(false);
       setCreateForm({ benchmarkName: '', department: '', level: '' });
     },
-    onError: () => toast.error('Failed to create benchmark'),
+    onError: (error) => {
+      const msg = error instanceof Error ? error.message : 'Failed to create benchmark';
+      toast.error(msg);
+    },
   });
 
   // ── tooltip ───────────────────────────────────────────────────────────
@@ -170,8 +176,8 @@ export function PerformanceBenchmarkPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-        <p className="font-semibold text-white">{label}</p>
+      <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 px-3 py-2 shadow-lg text-xs space-y-1">
+        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color || p.fill }}>
             {p.name}: {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}
@@ -302,32 +308,32 @@ export function PerformanceBenchmarkPage() {
                 <PolarGrid stroke="var(--color-secondary-300, #d1d5db)" />
                 <PolarAngleAxis
                   dataKey="dimension"
-                  tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }}
+                  tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }}
                 />
                 <PolarRadiusAxis
                   angle={90}
                   domain={[0, 100]}
-                  tick={{ fontSize: 9, fill: 'var(--color-secondary-400, #9ca3af)' }}
+                  tick={{  fontSize: 9, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                 />
                 <Radar
                   name="Team Average"
                   dataKey="team"
-                  stroke="#6366f1"
-                  fill="#6366f1"
+                  stroke={cc.primary}
+                  fill={cc.primary}
                   fillOpacity={0.3}
                 />
                 <Radar
                   name="Org Benchmark"
                   dataKey="benchmark"
-                  stroke="#f59e0b"
-                  fill="#f59e0b"
+                  stroke={cc.semantic.warning}
+                  fill={cc.semantic.warning}
                   fillOpacity={0.15}
                 />
                 <Legend
-                  wrapperStyle={{ fontSize: 11 }}
+                  wrapperStyle={{  fontSize: '11px' }}
                   iconType="circle"
                 />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
               </RadarChart>
             </ResponsiveContainer>
           </div>
@@ -354,34 +360,34 @@ export function PerformanceBenchmarkPage() {
                 >
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    stroke="var(--color-secondary-200, #e5e7eb)"
+                    stroke="var(--color-secondary-400, #94a3b8)"
                     opacity={0.5}
                     horizontal={false}
                   />
                   <XAxis
                     type="number"
                     domain={[0, 100]}
-                    tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+                    tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <YAxis
                     type="category"
                     dataKey="department"
-                    tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }}
+                    tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                     axisLine={false}
                     tickLine={false}
                     width={55}
                   />
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
-                  <Bar dataKey="avgScore" name="Department Average" fill="#6366f1" barSize={14} radius={[0, 4, 4, 0]}>
+                  <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
+                  <Bar dataKey="avgScore" name="Department Average" fill={cc.primary} barSize={14} radius={[0, 4, 4, 0]}>
                     {deptBarData.map((_, i) => (
                       <Cell key={i} fill={DEPT_COLORS[i % DEPT_COLORS.length]} />
                     ))}
                   </Bar>
                   <ReferenceLine
                     x={summary?.orgAvg ?? deptBarData[0]?.benchmark ?? 50}
-                    stroke="#f59e0b"
+                    stroke={cc.semantic.warning}
                     strokeDasharray="5 5"
                     strokeWidth={2}
                     label={{ value: 'Benchmark', position: 'top', fontSize: 10, fill: '#f59e0b' }}
@@ -406,22 +412,22 @@ export function PerformanceBenchmarkPage() {
                 <BarChart data={distributionData} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
                   <CartesianGrid
                     strokeDasharray="3 3"
-                    stroke="var(--color-secondary-200, #e5e7eb)"
+                    stroke="var(--color-secondary-400, #94a3b8)"
                     opacity={0.5}
                   />
                   <XAxis
                     dataKey="range"
-                    tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+                    tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <YAxis
-                    tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+                    tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
                     axisLine={false}
                     tickLine={false}
                     allowDecimals={false}
                   />
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                  <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
                   <Bar dataKey="count" name="Employees" barSize={40} radius={[6, 6, 0, 0]}>
                     {distributionData.map((entry, i) => {
                       const colors = ['#ef4444', '#f97316', '#f59e0b', '#22c55e', '#6366f1'];
@@ -452,7 +458,7 @@ export function PerformanceBenchmarkPage() {
                   {['Employee', 'Department', 'Score', 'Benchmark', 'Delta', 'Percentile'].map((h) => (
                     <th
                       key={h}
-                      className="text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 pb-2 pr-4"
+                      className="text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 pb-2 pr-4 whitespace-nowrap"
                     >
                       {h}
                     </th>
@@ -467,16 +473,16 @@ export function PerformanceBenchmarkPage() {
                       key={c.userId}
                       className="border-b border-secondary-100 dark:border-secondary-700/50 last:border-0"
                     >
-                      <td className="py-2.5 pr-4 text-xs font-medium text-secondary-900 dark:text-white">
+                      <td className="py-2.5 pr-4 text-xs font-medium text-secondary-900 dark:text-white whitespace-nowrap">
                         {c.userName || c.userId}
                       </td>
-                      <td className="py-2.5 pr-4 text-xs text-secondary-500 dark:text-secondary-400">
+                      <td className="py-2.5 pr-4 text-xs text-secondary-500 dark:text-secondary-400 whitespace-nowrap">
                         {c.department || '—'}
                       </td>
-                      <td className="py-2.5 pr-4 text-xs font-semibold text-secondary-900 dark:text-white">
+                      <td className="py-2.5 pr-4 text-xs font-semibold text-secondary-900 dark:text-white whitespace-nowrap">
                         {(c.score ?? 0).toFixed(1)}
                       </td>
-                      <td className="py-2.5 pr-4 text-xs text-secondary-500 dark:text-secondary-400">
+                      <td className="py-2.5 pr-4 text-xs text-secondary-500 dark:text-secondary-400 whitespace-nowrap">
                         {(c.benchmarkScore ?? 0).toFixed(1)}
                       </td>
                       <td className="py-2.5 pr-4">
@@ -543,7 +549,18 @@ export function PerformanceBenchmarkPage() {
               <XMarkIcon className="w-5 h-5" />
             </button>
           </div>
-          <div className="p-6 space-y-4">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            if (!createForm.benchmarkName.trim()) {
+              toast.error('Benchmark name is required');
+              return;
+            }
+            createMutation.mutate({
+              benchmarkName: createForm.benchmarkName.trim(),
+              department: createForm.department.trim() || undefined,
+              level: createForm.level ? Number(createForm.level) : undefined,
+            });
+          }} className="p-4 space-y-4">
             <div>
               <label className="block text-xs font-medium text-secondary-700 dark:text-secondary-300 mb-1">
                 Benchmark Name <span className="text-red-500">*</span>
@@ -582,9 +599,9 @@ export function PerformanceBenchmarkPage() {
                 max={10}
               />
             </div>
-          </div>
-          <div className="flex items-center justify-end gap-3 p-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
             <button
+              type="button"
               onClick={() => {
                 setShowCreateModal(false);
                 setCreateForm({ benchmarkName: '', department: '', level: '' });
@@ -594,23 +611,14 @@ export function PerformanceBenchmarkPage() {
               Cancel
             </button>
             <button
-              onClick={() => {
-                if (!createForm.benchmarkName.trim()) {
-                  toast.error('Benchmark name is required');
-                  return;
-                }
-                createMutation.mutate({
-                  benchmarkName: createForm.benchmarkName.trim(),
-                  department: createForm.department.trim() || undefined,
-                  level: createForm.level ? Number(createForm.level) : undefined,
-                });
-              }}
+              type="submit"
               disabled={createMutation.isPending || !createForm.benchmarkName.trim()}
               className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors disabled:opacity-50"
             >
               {createMutation.isPending ? 'Creating...' : 'Create Benchmark'}
             </button>
           </div>
+          </form>
         </div>
       </div>
     );

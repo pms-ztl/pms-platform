@@ -139,15 +139,27 @@ export function ScheduledReportsPage() {
 
   // ── Mutations ──────────────────────────────────────────────────────────────
 
+  const resetForm = () => {
+    setPresetKey('weekly');
+    setCustomCron('');
+    setReportType(REPORT_TYPES[0].value);
+    setStartDate(format(new Date(), 'yyyy-MM-dd'));
+    setEndDate('');
+  };
+
   const createMutation = useMutation({
-    mutationFn: (data: { reportDefinitionId: string; cronExpression: string; startDate: string; endDate?: string }) =>
+    mutationFn: (data: { reportType: string; cronExpression: string; startDate: string; endDate?: string }) =>
       reportsApi.createSchedule(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['report-schedules'] });
       toast.success('Schedule created');
+      resetForm();
       setShowCreateModal(false);
     },
-    onError: () => toast.error('Failed to create schedule'),
+    onError: (error) => {
+      const msg = error instanceof Error ? error.message : 'Failed to create schedule';
+      toast.error(msg);
+    },
   });
 
   const pauseMutation = useMutation({
@@ -198,11 +210,17 @@ export function ScheduledReportsPage() {
 
   function handleCreate() {
     if (!selectedCron) return toast.error('Select a schedule frequency');
+    if (!reportType) return toast.error('Select a report type');
+    if (!startDate) return toast.error('Start date is required');
+    if (presetKey === 'custom' && !customCron.trim()) return toast.error('Enter a cron expression');
+    // Convert date-only strings to ISO datetime format (required by backend validation)
+    const isoStart = startDate.includes('T') ? startDate : `${startDate}T00:00:00.000Z`;
+    const isoEnd = endDate ? (endDate.includes('T') ? endDate : `${endDate}T23:59:59.000Z`) : undefined;
     createMutation.mutate({
-      reportDefinitionId: reportType,
+      reportType,
       cronExpression: selectedCron,
-      startDate,
-      endDate: endDate || undefined,
+      startDate: isoStart,
+      endDate: isoEnd,
     });
   }
 
@@ -244,7 +262,7 @@ export function ScheduledReportsPage() {
           </p>
         </div>
         <button
-          onClick={() => setShowCreateModal(true)}
+          onClick={() => { resetForm(); setShowCreateModal(true); }}
           className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 hover:scale-[1.02] active:scale-[0.98] text-white text-sm font-medium rounded-lg transition-colors"
         >
           <PlusIcon className="h-4 w-4" />
@@ -332,7 +350,7 @@ export function ScheduledReportsPage() {
             <ClockIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
             <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-3">No report schedules yet</p>
             <button
-              onClick={() => setShowCreateModal(true)}
+              onClick={() => { resetForm(); setShowCreateModal(true); }}
               className="text-sm text-primary-600 dark:text-primary-400 hover:underline font-medium"
             >
               Create your first schedule
@@ -468,7 +486,7 @@ export function ScheduledReportsPage() {
                 <select
                   value={reportType}
                   onChange={(e) => setReportType(e.target.value)}
-                  className="w-full border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-3 py-2 text-sm bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
+                  className="w-full border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-3 py-2 text-sm bg-white dark:bg-secondary-800 backdrop-blur-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 transition-all duration-300"
                 >
                   {REPORT_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>{t.label}</option>
@@ -513,7 +531,7 @@ export function ScheduledReportsPage() {
                       value={customCron}
                       onChange={(e) => setCustomCron(e.target.value)}
                       placeholder="e.g., 0 9 * * 1-5"
-                      className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm font-mono bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+                      className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm font-mono bg-white dark:bg-secondary-800 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                     />
                     <p className="text-2xs text-secondary-400 mt-1">Format: minute hour day-of-month month day-of-week</p>
                   </div>
@@ -533,7 +551,7 @@ export function ScheduledReportsPage() {
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+                    className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-secondary-800 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
                 <div>
@@ -542,7 +560,7 @@ export function ScheduledReportsPage() {
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+                    className="w-full border border-secondary-300 dark:border-secondary-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-secondary-800 backdrop-blur-xl text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>

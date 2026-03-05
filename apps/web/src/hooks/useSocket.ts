@@ -28,6 +28,10 @@ const RESOURCE_QUERY_MAP: Record<string, string[][]> = {
   calendar: [['calendar'], ['calendar-events']],
   'admin-config': [['admin-config'], ['configuration']],
   leaderboard: [['leaderboard']],
+  analytics: [['goal-trends'], ['perf-distribution'], ['feedback-trends'], ['team-analytics'], ['dashboard-metrics']],
+  engagement: [['engagement-overview'], ['engagement-trends'], ['engagement-departments'], ['engagement-at-risk']],
+  health: [['health-latest'], ['health-departments'], ['health-history']],
+  license: [['subscription'], ['license-usage']],
 };
 
 export function useSocket() {

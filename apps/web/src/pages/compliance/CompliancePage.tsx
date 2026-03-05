@@ -440,9 +440,9 @@ export function CompliancePage() {
       </div>
 
       {/* ---- Main content area: table + deadlines sidebar ---- */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        {/* ---- Left: Filters + Table (3 cols) ---- */}
-        <div className="lg:col-span-3 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* ---- Left: Filters + Table (2 cols) ---- */}
+        <div className="lg:col-span-2 space-y-4">
           {/* Status filter tabs */}
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
             <div className="flex flex-col gap-3">
@@ -986,7 +986,7 @@ export function CompliancePage() {
                   className="input-field text-sm w-full mb-1"
                 />
                 {employeeSearch && !formState.employeeId && (
-                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
+                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white dark:bg-secondary-800 backdrop-blur-xl">
                     {filteredUsers.map((u) => (
                       <button
                         key={u.id}

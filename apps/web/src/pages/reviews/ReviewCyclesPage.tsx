@@ -441,7 +441,7 @@ export function ReviewCyclesPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-8 px-4">
-            <DocumentTextIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+            <DocumentTextIcon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
             <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">No cycles found</h3>
             <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
               {statusFilter !== 'ALL' || typeFilter !== 'ALL'

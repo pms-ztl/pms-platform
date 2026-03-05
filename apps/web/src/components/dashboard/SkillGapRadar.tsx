@@ -13,6 +13,7 @@ import {
 
 import { skillsApi, type SkillMatrixEntry } from '@/lib/api';
 import { SkeletonCard, Badge } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface SkillGapRadarProps {
   userId: string;
@@ -33,7 +34,26 @@ function useIsDark() {
   return isDark;
 }
 
+/** Word-wrap long skill labels into ≤ maxLen-char lines */
+function wrapLabel(text: string, maxLen: number): string[] {
+  if (text.length <= maxLen) return [text];
+  const words = text.split(/\s+/);
+  const lines: string[] = [];
+  let cur = '';
+  for (const w of words) {
+    if (cur && (cur.length + 1 + w.length) > maxLen) {
+      lines.push(cur);
+      cur = w;
+    } else {
+      cur = cur ? `${cur} ${w}` : w;
+    }
+  }
+  if (cur) lines.push(cur);
+  return lines.length ? lines : [text];
+}
+
 function SkillGapRadar({ userId }: SkillGapRadarProps) {
+  const cc = useChartColors();
   const isDark = useIsDark();
 
   const { data: skills, isLoading } = useQuery({
@@ -45,17 +65,20 @@ function SkillGapRadar({ userId }: SkillGapRadarProps) {
 
   if (isLoading) return <SkeletonCard />;
 
-  const matrix = skills ?? [];
+  const matrix = (skills ?? []).map((s: SkillMatrixEntry) => ({
+    ...s,
+    gap: typeof s.gap === 'number' ? s.gap : Math.max(0, (s.targetLevel ?? 0) - (s.currentLevel ?? 0)),
+  }));
 
   // Theme-aware colours for Recharts SVG props
-  const gridStroke   = isDark ? '#475569' : '#94a3b8';   // slate-600 / slate-400
-  const tickFill     = isDark ? '#94a3b8' : '#475569';   // slate-400 / slate-600
-  const radiusFill   = isDark ? '#64748b' : '#94a3b8';   // slate-500 / slate-400
+  const gridStroke   = cc.gridColor;
+  const tickFill     = cc.tickColor;
+  const radiusFill   = cc.tickColor;   // slate-400 / slate-400
 
   const header = (
-    <div className="flex items-center gap-2 mb-4">
+    <div className="flex items-center gap-2 mb-3">
       <AcademicCapIcon className="w-5 h-5 text-violet-500" />
-      <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">
+      <h3 className="text-sm font-bold text-secondary-700 dark:text-secondary-300">
         Skill Gap Analysis
       </h3>
     </div>
@@ -73,7 +96,7 @@ function SkillGapRadar({ userId }: SkillGapRadarProps) {
   }
 
   const chartData = matrix.slice(0, 8).map((s: SkillMatrixEntry) => ({
-    skill: s.skillName.length > 13 ? s.skillName.slice(0, 13) + '…' : s.skillName,
+    skill: s.skillName,
     current: s.currentLevel,
     target: s.targetLevel,
     fullName: s.skillName,
@@ -110,37 +133,57 @@ function SkillGapRadar({ userId }: SkillGapRadarProps) {
 
       {useRadar ? (
         /* ── Radar chart (≥ 3 skills) ── */
-        <div className="h-52">
+        <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={chartData} cx="50%" cy="50%" outerRadius="70%">
-              <PolarGrid stroke={gridStroke} strokeOpacity={0.65} />
+            <RadarChart data={chartData} cx="50%" cy="50%" outerRadius="65%">
+              <PolarGrid stroke={gridStroke} strokeOpacity={0.8} strokeWidth={2} />
               <PolarAngleAxis
                 dataKey="skill"
-                tick={{ fontSize: 10, fill: tickFill }}
+                tick={(props: any) => {
+                  const { x, y, payload, cx, cy } = props;
+                  const dx = x - (cx ?? 0);
+                  const dy = y - (cy ?? 0);
+                  const cos = dx / (Math.sqrt(dx * dx + dy * dy) || 1);
+                  const anchor = cos > 0.3 ? 'start' : cos < -0.3 ? 'end' : 'middle';
+                  const lines = wrapLabel(payload.value ?? '', 16);
+                  const lineH = 13;
+                  const offsetY = -((lines.length - 1) * lineH) / 2;
+                  return (
+                    <text x={x} y={y} textAnchor={anchor}
+                      fontSize={11} fontWeight={600} fill={tickFill}>
+                      {lines.map((line, li) => (
+                        <tspan key={li} x={x} dy={li === 0 ? offsetY : lineH}>
+                          {line}
+                        </tspan>
+                      ))}
+                    </text>
+                  );
+                }}
               />
               <PolarRadiusAxis
                 angle={30}
                 domain={[0, 5]}
-                tick={{ fontSize: 9, fill: radiusFill }}
+                tick={false}
+                axisLine={false}
               />
               <Radar
                 name="Current"
                 dataKey="current"
-                stroke="#8b5cf6"
-                fill="#8b5cf6"
+                stroke={cc.primary}
+                fill={cc.primary}
                 fillOpacity={0.4}
-                strokeWidth={2.5}
+                strokeWidth={3.5}
               />
               <Radar
                 name="Target"
                 dataKey="target"
-                stroke="#f59e0b"
-                fill="#f59e0b"
+                stroke={cc.semantic.warning}
+                fill={cc.semantic.warning}
                 fillOpacity={0.2}
-                strokeWidth={2}
+                strokeWidth={3}
                 strokeDasharray="4 4"
               />
-              <Legend wrapperStyle={{ fontSize: '11px', color: tickFill }} />
+              <Legend wrapperStyle={{ fontSize: '11px' }} />
             </RadarChart>
           </ResponsiveContainer>
         </div>

@@ -26,6 +26,7 @@ import clsx from 'clsx';
 import { aiInsightsApi, type AnomalyItem, type AnomalyStats } from '@/lib/api/ai-insights';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { ChartTooltip } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -52,6 +53,7 @@ const STATUS_BADGES: Record<string, string> = {
 // ── component ────────────────────────────────────────────────────────────────
 
 export function AnomalyDetectionPage() {
+  const cc = useChartColors();
   usePageTitle('Anomaly Detection');
   const queryClient = useQueryClient();
 
@@ -262,7 +264,7 @@ export function AnomalyDetectionPage() {
                       <Cell key={i} fill={e.color} />
                     ))}
                   </Pie>
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                  <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -277,14 +279,14 @@ export function AnomalyDetectionPage() {
             <div className="h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={timelineData} margin={{ top: 10, right: 20, bottom: 0, left: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
-                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} allowDecimals={false} />
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
-                  <Area type="monotone" dataKey="critical" name="Critical" stackId="1" stroke="#ef4444" fill="#ef4444" fillOpacity={0.6} />
-                  <Area type="monotone" dataKey="high" name="High" stackId="1" stroke="#f97316" fill="#f97316" fillOpacity={0.5} />
-                  <Area type="monotone" dataKey="medium" name="Medium" stackId="1" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.4} />
-                  <Area type="monotone" dataKey="low" name="Low" stackId="1" stroke="#6366f1" fill="#6366f1" fillOpacity={0.3} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
+                  <XAxis dataKey="date" tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                  <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
+                  <Area type="monotone" dataKey="critical" name="Critical" stackId="1" stroke={cc.semantic.danger} fill={cc.semantic.danger} fillOpacity={0.6} />
+                  <Area type="monotone" dataKey="high" name="High" stackId="1" stroke={cc.semantic.warning} fill={cc.semantic.warning} fillOpacity={0.5} />
+                  <Area type="monotone" dataKey="medium" name="Medium" stackId="1" stroke={cc.semantic.warning} fill={cc.semantic.warning} fillOpacity={0.4} />
+                  <Area type="monotone" dataKey="low" name="Low" stackId="1" stroke={cc.primary} fill={cc.primary} fillOpacity={0.3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -298,7 +300,7 @@ export function AnomalyDetectionPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-2 sm:px-3 py-2 text-sm sm:text-xs text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-2 sm:px-3 py-2 text-sm sm:text-xs text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
         >
           <option value="all">All Statuses</option>
           <option value="ACTIVE">Active</option>
@@ -308,7 +310,7 @@ export function AnomalyDetectionPage() {
         <select
           value={severityFilter}
           onChange={(e) => setSeverityFilter(e.target.value)}
-          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-2 sm:px-3 py-2 text-sm sm:text-xs text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-2 sm:px-3 py-2 text-sm sm:text-xs text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
         >
           <option value="all">All Severities</option>
           <option value="CRITICAL">Critical</option>

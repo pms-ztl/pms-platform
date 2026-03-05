@@ -89,7 +89,7 @@ export function ScrollToTop({ threshold = 300, className, hideDelay = 2000 }: Sc
     >
       <ChevronUpIcon
         className={clsx(
-          'h-4.5 w-4.5 transition-transform duration-300',
+          'h-[1.125rem] w-[1.125rem] transition-transform duration-300',
           glowing && 'scale-110'
         )}
         strokeWidth={2.5}

@@ -9,6 +9,7 @@ import {
   Cell,
 } from 'recharts';
 import clsx from 'clsx';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface MemberScore {
   userId: string;
@@ -23,11 +24,7 @@ interface PerformanceDistributionProps {
   className?: string;
 }
 
-const CATEGORY_COLORS: Record<string, string> = {
-  high: '#10b981',
-  average: '#3b82f6',
-  low: '#f59e0b',
-};
+// Category colors derived from semantic palette
 
 const CATEGORY_LABELS: Record<string, string> = {
   high: 'High Performer',
@@ -36,6 +33,12 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export function PerformanceDistribution({ members, className }: PerformanceDistributionProps) {
+  const cc = useChartColors();
+  const CATEGORY_COLORS: Record<string, string> = {
+    high: cc.semantic.success,
+    average: cc.semantic.info,
+    low: cc.semantic.warning,
+  };
   const chartData = useMemo(
     () => [...members].sort((a, b) => b.score - a.score).map((m) => ({
       ...m,
@@ -63,7 +66,7 @@ export function PerformanceDistribution({ members, className }: PerformanceDistr
   return (
     <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
       <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-1">Performance Distribution</h3>
-      <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-4">Team members ranked by performance score</p>
+      <p className="text-xs text-secondary-600 dark:text-secondary-300 mb-3">Team members ranked by performance score</p>
 
       {/* Category summary */}
       <div className="flex gap-3 mb-4">
@@ -80,40 +83,40 @@ export function PerformanceDistribution({ members, className }: PerformanceDistr
       </div>
 
       {/* Chart */}
-      <div className="h-64">
+      <div style={{ height: Math.max(80, Math.min(256, chartData.length * 40 + 40)) }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 20, bottom: 0, left: 10 }}>
+          <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 16, bottom: 0, left: 0 }}>
             <XAxis
               type="number"
               domain={[0, 'auto']}
-              tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+              tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-500, #64748b)' }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
               type="category"
               dataKey="displayName"
-              tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }}
+              tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-500, #64748b)' }}
               axisLine={false}
               tickLine={false}
-              width={100}
+              width={72}
             />
-            <Tooltip
-              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+            <Tooltip isAnimationActive={false}
+              cursor={{ fill: cc.cursorFill }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
                 const d = payload[0].payload as MemberScore & { displayName: string };
                 return (
-                  <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs space-y-1">
-                    <p className="font-semibold text-white">{d.name}</p>
-                    <p className="text-slate-300">Score: {(d.score ?? 0).toFixed(2)}</p>
-                    <p className="text-slate-300">Z-Score: {(d.zScore ?? 0).toFixed(2)}</p>
+                  <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs space-y-1">
+                    <p className="font-semibold text-secondary-900 dark:text-white">{d.name}</p>
+                    <p className="text-secondary-600 dark:text-secondary-300">Score: {(d.score ?? 0).toFixed(2)}</p>
+                    <p className="text-secondary-600 dark:text-secondary-300">Z-Score: {(d.zScore ?? 0).toFixed(2)}</p>
                     <p style={{ color: CATEGORY_COLORS[d.category] }}>{CATEGORY_LABELS[d.category]}</p>
                   </div>
                 );
               }}
             />
-            <Bar dataKey="score" radius={[0, 6, 6, 0]} maxBarSize={24}>
+            <Bar dataKey="score" radius={[0, 4, 4, 0]} maxBarSize={18}>
               {chartData.map((entry, i) => (
                 <Cell key={i} fill={CATEGORY_COLORS[entry.category]} />
               ))}

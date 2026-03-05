@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ChevronUpIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { useState, useMemo } from 'react';
+import { ChevronUpIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ArrowsUpDownIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
 import { SkeletonTableRows } from './Skeleton';
@@ -11,6 +11,8 @@ export interface Column<T> {
   sortable?: boolean;
   className?: string;
   render: (item: T, index: number) => React.ReactNode;
+  /** Optional: provide a value extractor for client-side sorting */
+  sortValue?: (item: T) => string | number;
 }
 
 interface DataTableProps<T> {
@@ -55,6 +57,19 @@ export function DataTable<T>({
     onSort?.(key, newDir);
   };
 
+  // Client-side sorting when no onSort callback is provided
+  const sortedData = useMemo(() => {
+    if (onSort || !sortKey) return data;
+    const col = columns.find((c) => c.key === sortKey);
+    if (!col?.sortValue) return data;
+    return [...data].sort((a, b) => {
+      const va = col.sortValue!(a);
+      const vb = col.sortValue!(b);
+      const cmp = typeof va === 'number' && typeof vb === 'number' ? va - vb : String(va).localeCompare(String(vb));
+      return sortDir === 'asc' ? cmp : -cmp;
+    });
+  }, [data, sortKey, sortDir, columns, onSort]);
+
   const totalPages = pagination ? Math.ceil(pagination.total / pagination.pageSize) : 0;
 
   return (
@@ -75,10 +90,12 @@ export function DataTable<T>({
                 >
                   <div className="flex items-center gap-1.5">
                     {col.header}
-                    {col.sortable && sortKey === col.key && (
-                      sortDir === 'asc'
-                        ? <ChevronUpIcon className="h-3.5 w-3.5" />
-                        : <ChevronDownIcon className="h-3.5 w-3.5" />
+                    {col.sortable && (
+                      sortKey === col.key
+                        ? (sortDir === 'asc'
+                            ? <ChevronUpIcon className="h-3.5 w-3.5 text-primary-500" />
+                            : <ChevronDownIcon className="h-3.5 w-3.5 text-primary-500" />)
+                        : <ArrowsUpDownIcon className="h-3.5 w-3.5 text-secondary-400 dark:text-secondary-500" />
                     )}
                   </div>
                 </th>
@@ -88,7 +105,7 @@ export function DataTable<T>({
           <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
             {isLoading ? (
               <SkeletonTableRows rows={5} cols={columns.length} />
-            ) : data.length === 0 ? (
+            ) : sortedData.length === 0 ? (
               <tr>
                 <td colSpan={columns.length}>
                   <EmptyState
@@ -100,7 +117,7 @@ export function DataTable<T>({
                 </td>
               </tr>
             ) : (
-              data.map((item, index) => (
+              sortedData.map((item, index) => (
                 <tr
                   key={keyExtractor(item)}
                   className="hover:bg-primary-50/30 dark:hover:bg-white/[0.03] transition-colors duration-150"

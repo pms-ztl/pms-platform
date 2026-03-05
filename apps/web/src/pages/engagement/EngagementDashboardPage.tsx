@@ -49,6 +49,7 @@ import {
   type EngagementEvent,
 } from '@/lib/api/engagement';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── Constants ──
 
@@ -91,10 +92,7 @@ const EVENT_CATEGORY_ICONS: Record<string, React.ElementType> = {
   COLLABORATION: UserGroupIcon,
 };
 
-const DEPT_BAR_COLORS = [
-  '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef',
-  '#ec4899', '#f43f5e', '#f97316', '#eab308', '#22c55e',
-];
+// DEPT_BAR_COLORS defined inside component via cc.palette()
 
 // ── Sort types ──
 
@@ -192,8 +190,8 @@ function getScoreColor(score: number): string {
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-      <p className="font-medium text-slate-300">{label}</p>
+    <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 px-3 py-2 shadow-lg text-xs space-y-1">
+      <p className="font-medium text-secondary-600 dark:text-secondary-300">{label}</p>
       {payload.map((entry: any, idx: number) => (
         <p key={idx} className="text-sm font-semibold" style={{ color: entry.color }}>
           {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(1) : Number(entry.value ?? 0).toFixed(1)}
@@ -208,6 +206,8 @@ function ChartTooltip({ active, payload, label }: any) {
 // ============================================================================
 
 export function EngagementDashboardPage() {
+  const cc = useChartColors();
+  const DEPT_BAR_COLORS = cc.palette(7);
   usePageTitle('Engagement Dashboard');
   const [timeRange, setTimeRange] = useState<TimeRange>(6);
   const [atRiskSort, setAtRiskSort] = useState<{ field: AtRiskSortField; dir: SortDir }>({
@@ -268,8 +268,8 @@ export function EngagementDashboardPage() {
           <h1 className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white">Engagement Dashboard</h1>
           <p className="mt-1 text-secondary-600 dark:text-secondary-400">Monitor employee engagement levels and trends</p>
         </div>
-        <div className="flex flex-col items-center justify-center py-8 text-center">
-          <ExclamationTriangleIcon className="h-12 w-12 text-amber-400 mb-4" />
+        <div className="flex flex-col items-center justify-center py-6 text-center card card-body">
+          <ExclamationTriangleIcon className="h-10 w-10 text-amber-400 mb-2" />
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">No engagement data available</h2>
           <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">Engagement metrics haven&apos;t been generated yet, or you may not have permission to view this data.</p>
         </div>
@@ -489,7 +489,7 @@ export function EngagementDashboardPage() {
       {/* 2. Engagement Distribution                                         */}
       {/* ================================================================== */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-3">
           Engagement Distribution
         </h2>
         {loadingOverview ? (
@@ -540,7 +540,7 @@ export function EngagementDashboardPage() {
             </div>
           </div>
         ) : (
-          <p className="text-secondary-500 dark:text-secondary-400 text-center py-6">
+          <p className="text-secondary-500 dark:text-secondary-400 text-center py-2">
             No distribution data available.
           </p>
         )}
@@ -550,7 +550,7 @@ export function EngagementDashboardPage() {
       {/* 3. Trend Line Chart                                                */}
       {/* ================================================================== */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
             Engagement Trend
           </h2>
@@ -580,42 +580,42 @@ export function EngagementDashboardPage() {
               <LineChart data={trends} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  className="stroke-secondary-200 dark:stroke-secondary-700"
+                  className="stroke-secondary-300 dark:stroke-secondary-500" strokeOpacity={0.5}
                 />
                 <XAxis
                   dataKey="month"
-                  className="fill-secondary-500 dark:fill-secondary-400"
-                  tick={{ fontSize: 12 }}
+                  className="fill-secondary-500 dark:fill-secondary-300"
+                  tick={{  fontSize: 11 }}
                 />
                 <YAxis
                   domain={[0, 100]}
-                  className="fill-secondary-500 dark:fill-secondary-400"
-                  tick={{ fontSize: 12 }}
+                  className="fill-secondary-500 dark:fill-secondary-300"
+                  tick={{  fontSize: 11 }}
                 />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
                 <Line
                   type="monotone"
                   dataKey="averageScore"
-                  stroke="#3b82f6"
+                  stroke={cc.primary}
                   strokeWidth={2.5}
-                  dot={{ fill: '#3b82f6', strokeWidth: 0, r: 4 }}
+                  dot={{ fill: cc.primary, strokeWidth: 0, r: 4 }}
                   activeDot={{ r: 6, strokeWidth: 2, stroke: '#fff' }}
                   name="Average Score"
                 />
                 <Line
                   type="monotone"
                   dataKey="atRiskCount"
-                  stroke="#ef4444"
-                  strokeWidth={2}
+                  stroke={cc.semantic.danger}
+                  strokeWidth={2.5}
                   strokeDasharray="5 5"
-                  dot={{ fill: '#ef4444', strokeWidth: 0, r: 3 }}
+                  dot={{ fill: cc.semantic.danger, strokeWidth: 0, r: 3 }}
                   name="At-Risk Count"
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
         ) : (
-          <p className="text-secondary-500 dark:text-secondary-400 text-center py-12">
+          <p className="text-secondary-500 dark:text-secondary-400 text-center py-2">
             No trend data available for the selected period.
           </p>
         )}
@@ -634,10 +634,10 @@ export function EngagementDashboardPage() {
       {/* ================================================================== */}
       {/* 4. Department Comparison                                           */}
       {/* ================================================================== */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         {/* Bar chart */}
-        <div className="xl:col-span-2 card card-body dark:bg-secondary-800 dark:border-secondary-700">
-          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
+        <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-3">
             Department Comparison
           </h2>
           {loadingDepts ? (
@@ -649,7 +649,7 @@ export function EngagementDashboardPage() {
                 const isSelected = selectedDeptId === dept.id;
                 const isDimmed = selectedDeptId && !isSelected;
                 const barHex = isSelected
-                  ? '#8b5cf6'
+                  ? cc.primary
                   : DEPT_BAR_COLORS[index % DEPT_BAR_COLORS.length];
                 return (
                   <div
@@ -716,7 +716,7 @@ export function EngagementDashboardPage() {
               </div>
             </div>
           ) : (
-            <p className="text-secondary-500 dark:text-secondary-400 text-center py-12">
+            <p className="text-secondary-500 dark:text-secondary-400 text-center py-4">
               No department data available.
             </p>
           )}
@@ -745,7 +745,7 @@ export function EngagementDashboardPage() {
 
       {/* Department table */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-3">
           Department Details
         </h2>
         {loadingDepts ? (
@@ -841,7 +841,7 @@ export function EngagementDashboardPage() {
             </table>
           </div>
         ) : (
-          <p className="text-secondary-500 dark:text-secondary-400 text-center py-8">
+          <p className="text-secondary-500 dark:text-secondary-400 text-center py-2">
             No department data available.
           </p>
         )}
@@ -851,7 +851,7 @@ export function EngagementDashboardPage() {
       {/* 5. At-Risk Employees Table                                         */}
       {/* ================================================================== */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
             At-Risk Employees
           </h2>
@@ -962,40 +962,39 @@ export function EngagementDashboardPage() {
             </table>
           </div>
         ) : (
-          <div className="flex flex-col items-center py-12 text-secondary-400 dark:text-secondary-500">
-            <CheckCircleIcon className="h-10 w-10 mb-2 text-green-400" />
+          <div className="flex flex-col items-center py-3 text-secondary-400 dark:text-secondary-500">
+            <CheckCircleIcon className="h-8 w-8 mb-1.5 text-green-400" />
             <p className="text-sm">No at-risk employees identified.</p>
           </div>
         )}
       </div>
 
       {/* ================================================================== */}
-      {/* 5b. Action Plans for At-Risk Employees                             */}
+      {/* 5b. Action Plans + Recent Events (side by side)                    */}
       {/* ================================================================== */}
-      {atRiskEmployees && atRiskEmployees.length > 0 && (
-        <ActionPlansWidget
-          atRiskEmployees={(atRiskEmployees as AtRiskEmployee[]).map((e) => ({
-            id: e.id,
-            userId: e.userId,
-            firstName: e.firstName,
-            lastName: e.lastName,
-            department: e.department,
-            overallScore: e.overallScore,
-          }))}
-        />
-      )}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        {atRiskEmployees && atRiskEmployees.length > 0 && (
+          <ActionPlansWidget
+            atRiskEmployees={(atRiskEmployees as AtRiskEmployee[]).map((e) => ({
+              id: e.id,
+              userId: e.userId,
+              firstName: e.firstName,
+              lastName: e.lastName,
+              department: e.department,
+              overallScore: e.overallScore,
+            }))}
+          />
+        )}
 
-      {/* ================================================================== */}
-      {/* 6. Recent Events Timeline                                          */}
-      {/* ================================================================== */}
-      <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">
+        {/* Recent Events Timeline */}
+        <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-3">
           Recent Engagement Events
         </h2>
         {loadingEvents ? (
-          <div className="animate-pulse space-y-4">
+          <div className="animate-pulse space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex gap-4">
+              <div key={i} className="flex gap-3">
                 <div className="h-8 w-8 bg-secondary-200 dark:bg-secondary-700 rounded-full flex-shrink-0" />
                 <div className="flex-1 space-y-2">
                   <div className="h-3 w-3/4 bg-secondary-200 dark:bg-secondary-700 rounded" />
@@ -1007,9 +1006,9 @@ export function EngagementDashboardPage() {
         ) : events && events.length > 0 ? (
           <div className="relative">
             {/* Vertical timeline line */}
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-secondary-200 dark:bg-secondary-700" />
+            <div className="absolute left-3.5 top-0 bottom-0 w-0.5 bg-secondary-200 dark:bg-secondary-700" />
 
-            <div className="space-y-4">
+            <div className="space-y-2">
               {events.map((event, idx) => {
                 const IconComponent = EVENT_CATEGORY_ICONS[event.eventCategory] || ClockIcon;
                 const isPositive = event.positiveIndicator;
@@ -1017,11 +1016,11 @@ export function EngagementDashboardPage() {
                 const relativeTime = getRelativeTime(timestamp);
 
                 return (
-                  <div key={event.id} className="relative flex gap-4 pl-0">
+                  <div key={event.id} className="relative flex gap-3 pl-0">
                     {/* Timeline dot */}
                     <div
                       className={clsx(
-                        'relative z-10 flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full ring-4 ring-white dark:ring-secondary-800',
+                        'relative z-10 flex-shrink-0 flex items-center justify-center h-7 w-7 rounded-full ring-2 ring-white dark:ring-secondary-800',
                         isPositive
                           ? 'bg-green-100 dark:bg-green-900/40'
                           : 'bg-red-100 dark:bg-red-900/40'
@@ -1029,7 +1028,7 @@ export function EngagementDashboardPage() {
                     >
                       <IconComponent
                         className={clsx(
-                          'h-4 w-4',
+                          'h-3.5 w-3.5',
                           isPositive
                             ? 'text-green-600 dark:text-green-400'
                             : 'text-red-600 dark:text-red-400'
@@ -1038,22 +1037,22 @@ export function EngagementDashboardPage() {
                     </div>
 
                     {/* Event content */}
-                    <div className="flex-1 min-w-0 pb-1">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <p className="text-sm font-medium text-secondary-900 dark:text-white">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
                             {formatEventType(event.eventType)}
+                            {event.user && (
+                              <span className="text-xs text-secondary-500 dark:text-secondary-400 ml-2 font-normal">
+                                {event.user.firstName} {event.user.lastName}
+                              </span>
+                            )}
                           </p>
-                          {event.user && (
-                            <p className="text-xs text-secondary-500 dark:text-secondary-400">
-                              {event.user.firstName} {event.user.lastName}
-                            </p>
-                          )}
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
                           <span
                             className={clsx(
-                              'inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full',
+                              'inline-flex items-center gap-0.5 text-xs font-medium px-1.5 py-0.5 rounded-full',
                               isPositive
                                 ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                                 : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
@@ -1067,16 +1066,14 @@ export function EngagementDashboardPage() {
                             {Number(event.engagementImpact ?? 0) > 0 ? '+' : ''}
                             {Number(event.engagementImpact ?? 0).toFixed(1)}
                           </span>
-                          <span className="text-xs text-secondary-400 dark:text-secondary-500 whitespace-nowrap">
+                          <span className="text-2xs text-secondary-400 dark:text-secondary-500 whitespace-nowrap">
                             {relativeTime}
                           </span>
                         </div>
                       </div>
-                      <div className="mt-1 flex items-center gap-2">
-                        <span className="inline-block px-1.5 py-0.5 text-2xs tracking-wider font-medium rounded bg-secondary-100 text-secondary-500 dark:bg-secondary-700 dark:text-secondary-400">
-                          {event.eventCategory.replace('_', ' ')}
-                        </span>
-                      </div>
+                      <span className="inline-block px-1.5 py-0.5 text-2xs tracking-wider font-medium rounded bg-secondary-100 text-secondary-500 dark:bg-secondary-700 dark:text-secondary-400 mt-0.5">
+                        {event.eventCategory.replace('_', ' ')}
+                      </span>
                     </div>
                   </div>
                 );
@@ -1084,11 +1081,12 @@ export function EngagementDashboardPage() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center py-12 text-secondary-400 dark:text-secondary-500">
-            <ClockIcon className="h-10 w-10 mb-2" />
+          <div className="flex flex-col items-center py-3 text-secondary-400 dark:text-secondary-500">
+            <ClockIcon className="h-8 w-8 mb-1.5" />
             <p className="text-sm">No recent engagement events.</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

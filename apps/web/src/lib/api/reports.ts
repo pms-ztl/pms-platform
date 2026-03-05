@@ -38,7 +38,7 @@ export const reportsApi = {
     api.getBlob(`/reports/${reportId}/download?format=${format}`),
   getJobStatus: (jobId: string) => api.get<any>(`/reports/jobs/${jobId}`),
   listSchedules: () => api.get<any[]>('/reports/schedules'),
-  createSchedule: (data: { reportDefinitionId: string; cronExpression: string; startDate: string; endDate?: string }) =>
+  createSchedule: (data: { reportType: string; cronExpression: string; startDate: string; endDate?: string }) =>
     api.post<any>('/reports/schedules', data),
   pauseSchedule: (id: string) => api.post(`/reports/schedules/${id}/pause`),
   resumeSchedule: (id: string) => api.post(`/reports/schedules/${id}/resume`),

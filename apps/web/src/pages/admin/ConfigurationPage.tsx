@@ -143,7 +143,7 @@ const DEFAULT_SECTIONS_JSON = JSON.stringify(
 
 function Spinner() {
   return (
-    <div className="flex justify-center py-12">
+    <div className="flex justify-center py-4">
       <div className="glass-spinner" />
     </div>
   );
@@ -151,8 +151,8 @@ function Spinner() {
 
 function EmptyState({ icon: Icon, title, description }: { icon: React.ElementType; title: string; description: string }) {
   return (
-    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-12 px-6">
-      <Icon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-4 px-6">
+      <Icon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
       <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">{title}</h3>
       <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">{description}</p>
     </div>
@@ -1145,7 +1145,7 @@ function QuestionnairesTab() {
               <select
                 name="type"
                 required
-                className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+                className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
               >
                 <option value="SELF_ASSESSMENT">Self Assessment</option>
                 <option value="PEER_REVIEW">Peer Review</option>

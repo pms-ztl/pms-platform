@@ -11,6 +11,8 @@ import {
 } from 'recharts';
 
 import type { GoalRiskResult } from '@/lib/api/analytics';
+import { ChartTooltip } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface GoalVelocityProps {
   goals: Array<{ id: string; title: string; progress: number }> | undefined;
@@ -18,13 +20,14 @@ interface GoalVelocityProps {
 }
 
 function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
+  const cc = useChartColors();
   if (!goals?.length || !goalRisks?.length) return null;
 
   // Merge goal titles with risk data — truncate long names for Y-axis readability
   const chartData = goalRisks.slice(0, 6).map((risk) => {
     const goal = goals.find((g) => g.id === risk.goalId);
     const fullTitle = goal?.title ?? risk.goalTitle;
-    const name = fullTitle.length > 28 ? fullTitle.slice(0, 26) + '…' : fullTitle;
+    const name = fullTitle.length > 38 ? fullTitle.slice(0, 36) + '…' : fullTitle;
     return {
       name,
       fullTitle,
@@ -41,10 +44,10 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
 
   return (
     <div className="glass-deep rounded-2xl p-4">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <BoltIcon className="w-5 h-5 text-cyan-500" />
-          <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Goal Velocity</h3>
+          <h3 className="text-sm font-bold text-secondary-700 dark:text-secondary-300">Goal Velocity</h3>
         </div>
         <div className="flex items-center gap-1.5">
           <span className={`text-sm font-bold ${onTrackCount === totalCount ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
@@ -54,18 +57,18 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
         </div>
       </div>
 
-      <div style={{ height: Math.max(160, chartData.length * 90 + 50) }}>
+      <div style={{ height: Math.max(120, chartData.length * 60 + 30) }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
             layout="vertical"
             margin={{ top: 10, right: 20, left: 16, bottom: 10 }}
-            barGap={8}
-            barSize={22}
+            barGap={4}
+            barSize={18}
           >
             <XAxis
               type="number"
-              tick={{ fontSize: 11, fontWeight: 500, fill: 'var(--color-secondary-600, #475569)' }}
+              tick={{   fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
               axisLine={false}
               tickLine={false}
             />
@@ -73,58 +76,36 @@ function GoalVelocity({ goals, goalRisks }: GoalVelocityProps) {
               type="category"
               dataKey="name"
               width={180}
-              tick={{ fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-500, #64748b)' }}
+              tick={{   fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
               axisLine={false}
               tickLine={false}
             />
-            <Tooltip
-              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-              contentStyle={{
-                background: 'rgba(15, 23, 42, 0.80)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(148, 163, 184, 0.15)',
-                borderRadius: '0.75rem',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                fontSize: '0.875rem',
-                color: '#f1f5f9',
-              }}
-              labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-              itemStyle={{ color: '#e2e8f0' }}
-              formatter={(value: number, name: string) => [
-                `${value}%/day`,
-                name === 'current' ? 'Current Velocity' : 'Required Velocity',
-              ]}
-              labelFormatter={(label) => {
-                const item = chartData.find((d) => d.name === label);
-                return item?.fullTitle ?? label;
-              }}
-            />
+            <Tooltip isAnimationActive={false} content={<ChartTooltip unit="%/day" />} cursor={{ fill: cc.cursorFill }} />
             <ReferenceLine x={0} stroke="var(--color-secondary-300, #cbd5e1)" strokeOpacity={0.3} />
-            <Bar dataKey="required" name="required" radius={[0, 4, 4, 0]} opacity={0.3}>
+            <Bar dataKey="required" name="Required" radius={[0, 4, 4, 0]} opacity={0.3}>
               {chartData.map((entry, i) => (
-                <Cell key={i} fill={entry.onTrack ? '#10b981' : '#ef4444'} />
+                <Cell key={i} fill={entry.onTrack ? cc.semantic.success : cc.semantic.danger} />
               ))}
             </Bar>
-            <Bar dataKey="current" name="current" radius={[0, 4, 4, 0]}>
+            <Bar dataKey="current" name="Current" radius={[0, 4, 4, 0]}>
               {chartData.map((entry, i) => (
-                <Cell key={i} fill={entry.onTrack ? '#10b981' : '#ef4444'} />
+                <Cell key={i} fill={entry.onTrack ? cc.semantic.success : cc.semantic.danger} />
               ))}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="flex items-center gap-4 mt-3 text-sm text-secondary-600 dark:text-secondary-300 font-medium">
+      <div className="flex items-center gap-4 mt-3 text-sm font-medium">
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-emerald-500" />
-          On Track
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cc.semantic.success }} />
+          <span style={{ color: cc.semantic.success }}>On Track</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-red-500" />
-          Behind
+          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cc.semantic.danger }} />
+          <span style={{ color: cc.semantic.danger }}>Behind</span>
         </div>
-        <span className="ml-auto">Solid = current, Faded = required velocity</span>
+        <span className="ml-auto text-secondary-600 dark:text-secondary-300">Solid = current, Faded = required velocity</span>
       </div>
     </div>
   );

@@ -262,7 +262,7 @@ export default function TenantDetailPage() {
       </div>
 
       {/* Tab Content */}
-      <div className="card p-6">
+      <div className="card p-4">
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-6">
@@ -514,7 +514,7 @@ export default function TenantDetailPage() {
                   className="input"
                 />
               </div>
-              <div>
+              <div className="relative z-50">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Plan
                 </label>
@@ -537,14 +537,14 @@ export default function TenantDetailPage() {
       {/* License Management Modal */}
       {showLicenseModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Modify License Configuration</h3>
-            <p className="text-sm text-gray-500 mb-6">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Modify License Configuration</h3>
+            <p className="text-sm text-gray-500 mb-4">
               Update the license allocation for <strong>{t.name}</strong>.
             </p>
 
             <div className="space-y-4">
-              <div>
+              <div className="relative z-50">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Subscription Plan
                 </label>
@@ -577,7 +577,7 @@ export default function TenantDetailPage() {
                 </p>
               </div>
 
-              <div>
+              <div className="relative z-50">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Maximum Organizational Level (1-16)
                 </label>

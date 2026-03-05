@@ -9,6 +9,7 @@ import {
   ReferenceArea,
 } from 'recharts';
 import clsx from 'clsx';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface BurnoutDataPoint {
   date: string;
@@ -28,6 +29,7 @@ function riskColor(energy: number, stress: number): string {
 }
 
 export function BurnoutRiskChart({ data, className }: BurnoutRiskChartProps) {
+  const cc = useChartColors();
   if (data.length === 0) {
     return (
       <div className={clsx('bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6', className)}>
@@ -44,43 +46,43 @@ export function BurnoutRiskChart({ data, className }: BurnoutRiskChartProps) {
       <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart margin={{ top: 10, right: 20, bottom: 20, left: 10 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.45} />
             <XAxis
               type="number"
               dataKey="energy"
               domain={[1, 5]}
-              tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+              tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
               axisLine={false}
               tickLine={false}
-              label={{ value: 'Energy Level →', position: 'insideBottom', offset: -10, fontSize: 10, fill: '#9ca3af' }}
+              label={{ value: 'Energy Level →', position: 'insideBottom', offset: -10, fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
             />
             <YAxis
               type="number"
               dataKey="stress"
               domain={[1, 5]}
-              tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }}
+              tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
               axisLine={false}
               tickLine={false}
-              label={{ value: '← Stress Level', angle: -90, position: 'insideLeft', offset: 10, fontSize: 10, fill: '#9ca3af' }}
+              label={{ value: '← Stress Level', angle: -90, position: 'insideLeft', offset: 10, fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
             />
             {/* Danger zone: high stress + low energy */}
-            <ReferenceArea x1={1} x2={2.5} y1={3.5} y2={5} fill="#ef4444" fillOpacity={0.08} />
+            <ReferenceArea x1={1} x2={2.5} y1={3.5} y2={5} fill={cc.semantic.danger} fillOpacity={0.08} />
             {/* Caution zone */}
-            <ReferenceArea x1={1} x2={3} y1={3} y2={3.5} fill="#f59e0b" fillOpacity={0.06} />
-            <ReferenceArea x1={2.5} x2={3} y1={3.5} y2={5} fill="#f59e0b" fillOpacity={0.06} />
+            <ReferenceArea x1={1} x2={3} y1={3} y2={3.5} fill={cc.semantic.warning} fillOpacity={0.06} />
+            <ReferenceArea x1={2.5} x2={3} y1={3.5} y2={5} fill={cc.semantic.warning} fillOpacity={0.06} />
             {/* Safe zone: low stress + high energy */}
-            <ReferenceArea x1={3.5} x2={5} y1={1} y2={2.5} fill="#22c55e" fillOpacity={0.06} />
-            <Tooltip
-              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+            <ReferenceArea x1={3.5} x2={5} y1={1} y2={2.5} fill={cc.semantic.success} fillOpacity={0.06} />
+            <Tooltip isAnimationActive={false}
+              cursor={{ fill: cc.cursorFill }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
                 const d = payload[0].payload as BurnoutDataPoint;
                 const risk = d.stress >= 3.5 && d.energy <= 2.5 ? 'High' : d.stress >= 3 && d.energy <= 3 ? 'Moderate' : 'Low';
                 return (
-                  <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-                    <p className="font-semibold text-white">{d.date}</p>
-                    <p className="text-slate-300">Energy: {(d.energy ?? 0).toFixed(1)}</p>
-                    <p className="text-slate-300">Stress: {(d.stress ?? 0).toFixed(1)}</p>
+                  <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 px-3 py-2 shadow-lg text-xs space-y-1">
+                    <p className="font-semibold text-secondary-900 dark:text-white">{d.date}</p>
+                    <p className="text-secondary-600 dark:text-secondary-300">Energy: {(d.energy ?? 0).toFixed(1)}</p>
+                    <p className="text-secondary-600 dark:text-secondary-300">Stress: {(d.stress ?? 0).toFixed(1)}</p>
                     <p style={{ color: riskColor(d.energy, d.stress) }}>Risk: {risk}</p>
                   </div>
                 );
@@ -88,11 +90,11 @@ export function BurnoutRiskChart({ data, className }: BurnoutRiskChartProps) {
             />
             <Scatter
               data={data}
-              fill="#6366f1"
+              fill={cc.primary}
               shape={(props: any) => {
                 const { cx, cy, payload } = props;
                 const color = riskColor(payload.energy, payload.stress);
-                return <circle cx={cx} cy={cy} r={5} fill={color} stroke={color} strokeWidth={1} fillOpacity={0.7} />;
+                return <circle cx={cx} cy={cy} r={6} fill={color} stroke={color} strokeWidth={2} fillOpacity={0.8} />;
               }}
             />
           </ScatterChart>

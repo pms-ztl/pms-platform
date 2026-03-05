@@ -26,7 +26,7 @@ function GoalsWithRisk({ goalsData, goalRisks, goalMappings }: GoalsWithRiskProp
             <FlagIcon className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">My Goals</h2>
+            <h2 className="text-lg font-bold text-secondary-900 dark:text-white">My Goals</h2>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">
               {goalMappings && goalMappings.length > 0
                 ? `Composite scores computed from ${goalMappings.reduce((s: number, m: any) => s + (m?.childGoals?.length || 0), 0)} sub-goals`
@@ -41,11 +41,11 @@ function GoalsWithRisk({ goalsData, goalRisks, goalMappings }: GoalsWithRiskProp
       </div>
       <div className="card-body">
         {goalsData?.data?.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="relative w-24 h-24 mx-auto mb-6">
+          <div className="text-center py-6">
+            <div className="relative w-16 h-16 mx-auto mb-3">
               <div className="absolute inset-0 bg-gradient-to-br from-primary-100 to-cyan-100 dark:from-primary-900/30 dark:to-cyan-900/30 rounded-full animate-pulse" />
               <div className="absolute inset-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-full flex items-center justify-center">
-                <FlagIcon className="w-10 h-10 text-secondary-300 dark:text-secondary-600" />
+                <FlagIcon className="w-7 h-7 text-secondary-300 dark:text-secondary-600" />
               </div>
             </div>
             <p className="text-secondary-500 dark:text-secondary-400 mb-2">No active goals yet</p>
@@ -55,7 +55,7 @@ function GoalsWithRisk({ goalsData, goalRisks, goalMappings }: GoalsWithRiskProp
             </a>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {goalsData?.data?.slice(0, 5).map((goal: any) => {
               const risk = getRiskForGoal(goal.id);
               const mapping = getMappingForGoal(goal.id);

@@ -48,6 +48,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { PageHeader } from '@/components/ui';
 import { SurveyInsights, EngagementHeatmap } from '@/components/engagement';
 import { MoodFaceIcon } from '@/components/ui/MoodFaceIcon';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── Constants ──
 
@@ -124,6 +125,7 @@ function SliderControl({
 }
 
 function PersonalSparkline({ history }: { history: PulseResponse[] }) {
+  const cc = useChartColors();
   if (!history || history.length === 0) {
     return (
       <div className="text-center py-4 text-sm text-secondary-400 dark:text-secondary-500">
@@ -141,23 +143,23 @@ function PersonalSparkline({ history }: { history: PulseResponse[] }) {
 
   return (
     <div className="mt-4">
-      <h4 className="text-sm font-medium text-secondary-600 dark:text-secondary-400 mb-2">
+      <h4 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 mb-2">
         Your mood - last {history.length} check-ins
       </h4>
       <div className="h-24">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
-            <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} />
-            <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 10, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} width={20} />
-            <Tooltip
-              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+            <XAxis dataKey="date" tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+            <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} width={20} />
+            <Tooltip isAnimationActive={false}
+              cursor={{ fill: cc.cursorFill }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
                 const d = payload[0].payload;
                 return (
-                  <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs">
-                    <p className="font-medium text-white">{d.date}</p>
-                    <p className="text-slate-300 flex items-center gap-1.5">
+                  <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs">
+                    <p className="font-medium text-secondary-900 dark:text-white">{d.date}</p>
+                    <p className="text-secondary-600 dark:text-secondary-300 flex items-center gap-1.5">
                       <MoodFaceIcon score={d.mood as 1|2|3|4|5} className="w-4 h-4" />
                       {getMoodLabel(d.mood)} ({d.mood}/5)
                     </p>
@@ -168,9 +170,9 @@ function PersonalSparkline({ history }: { history: PulseResponse[] }) {
             <Line
               type="monotone"
               dataKey="mood"
-              stroke="#8b5cf6"
+              stroke={cc.primary}
               strokeWidth={2.5}
-              dot={{ fill: '#8b5cf6', r: 3 }}
+              dot={{ fill: cc.primary, r: 3 }}
               activeDot={{ fill: '#7c3aed', r: 5 }}
             />
           </LineChart>
@@ -187,10 +189,10 @@ function SuccessAnimation({ onComplete }: { onComplete: () => void }) {
   }, [onComplete]);
 
   return (
-    <div className="flex flex-col items-center justify-center py-8 animate-in fade-in zoom-in duration-500">
+    <div className="flex flex-col items-center justify-center py-4 animate-in fade-in zoom-in duration-500">
       <div className="relative">
         <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center animate-bounce">
-          <CheckCircleIcon className="h-12 w-12 text-green-500" />
+          <CheckCircleIcon className="h-8 w-8 text-green-500" />
         </div>
         <div className="absolute -top-1 -right-1">
           <SparklesIcon className="h-6 w-6 text-yellow-400 animate-pulse" />
@@ -235,10 +237,10 @@ function StatCard({
         {trendIcon && <div>{trendIcon}</div>}
       </div>
       <div className="mt-3">
-        <p className="text-sm text-secondary-500 dark:text-secondary-400">{label}</p>
+        <p className="text-sm font-semibold text-secondary-600 dark:text-secondary-300">{label}</p>
         <p className="text-2xl font-bold text-secondary-900 dark:text-white mt-0.5">
           {value}
-          {suffix && <span className="text-sm font-normal text-secondary-400 ml-1">{suffix}</span>}
+          {suffix && <span className="text-sm font-medium text-secondary-600 dark:text-secondary-300 ml-1">{suffix}</span>}
         </p>
       </div>
     </div>
@@ -374,7 +376,7 @@ export function PulsePage() {
   }));
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* ── Page Header ── */}
       <PageHeader title="Pulse Survey & Mood Tracker" subtitle="How are you feeling today? Your well-being matters." />
 
@@ -382,15 +384,15 @@ export function PulsePage() {
          SECTION 1: MOOD CHECK-IN (All Users)
          ══════════════════════════════════════════════════════════════════════ */}
       <div className="bg-gradient-to-br from-violet-50 via-purple-50 to-fuchsia-50 dark:from-secondary-800 dark:via-secondary-800 dark:to-secondary-800 rounded-2xl shadow-sm border border-violet-200/60 dark:border-secondary-700 overflow-hidden">
-        <div className="p-6 sm:p-8">
+        <div className="p-4 sm:p-5">
           {/* Header area */}
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2.5 rounded-xl bg-violet-100 dark:bg-violet-900/30">
               <HeartIcon className="h-6 w-6 text-violet-600 dark:text-violet-400" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Daily Check-in</h2>
-              <p className="text-sm text-secondary-500 dark:text-secondary-400">
+              <h2 className="text-lg font-bold text-secondary-900 dark:text-white">Daily Check-in</h2>
+              <p className="text-sm font-medium text-secondary-600 dark:text-secondary-300">
                 {canSubmitData?.surveyType === 'WEEKLY' ? 'Weekly pulse survey' : 'Quick daily mood check'}
               </p>
             </div>
@@ -400,14 +402,14 @@ export function PulsePage() {
             <SuccessAnimation onComplete={resetForm} />
           ) : !canSubmit ? (
             /* Already submitted */
-            <div className="text-center py-8">
+            <div className="text-center py-4">
               <div className="w-16 h-16 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mx-auto mb-4">
                 <CheckCircleIcon className="h-9 w-9 text-violet-500" />
               </div>
               <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 You've already checked in!
               </h3>
-              <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-2 flex items-center justify-center gap-1.5">
+              <p className="text-sm font-medium text-secondary-600 dark:text-secondary-300 mt-2 flex items-center justify-center gap-1.5">
                 <ClockIcon className="h-4 w-4" />
                 {nextAvailable
                   ? `Next check-in available ${format(new Date(nextAvailable), 'MMM d \'at\' h:mm a')}`
@@ -426,11 +428,11 @@ export function PulsePage() {
               <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr_180px] gap-4 items-start">
                 {/* Left: Today summary (hidden on mobile) */}
                 <div className="hidden lg:flex flex-col gap-2 pt-6">
-                  <p className="text-2xs font-semibold text-secondary-400 dark:text-secondary-500 uppercase tracking-wider">
+                  <p className="text-2xs font-bold text-secondary-600 dark:text-secondary-300 uppercase tracking-wider">
                     Today
                   </p>
                   <div className="bg-white/60 dark:bg-secondary-700/40 rounded-lg px-3 py-2">
-                    <p className="text-2xs text-secondary-500 dark:text-secondary-400">Last mood</p>
+                    <p className="text-2xs font-semibold text-secondary-600 dark:text-secondary-300">Last mood</p>
                     <p className="text-sm font-bold text-secondary-900 dark:text-white flex items-center gap-1.5">
                       {myHistory && myHistory.length > 0 ? (
                         <>
@@ -441,7 +443,7 @@ export function PulsePage() {
                     </p>
                   </div>
                   <div className="bg-white/60 dark:bg-secondary-700/40 rounded-lg px-3 py-2">
-                    <p className="text-2xs text-secondary-500 dark:text-secondary-400">Streak</p>
+                    <p className="text-2xs font-semibold text-secondary-600 dark:text-secondary-300">Streak</p>
                     <p className="text-sm font-bold text-secondary-900 dark:text-white">
                       {(() => {
                         if (!myHistory || myHistory.length === 0) return '\u2014';
@@ -496,11 +498,11 @@ export function PulsePage() {
 
                 {/* Right: Trend note (hidden on mobile) */}
                 <div className="hidden lg:flex flex-col gap-2 pt-6">
-                  <p className="text-2xs font-semibold text-secondary-400 dark:text-secondary-500 uppercase tracking-wider">
+                  <p className="text-2xs font-bold text-secondary-600 dark:text-secondary-300 uppercase tracking-wider">
                     Trend
                   </p>
                   <div className="bg-white/60 dark:bg-secondary-700/40 rounded-lg px-3 py-2">
-                    <p className="text-2xs text-secondary-500 dark:text-secondary-400">Recent average</p>
+                    <p className="text-2xs font-semibold text-secondary-600 dark:text-secondary-300">Recent average</p>
                     <p className="text-sm font-bold text-secondary-900 dark:text-white">
                       {myHistory && myHistory.length >= 2
                         ? `${(myHistory.slice(0, 7).reduce((s, h) => s + h.moodScore, 0) / Math.min(7, myHistory.length)).toFixed(1)}/5`
@@ -508,7 +510,7 @@ export function PulsePage() {
                     </p>
                   </div>
                   <div className="bg-white/60 dark:bg-secondary-700/40 rounded-lg px-3 py-2">
-                    <p className="text-2xs text-secondary-500 dark:text-secondary-400">Check-ins</p>
+                    <p className="text-2xs font-semibold text-secondary-600 dark:text-secondary-300">Check-ins</p>
                     <p className="text-sm font-bold text-secondary-900 dark:text-white">
                       {myHistory ? myHistory.length : 0}
                     </p>
@@ -638,8 +640,8 @@ export function PulsePage() {
                 <ChartBarIcon className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Team Analytics</h2>
-                <p className="text-sm text-secondary-500 dark:text-secondary-400">
+                <h2 className="text-lg font-bold text-secondary-900 dark:text-white">Team Analytics</h2>
+                <p className="text-sm font-semibold text-secondary-600 dark:text-secondary-300">
                   Understand your team's pulse
                 </p>
               </div>
@@ -647,7 +649,7 @@ export function PulsePage() {
             <select
               value={analyticsDays}
               onChange={(e) => setAnalyticsDays(Number(e.target.value))}
-              className="text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-3 py-1.5 bg-white/90 dark:bg-secondary-900/60 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+              className="text-sm border border-secondary-200 dark:border-secondary-700/50 rounded-lg px-3 py-1.5 bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
             >
               <option value={7}>Last 7 days</option>
               <option value={14}>Last 14 days</option>
@@ -704,7 +706,7 @@ export function PulsePage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Mood Distribution Pie Chart */}
             <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-              <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Mood Distribution</h3>
+              <h3 className="text-sm font-bold text-secondary-900 dark:text-white mb-3">Mood Distribution</h3>
               {pieData.length > 0 ? (
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
@@ -726,17 +728,18 @@ export function PulsePage() {
                           />
                         ))}
                       </Pie>
-                      <Tooltip
-                        cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                      <Tooltip isAnimationActive={false}
+                        cursor={{ fill: cc.cursorFill }}
                         content={({ active, payload }) => {
                           if (!active || !payload?.length) return null;
                           const d = payload[0].payload;
                           return (
-                            <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs">
-                              <p className="font-medium text-white">
-                                {getMoodEmoji(d.score)} {d.name}
+                            <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs">
+                              <p className="font-medium text-secondary-900 dark:text-white flex items-center gap-1.5">
+                                <MoodFaceIcon score={Math.max(1, Math.min(5, d.score)) as 1|2|3|4|5} className="w-4 h-4" />
+                                {d.name}
                               </p>
-                              <p className="text-slate-300">
+                              <p className="text-secondary-600 dark:text-secondary-300">
                                 {d.value} responses
                               </p>
                             </div>
@@ -760,21 +763,21 @@ export function PulsePage() {
 
             {/* Trend Line Chart */}
             <div className="lg:col-span-2 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-              <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Mood Trends</h3>
+              <h3 className="text-sm font-bold text-secondary-900 dark:text-white mb-3">Mood Trends</h3>
               {trendChartData.length > 0 ? (
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={trendChartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" />
                       <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} />
                       <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} width={25} />
-                      <Tooltip
-                        cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                      <Tooltip isAnimationActive={false}
+                        cursor={{ fill: cc.cursorFill }}
                         content={({ active, payload, label }) => {
                           if (!active || !payload?.length) return null;
                           return (
-                            <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs space-y-1">
-                              <p className="font-medium text-white">{label}</p>
+                            <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs space-y-1">
+                              <p className="font-medium text-secondary-900 dark:text-white">{label}</p>
                               {payload.map((p: any) => (
                                 <p key={p.dataKey} style={{ color: p.color }}>
                                   {p.dataKey === 'mood' ? 'Mood' : p.dataKey === 'energy' ? 'Energy' : 'Stress'}: {p.value}
@@ -831,8 +834,8 @@ export function PulsePage() {
 
           {/* Pulse Activity Heatmap + KPI stack */}
           {trendData && Array.isArray(trendData) && trendData.length > 0 && (
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-6">
-              <h3 className="text-base font-semibold text-secondary-900 dark:text-white mb-4">
+            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+              <h3 className="text-base font-bold text-secondary-900 dark:text-white mb-3">
                 Pulse Check-in Activity
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-6">
@@ -884,7 +887,7 @@ export function PulsePage() {
                       key={kpi.label}
                       className="bg-secondary-50 dark:bg-secondary-700/40 rounded-lg px-4 py-3"
                     >
-                      <p className="text-2xs font-medium text-secondary-500 dark:text-secondary-400">
+                      <p className="text-2xs font-bold text-secondary-600 dark:text-secondary-300">
                         {kpi.label}
                       </p>
                       <p className={clsx('text-lg font-bold mt-0.5', kpi.color)}>
@@ -900,11 +903,11 @@ export function PulsePage() {
           {/* Department Heatmap / Bar Chart */}
           {deptChartData.length > 0 && (
             <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-              <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4">Department Breakdown</h3>
+              <h3 className="text-sm font-bold text-secondary-900 dark:text-white mb-3">Department Breakdown</h3>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={deptChartData} layout="vertical" margin={{ left: 10, right: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" horizontal={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" horizontal={false} />
                     <XAxis type="number" domain={[0, 5]} ticks={[0, 1, 2, 3, 4, 5]} tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} axisLine={false} tickLine={false} />
                     <YAxis
                       type="category"
@@ -914,21 +917,21 @@ export function PulsePage() {
                       tickLine={false}
                       width={100}
                     />
-                    <Tooltip
-                      cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
+                    <Tooltip isAnimationActive={false}
+                      cursor={{ fill: cc.cursorFill }}
                       content={({ active, payload }) => {
                         if (!active || !payload?.length) return null;
                         const d = payload[0].payload;
                         return (
-                          <div className="bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-xl px-3 py-2 border border-white/10 text-xs space-y-1">
-                            <p className="font-medium text-white">{d.fullName}</p>
-                            <p className="text-slate-300">
-                              Average Mood: {getMoodEmoji(Math.round(d.mood))} {d.mood}/5
+                          <div className="bg-white dark:bg-secondary-800 shadow-lg rounded-lg px-3 py-2 border border-secondary-200 dark:border-secondary-700 text-xs space-y-1">
+                            <p className="font-medium text-secondary-900 dark:text-white">{d.fullName}</p>
+                            <p className="text-secondary-600 dark:text-secondary-300 flex items-center gap-1.5">
+                              Average Mood: <MoodFaceIcon score={Math.max(1, Math.min(5, Math.round(d.mood))) as 1|2|3|4|5} className="w-4 h-4" /> {d.mood}/5
                             </p>
-                            <p className="text-slate-300">
+                            <p className="text-secondary-600 dark:text-secondary-300">
                               Participation: {d.participation}%
                             </p>
-                            <p className="text-slate-300">
+                            <p className="text-secondary-600 dark:text-secondary-300">
                               Responses: {d.responses}
                             </p>
                           </div>
@@ -963,12 +966,12 @@ export function PulsePage() {
                       key={dept.departmentId}
                       className="flex items-center gap-3 bg-secondary-50 dark:bg-secondary-700/40 rounded-lg p-3"
                     >
-                      <span className="text-2xl">{getMoodEmoji(Math.round(dept.averageMood))}</span>
+                      <MoodFaceIcon score={Math.max(1, Math.min(5, Math.round(dept.averageMood))) as 1|2|3|4|5} className="w-8 h-8 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-secondary-900 dark:text-white break-words">
                           {dept.departmentName}
                         </p>
-                        <div className="flex items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">
+                        <div className="flex items-center gap-3 text-xs font-medium text-secondary-600 dark:text-secondary-300">
                           <span className={clsx('font-semibold', moodColor)}>
                             {(dept.averageMood ?? 0).toFixed(1)}
                           </span>

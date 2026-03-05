@@ -124,7 +124,7 @@ function OverviewCard({
         </div>
 
         {/* Card content */}
-        <div className="px-4 sm:px-8 pb-6 sm:pb-8 pt-3 sm:pt-4">
+        <div className="px-4 sm:px-8 pb-4 sm:pb-6 pt-3 sm:pt-4">
           {children}
         </div>
       </div>
@@ -267,9 +267,9 @@ export function RealtimePerformancePage() {
     switch (activeTab) {
       case 'overview':
         return (
-          <div className="space-y-8">
+          <div className="space-y-4">
             {/* Hero summary banner — frosted glassmorphism */}
-            <div className="relative overflow-hidden rounded-2xl glass-banner p-4 sm:p-8 shadow-lg frosted-noise">
+            <div className="relative overflow-hidden rounded-2xl glass-banner p-4 sm:p-6 shadow-lg frosted-noise">
               {/* Decorative gradient orbs */}
               <div className="absolute -top-16 -right-16 w-56 h-56 bg-gradient-to-br from-primary-500/20 to-indigo-500/15 rounded-full blur-3xl" />
               <div className="absolute -bottom-12 -left-12 w-44 h-44 bg-gradient-to-tr from-cyan-500/15 to-primary-500/10 rounded-full blur-3xl" />
@@ -519,7 +519,7 @@ export function RealtimePerformancePage() {
 
       {/* Main Content */}
       <main className={clsx(
-        'mx-auto py-8 transition-all duration-300',
+        'mx-auto py-4 transition-all duration-300',
         activeTab === 'overview'
           ? 'max-w-[1400px] px-4 sm:px-6 lg:px-10'
           : 'max-w-7xl px-4 sm:px-6 lg:px-8'

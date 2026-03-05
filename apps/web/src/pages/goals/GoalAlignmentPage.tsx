@@ -91,17 +91,17 @@ function TreeNodeCard({ goal, depth, isLast, onSelect, selectedId, expandedMap, 
   const expanded = expandedMap[goal.id] ?? depth < 2;
 
   return (
-    <div className={clsx('relative', depth > 0 && 'ml-8 lg:ml-12')}>
+    <div className={clsx('relative', depth > 0 && 'ml-8')}>
       {depth > 0 && (
-        <div className="absolute left-0 top-0 -ml-8 lg:-ml-12 h-full pointer-events-none">
-          <div className="absolute top-5 left-0 w-8 lg:w-12 border-t-2 border-secondary-300 dark:border-secondary-600" />
+        <div className="absolute left-0 top-0 -ml-8 h-full pointer-events-none">
+          <div className="absolute top-5 left-0 w-8 border-t-2 border-secondary-300 dark:border-secondary-600" />
           <div className={clsx('absolute top-0 left-0 border-l-2 border-secondary-300 dark:border-secondary-600', isLast ? 'h-5' : 'h-full')} />
         </div>
       )}
       <div
         onClick={() => onSelect(goal)}
         className={clsx(
-          'relative group cursor-pointer rounded-lg border p-3 mb-2 transition-all duration-150',
+          'relative group cursor-pointer rounded-lg border p-3 mb-1.5 transition-all duration-150',
           'hover:shadow-md hover:border-primary-300 dark:hover:border-primary-600',
           selectedId === goal.id
             ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/20 shadow-md ring-1 ring-primary-200 dark:ring-primary-700'
@@ -120,7 +120,7 @@ function TreeNodeCard({ goal, depth, isLast, onSelect, selectedId, expandedMap, 
               <span className={clsx('w-2 h-2 rounded-full flex-shrink-0', typeDotColors[goal.type] || 'bg-secondary-400')} />
               <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">{goal.title}</span>
             </div>
-            <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-2 break-words">
+            <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-1 break-words">
               {goal.owner?.firstName} {goal.owner?.lastName}
             </p>
             <div className="flex items-center gap-2">
@@ -212,7 +212,7 @@ function DetailPanel({ goal, onClose }: { goal: Goal; onClose: () => void }) {
           <XMarkIcon className="h-4 w-4 text-secondary-500" />
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-5">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {/* Title & Description */}
         <div>
           <h4 className="text-base font-semibold text-secondary-900 dark:text-white leading-snug">{goal.title}</h4>
@@ -360,11 +360,11 @@ function StatsBar({ goals }: { goals: Goal[] }) {
     { label: 'Average Progress', value: `${avg}%`, cls: avgCls },
   ];
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
       {stats.map((s) => (
-        <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg border border-secondary-200/60 dark:border-white/[0.06] px-3 py-2">
+        <div key={s.label} className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-lg border border-secondary-200/60 dark:border-white/[0.06] px-3 py-1.5">
           <p className="text-2xs tracking-wide text-secondary-500 dark:text-secondary-400">{s.label}</p>
-          <p className={clsx('text-xl font-bold mt-0.5', s.cls)}>{s.value}</p>
+          <p className={clsx('text-lg font-bold mt-0.5', s.cls)}>{s.value}</p>
         </div>
       ))}
     </div>
@@ -446,7 +446,7 @@ export function GoalAlignmentPage() {
       </PageHeader>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-2">
         <FunnelIcon className="h-5 w-5 text-secondary-400 dark:text-secondary-500 flex-shrink-0" />
         <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="input py-1.5 w-40 text-sm">
           <option value="">All Types</option>
@@ -499,11 +499,13 @@ export function GoalAlignmentPage() {
         <div className="flex gap-0">
           <div className="flex-1 min-w-0">
             {effectiveView === 'tree' && (
-              <div className="space-y-1">
-                {filteredTree.map((goal, idx) => (
-                  <TreeNodeCard key={goal.id} goal={goal} depth={0} isLast={idx === filteredTree.length - 1}
-                    onSelect={handleSelect} selectedId={selectedGoal?.id ?? null} expandedMap={expandedMap} toggleExpand={toggleExpand} />
-                ))}
+              <div className="rounded-lg border border-secondary-200/60 dark:border-white/[0.06] bg-white/50 dark:bg-secondary-800/30 p-2">
+                <div className="space-y-0.5">
+                  {filteredTree.map((goal, idx) => (
+                    <TreeNodeCard key={goal.id} goal={goal} depth={0} isLast={idx === filteredTree.length - 1}
+                      onSelect={handleSelect} selectedId={selectedGoal?.id ?? null} expandedMap={expandedMap} toggleExpand={toggleExpand} />
+                  ))}
+                </div>
               </div>
             )}
             {effectiveView === 'list' && (
@@ -527,7 +529,7 @@ export function GoalAlignmentPage() {
             )}
           </div>
           {showPanel && !isMobile && (
-            <div className="w-80 xl:w-96 flex-shrink-0 ml-4 sticky top-0 h-[calc(100vh-12rem)] rounded-lg overflow-hidden border border-secondary-200/60 dark:border-white/[0.06] shadow-lg landscape-scroll"> {/* ui-allow: fixed-height — scrollable table container */}
+            <div className="w-80 xl:w-96 flex-shrink-0 ml-4 sticky top-4 max-h-[calc(100vh-6rem)] rounded-lg overflow-hidden border border-secondary-200/60 dark:border-white/[0.06] shadow-lg landscape-scroll"> {/* ui-allow: fixed-height — scrollable detail panel */}
               <DetailPanel goal={selectedGoal!} onClose={() => setSelectedGoal(null)} />
             </div>
           )}

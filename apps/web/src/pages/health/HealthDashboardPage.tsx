@@ -50,6 +50,7 @@ import {
   Cell,
 } from 'recharts';
 import clsx from 'clsx';
+import { ChartTooltip } from '@/components/ui';
 
 import {
   healthApi,
@@ -57,6 +58,7 @@ import {
   type DepartmentHealth,
 } from '@/lib/api/health';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ---------------------------------------------------------------------------
 // Constants & Helpers
@@ -275,16 +277,7 @@ const PIE_COLORS = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444'];
 // ---------------------------------------------------------------------------
 // Tooltip style (shared)
 // ---------------------------------------------------------------------------
-const TOOLTIP_STYLE = {
-  background: 'rgba(15, 23, 42, 0.85)',
-  backdropFilter: 'blur(16px)',
-  WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(148, 163, 184, 0.15)',
-  borderRadius: '0.75rem',
-  boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
-  fontSize: '0.75rem',
-  color: '#f1f5f9',
-};
+// TOOLTIP_STYLE removed — now using <ChartTooltip /> component
 
 /** Large radial gauge for the overall health score */
 function HealthGauge({ score, healthLevel }: { score: number; healthLevel: OrganizationalHealth['healthLevel'] }) {
@@ -438,6 +431,7 @@ function StatCard({
 // ---------------------------------------------------------------------------
 
 export function HealthDashboardPage() {
+  const cc = useChartColors();
   usePageTitle('Organizational Health');
   // ── Queries ──
   const {
@@ -523,7 +517,7 @@ export function HealthDashboardPage() {
   if (errorLatest) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
-        <ExclamationTriangleIcon className="h-12 w-12 text-danger-400 mb-4" />
+        <ExclamationTriangleIcon className="h-8 w-8 text-danger-400 mb-4" />
         <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
           Unable to load health metrics
         </h2>
@@ -535,7 +529,7 @@ export function HealthDashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* ================================================================== */}
       {/* 1. Header                                                          */}
       {/* ================================================================== */}
@@ -648,36 +642,33 @@ export function HealthDashboardPage() {
                   score: latest?.[comp.key] ?? 0,
                 }))}>
                   <PolarGrid
-                    className="stroke-secondary-300/40 dark:stroke-secondary-600/25"
+                    className="stroke-secondary-300/60 dark:stroke-secondary-500/50"
                     gridType="polygon"
+                    strokeWidth={1.5}
                   />
                   <PolarAngleAxis
                     dataKey="metric"
-                    tick={{ fontSize: 10, fill: 'currentColor' }}
+                    tick={{  fontSize: 10, fontWeight: 600, fill: 'currentColor' }}
                     className="[&_text]:fill-secondary-600 dark:[&_text]:fill-secondary-300"
                     stroke="transparent"
                     axisLine={{ stroke: 'transparent', fill: 'none' }}
                   />
                   <PolarRadiusAxis
                     domain={[0, 100]}
-                    tick={{ fontSize: 9 }}
-                    className="fill-secondary-400 dark:fill-secondary-500"
+                    tick={{  fontSize: 9, fontWeight: 600 }}
+                    className="fill-secondary-400 dark:fill-secondary-400"
                     stroke="transparent"
                   />
                   <Radar
                     name="Score"
                     dataKey="score"
-                    stroke="#8b5cf6"
-                    fill="#8b5cf6"
+                    stroke={cc.primary}
+                    fill={cc.primary}
                     fillOpacity={0.12}
                     strokeWidth={2}
-                    dot={{ r: 3.5, fill: '#8b5cf6', fillOpacity: 1, stroke: '#1e293b', strokeWidth: 1.5 }}
+                    dot={{ r: 3.5, fill: cc.primary, fillOpacity: 1, stroke: cc.primaryExtraDark, strokeWidth: 1.5 }}
                   />
-                  <Tooltip
-                    cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                    contentStyle={TOOLTIP_STYLE}
-                    formatter={(value: number) => [`${value}/100`, 'Score']}
-                  />
+                  <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
@@ -694,14 +685,14 @@ export function HealthDashboardPage() {
               <AreaChart data={MONTHLY_PULSE} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="pulseGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                    <stop offset="5%" stopColor={cc.semantic.success} stopOpacity={0.25} />
+                    <stop offset="95%" stopColor={cc.semantic.success} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="month" tick={{ fontSize: 10 }} className="fill-secondary-400 dark:fill-secondary-500" axisLine={false} tickLine={false} />
-                <YAxis domain={[6, 10]} tick={{ fontSize: 10 }} className="fill-secondary-400 dark:fill-secondary-500" axisLine={false} tickLine={false} />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${v}/10`, 'Pulse Score']} />
-                <Area type="monotone" dataKey="score" stroke="#22c55e" strokeWidth={2} fill="url(#pulseGrad)" dot={{ r: 3, fill: '#22c55e', stroke: '#1e293b', strokeWidth: 1.5 }} />
+                <XAxis dataKey="month" tick={{  fontSize: 11 }} className="fill-secondary-400 dark:fill-secondary-300" axisLine={false} tickLine={false} />
+                <YAxis domain={[6, 10]} tick={{  fontSize: 11 }} className="fill-secondary-400 dark:fill-secondary-300" axisLine={false} tickLine={false} />
+                <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+                <Area type="monotone" dataKey="score" stroke={cc.semantic.success} strokeWidth={3} fill="url(#pulseGrad)" dot={{ r: 3, fill: '#22c55e', stroke: cc.primaryExtraDark, strokeWidth: 1.5 }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -1040,14 +1031,14 @@ export function HealthDashboardPage() {
                   data={historyChartData.length >= 2 ? historyChartData : MOCK_HISTORY}
                   margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
-                  <XAxis dataKey="date" className="fill-secondary-500 dark:fill-secondary-400" tick={{ fontSize: 12 }} />
-                  <YAxis domain={[0, 100]} className="fill-secondary-500 dark:fill-secondary-400" />
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#94a3b8', fontWeight: 600 }} itemStyle={{ color: '#e2e8f0' }} />
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-300 dark:stroke-secondary-500" strokeOpacity={0.5} />
+                  <XAxis dataKey="date" className="fill-secondary-500 dark:fill-secondary-300" tick={{  fontSize: 11 }} />
+                  <YAxis domain={[0, 100]} className="fill-secondary-500 dark:fill-secondary-300" />
+                  <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
                   <Legend />
-                  <Line type="monotone" dataKey="healthScore" name="Health Score" stroke="#8b5cf6" strokeWidth={2.5} dot={{ r: 4, fill: '#8b5cf6' }} activeDot={{ r: 6 }} />
-                  <Line type="monotone" dataKey="engagement" name="Engagement" stroke="#22c55e" strokeWidth={1.5} strokeDasharray="5 5" dot={false} />
-                  <Line type="monotone" dataKey="performance" name="Performance" stroke="#3b82f6" strokeWidth={1.5} strokeDasharray="5 5" dot={false} />
+                  <Line type="monotone" dataKey="healthScore" name="Health Score" stroke={cc.primary} strokeWidth={2.5} dot={{ r: 4, fill: cc.primary }} activeDot={{ r: 6 }} />
+                  <Line type="monotone" dataKey="engagement" name="Engagement" stroke={cc.semantic.success} strokeWidth={1.5} strokeDasharray="5 5" dot={false} />
+                  <Line type="monotone" dataKey="performance" name="Performance" stroke={cc.semantic.info} strokeWidth={1.5} strokeDasharray="5 5" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

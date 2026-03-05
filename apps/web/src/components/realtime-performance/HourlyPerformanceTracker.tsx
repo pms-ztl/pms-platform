@@ -28,7 +28,9 @@ import {
   FireIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import { ChartTooltip } from '@/components/ui';
 import { fetchWithAuth } from '@/lib/fetch-with-auth';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface HourlyMetric {
   id: string;
@@ -158,6 +160,7 @@ const ScoreGauge = ({
 };
 
 export function HourlyPerformanceTracker() {
+  const cc = useChartColors();
   const [refreshInterval, setRefreshInterval] = useState(60000); // 1 minute
 
   const { data: snapshot, isLoading } = useQuery({
@@ -290,37 +293,24 @@ export function HourlyPerformanceTracker() {
             <AreaChart data={chartData}>
               <defs>
                 <linearGradient id="colorProductivity" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  <stop offset="5%" stopColor={cc.semantic.success} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={cc.semantic.success} stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorEngagement" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                  <stop offset="5%" stopColor={cc.primary} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={cc.primary} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
-              <XAxis dataKey="hour" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} domain={[0, 100]} />
-              <Tooltip
-                cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                contentStyle={{
-                  background: 'rgba(15, 23, 42, 0.80)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(148, 163, 184, 0.15)',
-                  borderRadius: '0.75rem',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                  fontSize: '0.75rem',
-                  color: '#f1f5f9',
-                }}
-                labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-                itemStyle={{ color: '#e2e8f0' }}
-              />
+              <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-300 dark:stroke-secondary-500" strokeOpacity={0.5} />
+              <XAxis dataKey="hour" tick={{  fontSize: 11, fontWeight: 600 }} className="fill-secondary-500 dark:fill-secondary-300" />
+              <YAxis tick={{  fontSize: 11, fontWeight: 600 }} domain={[0, 100]} className="fill-secondary-500 dark:fill-secondary-300" />
+              <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
               <Legend />
               <Area
                 type="monotone"
                 dataKey="productivity"
-                stroke="#10b981"
+                stroke={cc.semantic.success}
+                strokeWidth={3}
                 fillOpacity={1}
                 fill="url(#colorProductivity)"
                 name="Productivity"
@@ -328,7 +318,8 @@ export function HourlyPerformanceTracker() {
               <Area
                 type="monotone"
                 dataKey="engagement"
-                stroke="#3b82f6"
+                stroke={cc.primary}
+                strokeWidth={3}
                 fillOpacity={1}
                 fill="url(#colorEngagement)"
                 name="Engagement"

@@ -36,7 +36,7 @@ function ManagerGoalCascade({ teamTreeData, userId }: ManagerGoalCascadeProps) {
               <UserGroupIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Goal Cascade Overview</h2>
+              <h2 className="text-lg font-bold text-secondary-900 dark:text-white">Goal Cascade Overview</h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">
                 Cascading goals across your team
               </p>
@@ -49,7 +49,7 @@ function ManagerGoalCascade({ teamTreeData, userId }: ManagerGoalCascadeProps) {
       </div>
       <div className="card-body">
         {/* Summary stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
           <div className="text-center p-3 rounded-xl border transition-all duration-300 elastic-scale bg-purple-50 dark:bg-purple-500/[0.08] border-purple-100 dark:border-purple-500/10">
             <p className="text-xl font-bold text-purple-700 dark:text-purple-300">{cascadeStats.total}</p>
             <p className="text-xs text-purple-600 dark:text-purple-400">Total Goals</p>

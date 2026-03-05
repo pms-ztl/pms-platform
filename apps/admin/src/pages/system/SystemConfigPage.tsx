@@ -29,12 +29,20 @@ export default function SystemConfigPage() {
       queryClient.invalidateQueries({ queryKey: ['system-config'] });
       toast.success('Configuration updated');
     },
+    onError: (error) => {
+      const msg = error instanceof Error ? error.message : 'Failed to update configuration';
+      toast.error(msg);
+    },
   });
 
   const clearCacheMutation = useMutation({
     mutationFn: (type?: string) => systemApi.clearCache(type),
     onSuccess: () => {
       toast.success('Cache cleared');
+    },
+    onError: (error) => {
+      const msg = error instanceof Error ? error.message : 'Failed to clear cache';
+      toast.error(msg);
     },
   });
 

@@ -107,7 +107,7 @@ function ScenarioForm({
   params: Record<string, any>;
   setParams: (p: Record<string, any>) => void;
 }) {
-  const inputCls = 'w-full text-sm rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 focus:outline-none transition-all duration-300';
+  const inputCls = 'w-full text-sm rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm text-secondary-900 dark:text-white px-3 py-2 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 focus:outline-none transition-all duration-300';
   const labelCls = 'block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1';
 
   switch (scenario) {
@@ -193,7 +193,7 @@ export function PerformanceSimulatorPage() {
   const colors = colorMap[currentScenario.color];
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-4 pb-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -217,7 +217,7 @@ export function PerformanceSimulatorPage() {
               key={s.id}
               onClick={() => handleScenarioChange(s.id)}
               className={clsx(
-                'relative rounded-xl border-2 p-4 text-left transition-all hover:shadow-md',
+                'relative rounded-xl border-2 p-3 text-left transition-all hover:shadow-md',
                 isActive ? `${c.bg} ${c.border} ring-2 ${c.ring}` : 'border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl hover:border-secondary-300'
               )}
             >
@@ -232,8 +232,8 @@ export function PerformanceSimulatorPage() {
       {/* Two-column: inputs + results */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Input panel */}
-        <div className="lg:col-span-1 space-y-5">
-          <div className={clsx('rounded-2xl border p-5', colors.bg, colors.border)}>
+        <div className="lg:col-span-1 space-y-4">
+          <div className={clsx('rounded-2xl border p-4', colors.bg, colors.border)}>
             <h3 className={clsx('text-sm font-semibold mb-4 flex items-center gap-2', colors.text)}>
               <currentScenario.icon className="h-5 w-5" />
               {currentScenario.label} Parameters
@@ -242,7 +242,7 @@ export function PerformanceSimulatorPage() {
             <button
               onClick={handleRun}
               disabled={simulationMutation.isPending}
-              className="w-full mt-5 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 disabled:opacity-50 transition-colors shadow-lg shadow-primary-500/20"
+              className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 disabled:opacity-50 transition-colors shadow-lg shadow-primary-500/20"
             >
               {simulationMutation.isPending ? (
                 <><ArrowPathIcon className="h-4 w-4 animate-spin" /> Running...</>
@@ -254,12 +254,12 @@ export function PerformanceSimulatorPage() {
         </div>
 
         {/* Results panel */}
-        <div className="lg:col-span-2 space-y-5">
+        <div className="lg:col-span-2 space-y-4">
           {!result && !simulationMutation.isPending && (
-            <div className="py-6 space-y-5">
+            <div className="space-y-4">
               {/* 3-step guidance */}
-              <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
-                <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-4 flex items-center gap-2">
+              <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4">
+                <h3 className="text-sm font-semibold text-secondary-900 dark:text-white mb-3 flex items-center gap-2">
                   <BeakerIcon className="h-5 w-5 text-primary-500" /> How to run a simulation
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -302,7 +302,7 @@ export function PerformanceSimulatorPage() {
           )}
 
           {simulationMutation.isPending && (
-            <div className="flex flex-col items-center justify-center py-10">
+            <div className="flex flex-col items-center justify-center py-6">
               <div className="w-12 h-12 rounded-full border-4 border-primary-200 border-t-primary-600 animate-spin mb-3" />
               <p className="text-sm text-secondary-500 animate-pulse">Analyzing scenario impacts...</p>
             </div>
@@ -311,7 +311,7 @@ export function PerformanceSimulatorPage() {
           {result && (
             <>
               {/* Confidence + scenario type */}
-              <div className="flex items-center justify-between rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
+              <div className="flex items-center justify-between rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4">
                 <div>
                   <h3 className="text-sm font-semibold text-secondary-900 dark:text-white">Simulation Results</h3>
                   <p className="text-xs text-secondary-500 mt-0.5">Scenario: {result.scenarioType.replace(/_/g, ' ')}</p>
@@ -333,7 +333,7 @@ export function PerformanceSimulatorPage() {
 
               {/* Cascading effects */}
               {result.cascadingEffects.length > 0 && (
-                <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
+                <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4">
                   <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">Cascading Effects</h3>
                   <div className="space-y-3">
                     {result.cascadingEffects.map((ce, i) => (
@@ -354,7 +354,7 @@ export function PerformanceSimulatorPage() {
 
               {/* Recommendations */}
               {result.recommendations.length > 0 && (
-                <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
+                <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4">
                   <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3 flex items-center gap-1.5">
                     <LightBulbIcon className="h-4 w-4 text-amber-500" /> Recommendations
                   </h3>
@@ -380,7 +380,7 @@ export function PerformanceSimulatorPage() {
 
               {/* Constraints */}
               {result.constraints.length > 0 && (
-                <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-5">
+                <div className="rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-4">
                   <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3">Constraint Checks</h3>
                   <div className="space-y-2">
                     {result.constraints.map((c, i) => (

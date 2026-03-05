@@ -132,15 +132,15 @@ const goalColumns: Column<Goal>[] = [
     sortable: true,
     render: (goal) => (
       <div className="flex items-center gap-2">
-        <span className={clsx('text-2xs font-semibold px-1.5 py-0.5 rounded', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
+        <span className={clsx('text-2xs font-semibold px-1.5 py-0.5 rounded whitespace-nowrap shrink-0', typeColors[goal.type] || typeColors.INDIVIDUAL)}>
           {goal.type?.replace('_', ' ')}
         </span>
-        <div>
-          <a href={`/goals/${goal.id}`} className="text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400">
+        <div className="min-w-0">
+          <a href={`/goals/${goal.id}`} className="text-sm font-medium text-secondary-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 break-words">
             {goal.title}
           </a>
           {goal.parentGoal && (
-            <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5">↳ {goal.parentGoal.title}</p>
+            <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-0.5 truncate">↳ {goal.parentGoal.title}</p>
           )}
         </div>
       </div>
@@ -149,12 +149,13 @@ const goalColumns: Column<Goal>[] = [
   {
     key: 'owner',
     header: 'Owner',
+    className: 'w-[130px]',
     render: (goal) => (
       <div className="flex items-center gap-1.5">
         <div className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-2xs font-bold text-primary-700 dark:text-primary-300 flex-shrink-0">
           {goal.owner?.firstName?.[0]}{goal.owner?.lastName?.[0]}
         </div>
-        <span className="text-xs text-secondary-600 dark:text-secondary-400 truncate max-w-[100px]">
+        <span className="text-xs text-secondary-600 dark:text-secondary-400 truncate max-w-[80px]">
           {goal.owner?.firstName} {goal.owner?.lastName}
         </span>
       </div>
@@ -164,6 +165,8 @@ const goalColumns: Column<Goal>[] = [
     key: 'status',
     header: 'Status',
     sortable: true,
+    className: 'w-[100px]',
+    sortValue: (goal) => goal.status,
     render: (goal) => (
       <span className={statusColors[goal.status] || 'badge-secondary'}>{goal.status}</span>
     ),
@@ -172,6 +175,11 @@ const goalColumns: Column<Goal>[] = [
     key: 'priority',
     header: 'Priority',
     sortable: true,
+    className: 'w-[90px]',
+    sortValue: (goal) => {
+      const order: Record<string, number> = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
+      return order[goal.priority] ?? 4;
+    },
     render: (goal) => (
       <span className={clsx('text-sm', priorityColors[goal.priority])}>{goal.priority}</span>
     ),
@@ -180,15 +188,17 @@ const goalColumns: Column<Goal>[] = [
     key: 'progress',
     header: 'Progress',
     sortable: true,
+    className: 'w-[150px]',
+    sortValue: (goal) => goal.progress,
     render: (goal) => (
-      <div className="flex items-center">
-        <div className="w-24 bg-secondary-200 dark:bg-secondary-700 rounded-full h-2">
+      <div className="flex items-center gap-2">
+        <div className="w-20 bg-secondary-200 dark:bg-secondary-700 rounded-full h-2 shrink-0">
           <div
             className={clsx('h-2 rounded-full', goal.progress >= 100 ? 'bg-success-500' : 'bg-primary-600')}
             style={{ width: `${Math.min(goal.progress, 100)}%` }}
           />
         </div>
-        <span className="ml-2 text-sm text-secondary-600 dark:text-secondary-400">{goal.progress}%</span>
+        <span className="text-sm text-secondary-600 dark:text-secondary-400 w-10 text-right shrink-0">{goal.progress}%</span>
       </div>
     ),
   },
@@ -196,6 +206,8 @@ const goalColumns: Column<Goal>[] = [
     key: 'dueDate',
     header: 'Due Date',
     sortable: true,
+    className: 'w-[100px]',
+    sortValue: (goal) => goal.dueDate ? new Date(goal.dueDate).getTime() : 0,
     render: (goal) => (
       <span className="text-sm text-secondary-500 dark:text-secondary-400 whitespace-nowrap">
         {goal.dueDate ? new Date(goal.dueDate).toLocaleDateString() : '-'}
@@ -205,7 +217,7 @@ const goalColumns: Column<Goal>[] = [
   {
     key: 'actions',
     header: '',
-    className: 'text-right',
+    className: 'w-[60px] text-right',
     render: (goal) => (
       <a href={`/goals/${goal.id}`} className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 text-sm font-medium">
         View
@@ -354,11 +366,11 @@ export function GoalsPage() {
       {viewMode === 'tree' && (
         <>
           {treeLoading ? (
-            <div className="flex justify-center py-12">
+            <div className="flex justify-center py-6">
               <div className="glass-spinner" />
             </div>
           ) : !treeData || treeData.length === 0 ? (
-            <div className="text-center py-12 card card-body dark:bg-secondary-800">
+            <div className="text-center py-6 card card-body dark:bg-secondary-800">
               <svg className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
                 <path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM7 14h7v7H7v-7z" />
               </svg>

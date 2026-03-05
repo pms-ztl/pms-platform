@@ -43,7 +43,9 @@ import {
   Line,
 } from 'recharts';
 import clsx from 'clsx';
+import { ChartTooltip } from '@/components/ui';
 import { fetchWithAuth } from '@/lib/fetch-with-auth';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface SentimentAnalysis {
   overallScore: number;
@@ -241,32 +243,21 @@ const SentimentTrendMini = () => (
         <AreaChart data={SENTIMENT_TREND_DATA} margin={{ top: 4, right: 4, left: 4, bottom: 0 }}>
           <defs>
             <linearGradient id="sentimentAreaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#ec4899" stopOpacity={0.25} />
-              <stop offset="95%" stopColor="#ec4899" stopOpacity={0} />
+              <stop offset="5%" stopColor={cc.primary} stopOpacity={0.25} />
+              <stop offset="95%" stopColor={cc.primary} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="day" tick={{ fontSize: 9 }} axisLine={false} tickLine={false} className="fill-secondary-400 dark:fill-secondary-500" />
+          <XAxis dataKey="day" tick={{  fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} className="fill-secondary-400 dark:fill-secondary-300" />
           <Area
             type="monotone"
             dataKey="score"
-            stroke="#ec4899"
-            strokeWidth={2}
+            name="Score"
+            stroke={cc.primary}
+            strokeWidth={3}
             fill="url(#sentimentAreaGrad)"
-            dot={{ r: 2.5, fill: '#ec4899', stroke: '#1e293b', strokeWidth: 1.5 }}
+            dot={{ r: 3, fill: '#ec4899', stroke: cc.primaryExtraDark, strokeWidth: 1.5 }}
           />
-          <Tooltip
-            cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-            contentStyle={{
-              background: 'rgba(15, 23, 42, 0.85)',
-              backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(148, 163, 184, 0.15)',
-              borderRadius: '0.5rem',
-              fontSize: '0.7rem',
-              color: '#f1f5f9',
-              padding: '4px 8px',
-            }}
-            formatter={(value: number) => [`${value}%`, 'Sentiment']}
-          />
+          <Tooltip isAnimationActive={false} content={<ChartTooltip unit="%" />} cursor={{ fill: cc.cursorFill }} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -372,6 +363,7 @@ const TeamMemberCard = ({ member }: { member: TeamMorale['teamMembers'][0] }) =>
 };
 
 export function SentimentGauge() {
+  const cc = useChartColors();
   const [viewMode, setViewMode] = useState<'personal' | 'team'>('personal');
 
   const { data: sentiment, isLoading: loadingPersonal } = useQuery({
@@ -524,50 +516,39 @@ export function SentimentGauge() {
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData}>
                     <PolarGrid
-                      className="stroke-secondary-300/40 dark:stroke-secondary-600/25"
+                      className="stroke-secondary-300/60 dark:stroke-secondary-500/50"
                       gridType="polygon"
+                      strokeWidth={1.5}
                     />
                     <PolarAngleAxis
                       dataKey="metric"
-                      tick={{ fontSize: 12, fill: 'currentColor' }}
+                      tick={{  fontSize: 10, fontWeight: 600, fill: 'currentColor' }}
                       className="[&_text]:fill-secondary-600 dark:[&_text]:fill-secondary-300"
                       stroke="transparent"
                       axisLine={{ stroke: 'transparent', fill: 'none' }}
                     />
                     <PolarRadiusAxis
                       domain={[0, 100]}
-                      tick={{ fontSize: 10 }}
-                      className="fill-secondary-400 dark:fill-secondary-500"
+                      tick={{  fontSize: 9, fontWeight: 600 }}
+                      className="fill-secondary-400 dark:fill-secondary-400"
                       stroke="transparent"
                     />
                     <Radar
                       name="Sentiment"
                       dataKey="value"
-                      stroke="#f472b6"
-                      fill="#ec4899"
-                      fillOpacity={0.1}
-                      strokeWidth={2}
+                      stroke={cc.primaryLight}
+                      fill={cc.primary}
+                      fillOpacity={0.15}
+                      strokeWidth={3}
                       dot={{
                         r: 4,
                         fill: '#f472b6',
                         fillOpacity: 1,
-                        stroke: '#1e293b',
+                        stroke: cc.primaryExtraDark,
                         strokeWidth: 2,
                       }}
                     />
-                    <Tooltip
-                      cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                      contentStyle={{
-                        background: 'rgba(15, 23, 42, 0.80)',
-                        backdropFilter: 'blur(16px)',
-                        WebkitBackdropFilter: 'blur(16px)',
-                        border: '1px solid rgba(148, 163, 184, 0.15)',
-                        borderRadius: '0.75rem',
-                        fontSize: '0.75rem',
-                        color: '#f1f5f9',
-                      }}
-                      formatter={(value: number) => [`${Number(value).toFixed(0)}%`, '']}
-                    />
+                    <Tooltip isAnimationActive={false} content={<ChartTooltip unit="%" />} cursor={{ fill: cc.cursorFill }} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
@@ -618,26 +599,15 @@ export function SentimentGauge() {
                     <BarChart data={teamBarData}>
                       <XAxis
                         dataKey="name"
-                        tick={{ fontSize: 12 }}
-                        className="fill-secondary-500 dark:fill-secondary-400"
+                        tick={{  fontSize: 11, fontWeight: 600 }}
+                        className="fill-secondary-500 dark:fill-secondary-300"
                       />
                       <YAxis
                         domain={[0, 100]}
-                        tick={{ fontSize: 12 }}
-                        className="fill-secondary-500 dark:fill-secondary-400"
+                        tick={{  fontSize: 11, fontWeight: 600 }}
+                        className="fill-secondary-500 dark:fill-secondary-300"
                       />
-                      <Tooltip
-                        cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                        contentStyle={{
-                          background: 'rgba(15, 23, 42, 0.80)',
-                          backdropFilter: 'blur(16px)',
-                          WebkitBackdropFilter: 'blur(16px)',
-                          border: '1px solid rgba(148, 163, 184, 0.15)',
-                          borderRadius: '0.75rem',
-                          fontSize: '0.75rem',
-                          color: '#f1f5f9',
-                        }}
-                      />
+                      <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
                       <Bar dataKey="score" radius={[4, 4, 0, 0]}>
                         {teamBarData.map((entry, index) => (
                           <Cell

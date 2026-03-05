@@ -369,7 +369,7 @@ export function SAUsersPage() {
         <select
           value={roleFilter}
           onChange={(e) => handleRoleFilterChange(e.target.value)}
-          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
+          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm px-3 py-2.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
         >
           {ROLES.map((r) => (
             <option key={r.value} value={r.value}>

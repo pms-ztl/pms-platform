@@ -77,7 +77,7 @@ export function LicenseDashboardPage() {
         <PageHeader title="License Dashboard" subtitle="Loading license information..." />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
+            <div key={i} className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
                 <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" />
@@ -208,7 +208,7 @@ export function LicenseDashboardPage() {
         ].map((card) => {
           const Icon = card.icon;
           return (
-            <div key={card.label} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5 flex flex-col">
+            <div key={card.label} className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-5 flex flex-col">
               {/* Header: icon + label */}
               <div className="flex items-center gap-2.5 mb-3">
                 <div className={`p-2 rounded-lg ${card.iconBg}`}>
@@ -254,10 +254,10 @@ export function LicenseDashboardPage() {
       {/* Details Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Subscription Details */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
           <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center gap-2">
-              <BuildingOffice2Icon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
+              <BuildingOffice2Icon className="h-[1.125rem] w-[1.125rem] text-secondary-400 dark:text-secondary-500" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Subscription Details</h2>
             </div>
           </div>
@@ -282,11 +282,11 @@ export function LicenseDashboardPage() {
         </div>
 
         {/* Designated Manager */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
           <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <UserPlusIcon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
+                <UserPlusIcon className="h-[1.125rem] w-[1.125rem] text-secondary-400 dark:text-secondary-500" />
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Designated Manager</h2>
               </div>
               <button
@@ -322,10 +322,10 @@ export function LicenseDashboardPage() {
       </div>
 
       {/* License Usage Breakdown */}
-      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+      <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
         <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
           <div className="flex items-center gap-2">
-            <CalendarDaysIcon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
+            <CalendarDaysIcon className="h-[1.125rem] w-[1.125rem] text-secondary-400 dark:text-secondary-500" />
             <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">License Usage Summary</h2>
           </div>
         </div>
@@ -367,10 +367,10 @@ export function LicenseDashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* By Level */}
           {breakdown.byLevel.length > 0 && (
-            <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
               <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="flex items-center gap-2">
-                  <ChartBarIcon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
+                  <ChartBarIcon className="h-[1.125rem] w-[1.125rem] text-secondary-400 dark:text-secondary-500" />
                   <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Employees by Level</h2>
                 </div>
               </div>
@@ -397,10 +397,10 @@ export function LicenseDashboardPage() {
 
           {/* By Department */}
           {breakdown.byDepartment.length > 0 && (
-            <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
               <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
                 <div className="flex items-center gap-2">
-                  <BuildingOffice2Icon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
+                  <BuildingOffice2Icon className="h-[1.125rem] w-[1.125rem] text-secondary-400 dark:text-secondary-500" />
                   <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Employees by Department</h2>
                 </div>
               </div>
@@ -429,10 +429,10 @@ export function LicenseDashboardPage() {
 
       {/* Upload History */}
       {Array.isArray(uploadHistory) && uploadHistory.length > 0 && (
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
           <div className="px-5 py-3.5 border-b border-secondary-200/60 dark:border-white/[0.06]">
             <div className="flex items-center gap-2">
-              <ArrowTrendingUpIcon className="h-4.5 w-4.5 text-secondary-400 dark:text-secondary-500" />
+              <ArrowTrendingUpIcon className="h-[1.125rem] w-[1.125rem] text-secondary-400 dark:text-secondary-500" />
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Recent Excel Uploads</h2>
             </div>
           </div>
@@ -551,7 +551,7 @@ function AssignManagerModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full">
+      <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full">
         <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Assign Designated Manager</h3>
           <p className="text-sm text-secondary-500 mt-1">Search for a user to assign as manager for Excel uploads.</p>

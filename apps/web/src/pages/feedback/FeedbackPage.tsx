@@ -163,20 +163,20 @@ export function FeedbackPage() {
     if (remaining <= 0) return null;
 
     return (
-      <div className="flex items-center gap-2 ml-auto">
+      <div className="flex items-center gap-2 ml-auto relative z-10">
         <span className="text-2xs tabular-nums text-warning-600 dark:text-warning-400 font-medium">
           {remaining}s
         </span>
         <button
-          onClick={() => { setEditingFeedback(feedback); setEditContent(feedback.content); }}
-          className="p-1 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-500 hover:text-primary-600 transition-colors"
+          onClick={(e) => { e.stopPropagation(); setEditingFeedback(feedback); setEditContent(feedback.content); }}
+          className="p-1 rounded hover:bg-secondary-100 dark:hover:bg-secondary-700 text-secondary-500 hover:text-primary-600 transition-colors cursor-pointer"
           title="Edit feedback"
         >
           <PencilIcon className="h-3.5 w-3.5" />
         </button>
         <button
-          onClick={() => setDeletingId(feedback.id)}
-          className="p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-secondary-500 hover:text-red-600 transition-colors"
+          onClick={(e) => { e.stopPropagation(); setDeletingId(feedback.id); }}
+          className="p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 text-secondary-500 hover:text-red-600 transition-colors cursor-pointer"
           title="Delete feedback"
         >
           <TrashIcon className="h-3.5 w-3.5" />
@@ -189,37 +189,37 @@ export function FeedbackPage() {
     const TypeIcon = feedbackTypeConfig[feedback.type]?.icon || ChatBubbleLeftRightIcon;
 
     return (
-      <div key={feedback.id} className="card card-body">
-        <div className="flex items-start gap-4">
+      <div key={feedback.id} className="card card-body relative z-0 overflow-visible">
+        <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
             {feedback.isAnonymous ? (
-              <div className="w-10 h-10 rounded-full bg-secondary-200 flex items-center justify-center">
-                <UserIcon className="h-5 w-5 text-secondary-500" />
+              <div className="w-10 h-10 rounded-full bg-secondary-200 dark:bg-secondary-700 flex items-center justify-center">
+                <UserIcon className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
               </div>
             ) : (
-              <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-                <span className="text-sm font-medium text-primary-700">
+              <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
+                <span className="text-sm font-medium text-primary-700 dark:text-primary-300">
                   {feedback.fromUser?.firstName?.[0]}{feedback.fromUser?.lastName?.[0]}
                 </span>
               </div>
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="font-medium text-secondary-900 dark:text-white">
                 {feedback.isAnonymous ? 'Anonymous' : `${feedback.fromUser?.firstName} ${feedback.fromUser?.lastName}`}
               </span>
               <span className={clsx('px-2 py-0.5 rounded-full text-xs font-medium', feedbackTypeConfig[feedback.type]?.color)}>
                 {feedbackTypeConfig[feedback.type]?.label || feedback.type}
               </span>
-              <span className="text-xs text-secondary-400">
+              <span className="text-xs text-secondary-400 dark:text-secondary-500">
                 {formatDistanceToNow(new Date(feedback.createdAt), { addSuffix: true })}
               </span>
               {isGiven && <GraceActions feedback={feedback} />}
             </div>
-            <p className="mt-2 text-secondary-700 dark:text-secondary-300 whitespace-pre-wrap">{feedback.content}</p>
+            <p className="mt-2 text-sm text-secondary-700 dark:text-secondary-300 whitespace-pre-wrap">{feedback.content}</p>
             {feedback.tags && feedback.tags.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-2 flex flex-wrap gap-1.5">
                 {feedback.tags.map((tag, i) => (
                   <span key={i} className="px-2 py-0.5 bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-300 rounded text-xs">
                     {tag}
@@ -227,24 +227,24 @@ export function FeedbackPage() {
                 ))}
               </div>
             )}
-            <div className="mt-3 flex items-center gap-3 sm:gap-4 flex-wrap">
-              <span className="text-xs text-secondary-400">
+            <div className="mt-2 flex items-center gap-3 flex-wrap">
+              <span className="text-xs text-secondary-400 dark:text-secondary-500">
                 To: {feedback.toUser.firstName} {feedback.toUser.lastName}
               </span>
-              <span className="text-xs text-secondary-400">
+              <span className="text-xs text-secondary-400 dark:text-secondary-500">
                 {visibilityLabels[feedback.visibility] || feedback.visibility}
               </span>
               {showAcknowledge && !feedback.isAcknowledged && (
                 <button
-                  onClick={() => acknowledgeMutation.mutate(feedback.id)}
-                  className="text-xs text-primary-600 hover:text-primary-800 flex items-center gap-1 whitespace-nowrap"
+                  onClick={(e) => { e.stopPropagation(); acknowledgeMutation.mutate(feedback.id); }}
+                  className="relative z-10 text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 flex items-center gap-1 whitespace-nowrap cursor-pointer"
                 >
                   <CheckCircleIcon className="h-4 w-4 flex-shrink-0" />
                   Acknowledge
                 </button>
               )}
               {feedback.isAcknowledged && (
-                <span className="text-xs text-success-600 flex items-center gap-1 whitespace-nowrap">
+                <span className="text-xs text-success-600 dark:text-success-400 flex items-center gap-1 whitespace-nowrap">
                   <CheckCircleIcon className="h-4 w-4 flex-shrink-0" />
                   Acknowledged
                 </span>
@@ -260,15 +260,15 @@ export function FeedbackPage() {
     if (activeTab === 'received') {
       if (loadingReceived) {
         return (
-          <div className="flex justify-center py-12">
+          <div className="flex justify-center py-4">
             <div className="glass-spinner" />
           </div>
         );
       }
       if (!receivedFeedback?.data.length) {
         return (
-          <div className="card card-body text-center py-12">
-            <ChatBubbleLeftRightIcon className="mx-auto h-12 w-12 text-secondary-300" />
+          <div className="card card-body text-center py-4">
+            <ChatBubbleLeftRightIcon className="mx-auto h-8 w-8 text-secondary-300" />
             <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No feedback received</h3>
             <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
               Request feedback from your colleagues to get started.
@@ -280,7 +280,7 @@ export function FeedbackPage() {
         );
       }
       return (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {receivedFeedback.data.map((feedback) => renderFeedbackCard(feedback, true))}
         </div>
       );
@@ -289,15 +289,15 @@ export function FeedbackPage() {
     if (activeTab === 'given') {
       if (loadingGiven) {
         return (
-          <div className="flex justify-center py-12">
+          <div className="flex justify-center py-4">
             <div className="glass-spinner" />
           </div>
         );
       }
       if (!givenFeedback?.data.length) {
         return (
-          <div className="card card-body text-center py-12">
-            <PaperAirplaneIcon className="mx-auto h-12 w-12 text-secondary-300" />
+          <div className="card card-body text-center py-4">
+            <PaperAirplaneIcon className="mx-auto h-8 w-8 text-secondary-300" />
             <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No feedback given</h3>
             <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
               Share feedback with your colleagues to help them grow.
@@ -309,7 +309,7 @@ export function FeedbackPage() {
         );
       }
       return (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {givenFeedback.data.map((feedback) => renderFeedbackCard(feedback, false, true))}
         </div>
       );
@@ -318,15 +318,15 @@ export function FeedbackPage() {
     if (activeTab === 'timeline') {
       if (loadingTimeline) {
         return (
-          <div className="flex justify-center py-12">
+          <div className="flex justify-center py-4">
             <div className="glass-spinner" />
           </div>
         );
       }
       if (!timeline?.length) {
         return (
-          <div className="card card-body text-center py-12">
-            <ClockIcon className="mx-auto h-12 w-12 text-secondary-300" />
+          <div className="card card-body text-center py-4">
+            <ClockIcon className="mx-auto h-8 w-8 text-secondary-300" />
             <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No activity yet</h3>
             <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
               Your feedback timeline will appear here.
@@ -335,7 +335,7 @@ export function FeedbackPage() {
         );
       }
       return (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {timeline.map((event: any, index: number) => (
             <div key={index} className="card card-body">
               <div className="flex items-center gap-3">
@@ -379,41 +379,41 @@ export function FeedbackPage() {
       </PageHeader>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="card card-body">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="card card-body relative z-0 overflow-visible">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-success-100 dark:bg-success-900/30">
+            <div className="p-2.5 rounded-lg bg-success-100 dark:bg-success-900/30 flex-shrink-0">
               <HandThumbUpIcon className="h-5 w-5 text-success-600" />
             </div>
             <div className="min-w-0">
               <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400">Praise Received</p>
-              <p className="text-xl font-bold text-secondary-900 dark:text-white">
+              <p className="text-2xl font-bold text-secondary-900 dark:text-white leading-tight">
                 {receivedFeedback?.data?.filter((f) => f.type === 'PRAISE').length || 0}
               </p>
             </div>
           </div>
         </div>
-        <div className="card card-body">
+        <div className="card card-body relative z-0 overflow-visible">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-primary-100 dark:bg-primary-900/30">
+            <div className="p-2.5 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex-shrink-0">
               <PaperAirplaneIcon className="h-5 w-5 text-primary-600" />
             </div>
             <div className="min-w-0">
               <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400">Feedback Given</p>
-              <p className="text-xl font-bold text-secondary-900 dark:text-white">
+              <p className="text-2xl font-bold text-secondary-900 dark:text-white leading-tight">
                 {givenFeedback?.data?.length || 0}
               </p>
             </div>
           </div>
         </div>
-        <div className="card card-body">
+        <div className="card card-body relative z-0 overflow-visible">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-warning-100 dark:bg-warning-900/30">
+            <div className="p-2.5 rounded-lg bg-warning-100 dark:bg-warning-900/30 flex-shrink-0">
               <ChatBubbleLeftRightIcon className="h-5 w-5 text-warning-600" />
             </div>
             <div className="min-w-0">
               <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400">Unacknowledged</p>
-              <p className="text-xl font-bold text-secondary-900 dark:text-white">
+              <p className="text-2xl font-bold text-secondary-900 dark:text-white leading-tight">
                 {receivedFeedback?.data?.filter((f) => !f.isAcknowledged).length || 0}
               </p>
             </div>
@@ -447,13 +447,13 @@ export function FeedbackPage() {
 
       {/* Filters */}
       {activeTab === 'received' && (
-        <div className="flex items-center gap-4">
+        <div className="relative z-30 flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <FunnelIcon className="h-5 w-5 text-secondary-400" />
+            <FunnelIcon className="h-5 w-5 text-secondary-400 flex-shrink-0" />
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="input py-1.5 w-40"
+              className="input py-1.5 w-40 relative z-30 cursor-pointer"
             >
               <option value="">All Types</option>
               <option value="PRAISE">Praise</option>

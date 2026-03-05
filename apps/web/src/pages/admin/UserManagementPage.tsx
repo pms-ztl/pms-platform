@@ -237,7 +237,7 @@ export function UserManagementPage() {
 
   if (!isHRAdmin) {
     return (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-4">
         <div className="text-center">
           <ShieldCheckIcon className="mx-auto h-16 w-16 text-secondary-300 dark:text-secondary-600" />
           <h2 className="mt-4 text-xl font-semibold text-secondary-900 dark:text-white">Access Restricted</h2>
@@ -348,7 +348,7 @@ export function UserManagementPage() {
         keyExtractor={(member) => member.id}
         emptyTitle="No users found"
         emptyDescription={searchQuery ? 'Try adjusting your search query.' : 'Add your first user to get started.'}
-        emptyIcon={<UserGroupIcon className="h-12 w-12" />}
+        emptyIcon={<UserGroupIcon className="h-8 w-8" />}
         emptyAction={{ label: 'Add User', onClick: () => setShowCreateModal(true) }}
       />
 

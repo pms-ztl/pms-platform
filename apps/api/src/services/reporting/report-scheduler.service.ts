@@ -279,23 +279,36 @@ export class ReportSchedulerService {
       throw new Error('Invalid cron expression');
     }
 
-    // Get report definition
-    const reportDefinition = await prisma.reportDefinition.findUnique({
+    // Get report definition — try by UUID first, then by reportType name
+    let reportDefinition = await prisma.reportDefinition.findUnique({
       where: { id: params.reportDefinitionId },
-    });
+    }).catch(() => null);
 
     if (!reportDefinition) {
-      throw new Error('Report definition not found');
+      // Try finding by reportType (e.g., 'PERFORMANCE_SUMMARY')
+      reportDefinition = await prisma.reportDefinition.findFirst({
+        where: {
+          OR: [
+            { reportType: params.reportDefinitionId },
+            { name: params.reportDefinitionId },
+          ],
+          tenantId: params.tenantId,
+        },
+      }).catch(() => null);
+    }
+
+    if (!reportDefinition) {
+      throw new Error(`Report definition not found for "${params.reportDefinitionId}". Please create a report definition first.`);
     }
 
     // Determine schedule type from cron expression
     const scheduleType = this.determineScheduleType(params.cronExpression);
 
-    // Create schedule in database
+    // Create schedule in database — use the actual definition ID from the lookup
     const schedule = await prisma.reportSchedule.create({
       data: {
         tenantId: params.tenantId,
-        reportDefinitionId: params.reportDefinitionId,
+        reportDefinitionId: reportDefinition.id,
         scheduleType,
         cronExpression: params.cronExpression,
         timezone: params.timezone || 'UTC',

@@ -33,6 +33,7 @@ import {
   type CultureDiagnostic,
 } from '@/lib/api/actionable-insights';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -51,6 +52,7 @@ const PERIODS = ['MONTHLY', 'QUARTERLY', 'ANNUAL'] as const;
 // ── component ────────────────────────────────────────────────────────────────
 
 export function CultureDiagnosticsPage() {
+  const cc = useChartColors();
   usePageTitle('Culture Diagnostics');
   const queryClient = useQueryClient();
 
@@ -135,8 +137,8 @@ export function CultureDiagnosticsPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-sm space-y-1">
-        <p className="font-semibold text-white">{label}</p>
+      <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 px-3 py-2 shadow-lg text-sm space-y-1">
+        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color || p.fill }}>{p.name}: {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}</p>
         ))}
@@ -207,7 +209,7 @@ export function CultureDiagnosticsPage() {
         </div>
         <div className="flex items-center gap-3">
           <select value={period} onChange={(e) => setPeriod(e.target.value)}
-            className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300">
+            className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300">
             {PERIODS.map((p) => <option key={p} value={p}>{p.charAt(0) + p.slice(1).toLowerCase()}</option>)}
           </select>
           <button
@@ -246,10 +248,10 @@ export function CultureDiagnosticsPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dimensionData} layout="vertical" margin={{ top: 5, right: 20, bottom: 5, left: 80 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} horizontal={false} />
-                <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 13, fill: 'var(--color-secondary-700, #374151)' }} axisLine={false} tickLine={false} />
-                <YAxis type="category" dataKey="dimension" tick={{ fontSize: 14, fontWeight: 500, fill: 'var(--color-secondary-800, #1f2937)' }} axisLine={false} tickLine={false} width={100} />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} horizontal={false} />
+                <XAxis type="number" domain={[0, 100]} tick={{  fontSize: 11, fill: 'var(--color-secondary-700, #374151)' }} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="dimension" tick={{   fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-800, #1f2937)' }} axisLine={false} tickLine={false} width={100} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
                 <Bar dataKey="score" name="Score" barSize={16} radius={[0, 6, 6, 0]}>
                   {dimensionData.map((d, i) => <Cell key={i} fill={scoreColor(d.score)} />)}
                 </Bar>
@@ -290,10 +292,10 @@ export function CultureDiagnosticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={cultureRadar} cx="50%" cy="50%" outerRadius="70%">
                     <PolarGrid stroke="var(--color-secondary-300, #d1d5db)" />
-                    <PolarAngleAxis dataKey="type" tick={{ fontSize: 14, fontWeight: 500, fill: 'var(--color-secondary-800, #1f2937)' }} />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 11, fill: 'var(--color-secondary-500, #6b7280)' }} />
-                    <Radar name="Culture Score" dataKey="score" stroke="#e11d48" fill="#e11d48" fillOpacity={0.25} />
-                    <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                    <PolarAngleAxis dataKey="type" tick={{   fontSize: 10, fontWeight: 600, fill: 'var(--color-secondary-800, #1f2937)' }} />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9, fill: 'var(--color-secondary-500, #6b7280)' }} />
+                    <Radar name="Culture Score" dataKey="score" stroke={cc.semantic.danger} fill="#e11d48" fillOpacity={0.25} />
+                    <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
                   </RadarChart>
                 </ResponsiveContainer>
               </div>

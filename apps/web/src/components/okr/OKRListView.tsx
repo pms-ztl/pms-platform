@@ -3,6 +3,7 @@ import {
   FlagIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  ChevronUpIcon,
   EllipsisVerticalIcon,
   ArrowsUpDownIcon,
 } from '@heroicons/react/24/outline';
@@ -43,6 +44,13 @@ function healthLabel(p: number): { label: string; cls: string } {
   if (p >= 40) return { label: 'At Risk', cls: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' };
   return { label: 'Behind', cls: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' };
 }
+
+const priorityColors: Record<string, string> = {
+  LOW: 'text-secondary-500 dark:text-secondary-400',
+  MEDIUM: 'text-amber-600 dark:text-amber-400',
+  HIGH: 'text-orange-600 dark:text-orange-400',
+  CRITICAL: 'text-red-600 dark:text-red-400 font-bold',
+};
 
 // Tag color deterministic hash
 const tagPalette = [
@@ -98,90 +106,97 @@ function ListRow({
         onClick={() => setExpanded(!expanded)}
       >
         {/* Expand */}
-        <td className="pl-4 pr-1 py-3.5 w-8">
+        <td className="pl-3 pr-1 py-2.5 w-8">
           {keyResults.length > 0 ? (
             expanded ? (
-              <ChevronDownIcon className="h-4 w-4 text-secondary-400" />
+              <ChevronDownIcon className="h-3.5 w-3.5 text-secondary-400" />
             ) : (
-              <ChevronRightIcon className="h-4 w-4 text-secondary-400" />
+              <ChevronRightIcon className="h-3.5 w-3.5 text-secondary-400" />
             )
           ) : (
-            <div className="w-4" />
+            <div className="w-3.5" />
           )}
         </td>
 
         {/* Title */}
-        <td className="py-3.5 pr-4">
-          <div className="flex items-center gap-2">
-            <span className="px-1.5 py-0.5 rounded text-3xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 shrink-0">
+        <td className="py-2.5 pr-3">
+          <div className="flex items-center gap-1.5">
+            <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-3xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 shrink-0">
               OBJ
             </span>
-            <span className="text-sm font-medium text-secondary-900 dark:text-white break-words">
+            <span className="text-sm font-medium text-secondary-900 dark:text-white truncate">
               {objective.title}
             </span>
           </div>
         </td>
 
         {/* Tags */}
-        <td className="py-3.5 pr-4">
-          <div className="flex items-center gap-1 flex-wrap">
-            {tags.slice(0, 3).map((t) => (
-              <span key={t} className={clsx('px-1.5 py-0.5 rounded text-3xs font-semibold', tagColor(t))}>
+        <td className="py-2.5 pr-3">
+          <div className="flex items-center gap-1 flex-nowrap">
+            {tags.slice(0, 2).map((t) => (
+              <span key={t} className={clsx('px-1.5 py-0.5 rounded text-3xs font-semibold whitespace-nowrap', tagColor(t))}>
                 {t}
               </span>
             ))}
-            {tags.length > 3 && (
-              <span className="text-3xs text-secondary-400">+{tags.length - 3}</span>
+            {tags.length > 2 && (
+              <span className="text-3xs text-secondary-400">+{tags.length - 2}</span>
             )}
           </div>
         </td>
 
         {/* Owner */}
-        <td className="py-3.5 pr-4">
-          <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-2xs font-bold shrink-0">
+        <td className="py-2.5 pr-3">
+          <div className="flex items-center gap-1.5">
+            <span className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 flex items-center justify-center text-2xs font-bold shrink-0">
               {initials}
             </span>
-            <span className="text-xs text-secondary-600 dark:text-secondary-300 break-words">
+            <span className="text-xs text-secondary-600 dark:text-secondary-300 truncate max-w-[100px]">
               {objective.owner?.firstName} {objective.owner?.lastName}
             </span>
           </div>
         </td>
 
+        {/* Priority */}
+        <td className="py-2.5 pr-3">
+          <span className={clsx('text-xs font-medium whitespace-nowrap', priorityColors[objective.priority] || 'text-secondary-500')}>
+            {objective.priority || '---'}
+          </span>
+        </td>
+
         {/* Progress */}
-        <td className="py-3.5 pr-4 w-36">
-          <div className="flex items-center gap-2">
-            <div className="flex-1 h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
+        <td className="py-2.5 pr-3 w-32">
+          <div className="flex items-center gap-1.5">
+            <div className="flex-1 h-1.5 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
               <div
                 className={clsx('h-full rounded-full transition-all', progressColor(avgProgress))}
                 style={{ width: `${Math.min(avgProgress, 100)}%` }}
               />
             </div>
-            <span className={clsx('text-xs font-semibold w-9 text-right', progressTextColor(avgProgress))}>
+            <span className={clsx('text-xs font-semibold w-8 text-right', progressTextColor(avgProgress))}>
               {avgProgress}%
             </span>
           </div>
         </td>
 
         {/* Status */}
-        <td className="py-3.5 pr-4">
-          <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap', health.cls)}>
+        <td className="py-2.5 pr-3">
+          <span className={clsx('px-1.5 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap', health.cls)}>
             {health.label}
           </span>
         </td>
 
         {/* Due */}
-        <td className="py-3.5 pr-4">
+        <td className="py-2.5 pr-3">
           <span className="text-xs text-secondary-500 dark:text-secondary-400 whitespace-nowrap">{fmtShortDate(objective.dueDate)}</span>
         </td>
 
         {/* Actions */}
-        <td className="py-3.5 pr-4 w-10">
+        <td className="py-2.5 pr-3 w-8">
           <button
             onClick={(e) => { e.stopPropagation(); window.open(`/goals/${objective.id}`, '_self'); }}
             className="p-1 rounded text-secondary-400 hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors"
           >
-            <EllipsisVerticalIcon className="h-4 w-4" />
+            <EllipsisVerticalIcon className="h-3.5 w-3.5" />
           </button>
         </td>
       </tr>
@@ -198,53 +213,58 @@ function ListRow({
               key={kr.id}
               className="bg-secondary-50/50 dark:bg-secondary-900/20 hover:bg-secondary-100 dark:hover:bg-secondary-800/40 transition-colors"
             >
-              <td className="pl-4 pr-1 py-2.5 w-8" />
-              <td className="py-2.5 pr-4 pl-8">
-                <div className="flex items-center gap-2">
-                  <span className="px-1.5 py-0.5 rounded text-3xs font-bold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 shrink-0">
+              <td className="pl-3 pr-1 py-2 w-8" />
+              <td className="py-2 pr-3 pl-7">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-3xs font-bold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 shrink-0">
                     KR
                   </span>
-                  <span className="text-sm text-secondary-700 dark:text-secondary-200 break-words">
+                  <span className="text-sm text-secondary-700 dark:text-secondary-200 truncate">
                     {kr.title}
                   </span>
                 </div>
               </td>
-              <td className="py-2.5 pr-4">
+              <td className="py-2 pr-3">
                 {(kr.tags || []).slice(0, 2).map((t) => (
                   <span key={t} className={clsx('px-1.5 py-0.5 rounded text-3xs font-semibold mr-1', tagColor(t))}>
                     {t}
                   </span>
                 ))}
               </td>
-              <td className="py-2.5 pr-4">
+              <td className="py-2 pr-3">
                 {kr.owner && (
-                  <span className="text-xs text-secondary-500 dark:text-secondary-400">
+                  <span className="text-xs text-secondary-500 dark:text-secondary-400 truncate max-w-[100px] block">
                     {kr.owner.firstName} {kr.owner.lastName}
                   </span>
                 )}
               </td>
-              <td className="py-2.5 pr-4 w-36">
-                <div className="flex items-center gap-2">
+              <td className="py-2 pr-3">
+                <span className={clsx('text-xs font-medium whitespace-nowrap', priorityColors[(kr as any).priority] || 'text-secondary-400')}>
+                  {(kr as any).priority || '---'}
+                </span>
+              </td>
+              <td className="py-2 pr-3 w-32">
+                <div className="flex items-center gap-1.5">
                   <div className="flex-1 h-1.5 bg-secondary-200 dark:bg-secondary-700 rounded-full overflow-hidden">
                     <div
                       className={clsx('h-full rounded-full transition-all', progressColor(kr.progress))}
                       style={{ width: `${Math.min(kr.progress, 100)}%` }}
                     />
                   </div>
-                  <span className={clsx('text-xs font-medium w-9 text-right', progressTextColor(kr.progress))}>
+                  <span className={clsx('text-xs font-medium w-8 text-right', progressTextColor(kr.progress))}>
                     {Math.round(kr.progress)}%
                   </span>
                 </div>
               </td>
-              <td className="py-2.5 pr-4">
-                <span className={clsx('px-2 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap', krHealth.cls)}>
+              <td className="py-2 pr-3">
+                <span className={clsx('px-1.5 py-0.5 rounded-full text-2xs font-medium whitespace-nowrap', krHealth.cls)}>
                   {krHealth.label}
                 </span>
               </td>
-              <td className="py-2.5 pr-4">
+              <td className="py-2 pr-3">
                 <span className="text-xs text-secondary-500 dark:text-secondary-400 whitespace-nowrap">{fmtShortDate(kr.dueDate)}</span>
               </td>
-              <td className="py-2.5 pr-4 w-10">
+              <td className="py-2 pr-3 w-8">
                 {kr.status === 'ACTIVE' && (
                   <button
                     onClick={() => onCheckin(kr.id)}
@@ -271,7 +291,7 @@ interface OKRListViewProps {
   onCheckin: (krId: string) => void;
 }
 
-type SortField = 'title' | 'progress' | 'dueDate' | 'status';
+type SortField = 'title' | 'progress' | 'dueDate' | 'status' | 'priority';
 
 export function OKRListView({ objectives, krByParent, onCheckin }: OKRListViewProps) {
   const [sortField, setSortField] = useState<SortField>('title');
@@ -282,9 +302,14 @@ export function OKRListView({ objectives, krByParent, onCheckin }: OKRListViewPr
     else { setSortField(field); setSortAsc(true); }
   }
 
+  const priorityOrder: Record<string, number> = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
+
   const sorted = [...objectives].sort((a, b) => {
     const dir = sortAsc ? 1 : -1;
     if (sortField === 'title') return a.title.localeCompare(b.title) * dir;
+    if (sortField === 'priority') {
+      return ((priorityOrder[a.priority] ?? 4) - (priorityOrder[b.priority] ?? 4)) * dir;
+    }
     if (sortField === 'progress') {
       const ap = (krByParent.get(a.id) || []).reduce((s, kr) => s + kr.progress, 0) / Math.max(1, (krByParent.get(a.id) || []).length) || a.progress;
       const bp = (krByParent.get(b.id) || []).reduce((s, kr) => s + kr.progress, 0) / Math.max(1, (krByParent.get(b.id) || []).length) || b.progress;
@@ -301,10 +326,10 @@ export function OKRListView({ objectives, krByParent, onCheckin }: OKRListViewPr
 
   if (objectives.length === 0) {
     return (
-      <div className="text-center py-16">
-        <FlagIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
-        <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">No OKRs found</h3>
-        <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
+      <div className="text-center py-6">
+        <FlagIcon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
+        <h3 className="mt-1.5 text-sm font-medium text-secondary-900 dark:text-white">No OKRs found</h3>
+        <p className="mt-0.5 text-sm text-secondary-500 dark:text-secondary-400">
           Create objectives with type &quot;OKR Objective&quot; from the Goals page.
         </p>
       </div>
@@ -313,12 +338,18 @@ export function OKRListView({ objectives, krByParent, onCheckin }: OKRListViewPr
 
   const SortHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
     <th
-      className="text-left py-3 pr-4 text-xs font-semibold text-secondary-500 dark:text-secondary-400 cursor-pointer select-none hover:text-secondary-700 dark:hover:text-secondary-200 transition-colors"
+      className="text-left py-2.5 pr-3 text-xs font-semibold text-secondary-500 dark:text-secondary-400 cursor-pointer select-none hover:text-secondary-700 dark:hover:text-secondary-200 transition-colors whitespace-nowrap"
       onClick={() => toggleSort(field)}
     >
       <span className="inline-flex items-center gap-1">
         {children}
-        <ArrowsUpDownIcon className={clsx('h-3 w-3', sortField === field ? 'text-primary-500' : 'opacity-40')} />
+        {sortField === field ? (
+          sortAsc
+            ? <ChevronUpIcon className="h-3 w-3 text-primary-500" />
+            : <ChevronDownIcon className="h-3 w-3 text-primary-500" />
+        ) : (
+          <ArrowsUpDownIcon className="h-3 w-3 text-secondary-300 dark:text-secondary-600" />
+        )}
       </span>
     </th>
   );
@@ -329,14 +360,15 @@ export function OKRListView({ objectives, krByParent, onCheckin }: OKRListViewPr
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-secondary-200/60 dark:border-white/[0.06] bg-secondary-50 dark:bg-secondary-800/80">
-              <th className="w-8 pl-4 pr-1 py-3" />
+              <th className="w-8 pl-3 pr-1 py-2.5" />
               <SortHeader field="title">Title</SortHeader>
-              <th className="text-left py-3 pr-4 text-xs font-semibold text-secondary-500 dark:text-secondary-400">Tags</th>
-              <th className="text-left py-3 pr-4 text-xs font-semibold text-secondary-500 dark:text-secondary-400">Owner</th>
+              <th className="text-left py-2.5 pr-3 text-xs font-semibold text-secondary-500 dark:text-secondary-400 whitespace-nowrap">Tags</th>
+              <th className="text-left py-2.5 pr-3 text-xs font-semibold text-secondary-500 dark:text-secondary-400 whitespace-nowrap">Owner</th>
+              <SortHeader field="priority">Priority</SortHeader>
               <SortHeader field="progress">Progress</SortHeader>
               <SortHeader field="status">Status</SortHeader>
               <SortHeader field="dueDate">Due</SortHeader>
-              <th className="w-10 py-3 pr-4" />
+              <th className="w-8 py-2.5 pr-3" />
             </tr>
           </thead>
           <tbody className="divide-y divide-secondary-100 dark:divide-secondary-700/50">

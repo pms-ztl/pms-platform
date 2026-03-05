@@ -353,7 +353,7 @@ export function EmployeeProfilePage() {
 
   if (loadingEmployee) {
     return (
-      <div className="flex justify-center py-12">
+      <div className="flex justify-center py-4">
         <div className="glass-spinner" />
       </div>
     );
@@ -361,8 +361,8 @@ export function EmployeeProfilePage() {
 
   if (employeeError || !employee) {
     return (
-      <div className="text-center py-12">
-        <UserIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+      <div className="text-center py-4">
+        <UserIcon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
         <h3 className="mt-2 text-lg font-medium text-secondary-900 dark:text-white">Employee not found</h3>
         <p className="mt-1 text-secondary-500 dark:text-secondary-400">
           The employee profile you are looking for does not exist or has been removed.

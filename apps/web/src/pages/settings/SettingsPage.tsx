@@ -4,23 +4,28 @@ import {
   PaintBrushIcon,
   ShieldCheckIcon,
   BuildingOfficeIcon,
+  GlobeAltIcon,
+  ClockIcon,
+  CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import { useMutation } from '@tanstack/react-query';
 
 import { useAuthStore } from '@/store/auth';
 import { useThemeStore } from '@/store/theme';
+import { usersApi, notificationsApi } from '@/lib/api';
 import { ACCENT_COLORS, type AccentColor } from '@/lib/accent-colors';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { PageHeader } from '@/components/ui';
 
-type SettingsTab = 'notifications' | 'appearance' | 'privacy' | 'organization';
+type SettingsTab = 'general' | 'notifications' | 'appearance' | 'privacy' | 'organization';
 
 export function SettingsPage() {
   usePageTitle('Settings');
   const { user } = useAuthStore();
   const { theme, setTheme, accentColor, setAccentColor, compactMode, setCompactMode, animationsEnabled, setAnimationsEnabled } = useThemeStore();
-  const [activeTab, setActiveTab] = useState<SettingsTab>('notifications');
+  const [activeTab, setActiveTab] = useState<SettingsTab>('general');
 
   // Notification settings state
   const [notificationSettings, setNotificationSettings] = useState({
@@ -41,18 +46,151 @@ export function SettingsPage() {
     allowAnonymousFeedback: true,
   });
 
+  // General settings state
+  const [generalSettings, setGeneralSettings] = useState({
+    language: 'en',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+    dateFormat: 'MMM d, yyyy',
+  });
+
   const isAdmin = user?.roles?.includes('ADMIN') || user?.roles?.includes('HR_ADMIN');
 
   const tabs = [
+    { key: 'general', label: 'General', icon: GlobeAltIcon },
     { key: 'notifications', label: 'Notifications', icon: BellIcon },
     { key: 'appearance', label: 'Appearance', icon: PaintBrushIcon },
     { key: 'privacy', label: 'Privacy', icon: ShieldCheckIcon },
     ...(isAdmin ? [{ key: 'organization', label: 'Organization', icon: BuildingOfficeIcon }] : []),
   ];
 
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      // Save general settings (timezone, locale) to backend
+      if (user?.id) {
+        await usersApi.update(user.id, {
+          timezone: generalSettings.timezone,
+          locale: generalSettings.language,
+        });
+      }
+      // Persist dateFormat in localStorage (no backend field)
+      localStorage.setItem('pms-date-format', generalSettings.dateFormat);
+    },
+    onSuccess: () => {
+      toast.success('Settings saved successfully');
+    },
+    onError: (error) => {
+      const msg = error instanceof Error ? error.message : 'Failed to save settings';
+      toast.error(msg);
+    },
+  });
+
   const handleSave = () => {
-    toast.success('Settings saved successfully');
+    saveMutation.mutate();
   };
+
+  const renderGeneral = () => (
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Regional Settings</h3>
+        <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Configure language, timezone, and date preferences.</p>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <GlobeAltIcon className="h-4 w-4 text-secondary-400 dark:text-secondary-500" />
+                <p className="text-sm font-medium text-secondary-900 dark:text-white">Language</p>
+              </div>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 ml-6">Display language for the application</p>
+            </div>
+            <select
+              value={generalSettings.language}
+              onChange={(e) => setGeneralSettings({ ...generalSettings, language: e.target.value })}
+              className="input w-48 flex-shrink-0"
+            >
+              <option value="en">English</option>
+              <option value="es">Spanish</option>
+              <option value="fr">French</option>
+              <option value="de">German</option>
+              <option value="pt">Portuguese</option>
+              <option value="ar">Arabic</option>
+              <option value="zh">Chinese</option>
+              <option value="ja">Japanese</option>
+            </select>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <ClockIcon className="h-4 w-4 text-secondary-400 dark:text-secondary-500" />
+                <p className="text-sm font-medium text-secondary-900 dark:text-white">Timezone</p>
+              </div>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 ml-6">Used for scheduling and date displays</p>
+            </div>
+            <select
+              value={generalSettings.timezone}
+              onChange={(e) => setGeneralSettings({ ...generalSettings, timezone: e.target.value })}
+              className="input w-48 flex-shrink-0"
+            >
+              <option value="UTC">UTC</option>
+              <option value="America/New_York">Eastern Time (US)</option>
+              <option value="America/Chicago">Central Time (US)</option>
+              <option value="America/Denver">Mountain Time (US)</option>
+              <option value="America/Los_Angeles">Pacific Time (US)</option>
+              <option value="Europe/London">London (GMT)</option>
+              <option value="Europe/Berlin">Berlin (CET)</option>
+              <option value="Asia/Dubai">Dubai (GST)</option>
+              <option value="Asia/Kolkata">India (IST)</option>
+              <option value="Asia/Shanghai">Shanghai (CST)</option>
+              <option value="Asia/Tokyo">Tokyo (JST)</option>
+              <option value="Australia/Sydney">Sydney (AEST)</option>
+            </select>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <CalendarDaysIcon className="h-4 w-4 text-secondary-400 dark:text-secondary-500" />
+                <p className="text-sm font-medium text-secondary-900 dark:text-white">Date Format</p>
+              </div>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 ml-6">How dates are displayed throughout the app</p>
+            </div>
+            <select
+              value={generalSettings.dateFormat}
+              onChange={(e) => setGeneralSettings({ ...generalSettings, dateFormat: e.target.value })}
+              className="input w-48 flex-shrink-0"
+            >
+              <option value="MMM d, yyyy">Mar 4, 2026</option>
+              <option value="dd/MM/yyyy">04/03/2026</option>
+              <option value="MM/dd/yyyy">03/04/2026</option>
+              <option value="yyyy-MM-dd">2026-03-04</option>
+              <option value="d MMM yyyy">4 Mar 2026</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-secondary-200/60 dark:border-white/[0.06] pt-6">
+        <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Account Information</h3>
+        <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Your account details.</p>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-secondary-600 dark:text-secondary-400">Name</p>
+            <p className="text-sm font-medium text-secondary-900 dark:text-white">{user?.firstName} {user?.lastName}</p>
+          </div>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-secondary-600 dark:text-secondary-400">Email</p>
+            <p className="text-sm font-medium text-secondary-900 dark:text-white">{user?.email}</p>
+          </div>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-secondary-600 dark:text-secondary-400">Role</p>
+            <p className="text-sm font-medium text-secondary-900 dark:text-white">{user?.roles?.join(', ') || 'Employee'}</p>
+          </div>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-secondary-600 dark:text-secondary-400">Department</p>
+            <p className="text-sm font-medium text-secondary-900 dark:text-white">{typeof user?.department === 'object' ? user.department.name : user?.department || 'Not assigned'}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderNotifications = () => (
     <div className="space-y-4">
@@ -184,8 +322,8 @@ export function SettingsPage() {
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Display</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Customize your display preferences.</p>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
               <p className="text-sm font-medium text-secondary-900 dark:text-white">Compact mode</p>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Show more content with less spacing</p>
             </div>
@@ -199,8 +337,8 @@ export function SettingsPage() {
               <div className="w-11 h-6 bg-secondary-200 dark:bg-secondary-700 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-secondary-300 dark:after:border-secondary-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
             </label>
           </div>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
               <p className="text-sm font-medium text-secondary-900 dark:text-white">Animations</p>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Enable smooth transitions and animations</p>
             </div>
@@ -225,8 +363,8 @@ export function SettingsPage() {
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Profile Visibility</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Control who can see your information.</p>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
               <p className="text-sm font-medium text-secondary-900 dark:text-white">Show profile to team</p>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Let team members see your profile details</p>
             </div>
@@ -242,8 +380,8 @@ export function SettingsPage() {
               <div className="w-11 h-6 bg-secondary-200 dark:bg-secondary-700 peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-secondary-300 dark:after:border-secondary-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
             </label>
           </div>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
               <p className="text-sm font-medium text-secondary-900 dark:text-white">Show goals to team</p>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Let team members see your goals and progress</p>
             </div>
@@ -266,8 +404,8 @@ export function SettingsPage() {
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">Feedback Settings</h3>
         <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-4">Control how you receive feedback.</p>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
               <p className="text-sm font-medium text-secondary-900 dark:text-white">Allow anonymous feedback</p>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Let colleagues send you anonymous feedback</p>
             </div>
@@ -335,8 +473,8 @@ export function SettingsPage() {
               <option value="optional">Optional</option>
             </select>
           </div>
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
               <p className="text-sm font-medium text-secondary-900 dark:text-white">Enable OKRs</p>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Allow OKR-style goal tracking</p>
             </div>
@@ -392,6 +530,7 @@ export function SettingsPage() {
 
         {/* Content */}
         <div className="flex-1 card card-body !p-4 sm:!p-6 min-w-0">
+          {activeTab === 'general' && renderGeneral()}
           {activeTab === 'notifications' && renderNotifications()}
           {activeTab === 'appearance' && renderAppearance()}
           {activeTab === 'privacy' && renderPrivacy()}
@@ -399,7 +538,9 @@ export function SettingsPage() {
 
           <div className="border-t border-secondary-200/60 dark:border-white/[0.06] mt-6 pt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
             <button className="btn-secondary w-full sm:w-auto">Reset to Defaults</button>
-            <button onClick={handleSave} className="btn-primary w-full sm:w-auto">Save Changes</button>
+            <button onClick={handleSave} disabled={saveMutation.isPending} className="btn-primary w-full sm:w-auto disabled:opacity-50">
+              {saveMutation.isPending ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         </div>
       </div>

@@ -213,29 +213,29 @@ export function DataExportPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Report Type</label>
-                <select value={reportType} onChange={(e) => setReportType(e.target.value)} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white transition-all duration-300">
+                <select value={reportType} onChange={(e) => setReportType(e.target.value)} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white transition-all duration-300">
                   {REPORT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Scope</label>
-                <select value={reportScope} onChange={(e) => setReportScope(e.target.value)} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white transition-all duration-300">
+                <select value={reportScope} onChange={(e) => setReportScope(e.target.value)} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white transition-all duration-300">
                   {REPORT_SCOPES.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Format</label>
-                <select value={reportFormat} onChange={(e) => setReportFormat(e.target.value)} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white transition-all duration-300">
+                <select value={reportFormat} onChange={(e) => setReportFormat(e.target.value)} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm px-3 py-2 text-sm text-secondary-900 dark:text-white transition-all duration-300">
                   {REPORT_FORMATS.map((f) => <option key={f} value={f}>{f}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Period Start</label>
-                <input type="date" value={periodStart} onChange={(e) => setPeriodStart(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white" />
+                <input type="date" value={periodStart} onChange={(e) => setPeriodStart(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary-600 dark:text-secondary-400 mb-1">Period End</label>
-                <input type="date" value={periodEnd} onChange={(e) => setPeriodEnd(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white" />
+                <input type="date" value={periodEnd} onChange={(e) => setPeriodEnd(e.target.value)} className="w-full rounded-lg border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-800 backdrop-blur-xl px-3 py-2 text-sm text-secondary-900 dark:text-white" />
               </div>
               <div className="flex items-end">
                 <button
@@ -286,7 +286,7 @@ function ReportsList({
   if (loading) {
     return (
       <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
-        <div className="flex justify-center py-12">
+        <div className="flex justify-center py-4">
           <div className="glass-spinner" />
         </div>
       </div>
@@ -296,7 +296,7 @@ function ReportsList({
   if (reports.length === 0) {
     return (
       <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4 text-center py-8">
-        <DocumentChartBarIcon className="h-12 w-12 mx-auto text-secondary-300 dark:text-secondary-600 mb-3" />
+        <DocumentChartBarIcon className="h-8 w-8 mx-auto text-secondary-300 dark:text-secondary-600 mb-3" />
         <p className="text-lg font-medium text-secondary-500 dark:text-secondary-400">No reports yet</p>
         <p className="text-sm text-secondary-400 dark:text-secondary-500 mt-1">Generate your first report to see it here.</p>
       </div>

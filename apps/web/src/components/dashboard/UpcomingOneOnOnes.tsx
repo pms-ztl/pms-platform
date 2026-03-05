@@ -23,7 +23,7 @@ function UpcomingOneOnOnes() {
               <CalendarDaysIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Upcoming 1-on-1s</h2>
+              <h2 className="text-lg font-bold text-secondary-900 dark:text-white">Upcoming 1-on-1s</h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">Your next scheduled meetings</p>
             </div>
           </div>

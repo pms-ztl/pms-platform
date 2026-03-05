@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 
 import { rbacApi, type RoleDistribution, type RecentRoleChange } from '@/lib/api/rbac';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -27,7 +28,7 @@ interface RoleInfo {
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const PIE_COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899', '#14B8A6'];
+// PIE_COLORS derived from accent palette inside component
 
 const ACTION_BADGE_STYLES: Record<string, string> = {
   ASSIGNED: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
@@ -81,6 +82,8 @@ function describeChange(change: RecentRoleChange): string {
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function RBACDashboardPage() {
+  const cc = useChartColors();
+  const PIE_COLORS = cc.palette(8);
   usePageTitle('RBAC Dashboard');
 
   const [loading, setLoading] = useState(true);
@@ -159,7 +162,7 @@ export function RBACDashboardPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
+            <div key={i} className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
                 <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" />
@@ -169,7 +172,7 @@ export function RBACDashboardPage() {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-64">
+            <div key={i} className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4 h-64">
               <div className="animate-pulse space-y-4">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/4" />
                 <div className="h-40 bg-secondary-200 dark:bg-secondary-700 rounded" />
@@ -231,15 +234,15 @@ export function RBACDashboardPage() {
       {/* Row 2: Charts & Permission Coverage */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Pie Chart: Role Distribution */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
-          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
-            <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Role Distribution</h2>
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06]">
+            <h2 className="text-base font-semibold text-secondary-900 dark:text-white">Role Distribution</h2>
           </div>
-          <div className="p-6">
+          <div className="p-4">
             {pieData.length > 0 ? (
               <DonutChart data={pieData} colors={PIE_COLORS} totalUsers={usersWithRoles} />
             ) : (
-              <div className="flex flex-col items-center justify-center h-64 text-center">
+              <div className="flex flex-col items-center justify-center py-6 text-center">
                 <ShieldCheckIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mb-3" />
                 <p className="text-sm text-secondary-500 dark:text-secondary-400">No roles with assigned users</p>
               </div>
@@ -248,13 +251,13 @@ export function RBACDashboardPage() {
         </div>
 
         {/* Permission Coverage */}
-        <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
-          <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
-            <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Permission Coverage</h2>
+        <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+          <div className="px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06]">
+            <h2 className="text-base font-semibold text-secondary-900 dark:text-white">Permission Coverage</h2>
           </div>
-          <div className="p-6">
+          <div className="p-4">
             {roles.length > 0 ? (
-              <div className="space-y-3 max-h-[280px] overflow-y-auto pr-1">
+              <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
                 {roles
                   .slice()
                   .sort((a, b) => b.permissions.length - a.permissions.length)
@@ -285,7 +288,7 @@ export function RBACDashboardPage() {
                   })}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-64 text-center">
+              <div className="flex flex-col items-center justify-center py-6 text-center">
                 <DocumentTextIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mb-3" />
                 <p className="text-sm text-secondary-500 dark:text-secondary-400">No roles configured</p>
               </div>
@@ -295,16 +298,16 @@ export function RBACDashboardPage() {
       </div>
 
       {/* Row 3: Recent Role Changes Timeline */}
-      <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
-        <div className="px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+      <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06]">
+        <div className="px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06]">
           <div className="flex items-center gap-2">
             <ClockIcon className="h-5 w-5 text-secondary-500" />
-            <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Recent Role Changes</h2>
+            <h2 className="text-base font-semibold text-secondary-900 dark:text-white">Recent Role Changes</h2>
           </div>
         </div>
-        <div className="p-6">
+        <div className="p-4">
           {changesError ? (
-            <div className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="flex flex-col items-center justify-center py-6 text-center">
               <ExclamationCircleIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mb-3" />
               <p className="text-sm text-secondary-500 dark:text-secondary-400">
                 Unable to load audit events
@@ -314,7 +317,7 @@ export function RBACDashboardPage() {
               </p>
             </div>
           ) : recentChanges.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="flex flex-col items-center justify-center py-6 text-center">
               <ClockIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mb-3" />
               <p className="text-sm text-secondary-500 dark:text-secondary-400">No recent role changes</p>
             </div>
@@ -440,14 +443,14 @@ function StatCard({
   iconColor: string;
 }) {
   return (
-    <div className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
-      <div className="flex items-center gap-3 mb-3">
-        <div className={`p-2 rounded-lg ${colorClass}`}>
-          <Icon className={`h-5 w-5 ${iconColor}`} />
+    <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-3">
+      <div className="flex items-center gap-2 mb-2">
+        <div className={`p-1.5 rounded-lg ${colorClass}`}>
+          <Icon className={`h-4 w-4 ${iconColor}`} />
         </div>
-        <span className="text-sm font-medium text-secondary-500 dark:text-secondary-400">{label}</span>
+        <span className="text-xs font-medium text-secondary-500 dark:text-secondary-400">{label}</span>
       </div>
-      <span className="text-2xl font-bold text-secondary-900 dark:text-white">{value}</span>
+      <span className="text-xl font-bold text-secondary-900 dark:text-white">{value}</span>
     </div>
   );
 }

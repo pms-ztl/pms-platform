@@ -33,10 +33,10 @@ function PeerComparison({ percentile, score, dimensions }: PeerComparisonProps) 
 
   return (
     <div className="glass-deep rounded-2xl p-4">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <UsersIcon className="w-5 h-5 text-blue-500" />
-          <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Peer Comparison</h3>
+          <h3 className="text-sm font-bold text-secondary-700 dark:text-secondary-300">Peer Comparison</h3>
         </div>
         <div className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${colors.text} bg-current/10`}>
           Top {topPercent}%
@@ -44,7 +44,7 @@ function PeerComparison({ percentile, score, dimensions }: PeerComparisonProps) 
       </div>
 
       {/* Distribution bar */}
-      <div className="relative mb-4">
+      <div className="relative mb-3">
         <div className="flex h-4 rounded-full overflow-hidden bg-secondary-100 dark:bg-secondary-800">
           {segments.map((seg, i) => (
             <div
@@ -86,7 +86,7 @@ function PeerComparison({ percentile, score, dimensions }: PeerComparisonProps) 
         <div className="mt-4 pt-3 border-t border-secondary-100 dark:border-white/[0.06]">
           <p className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 mb-2.5">Score Breakdown</p>
           <div className="space-y-2">
-            {dimensions.slice(0, 4).map((d) => {
+            {dimensions.map((d) => {
               const barColor = d.rawScore >= 80 ? 'bg-emerald-500' : d.rawScore >= 60 ? 'bg-blue-500' : d.rawScore >= 40 ? 'bg-amber-500' : 'bg-red-400';
               return (
                 <div key={d.code} className="flex items-center gap-2">

@@ -426,7 +426,7 @@ export function OneOnOnesPage() {
                 {other.firstName} {other.lastName}
               </p>
               {other.jobTitle && (
-                <p className="text-xs text-secondary-500 dark:text-secondary-400 break-words">
+                <p className="text-xs font-medium text-secondary-600 dark:text-secondary-300 break-words">
                   {other.jobTitle}
                 </p>
               )}
@@ -443,7 +443,7 @@ export function OneOnOnesPage() {
         </div>
 
         {/* Date / Duration */}
-        <div className="mt-4 flex items-center gap-4 text-sm text-secondary-500 dark:text-secondary-400">
+        <div className="mt-3 flex items-center gap-4 text-sm font-medium text-secondary-600 dark:text-secondary-300">
           <span className="flex items-center gap-1">
             <CalendarDaysIcon className="h-4 w-4" />
             {format(scheduledDate, 'MMM d, yyyy')}
@@ -452,14 +452,14 @@ export function OneOnOnesPage() {
             <ClockIcon className="h-4 w-4" />
             {format(scheduledDate, 'h:mm a')}
           </span>
-          <span className="rounded-full bg-secondary-100 dark:bg-secondary-700 px-2 py-0.5 text-xs font-medium text-secondary-600 dark:text-secondary-300">
+          <span className="rounded-full bg-secondary-100 dark:bg-secondary-700 px-2 py-0.5 text-xs font-semibold text-secondary-700 dark:text-secondary-200">
             {meeting.duration} min
           </span>
         </div>
 
         {/* Location / Meeting link */}
         {(meeting.location || meeting.meetingLink) && (
-          <div className="mt-3 flex items-center gap-3 text-xs text-secondary-500 dark:text-secondary-400">
+          <div className="mt-3 flex items-center gap-3 text-xs font-medium text-secondary-600 dark:text-secondary-300">
             {meeting.location && (
               <span className="flex items-center gap-1 break-words">
                 <MapPinIcon className="h-3.5 w-3.5 flex-shrink-0" />
@@ -480,12 +480,12 @@ export function OneOnOnesPage() {
           <div className="mt-3 space-y-1">
             {agendaPreview.map((item, i) => (
               <div key={i} className="flex items-start gap-2 text-sm text-secondary-600 dark:text-secondary-300">
-                <ChatBubbleLeftRightIcon className="h-4 w-4 mt-0.5 flex-shrink-0 text-secondary-400" />
+                <ChatBubbleLeftRightIcon className="h-4 w-4 mt-0.5 flex-shrink-0 text-secondary-500 dark:text-secondary-400" />
                 <span>{item.topic}</span>
               </div>
             ))}
             {(meeting.agenda || []).length > 2 && (
-              <p className="text-xs text-secondary-400 dark:text-secondary-500 ml-6">
+              <p className="text-xs font-medium text-secondary-600 dark:text-secondary-300 ml-6">
                 +{(meeting.agenda || []).length - 2} more topic{(meeting.agenda || []).length - 2 > 1 ? 's' : ''}
               </p>
             )}
@@ -494,7 +494,7 @@ export function OneOnOnesPage() {
 
         {/* Action items count */}
         {totalActionItems > 0 && (
-          <div className="mt-3 flex items-center gap-1.5 text-xs text-secondary-500 dark:text-secondary-400">
+          <div className="mt-3 flex items-center gap-1.5 text-xs font-medium text-secondary-600 dark:text-secondary-300">
             <ListBulletIcon className="h-4 w-4" />
             <span>
               {doneActionItems}/{totalActionItems} action item{totalActionItems !== 1 ? 's' : ''} done
@@ -513,7 +513,7 @@ export function OneOnOnesPage() {
           <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
             No upcoming 1-on-1 meetings
           </h3>
-          <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
+          <p className="mt-1 text-sm font-medium text-secondary-600 dark:text-secondary-300">
             Schedule a 1-on-1 to connect with your team and discuss goals, feedback, and career growth.
           </p>
           <button
@@ -533,7 +533,7 @@ export function OneOnOnesPage() {
         <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
           No past meetings yet
         </h3>
-        <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
+        <p className="mt-1 text-sm font-medium text-secondary-600 dark:text-secondary-300">
           Completed and cancelled meetings will show up here.
         </p>
       </div>
@@ -545,7 +545,7 @@ export function OneOnOnesPage() {
 
     return (
       <div className="flex items-center justify-between pt-2">
-        <p className="text-sm text-secondary-500 dark:text-secondary-400">
+        <p className="text-sm font-medium text-secondary-600 dark:text-secondary-300">
           Page {page} of {totalPages}
         </p>
         <div className="flex items-center gap-2">
@@ -555,7 +555,7 @@ export function OneOnOnesPage() {
             className={clsx(
               'inline-flex items-center border rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
               page <= 1
-                ? 'border-secondary-200/60 dark:border-white/[0.06] text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
+                ? 'border-secondary-200/60 dark:border-white/[0.06] text-secondary-400 dark:text-secondary-500 cursor-not-allowed'
                 : 'border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]'
             )}
           >
@@ -568,7 +568,7 @@ export function OneOnOnesPage() {
             className={clsx(
               'inline-flex items-center border rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
               page >= totalPages
-                ? 'border-secondary-200/60 dark:border-white/[0.06] text-secondary-300 dark:text-secondary-600 cursor-not-allowed'
+                ? 'border-secondary-200/60 dark:border-white/[0.06] text-secondary-400 dark:text-secondary-500 cursor-not-allowed'
                 : 'border-secondary-300 dark:border-secondary-600 text-secondary-700 dark:text-secondary-300 hover:bg-primary-50/30 dark:hover:bg-white/[0.03]'
             )}
           >
@@ -598,7 +598,7 @@ export function OneOnOnesPage() {
       </PageHeader>
 
       {/* Tabs */}
-      <div className="border-b border-secondary-200/60 dark:border-white/[0.06]">
+      <div className="border-b-2 border-secondary-200 dark:border-secondary-700">
         <nav className="-mb-px flex space-x-8">
           {[
             { key: 'upcoming' as const, label: 'Upcoming' },
@@ -683,7 +683,7 @@ export function OneOnOnesPage() {
                     value={formEmployeeId}
                     onChange={(e) => setFormEmployeeId(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   >
                     <option value="">Select an employee...</option>
                     {employeeOptions.map((emp: User) => (
@@ -705,7 +705,7 @@ export function OneOnOnesPage() {
                     value={formScheduledAt}
                     onChange={(e) => setFormScheduledAt(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   />
                 </div>
 
@@ -717,7 +717,7 @@ export function OneOnOnesPage() {
                   <select
                     value={formDuration}
                     onChange={(e) => setFormDuration(Number(e.target.value))}
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   >
                     {durationOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -737,7 +737,7 @@ export function OneOnOnesPage() {
                     value={formLocation}
                     onChange={(e) => setFormLocation(e.target.value)}
                     placeholder="e.g., Conference Room B"
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   />
                 </div>
 
@@ -751,7 +751,7 @@ export function OneOnOnesPage() {
                     value={formMeetingLink}
                     onChange={(e) => setFormMeetingLink(e.target.value)}
                     placeholder="https://meet.google.com/..."
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 text-secondary-900 dark:text-white px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   />
                 </div>
 
@@ -773,7 +773,7 @@ export function OneOnOnesPage() {
                   <div className="space-y-2">
                     {agendaItems.map((item, index) => (
                       <div key={index} className="flex items-center gap-2">
-                        <span className="text-xs text-secondary-400 dark:text-secondary-500 w-5 text-right flex-shrink-0">
+                        <span className="text-xs font-medium text-secondary-600 dark:text-secondary-300 w-5 text-right flex-shrink-0">
                           {index + 1}.
                         </span>
                         <input

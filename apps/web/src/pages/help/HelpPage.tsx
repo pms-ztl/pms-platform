@@ -307,7 +307,7 @@ function GuideCard({ guide, isExpanded, onToggle }: { guide: Guide; isExpanded: 
       <div className="p-4">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
-            <Icon className="h-4.5 w-4.5 text-primary-600 dark:text-primary-400" />
+            <Icon className="h-[1.125rem] w-[1.125rem] text-primary-600 dark:text-primary-400" />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-base font-semibold text-secondary-900 dark:text-white leading-snug">{guide.title}</h3>
@@ -547,7 +547,7 @@ export function HelpPage() {
 
           {/* No results message */}
           {searchQuery && !hasResults && (
-            <div className="text-center py-12">
+            <div className="text-center py-4">
               <BookOpenIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
               <p className="text-secondary-500 dark:text-secondary-400 text-sm">
                 No results found for "<span className="font-medium">{searchQuery}</span>". Try a different search term.

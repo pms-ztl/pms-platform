@@ -20,8 +20,8 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   PieChart,
   Pie,
   Cell,
@@ -29,6 +29,7 @@ import {
 } from 'recharts';
 import clsx from 'clsx';
 import toast from 'react-hot-toast';
+import { ChartTooltip } from '@/components/ui';
 
 import {
   analyticsApi,
@@ -53,10 +54,12 @@ import {
   type FilterState,
 } from '@/components/analytics';
 import { PageHeader } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
-const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'];
+const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6']; // semantic rating scale
 
 export function AnalyticsPage() {
+  const cc = useChartColors();
   usePageTitle('Analytics');
   const { user } = useAuthStore();
   const [selectedCycleId, setSelectedCycleId] = useState<string>('');
@@ -227,7 +230,7 @@ export function AnalyticsPage() {
         {/* Goal status breakdown */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Goal Status</h3>
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-4">Goal Status</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -284,7 +287,7 @@ export function AnalyticsPage() {
           </div>
 
           <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-            <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Reviews Overview</h3>
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-4">Reviews Overview</h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-secondary-600 dark:text-secondary-400">Active Cycles</span>
@@ -351,18 +354,18 @@ export function AnalyticsPage() {
 
       {/* Rating distribution */}
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Performance Rating Distribution</h3>
+        <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-4">Performance Rating Distribution</h3>
         {distribution && distribution.length > 0 ? (
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={distribution}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="rating" tickFormatter={(v) => `${v} Star`} />
-                <YAxis />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} formatter={(value) => [`${value} employees`, 'Count']} />
-                <Bar dataKey="count" fill="#3b82f6">
+                <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-300 dark:stroke-secondary-500" strokeOpacity={0.5} />
+                <XAxis dataKey="rating" tickFormatter={(v) => `${v} Star`} tick={{ fontWeight: 600 }} className="fill-secondary-500 dark:fill-secondary-300" />
+                <YAxis tick={{ fontWeight: 600 }} className="fill-secondary-500 dark:fill-secondary-300" />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} formatter={(value) => [`${value} employees`, 'Count']} />
+                <Bar dataKey="count" fill={cc.primary} strokeWidth={2}>
                   {distribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                    <Cell key={`cell-${index}`} fill={COLORS[index]} stroke={COLORS[index]} strokeWidth={2} />
                   ))}
                 </Bar>
               </BarChart>
@@ -376,7 +379,7 @@ export function AnalyticsPage() {
       {/* Department comparison (HR admin only) */}
       {isHRAdmin && teamPerformance && teamPerformance.length > 0 && (
         <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-          <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Team Performance Comparison</h3>
+          <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-4">Team Performance Comparison</h3>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
               <thead className="bg-secondary-50 dark:bg-secondary-900/50">
@@ -419,33 +422,29 @@ export function AnalyticsPage() {
   const renderGoalsTrends = () => (
     <div className="space-y-4">
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Goal Completion Trends (Last 6 Months)</h3>
+        <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-4">Goal Completion Trends (Last 6 Months)</h3>
         {goalTrends && goalTrends.length > 0 ? (
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={goalTrends}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
-                <XAxis dataKey="month" className="fill-secondary-500 dark:fill-secondary-400" />
-                <YAxis className="fill-secondary-500 dark:fill-secondary-400" />
-                <Tooltip
-                  cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                  contentStyle={{
-                    background: 'rgba(15, 23, 42, 0.80)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(148, 163, 184, 0.15)',
-                    borderRadius: '0.75rem',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                    fontSize: '0.75rem',
-                    color: '#f1f5f9',
-                  }}
-                  labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-                  itemStyle={{ color: '#e2e8f0' }}
-                />
+              <AreaChart data={goalTrends}>
+                <defs>
+                  <linearGradient id="gradCreated" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={cc.primary} stopOpacity={0.3} />
+                    <stop offset="100%" stopColor={cc.primary} stopOpacity={0.05} />
+                  </linearGradient>
+                  <linearGradient id="gradCompleted" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={cc.semantic.success} stopOpacity={0.3} />
+                    <stop offset="100%" stopColor={cc.semantic.success} stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-300 dark:stroke-secondary-500" strokeOpacity={0.5} />
+                <XAxis dataKey="month" className="fill-secondary-500 dark:fill-secondary-300" tick={{ fontWeight: 600 }} />
+                <YAxis className="fill-secondary-500 dark:fill-secondary-300" tick={{ fontWeight: 600 }} />
+                <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
                 <Legend />
-                <Line type="monotone" dataKey="created" stroke="#3b82f6" name="Created" strokeWidth={2} />
-                <Line type="monotone" dataKey="completed" stroke="#22c55e" name="Completed" strokeWidth={2} />
-              </LineChart>
+                <Area type="monotone" dataKey="created" stroke={cc.primary} name="Created" strokeWidth={3} fill="url(#gradCreated)" />
+                <Area type="monotone" dataKey="completed" stroke={cc.semantic.success} name="Completed" strokeWidth={3} fill="url(#gradCompleted)" />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         ) : (
@@ -454,16 +453,16 @@ export function AnalyticsPage() {
       </div>
 
       <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Goal Completion Rate</h3>
+        <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-4">Goal Completion Rate</h3>
         {goalTrends && goalTrends.length > 0 ? (
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={goalTrends}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
-                <XAxis dataKey="month" className="fill-secondary-500 dark:fill-secondary-400" />
-                <YAxis unit="%" className="fill-secondary-500 dark:fill-secondary-400" />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} formatter={(value) => [`${value}%`, 'Completion Rate']} />
-                <Bar dataKey="completionRate" fill="#22c55e" name="Completion Rate" />
+                <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-300 dark:stroke-secondary-500" strokeOpacity={0.5} />
+                <XAxis dataKey="month" className="fill-secondary-500 dark:fill-secondary-300" tick={{ fontWeight: 600 }} />
+                <YAxis unit="%" className="fill-secondary-500 dark:fill-secondary-300" tick={{ fontWeight: 600 }} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} formatter={(value) => [`${value}%`, 'Completion Rate']} />
+                <Bar dataKey="completionRate" fill="#22c55e" name="Completion Rate" stroke={cc.semantic.success} strokeWidth={2} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -474,62 +473,177 @@ export function AnalyticsPage() {
     </div>
   );
 
-  const renderFeedbackTrends = () => (
-    <div className="space-y-4">
-      <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Feedback Trends (Last 6 Months)</h3>
-        {feedbackTrends && feedbackTrends.length > 0 ? (
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={feedbackTrends}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-200 dark:stroke-secondary-700" />
-                <XAxis dataKey="month" className="fill-secondary-500 dark:fill-secondary-400" />
-                <YAxis className="fill-secondary-500 dark:fill-secondary-400" />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
-                <Legend />
-                <Line type="monotone" dataKey="praise" stroke="#22c55e" name="Praise" strokeWidth={2} />
-                <Line type="monotone" dataKey="constructive" stroke="#f97316" name="Constructive" strokeWidth={2} />
-                <Line type="monotone" dataKey="total" stroke="#3b82f6" name="Total" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        ) : (
-          <p className="text-secondary-500 dark:text-secondary-400 text-center py-8">No feedback trends data available.</p>
-        )}
-      </div>
+  const renderFeedbackTrends = () => {
+    const totalPraise = feedbackTrends?.reduce((a, t) => a + t.praise, 0) ?? 0;
+    const totalConstructive = feedbackTrends?.reduce((a, t) => a + t.constructive, 0) ?? 0;
+    const totalFeedback = totalPraise + totalConstructive;
+    const praisePercent = totalFeedback > 0 ? Math.round((totalPraise / totalFeedback) * 100) : 0;
+    const constructivePercent = 100 - praisePercent;
 
-      <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
-        <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4">Feedback Type Breakdown</h3>
-        {feedbackTrends && feedbackTrends.length > 0 ? (
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={[
-                    { name: 'Praise', value: feedbackTrends.reduce((acc, t) => acc + t.praise, 0) },
-                    { name: 'Constructive', value: feedbackTrends.reduce((acc, t) => acc + t.constructive, 0) },
-                  ]}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  <Cell fill="#22c55e" />
-                  <Cell fill="#f97316" />
-                </Pie>
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+    const barData = (feedbackTrends ?? []).map(t => ({
+      month: t.month,
+      Praise: t.praise,
+      Constructive: t.constructive,
+    }));
+
+    const pieData = [
+      { name: 'Praise', value: totalPraise },
+      { name: 'Constructive', value: totalConstructive },
+    ];
+
+    return (
+      <div className="space-y-4">
+        {/* Feedback Trends Area Chart — full width */}
+        <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
+          <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-4">Feedback Trends (Last 6 Months)</h3>
+          {feedbackTrends && feedbackTrends.length > 0 ? (
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={feedbackTrends}>
+                  <defs>
+                    <linearGradient id="gradPraise" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={cc.semantic.success} stopOpacity={0.3} />
+                      <stop offset="100%" stopColor={cc.semantic.success} stopOpacity={0.05} />
+                    </linearGradient>
+                    <linearGradient id="gradConstructive" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={cc.feedbackColors[1]} stopOpacity={0.3} />
+                      <stop offset="100%" stopColor={cc.feedbackColors[1]} stopOpacity={0.05} />
+                    </linearGradient>
+                    <linearGradient id="gradTotal" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={cc.primary} stopOpacity={0.3} />
+                      <stop offset="100%" stopColor={cc.primary} stopOpacity={0.05} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-secondary-300 dark:stroke-secondary-500" strokeOpacity={0.5} />
+                  <XAxis dataKey="month" className="fill-secondary-500 dark:fill-secondary-300" tick={{ fontWeight: 600 }} />
+                  <YAxis className="fill-secondary-500 dark:fill-secondary-300" tick={{ fontWeight: 600 }} />
+                  <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+                  <Legend />
+                  <Area type="monotone" dataKey="praise" stroke={cc.semantic.success} name="Praise" strokeWidth={3} fill="url(#gradPraise)" />
+                  <Area type="monotone" dataKey="constructive" stroke={cc.feedbackColors[1]} name="Constructive" strokeWidth={3} fill="url(#gradConstructive)" />
+                  <Area type="monotone" dataKey="total" stroke={cc.primary} name="Total" strokeWidth={3} fill="url(#gradTotal)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p className="text-secondary-500 dark:text-secondary-400 text-center py-8">No feedback trends data available.</p>
+          )}
+        </div>
+
+        {/* Bottom row — Donut with center stats + Monthly Stacked Bar */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          {/* Left: Feedback Ratio donut with center stats */}
+          <div className="lg:col-span-2 card card-body dark:bg-secondary-800 dark:border-secondary-700">
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-1">Feedback Ratio</h3>
+            <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-3">Praise vs constructive split</p>
+            {totalFeedback > 0 ? (
+              <>
+                <div className="relative" style={{ height: 200 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <defs>
+                        <linearGradient id="gradPieGreen" x1="0" y1="0" x2="1" y2="1">
+                          <stop offset="0%" stopColor={cc.semantic.success} />
+                          <stop offset="100%" stopColor={cc.feedbackColors[0]} />
+                        </linearGradient>
+                        <linearGradient id="gradPieOrange" x1="0" y1="0" x2="1" y2="1">
+                          <stop offset="0%" stopColor={cc.feedbackColors[1]} />
+                          <stop offset="100%" stopColor={cc.semantic.warning} />
+                        </linearGradient>
+                      </defs>
+                      <Pie
+                        data={pieData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius="52%"
+                        outerRadius="88%"
+                        paddingAngle={3}
+                        dataKey="value"
+                        strokeWidth={0}
+                        cornerRadius={6}
+                      >
+                        <Cell fill="url(#gradPieGreen)" />
+                        <Cell fill="url(#gradPieOrange)" />
+                      </Pie>
+                      <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  {/* Center overlay stats */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-3xl font-extrabold text-secondary-900 dark:text-white leading-none">{totalFeedback}</span>
+                    <span className="text-2xs text-secondary-500 dark:text-secondary-400 mt-0.5">Total</span>
+                  </div>
+                </div>
+                {/* Legend pills */}
+                <div className="flex items-center justify-center gap-4 mt-2">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                    <span className="text-xs font-semibold text-secondary-700 dark:text-secondary-300">
+                      {totalPraise} <span className="text-green-600 dark:text-green-400">({praisePercent}%)</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-orange-500" />
+                    <span className="text-xs font-semibold text-secondary-700 dark:text-secondary-300">
+                      {totalConstructive} <span className="text-orange-600 dark:text-orange-400">({constructivePercent}%)</span>
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <p className="text-secondary-500 dark:text-secondary-400 text-center py-8">No data available.</p>
+            )}
           </div>
-        ) : (
-          <p className="text-secondary-500 dark:text-secondary-400 text-center py-8">No data available.</p>
-        )}
+
+          {/* Right: Monthly Stacked Bar Chart */}
+          <div className="lg:col-span-3 card card-body dark:bg-secondary-800 dark:border-secondary-700">
+            <h3 className="text-lg font-bold text-secondary-900 dark:text-white mb-1">Monthly Breakdown</h3>
+            <p className="text-xs text-secondary-500 dark:text-secondary-400 mb-3">Feedback volume by month</p>
+            {barData.length > 0 ? (
+              <div style={{ height: 240 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={barData} margin={{ top: 4, right: 8, bottom: 0, left: -16 }}>
+                    <defs>
+                      <linearGradient id="gradBarPraise" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={cc.semantic.success} stopOpacity={0.9} />
+                        <stop offset="100%" stopColor={cc.feedbackColors[0]} stopOpacity={0.7} />
+                      </linearGradient>
+                      <linearGradient id="gradBarConstr" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={cc.feedbackColors[1]} stopOpacity={0.9} />
+                        <stop offset="100%" stopColor={cc.semantic.warning} stopOpacity={0.7} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-300, #cbd5e1)" strokeOpacity={0.4} vertical={false} />
+                    <XAxis
+                      dataKey="month"
+                      tick={{ fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-500, #64748b)' }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-500, #64748b)' }}
+                      axisLine={false}
+                      tickLine={false}
+                      allowDecimals={false}
+                    />
+                    <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+                    <Legend
+                      wrapperStyle={{  fontSize: '11px', fontWeight: 600 }}
+                      formatter={(value: string) => <span className="text-secondary-600 dark:text-secondary-400">{value}</span>}
+                    />
+                    <Bar dataKey="Praise" stackId="fb" fill="url(#gradBarPraise)" radius={[0, 0, 0, 0]} maxBarSize={32} />
+                    <Bar dataKey="Constructive" stackId="fb" fill="url(#gradBarConstr)" radius={[4, 4, 0, 0]} maxBarSize={32} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <p className="text-secondary-500 dark:text-secondary-400 text-center py-8">No data available.</p>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderFairness = () => {
     if (!isHRAdmin) {

@@ -419,7 +419,7 @@ export function CompensationPage() {
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-              className="input-field text-sm py-1.5"
+              className="input-field text-sm py-1.5 relative z-50"
             >
               {STATUS_OPTIONS.map((s) => (
                 <option key={s} value={s}>{s === 'ALL' ? 'All Statuses' : s.replace('_', ' ')}</option>
@@ -429,7 +429,7 @@ export function CompensationPage() {
           <select
             value={typeFilter}
             onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-            className="input-field text-sm py-1.5"
+            className="input-field text-sm py-1.5 relative z-50"
           >
             {TYPE_OPTIONS.map((t) => (
               <option key={t} value={t}>{t === 'ALL' ? 'All Types' : typeLabels[t] ?? t}</option>
@@ -451,11 +451,11 @@ export function CompensationPage() {
       {/* ---- Decisions Table ---- */}
       <div className="card dark:bg-secondary-800 dark:border-secondary-700 overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center py-8">
+          <div className="flex justify-center py-4">
             <div className="glass-spinner" />
           </div>
         ) : filteredDecisions.length === 0 ? (
-          <div className="text-center py-8">
+          <div className="text-center py-4">
             <CurrencyDollarIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
             <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No compensation decisions</h3>
             <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
@@ -611,7 +611,7 @@ export function CompensationPage() {
       <div className="card dark:bg-secondary-800 dark:border-secondary-700">
         <button
           onClick={() => setShowBudgetSection(!showBudgetSection)}
-          className="w-full flex items-center justify-between px-6 py-4"
+          className="w-full flex items-center justify-between px-4 py-3"
         >
           <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Budget Overview</h2>
           {showBudgetSection
@@ -619,7 +619,7 @@ export function CompensationPage() {
             : <ChevronDownIcon className="h-5 w-5 text-secondary-400" />}
         </button>
         {showBudgetSection && (
-          <div className="px-6 pb-6 space-y-4">
+          <div className="px-4 pb-4 space-y-3">
             {departmentBudgets.length === 0 ? (
               <p className="text-sm text-secondary-500 dark:text-secondary-400 text-center py-4">
                 No department budget data available.
@@ -703,7 +703,7 @@ export function CompensationPage() {
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
           <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-secondary-200/60 dark:border-white/[0.06]">
               <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {editingDecision ? 'Edit Compensation Decision' : 'New Compensation Decision'}
               </h2>
@@ -711,7 +711,7 @@ export function CompensationPage() {
                 <XMarkIcon className="h-5 w-5 text-secondary-500" />
               </button>
             </div>
-            <div className="px-6 py-5 space-y-4">
+            <div className="px-4 py-4 space-y-3">
               {/* Employee selector */}
               <div>
                 <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-1">
@@ -725,7 +725,7 @@ export function CompensationPage() {
                   className="input-field text-sm w-full mb-1"
                 />
                 {employeeSearch && !formState.employeeId && (
-                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
+                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white dark:bg-secondary-800 backdrop-blur-xl">
                     {filteredUsers.map((u) => (
                       <button
                         key={u.id}
@@ -750,7 +750,7 @@ export function CompensationPage() {
                 <select
                   value={formState.compensationType}
                   onChange={(e) => setFormState((s) => ({ ...s, compensationType: e.target.value }))}
-                  className="input-field text-sm w-full"
+                  className="input-field text-sm w-full relative z-50"
                 >
                   {TYPE_OPTIONS.filter((t) => t !== 'ALL').map((t) => (
                     <option key={t} value={t}>{typeLabels[t]}</option>
@@ -777,7 +777,7 @@ export function CompensationPage() {
                   <select
                     value={formState.currency}
                     onChange={(e) => setFormState((s) => ({ ...s, currency: e.target.value }))}
-                    className="input-field text-sm w-full"
+                    className="input-field text-sm w-full relative z-50"
                   >
                     {CURRENCIES.map((c) => (
                       <option key={c} value={c}>{c}</option>
@@ -821,7 +821,7 @@ export function CompensationPage() {
                   <select
                     value={formState.evidenceId}
                     onChange={(e) => setFormState((s) => ({ ...s, evidenceId: e.target.value }))}
-                    className="input-field text-sm w-full"
+                    className="input-field text-sm w-full relative z-50"
                   >
                     <option value="">None</option>
                     {(evidenceResult?.data ?? []).map((ev: any) => (
@@ -833,7 +833,7 @@ export function CompensationPage() {
             </div>
 
             {/* Modal footer */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-end gap-3 px-4 py-3 border-t border-secondary-200/60 dark:border-white/[0.06]">
               <button
                 onClick={() => { setShowCreateModal(false); setEditingDecision(null); }}
                 className="btn-secondary text-sm"

@@ -348,7 +348,7 @@ export function PromotionsPage() {
         <select
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
+          className="relative z-50 rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
         >
           {PROMOTION_STATUSES.map((s) => (
             <option key={s} value={s}>{s === 'ALL' ? 'All Statuses' : statusLabels[s] || s}</option>
@@ -357,7 +357,7 @@ export function PromotionsPage() {
         <select
           value={typeFilter}
           onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-          className="rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
+          className="relative z-50 rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm text-sm px-3 py-1.5 text-secondary-700 dark:text-secondary-300 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 transition-all duration-300"
         >
           {PROMOTION_TYPES.map((t) => (
             <option key={t} value={t}>{t === 'ALL' ? 'All Types' : typeLabels[t] || t}</option>
@@ -385,11 +385,11 @@ export function PromotionsPage() {
 
       {/* Table */}
       {isLoading ? (
-        <div className="flex justify-center py-8">
+        <div className="flex justify-center py-4">
           <div className="glass-spinner" />
         </div>
       ) : filteredPromotions.length === 0 ? (
-        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-8">
+        <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] text-center py-4">
           <DocumentTextIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No promotions found</h3>
           <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
@@ -474,7 +474,7 @@ export function PromotionsPage() {
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={resetCreateForm} />
             <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-lg w-full p-4 border border-secondary-200/60 dark:border-white/[0.06] max-h-[85vh] overflow-y-auto"> {/* ui-allow: fixed-height — modal/drawer container */}
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Nominate for Promotion</h2>
                 <button onClick={resetCreateForm} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
                   <XMarkIcon className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
@@ -511,7 +511,7 @@ export function PromotionsPage() {
                     value={formEmployeeId}
                     onChange={(e) => setFormEmployeeId(e.target.value)}
                     required
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   >
                     <option value="">Select an employee...</option>
                     {(reports || []).map((r: any) => (
@@ -536,7 +536,7 @@ export function PromotionsPage() {
                       if (newType === 'LEVEL_PROMOTION') { setFormProposedRole(''); }
                       if (newType === 'TITLE_CHANGE' || newType === 'LATERAL_MOVE') { setFormProposedLevel(''); }
                     }}
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   >
                     {PROMOTION_TYPES.filter((t) => t !== 'ALL').map((t) => (
                       <option key={t} value={t}>{typeLabels[t]}</option>
@@ -636,7 +636,7 @@ export function PromotionsPage() {
                     type="date"
                     value={formEffectiveDate}
                     onChange={(e) => setFormEffectiveDate(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   />
                 </div>
 
@@ -716,7 +716,7 @@ export function PromotionsPage() {
           <div className="flex min-h-full items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => { setShowDeferModal(null); setDeferReason(''); setDeferUntil(''); }} />
             <div className="relative bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-xl max-w-md w-full p-4 border border-secondary-200/60 dark:border-white/[0.06]">
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Defer Promotion</h2>
                 <button onClick={() => { setShowDeferModal(null); setDeferReason(''); setDeferUntil(''); }} className="p-1.5 rounded-lg hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors">
                   <XMarkIcon className="h-5 w-5 text-secondary-500 dark:text-secondary-400" />
@@ -753,7 +753,7 @@ export function PromotionsPage() {
                     type="date"
                     value={deferUntil}
                     onChange={(e) => setDeferUntil(e.target.value)}
-                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none backdrop-blur-sm transition-all duration-300"
+                    className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 outline-none transition-all duration-300"
                   />
                 </div>
                 <div className="flex justify-end gap-3 pt-2">

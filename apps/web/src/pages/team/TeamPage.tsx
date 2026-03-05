@@ -8,7 +8,6 @@ import {
   EnvelopeIcon,
   BuildingOfficeIcon,
   UserIcon,
-  ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
@@ -115,8 +114,8 @@ export function TeamPage() {
   const renderOrgChart = () => {
     if (!orgChart || orgChart.length === 0) {
       return (
-        <div className="text-center py-12">
-          <UserGroupIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+        <div className="text-center py-4">
+          <UserGroupIcon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
           <p className="mt-2 text-secondary-600 dark:text-secondary-400">No organization data available.</p>
         </div>
       );
@@ -132,7 +131,7 @@ export function TeamPage() {
       return (
         <div key={user.id} className={clsx('relative', level > 0 && 'ml-8')}>
           {level > 0 && (
-            <div className="absolute left-[-16px] top-6 w-4 border-b border-l border-secondary-300 dark:border-secondary-600 h-6 rounded-bl-lg" />
+            <div className="absolute left-[-16px] top-6 w-4 border-b-2 border-l-2 border-secondary-300 dark:border-secondary-600 h-6 rounded-bl" />
           )}
           <div className="py-2">
             <div className="inline-flex items-center gap-3 p-3 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl border border-secondary-200/60 dark:border-white/[0.06] rounded-lg shadow-sm">
@@ -148,12 +147,12 @@ export function TeamPage() {
                 <p className="text-xs text-secondary-500 dark:text-secondary-400">{user.jobTitle || 'Employee'}</p>
               </div>
               {children.length > 0 && (
-                <ChevronRightIcon className="h-4 w-4 text-secondary-400" />
+                <span className="text-xs font-medium text-secondary-400 dark:text-secondary-500">+{children.length}</span>
               )}
             </div>
           </div>
           {children.length > 0 && (
-            <div className="border-l border-secondary-300 dark:border-secondary-600 ml-5">
+            <div className="border-l-2 border-secondary-300 dark:border-secondary-600 ml-5">
               {children.map((child) => renderTreeNode(child, level + 1))}
             </div>
           )}
@@ -182,15 +181,15 @@ export function TeamPage() {
       {/* Direct reports section (for managers) */}
       {isManager && directReports && directReports.length > 0 && (
         <div className="card card-body">
-          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4 flex items-center">
+          <h2 className="text-lg font-semibold text-secondary-900 dark:text-white mb-3 flex items-center">
             <UserGroupIcon className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
             Your Direct Reports ({directReports.length})
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {directReports.map((report: User) => (
               <div
                 key={report.id}
-                className="flex items-center gap-3 p-3 border border-secondary-200/60 dark:border-white/[0.06] rounded-lg hover:border-primary-300 dark:hover:border-primary-600 transition-colors bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl/50"
+                className="flex items-center gap-3 p-2.5 border border-secondary-200/60 dark:border-white/[0.06] rounded-lg hover:border-primary-300 dark:hover:border-primary-600 transition-colors bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl/50"
               >
                 <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
                   <span className="text-sm font-medium text-primary-700 dark:text-primary-300">
@@ -221,7 +220,7 @@ export function TeamPage() {
       )}
 
       {/* View toggle and search */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3">
         <div className="relative flex-1">
           <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-secondary-400" />
           <input
@@ -261,12 +260,12 @@ export function TeamPage() {
       {/* Content */}
       {viewMode === 'list' ? (
         isLoading ? (
-          <div className="flex justify-center py-12">
+          <div className="flex justify-center py-4">
             <div className="glass-spinner" />
           </div>
         ) : !teamMembers?.data.length ? (
-          <div className="card card-body text-center py-12">
-            <UserGroupIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+          <div className="card card-body text-center py-4">
+            <UserGroupIcon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
             <h3 className="mt-2 text-sm font-medium text-secondary-900 dark:text-white">No team members found</h3>
             <p className="mt-1 text-sm text-secondary-500 dark:text-secondary-400">
               {searchQuery ? 'Try adjusting your search query.' : 'No team data available.'}
@@ -285,7 +284,7 @@ export function TeamPage() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {teamMembers.data.map((member: User) => renderUserCard(member))}
           </div>
         )

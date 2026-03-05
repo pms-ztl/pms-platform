@@ -29,6 +29,7 @@ import {
 import { actionableInsightsApi, type GeneratedDevPlan } from '@/lib/api';
 import { useAuthStore } from '@/store/auth';
 import { EmployeePicker, MasterDetail, SafeGrid, ChartTooltip as SharedChartTooltip } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 /* ── helpers ─────────────────────────────────────────────────────────── */
 
@@ -48,6 +49,8 @@ const STATUS_META: Record<string, { label: string; color: string; bg: string }> 
 };
 
 function badge(map: Record<string, { label: string; color: string; bg: string }>, key?: string) {
+  const cc = useChartColors();
+  const CHART_COLORS = cc.palette(2);
   const m = map[(key ?? '').toUpperCase()] ?? { label: key ?? '—', color: 'text-gray-400', bg: 'bg-gray-500/20' };
   return <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${m.bg} ${m.color}`}>{m.label}</span>;
 }
@@ -55,7 +58,7 @@ function badge(map: Record<string, { label: string; color: string; bg: string }>
 function pct(v?: number) { return typeof v === 'number' ? `${Math.round(v)}%` : '—'; }
 function money(v?: number) { return typeof v === 'number' ? `$${v.toLocaleString()}` : '—'; }
 
-const CHART_COLORS = ['#3b82f6', '#f59e0b'];
+// Chart colors derived from accent palette inside component
 
 /* ── component ───────────────────────────────────────────────────────── */
 
@@ -226,8 +229,8 @@ export function AIDevPlanPage() {
                 return (
                   <button key={plan.id} onClick={() => setSelectedPlan(isSelected ? null : plan)} className={`text-left rounded-xl border p-4 transition-all ${isSelected ? 'border-purple-500 bg-purple-500/10' : 'border-gray-700 bg-gray-800/60 hover:border-gray-600'}`}>
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <h4 className="text-sm font-semibold text-white">{plan.planName || 'Untitled Plan'}</h4>
-                      {badge(STATUS_META, plan.status)}
+                      <h4 className="text-sm font-semibold text-white truncate min-w-0">{plan.planName || 'Untitled Plan'}</h4>
+                      <span className="flex-shrink-0">{badge(STATUS_META, plan.status)}</span>
                     </div>
 
                     <div className="flex flex-wrap gap-2 mb-3">
@@ -320,10 +323,10 @@ export function AIDevPlanPage() {
                   <h4 className="text-xs font-semibold text-white mb-3">Skill Gap Analysis</h4>
                   <ResponsiveContainer width="100%" height={Math.max(180, skillGapData.length * 34)}>
                     <BarChart layout="vertical" data={skillGapData} margin={{ left: 10, right: 10, top: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                      <XAxis type="number" domain={[0, 10]} tick={{ fill: '#9ca3af', fontSize: 11 }} />
-                      <YAxis type="category" dataKey="skill" width={100} tick={{ fill: '#9ca3af', fontSize: 10 }} />
-                      <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<SharedChartTooltip />} />
+                      <CartesianGrid strokeDasharray="3 3" stroke={cc.primaryExtraDark} />
+                      <XAxis type="number" domain={[0, 10]} tick={{  fill: '#cbd5e1', fontSize: 11, fontWeight: 600 }} />
+                      <YAxis type="category" dataKey="skill" width={100} tick={{ fill: '#cbd5e1', fontSize: 11, fontWeight: 600 }} />
+                      <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<SharedChartTooltip />} />
                       <Legend />
                       <Bar dataKey="current" name="Current" fill={CHART_COLORS[0]} radius={[0, 4, 4, 0]} barSize={12} />
                       <Bar dataKey="required" name="Required" fill={CHART_COLORS[1]} radius={[0, 4, 4, 0]} barSize={12} />
@@ -482,7 +485,7 @@ export function AIDevPlanPage() {
 
               <div>
                 <label className="block text-sm text-gray-300 mb-1">Plan Type *</label>
-                <select value={genForm.planType} onChange={e => setGenForm(f => ({ ...f, planType: e.target.value }))} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:outline-none focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300">
+                <select value={genForm.planType} onChange={e => setGenForm(f => ({ ...f, planType: e.target.value }))} className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:outline-none focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300">
                   <option value="CAREER_GROWTH">Career Growth</option>
                   <option value="SKILL_DEVELOPMENT">Skill Development</option>
                   <option value="LEADERSHIP">Leadership</option>

@@ -559,7 +559,7 @@ export function EvidencePage() {
               <select
                 value={typeFilter}
                 onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-                className="text-sm py-1.5 px-3 rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 focus:outline-none transition-all duration-300"
+                className="text-sm py-1.5 px-3 rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 focus:outline-none transition-all duration-300"
               >
                 {TYPE_OPTIONS.map((t) => (
                   <option key={t} value={t}>
@@ -575,7 +575,7 @@ export function EvidencePage() {
                 placeholder="Search by title, source, or user..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="text-sm py-1.5 pl-9 pr-3 w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 backdrop-blur-sm text-secondary-900 dark:text-white placeholder-secondary-400 dark:placeholder-secondary-500 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 focus:outline-none transition-all duration-300"
+                className="text-sm py-1.5 pl-9 pr-3 w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 backdrop-blur-sm text-secondary-900 dark:text-white placeholder-secondary-400 dark:placeholder-secondary-500 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 focus:outline-none transition-all duration-300"
               />
             </div>
           </div>
@@ -962,7 +962,7 @@ export function EvidencePage() {
                   className="input-field text-sm w-full mb-1"
                 />
                 {employeeSearch && !formState.userId && (
-                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl">
+                  <div className="border border-secondary-200 dark:border-secondary-600 rounded-lg max-h-32 overflow-y-auto bg-white dark:bg-secondary-800 backdrop-blur-xl">
                     {filteredUsers.map((u) => (
                       <button
                         key={u.id}

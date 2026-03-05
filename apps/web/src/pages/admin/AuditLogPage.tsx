@@ -21,6 +21,7 @@ import {
   BoltIcon,
   UserGroupIcon,
   FireIcon,
+  ArrowsUpDownIcon,
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
@@ -375,10 +376,10 @@ function StatCard({
   const { bg, icon: iconColor } = colorMap[color];
 
   return (
-    <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-5">
-      <div className="flex items-center gap-4">
-        <div className={clsx('p-3 rounded-xl', bg)}>
-          <Icon className={clsx('h-6 w-6', iconColor)} />
+    <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+      <div className="flex items-center gap-3">
+        <div className={clsx('p-2.5 rounded-xl', bg)}>
+          <Icon className={clsx('h-5 w-5', iconColor)} />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm text-secondary-500 dark:text-secondary-400">{title}</p>
@@ -439,7 +440,7 @@ function ActivityTimeline({ events }: { events: AuditEvent[] }) {
     <div className="space-y-4">
       {Array.from(grouped.entries()).map(([dateKey, dateEvents]) => (
         <div key={dateKey}>
-          <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3 sticky top-0 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl py-1 z-10">
+          <h3 className="text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider mb-3 sticky top-0 bg-white dark:bg-secondary-800 backdrop-blur-xl py-1 z-10">
             {formatDateGroup(dateEvents[0].timestamp)}
           </h3>
           <div className="relative pl-6 border-l-2 border-secondary-200/60 dark:border-white/[0.06] space-y-4">
@@ -506,6 +507,8 @@ export function AuditLogPage() {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ViewTab>('table');
   const [showTimeline, setShowTimeline] = useState(false);
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   // ── Data Queries ──────────────────────────────────────────────────────────
 
@@ -529,8 +532,40 @@ export function AuditLogPage() {
 
   // ── Derived data ──────────────────────────────────────────────────────────
 
-  const events = eventsData?.data ?? [];
+  const rawEvents = eventsData?.data ?? [];
   const meta = eventsData?.meta ?? { total: 0, page: 1, limit: 20, totalPages: 0 };
+
+  const handleSortToggle = useCallback((column: string) => {
+    setSortColumn((prev) => {
+      if (prev === column) {
+        setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'));
+        return column;
+      }
+      setSortDirection('asc');
+      return column;
+    });
+  }, []);
+
+  const events = useMemo(() => {
+    if (!sortColumn) return rawEvents;
+    const sorted = [...rawEvents];
+    sorted.sort((a, b) => {
+      let aVal = '';
+      let bVal = '';
+      switch (sortColumn) {
+        case 'timestamp': aVal = a.timestamp; bVal = b.timestamp; break;
+        case 'user': aVal = `${a.user.firstName} ${a.user.lastName}`; bVal = `${b.user.firstName} ${b.user.lastName}`; break;
+        case 'action': aVal = a.action; bVal = b.action; break;
+        case 'entityType': aVal = a.entityType; bVal = b.entityType; break;
+        case 'entityId': aVal = a.entityId; bVal = b.entityId; break;
+        case 'ipAddress': aVal = a.ipAddress ?? ''; bVal = b.ipAddress ?? ''; break;
+        default: return 0;
+      }
+      const cmp = aVal.localeCompare(bVal);
+      return sortDirection === 'asc' ? cmp : -cmp;
+    });
+    return sorted;
+  }, [rawEvents, sortColumn, sortDirection]);
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
@@ -619,7 +654,7 @@ export function AuditLogPage() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-x-hidden">
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <PageHeader title="Audit Trail" subtitle="Track all system activities and changes">
         <div className="flex items-center gap-2">
@@ -646,7 +681,7 @@ export function AuditLogPage() {
       </PageHeader>
 
       {/* ── Filters Bar ────────────────────────────────────────────────────── */}
-      <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
+      <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] p-4">
         <div className="flex items-center gap-2 mb-3">
           <FunnelIcon className="h-4 w-4 text-secondary-400" />
           <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300">Filters</span>
@@ -686,7 +721,7 @@ export function AuditLogPage() {
             <select
               value={filters.entityType}
               onChange={(e) => setFilters((f) => ({ ...f, entityType: e.target.value }))}
-              className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+              className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300 relative z-10"
             >
               {ENTITY_TYPES.map((et) => (
                 <option key={et.value} value={et.value}>
@@ -704,7 +739,7 @@ export function AuditLogPage() {
             <select
               value={filters.action}
               onChange={(e) => setFilters((f) => ({ ...f, action: e.target.value }))}
-              className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300"
+              className="w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-400 backdrop-blur-sm transition-all duration-300 relative z-10"
             >
               {ACTION_TYPES.map((at) => (
                 <option key={at.value} value={at.value}>
@@ -783,7 +818,7 @@ export function AuditLogPage() {
       <div className={clsx('grid gap-4', showTimeline ? 'grid-cols-1 xl:grid-cols-3' : 'grid-cols-1')}> {/* ui-allow: rigid-grid — layout grid, not card collection */}
         {/* Table */}
         <div className={clsx(showTimeline ? 'xl:col-span-2' : '')}>
-          <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
+          <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden">
             {/* Table Header */}
             <div className="px-5 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -819,30 +854,34 @@ export function AuditLogPage() {
                 <table className="min-w-[800px] w-full divide-y divide-secondary-100/60 dark:divide-white/[0.04]">
                   <thead className="bg-secondary-50 dark:bg-secondary-900/50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[140px]">
-                        Timestamp
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[180px]">
-                        User
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[90px]">
-                        Action
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[110px]">
-                        Entity Type
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[90px]">
-                        Entity ID
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[100px]">
-                        IP Address
-                      </th>
+                      {[
+                        { key: 'timestamp', label: 'Timestamp', minW: 'min-w-[140px]' },
+                        { key: 'user', label: 'User', minW: 'min-w-[180px]' },
+                        { key: 'action', label: 'Action', minW: 'min-w-[90px]' },
+                        { key: 'entityType', label: 'Entity Type', minW: 'min-w-[110px]' },
+                        { key: 'entityId', label: 'Entity ID', minW: 'min-w-[90px]' },
+                        { key: 'ipAddress', label: 'IP Address', minW: 'min-w-[100px]' },
+                      ].map((col) => (
+                        <th
+                          key={col.key}
+                          onClick={() => handleSortToggle(col.key)}
+                          className={clsx(
+                            'px-4 py-3 text-left text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider cursor-pointer select-none hover:text-secondary-700 dark:hover:text-secondary-200 transition-colors',
+                            col.minW,
+                          )}
+                        >
+                          <span className="inline-flex items-center gap-1">
+                            {col.label}
+                            <ArrowsUpDownIcon className={clsx('h-3.5 w-3.5', sortColumn === col.key ? 'text-primary-500' : 'text-secondary-400')} />
+                          </span>
+                        </th>
+                      ))}
                       <th className="px-4 py-3 text-center text-xs font-semibold text-secondary-500 dark:text-secondary-400 tracking-wider min-w-[60px]">
                         Details
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl">
+                  <tbody className="divide-y divide-secondary-100/60 dark:divide-white/[0.04] bg-white dark:bg-secondary-800 backdrop-blur-xl">
                     {events.map((event) => {
                       const isExpanded = expandedRow === event.id;
                       return (
@@ -905,7 +944,7 @@ export function AuditLogPage() {
         {/* Timeline Sidebar */}
         {showTimeline && (
           <div className="xl:col-span-1">
-            <div className="bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden sticky top-6">
+            <div className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl shadow-sm border border-secondary-200/60 dark:border-white/[0.06] overflow-hidden sticky top-6">
               <div className="px-5 py-4 border-b border-secondary-200/60 dark:border-white/[0.06] flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
                   <ClockIcon className="h-5 w-5 text-primary-500" />

@@ -28,6 +28,7 @@ import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { aiInsightsApi, type AnomalyItem, type AnomalyStats, type AtRiskUser, type ProductivityPrediction } from '@/lib/api/ai-insights';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ── constants ────────────────────────────────────────────────────────────────
 
@@ -54,6 +55,7 @@ const RISK_BADGES: Record<string, string> = {
 // ── component ────────────────────────────────────────────────────────────────
 
 export function AIInsightsDashboardPage() {
+  const cc = useChartColors();
   usePageTitle('AI Insights');
   const queryClient = useQueryClient();
   const [daysRange, setDaysRange] = useState<30 | 60 | 90>(30);
@@ -193,8 +195,8 @@ export function AIInsightsDashboardPage() {
   const ChartTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="rounded-xl border border-white/10 bg-slate-900/80 backdrop-blur-xl px-3 py-2 shadow-2xl text-xs space-y-1">
-        <p className="font-semibold text-white">{label}</p>
+      <div className="rounded-lg border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-800 px-3 py-2 shadow-lg text-xs space-y-1">
+        <p className="font-semibold text-secondary-900 dark:text-white">{label}</p>
         {payload.map((p: any, i: number) => (
           <p key={i} style={{ color: p.color }}>{p.name}: {typeof p.value === 'number' ? p.value.toFixed(2) : p.value}</p>
         ))}
@@ -300,15 +302,15 @@ export function AIInsightsDashboardPage() {
               <AreaChart data={sentimentTrend} margin={{ top: 10, right: 20, bottom: 0, left: 0 }}>
                 <defs>
                   <linearGradient id="gradSentiment" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    <stop offset="5%" stopColor={cc.primary} stopOpacity={0.3} />
+                    <stop offset="95%" stopColor={cc.primary} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
-                <XAxis dataKey="date" tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                <YAxis domain={[0, 1]} tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
-                <Area type="monotone" dataKey="avgScore" name="Sentiment" stroke="#6366f1" fill="url(#gradSentiment)" strokeWidth={2} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
+                <XAxis dataKey="date" tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 1]} tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
+                <Area type="monotone" dataKey="avgScore" name="Sentiment" stroke={cc.primary} fill="url(#gradSentiment)" strokeWidth={3} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -324,9 +326,9 @@ export function AIInsightsDashboardPage() {
             {activeAnomalies.length} anomalies requiring attention
           </p>
           {activeAnomalies.length === 0 ? (
-            <div className="text-center py-12 text-secondary-400 text-sm">No active anomalies detected</div>
+            <div className="text-center py-4 text-secondary-400 text-sm">No active anomalies detected</div>
           ) : (
-            <div className="space-y-3 max-h-72 overflow-y-auto">
+            <div className="space-y-3 max-h-96 overflow-y-auto">
               {activeAnomalies.slice(0, 10).map((a) => (
                 <div key={a.id} className="flex items-start gap-3 p-3 rounded-lg bg-secondary-50 dark:bg-secondary-700/30">
                   <div className="flex-1 min-w-0">
@@ -381,7 +383,7 @@ export function AIInsightsDashboardPage() {
                       <Cell key={i} fill={e.color} />
                     ))}
                   </Pie>
-                  <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
+                  <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -397,12 +399,12 @@ export function AIInsightsDashboardPage() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={predictions.slice(0, 15)} margin={{ top: 10, right: 20, bottom: 0, left: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-200, #e5e7eb)" opacity={0.5} />
-                <XAxis dataKey="entityName" tick={{ fontSize: 9, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 10, fill: 'var(--color-secondary-400, #9ca3af)' }} axisLine={false} tickLine={false} />
-                <Tooltip cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }} content={<ChartTooltip />} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Bar dataKey="predicted" name="Predicted" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" opacity={0.5} />
+                <XAxis dataKey="entityName" tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+                <Tooltip isAnimationActive={false} cursor={{ fill: cc.cursorFill }} content={<ChartTooltip />} />
+                <Legend wrapperStyle={{  fontSize: '11px' }} />
+                <Bar dataKey="predicted" name="Predicted" fill={cc.primary} radius={[4, 4, 0, 0]} />
                 <Bar dataKey="actual" name="Actual" fill="#22c55e" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -464,7 +466,7 @@ export function AIInsightsDashboardPage() {
       {/* Empty state when all sections are empty */}
       {sentimentTrend.length === 0 && activeAnomalies.length === 0 && predictions.length === 0 && atRiskUsers.length === 0 && (
         <div className="rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl p-16 text-center">
-          <SparklesIcon className="w-12 h-12 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
+          <SparklesIcon className="w-8 h-8 text-secondary-300 dark:text-secondary-600 mx-auto mb-4" />
           <p className="text-secondary-500 dark:text-secondary-400 text-sm">No AI insights data available yet. Insights will appear as the system analyzes your organization&apos;s data.</p>
         </div>
       )}

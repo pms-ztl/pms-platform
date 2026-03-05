@@ -153,7 +153,7 @@ function SectionHeader({
     <div className="flex items-center justify-between mb-5">
       <h3 className="text-base font-semibold text-gray-900 dark:text-white/90 flex items-center gap-2.5">
         <div className={clsx('p-1.5 rounded-lg', iconColor || 'bg-primary-100/60 dark:bg-primary-500/10')}>
-          <Icon className="h-4.5 w-4.5 text-primary-600 dark:text-primary-400" />
+          <Icon className="h-[1.125rem] w-[1.125rem] text-primary-600 dark:text-primary-400" />
         </div>
         {title}
         {badge}
@@ -660,7 +660,7 @@ export function ExcelUploadPage() {
             {/* Step indicators */}
             <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-white/50">
               <div className="flex items-center gap-1.5">
-                <CheckCircleIcon className="h-4.5 w-4.5 text-green-500" />
+                <CheckCircleIcon className="h-[1.125rem] w-[1.125rem] text-green-500" />
                 <span>Parsing</span>
               </div>
               <div className="w-6 h-0.5 rounded-full bg-green-400/60" />
@@ -728,7 +728,7 @@ export function ExcelUploadPage() {
                           <XAxis type="number" hide />
                           <YAxis type="category" dataKey="name" width={80} tick={{ fontSize: 10 }}
                             className="fill-gray-500 dark:fill-white/40" />
-                          <Tooltip content={<GlassTooltip />} />
+                          <Tooltip isAnimationActive={false} content={<GlassTooltip />} />
                           <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={12}>
                             {fixCategoryChartData.map((entry, i) => (
                               <Cell key={i} fill={entry.fill} opacity={0.8} />
@@ -850,7 +850,7 @@ export function ExcelUploadPage() {
                     </div>
                     {analyzeResult.validation.suggestions.map((sug, i) => (
                       <div key={`sug-${i}`} className="px-6 py-3 flex items-center gap-4 text-sm bg-green-50/30 dark:bg-green-500/[0.03] border-b border-gray-100/20 dark:border-white/[0.02]">
-                        <CheckCircleIcon className="h-4.5 w-4.5 text-green-500 flex-shrink-0" />
+                        <CheckCircleIcon className="h-[1.125rem] w-[1.125rem] text-green-500 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <span className="text-gray-500 dark:text-white/40">Row {sug.row}, {sug.field}: </span>
                           <span className="line-through text-red-400">{sug.currentValue}</span>

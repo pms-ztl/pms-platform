@@ -74,6 +74,7 @@ import {
   type SASystemConfig,
 } from '@/lib/api';
 import { useThemeStore } from '@/store/theme';
+import { useChartColors } from '@/hooks/useChartColors';
 
 // ============================================================================
 // Demo Data Fallbacks
@@ -216,6 +217,7 @@ function formatUptime(uptime: number | undefined | null): string {
 }
 
 function getActionIcon(action: string) {
+  const cc = useChartColors();
   if (action.includes('LOGIN')) return ArrowRightOnRectangleIcon;
   if (action.includes('CREATE') || action.includes('ADD')) return UserPlusIcon;
   if (action.includes('DELETE') || action.includes('REMOVE')) return TrashIcon;
@@ -362,8 +364,8 @@ function DashboardSkeleton() {
 
 function DashboardError({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <ExclamationTriangleIcon className="h-12 w-12 text-red-400 mb-4" />
+    <div className="flex flex-col items-center justify-center py-4 text-center">
+      <ExclamationTriangleIcon className="h-8 w-8 text-red-400 mb-4" />
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Failed to Load Dashboard</h2>
       <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-md">{message}</p>
       <button onClick={onRetry} className="mt-6 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors">
@@ -666,7 +668,7 @@ export function SADashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* ════════════════════════════════════════════════════════════════════
           Hero Welcome Banner
          ════════════════════════════════════════════════════════════════════ */}
@@ -786,8 +788,8 @@ export function SADashboardPage() {
               <AreaChart data={revenueTrend} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="#a78bfa" stopOpacity={0} />
+                    <stop offset="0%" stopColor={cc.primaryLight} stopOpacity={0.4} />
+                    <stop offset="100%" stopColor={cc.primaryLight} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
@@ -803,11 +805,11 @@ export function SADashboardPage() {
                   tickLine={false}
                   tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`}
                 />
-                <Tooltip content={<GlassTooltip />} />
+                <Tooltip isAnimationActive={false} content={<GlassTooltip />} />
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#a78bfa"
+                  stroke={cc.primaryLight}
                   strokeWidth={2.5}
                   fill="url(#revenueGrad)"
                   dot={false}
@@ -853,12 +855,12 @@ export function SADashboardPage() {
                 <YAxis
                   type="category"
                   dataKey="name"
-                  tick={{ fontSize: 12, fill: chartTick }}
+                  tick={{  fontSize: 11, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                   width={90}
                 />
-                <Tooltip content={<GlassTooltip />} />
+                <Tooltip isAnimationActive={false} content={<GlassTooltip />} />
                 <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={24}>
                   {revenueByPlan.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -1153,7 +1155,7 @@ export function SADashboardPage() {
                     <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip content={<GlassTooltip />} />
+                <Tooltip isAnimationActive={false} content={<GlassTooltip />} />
               </PieChart>
             </ResponsiveContainer>
             {/* Center label */}
@@ -1282,7 +1284,7 @@ export function SADashboardPage() {
                   tickLine={false}
                   width={110}
                 />
-                <Tooltip content={<GlassTooltip />} />
+                <Tooltip isAnimationActive={false} content={<GlassTooltip />} />
                 <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={20}>
                   {auditChartData.map((entry, index) => {
                     const actionName = entry.name.toUpperCase();
@@ -1487,7 +1489,7 @@ export function SADashboardPage() {
                       <Cell key={`ucell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip content={<GlassTooltip />} />
+                  <Tooltip isAnimationActive={false} content={<GlassTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -1576,24 +1578,24 @@ export function SADashboardPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke={chartGrid} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 10, fill: chartTick }}
+                  tick={{  fontSize: 11, fontWeight: 600, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: chartTick }}
+                  tick={{  fontSize: 11, fontWeight: 600, fill: chartTick }}
                   axisLine={false}
                   tickLine={false}
                 />
-                <Tooltip content={<GlassTooltip />} />
+                <Tooltip isAnimationActive={false} content={<GlassTooltip />} />
                 <Legend
-                  wrapperStyle={{ fontSize: '10px', color: chartLegend }}
+                  wrapperStyle={{  fontSize: '11px', color: chartLegend }}
                   iconType="circle"
                   iconSize={7}
                 />
-                <Bar dataKey="users" name="Users" fill="#60a5fa" radius={[4, 4, 0, 0]} barSize={14} />
-                <Bar dataKey="goals" name="Goals" fill="#a78bfa" radius={[4, 4, 0, 0]} barSize={14} />
-                <Bar dataKey="reviews" name="Reviews" fill="#34d399" radius={[4, 4, 0, 0]} barSize={14} />
+                <Bar dataKey="users" name="Users" fill={cc.primary} radius={[4, 4, 0, 0]} barSize={14} />
+                <Bar dataKey="goals" name="Goals" fill={cc.primaryLight} radius={[4, 4, 0, 0]} barSize={14} />
+                <Bar dataKey="reviews" name="Reviews" fill={cc.semantic.success} radius={[4, 4, 0, 0]} barSize={14} />
               </BarChart>
             </ResponsiveContainer>
           </div>

@@ -12,17 +12,20 @@ import {
 } from 'recharts';
 
 import { analyticsApi, type PerformanceDistribution } from '@/lib/api';
-import { SkeletonCard } from '@/components/ui';
+import { SkeletonCard, ChartTooltip } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface PerformanceDistributionChartProps {
   cycleId?: string;
   className?: string;
 }
 
-const RATING_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'];
+// Rating colors are semantic (performance scale) - imported from hook
 const RATING_LABELS = ['Needs Improvement', 'Below Expectations', 'Meets Expectations', 'Exceeds Expectations', 'Outstanding'];
 
 function PerformanceDistributionChart({ cycleId, className = '' }: PerformanceDistributionChartProps) {
+  const cc = useChartColors();
+  const RATING_COLORS = [...cc.ratingColors];
   const { data, isLoading } = useQuery({
     queryKey: ['perf-distribution', cycleId],
     queryFn: () => analyticsApi.getPerformanceDistribution(cycleId),
@@ -68,40 +71,22 @@ function PerformanceDistributionChart({ cycleId, className = '' }: PerformanceDi
       <div className="h-56">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.15} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-secondary-400, #94a3b8)" strokeOpacity={0.4} />
             <XAxis
               dataKey="rating"
-              tick={{ fontSize: 10, fill: 'var(--color-secondary-500)' }}
+              tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fontSize: 10, fill: 'var(--color-secondary-400)' }}
+              tick={{  fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }}
               axisLine={false}
               tickLine={false}
             />
-            <Tooltip
-              cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-              contentStyle={{
-                background: 'rgba(15, 23, 42, 0.80)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(148, 163, 184, 0.15)',
-                borderRadius: '0.75rem',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                fontSize: '0.75rem',
-                color: '#f1f5f9',
-              }}
-              labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-              itemStyle={{ color: '#e2e8f0' }}
-              formatter={(value: number, _name: string, props: any) => [
-                `${value} employees (${props.payload.percentage}%)`,
-                props.payload.label,
-              ]}
-            />
-            <Bar dataKey="count" radius={[6, 6, 0, 0]} barSize={36}>
+            <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+            <Bar dataKey="count" name="Count" radius={[6, 6, 0, 0]} barSize={36}>
               {chartData.map((entry, i) => (
-                <Cell key={i} fill={RATING_COLORS[entry.ratingNum - 1] ?? '#3b82f6'} />
+                <Cell key={i} fill={RATING_COLORS[entry.ratingNum - 1] ?? cc.primary} />
               ))}
             </Bar>
           </BarChart>

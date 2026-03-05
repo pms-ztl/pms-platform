@@ -223,7 +223,7 @@ export function OneOnOneDetailPage() {
   // ---- Loading state ----
   if (isLoading) {
     return (
-      <div className="flex justify-center py-12">
+      <div className="flex justify-center py-4">
         <div className="glass-spinner" />
       </div>
     );
@@ -232,7 +232,7 @@ export function OneOnOneDetailPage() {
   // ---- Error / not found ----
   if (error || !meeting) {
     return (
-      <div className="text-center py-12">
+      <div className="text-center py-4">
         <h3 className="text-lg font-medium text-secondary-900 dark:text-white">
           Meeting not found
         </h3>

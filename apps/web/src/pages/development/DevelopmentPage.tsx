@@ -218,9 +218,9 @@ function PlanCard({ plan, showEmployee, onDelete }: { plan: DevelopmentPlan; sho
           <TrashIcon className="h-4 w-4" />
         </button>
       )}
-      <div className="p-5">
+      <div className="p-4">
         {/* Top row: employee avatar (team view) + badges */}
-        <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="flex items-start justify-between gap-2 mb-2">
           <div className="flex items-center gap-3 min-w-0 flex-1">
             {showEmployee && plan.user && (
               <div className="flex-shrink-0">
@@ -366,12 +366,17 @@ function CreatePlanModal({ onClose }: { onClose: () => void }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!planName.trim()) { toast.error('Plan name is required'); return; }
+    if (!careerGoal.trim()) { toast.error('Career goal is required'); return; }
+    if (!currentLevel.trim()) { toast.error('Current level is required'); return; }
+    if (!startDate) { toast.error('Start date is required'); return; }
+    if (!targetCompletionDate) { toast.error('Target completion date is required'); return; }
     createMutation.mutate({
-      planName,
+      planName: planName.trim(),
       planType,
-      careerGoal,
-      targetRole: targetRole || undefined,
-      currentLevel,
+      careerGoal: careerGoal.trim(),
+      targetRole: targetRole.trim() || undefined,
+      currentLevel: currentLevel.trim(),
       duration,
       startDate,
       targetCompletionDate,
@@ -424,7 +429,7 @@ function CreatePlanModal({ onClose }: { onClose: () => void }) {
               required
               value={planType}
               onChange={(e) => setPlanType(e.target.value)}
-              className="block w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300"
+              className="block w-full rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300"
             >
               <option value="CAREER_GROWTH">Career Growth</option>
               <option value="SKILL_DEVELOPMENT">Skill Development</option>
@@ -701,7 +706,7 @@ export function DevelopmentPage() {
           <select
             value={statusFilter}
             onChange={(e) => handleStatusChange(e.target.value)}
-            className="block rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white/90 dark:bg-secondary-900/60 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300 w-40"
+            className="block rounded-lg border border-secondary-200 dark:border-secondary-700/50 bg-white dark:bg-secondary-800 px-3 py-1.5 text-sm text-secondary-900 dark:text-white focus:border-primary-400 focus:ring-1 focus:ring-primary-500/50 backdrop-blur-sm transition-all duration-300 w-40"
           >
             <option value="">All Statuses</option>
             <option value="DRAFT">Draft</option>
@@ -737,7 +742,7 @@ export function DevelopmentPage() {
       ) : (
         <>
           {/* Plan cards grid */}
-          <SafeGrid minWidth={300}>
+          <SafeGrid minWidth={280} gap="gap-3">
             {plans.map((plan) => (
               <PlanCard
                 key={plan.id}

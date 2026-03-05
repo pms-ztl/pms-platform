@@ -10,6 +10,8 @@ import {
   Tooltip,
 } from 'recharts';
 import clsx from 'clsx';
+import { ChartTooltip } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface DepartmentEngagement {
   departmentId: string;
@@ -31,7 +33,7 @@ interface DepartmentRadarProps {
   className?: string;
 }
 
-const RADAR_COLORS = ['#818cf8', '#fbbf24', '#34d399'];
+// Colors will be derived from accent palette inside component
 const AXIS_LABELS: Record<string, string> = {
   participation: 'Participation',
   communication: 'Communication',
@@ -41,6 +43,8 @@ const AXIS_LABELS: Record<string, string> = {
 };
 
 export function DepartmentRadar({ departments, selectedDeptIds: initialSelected, className }: DepartmentRadarProps) {
+  const cc = useChartColors();
+  const RADAR_COLORS = cc.palette(3);
   const [selectedIds, setSelectedIds] = useState<string[]>(() => {
     if (initialSelected?.length) return initialSelected.slice(0, 3);
     return departments.slice(0, Math.min(2, departments.length)).map((d) => d.departmentId);
@@ -117,13 +121,14 @@ export function DepartmentRadar({ departments, selectedDeptIds: initialSelected,
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={chartData} cx="50%" cy="50%" outerRadius="75%">
               <PolarGrid
-                className="stroke-secondary-300/40 dark:stroke-secondary-600/25"
+                className="stroke-secondary-300/60 dark:stroke-secondary-500/50"
                 gridType="polygon"
                 radialLines={true}
+                strokeWidth={1.5}
               />
               <PolarAngleAxis
                 dataKey="axis"
-                tick={{ fontSize: 11, fill: 'currentColor' }}
+                tick={{  fontSize: 10, fontWeight: 600, fill: 'currentColor' }}
                 className="[&_text]:fill-secondary-600 dark:[&_text]:fill-secondary-300"
                 stroke="transparent"
                 axisLine={{ stroke: 'transparent', fill: 'none' }}
@@ -131,8 +136,8 @@ export function DepartmentRadar({ departments, selectedDeptIds: initialSelected,
               <PolarRadiusAxis
                 angle={90}
                 domain={[0, 100]}
-                tick={{ fontSize: 9 }}
-                className="fill-secondary-400 dark:fill-secondary-500"
+                tick={{  fontSize: 9, fontWeight: 600 }}
+                className="fill-secondary-400 dark:fill-secondary-400"
                 stroke="transparent"
               />
               {selectedDepts.map((dept, i) => (
@@ -143,12 +148,12 @@ export function DepartmentRadar({ departments, selectedDeptIds: initialSelected,
                   stroke={RADAR_COLORS[i]}
                   fill={RADAR_COLORS[i]}
                   fillOpacity={0.08}
-                  strokeWidth={2}
+                  strokeWidth={2.5}
                   dot={{
                     r: 4,
                     fill: RADAR_COLORS[i],
                     fillOpacity: 1,
-                    stroke: '#1e293b',
+                    stroke: cc.primaryExtraDark,
                     strokeWidth: 2,
                   }}
                   activeDot={{
@@ -163,22 +168,7 @@ export function DepartmentRadar({ departments, selectedDeptIds: initialSelected,
               <Legend
                 wrapperStyle={{ fontSize: '11px' }}
               />
-              <Tooltip
-                cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                contentStyle={{
-                  background: 'rgba(15, 23, 42, 0.80)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(148, 163, 184, 0.15)',
-                  borderRadius: '0.75rem',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                  fontSize: '0.75rem',
-                  color: '#f1f5f9',
-                }}
-                labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-                itemStyle={{ color: '#e2e8f0' }}
-                formatter={(value: number) => [`${value}%`, '']}
-              />
+              <Tooltip isAnimationActive={false} content={<ChartTooltip unit="%" />} cursor={{ fill: cc.cursorFill }} />
             </RadarChart>
           </ResponsiveContainer>
         </div>

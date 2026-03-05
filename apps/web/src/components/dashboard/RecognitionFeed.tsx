@@ -40,9 +40,9 @@ function RecognitionFeed() {
   if (!items.length) {
     return (
       <div className="glass-deep rounded-2xl p-4">
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3">
           <HandThumbUpIcon className="w-5 h-5 text-amber-500" />
-          <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Recognition</h3>
+          <h3 className="text-sm font-bold text-secondary-700 dark:text-secondary-300">Recognition</h3>
         </div>
         <div className="flex flex-col items-center py-4">
           <StarIcon className="w-10 h-10 text-secondary-200 dark:text-secondary-700 mb-2" />
@@ -55,10 +55,10 @@ function RecognitionFeed() {
 
   return (
     <div className="glass-deep rounded-2xl p-4">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <HandThumbUpIcon className="w-5 h-5 text-amber-500" />
-          <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Recognition</h3>
+          <h3 className="text-sm font-bold text-secondary-700 dark:text-secondary-300">Recognition</h3>
         </div>
         <Link
           to="/recognition"

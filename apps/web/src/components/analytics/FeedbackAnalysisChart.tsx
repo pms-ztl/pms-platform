@@ -14,16 +14,19 @@ import {
 } from 'recharts';
 
 import { analyticsApi, type FeedbackTrend } from '@/lib/api';
-import { SkeletonCard } from '@/components/ui';
+import { SkeletonCard, ChartTooltip } from '@/components/ui';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface FeedbackAnalysisChartProps {
   months?: number;
   className?: string;
 }
 
-const PIE_COLORS = ['#10b981', '#f59e0b'];
+// Feedback colors are semantic (praise=green, constructive=amber) - imported from hook
 
 function FeedbackAnalysisChart({ months = 12, className = '' }: FeedbackAnalysisChartProps) {
+  const cc = useChartColors();
+  const PIE_COLORS = [...cc.feedbackColors];
   const { data, isLoading } = useQuery({
     queryKey: ['feedback-trends', months],
     queryFn: () => analyticsApi.getFeedbackTrends(months),
@@ -81,30 +84,15 @@ function FeedbackAnalysisChart({ months = 12, className = '' }: FeedbackAnalysis
                 innerRadius={35}
                 outerRadius={55}
                 dataKey="value"
-                strokeWidth={2}
+                strokeWidth={3}
                 stroke="var(--color-surface-card, #fff)"
               >
                 {pieData.map((_, i) => (
                   <Cell key={i} fill={PIE_COLORS[i]} />
                 ))}
               </Pie>
-              <Tooltip
-                cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                contentStyle={{
-                  background: 'rgba(15, 23, 42, 0.80)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(148, 163, 184, 0.15)',
-                  borderRadius: '0.75rem',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                  fontSize: '0.75rem',
-                  color: '#f1f5f9',
-                }}
-                labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-                itemStyle={{ color: '#e2e8f0' }}
-                formatter={(value: number, name: string) => [`${value}`, name]}
-              />
-              <Legend wrapperStyle={{ fontSize: '10px' }} />
+              <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+              <Legend wrapperStyle={{  fontSize: '11px' }} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -113,25 +101,11 @@ function FeedbackAnalysisChart({ months = 12, className = '' }: FeedbackAnalysis
         <div className="col-span-3 h-44">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={lineData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-              <XAxis dataKey="label" tick={{ fontSize: 9, fill: 'var(--color-secondary-400)' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 9, fill: 'var(--color-secondary-400)' }} axisLine={false} tickLine={false} />
-              <Tooltip
-                cursor={{ fill: 'rgba(99, 102, 241, 0.08)' }}
-                contentStyle={{
-                  background: 'rgba(15, 23, 42, 0.80)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(148, 163, 184, 0.15)',
-                  borderRadius: '0.75rem',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
-                  fontSize: '0.75rem',
-                  color: '#f1f5f9',
-                }}
-                labelStyle={{ color: '#94a3b8', fontWeight: 600 }}
-                itemStyle={{ color: '#e2e8f0' }}
-              />
-              <Line type="monotone" dataKey="praise" stroke="#10b981" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="constructive" stroke="#f59e0b" strokeWidth={2} dot={false} />
+              <XAxis dataKey="label" tick={{ fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fontWeight: 600, fill: 'var(--color-secondary-300, #cbd5e1)' }} axisLine={false} tickLine={false} />
+              <Tooltip isAnimationActive={false} content={<ChartTooltip />} cursor={{ fill: cc.cursorFill }} />
+              <Line type="monotone" dataKey="praise" name="Praise" stroke={cc.feedbackColors[0]} strokeWidth={3} dot={false} />
+              <Line type="monotone" dataKey="constructive" name="Constructive" stroke={cc.feedbackColors[1]} strokeWidth={3} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>

@@ -20,7 +20,7 @@ function QuickActions({ pendingReviews, atRiskGoals, goalsData }: QuickActionsPr
             <BoltIcon className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">Quick Actions</h2>
+            <h2 className="text-lg font-bold text-secondary-900 dark:text-white">Quick Actions</h2>
             <p className="text-xs text-secondary-500 dark:text-secondary-400">Tasks awaiting you</p>
           </div>
         </div>
@@ -76,15 +76,15 @@ function QuickActions({ pendingReviews, atRiskGoals, goalsData }: QuickActionsPr
         })}
 
         {pendingReviews.length === 0 && atRiskGoals.length === 0 && (
-          <div className="text-center py-8">
-            <div className="relative w-16 h-16 mx-auto mb-4">
+          <div className="text-center py-4">
+            <div className="relative w-12 h-12 mx-auto mb-2">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 rounded-full animate-pulse" />
               <div className="absolute inset-1 bg-white/90 dark:bg-secondary-800/70 backdrop-blur-xl rounded-full flex items-center justify-center">
-                <CheckCircleIcon className="w-8 h-8 text-emerald-500" />
+                <CheckCircleIcon className="w-6 h-6 text-emerald-500" />
               </div>
             </div>
             <p className="text-sm text-secondary-900 dark:text-white font-medium">All caught up!</p>
-            <p className="text-secondary-500 dark:text-secondary-400 text-sm mt-1">No pending tasks</p>
+            <p className="text-secondary-500 dark:text-secondary-400 text-xs mt-0.5">No pending tasks</p>
           </div>
         )}
       </div>

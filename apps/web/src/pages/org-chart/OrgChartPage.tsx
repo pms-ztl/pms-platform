@@ -686,8 +686,8 @@ export function OrgChartPage() {
           <OrgChartSkeleton />
         </div>
       ) : isError ? (
-        <div className="card card-body text-center py-12">
-          <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-danger-400 dark:text-danger-500" />
+        <div className="card card-body text-center py-4">
+          <ExclamationTriangleIcon className="mx-auto h-8 w-8 text-danger-400 dark:text-danger-500" />
           <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
             Failed to load organization chart
           </h3>
@@ -703,8 +703,8 @@ export function OrgChartPage() {
           </button>
         </div>
       ) : filteredTree.length === 0 ? (
-        <div className="card card-body text-center py-12">
-          <UserGroupIcon className="mx-auto h-12 w-12 text-secondary-300 dark:text-secondary-600" />
+        <div className="card card-body text-center py-4">
+          <UserGroupIcon className="mx-auto h-8 w-8 text-secondary-300 dark:text-secondary-600" />
           <h3 className="mt-3 text-sm font-medium text-secondary-900 dark:text-white">
             {debouncedSearch.trim()
               ? 'No matching employees'

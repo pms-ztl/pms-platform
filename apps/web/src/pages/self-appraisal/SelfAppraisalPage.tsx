@@ -131,12 +131,12 @@ export function SelfAppraisalPage() {
   );
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-4 pb-4">
       {/* Header */}
       <PageHeader title="Self Appraisal" subtitle="Review your performance and submit your self-assessment" />
 
       {/* Performance Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="card card-body dark:bg-secondary-800 dark:border-secondary-700">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
@@ -207,21 +207,26 @@ export function SelfAppraisalPage() {
             </p>
           </div>
           <div className="card-body">
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {competencies.map((competency) => (
                 <div
                   key={competency.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 p-4 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg"
+                  className="flex flex-col gap-2 p-3 bg-secondary-50 dark:bg-secondary-900/50 rounded-lg"
                 >
                   <div className="min-w-0">
                     <p className="font-medium text-secondary-900 dark:text-white">{competency.name}</p>
-                    <p className="text-xs sm:text-sm text-secondary-500 dark:text-secondary-400">{competency.description}</p>
+                    <p className="text-xs text-secondary-500 dark:text-secondary-400">{competency.description}</p>
                   </div>
-                  <RatingStars
-                    rating={competency.rating}
-                    maxRating={competency.maxRating}
-                    onChange={(r) => handleCompetencyChange(competency.id, r)}
-                  />
+                  <div className="flex items-center justify-between">
+                    <RatingStars
+                      rating={competency.rating}
+                      maxRating={competency.maxRating}
+                      onChange={(r) => handleCompetencyChange(competency.id, r)}
+                    />
+                    <span className="text-xs font-medium text-secondary-500 dark:text-secondary-400">
+                      {competency.rating}/{competency.maxRating}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -237,6 +242,9 @@ export function SelfAppraisalPage() {
                 Overall Self-Rating
               </h2>
             </div>
+            <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
+              Rate your overall performance considering all competencies and goal achievements
+            </p>
           </div>
           <div className="card-body">
             <div className="flex items-center gap-4">
@@ -248,91 +256,108 @@ export function SelfAppraisalPage() {
               <span className="text-lg font-semibold text-secondary-900 dark:text-white">
                 {overallRating}/5
               </span>
+              <span className="text-xs text-secondary-400 dark:text-secondary-500">
+                {overallRating <= 1 ? 'Needs Improvement' : overallRating <= 2 ? 'Below Expectations' : overallRating <= 3 ? 'Meets Expectations' : overallRating <= 4 ? 'Exceeds Expectations' : 'Outstanding'}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Accomplishments */}
-        <div className="card dark:bg-secondary-800 dark:border-secondary-700">
-          <div className="card-header dark:border-secondary-700">
-            <div className="flex items-center gap-2">
-              <CheckCircleIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
-                Key Accomplishments
-              </h2>
+        {/* Accomplishments + Challenges (side by side) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="card dark:bg-secondary-800 dark:border-secondary-700">
+            <div className="card-header dark:border-secondary-700">
+              <div className="flex items-center gap-2">
+                <CheckCircleIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+                <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
+                  Key Accomplishments
+                </h2>
+              </div>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
+                Highlight measurable results and impactful contributions
+              </p>
+            </div>
+            <div className="card-body">
+              <textarea
+                value={accomplishments}
+                onChange={(e) => setAccomplishments(e.target.value)}
+                rows={4}
+                className="input dark:bg-secondary-900 dark:border-secondary-700 dark:text-white w-full"
+                placeholder="List your key achievements and contributions during this review period..."
+              />
             </div>
           </div>
-          <div className="card-body">
-            <textarea
-              value={accomplishments}
-              onChange={(e) => setAccomplishments(e.target.value)}
-              rows={4}
-              className="input dark:bg-secondary-900 dark:border-secondary-700 dark:text-white w-full"
-              placeholder="List your key achievements and contributions during this review period..."
-            />
+
+          <div className="card dark:bg-secondary-800 dark:border-secondary-700">
+            <div className="card-header dark:border-secondary-700">
+              <div className="flex items-center gap-2">
+                <LightBulbIcon className="h-5 w-5 text-amber-500" />
+                <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
+                  Challenges Faced
+                </h2>
+              </div>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
+                Describe obstacles and how you addressed them
+              </p>
+            </div>
+            <div className="card-body">
+              <textarea
+                value={challenges}
+                onChange={(e) => setChallenges(e.target.value)}
+                rows={4}
+                className="input dark:bg-secondary-900 dark:border-secondary-700 dark:text-white w-full"
+                placeholder="Describe any challenges or obstacles you encountered..."
+              />
+            </div>
           </div>
         </div>
 
-        {/* Challenges */}
-        <div className="card dark:bg-secondary-800 dark:border-secondary-700">
-          <div className="card-header dark:border-secondary-700">
-            <div className="flex items-center gap-2">
-              <LightBulbIcon className="h-5 w-5 text-amber-500" />
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
-                Challenges Faced
-              </h2>
+        {/* Improvements + Development Goals (side by side) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="card dark:bg-secondary-800 dark:border-secondary-700">
+            <div className="card-header dark:border-secondary-700">
+              <div className="flex items-center gap-2">
+                <ArrowTrendingUpIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
+                  Areas for Improvement
+                </h2>
+              </div>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
+                Identify skills or behaviors to develop further
+              </p>
+            </div>
+            <div className="card-body">
+              <textarea
+                value={improvements}
+                onChange={(e) => setImprovements(e.target.value)}
+                rows={4}
+                className="input dark:bg-secondary-900 dark:border-secondary-700 dark:text-white w-full"
+                placeholder="Identify areas where you can improve..."
+              />
             </div>
           </div>
-          <div className="card-body">
-            <textarea
-              value={challenges}
-              onChange={(e) => setChallenges(e.target.value)}
-              rows={3}
-              className="input dark:bg-secondary-900 dark:border-secondary-700 dark:text-white w-full"
-              placeholder="Describe any challenges or obstacles you encountered..."
-            />
-          </div>
-        </div>
 
-        {/* Areas for Improvement */}
-        <div className="card dark:bg-secondary-800 dark:border-secondary-700">
-          <div className="card-header dark:border-secondary-700">
-            <div className="flex items-center gap-2">
-              <ArrowTrendingUpIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
-                Areas for Improvement
-              </h2>
+          <div className="card dark:bg-secondary-800 dark:border-secondary-700">
+            <div className="card-header dark:border-secondary-700">
+              <div className="flex items-center gap-2">
+                <FlagIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
+                  Development Goals for Next Period
+                </h2>
+              </div>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
+                Set specific, measurable goals for your professional growth
+              </p>
             </div>
-          </div>
-          <div className="card-body">
-            <textarea
-              value={improvements}
-              onChange={(e) => setImprovements(e.target.value)}
-              rows={3}
-              className="input dark:bg-secondary-900 dark:border-secondary-700 dark:text-white w-full"
-              placeholder="Identify areas where you can improve..."
-            />
-          </div>
-        </div>
-
-        {/* Development Goals */}
-        <div className="card dark:bg-secondary-800 dark:border-secondary-700">
-          <div className="card-header dark:border-secondary-700">
-            <div className="flex items-center gap-2">
-              <FlagIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
-                Development Goals for Next Period
-              </h2>
+            <div className="card-body">
+              <textarea
+                value={developmentGoals}
+                onChange={(e) => setDevelopmentGoals(e.target.value)}
+                rows={4}
+                className="input dark:bg-secondary-900 dark:border-secondary-700 dark:text-white w-full"
+                placeholder="What are your goals for professional development?"
+              />
             </div>
-          </div>
-          <div className="card-body">
-            <textarea
-              value={developmentGoals}
-              onChange={(e) => setDevelopmentGoals(e.target.value)}
-              rows={3}
-              className="input dark:bg-secondary-900 dark:border-secondary-700 dark:text-white w-full"
-              placeholder="What are your goals for professional development?"
-            />
           </div>
         </div>
 

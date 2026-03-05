@@ -316,8 +316,8 @@ export function UpgradeRequestPage() {
   // Access guard
   if (!isAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <ShieldCheckIcon className="h-12 w-12 text-secondary-400 mb-4" />
+      <div className="flex flex-col items-center justify-center py-4 text-center">
+        <ShieldCheckIcon className="h-8 w-8 text-secondary-400 mb-4" />
         <h2 className="text-xl font-semibold text-secondary-900 dark:text-white">Access Denied</h2>
         <p className="text-secondary-500 dark:text-secondary-400 mt-2">
           You need admin permissions to manage subscription upgrades.
@@ -336,7 +336,7 @@ export function UpgradeRequestPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
+            <div key={i} className="bg-white dark:bg-secondary-800 backdrop-blur-xl rounded-xl border border-secondary-200/60 dark:border-white/[0.06] p-4">
               <div className="animate-pulse space-y-3">
                 <div className="h-4 bg-secondary-200 dark:bg-secondary-700 rounded w-1/3" />
                 <div className="h-8 bg-secondary-200 dark:bg-secondary-700 rounded w-1/2" />
@@ -351,7 +351,7 @@ export function UpgradeRequestPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Header */}
       <PageHeader title="Upgrade Plan" subtitle="Compare plans and request an upgrade for your organization">
         <button
@@ -407,7 +407,7 @@ export function UpgradeRequestPage() {
                   isCurrent
                     ? 'border-primary-500 dark:border-primary-400 ring-2 ring-primary-500/20 dark:ring-primary-400/20'
                     : plan.borderColor
-                } bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl shadow-sm transition-all hover:shadow-md`}
+                } bg-white dark:bg-secondary-800 backdrop-blur-xl shadow-sm transition-all hover:shadow-md`}
               >
                 {/* Popular badge */}
                 {plan.popular && !isCurrent && (
@@ -504,7 +504,7 @@ export function UpgradeRequestPage() {
       {/* Past Requests Table */}
       <div>
         <h3 className="text-lg font-semibold text-secondary-900 dark:text-white mb-4">Upgrade Request History</h3>
-        <div className="overflow-hidden rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-secondary-200/60 dark:border-white/[0.06] bg-white dark:bg-secondary-800 backdrop-blur-xl shadow-sm">
           {requestsLoading ? (
             <div className="p-8 text-center">
               <ArrowPathIcon className="h-6 w-6 text-secondary-400 animate-spin mx-auto mb-2" />
@@ -522,7 +522,7 @@ export function UpgradeRequestPage() {
               </button>
             </div>
           ) : requests.length === 0 ? (
-            <div className="p-12 text-center">
+            <div className="p-4 text-center">
               <ArrowUpCircleIcon className="h-10 w-10 text-secondary-300 dark:text-secondary-600 mx-auto mb-3" />
               <p className="text-sm font-medium text-secondary-600 dark:text-secondary-400">No upgrade requests yet</p>
               <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1">
@@ -620,7 +620,7 @@ export function UpgradeRequestPage() {
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white/90 dark:bg-secondary-900/70 backdrop-blur-xl shadow-2xl"> {/* ui-allow: fixed-height — modal/drawer container */}
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-secondary-200/60 dark:border-white/[0.06] bg-white dark:bg-secondary-800 backdrop-blur-xl shadow-2xl"> {/* ui-allow: fixed-height — modal/drawer container */}
             {/* Header */}
             <div className={`sticky top-0 z-10 flex items-center justify-between rounded-t-2xl border-b border-secondary-100 dark:border-secondary-800 bg-gradient-to-r ${selectedPlan.bgGradient} px-6 py-4`}>
               <div className="flex items-center gap-3">

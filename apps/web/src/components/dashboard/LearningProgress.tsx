@@ -25,24 +25,26 @@ function LearningProgress() {
   if (!plans.length) {
     return (
       <div className="glass-deep rounded-2xl p-4">
-        <div className="flex items-center gap-2 mb-4">
-          <BookOpenIcon className="w-5 h-5 text-indigo-500" />
-          <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Learning & Development</h3>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <BookOpenIcon className="w-5 h-5 text-indigo-500" />
+            <h3 className="text-sm font-bold text-secondary-700 dark:text-secondary-300">Learning & Development</h3>
+          </div>
+          <Link
+            to="/development"
+            className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline"
+          >
+            Browse development options &rarr;
+          </Link>
         </div>
-        <p className="text-sm text-secondary-500 dark:text-secondary-400 mb-3">No active development plans.</p>
-        <Link
-          to="/development"
-          className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline"
-        >
-          Browse development options &rarr;
-        </Link>
+        <p className="text-sm text-secondary-500 dark:text-secondary-400">No active development plans.</p>
       </div>
     );
   }
 
   return (
     <div className="glass-deep rounded-2xl p-4">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <BookOpenIcon className="w-5 h-5 text-indigo-500" />
           <h3 className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">Learning & Development</h3>

@@ -10,6 +10,7 @@ import {
   BeakerIcon,
   TrophyIcon,
 } from '@heroicons/react/24/outline';
+import { ChartBarIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
 import MetricTooltip from './MetricTooltip';
 
@@ -30,12 +31,13 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
               <BeakerIcon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-secondary-900 dark:text-white"><MetricTooltip code="CPIS">CPIS</MetricTooltip> Dimensions</h2>
+              <h2 className="text-lg font-bold text-secondary-900 dark:text-white"><MetricTooltip code="CPIS">CPIS</MetricTooltip> Dimensions</h2>
               <p className="text-xs text-secondary-500 dark:text-secondary-400">8-dimensional performance intelligence breakdown</p>
             </div>
           </div>
           {cpisData?.confidence && (
-            <span className="text-xs font-medium text-secondary-500 dark:text-secondary-400 bg-secondary-100 dark:bg-white/5 px-3 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1 rounded-full bg-gradient-to-r from-cyan-100 to-violet-100 dark:from-cyan-500/[0.12] dark:to-violet-500/[0.1] text-violet-600 dark:text-violet-300 border border-violet-200/60 dark:border-violet-400/20 shadow-sm">
+              <ChartBarIcon className="w-3.5 h-3.5" />
               {cpisData.confidence.dataPoints} data points
             </span>
           )}
@@ -64,26 +66,25 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
               return (
                 <div
                   key={dim.code}
-                  className="group relative p-4 rounded-xl bg-secondary-50/80 dark:bg-secondary-800/40 hover:bg-white dark:hover:bg-secondary-800 hover:shadow-lg transition-all duration-300 border border-transparent hover:border-secondary-200 dark:hover:border-secondary-700 cascade-in"
+                  className="group relative p-4 rounded-xl bg-secondary-50/80 dark:bg-secondary-800/40 hover:bg-white dark:hover:bg-secondary-800 hover:shadow-lg transition-all duration-300 border border-transparent hover:border-secondary-200 dark:hover:border-secondary-700 cascade-in flex flex-col"
                   style={{ animationDelay: `${index * 0.06}s` }}
                 >
                   {/* Top accent */}
                   <div className={clsx('absolute top-0 left-0 right-0 h-[2px] rounded-t-xl bg-gradient-to-r opacity-60 group-hover:opacity-100 transition-opacity', dimColors[index])} />
-                  <div className="flex items-center justify-between mb-2.5">
-                    <div className="flex items-center gap-2">
-                      <div className={clsx('p-1.5 rounded-lg bg-gradient-to-br shadow-sm', dimColors[index])}>
-                        <IconComp className="w-3.5 h-3.5 text-white" />
-                      </div>
-                      <div>
-                        <MetricTooltip code={dim.code} className="text-sm font-semibold text-secondary-700 dark:text-secondary-300 leading-tight">{dim.name}</MetricTooltip>
-                        <span className="text-2xs text-secondary-400 dark:text-secondary-500 block">{Math.round(dim.weight * 100)}% weight</span>
-                      </div>
+                  {/* Grade badge — pinned top-right for uniform alignment */}
+                  <span className={clsx('absolute top-3 right-3 text-xs font-black px-2 py-0.5 rounded z-10', gradeColor)}>
+                    {dim.grade}
+                  </span>
+                  <div className="flex items-start gap-2 mb-2.5 pr-10">
+                    <div className={clsx('p-1.5 rounded-lg bg-gradient-to-br shadow-sm flex-shrink-0 mt-0.5', dimColors[index])}>
+                      <IconComp className="w-3.5 h-3.5 text-white" />
                     </div>
-                    <span className={clsx('text-xs font-black px-1.5 py-0.5 rounded', gradeColor)}>
-                      {dim.grade}
-                    </span>
+                    <div className="min-w-0">
+                      <MetricTooltip code={dim.code} className="text-sm font-bold text-secondary-700 dark:text-secondary-300 leading-tight">{dim.name}</MetricTooltip>
+                      <span className="text-2xs text-secondary-400 dark:text-secondary-500 block">{Math.round(dim.weight * 100)}% weight</span>
+                    </div>
                   </div>
-                  <div className="flex items-end gap-1 mb-2">
+                  <div className="flex items-end gap-1 mb-2 mt-auto">
                     {dim.rawScore > 0 ? (
                       <>
                         <span className="text-xl font-bold text-secondary-900 dark:text-white">{Math.round(dim.rawScore)}</span>
@@ -114,7 +115,7 @@ function CPISDimensionBreakdown({ dimensions, cpisData }: CPISDimensionBreakdown
 
         {/* Strengths & Growth Areas */}
         {(cpisData?.strengths?.length > 0 || cpisData?.growthAreas?.length > 0) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-secondary-200/60 dark:border-secondary-700/40">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 pt-3 border-t border-secondary-200/60 dark:border-secondary-700/40">
             {cpisData.strengths?.length > 0 && (
               <div className="flex items-start gap-3">
                 <div className="p-1.5 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 shadow-sm">
