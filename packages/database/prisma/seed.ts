@@ -144,34 +144,44 @@ async function main() {
     demoRoles.push(role);
   }
 
-  // 7. Demo admin user
+  // 7. All 4 workspace demo users
   const demoPassword = await bcrypt.hash('Demo@2026', SALT_ROUNDS);
-  const demoAdmin = await findOrCreate(
-    () => prisma.user.findFirst({ where: { email: 'pms.hradmin@protonmail.com', tenantId: demoTenant.id } }),
-    () => prisma.user.create({
-      data: {
-        tenantId: demoTenant.id,
-        email: 'pms.hradmin@protonmail.com',
-        firstName: 'HR',
-        lastName: 'Admin',
-        passwordHash: demoPassword,
-        isActive: true,
-        emailVerified: true,
-        level: 12,
-      },
-    }),
-  );
-  console.log('[seed] Demo Admin user:', demoAdmin.email);
 
-  // Assign Tenant Admin role to demo admin
-  const demoAdminRole = demoRoles.find(r => r.category === 'ADMIN');
-  if (demoAdminRole) {
-    await findOrCreate(
-      () => prisma.userRole.findFirst({ where: { userId: demoAdmin.id, roleId: demoAdminRole.id } }),
-      () => prisma.userRole.create({
-        data: { userId: demoAdmin.id, roleId: demoAdminRole.id, grantedBy: demoAdmin.id },
+  const tenantAdminRole = demoRoles.find(r => r.category === 'ADMIN')!;
+  const hrAdminRole     = demoRoles.find(r => r.category === 'HR')!;
+  const managerRole     = demoRoles.find(r => r.category === 'MANAGER')!;
+  const employeeRole    = demoRoles.find(r => r.category === 'EMPLOYEE')!;
+
+  const workspaceUsers = [
+    { email: 'pms.tenantadmin@protonmail.com', firstName: 'Tenant', lastName: 'Admin',    level: 12, role: tenantAdminRole },
+    { email: 'pms.hradmin@protonmail.com',     firstName: 'HR',     lastName: 'Admin',    level: 10, role: hrAdminRole },
+    { email: 'pms.manager@protonmail.com',     firstName: 'Demo',   lastName: 'Manager',  level: 7,  role: managerRole },
+    { email: 'pms.employee@protonmail.com',    firstName: 'Demo',   lastName: 'Employee', level: 3,  role: employeeRole },
+  ];
+
+  for (const u of workspaceUsers) {
+    const user = await findOrCreate(
+      () => prisma.user.findFirst({ where: { email: u.email, tenantId: demoTenant.id } }),
+      () => prisma.user.create({
+        data: {
+          tenantId: demoTenant.id,
+          email: u.email,
+          firstName: u.firstName,
+          lastName: u.lastName,
+          passwordHash: demoPassword,
+          isActive: true,
+          emailVerified: true,
+          level: u.level,
+        },
       }),
     );
+    await findOrCreate(
+      () => prisma.userRole.findFirst({ where: { userId: user.id, roleId: u.role.id } }),
+      () => prisma.userRole.create({
+        data: { userId: user.id, roleId: u.role.id, grantedBy: user.id },
+      }),
+    );
+    console.log('[seed] Workspace user:', user.email, '→', u.role.name);
   }
 
   // 8. Demo subscription

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import { authenticate } from '../../middleware/authenticate';
+import { requireRoles } from '../../middleware/authorize';
 import { uploadRateLimiter } from '../../middleware';
 import * as ctrl from './excel-upload.controller';
 
@@ -27,19 +28,22 @@ const router = Router();
 // All routes require authentication
 router.use(authenticate);
 
-// Template download
-router.get('/template', ctrl.downloadTemplate);
+// HR Admin / Tenant Admin / Super Admin only
+const adminOnly = requireRoles('HR Admin', 'Tenant Admin', 'Super Admin');
+
+// Template download (read-only — managers may also download)
+router.get('/template', requireRoles('HR Admin', 'Tenant Admin', 'Super Admin', 'Manager'), ctrl.downloadTemplate);
 
 // Two-phase upload flow (AI-enhanced)
-router.post('/analyze', uploadRateLimiter, upload.single('file'), ctrl.analyzeUpload);
-router.post('/:id/confirm', uploadRateLimiter, ctrl.confirmUpload);
-router.get('/:id/progress', ctrl.getProgress);
+router.post('/analyze', adminOnly, uploadRateLimiter, upload.single('file'), ctrl.analyzeUpload);
+router.post('/:id/confirm', adminOnly, uploadRateLimiter, ctrl.confirmUpload);
+router.get('/:id/progress', adminOnly, ctrl.getProgress);
 
 // Legacy single-step upload (backward compatible)
-router.post('/upload', uploadRateLimiter, upload.single('file'), ctrl.uploadExcel);
+router.post('/upload', adminOnly, uploadRateLimiter, upload.single('file'), ctrl.uploadExcel);
 
 // History & errors
-router.get('/history', ctrl.getUploadHistory);
-router.get('/:id/errors', ctrl.getUploadErrors);
+router.get('/history', adminOnly, ctrl.getUploadHistory);
+router.get('/:id/errors', adminOnly, ctrl.getUploadErrors);
 
 export { router as excelUploadRoutes };
