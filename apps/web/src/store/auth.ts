@@ -144,6 +144,8 @@ const ROUTE_ACCESS: Record<string, { roles?: string[] }> = {
   '/team-optimizer':       { roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'ADMIN', 'HR_ADMIN'] },
   '/culture-diagnostics':  { roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'ADMIN', 'HR_ADMIN'] },
   '/ai-development':       { roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/simulator':            { roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
+  '/team-insights':        { roles: ['SUPER_ADMIN', 'TENANT_ADMIN', 'ADMIN', 'HR_ADMIN', 'MANAGER'] },
 };
 
 /**
