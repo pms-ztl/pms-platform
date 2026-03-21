@@ -30,16 +30,16 @@ async function main() {
   console.log(`  ✓ Tenant: ${tenant.name} (${tenantId})`);
 
   const [danish, prasina, preethi, sanjay] = await Promise.all([
-    prisma.user.findFirst({ where: { email: 'agdanishr@gmail.com', tenantId } }),
-    prisma.user.findFirst({ where: { email: 'danish@xzashr.com', tenantId } }),
-    prisma.user.findFirst({ where: { email: 'preethisivachandran0@gmail.com', tenantId } }),
-    prisma.user.findFirst({ where: { email: 'sanjayn0369@gmail.com', tenantId } }),
+    prisma.user.findFirst({ where: { email: 'pms.superadmin@protonmail.com', tenantId } }),
+    prisma.user.findFirst({ where: { email: 'pms.hradmin@protonmail.com', tenantId } }),
+    prisma.user.findFirst({ where: { email: 'pms.manager@protonmail.com', tenantId } }),
+    prisma.user.findFirst({ where: { email: 'pms.employee@protonmail.com', tenantId } }),
   ]);
 
-  if (!danish) throw new Error('agdanishr@gmail.com not found in demo-company');
-  if (!prasina) throw new Error('danish@xzashr.com not found in demo-company');
-  if (!preethi) throw new Error('preethisivachandran0@gmail.com not found in demo-company');
-  if (!sanjay) throw new Error('sanjayn0369@gmail.com not found in demo-company');
+  if (!danish) throw new Error('pms.superadmin@protonmail.com not found in demo-company');
+  if (!prasina) throw new Error('pms.hradmin@protonmail.com not found in demo-company');
+  if (!preethi) throw new Error('pms.manager@protonmail.com not found in demo-company');
+  if (!sanjay) throw new Error('pms.employee@protonmail.com not found in demo-company');
 
   console.log(`  ✓ Users: ${danish.firstName}, ${prasina.firstName}, ${preethi.firstName}, ${sanjay.firstName}`);
 
@@ -1267,10 +1267,10 @@ async function main() {
   console.log('🚀  Ready for demo!');
   console.log('');
   console.log('Credentials:');
-  console.log('  agdanishr@gmail.com          → Demo@123  (CTO / TENANT_ADMIN)');
-  console.log('  danish@xzashr.com            → Demo@123  (Head of HR / HR_ADMIN)');
-  console.log('  preethisivachandran0@gmail.com → Demo@123  (Eng Manager / MANAGER)');
-  console.log('  sanjayn0369@gmail.com         → Demo@123  (Frontend Engineer / EMPLOYEE)');
+  console.log('  pms.superadmin@protonmail.com  → Demo@2026  (CTO / TENANT_ADMIN)');
+  console.log('  pms.hradmin@protonmail.com     → Demo@2026  (Head of HR / HR_ADMIN)');
+  console.log('  pms.manager@protonmail.com     → Demo@2026  (Eng Manager / MANAGER)');
+  console.log('  pms.employee@protonmail.com    → Demo@2026  (Frontend Engineer / EMPLOYEE)');
 }
 
 main()

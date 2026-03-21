@@ -64,13 +64,13 @@ async function main() {
   console.log('[seed] Super Admin role:', superAdminRole.id);
 
   // 3. Super Admin user
-  const adminPassword = await bcrypt.hash('admin123', SALT_ROUNDS);
+  const adminPassword = await bcrypt.hash('Demo@2026', SALT_ROUNDS);
   const superAdmin = await findOrCreate(
-    () => prisma.user.findFirst({ where: { email: 'admin@pms-platform.com', tenantId: platformTenant.id } }),
+    () => prisma.user.findFirst({ where: { email: 'pms.superadmin@protonmail.com', tenantId: platformTenant.id } }),
     () => prisma.user.create({
       data: {
         tenantId: platformTenant.id,
-        email: 'admin@pms-platform.com',
+        email: 'pms.superadmin@protonmail.com',
         firstName: 'Super',
         lastName: 'Admin',
         passwordHash: adminPassword,
@@ -145,14 +145,14 @@ async function main() {
   }
 
   // 7. Demo admin user
-  const demoPassword = await bcrypt.hash('demo123', SALT_ROUNDS);
+  const demoPassword = await bcrypt.hash('Demo@2026', SALT_ROUNDS);
   const demoAdmin = await findOrCreate(
-    () => prisma.user.findFirst({ where: { email: 'admin@demo.com', tenantId: demoTenant.id } }),
+    () => prisma.user.findFirst({ where: { email: 'pms.hradmin@protonmail.com', tenantId: demoTenant.id } }),
     () => prisma.user.create({
       data: {
         tenantId: demoTenant.id,
-        email: 'admin@demo.com',
-        firstName: 'Demo',
+        email: 'pms.hradmin@protonmail.com',
+        firstName: 'HR',
         lastName: 'Admin',
         passwordHash: demoPassword,
         isActive: true,
@@ -190,8 +190,8 @@ async function main() {
 
   console.log('');
   console.log('[seed] Done! Login credentials:');
-  console.log('  Super Admin:  admin@pms-platform.com / admin123');
-  console.log('  Demo Admin:   admin@demo.com / demo123');
+  console.log('  Super Admin:  pms.superadmin@protonmail.com / Demo@2026');
+  console.log('  HR Admin:     pms.hradmin@protonmail.com    / Demo@2026');
   console.log('');
 }
 
