@@ -416,7 +416,7 @@ export function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 flex items-center pr-4 text-white/20 hover:text-white/50 transition-colors"
+              className="absolute inset-y-0 right-0 flex items-center pr-4 text-secondary-400 hover:text-secondary-600 dark:text-white/40 dark:hover:text-white/70 transition-colors"
             >
               {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
             </button>
