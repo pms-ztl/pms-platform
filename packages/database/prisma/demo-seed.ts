@@ -30,13 +30,13 @@ async function main() {
   console.log(`  ✓ Tenant: ${tenant.name} (${tenantId})`);
 
   const [danish, prasina, preethi, sanjay] = await Promise.all([
-    prisma.user.findFirst({ where: { email: 'pms.superadmin@protonmail.com', tenantId } }),
+    prisma.user.findFirst({ where: { email: 'pms.tenantadmin@protonmail.com', tenantId } }),
     prisma.user.findFirst({ where: { email: 'pms.hradmin@protonmail.com', tenantId } }),
     prisma.user.findFirst({ where: { email: 'pms.manager@protonmail.com', tenantId } }),
     prisma.user.findFirst({ where: { email: 'pms.employee@protonmail.com', tenantId } }),
   ]);
 
-  if (!danish) throw new Error('pms.superadmin@protonmail.com not found in demo-company');
+  if (!danish) throw new Error('pms.tenantadmin@protonmail.com not found in demo-company');
   if (!prasina) throw new Error('pms.hradmin@protonmail.com not found in demo-company');
   if (!preethi) throw new Error('pms.manager@protonmail.com not found in demo-company');
   if (!sanjay) throw new Error('pms.employee@protonmail.com not found in demo-company');
@@ -1267,7 +1267,7 @@ async function main() {
   console.log('🚀  Ready for demo!');
   console.log('');
   console.log('Credentials:');
-  console.log('  pms.superadmin@protonmail.com  → Demo@2026  (CTO / TENANT_ADMIN)');
+  console.log('  pms.tenantadmin@protonmail.com → Demo@2026  (CTO / TENANT_ADMIN)');
   console.log('  pms.hradmin@protonmail.com     → Demo@2026  (Head of HR / HR_ADMIN)');
   console.log('  pms.manager@protonmail.com     → Demo@2026  (Eng Manager / MANAGER)');
   console.log('  pms.employee@protonmail.com    → Demo@2026  (Frontend Engineer / EMPLOYEE)');

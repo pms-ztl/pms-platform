@@ -71,7 +71,7 @@ async function main() {
       data: {
         tenantId: platformTenant.id,
         email: 'pms.superadmin@protonmail.com',
-        firstName: 'Super',
+        firstName: 'Platform',
         lastName: 'Admin',
         passwordHash: adminPassword,
         isActive: true,
@@ -190,8 +190,13 @@ async function main() {
 
   console.log('');
   console.log('[seed] Done! Login credentials:');
-  console.log('  Super Admin:  pms.superadmin@protonmail.com / Demo@2026');
-  console.log('  HR Admin:     pms.hradmin@protonmail.com    / Demo@2026');
+  console.log('  COMMAND CENTER:');
+  console.log('    pms.superadmin@protonmail.com   / Demo@2026  (Super Admin)');
+  console.log('  YOUR WORKSPACE:');
+  console.log('    pms.tenantadmin@protonmail.com  / Demo@2026  (Tenant Admin)');
+  console.log('    pms.hradmin@protonmail.com      / Demo@2026  (HR Admin)');
+  console.log('    pms.manager@protonmail.com      / Demo@2026  (Manager)');
+  console.log('    pms.employee@protonmail.com     / Demo@2026  (Employee)');
   console.log('');
 }
 
